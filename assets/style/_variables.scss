@@ -1,0 +1,81 @@
+:root {
+  --color-white: #fff;
+  --color-black: #000;
+
+  --primary-color: #6937a5;
+  --secondary-color: #a9abac;
+
+  --bg-primary-color: #F8F9FB;
+  --bg-secondary-color: #fff;
+  --bg-tertiary-color: #f6f6f6;
+
+  --text-color-primary: #212529;
+  --text-color-secondary: #565263;
+  --text-color-tertiary: #8b92a1;
+  --text-color-quaternary: #1c1323;
+  --text-color-quinary: #a8a8a8;
+  --text-color-senary: #667085;
+  --text-color-septenary: #9e92a8;
+  --text-color-octonary: #fff;
+  --text-color-ternary: #6937a5;
+  --text-color-decimal: #AEAEAE;
+  --text-color-monodecimal: #000;
+
+  --text-color-positive: #027a48;
+  --text-color-negative: #b42318;
+  --text-color-active: #de5434;
+
+  --text-color-info-primary: #17a2b8;
+  --text-color-info-secondary: #856404;
+  --text-color-success: #6dbf2f;
+  --text-color-warning: #ffc107;
+  --text-color-danger: #dc3545;
+
+  --text-color-hover-primary: #6937a5;
+
+  --button-background-primary: #6937a5;
+  --button-background-primary-hover: #4a2774;
+  --button-background-secondary: #f6f6f6;
+  --button-background-secondary-hover: #e3e3e3;
+  --button-background-tertiary-hover: #e9ecef;
+  --button-background-quaternary: #fff;
+
+  --border-color-primary: #dee2e6;
+  --border-color-secondary: #c4c4c4;
+  --border-color-tertiary: #f7f7f7;
+  --border-color-quaternary: #6937a5;
+  --border-color-quinary: #e9ecef;
+
+  --border-color-input-focus: #aa85d6;
+
+  --box-shadow-primary: -2px -2px 0 #6937a5, 0 1px 1px rgba(0, 0, 0, 0.15);
+  --box-shadow-secondary: -2px -2px 0 #DADADA, 0 1px 1px rgba(0, 0, 0, 0.15);
+  --box-shadow-tertiary: 0 0 15px rgba(0,0,0,.1);
+  --box-shadow-dropdown: 0 0 .5rem rgba(0, 0, 0, 0.1);
+  --box-shadow-input: 0 0 0 .2rem rgba(105,55,165,.25);
+
+  --container-width: 1520px;
+
+  --container-padding-x: 13px;
+
+  --transition-duration: 0.2s;
+
+  --header-height: 132px;
+
+  --svg-size-desktop-lx: 3rem;
+  --svg-size-mobile-lx: 30px;
+
+  --svg-size-desktop-l: 2.4rem;
+  --svg-size-mobile-l: 24px;
+
+  --svg-size-desktop-m: 1.5rem;
+  --svg-size-mobile-m: 15px;
+
+  --svg-size-desktop-s: 8px;
+
+  --desktop-breakpoint: 1740px;
+  --tablet-breakpoint: 1300px;
+  --mobile-breakpoint: 887px;
+
+
+}

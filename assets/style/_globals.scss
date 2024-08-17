@@ -1,0 +1,162 @@
+html {
+  font-size: 10px;
+  min-width: 375px;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  color: var(--text-color-primary);
+  // font-size: 10px;
+  line-height: 1.5;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+header {
+  width: 100%;
+}
+
+main {
+  flex: 1 0 auto;
+  width: 100%;
+  background-color: (var(--bg-primary-color));
+}
+
+footer {
+  flex: 0 0 auto;
+  width: 100%;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  list-style-type: none;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+a, button {
+  cursor: pointer;
+  transition: color .2s ease, background-color .2s ease;
+}
+
+svg, path, circle {
+  transition: fill .1s ease;
+}
+
+button {
+  background-color: inherit;
+  border: none;
+  padding: 0;
+  
+  @include hover {
+    color: var(--text-color-hover-primary);
+  }
+}
+
+p {
+  font-size: 1.6em;
+  margin: 0;
+}
+
+h1, h2, h3, h4, h5 {
+  font-weight: 400;
+  margin: 0;
+}
+
+h1, .h1 {
+  font-size: 3.6em;
+}
+
+h2, .h2{
+  font-size: 3.2em;
+}
+
+h3, .h3{
+  font-size: 2.8em;
+}
+
+h4, .h4{
+  font-size: 2.4em;
+}
+
+h5, .h5{
+  font-size: 1.8em;
+}
+
+img {
+  width: 100%;
+  height: 100%;
+}
+
+.svg-lx {
+  width: var(--svg-size-desktop-lx);
+  height: auto;
+  margin: 0;
+
+  @include mobile {
+    width: var(--svg-size-mobile-lx);
+  }
+}
+
+.svg-l {
+  width: var(--svg-size-desktop-l);
+  height: auto;
+  margin: 0;
+
+  @include mobile {
+    width: var(--svg-size-mobile-l);
+  }
+}
+
+.svg-m {
+  width: var(--svg-size-desktop-m);
+  height: auto;
+  margin: 0;
+
+  @include mobile {
+    width: var(--svg-size-mobile-m);
+  }
+}
+
+.svg-s {
+  width: var(--svg-size-desktop-s);
+  height: auto;
+  margin: 0;
+}
+
+
+
+.container {
+  max-width: var(--container-width);
+  margin-inline: auto;
+  width: 100%;
+  box-sizing: border-box;
+
+  @include desktop {
+    padding-inline: var(--container-padding-x);
+  }
+
+}
+
+@include tablet {
+  html {
+    font-size: clamp(6.5px, calc((2.2vw) * .333333), 10px);
+  }
+}

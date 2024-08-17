@@ -1,0 +1,45 @@
+$desktop-breakpoint: 1740px;
+$tablet-breakpoint: 1300px;
+$mobile-breakpoint: 887px;
+
+
+
+@mixin desktop {
+  @media (max-width: $desktop-breakpoint) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (max-width: $tablet-breakpoint) {
+    @content;
+  }
+}
+
+@mixin mobile {
+  @media (max-width: $mobile-breakpoint) {
+    @content;
+  }
+}
+
+
+@mixin hover {
+  @media (hover: hover) {
+    &:hover {
+      @content;
+    }
+  }
+
+  @media (hover: none) {
+    &:active {
+      @content;
+    }
+  }
+}
+
+@mixin transition($properties, $duration: 10s, $timing-function: ease-in-out, $delay: 0s) {
+  transition-property: $properties;
+  transition-duration: $duration;
+  transition-timing-function: $timing-function;
+  transition-delay: $delay;
+}
