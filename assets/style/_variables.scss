@@ -20,6 +20,8 @@
   --text-color-ternary: #6937a5;
   --text-color-decimal: #AEAEAE;
   --text-color-monodecimal: #000;
+  --text-color-hexadecimal: #2a1947;
+  --text-color-octal: #141231;
 
   --text-color-positive: #027a48;
   --text-color-negative: #b42318;
@@ -32,14 +34,18 @@
   --text-color-danger: #dc3545;
 
   --text-color-hover-primary: #6937a5;
+  --text-color-hover-secondary: #fff;
 
   --button-background-primary: #6937a5;
-  --button-background-primary-hover: #4a2774;
   --button-background-secondary: #f6f6f6;
+  --button-background-quaternary: #fff;
+  --button-background-quinary: rgba(255, 255, 255, 0.4);
+  
+  --button-background-primary-hover: #4a2774;
   --button-background-secondary-hover: #e3e3e3;
   --button-background-tertiary-hover: #e9ecef;
-  --button-background-quaternary: #fff;
-
+  --button-background-quaternary-hover: #fff;
+  
   --border-color-primary: #dee2e6;
   --border-color-secondary: #c4c4c4;
   --border-color-tertiary: #f7f7f7;

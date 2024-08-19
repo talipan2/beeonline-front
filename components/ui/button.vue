@@ -17,12 +17,12 @@ const props = defineProps({
   variant: {
     type: String,
     default: 'primary',
-    validator: value => ['primary', 'secondary', 'tertiary',].includes(value),
+    validator: value => ['primary', 'secondary', 'tertiary', 'quaternary',].includes(value),
   },
   size: {
     type: String,
     default: 'medium',
-    validator: value => ['small', 'medium', 'large', 'centered', 'around'].includes(value),
+    validator: value => ['small', 'medium', 'large', 'centered', 'around', 'xl'].includes(value),
   },
   disabled: {
     type: Boolean,
@@ -54,8 +54,6 @@ const buttonClass = computed(() => {
 </script>
 
 <style lang="scss">
-
-@import '~/assets/style/style.scss';
 
 .btn {
   display: flex;
@@ -108,6 +106,29 @@ const buttonClass = computed(() => {
     svg {
       fill: var(--text-color-octonary);
     }
+  }
+}
+
+.btn-quaternary {
+  background-color: hsla(0, 0%, 100%, 0.31);
+  color: #fff;
+  display: block;
+  font-size: 1.8rem;
+  line-height: 1.33em;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+
+  &:hover {
+    background-color: var(--button-background-quaternary-hover);
+    color: var(--text-color-hover-primary)
+  }
+}
+
+.btn-xl {
+  padding: 1.6rem 3.2rem;
+  border-radius: 100px;
+
+  @include mobile {
+    padding: 12px 24px;
   }
 }
 

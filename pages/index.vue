@@ -1,3 +1,11 @@
 <template>
-  <h1>Главная</h1>
+  <div>
+    <MainBanner />
+    <MainServices />
+    <MainBrands />
+    <MainAdvantages />
+    <MainPartners />
+    <MainSearchOptions />
+    <MainSafeTransaction />
+  </div>
 </template>

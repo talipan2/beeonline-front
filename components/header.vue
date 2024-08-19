@@ -105,9 +105,6 @@ onUnmounted(() => {
 </script>
 
 <style lang="scss">
-
-@import '~/assets/style/style.scss';
-
 .header {
   background-color: var(--bg-secondary-color);
 
@@ -251,7 +248,7 @@ onUnmounted(() => {
 }
 
 .header__logo-container .header__logo-img {
-  height: 6rem;
+  height: 5rem;
   width: 16rem;
 }
 
@@ -262,7 +259,8 @@ onUnmounted(() => {
   cursor: pointer;
   font-size: 1.6rem;
   font-weight: 600;
-  padding: 12px 20px;
+  padding: 1.2rem 2.4rem;
+  line-height: 1em;
   @include transition(background-color, .2s, ease-in-out);
 }
 

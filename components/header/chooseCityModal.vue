@@ -74,8 +74,6 @@ const activeLevel = ref('country');
 
 const emit = defineEmits(['update:modelValue']);
 
-console.log(activeLevel.value)
-
 const countries = ref([
   { id: '1', name: 'Россия' },
   { id: '2', name: 'Италия' },

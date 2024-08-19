@@ -1,8 +1,6 @@
-@import
-  'normalize.scss',
-  'variables.scss',
-  'fonts.scss',
-  'media.scss',
-  'globals.scss',
-  "icomoon.scss"
-;
+@use 'normalize' as *;
+@use 'variables' as *;
+@use 'fonts' as *;
+@use 'media' as *;
+@use 'globals' as *;
+@use 'icomoon' as *;
