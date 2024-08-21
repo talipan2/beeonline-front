@@ -349,6 +349,7 @@ onUnmounted(() => {
 
   .header__login {
     display: flex;
+    line-height: 1.66em;
   }
 
   .header__logo-container .header__logo-img {
