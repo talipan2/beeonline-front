@@ -61,6 +61,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  location: {
+    type: [String, Number],
+    default: null,
+  }
 });
 
 const isOpenModal = ref(props.modelValue);
@@ -72,7 +76,7 @@ const selectedCity = ref(null);
 const activeLevel = ref('country');
 
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue', 'selectCity']);
 
 const countries = ref([
   { id: '1', name: 'Россия' },
@@ -198,6 +202,8 @@ function selectRegion(region) {
 
 function selectCity(city) {
   selectedCity.value = city;
+  emit('selectCity', city.name);
+  emit('update:modelValue', false);
 }
 
 watch(() => props.modelValue, (newVal) => {

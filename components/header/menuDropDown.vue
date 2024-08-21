@@ -37,13 +37,22 @@
         В кабинет<br>менеджера сделок
       </UiButton>
       <div class="header__dropdown-logout">
-        <a class="header__dropdown-links" href="javascript:;">Выход</a>
+        <a class="header__dropdown-links" href="javascript:;" @click="emit('update:modelValue', false)">Выход</a>
       </div>
     </template>
   </UiDropDown>
 </template>
 
 <script setup>
+
+const props = defineProps({
+  modelValue: {
+    type: Boolean,
+    default: false,
+  }
+});
+
+const emit = defineEmits(['update:modelValue']);
 
   const dropdownMenuLinks = [
     { label: 'Рабочий стол', value: '/' },

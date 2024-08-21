@@ -1,6 +1,6 @@
 <template>
-  <header class="header container" ref="header">
-    <div class="header__info">
+  <header class="header container" ref="header" :class="{ 'header_fixed': headerFixed }">
+    <div class="header__info" ref="headerInfo">
       <ul class="header__list">
         <!-- <li class="header__item">
 					<a href="#" class="header__link">О компании</a>
@@ -21,8 +21,9 @@
         </li>
       </ul>
     </div>
-    <div class="header__main">
-      <div class="header__main-container">
+    <div class="header__filler" ref="headerFiller"></div>
+    <div class="header__main" ref="headerMain" >
+      <div class="header__main-container" :class="{ 'container': headerFixed }">
         <div class="header__logo-container">
           <button class="header__menu-btn" :class="{ 'header__menu-btn_active': isOpenMobileModal }" @click="isOpenMobileModal = !isOpenMobileModal">
             <div></div>
@@ -62,16 +63,16 @@
             <SvgoNotice class="svg-m" />
             <UiAlertBadge />
           </UiButton>
-          <HeaderMenuDropDown />
+          <HeaderMenuDropDown v-model="isAuth" />
         </div>
         <div class="header__auth" v-else>
-          <UiButton to="/" variant="secondary" size="small">
+          <UiButton to="/" variant="secondary" size="around" class="header__search-icon"> 
             <img src="~/assets/images/header/search-icon.svg" alt="Поиск">
           </UiButton>
-          <UiButton to="/" variant="secondary" size="large">Вход</UiButton>
+          <UiButton to="/" variant="secondary" size="large" type="button" @click="isAuth = true">Вход</UiButton>
           <UiButton to="/" variant="secondary" size="large">Регистрация</UiButton>
         </div>
-        <UiButton to="/" variant="primary" size="small" class="header__login">Вход</UiButton>
+        <UiButton to="/" variant="primary" size="small" class="header__login" @click="isAuth = true">Вход</UiButton>
       </div>
     </div>
     <HeaderMenuMobileModal v-model="isOpenMobileModal" :headerHeight="headerHeight"></HeaderMenuMobileModal>
@@ -80,31 +81,91 @@
 
 <script setup>
 
-const isAuth = ref(true);
+const isAuth = ref(false);
 const isOpenMobileModal = ref(false);
 const header = ref(null);
+const headerMain = ref(null);
+const headerMainHeight = ref(null);
 const headerHeight = ref(null);
+const headerFixed = ref(false);
+const headerMainOffsetTop = ref(0);
+const headerFiller = ref(0)
+const headerInfo = ref(null)
 
 function updateHeaderHeight() {
   if (header) {
     headerHeight.value = header.value.offsetHeight;
+    headerMainHeight.value = headerMain.value.offsetHeight;
   }
-  
+}
+
+const onScrollPage = () => {
+  if (!headerFixed.value) {
+    headerMainOffsetTop.value = headerInfo.value.offsetHeight;
+  }
+  if (window.scrollY > headerMainOffsetTop.value) {
+    if (!headerFixed.value) {
+      headerFixed.value = true;
+      headerFiller.value.style.height = headerMainHeight.value + 'px';
+    }
+  } else {
+    if (headerFixed.value) {
+      headerFixed.value = false;
+      headerFiller.value.style.height = 0;
+    }
+  }
 }
 
 onMounted(() => {
   updateHeaderHeight();
-
+  onScrollPage();
   window.addEventListener('resize', updateHeaderHeight);
+  window.addEventListener("scroll", onScrollPage)
+
 });
 
 onUnmounted(() => {
   window.removeEventListener('resize', updateHeaderHeight);
+  window.removeEventListener("scroll", onScrollPage)
+  
 });
 
 </script>
 
 <style lang="scss">
+
+.header__filler {
+  height: 0
+}
+
+.header_fixed .header__filler {
+  // height: var(--header-height)
+}
+
+.header_fixed .header__main {
+  background-color: var(--bg-secondary-color);
+  box-shadow: var(--box-shadow-tertiary);
+  box-sizing: border-box;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 100
+}
+
+
+// @media screen and (max-width: 1550px) {
+//   .header_fixed .header__main {
+//     padding-inline: 50px
+//   }
+// }
+
+// @media screen and (max-width: 887px) {
+//   .header_fixed .header__main {
+//     padding-inline: 16px
+//   }
+// }
+
 .header {
   background-color: var(--bg-secondary-color);
 
@@ -149,58 +210,10 @@ onUnmounted(() => {
     width: 16px
   }
 
-//   .header__item_type-location .header__lang {
-//     align-items: center;
-//     display: flex;
-//     padding: 5px;
-//     background-color: inherit;
-//     border: none;
-//     column-gap: .4rem;
-//     font-size: 1.3rem;
-//   }
-
-// .header__lang-icon {
-//   background-color: #fff;
-//   border-radius: 15px;
-//   box-shadow: 0 0 0 2px #fff;
-//   height: 15px;
-//   min-width: 15px;
-//   width: 15px;
-// }
-
-// .header__lang-dropdown {
-//   width: 8px;
-//   height: auto;
-// }
-
-// .header__lang-item {
-//   border: none;
-//   width: 100%;
-//   font-size: 1.4rem;
-//   display: flex;
-//   align-items: center;
-//   column-gap: .4rem;
-//   padding: .5rem;
-//   background-color: inherit;
-
-//   svg {
-//     background-color: #fff;
-//     border-radius: 15px;
-//     box-shadow: 0 0 0 2px #fff;
-//     height: auto;
-//     min-width: 15px;
-//     width: 15px;
-//   }
-// }
-
-// .header__lang {
-//   font-size: 1.4rem;
-//   font-weight: 500;
-//   color: var(--text-color-primary);
-//   display: flex;
-//   align-items: center;
-//   column-gap: .4rem
-// }
+  .header__search-icon {
+    width: 1em;
+    height: auto;
+  }
 
 .header__main-container {
   display: flex;
@@ -209,36 +222,7 @@ onUnmounted(() => {
   align-items: center;
 }
 
-.header__filler {
-  height: 0
-}
 
-.header_fixed .header__filler {
-  height: var(--header-height)
-}
-
-.header_fixed .header__main {
-  background-color: var(--bg-secondary-color);
-  box-shadow: var(--box-shadow-tertiary);
-  box-sizing: border-box;
-  left: 0;
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 100
-}
-
-@media screen and (max-width: 1550px) {
-  .header_fixed .header__main {
-    padding-inline: 50px
-  }
-}
-
-@media screen and (max-width: 887px) {
-  .header_fixed .header__main {
-    padding-inline: 16px
-  }
-}
 
 .header__logo-container {
   align-items: center;

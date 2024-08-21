@@ -3,10 +3,10 @@
     <button class="header__location" @click="isOpen = true">
       <SvgoMapPin class="svg-m" filled />
       <span class="header__location-value">
-        Город не задан
+        {{location ? location : 'Город не задан'}}
       </span>
     </button>
-    <HeaderChooseCityModal v-model="isOpen" />
+    <HeaderChooseCityModal v-model="isOpen" :location="location" @selectCity="selectCity"/>
   </div>
 </template>
 
@@ -14,6 +14,15 @@
 <script setup>
 
 const isOpen = ref(false);
+const location = ref(null);
+
+function selectCity(city) {
+  location.value = city
+}
+
+watch(() => location.value, (newVal) => {
+  console.log(newVal)
+});
 
 </script>
 
