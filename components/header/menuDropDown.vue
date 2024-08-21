@@ -68,76 +68,61 @@
 }
 
 .header__auth-link {
-  font-size: 1.4rem;
+  font-size: 1em;
   font-weight: 600;
   display: flex;
   align-items: center;
-  column-gap: .75rem;
+  column-gap: 0.53em;
 }
   .header__user-info {
     display: flex;
-    padding-bottom: 1.2rem;
+    padding-bottom: 0.857em;
     border-bottom: 1px solid var(--border-color-quinary);
-    margin-bottom: 1.2rem;
+    margin-bottom: 0.857em;
     align-items: center;
   }
 
   .header__user-image {
       position: relative;
-      min-width: 3.6rem;
-      width: 3.6rem;
-      height: 3.6rem;
-      border-radius: 3.6rem;
-      margin-right: 1.6rem;
+      min-width: 2.57em;
+      width: 2.57em;
+      height: 2.57em;
+      border-radius: 2.57em;
+      margin-right: 1.142em;
   }
 
   .header__user-name {
-      font-size: 1.6rem;
+      font-size: 1.142em;
       line-height: 1em;
   }
 
   .header__user-role {
-      font-size: 1.2rem;
+      font-size: 0.857em;
       font-weight: 300;
       text-transform: uppercase;
   }
 
-  .header__user-nav {
-      padding: 1em 0 1em 4em;
-      font-weight: 300;
-  }
-
-  .header__user-nav a {
-      font-size: 1.6em;
-      display: block;
-  }
-
-  .header__user-nav a+a {
-      margin-top: .625em;
-  }
-
   .header__dropdown-links {
-    padding: .29rem .6rem;
-    font-size: 1.44rem;
-    margin-bottom: .3rem;
+    padding: .2em .42em;
+    font-size: 1em;
+    margin-bottom: 0.214em;
     line-height: 1.2em;
   }
 
   .dropdown__link_list {
-    margin-bottom: 1.2rem;
-    // margin-left: -.6rem;
+    margin-bottom: 0.857em;
   }
 
   .header__dropdown-change-role {
     display: flex;
     align-items: center;
-    column-gap: 1.5rem;
-    font-size: 1.2rem;
+    column-gap: 1.25em;
+    font-size: .857em;
     line-height: 1em;
     color: var(--text-color-ternary);
     text-transform: uppercase;
-    margin-bottom: .4rem;
-    padding-block: .8rem;
+    margin-bottom: 0.33em;
+    padding-block: 0.66em;
 
     & svg {
       fill: var(--text-color-ternary)
@@ -151,8 +136,8 @@
 
   .header__dropdown-logout {
     border-top: 1px solid var(--border-color-quinary);
-    margin-top: 12px;
-    padding-top: 12px;
+    margin-top: 0.857em;
+    padding-top: 0.857em;
 
     a:hover {
       background-color: var(--button-background-tertiary-hover) ;
@@ -160,7 +145,7 @@
   }
   
 
-  @media screen and (max-width: 1400px) {
+  @media screen and (max-width: 1420px) {
     .d-none {
       display: none;
     }

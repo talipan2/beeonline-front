@@ -3,7 +3,7 @@
         <h2 class="brands__title">Больше 10000 пользователей<br>на платформе</h2>
         <UiButton variant="quaternary" size="xl" class="brands__link">Каталог заказов</UiButton>
         <div class="brands__cards brands-swiper-container">
-            <Swiper class="brands__swiper" :slides-per-view="1.7" :space-between="16" :centered-slides="true" :slides-per-group="1"
+            <Swiper class="brands__swiper" :slides-per-view="1.4" :space-between="16" :centered-slides="true" :slides-per-group="1"
                 :pagination="true" :modules="[SwiperPagination]" :loop="false" :breakpoints="breakpoints">
                 <SwiperSlide class="brands__card">
                     <div class="brands__card-header">
@@ -67,7 +67,7 @@ const breakpoints = {
         centeredSlides: true, 
         spaceBetween: 16,
     },
-    768: { 
+    888: { 
         slidesPerView: 3,
         centeredSlides: false, 
         spaceBetween: 16,
@@ -92,23 +92,23 @@ const breakpoints = {
     background-position: center 40%;
     background-repeat: no-repeat;
     background-size: cover;
-    border-radius: 24px;
+    border-radius: 2.4em;
     box-sizing: border-box;
     margin: 0 auto;
-    padding: 7.6rem 12rem 10.1rem;
+    padding: 7.6em 12em 10.1em;
     position: relative;
-    margin-bottom: 100px;
+    margin-bottom: 10em;
 }
 
 .brands__swiper {
-    padding-bottom: 3.2rem;
+    padding-bottom: 3.2em;
 }
 
 .brands__title {
     font-family: SongerGrotesque,sans-serif;
-    font-size: 6.4rem;
+    font-size: 6.4em;
     line-height: 1.14em;
-    margin-block:0 3.2rem;
+    margin-block: 0 .5em;
 }
 
 .brands__link,.brands__title {
@@ -120,38 +120,38 @@ const breakpoints = {
 .brands__link {
     font-family: Involve,sans-serif;
     font-size: 1.8rem;
-    margin: 0 auto 7.2rem;
-    max-width: 212px;
+    margin: 0 auto 4em;
+    max-width: 11.77em;
     box-sizing: border-box;
 }
 
 
 .brands__cards {
     width: 100%;
-    max-width: 1280px;
+    max-width: 128em;
     margin: 0 auto;
 }
 
 .brands__card {
-    background-color: #fff;
-    border-radius: 10px;
-    max-width: 400px;
+    background-color: var(--bg-secondary-color);
+    border-radius: 1em;
+    max-width: 40em;
     position: relative;
 }
 
 .brands__card-header {
     align-items: center;
-    column-gap: .8rem;
+    column-gap: .8em;
     display: flex;
-    padding: 1.6rem;
+    padding: 1.6em;
 }
 
 .brands__card-header img {
-    flex: 0 0 4rem;
-    height: 4rem;
+    flex: 0 0 4em;
+    height: 4em;
     -o-object-fit: cover;
     object-fit: cover;
-    width: 4rem;
+    width: 4em;
 }
 
 .brands__card-description {
@@ -166,7 +166,7 @@ const breakpoints = {
     align-items: center;
     color: #353f58;
     display: flex;
-    font-size: 1.4rem;
+    font-size: 1.4em;
     font-weight: 700;
     height: 2em;
     line-height: 1em;
@@ -187,7 +187,7 @@ const breakpoints = {
 .brands__card-city {
     -webkit-line-clamp: 1;
     color: #9ba5ad;
-    font-size: 1.4rem;
+    font-size: 1.4em;
     font-weight: 500;
     line-height: 1.2em;
     margin-block:0;
@@ -211,13 +211,13 @@ const breakpoints = {
 }
 
 .brands__card-footer {
-    padding: 1.6rem;
+    padding: 1.6em;
 }
 
 .brands__card-type {
     color: #353f58;
     font-weight: 700;
-    margin-block:0 4px
+    margin-block:0 .28em
 }
 
 .brands__card-tags,.brands__card-type {
@@ -245,18 +245,18 @@ const breakpoints = {
 
 .brands .swiper-pagination-bullet {
     background-color: hsla(0,0%,100%,.4);
-    border-radius: 4px;
-    height: 6px;
-    margin: 0 6px;
+    border-radius: .4em;
+    height: .6em;
+    margin: 0 .6em;
     opacity: 1;
-    width: 8px
+    width: .8em;
 }
 
 .brands .swiper-pagination-bullet-active {
     background-color: #fff;
-    border-radius: 4px;
-    height: 6px;
-    width: 16px
+    border-radius: .4em;
+    height: .6em;
+    width: 1.6em;
 }
 
 .brands .swiper-pagination {
@@ -264,95 +264,95 @@ const breakpoints = {
 }
 
 .brands__gift-img {
-    height: 43.6rem;
+    height: 43.6em;
     position: absolute;
-    right: -12rem;
+    right: -12em;
     top: -17rem;
-    width: 43.6rem
+    width: 43.6em
 }
 
 .brands__package-img {
-    bottom: -11rem;
-    height: 29.3rem;
-    left: -11rem;
+    bottom: -11em;
+    height: 29.3em;
+    left: -11em;
     position: absolute;
-    width: 29.3rem;
+    width: 29.3em;
 }
 
 @include desktop {
     .brands .brands__gift-img {
-        height: 228px;
-        width: 228px;
-        top: -100px;
+        height: 22.8em;
+        width: 22.8em;
+        top: -10em;
         right: 0;
     }
 
     .brands .brands__package-img {
-        bottom: -100px;
-        height: 268px;
+        bottom: -10em;
+        height: 26.8em;
         left: 0;
-        width: 268px
+        width: 26.8em;
     }
 }
 
 @include tablet {
     .brands .brands__gift-img {
-        height: 180px;
-        width: 180px;
-        top: -80px;
+        height: 18em;
+        width: 18em;
+        top: -8em;
         right: 0;
     }
 
     .brands .brands__package-img {
-        bottom: -80px;
-        height: 170px;
+        bottom: -8em;
+        height: 17em;
         left: 0;
-        width: 170px
+        width: 17em;
     }
 }
 
 @include mobile {
     .brands {
         border-radius:0;
-        padding-block:64px 92px;
-        padding-inline:0
+        padding-block:6.4em 9.2em;
+        padding-inline: 0;
     }
 
     .brands__title {
-        font-size: 28px;
-        margin-bottom: 32px
+        font-size: 2.8em;
+        margin-bottom: 2.28em
     }
 
     .brands__link {
         -webkit-backdrop-filter: blur(20px);
         backdrop-filter: blur(20px);
-        font-size: 16px;
-        margin-bottom: 64px;
-        max-width: 231px;
-        padding-block:12px
+        font-size: 1.6em;
+        margin-bottom: 4em;
+        max-width: 14.43em;
+        padding-block: 0.75em;
     }
 
     .brands__card-header img {
-        height: 40px;
-        width: 40px
+        height: 4em;
+        width: 4em;
     }
 
     .brands__card-header {
-        -moz-column-gap: 8px;
-        column-gap: 8px;
-        padding: 16px
+        -moz-column-gap: .8em;
+        column-gap: .8em;
+        padding: 1.6em
     }
 
     .brands__card-brend,.brands__card-city {
-        font-size: 14px
+        font-size: 1.4em
     }
 
     .brands__card-footer {
-        padding: 16px
+        padding: 1.6em
     }
 
     .brands__card-tags,.brands__card-type {
-        font-size: 14px
+        font-size: 1.4em
     }
 
     .brands__gift-img {
@@ -362,14 +362,14 @@ const breakpoints = {
     }
 
     .brands__package-img {
-        bottom: -50px;
-        height: 134px;
+        bottom: -5em;
+        height: 13.4em;
         left: 0;
-        width: 134px
+        width: 13.4em;
     }
 
     .brands__swiper {
-      padding-bottom: 32px;
+      padding-bottom: 3.2em;
     }
 }
 </style>

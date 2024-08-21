@@ -67,7 +67,7 @@ const buttonClass = computed(() => {
   color: var(--text-color-octonary);
   font-size: 1.6rem;
   font-weight: 600;
-  line-height: 1.6em;
+  line-height: 1em;
   
   &:hover {
     background-color: var(--button-background-primary-hover);

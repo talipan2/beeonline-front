@@ -38,15 +38,15 @@
 }
 
 .partners__details {
-    -moz-column-gap: 15.7rem;
-    column-gap: 15.7rem;
+    -moz-column-gap: 15.7em;
+    column-gap: 15.7em;
     display: flex;
     margin: 0 auto;
-    padding-block: 15rem 12.7rem;
+    padding-block: 15em 12.7em;
   }
 
 .partners__image {
-    width: 70.6rem;
+    width: 70.6em;
     height: auto;
     z-index: 2
 }
@@ -54,37 +54,37 @@
 .partners__title {
     color: var(--text-color-octonary);
     font-family: SongerGrotesque,sans-serif;
-    font-size: 7.2rem;
+    font-size: 7.2em;
     font-weight: 700;
     line-height: 1.14em;
-    margin-block:0 6.4rem;
-    max-width: 60.3rem;
+    margin-block:0 .88em;
+    max-width: 8.375em;
     text-transform: uppercase
 }
 
 .partners__list {
     display: flex;
     flex-direction: column;
-    row-gap: 1.2rem;
+    row-gap: 1.2em;
 }
 
 .partners__item {
     align-items: center;
     background-color: hsla(0,0%,100%,.3);
-    border-radius: 24px;
+    border-radius: 2.4em;
     box-sizing: border-box;
     display: flex;
-    height: 10.2rem;
+    height: 10.2em;
     justify-content: space-between;
-    max-width: 47.5rem;
-    padding: 1.2rem 1.4rem 1.3rem 3.2rem;
+    max-width: 47.5em;
+    padding: 1.2em 1.4em 1.3em 3.2em;
     position: relative;
     z-index: 4
 }
 
 .partners__item img {
     display: block;
-    max-height: 7.7rem;
+    max-height: 7.7em;
     -o-object-fit: contain;
     object-fit: contain;
     width: auto
@@ -93,7 +93,7 @@
 .partners__text {
     color: var(--text-color-octonary);
     font-family: Coolvetica,sans-serif;
-    font-size: 2.4rem;
+    font-size: 2.4em;
     font-weight: 400;
     line-height: 1.5em;
     margin: 0
@@ -105,7 +105,7 @@
     position: absolute;
     right: 0;
     top: 0;
-    width: 106rem;
+    width: 106em;
     z-index: 1
 }
 
@@ -113,11 +113,11 @@
     display: none
 }
 
-@media screen and (max-width: 991px) {
+@include mobile {
     .partners__details {
         align-items:center;
         flex-direction: column;
-        row-gap: 56px
+        row-gap: 5.6em
     }
 
     .partners__text-container {
@@ -128,37 +128,37 @@
     }
 
     .partners__title {
-        font-size: 28px;
-        margin-bottom: 32px;
-        max-width: 210px;
+        font-size: 2.8em;
+        margin-bottom: 1.14em;
+        max-width: 7.5em;
         text-align: center
     }
 
     .partners__list {
-        row-gap: 17px;
+        row-gap: 1.7em;
         width: 100%
     }
 
     .partners__item {
-        border-radius: 16px;
+        border-radius: 1.6em;
         height: auto;
         max-width: none;
-        padding: 10px 16px;
-        width: 100%
+        padding: 1em 1.6em;
+        width: 100%;
     }
 
     .partners__item img {
-        height: 53px;
+        height: 5.3em;
         max-height: none
     }
 
     .partners__text {
-        font-size: 18px
+        font-size: 1.8em
     }
 
     .partners__image {
-        height: 212px;
-        width: 212px
+        height: 21.2em;
+        width: 21.2em
     }
 
     .partners__pattern {

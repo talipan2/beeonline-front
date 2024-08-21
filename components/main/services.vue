@@ -54,21 +54,21 @@
 
 .services__container {
   display: grid;
-  gap: 3.2rem;
+  gap: 3.2em;
   grid-template-columns: repeat(2, 1fr);
   padding-block: 16rem 14rem;
 }
 
 .services__card {
   align-items: flex-start;
-  border-radius: 24px;
+  border-radius: 2.4em;
   display: flex;
   flex-direction: column;
-  height: 46rem;
+  height: 46em;
   overflow: hidden;
-  padding: 4.8rem;
+  padding: 4.8em;
   position: relative;
-  row-gap: 4.8rem;
+  row-gap: 4.8em;
   z-index: 0;
   box-sizing: border-box;
 }
@@ -79,17 +79,17 @@
 }
 
 .services__card_type_wide .services__title {
-  font-size: 5.6rem
+  font-size: 5.6em
 }
 
 .services__card_type_wide .services__description {
-  font-size: 2.2rem;
-  max-width: 45.5rem;
+  font-size: 2.2em;
+  max-width: 20.68em;
 }
 
 .services__title {
   font-family: Coolvetica, sans-serif;
-  font-size: 4rem;
+  font-size: 4em;
   letter-spacing: 2px;
   line-height: 1em
 }
@@ -103,17 +103,17 @@
 }
 
 .services__description {
-  font-size: 1.8rem;
+  font-size: 1.8em;
   font-weight: 500;
   line-height: 1.3em;
-  max-width: 37.5rem;
+  max-width: 20.83em;
   opacity: .8
 }
 
 .services__link {
   display: block;
   font-family: Involve, sans-serif;
-  font-size: 1.8rem;
+  font-size: 1.8em;
   line-height: 1.33em;
   margin-block: auto 0;
   position: relative;
@@ -134,7 +134,7 @@
 
 .services__card_type_performers img {
   height: auto;
-  width: 32.2rem
+  width: 32.2em
 }
 
 .services__card_type_customers {
@@ -143,7 +143,7 @@
 
 .services__card_type_customers img {
   height: auto;
-  width: 65.4rem;
+  width: 65.4em;
 }
 
 .services__card_type_suppliers {
@@ -152,7 +152,7 @@
 
 .services__card_type_suppliers img {
   height: auto;
-  width: 95.4rem;
+  width: 95.4em;
 }
 
 .services__card_type_factories {
@@ -161,7 +161,7 @@
 
 .services__card_type_factories img {
   height: auto;
-  width: 44rem;
+  width: 44em;
 }
 
 .services__card_type_exhibitions {
@@ -170,7 +170,7 @@
 
 .services__card_type_exhibitions img {
   height: auto;
-  width: 31.2rem
+  width: 31.2em
 }
 
 .services__image-mobile {
@@ -185,29 +185,29 @@
 
   .services__card {
     box-sizing: border-box;
-    min-height: 388px;
-    padding: 24px;
-    row-gap: 8px
+    min-height: 38.8em;
+    padding: 2.4em;
+    row-gap: .8em;
   }
 
   .services__card:nth-child(3) .services__title {
-    font-size: 22px
+    font-size: 2.2em
   }
 
   .services__card:nth-child(3) .services__description {
-    font-size: 13px;
+    font-size: 1.3em;
     max-width: none
   }
 
   .services__title {
-    font-size: 22px;
+    font-size: 2.2em;
     font-weight: 400;
     letter-spacing: 1px;
     line-height: 1.36em
   }
 
   .services__description {
-    font-size: 13px;
+    font-size: 1.3em;
     line-height: 1.5em;
     max-width: none
   }
@@ -215,8 +215,8 @@
   .services__link {
     -webkit-backdrop-filter: blur(20px);
     backdrop-filter: blur(20px);
-    font-size: 14px;
-    padding: 12px 47px
+    font-size: 1.4em;
+    padding: 0.857em 3.357em
   }
 
   .services__link:hover {
@@ -230,29 +230,29 @@
   }
 
   .services__card_type_performers img {
-    bottom: 24px;
-    height: 254px;
-    width: 254px
+    bottom: 2.4em;
+    height: 25.4em;
+    width: 25.4em
   }
 
   .services__card_type_customers img {
     height: auto;
-    width: 293px
+    width: 29.3em
   }
 
   .services__card_type_suppliers img {
     height: auto;
-    width: 253px
+    width: 25.3em
   }
 
   .services__card_type_factories img {
     height: auto;
-    width: 227px
+    width: 22.7em
   }
 
   .services__card_type_exhibitions img {
     height: auto;
-    width: 185px
+    width: 18.5em
   }
 
   .services__image {

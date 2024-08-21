@@ -40,16 +40,17 @@ const selectedOptionChosen = computed(() => {
 
 <style lang="scss">
 
-
-
 .header__lang {
   align-items: center;
   display: flex;
-  padding: 5px;
+  padding: 0.357em;
   background-color: inherit;
   border: none;
-  column-gap: .4rem;
-  font-size: 1.3rem;
+  font-size: 1em;
+  font-weight: 500;
+  color: var(--text-color-primary);
+  column-gap: 0.285em;
+
   
   @include hover {
     color: var(--text-color-ternary);
@@ -64,52 +65,44 @@ const selectedOptionChosen = computed(() => {
 
 .header__lang-icon {
   background-color: #fff;
-  border-radius: 15px;
+  border-radius: 1.07em;
   box-shadow: 0 0 0 2px #fff;
-  height: 15px;
-  min-width: 15px;
-  width: 15px;
+  height: 1.07em;
+  min-width: 1.07em;
+  width: 1.07em;
 }
 
 .header__lang-dropdown {
-  width: 8px;
+  width: 0.571em;
   height: auto;
 }
 
 .header__lang-item {
   border: none;
   width: 100%;
-  font-size: 1.4rem;
+  font-size: 1em;
   display: flex;
   align-items: center;
-  column-gap: .4rem;
-  padding-inline: .9rem;
-  padding-block: .5rem;
+  column-gap: 0.28em;
+  padding-inline: 0.642em;
+  padding-block: 0.357em;
   background-color: inherit;
 
   svg {
     background-color: #fff;
-    border-radius: 15px;
+    border-radius: 1.07em;
     box-shadow: 0 0 0 2px #fff;
     height: auto;
-    min-width: 15px;
-    width: 15px;
+    min-width: 1.07em;
+    width: 1.07em;
   }
 }
 
-.header__lang {
-  font-size: 1.4rem;
-  font-weight: 500;
-  color: var(--text-color-primary);
-  display: flex;
-  align-items: center;
-  column-gap: .4rem;
-}
 
 @include mobile {
   .header__lang {
-    font-size: 14px;
-    column-gap: 4px;
+    font-size: 1.4em;
+    column-gap: 0.285em;
     color: var(--text-color-octonary);
   }
 
@@ -120,10 +113,8 @@ const selectedOptionChosen = computed(() => {
   }
 
   .header__lang-item {
-    font-size: 14px;
-    column-gap: 4px;
-    padding-inline: 9px;
-    padding-block: 5px;
+    font-size: 1.4em;
+    column-gap: 0.285em;
   }
   
 }

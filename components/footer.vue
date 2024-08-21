@@ -1,7 +1,7 @@
 <template>
   <footer class="footer">
     <div class="footer__menu-container">
-      <div class="footer__menu scope-container">
+      <div class="footer__menu container">
         <div class="footer__menu-links">
           <div class="footer__logo">
             <NuxtLink to="https://test.bee-online.ru">
@@ -34,7 +34,7 @@
       </div>
     </div>
     <div class="footer__additionally-container ">
-      <div class="footer__additionally scope-container">
+      <div class="footer__additionally container">
         <ul class="footer__additionally-list">
           <li class="footer__additionally-item">
             <NuxtLink to="https://test.bee-online.ru/page-policy" class="footer__additionally-link">Политика
@@ -62,12 +62,12 @@
 
 <style lang="scss">
 .footer {
-  color: #fff
+  color: var(--text-color-octonary)
 }
 
 .footer__menu-container {
   overflow: hidden;
-  padding-block: 6.8rem 3.6rem;
+  padding-block: 6.8em 3.6em;
   position: relative
 }
 
@@ -84,30 +84,25 @@
   z-index: -1
 }
 
-.footer__menu {
-  margin: 0 auto;
-  max-width: 1520px
-}
-
 .footer__menu-links {
   align-items: center;
-  -moz-column-gap: 14.9rem;
-  column-gap: 14.9rem;
+  -moz-column-gap: 14.9em;
+  column-gap: 14.9em;
   display: flex;
   flex-direction: row;
-  margin-bottom: 3.6rem;
+  margin-bottom: 3.6em;
 }
 
 .footer__list {
   align-items: center;
-  -moz-column-gap: 3.2rem;
-  column-gap: 3.2rem;
+  -moz-column-gap: 3.2em;
+  column-gap: 3.2em;
   display: flex
 }
 
 .footer__link {
-  color: #fff;
-  font-size: 1.6rem;
+  color: var(--text-color-octonary);
+  font-size: 1.6em;
   font-weight: 600;
   position: relative;
   z-index: 4
@@ -115,16 +110,16 @@
 
 .footer__logo img {
   height: auto;
-  width: 28.4rem
+  width: 28.4em
 }
 
 .footer__copyright {
-  color: #fff;
-  font-size: 1.4rem;
+  color: var(--text-color-octonary);
+  font-size: 1.4em;
   font-weight: 500;
   line-height: 1.42em;
   margin: 0;
-  max-width: 35.1rem;
+  max-width: 25.07em;
   opacity: .8
 }
 
@@ -133,7 +128,7 @@
   opacity: .5;
   position: absolute;
   right: 0;
-  width: 545px;
+  width: 54.5em;
   height: auto;
   z-index: 0
 }
@@ -143,31 +138,29 @@
 }
 
 .footer__additionally {
-  margin: 0 auto;
-  max-width: 1520px;
-  padding-block: 2.6rem
+  padding-block: 2.6em
 }
 
 .footer__additionally-list {
   align-items: center;
-  -moz-column-gap: 3.2rem;
-  column-gap: 3.2rem;
+  -moz-column-gap: 3.2em;
+  column-gap: 3.2em;
   display: flex
 }
 
 .footer .footer__additionally-link {
   color: hsla(0, 0%, 100%, .5);
-  font-size: 1.3rem;
-  font-weight: 600
+  font-size: 1.3em;
+  font-weight: 600;
 }
 
-@media screen and (max-width: 991px) {
+@include mobile {
   .footer .scope-container {
-    padding-inline: 32px
+    padding-inline: 3.2em
   }
 
   .footer__menu-container {
-    padding-block: 32px
+    padding-block: 3.2em
   }
 
   .footer__menu-container:before {
@@ -177,17 +170,17 @@
   .footer__menu {
     display: flex;
     flex-direction: column;
-    min-height: 525px;
+    min-height: 52.5em;
     box-sizing: border-box;
   }
 
   .footer__logo img {
-    width: 200px
+    width: 20em
   }
 
   .footer__menu-links {
-    row-gap: 44px;
-    margin-bottom: 32px;
+    row-gap: 4.4em;
+    margin-bottom: 3.2em;
   }
 
   .footer__list,
@@ -198,41 +191,41 @@
 
   .footer__list {
     position: relative;
-    row-gap: 32px
+    row-gap: 3.2em
   }
 
   .footer__link {
-    font-size: 16px
+    font-size: 1.6em
   }
 
   .footer__copyright {
     display: block;
-    font-size: 14px;
+    font-size: 1.4em;
     margin-block: auto 0;
     max-width: none
   }
 
   .footer__additionally {
-    padding-block: 32px
+    padding-block: 3.2em
   }
 
   .footer__additionally-list {
     align-items: flex-start;
     flex-direction: column;
-    row-gap: 24px
+    row-gap: 2.4em
   }
 
   .footer .footer__additionally-link {
-    font-size: 13px
+    font-size: 1.3em;
   }
 
   .footer__pattern {
-    bottom: 9px;
+    bottom: .9em;
     height: auto;
-    left: 13px;
-    max-width: calc(100% - 26px);
+    left: 1.3em;
+    max-width: calc(100% - 2.6em);
     right: auto;
-    width: 350px
+    width: 35em;
   }
 }
 </style>

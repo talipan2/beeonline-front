@@ -21,19 +21,19 @@ const isOpen = ref(false);
 
   .header__location {
     display: flex;
-    column-gap: .4rem;
+    column-gap: 0.28em;
     align-items: center;
   }
 
   .header__location-value {
-    font-size: 1.4rem;
+    font-size: 1em;
     font-weight: 500;
     color: var(--text-color-primary);
   }
 
   @include mobile {
     .header__location-value {
-      font-size: 14px;
+      font-size: 1em;
       color: var(--text-color-octonary);
     }
   }

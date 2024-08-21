@@ -118,18 +118,18 @@ watch(isOpenModal, (newVal) => {
 .header-menu {
 
   .modal-body {
-    width: 290px;
+    width: 29em;
   }
 
   &__header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 15px;
+    margin-bottom: 1.5em;
   }
 
   &__search {
-    margin-bottom: 15px;
+    margin-bottom: 1em;
   }
 
   &__user-data {
@@ -137,23 +137,23 @@ watch(isOpenModal, (newVal) => {
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    column-gap: 12px;
-    padding-block: 15px;
-    margin-block: 15px;
+    column-gap: 1.2em;
+    padding-block: 1.5em;
+    margin-block: 1.5em;
     border-bottom: 1px solid var(--text-color-ternary);
     border-top: 1px solid var(--text-color-ternary);
 
   }
 
   &__user-image {
-    width: 30px;
-    height: 30px;
-    border-radius: 30px;
+    width: 3em;
+    height: 3em;
+    border-radius: 3em;
     overflow: hidden;
   }
 
   &__user-info { 
-    font-size: 14px;
+    font-size: 1.4em;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -162,7 +162,7 @@ watch(isOpenModal, (newVal) => {
   }
 
   &__user-role{
-    font-size: 12px;
+    font-size: 0.857em;
   }
 
   &__dropdown-icon {
@@ -174,25 +174,25 @@ watch(isOpenModal, (newVal) => {
   &__link-list {
     display: flex;
     flex-direction: column;
-    row-gap: 10px;
-    font-size: 16px;
+    row-gap: 0.625em;
+    font-size: 1.6em;
     color: var(--text-color-octonary);
-    padding: 10px 0 30px 40px;
+    padding: 0.625em 0 1.9em 2.5em;
     font-weight: 300;
     border-bottom: 1px solid var(--text-color-ternary);
-    margin-bottom: 20px;
+    margin-bottom: 1.25em;
   }
 
   &__change-role {
-    font-size: 12px;
+    font-size: 1.2em;
     color: var(--text-color-octonary);
     text-transform: uppercase;
     display: flex;
     align-items: center;
-    column-gap: 7.5px;
-    padding: 7.5px 7.5px 27.5px 30px;
+    column-gap: 0.625em;
+    padding: 0.625em 0.625em 2.291em 2.5em;
     border-bottom: 1px solid var(--text-color-ternary);
-    margin-bottom: 20px;
+    margin-bottom: 1.66em;
 
     svg {
       fill: #fff;
@@ -221,23 +221,13 @@ watch(isOpenModal, (newVal) => {
 
   &__sign-out {
     border-top: 1px solid #fff;
-    padding-top: 10px;
+    padding-top: 1em;
   }
 
     .fade-enter-active,
     .fade-leave-active {
       transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
     }
-  
-    // .fade-enter-from,
-    // .fade-leave-to {
-    //   opacity: 0;
-    // }
-  
-    // .fade-enter-to,
-    // .fade-leave-from {
-    //   opacity: 1;
-    // }
 
 .fade-enter-from {
   transform: translateY(-10%);

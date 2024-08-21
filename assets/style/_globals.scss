@@ -162,3 +162,9 @@ img {
     font-size: clamp(6.5px, calc((2.2vw) * .333333), 10px);
   }
 }
+
+@include mobile{
+  html {
+    font-size: 10px;
+  }
+}
