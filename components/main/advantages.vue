@@ -41,45 +41,45 @@
 .advantages__title {
   color: var(--text-color-hexadecimal);
   font-family: SongerGrotesque, sans-serif;
-  font-size: 6.4rem;
+  font-size: 6.4em;
   font-weight: 700;
   line-height: 1.14em;
-  margin-block: 0 2.4rem;
+  margin-block: 0 .375em;
   text-align: center;
   text-transform: uppercase
 }
 
 .advantages__description {
   color: #797b89;
-  font-size: 1.8rem;
+  font-size: 1.8em;
   font-weight: 500;
   line-height: 1.44em;
-  margin-block: 0 6.6rem;
+  margin-block: 0 3.66em;
   margin-inline: auto;
-  max-width: 375px;
+  max-width: 20.83em;
   text-align: center
 }
 
 .advantages__cards {
   display: grid;
-  gap: 2.4rem;
-  grid-template-columns: 19.4rem 26.5rem 43.3rem 26.5rem 26.5rem;
-  grid-template-rows: repeat(2, 23.4rem)
+  gap: 2.4em;
+  grid-template-columns: 19.4em 26.5em 43.3em 26.5em 26.5em;
+  grid-template-rows: repeat(2, 23.4em)
 }
 
 .advantages__card {
   background-color: #f2f0f8;
-  border-radius: 24px;
+  border-radius: 2.4em;
   box-sizing: border-box;
   overflow: hidden;
-  padding: 2.4rem 3.2rem;
+  padding: 2.4em 3.2em;
   position: relative
 }
 
 .advantages__card h3 {
   color: var(--text-color-hexadecimal);
   font-family: Coolvetica, sans-serif;
-  font-size: 2rem;
+  font-size: 2em;
   font-weight: 400;
   line-height: 1.2em;
   margin: 0
@@ -99,32 +99,32 @@
 }
 
 .advantages__card_type_protection h3 {
-  max-width: 196px
+  max-width: 9.8em;
 }
 
 .advantages__card_type_protection img {
-  height: 21.2rem;
-  right: -7px;
-  width: 21.2rem
+  height: 21.2em;
+  right: - .7em;
+  width: 21.2em
 }
 
 .advantages__card_type_navigation {
   grid-column: 3;
   grid-row: 1/span 2;
-  max-width: 433px
+  max-width: 43.3em
 }
 
 .advantages__card_type_navigation h3 {
-  font-size: 3.6rem;
+  font-size: 3.6em;
   line-height: 1.16em;
   text-align: center
 }
 
 .advantages__card_type_navigation img {
-  height: 34.5rem;
+  height: 34.5em;
   right: 50%;
   transform: translateX(50%);
-  width:34.5rem;
+  width: 34.5em;
 }
 
 .advantages__card_type_catalog {
@@ -137,10 +137,10 @@
 }
 
 .advantages__card_type_catalog img {
-  bottom: -20px;
-  height: 17rem;
-  right: -10px;
-  width: 17rem;
+  bottom: -2em;
+  height: 17em;
+  right: -1em;
+  width: 17em;
 }
 
 .advantages__card_type_rating {
@@ -153,10 +153,10 @@
 }
 
 .advantages__card_type_rating img {
-  height: 18.1rem;
+  height: 18.1em;
   right: 50%;
   transform: translateX(50%);
-  width: 22.1rem
+  width: 22.1em
 }
 
 .advantages__card_type_choice {
@@ -169,27 +169,27 @@
 }
 
 .advantages__card_type_choice img {
-  bottom: -5px;
-  height: 14.3rem;
-  right: -10px;
-  width: 14.3rem
+  bottom: -.5em;
+  height: 14.3em;
+  right: -1em;
+  width: 14.3em
 }
 
 .advantages__card_type_negotiation {
   box-sizing: border-box;
   grid-column: 4/span 2;
   grid-row: 2/span 1;
-  max-width: 400px
+  max-width: 40em
 }
 
 .advantages__card_type_negotiation h3 {
-  max-width: 208px
+  max-width: 20.8em
 }
 
 .advantages__card_type_negotiation img {
-  bottom: -25px;
-  height: 23.9rem;
-  width: 23.9rem;
+  bottom: -2.5em;
+  height: 23.9em;
+  width: 23.9em;
 }
 
 @media screen and (max-width: 1800px) {
@@ -198,28 +198,28 @@
   }
 }
 
-@media screen and (max-width: 991px) {
+@include mobile {
   .advantages__title {
-    font-size: 28px;
-    margin-bottom: 8px
+    font-size: 2.8em;
+    margin-bottom: .28em;
   }
 
   .advantages__description {
-    font-size: 16px;
-    margin-bottom: 32px
+    font-size: 1.6em;
+    margin-bottom: 2em;
   }
 
   .advantages__cards {
     grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: 195px 136px 136px 195px
+    grid-template-rows: 19.5em 13.6em 13.6em 19.5em
   }
 
   .advantages__card {
-    padding: 16px
+    padding: 1.6em
   }
 
   .advantages__card h3 {
-    font-size: 13px;
+    font-size: 1.3em;
     text-align: start
   }
 
@@ -231,14 +231,14 @@
   }
 
   .advantages__card_type_navigation h3 {
-    font-size: 20px;
+    font-size: 2em;
     text-align: center
   }
 
   .advantages__card_type_navigation img {
-    bottom: 13px;
-    height: 124px;
-    width: 124px
+    bottom: 1.3em;
+    height: 12.4em;
+    width: 12.4em;
   }
 
   .advantages__card_type_choice {
@@ -249,9 +249,9 @@
 
   .advantages__card_type_choice img {
     bottom: 0;
-    height: 84px;
-    right: 3px;
-    width: 84px
+    height: 8.4em;
+    right: .3em;
+    width: 8.4em;
   }
 
   .advantages__card_type_catalog {
@@ -262,9 +262,9 @@
 
   .advantages__card_type_catalog img {
     bottom: 0;
-    height: 90px;
-    right: 3px;
-    width: 90px
+    height: 9em;
+    right: .3em;
+    width: 9em;
   }
 
   .advantages__card_type_protection {
@@ -274,9 +274,9 @@
   }
 
   .advantages__card_type_protection img {
-    height: 83px;
+    height: 8.3em;
     right: 0;
-    width: 83px
+    width: 8.3em
   }
 
   .advantages__card_type_negotiation {
@@ -286,10 +286,10 @@
   }
 
   .advantages__card_type_negotiation img {
-    bottom: -8px;
-    height: 100px;
-    right: 8px;
-    width: 100px
+    bottom: -.8em;
+    height: 10em;
+    right: .8em;
+    width: 10em;
   }
 
   .advantages__card_type_rating {
@@ -299,15 +299,15 @@
   }
 
   .advantages__card_type_rating h3 {
-    font-size: 20px;
+    font-size: 2em;
     margin: 0 auto;
-    max-width: 150px;
+    max-width: 7.5em;
     text-align: center
   }
 
   .advantages__card_type_rating img {
-    height: 152px;
-    width: 152px
+    height: 15.2em;
+    width: 15.2em
   }
 }
 </style>

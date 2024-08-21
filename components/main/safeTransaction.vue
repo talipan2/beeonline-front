@@ -20,45 +20,45 @@
   background-position: 0 0;
   background-repeat: no-repeat;
   background-size: cover;
-  border-radius: 24px;
-  padding: 7rem 8.6rem 5.8rem;
+  border-radius: 2.4em;
+  padding: 7em 8.6em 5.8em;
   position: relative
 }
 
 .safe-transaction__title {
   color: var(--text-color-octonary);
   font-family: SongerGrotesque, sans-serif;
-  font-size: 6.4rem;
+  font-size: 6.4em;
   font-weight: 700;
   line-height: 1.14em;
-  margin-block: 0 3.2rem;
-  max-width: 64rem;
+  margin-block: 0 .5em;
+  max-width: 10em;
 }
 
 .safe-transaction__text {
   color: var(--text-color-octonary);
-  font-size: 2rem;
+  font-size: 2em;
   font-weight: 500;
   line-height: 1.5em;
-  margin-block: 0 5.6rem;
-  max-width: 45.5rem;
+  margin-block: 0 2.8em;
+  max-width: 22.75em;
   opacity: .8
 }
 
 .safe-transaction__image {
-  bottom: 2rem;
+  bottom: 2em;
   height: auto;
   position: absolute;
-  right: 7.7rem;
-  width: 61.4rem;
+  right: 7.7em;
+  width: 61.4em;
   z-index: 2
 }
 
 .safe-transaction__pattern {
-  border-radius: 0 0 24px 24px;
+  border-radius: 0 0 2.4em 2.4em;
   bottom: 0;
   height: auto;
-  max-width: 80rem;
+  max-width: 80em;
   position: absolute;
   right: 0;
   z-index: 1
@@ -66,15 +66,15 @@
 
 .safe-transaction__link {
   font-family: Involve, sans-serif;
-  font-size: 1.8rem;
+  font-size: 1.8em;
   font-weight: 700;
   line-height: 1.3em;
   display: inline-block;
 }
 
-@media screen and (max-width: 991px) {
+@include mobile {
   .safe-transaction {
-    margin-bottom: 120px
+    margin-bottom: 12em;
   }
 
   .safe-transaction__pattern {
@@ -86,7 +86,7 @@
     right: 50%;
     top: -50px;
     transform: translateX(50%);
-    width: 260px
+    width: 26em;
   }
 
   .safe-transaction__container {
@@ -95,29 +95,29 @@
     border-radius: 0;
     display: flex;
     flex-direction: column;
-    padding-block: 212px 32px
+    padding-block: 21.2em 3.2em
   }
 
   .safe-transaction__title {
-    font-size: 28px;
-    margin-bottom: 24px;
-    max-width: 253px;
+    font-size: 2.8em;
+    margin-bottom: .85em;
+    max-width: 9.03em;
     text-align: center
   }
 
   .safe-transaction__text {
-    font-size: 16px;
+    font-size: 1.6em;
     line-height: 1.5em;
-    margin-bottom: 32px;
+    margin-bottom: 2em;
     max-width: none;
     text-align: center
   }
 
   .safe-transaction__link {
     font-family: Coolvetica, sans-serif;
-    font-size: 16px;
+    font-size: 1.6em;
     font-weight: 400;
-    margin-block: 12px;
+    margin-block: .75em;
   }
 
 }

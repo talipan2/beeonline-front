@@ -168,24 +168,25 @@ onUnmounted(() => {
 
 .header {
   background-color: var(--bg-secondary-color);
+  font-size: 1.4em; //14
 
   .header__info {
     border-bottom: 1px solid var(--border-color-tertiary);
     display: flex;
     justify-content: space-between;
-    padding-block: 1.6rem;
+    padding-block: 1.14em; //16
   }
 
   .header__list {
     align-items: center;
-    column-gap: 1.6rem;
+    column-gap: 1.14em; // 16
     display: flex
   }
 
   .header__item {
     color: var(--text-color-septenary);
     font-weight: 500;
-    font-size: 1.4rem;
+    font-size: 1em; // 14
   }
 
   .header__item_type-location {
@@ -193,21 +194,21 @@ onUnmounted(() => {
   }
 
   .header__item_type-lang {
-    font-size: 1.4rem;
+    font-size: 1em;
     font-weight: 500;
     color: var(--text-color-primary);
   }
 
   .header__item_type-location a {
     align-items: center;
-    column-gap: .4rem;
+    column-gap: .4em;
     display: flex
   }
 
   .header__item_type-location img {
-    height: 16px;
+    height: 1.14em;
     object-fit: contain;
-    width: 16px
+    width: 1em;
   }
 
   .header__search-icon {
@@ -218,7 +219,7 @@ onUnmounted(() => {
 .header__main-container {
   display: flex;
   justify-content: space-between;
-  padding-block: 2rem 1.7rem;
+  padding-block: 1.428em 1.214em;
   align-items: center;
 }
 
@@ -226,14 +227,14 @@ onUnmounted(() => {
 
 .header__logo-container {
   align-items: center;
-  column-gap: 4rem;
+  column-gap: 2.857em;
   display: flex;
   // flex: 1 0 auto;
 }
 
 .header__logo-container .header__logo-img {
-  height: 5rem;
-  width: 16rem;
+  height: 3.571em;
+  width: 11.428em;
 }
 
 .header__logo-button {
@@ -241,9 +242,9 @@ onUnmounted(() => {
   border-radius: 100px;
   color: var(--text-color-octonary);
   cursor: pointer;
-  font-size: 1.6rem;
+  font-size: 1.142em;
   font-weight: 600;
-  padding: 1.2rem 2.4rem;
+  padding: 0.75em 1.5em;
   line-height: 1em;
   @include transition(background-color, .2s, ease-in-out);
 }
@@ -258,9 +259,9 @@ onUnmounted(() => {
 }
 
 .header__menu-list {
-  column-gap: 3.2rem;
   display: flex;
-  font-size: 1.6rem;
+  font-size: 1.142em;
+  column-gap: 2em;
   font-weight: 600;
   justify-content: space-between
 }
@@ -272,26 +273,26 @@ onUnmounted(() => {
 
 .header__auth {
   align-items: center;
-  column-gap: 1.6rem;
+  column-gap: 1.142em;
   display: flex;
 }
 
-.header__search {
-  align-items: center;
-  border-radius: 100px;
-  display: flex;
-  height: 4.1rem;
-  justify-content: center;
-  position: relative;
-  width: 4.1rem
-}
+// .header__search {
+//   align-items: center;
+//   border-radius: 100px;
+//   display: flex;
+//   height: 4.1rem;
+//   justify-content: center;
+//   position: relative;
+//   width: 4.1rem
+// }
 
-.header__search img {
-  height: 2rem;
-  -o-object-fit: contain;
-  object-fit: contain;
-  width: 2rem;
-}
+// .header__search img {
+//   height: 2rem;
+//   -o-object-fit: contain;
+//   object-fit: contain;
+//   width: 2rem;
+// }
 
 .header__login,
 .header__menu-btn {
@@ -302,11 +303,7 @@ onUnmounted(() => {
   display: none;
 }
 
-.header__l {
-
-}
-
-@media screen and (max-width: 887px) {
+@include mobile {
 
   .header__auth,
   .header__info,
@@ -316,7 +313,7 @@ onUnmounted(() => {
   }
 
   .header__main {
-    padding-block: 7px
+    padding-block: 0;
   }
 
   .d-none {
@@ -324,31 +321,30 @@ onUnmounted(() => {
   }
 
   .header__logo-container {
-    -moz-column-gap: 12px;
-    column-gap: 12px
+    column-gap: 0.857em
   }
 
   .header__logo-container .header__logo img {
     height: auto;
-    width: 133px
+    width: 9.5em
   }
 
   .header__main-container {
-    padding-block: 7px;
+    padding-block: .5em;
   }
 
   .header__menu-btn {
     background-color: inherit;
     border: none;
     display: block;
-    height: 24px;
+    height: 1.714em;
     padding: 0;
-    width: 24px;
+    width: 1.714em;
     position: relative;
   }
 
   .header__menu-btn i {
-    font-size: 24px;
+    font-size: 1.714em;
   }
 
   .header__login {
@@ -357,26 +353,10 @@ onUnmounted(() => {
 
   .header__logo-container .header__logo-img {
     height: auto;
-    width: 133px;
+    width: 9.5em;
   }
 }
 }
-
-// .header__menu-icon {
-//     width: 24px;
-//     height: 24px;
-//     cursor: pointer;
-//     transition: transform 0.3s ease;
-
-//     path {
-//       transition: d 0.3s ease;
-//     }
-// }
-
-
-// .header__menu-btn_active .header__menu-icon path {
-//     rotate: 90deg;
-// }
 
 .header__menu-btn>div {
     position: absolute;

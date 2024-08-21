@@ -21,11 +21,12 @@
 
 <style lang="scss">
 .search-options {
-    padding-block: 20rem 5rem}
+    padding-block: 20em 5em
+}
 
 .search-options__list {
-    -moz-column-gap: 4rem;
-    column-gap: 4rem;
+    -moz-column-gap: 4em;
+    column-gap: 4em;
     display: flex;
     justify-content: space-between;
 }
@@ -33,19 +34,19 @@
 .search-options__card {
     align-items: center;
     background-color: #f6f4ff;
-    border-radius: 24px;
+    border-radius: 2.4em;
     display: flex;
     flex-direction: column;
-    max-width: 74rem;
-    padding: 4rem 4rem 4.9rem;
-    row-gap: 2.4rem;
+    max-width: 74em;
+    padding: 4em 4em 4.9em;
+    row-gap: 2.4em;
     width: 100%
 }
 
 .search-options__title {
-    color: #2a1947;
+    color: var(--text-color-hexadecimal);
     font-family: Coolvetica,sans-serif;
-    font-size: 4.8rem;
+    font-size: 4.8em;
     font-weight: 400;
     line-height: .91em;
     margin: 0;
@@ -54,11 +55,11 @@
 
 .search-options__description {
     color: var(--text-color-octal);
-    font-size: 1.6rem;
+    font-size: 1.6em;
     font-weight: 400;
     line-height: 1.5em;
     margin: 0;
-    max-width: 38.3rem;
+    max-width: 23.9em;
     text-align: center
 }
 
@@ -69,45 +70,45 @@
 }
 
 .search-options__image {
-    height: 34.3rem;
-    margin-top: 1.6rem;
+    height: 34.3em;
+    margin-top: 1.6em;
     -o-object-fit: contain;
     object-fit: contain;
-    width: 34.3rem;
+    width: 34.3em;
 }
 
-@media screen and (max-width: 991px) {
+@include mobile {
     .search-options {
-        padding-block:120px 68px
+        padding-block: 12rem 6.8rem;
     }
 
     .search-options__list {
         align-items: center;
         flex-direction: column;
-        row-gap: 16px
+        row-gap: 1.6em
     }
 
     .search-options__card {
         box-sizing: border-box;
         max-width: none;
-        padding: 24px;
-        row-gap: 8px
+        padding: 2.4em;
+        row-gap: .8em;
     }
 
     .search-options__title {
-        font-size: 22px
+        font-size: 2.2em
     }
 
     .search-options__description {
-        font-size: 13px;
+        font-size: 1.3em;
         max-width: none
     }
 
     .search-options__link {
-        font-size: 16px;
-        margin-top: 12px;
+        font-size: 1.6em;
+        margin-top: .75em;
         order: 4;
-        padding: 12px 24px;
+        padding: .75em 1.5em;
         // width: 224px
     }
 
@@ -120,10 +121,10 @@
     }
 
     .search-options__image {
-        height: 154px;
-        margin-top: 12px;
+        height: 15.4em;
+        margin-top: 1.2em;
         order: 3;
-        width: 154px
+        width: 15,4em;
     }
 }
 </style>

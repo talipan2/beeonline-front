@@ -279,6 +279,7 @@ onMounted(() => {
 .banner {
   background-image: url("~/assets/images/main/banner/banner-bg.jpg");
   margin: 0 auto;
+	font-size: 1em;
   padding-block: 20rem 21rem;
   position: relative;
   background-repeat: no-repeat;
@@ -293,28 +294,28 @@ onMounted(() => {
 
 .banner__title {
   font-family: "SongerGrotesque", sans-serif;
-  font-size: 7.2rem;
+  font-size: 7.2em;
   color: var(--text-color-octonary);
   line-height: 1.14em;
   font-weight: 700;
   text-transform: uppercase;
   display: block;
-  max-width: 952px;
-  margin-block: 0 4rem;
+  max-width: 13.22em;
+  margin-block: 0 .55em;
   position: relative;
   z-index: 2;
   pointer-events: none;
 }
 
 .banner__description {
-  font-size: 2rem;
+  font-size: 2em;
   font-weight: 600;
   line-height: 1.4em;
   color: var(--text-color-octonary);
   display: block;
-  max-width: 387px;
+  max-width: 19.35em;
   opacity: 0.8;
-  margin-bottom: 4.8rem;
+  margin-bottom: 2.4em;
   position: relative;
   z-index: 2;
   pointer-events: none;
@@ -326,11 +327,11 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 33rem;
-  font-size: 2rem;
+  max-width: 16.5em;
+  font-size: 2em;
   line-height: 1.8em;
-  padding: .8rem .8rem .8rem 2.4rem;
-  border-radius: 100px;
+  padding: .4em .4em .4em 1.2em;
+  border-radius: 5em;
   color: var(--text-color-octonary);
   transition: background-color 0.2s ease-in-out;
   position: relative;
@@ -340,9 +341,9 @@ onMounted(() => {
 
 .banner__link div {
   background-color: var(--button-background-quaternary);
-  width: 4.8rem;
-  height: 4.8rem;
-  border-radius: 100px;
+  width: 2.4em;
+  height: 2.4em;
+  border-radius: 5em;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -350,8 +351,8 @@ onMounted(() => {
 }
 
 .banner__link div img {
-  width: 1.6rem;
-  height: 1.6rem;
+  width: .8em;
+  height: .8em;
   transition: filter 0.2s ease-in-out;
 }
 
@@ -378,7 +379,7 @@ onMounted(() => {
   top: 0;
   right: 0;
   z-index: 0;
-  width: 137rem;
+  width: 137em;
   height: auto;
   z-index: 0;
 }
@@ -386,7 +387,7 @@ onMounted(() => {
 .banner #world {
   width: 100%;
   height: 100%;
-  max-width: 1400px;
+  max-width: 140em;
 }
 
 .banner #world canvas {
@@ -403,29 +404,31 @@ onMounted(() => {
 
 @media screen and (max-width: 991px) {
   .banner {
-    padding-block: 100px 15px;
+    padding-block: 10em 1.5em;
   }
 
   .banner__title {
-    font-size: 28px;
+    font-size: 2.8em;
     line-height: 1.2em;
     text-align: center;
-    margin-bottom: 24px;
+    margin-bottom: 0.85em;
+		margin-inline: auto;
+		max-width: 31em;
   }
 
   .banner__description {
-    font-size: 16px;
+    font-size: 1.6em;
     line-height: 1.5em;
     text-align: center;
     max-width: none;
-    margin-bottom: 40px;
+    margin-bottom: 2.5em;
   }
 
   .banner__link {
     margin: 0 auto;
-    font-size: 16px;
-    max-width: 231px;
-    padding: 12px 24px;
+    font-size: 1.6em;
+    max-width: 14.4em;
+    padding: 0.5em .5em .5em 1.5em;
     position: relative;
     z-index: 2;
     -webkit-backdrop-filter: blur(20px);
@@ -433,13 +436,13 @@ onMounted(() => {
   }
 
   .banner__link div {
-    width: 32px;
-    height: 32px;
+    width: 2em;
+    height: 2em;
   }
 
   .banner__link div img {
-    width: 12px;
-    height: 12px;
+    width: .75em;
+    height: .75em;
   }
 
   .banner__link:hover {
@@ -474,9 +477,9 @@ onMounted(() => {
   .banner #world {
     display: flex;
     justify-content: flex-end;
-    height: 430px;
-    margin-top: -120px;
-    min-width: 375px;
+    height: 43em;
+    margin-top: -12em;
+    min-width: 37.5em;
   }
 
   .banner #world canvas {
@@ -495,7 +498,7 @@ onMounted(() => {
     top: auto;
     width: 100%;
     height: auto;
-    max-height: 438px;
+    max-height: 43.8em;
   }
 }
 </style>
