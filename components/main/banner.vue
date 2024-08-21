@@ -412,6 +412,8 @@ onMounted(() => {
     line-height: 1.2em;
     text-align: center;
     margin-bottom: 0.85em;
+		margin-inline: auto;
+		max-width: 31em;
   }
 
   .banner__description {
