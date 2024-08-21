@@ -118,10 +118,6 @@ const emit = defineEmits(['update:modelValue']);
     line-height: 1.2em;
   }
 
-  .dropdown__link_list {
-    margin-bottom: 0.857em;
-  }
-
   .header__dropdown-change-role {
     display: flex;
     align-items: center;

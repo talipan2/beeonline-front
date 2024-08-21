@@ -121,11 +121,22 @@ watch(isOpenModal, (newVal) => {
     width: 29em;
   }
 
+  .modal-dialog {
+    max-height: 100%;
+    box-sizing: border-box;
+    overflow-y: auto;
+    padding-bottom: 3em;
+  }
+
   &__header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 1.5em;
+    
+      .header__location {
+        font-size: 1.4em;
+      }
   }
 
   &__search {

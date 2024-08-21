@@ -61,10 +61,6 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  location: {
-    type: [String, Number],
-    default: null,
-  }
 });
 
 const isOpenModal = ref(props.modelValue);

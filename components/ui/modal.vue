@@ -9,11 +9,13 @@
   >
     <div class="modal-content">
 
-      <a href="javascript:;"
-        class="btn-close close btn"
+      <button href="javascript:;"
+        class="modal-close"
         @click="$emit('update:modelValue', false)"
-        v-if="clickToClose"
-      ></a>
+        v-if="closeButton"
+      >
+        <SvgoClose class="svg-l" />
+      </button>
       <div class="modal-header" v-if="$slots.header">
         <h5 class="modal-title">
           {{ title }}
@@ -49,7 +51,12 @@ props: {
   clickToClose: {
     type: Boolean,
     default: true,
+  },
+  closeButton: {
+    type: Boolean,
+    default: true
   }
+
 },
 computed: {
   contentClass: function () {
@@ -68,7 +75,12 @@ computed: {
   transform: translate(-50%, -50%);
 }
 
-.modal-content {
+.modal-close {
+  position: absolute;
+  right: 0.75em;
+  top: 0.75em;
+  background-color: rgba(0, 0, 0, 0);
+
 }
 
 .modal-title {
@@ -79,7 +91,7 @@ computed: {
 
 .modal {
   .vfm--overlay{
-    background-color: rgba(0, 0, 0, 0.9);
+    background-color: rgba(0, 0, 0, 0.6);
   }
 
   .modal-dialog {
@@ -100,7 +112,7 @@ computed: {
   .modal-dialog {
     top: 2rem;
     right: 0;
-    margin-right: 7%;
+    padding-right: 7%;
     left: auto;
     transform: none;
   }
@@ -109,4 +121,5 @@ computed: {
     background-color: rgba(0, 0, 0, 0.9);
   }
 }
+
 </style>

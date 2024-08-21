@@ -1,13 +1,10 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  modules: ["nuxt-svgo", "@nuxt/image", "nuxt-swiper"],
+  modules: ["nuxt-svgo", "nuxt-swiper"],
   svgo: {
     defaultImport: 'component',
     autoImportPath: './assets/svg/',
     explicitImportsOnly: true,
-  },
-  image: {
-    dir: 'assets',
   },
   
   css: ['~/assets/style/style.scss', 'vue-final-modal/style.css'],

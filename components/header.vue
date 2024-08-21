@@ -75,7 +75,7 @@
         <UiButton to="/" variant="primary" size="small" class="header__login" @click="isAuth = true">Вход</UiButton>
       </div>
     </div>
-    <HeaderMenuMobileModal v-model="isOpenMobileModal" :headerHeight="headerHeight"></HeaderMenuMobileModal>
+    <HeaderMenuMobileModal v-model="isOpenMobileModal" :headerHeight="headerHeight" :closeButton="false"></HeaderMenuMobileModal>
   </header>
 </template>
 
@@ -366,7 +366,7 @@ onUnmounted(() => {
     width: 18px;
     height: 2px;
     margin: auto;
-    background-color: #3C3C53;
+    background-color: #6937a5;
     border-radius: 2px;
     transition: opacity 0s 0.3s, transform 0.3s 0s, top 0.3s 0.3s, width 0s 0.3s;
 }

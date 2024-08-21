@@ -132,7 +132,7 @@ onMounted(() => {
 
   .dropdown__list_secondary {
     padding: 2.4rem;
-    min-width: 276px;
+    min-width: 27.6rem;
     box-sizing: border-box;
   }
 }
