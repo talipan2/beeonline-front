@@ -1,0 +1,130 @@
+<template>
+  <RegisterLayout title="Карточка организации" description="Указанные данные увидят другие участники портала.">
+    <div class="register__input-container">
+      <label class="register__label ">
+        Название компании *
+        <UiInput class="register__input" type="text" placeholder="Компания" :required="true" />
+      </label>
+      <div class="register__input-list register__input-list_type_company">
+        <label class="register__label">
+          Загрузить логотип компании
+          <div class="register__company-image">
+            <img src="~/assets/images/nophoto_pc.png">
+            <input type="file" name="logo" accept=".jpeg, .png, .jpg, .gif" @change="onFileChange">
+            <span class="register__company-image-title">Загрузить логотип (до 5Мб. Допустимый формат .jpeg, .png, .jpg,
+              .gif)</span>
+          </div>
+        </label>
+        <label class="register__label">Описание *
+          <div class="register__textarea">
+            <textarea class="" name="description" rows="5"></textarea>
+          </div>
+        </label>
+      </div>
+      <img :src="imagePreview" alt="" />
+      <div class="register__btn-container">
+        <UiButton class="register__btn" variant="senary" size="large">Назад</UiButton>
+        <UiButton class="register__btn" variant="quinary" size="large">Далее
+          <SvgoBtnArrow class="svg-lx" />
+        </UiButton>
+      </div>
+    </div>
+  </RegisterLayout>
+</template>
+
+<script setup>
+
+const selectedFile = ref(null);
+const imagePreview = ref(null);
+
+const onFileChange = (event) => {
+  const file = event.target.files[0];
+  if (file && file.type.startsWith('image/')) {
+    imagePreview.value = URL.createObjectURL(file);
+  } else {
+    console.log('Invalid file type');
+  }
+};
+
+</script>
+
+<style lang="scss">
+.register {
+
+  &__input-list_type_company {
+    margin-top: 1em;
+  }
+
+  &__company-image {
+    margin-top: .5em;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #c4c4c4;
+    position: relative;
+    cursor: pointer;
+    padding-bottom: 63%;
+
+    input {
+      position: absolute;
+      width: 0;
+    }
+
+    span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    min-height: 15%;
+    padding: 1em;
+    line-height: 1;
+    font-size: 12px;
+
+    }
+
+    img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 100%;
+      width: 100%;
+      object-fit: contain;
+      padding: 1em;
+      box-sizing: border-box;
+    }
+  }
+
+  &__textarea {
+    padding-bottom: 63.1%;
+    position: relative;
+    margin-top: .5em;
+
+    textarea {
+      width: 100%;
+      height: 100%;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      position: absolute;
+      padding: 0;
+      resize: none;
+      font-size: 1.23em;
+      padding: 0.625em;
+      box-sizing: border-box;
+      color: rgb(102, 112, 133);
+
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+}
+</style>

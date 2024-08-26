@@ -69,20 +69,24 @@
           <UiButton to="/" variant="secondary" size="around" class="header__search-icon"> 
             <img src="~/assets/images/header/search-icon.svg" alt="Поиск">
           </UiButton>
-          <UiButton to="/" variant="secondary" size="large" type="button" @click="isAuth = true">Вход</UiButton>
-          <UiButton to="/" variant="secondary" size="large">Регистрация</UiButton>
+          <UiButton variant="secondary" size="large" type="button" @click="isOpenAuthModal = true">Вход</UiButton>
+          <UiButton to="/register" variant="secondary" size="large">Регистрация</UiButton>
         </div>
         <UiButton to="/" variant="primary" size="small" class="header__login" @click="isAuth = true">Вход</UiButton>
       </div>
     </div>
     <HeaderMenuMobileModal v-model="isOpenMobileModal" :headerHeight="headerHeight" :closeButton="false"></HeaderMenuMobileModal>
+    <HeaderAuthUserModal v-model="isOpenAuthModal" />
   </header>
 </template>
 
 <script setup>
 
+
+
 const isAuth = ref(false);
 const isOpenMobileModal = ref(false);
+const isOpenAuthModal = ref(false);
 const header = ref(null);
 const headerMain = ref(null);
 const headerMainHeight = ref(null);
@@ -169,6 +173,7 @@ onUnmounted(() => {
 .header {
   background-color: var(--bg-secondary-color);
   font-size: 1.4em; //14
+  font-family: "Inter", sans-serif;
 
   .header__info {
     border-bottom: 1px solid var(--border-color-tertiary);

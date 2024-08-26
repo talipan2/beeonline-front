@@ -7,6 +7,7 @@
       @input="updateValue($event.target.value)"
       :disabled="disabled"
       :placeholder="placeholder"
+      :required="required"
     />
     <slot />
   </div>
@@ -31,6 +32,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  required: {
+    type: Boolean,
+    default: false,
+  }
 });
 
 const emit = defineEmits(['update:modelValue']);
@@ -52,7 +57,13 @@ function updateValue(value) {
     &:focus-within {
       border-color: var(--border-color-input-focus);
       box-shadow: var(--box-shadow-input);
-  }
+    }
+
+    &:has(input:disabled) {
+      background-color: var(--button-disabled-background);
+      color: var(--button-disabled-color);
+    }
+    
   }
 
   .input {

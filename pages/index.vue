@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="main">
     <MainBanner />
     <MainServices />
     <MainBrands />
@@ -9,3 +9,9 @@
     <MainSafeTransaction />
   </div>
 </template>
+
+<style lang="scss">
+.main {
+  font-family: "Inter", sans-serif;
+}
+</style>

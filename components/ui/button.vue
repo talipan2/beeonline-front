@@ -6,7 +6,7 @@
   >
     <slot />
   </NuxtLink>
-  <button v-else :class="buttonClass" :disabled="disabled" @click="emit('click')">
+  <button v-else :class="buttonClass" :disabled="disabled" @click="handleClick">
     <slot />
   </button>
 </template>
@@ -17,7 +17,7 @@ const props = defineProps({
   variant: {
     type: String,
     default: 'primary',
-    validator: value => ['primary', 'secondary', 'tertiary', 'quaternary',].includes(value),
+    validator: value => ['primary', 'secondary', 'tertiary', 'quaternary', 'quinary', 'senary', 'telegram'].includes(value),
   },
   size: {
     type: String,
@@ -51,12 +51,18 @@ const buttonClass = computed(() => {
   ];
 });
 
+const handleClick = () => {
+  console.log(1)
+  emit('click');
+}
+
 </script>
 
 <style lang="scss">
 
 .btn {
   display: flex;
+  border: 2px solid transparent;
   align-items: center;
   text-wrap: nowrap;
   position: relative;
@@ -114,12 +120,69 @@ const buttonClass = computed(() => {
   color: #fff;
   display: block;
   font-size: 1.8rem;
-  line-height: 1.33em;
+  line-height: 1em;
   transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 
   &:hover {
     background-color: var(--button-background-quaternary-hover);
     color: var(--text-color-hover-primary)
+  }
+}
+
+
+.btn-quinary {
+  background-color: var(--button-background-primary);
+  color: var(--text-color-octonary);
+  font-size: 1.8rem;
+  line-height: 1em;
+
+  &:hover {
+    border-color: var(--button-background-primary);
+    background-color: var(--button-background-quaternary-hover);
+    color: var(--text-color-primary);
+
+    svg {
+      fill: var(--text-color-primary);
+
+      path {
+        fill: var(--text-color-primary);
+      }
+    }
+  }
+}
+
+.btn-senary {
+  font-size: 1.6rem;
+  background-color: var(--button-background-quaternary);
+  border-color: #fff;
+  color: var(--text-color-primary);
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3);
+
+  &:hover {
+    background-color: var(--button-background-primary);
+    border-color: var(--button-background-primary);
+    color: var(--text-color-octonary);
+
+    svg {
+      fill: var(--text-color-octonary);
+
+      path {
+        fill: var(--text-color-octonary);
+      }
+    }
+  }
+}
+
+.btn-telegram {
+  font-size: 1.6rem;
+  background-color: var(--button-background-quaternary);
+  border-color: #08c;
+  color: var(--text-color-primary);
+
+  &:hover {
+    background-color: #08c;
+    border-color: #08c;
+    color: var(--text-color-octonary);
   }
 }
 

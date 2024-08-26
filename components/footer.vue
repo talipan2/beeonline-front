@@ -62,7 +62,8 @@
 
 <style lang="scss">
 .footer {
-  color: var(--text-color-octonary)
+  color: var(--text-color-octonary);
+  font-family: "Inter", sans-serif;
 }
 
 .footer__menu-container {
