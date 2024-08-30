@@ -35,7 +35,7 @@ const props = defineProps({
   type: {
     type: String,
     default: 'link',
-    validator: value => ['link', 'button'].includes(value),
+    validator: value => ['link', 'button', 'submit'].includes(value),
   }
 });
 
@@ -52,7 +52,6 @@ const buttonClass = computed(() => {
 });
 
 const handleClick = () => {
-  console.log(1)
   emit('click');
 }
 
@@ -135,6 +134,14 @@ const handleClick = () => {
   color: var(--text-color-octonary);
   font-size: 1.8rem;
   line-height: 1em;
+
+  svg {
+    fill: var(--text-color-octonary);
+
+    path {
+      fill: var(--text-color-octonary);
+    }
+  }
 
   &:hover {
     border-color: var(--button-background-primary);

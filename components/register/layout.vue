@@ -3,9 +3,7 @@
     <h1 class="register__title">Регистрация исполнителя</h1>
     <h2 class="register__subtitle">{{ title }}</h2>
     <p class="register__text">{{ description }}</p>
-    <form>
-      <slot />
-    </form>
+    <slot /> 
     <slot name="soc-reg"/>
   </div>
 </template>

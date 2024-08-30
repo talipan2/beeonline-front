@@ -1,12 +1,14 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  modules: ["nuxt-svgo", "nuxt-swiper"],
+  modules: ["nuxt-svgo", "nuxt-swiper", '@pinia/nuxt'],
   svgo: {
     defaultImport: 'component',
     autoImportPath: './assets/svg/',
     explicitImportsOnly: true,
   },
-  
+  alias: {
+    pinia: "/node_modules/@pinia/nuxt/node_modules/pinia/dist/pinia.mjs"
+  },
   css: ['~/assets/style/style.scss', 'vue-final-modal/style.css'],
   vite: {
     css: {

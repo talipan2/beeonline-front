@@ -1,0 +1,98 @@
+import { defineStore } from 'pinia';
+import Api from '@/api/userApi';
+
+export const useUserStore = defineStore('user', {
+  state: () => ({
+    userData: {},
+    userToken: null,
+    isAuth: false,
+    location: null,
+    settingUser: {
+      location: 1,
+      inn: null,
+      KPP: null,
+      organizationForm: null,
+      ogrn: null,
+      legalAddress: null,
+      companyName: null,
+      companyLogo: null,
+      companyDescription: null,
+      productionCountry: null,
+      selfEmployed: false,
+      registerAddress: null,
+    },
+  }),
+  actions: {
+    async authUser(email, password) {
+      try {
+        const response = await Api.authUser(email, password);
+        if(response.data) {
+          console.log(response.data)
+          // this.userData = response.data.user;
+          this.isAuth = true;
+          this.userToken = response.data.access_token;
+          localStorage.setItem('token', this.userToken);
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    async registerUser(name, email, job='', phone) {
+      try {
+        const response = await Api.registerUser(name, email, job, phone);
+        console.log(response)
+        if(response.data) {
+          // this.userData = response.data.user;
+          this.isAuth = true;
+          this.userToken = response.data.access_token;
+          localStorage.setItem('token', this.userToken);
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    async checkAuth() {
+      try {
+        const response = await Api.checkAuth();
+        if(response.data) {
+          // this.userData = response.data.user;
+          this.isAuth = true;
+          this.userToken = response.data.user.token;
+          localStorage.setItem('token', this.userToken);
+          console.log(response.data.user)
+        }
+      } catch (error) {
+        // this.userToken = null;
+        // localStorage.removeItem('token');
+        // this.isAuth = false;
+        throw error;
+      }
+    },
+
+    async logOut() {
+      try {
+        const response = await Api.logOut();
+        if(response && response.data) {
+          this.userToken = null;
+          localStorage.removeItem('token');
+          this.isAuth = false;
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    async setUserData(data) {
+      try {
+        const response = await Api.setUserData(data);
+        if(response.data.user) {
+          this.userData = response.data.user;
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
+  }
+});

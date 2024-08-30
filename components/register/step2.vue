@@ -1,50 +1,63 @@
 <template>
   <RegisterLayout title="Карточка организации" description="Указанные данные увидят другие участники портала.">
-    <div class="register__input-container">
-      <label class="register__label ">
-        Название компании *
-        <UiInput class="register__input" type="text" placeholder="Компания" :required="true" />
-      </label>
-      <div class="register__input-list register__input-list_type_company">
-        <label class="register__label">
-          Загрузить логотип компании
-          <div class="register__company-image">
-            <img src="~/assets/images/nophoto_pc.png">
-            <input type="file" name="logo" accept=".jpeg, .png, .jpg, .gif" @change="onFileChange">
-            <span class="register__company-image-title">Загрузить логотип (до 5Мб. Допустимый формат .jpeg, .png, .jpg,
-              .gif)</span>
-          </div>
+    <form @submit="handleSubmit">
+      <div class="register__input-container">
+        <label class="register__label ">
+          Название компании *
+          <UiInput class="register__input" type="text" v-model="organizationStore.registerOrg.companyName" placeholder="Компания" :required="true" />
         </label>
-        <label class="register__label">Описание *
-          <div class="register__textarea">
-            <textarea class="" name="description" rows="5"></textarea>
-          </div>
-        </label>
+        <div class="register__input-list register__input-list_type_company">
+          <label class="register__label">
+            Загрузить логотип компании
+            <div class="register__company-image">
+              <img src="~/assets/images/nophoto_pc.png">
+              <input type="file" name="logo" accept=".jpeg, .png, .jpg, .gif" @change="onFileChange">
+              <span class="register__company-image-title">Загрузить логотип (до 5Мб. Допустимый формат .jpeg, .png, .jpg,
+                .gif)</span>
+            </div>
+          </label>
+          <label class="register__label">Описание *
+            <div class="register__textarea">
+              <textarea v-model="organizationStore.registerOrg.companyDescription" class="" name="description" rows="5"></textarea>
+            </div>
+          </label>
+        </div>
+        <div class="register__btn-container">
+          <UiButton type="button" class="register__btn" variant="senary" size="large" @click="router.back">Назад</UiButton>
+          <UiButton type="submit" class="register__btn" variant="quinary" size="large">Далее
+            <SvgoBtnArrow class="svg-lx" />
+          </UiButton>
+        </div>
       </div>
-      <img :src="imagePreview" alt="" />
-      <div class="register__btn-container">
-        <UiButton class="register__btn" variant="senary" size="large">Назад</UiButton>
-        <UiButton class="register__btn" variant="quinary" size="large">Далее
-          <SvgoBtnArrow class="svg-lx" />
-        </UiButton>
-      </div>
-    </div>
+    </form>
   </RegisterLayout>
 </template>
 
 <script setup>
+import { useOrganizationStore } from '~/store/organizationStore';
+import { useUserStore } from '~/store/userStore';
 
-const selectedFile = ref(null);
+const router = useRouter();
+const userStore = useUserStore();
+const organizationStore = useOrganizationStore();
+
 const imagePreview = ref(null);
 
 const onFileChange = (event) => {
   const file = event.target.files[0];
   if (file && file.type.startsWith('image/')) {
     imagePreview.value = URL.createObjectURL(file);
+    organizationStore.registerOrg.companyLogo = imagePreview.value
   } else {
     console.log('Invalid file type');
   }
 };
+
+
+const handleSubmit = (e) => {
+  e.preventDefault();
+  router.push('/register/step3');
+}
 
 </script>
 
@@ -114,7 +127,6 @@ const onFileChange = (event) => {
       left: 0;
       right: 0;
       position: absolute;
-      padding: 0;
       resize: none;
       font-size: 1.23em;
       padding: 0.625em;

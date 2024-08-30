@@ -15,9 +15,6 @@ body {
   color: var(--text-color-primary);
   // font-size: 10px;
   line-height: 1.5;
-}
-
-.body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -56,6 +53,13 @@ a {
 a, button {
   cursor: pointer;
   transition: color .2s ease, background-color .2s ease, border .2s ease;
+}
+
+.link {
+  &:hover {
+    color: var(--text-color-hover-primary);
+    text-decoration: underline;
+  }
 }
 
 svg, path, circle {
@@ -145,8 +149,28 @@ img {
 }
 
 .flag {
-  border-radius: 1em;
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 15px;
+  width: 1em;
+  height: 1em;
+  line-height: 1;
+  background: url('@/assets/images/flags.png') no-repeat left top / 1em;
 }
+
+.flag_round { border-radius: 1em; }
+.flag_border { box-shadow: 0 0 0 2px #FFF; }
+
+.flag_russia { background-position: 0 -1em; }
+.flag_kazakhstan { background-position: 0 -2em; }
+.flag_belarus { background-position: 0 -3em; }
+.flag_armenia { background-position: 0 -4em; }
+.flag_uzbekistan { background-position: 0 -5em; }
+.flag_kyrgyzstan { background-position: 0 -6em; }
+.flag_it { background-position: 0 -7em; }
+.flag_de { background-position: 0 -8em; }
+.flag_en { background-position: 0 -9em; }
+.flag_fr { background-position: 0 -10em; }
 
 
 .container {

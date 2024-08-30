@@ -1,11 +1,11 @@
 <template>
-  <UiModal title="Авторизация" v-model="isOpen" @confirm="() => confirm()" class="auth-modal modal">
+  <UiModal title="Авторизация" v-model="settingStore.authModalStatus" @confirm="() => confirm()" class="auth-modal modal">
     <template #header />
     <template #content>
-      <form class="auth-modal__form">
-        <UiInput class="auth-modal__input" placeholder="E-mail"/>
+      <form class="auth-modal__form" @submit="handleSubmit">
+        <UiInput class="auth-modal__input" placeholder="E-mail" v-model="email"/>
         <div class="auth-modal__input-container">
-          <UiInput type="password" placeholder="Пароль" class="auth-modal__input auth-modal__input_type-password">
+          <UiInput type="password" placeholder="Пароль" class="auth-modal__input auth-modal__input_type-password" v-model="password">
         </UiInput>
           <button class="auth-modal__show-password">
             <SvgoViews class="svg-lx" fill="#6937a5"/>
@@ -13,14 +13,13 @@
         </div>
 
         <div class="auth-modal__btn-container">
-          <UiButton class="auth-modal__btn" variant="quinary" size="large">Войти</UiButton>
+          <UiButton type="submit" class="auth-modal__btn" variant="quinary" size="large">Войти</UiButton>
           <UiButton class="auth-modal__btn" variant="tertiary" size="large">Войти без пароля</UiButton>
         </div>
         <div class="auth-modal__btn-container">
-          <label class="auth-modal__label">
-            <input type="checkbox">
+          <UiCheckbox variant="square" >
             Запомнить меня
-          </label>
+          </UiCheckbox>
           <NuxtLink to="" class="auth-modal__link">Забыли пароль?</NuxtLink>
         </div>
       </form>
@@ -51,29 +50,28 @@
 
 <script setup>
 
-const props = defineProps({
-  modelValue: {
-    type: Boolean,
-    default: false,
-  },
-});
+import { useUserStore } from '~/store/userStore';
+import { useSettingStore } from '~/store/settingStore';
 
-const isOpen = ref(props.modelValue);
+const userStore = useUserStore();
+const settingStore = useSettingStore();
 
-const emit = defineEmits(['update:modelValue']);
+const email = ref('');
+const password = ref('');
 
+const handleSubmit = (event) => {
+  event.preventDefault();
+  userStore.authUser(email.value, password.value).then((res) => {
+    settingStore.authModalStatus = false;
+    console.log(res)
+  }).catch((err) => {
+    console.log(err)
+  })
+}
 
 const confirm = () => {
-  isOpen.value = false;
+  settingStore.authModalStatus = false;
 };
-
-watch(() => props.modelValue, (newVal) => {
-  isOpen.value = newVal;
-});
-
-watch(() => isOpen.value, (newVal) => {
-  emit('update:modelValue', newVal);
-});
 
 </script>
 

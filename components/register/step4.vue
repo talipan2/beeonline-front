@@ -5,11 +5,11 @@
       <div class="form-group">
         <div class="form-group-data">
           <div class="form-group-data__title">Почта</div>
-          <div class="form-group-data__value">qq@qq.ru</div>
+          <div class="form-group-data__value">{{ userStore.userData.email || '-' }}</div>
         </div>
         <div class="form-group-data">
           <div class="form-group-data__title">Телефон</div>
-          <div class="form-group-data__value">+7 999 999 99 99</div>
+          <div class="form-group-data__value">{{ userStore.userData.phone || '-' }}</div>
         </div>
       </div>
       <UiButton class="register__btn register__btn_type_tg" variant="telegram" size="large">Включить уведомления в
@@ -22,68 +22,107 @@
           <div class="register__check-company-logo">
             <p class="form-group-data__title">Логотип</p>
             <div class="form-group-data__logo">
-              <img src="~/assets/images/nophoto_pc.png" alt="">
+              <img :src="organizationStore.registerOrg.companyLogo  || defaultCompanyLogo" alt="">
             </div>
           </div>
           <div class="register__check-company-details">
             <div class="form-group-data">
               <p class="form-group-data__title">Название</p>
-              <p class="form-group-data__value">Компания</p>
+              <p class="form-group-data__value">{{ organizationStore.registerOrg.companyName || '-' }}</p>
             </div>
             <div class="form-group-data">
               <p class="form-group-data__title">География фактического производства</p>
-              <p class="form-group-data__value">Компания</p>
+              <div class="form-group-data__container">
+                <i class="flag flag_round" 
+                  :class="organizationStore.registerOrg.selectedProductionCountries[0] 
+                  ? selectFlag(organizationStore.registerOrg.selectedProductionCountries[0].countryId) 
+                  :''" 
+                />
+                <p class="register__check-company-city">
+                  {{ 
+                    ( organizationStore.registerOrg.selectedProductionCountries[0] 
+                    ?
+                      `
+                      ${organizationStore.registerOrg.selectedProductionCountries[0].city},
+                      ${organizationStore.registerOrg.selectedProductionCountries[0].region},
+                      ${organizationStore.registerOrg.selectedProductionCountries[0].country}
+                      &nbsp;
+                      `
+                    : '')
+                    || '-' 
+                  }}
+                </p>
+                <a class="register__check-company-more link" href="javascript:;">
+                  {{ organizationStore.registerOrg.selectedProductionCountries.length > 1 
+                    ? '+ еще&nbsp;' + (organizationStore.registerOrg.selectedProductionCountries.length - 1) 
+                    : '' 
+                  }}
+                </a>
+              </div>
             </div>
           </div>
         </div>
         <div class="form-group-data">
           <p class="form-group-data__title">Описание</p>
-          <p class="form-group-data__value">Компания</p>
+          <p class="form-group-data__value">{{ organizationStore.registerOrg.companyDescription || '-' }}</p>
         </div>
       </div>
     </RegisterCheckCard>
     <RegisterCheckCard title="Данные организации"
       text="Указанные данные не разглашаются третьим лицам, и необходимы для успешной работы на портале"
-      changeLink="/register/step2">
+      changeLink="/register/step1">
       <div class="register__organization-data">
         <div class="form-group-data">
           <p class="form-group-data__title">Юридическое названии организации</p>
-          <p class="form-group-data__value">Без имени</p>
+          <p class="form-group-data__value">{{ organizationStore.registerOrg.companyName || '-' }}</p>
         </div>
       </div>
       <div class="form-group">
         <div class="form-group-data">
           <p class="form-group-data__title">Форма организации</p>
-          <p class="form-group-data__value">Другое</p>
+          <p class="form-group-data__value">{{ organizationStore.registerOrg.organizationForm || '-' }}</p>
         </div>
         <div class="form-group-data">
           <p class="form-group-data__title">ИНН</p>
-          <p class="form-group-data__value">-</p>
+          <p class="form-group-data__value">{{ organizationStore.registerOrg.inn || '-' }}</p>
         </div>
         <div class="form-group-data">
           <p class="form-group-data__title">КПП</p>
-          <p class="form-group-data__value">-</p>
+          <p class="form-group-data__value">{{ organizationStore.registerOrg.kpp || '-' }}</p>
         </div>
         <div class="form-group-data">
           <p class="form-group-data__title">ОГРН</p>
-          <p class="form-group-data__value">-</p>
+          <p class="form-group-data__value">{{ organizationStore.registerOrg.ogrn || '-' }}</p>
         </div>
       </div>
       <div class="form-group-data">
         <p class="form-group-data__title">Страна</p>
-        <p class="form-group-data__value">Россия</p>
+        <p class="form-group-data__value">{{ organizationStore.registerOrg.location || '-' }}</p>
       </div>
       <div class="form-group-data">
         <p class="form-group-data__title">Юридический адрес</p>
-        <p class="form-group-data__value">-</p>
+        <p class="form-group-data__value">{{ organizationStore.registerOrg.registerAddress || '-' }}</p>
       </div>
       <div class="register__btn-container">
-        <UiButton class="register__btn" variant="senary" size="large">Назад</UiButton>
+        <UiButton type="button" class="register__btn" variant="senary" size="large" @click="router.back">Назад</UiButton>
         <UiButton class="register__btn" variant="quinary" size="large">Подтвердить </UiButton>
       </div>
     </RegisterCheckCard>
   </RegisterLayout>
 </template>
+
+<script setup>
+import { useUserStore } from '~/store/userStore';
+import defaultCompanyLogo from '@/assets/images/nophoto_pc.png';
+import { useOrganizationStore } from '~/store/organizationStore';
+import selectFlag from '~/utils/selectFlag';
+
+const router = useRouter();
+const userStore = useUserStore();
+const organizationStore = useOrganizationStore();
+
+
+</script>
 
 <style lang="scss">
 
@@ -108,12 +147,18 @@
   &-data__value {
     font-size: 1.23em;
   }
+
+  &-data__container {
+    display: flex;
+    align-items: center;
+  }
 }
 .register {
   .register__btn_type_tg {
     text-wrap: wrap;
     text-align: center;
-    max-width: 45%;
+    max-width: 41%;
+    font-size: 1.2em;
   }
 
   &__check-company {
@@ -134,7 +179,9 @@
 
     img {
       width: 100%;
+      height: 100%;
       border: 1px solid #d1d5db;
+      object-fit: cover;
     }
     
   }
@@ -144,9 +191,31 @@
     display: flex;
     flex-direction: column;
     row-gap: 1.53em;
+
+    .form-group-data {
+      flex: 0;
+      margin-bottom: 0;
+    }
+
+    .flag {
+      margin-right: .5em;
+    }
   }
 
-  
+  &__check-company-city {
+    font-size: 1.23em;
+  }
+
+  &__check-company-more {
+    font-size: 1.23em;
+  }
+
+  .form-group-data__logo {
+    width: 100%;
+    height: 9.15em;
+  }
+
+
 }
 
 

@@ -1,20 +1,59 @@
 <template>
+  <div>
   <RegisterLayout title="Города фактического производства *">
     <div class="register__step-three">
       <div class="register__text-container">
         <p class="register__text">Укажите город вашего производства. Если производств несколько - выберите несколько городов, но не более пяти.</p>
         <p class="register__text">Указанные города используются для автоматического добавления в новые услуги и позволят потенциальным заказчикам находить их в поиске по регионам.</p>
       </div>
-        <UiButton class="register__btn register__btn_type_half" variant="tertiary" size="large">Выбрать город или регион</UiButton>
+      <div class="register__city-container">
+        <div v-for="city in selectedCities" :key="city.id" class="register__location">
+          <SvgoChecked  class="svg-m register__selected-icon"/>
+          <p  class="register__city-selected">
+            {{city.city}}, {{ city.region}}, {{city.country}}
+          </p>
+          <button type="button" class="register__location-delete" @click="deleteLocation(city.id)">
+            <SvgoCancel class="svg-m" />
+          </button>
+        </div>
+      </div>
+        <UiButton type="button" class="register__btn register__btn_type_half" variant="tertiary" size="large" @click="openAuthModal">Выбрать город или регион</UiButton>
       <div class="register__btn-container">
-        <UiButton class="register__btn" variant="senary" size="large">Назад</UiButton>
-        <UiButton class="register__btn" variant="quinary" size="large">Далее
+        <UiButton type="button" class="register__btn" variant="senary" size="large" @click="router.back">Назад</UiButton>
+        <UiButton type="button" class="register__btn" variant="quinary" size="large" @click="router.push({path: '/register/step4'})">Далее
           <SvgoBtnArrow class="svg-lx" />
         </UiButton>
       </div>
     </div>
   </RegisterLayout>
+    <RegisterChooseCityModal v-model="selectedCities"/>
+  </div>
 </template>
+
+<script setup>
+import { useOrganizationStore } from '~/store/organizationStore';
+import { useSettingStore } from '~/store/settingStore';
+;
+const router = useRouter();
+const settingStore = useSettingStore();
+const organizationStore = useOrganizationStore();
+const selectedCities = ref([]);
+
+
+function deleteLocation(id) {
+  selectedCities.value = selectedCities.value.filter(selectedCity => selectedCity.id !== id);
+  organizationStore.registerOrg.countryId = organizationStore.registerOrg.countryId.filter(cityId => cityId !== id);
+}
+
+watch(() => selectedCities.value, (newVal) => {
+  organizationStore.registerOrg.selectedProductionCountries = [...organizationStore.registerOrg.selectedProductionCountries, ...newVal];
+});
+
+function openAuthModal () {
+  settingStore.chooseLocationModal = true;
+}
+
+</script>
 
 <style lang="scss">
 
@@ -29,7 +68,8 @@
     }
 
     .register__btn_type_half {
-      max-width: 44%;
+      max-width: 47%;
+      width: 100%;
       margin-bottom: 2em;
     }
 
@@ -38,6 +78,36 @@
       line-height: 1em;
     }
   }
+
+  &__city-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5em 3em;
+    margin-bottom: 3em;
+  }
+
+  &__location {
+    flex: 0 1 45%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    column-gap: .5em;
+  }
+
+  &__selected-icon {
+    width: 1.8em;
+  }
+
+  &__city-selected {
+    font-size: 1.6em;
+    line-height: 1em;
+    width: 100%;
+  }
+
+  &__location-delete {
+    line-height: 1em;
+  }
 }
+
 
 </style>

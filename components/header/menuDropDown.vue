@@ -14,12 +14,12 @@
           <img src="~/assets/images/header/profile-image.jpg" alt="">
         </div>
         <div class="header__user-data">
-          <div class="header__user-name">Заказчик 1</div>
+          <div class="header__user-name">{{ userData.name }}</div>
           <div class="header__user-role">
             Исполнитель
           </div>
           <div class="header__user-role">
-            (ID=2)
+            (ID={{ userData.id }})
           </div>
         </div>
       </div>
@@ -37,13 +37,16 @@
         В кабинет<br>менеджера сделок
       </UiButton>
       <div class="header__dropdown-logout">
-        <a class="header__dropdown-links" href="javascript:;" @click="emit('update:modelValue', false)">Выход</a>
+        <a class="header__dropdown-links" href="javascript:;" @click="logOut">Выход</a>
       </div>
     </template>
   </UiDropDown>
 </template>
 
 <script setup>
+import { useUserStore } from '~/store/userStore';
+
+const userStore = useUserStore();
 
 const props = defineProps({
   modelValue: {
@@ -53,6 +56,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['update:modelValue']);
+const userData = computed(() => userStore.userData);
 
   const dropdownMenuLinks = [
     { label: 'Рабочий стол', value: '/' },
@@ -67,6 +71,12 @@ const emit = defineEmits(['update:modelValue']);
     { label: 'Техническая поддержка', value: '/' },
     { label: 'Новости', value: '/' },
   ]
+
+const logOut = () => {
+  userStore.logOut()
+  .then(res => console.log(res))
+  .catch(err => console.log(err))
+};
 
 </script>
 

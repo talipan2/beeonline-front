@@ -6,12 +6,12 @@
           <div class="checklist__title">Заполнение профиля</div>
           <div class="checklist__status">низкое</div>
         </div>
-        <div class="checklist__progress">
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
+        <div class="checklist__progress" :class="progressClass">
+          <div v-for="(step, index) in progressSteps" :key="index" 
+          :class="[
+          'checklist__progress-step', { active: index < progressLevel },
+          ]"
+          ></div>
         </div>
       </div>
     </div>
@@ -20,17 +20,84 @@
     </Advice>
     <div class="checklist__collapse">
       <ul class="checklist__steps">
-        <li class="checklist__step checklist__step_current">Регистрационные данные</li>
-        <li class="checklist__step">Данные организации</li>
-        <li class="checklist__step">Карточка организации</li>
-        <li class="checklist__step">Города фактического производства</li>
-        <li class="checklist__step">Проверка</li>
+        <li v-for="step in steps" :key="step.path" :class="[
+          'checklist__step',
+          {
+            'checklist__step_current': isCurrentStep(step.path),
+            'checklist__step_passed': isStepPassed(step.path)
+          }
+        ]">
+          {{ step.label }}
+        </li>
       </ul>
     </div>
   </div>
 </template>
 
+<script setup>
+import { useOrganizationStore } from '~/store/organizationStore';
+
+
+const route = useRoute();
+const organizationStore = useOrganizationStore();
+
+const steps = [
+  { label: 'Регистрационные данные', path: '/register' },
+  { label: 'Данные организации', path: '/register/step1' },
+  { label: 'Карточка организации', path: '/register/step2' },
+  { label: 'Города фактического производства', path: '/register/step3' },
+  { label: 'Проверка', path: '/register/step4' },
+];
+
+const progressLevel = computed(() => {
+  if (nullPercentage.value <= 10) return '5';
+  if (nullPercentage.value <= 20) return '4';
+  if (nullPercentage.value <= 30) return '3';
+  if (nullPercentage.value <= 60) return '2';
+  if (nullPercentage.value <= 99) return '1';
+
+  return '';
+});
+
+
+
+const progressSteps = [1, 2, 3, 4, 5]; 
+
+const progressClass = computed(() => {
+  if (nullPercentage.value <= 20) return 'checklist_100';
+  if (nullPercentage.value <= 30) return 'checklist_80';
+  if (nullPercentage.value <= 60) return 'checklist_50';
+  return '';
+});
+
+const isCurrentStep = (stepPath) => {
+  return route.path === stepPath;
+};
+
+const isStepPassed = (stepPath) => {
+  return steps.findIndex(step => step.path === stepPath) < steps.findIndex(step => step.path === route.path);
+};
+
+
+const nullPercentage = computed(() => {
+  const registerOrg = organizationStore.registerOrg;
+  const totalFields = Object.keys(registerOrg).length;
+  const nullCount = Object.values(registerOrg).filter(value => value === null || value === '' || (Array.isArray(value) && value.length === 0)).length;
+  return parseInt((nullCount / totalFields) * 100);
+});
+
+watch(() => nullPercentage.value, (newVal) => {
+  console.log(newVal)
+})
+
+</script>
+
 <style lang="scss">
+
+.checklist {
+    height: fit-content;
+}
+
 .checklist__header {
   display: flex;
 }
@@ -126,15 +193,15 @@
     background-color: #EF3520;
 }
 
-.checklist_50 .checklist__progress > div.active:before {
+.checklist_50 > div.active:before {
     background-color: #FBBC05;
 }
 
-.checklist_80 .checklist__progress > div.active:before {
+.checklist_80 > div.active:before {
     background-color: #BCBF2F;
 }
 
-.checklist_100 .checklist__progress > div.active:before {
+.checklist_100 > div.active:before {
     background-color: #6DBF2F;
 }
 

@@ -4,7 +4,7 @@
       <h5 class="register__check-card-title">
         {{ title }}
       </h5>
-      <NuxtLink :to="changeLink" class="register__check-card-link" v-if="changeLink">Изменить</NuxtLink>
+      <NuxtLink :to="changeLink" class="register__check-card-link link" v-if="changeLink">Изменить</NuxtLink>
     </div>
     <p class="register__check-card-text">
       {{ text }}
@@ -52,6 +52,11 @@ const props = defineProps({
     padding-bottom: 1.53em;
     margin-bottom: 1.53em;
     border-bottom: 1px solid var(--border-color-secondary);
+  }
+
+  &__check-card-link {
+    color: var(--text-color-ternary);
+    font-size: 1.2em;
   }
 }
 

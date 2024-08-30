@@ -1,18 +1,12 @@
 <template>
-  <UiModal v-model="isOpenModal" title="Выберите город" @confirm="() => confirm()" class="choose-city-modal modal">
+  <UiModal v-model="settingStore.chooseLocationModal" title="Выберите город" @confirm="() => confirm()" 
+    class="choose-city-modal choose-city-modal-register modal">
     <template #header>
       <UiInput :placeholder="'Поиск города'">
         <SvgoSearchIcon class="svg-m" />
       </UiInput>
-      <div class="popular-cities">
-        <p class="popular-cities__title">Популярные города</p>
-        <div class="popular-cities__list">
-          <button class="popular-cities__item">Санкт-Петербург</button>
-          <button class="popular-cities__item">Москва</button>
-          <button class="popular-cities__item">Новосибирск</button>
-          <button class="popular-cities__item">Екатеринбург</button>
-          <button class="popular-cities__item">Рим</button>
-        </div>
+      <div class="choose-city__count">
+        <p class="choose-city__count-value">Выбрано локаций: {{ selectedCities.length || 0 }}/5</p>
       </div>
     </template>
     <template #content>
@@ -43,27 +37,46 @@
         <div class="choose-city__container" :class="{ 'choose-city__item_type_selected': activeLevel === 'city' }">
           <p class="choose-city__title">Город</p>
           <ul class="choose-city__list" v-if="selectedRegion">
-            <li class="choose-city__item" v-for="city in cities" :class="{ 'selected': city.id === selectedCity?.id }"
+            <li class="choose-city__item" v-for="city in cities"
               :key="city.id">
-              <button @click="selectCity(city)">{{ city.name }}</button>
+              <UiCheckbox class="choose-city__checkbox" variant="square" v-model="city.selected" :id="city.id"
+                :disabled="!selectedCities.includes(city.id) && selectedCities.length >= 5"
+                @change="toggleCitySelection(city)"
+              >
+                {{ city.name }}
+              </UiCheckbox>
             </li>
           </ul>
         </div>
       </div>
+        <div class="choose-city__btn-container">
+          <UiButton type="button" class="choose-city__btn" variant="quinary" size="large" @click="handleSubmit">
+            Применить
+            <SvgoBtnArrow class="svg-l" />
+          </UiButton>
+        </div>
     </template>
   </UiModal>
 </template>
 
 <script setup>
+import { useOrganizationStore } from '~/store/organizationStore';
+import { useSettingStore } from '~/store/settingStore';
+
 
 const props = defineProps({
   modelValue: {
-    type: Boolean,
-    default: false,
+    type: Array,
+    default: [],
   },
 });
 
-const isOpenModal = ref(props.modelValue);
+const organizationStore = useOrganizationStore();
+const settingStore = useSettingStore();
+const selectedCities = ref([]);
+
+const emit = defineEmits(['update:modelValue']);
+
 const regions = ref([]);
 const cities = ref([]);
 const selectedCountry = ref(null);
@@ -71,8 +84,33 @@ const selectedRegion = ref(null);
 const selectedCity = ref(null);
 const activeLevel = ref('country');
 
+function toggleCitySelection(city) {
+  if (selectedCities.value.includes(city.id)) {
+    selectedCities.value = selectedCities.value.filter(selectedCity => selectedCity.id !== city.id);
+  } else if(selectedCities.value.length < 5) {
+    selectedCities.value = [...selectedCities.value, { 
+      id: city.id, 
+      region: selectedRegion.value.name, 
+      country: selectedCountry.value.name,
+      countryId: selectedCountry.value.id,
+      city: city.name,
+      selected: false,
+    }];
+  }
+}
 
-const emit = defineEmits(['update:modelValue', 'selectCity']);
+function handleSubmit () {
+  organizationStore.registerOrg.countryId = selectedCities.value.map(city => city.id);
+  emit('update:modelValue', [...selectedCities.value]);
+  settingStore.chooseLocationModal = false;
+}
+
+function updateCitySelection() {
+  cities.value.forEach(city => {
+    city.selected = selectedCities.value.some(selectedCity => selectedCity.id === city.id);
+  });
+
+}
 
 const countries = ref([
   { id: '1', name: 'Россия' },
@@ -164,7 +202,7 @@ const citiesData = {
 };
 
 function confirm() {
-  isOpenModal.value = false;
+  settingStore.chooseLocationModal = false;
 }
 
 function goBack() {
@@ -196,277 +234,45 @@ function selectRegion(region) {
   activeLevel.value = 'city'
 }
 
-function selectCity(city) {
-  selectedCity.value = city;
-  emit('selectCity', city.name);
-  emit('update:modelValue', false);
-}
-
 watch(() => props.modelValue, (newVal) => {
-  isOpenModal.value = newVal;
-});
-
-watch(isOpenModal, (newVal) => {
-  isOpenModal.value = newVal;
-  emit('update:modelValue', newVal);
-});
-
-
-
+  selectedCities.value = newVal;
+  updateCitySelection();
+})
 
 </script>
 
 <style lang="scss" >
-.choose-city-modal {
-  
 
-  .modal-dialog {
-    max-width: 82.5em;
-    width: 100%;
-  }
-
-  .modal-content {
-    max-height: 80em;
-    min-height: 60em;
-    height: 100%;
-    // padding-bottom: 6em;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .modal-header {
-    background-color: var(--bg-tertiary-color);
-    padding: 3em 6em;
-  }
-
-  .modal-content-header {
-    background-color: var(--bg-tertiary-color);
-  }
-
-  .modal-body {
-    // margin-bottom: 7em;
-    height: 100%;
-    flex: 1;
-  }
+.choose-city__count {
+  margin-top: 2em;
 }
 
-.popular-cities {
-  margin-block: 2em 0;
-
-  &__title {
-    font-size: 1.2em;
-    text-transform: uppercase;
-    color: var(--text-color-decimal);
-    margin-bottom: .5em;
-  }
-
-  &__list {
-    display: flex;
-    flex-wrap: wrap;
-    font-size: 1.2em;
-  }
-
-  &__item {
-    flex: 0 0 33%;
-    text-align: left;
-    font-size: 1.2em;
-    line-height: 1.5em;
-  }
-
+.choose-city__count-value {
+  font-size: 1.6em;
 }
 
-.choose-city {
-  display: flex;
-  column-gap: 6.3em;
+.choose-city-modal-register .choose-city {
+  height: 40em;
+}
+
+.choose-city__btn-container {
   padding: 3em 6em;
-  overflow-y: auto;
-  height: 48em;
-
-  &__title {
-    font-size: 1.4em;
-    color: var(--text-color-decimal);
-    text-transform: uppercase;
-    margin-bottom: 1.43em;
-  }
-
-  &__list {
-    display: flex;
-    flex-direction: column;
-    row-gap: 1.6em;
-    height: 100%;
-    max-height: 47em;
-    overflow-y: auto;
-
-    /* Стили для скроллбара */
-    &::-webkit-scrollbar {
-      width: 7px;
-      /* Ширина вертикального скроллбара */
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background-color: #888;
-      /* Цвет ползунка */
-      border-radius: 5px;
-      /* Радиус скругления ползунка */
-    }
-
-    &::-webkit-scrollbar-track {
-      background-color: inherit;
-      /* Цвет трека (фона) */
-      border-radius: 5px;
-      /* Радиус скругления трека */
-    }
-
-  }
-
-  &__item {
-    font-size: 1.6em;
-  }
-
-  .choose-city__container {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-width: 15.2em;
-
-    &:nth-child(2) {
-      flex: 2;
-    }
-
-    &:not(:last-child) {
-      border-right: 2px solid #dcdce4;
-      padding-right: 1.5em;
-    }
-  }
-
-  .selected {
-    button {
-      color: var(--text-color-ternary);
-    }
-  }
-
+  background-color: var(--bg-primary-color);
 }
 
-.choose-city__back-btn {
-  display: flex;
-  align-items: center;
-  margin: 0 auto;
-  visibility: hidden;
-
-  svg {
-    rotate: 90deg;
-  }
-}
-
-.choose-city__back-btn_type_visible {
-  visibility: visible;
-}
-
-.choose-city__back-btn {
-  background-color: var(--button-background-primary);
-  color: var(--text-color-octonary);
-  display: flex;
-  align-items: center;
-  column-gap: 0.416em;
-  text-transform: uppercase;
-  font-size: 1.2em;
-  padding: 0.75em;
-  border-radius: 300px;
-  width: calc(100% - 6.5em);
+.choose-city__btn {
+  width: 33%;
+  margin-left: auto;
   justify-content: center;
-  // margin-inline: 19.5px;
-  flex-basis: auto;
-  display: none;
-
-
-  &:hover {
-    color: var(--text-color-octonary);
-  }
-
-  svg {
-    path {
-      fill: #fff;
-    }
-  }
+  column-gap: 1em;
+  font-size: 1.2em;
+  text-transform: uppercase;
 }
 
-@include tablet {
-  .choose-city__list {
-    max-height: none;
-  }
-
-  .choose-city {
-    max-height: 50em;
-  }
-}
-
-@include mobile {
-  
-  .choose-city-modal .modal-content {
-    padding-bottom: 0;
-    max-height: 70em;
-  }
-
-  .modal-title {
-    font-size: 1.6em;
-  }
-
-  .choose-city-modal {
+.choose-city__checkbox {
+  label {
     font-size: 1em;
   }
-
-  .choose-city-modal .modal-dialog {
-    width: calc(100% - 3em);
-    max-height: 70em;
-  }
-
-  .choose-city-modal .modal-header {
-    padding: 1em 2em;
-  }
-
-  .choose-city {
-    padding: 1em 2em;
-  }
-
-  .choose-city__back-btn {
-    display: flex;
-  }
-
-  .popular-cities__title {
-    font-size: 1.2em;
-    margin-bottom: .5em;
-  }
-
-  .popular-cities__item {
-    font-size: 1.16em;
-    text-wrap: nowrap;
-    flex: 0 0 50%;
-  }
-
-  .choose-city {
-    .choose-city__list {
-      max-height: 38em;
-      height: 100%;
-    }
-
-    .choose-city__title {
-      font-size: 1.4em;
-    }
-
-    .choose-city__item {
-      font-size: 1.6em;
-    }
-
-    .choose-city__container {
-      display: none;
-    }
-
-    .choose-city__item_type_selected {
-      display: flex;
-      padding: 0 !important;
-      border: none !important;
-    }
-  }
 }
+
 </style>

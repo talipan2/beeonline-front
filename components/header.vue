@@ -69,24 +69,26 @@
           <UiButton to="/" variant="secondary" size="around" class="header__search-icon"> 
             <img src="~/assets/images/header/search-icon.svg" alt="Поиск">
           </UiButton>
-          <UiButton variant="secondary" size="large" type="button" @click="isOpenAuthModal = true">Вход</UiButton>
+          <UiButton variant="secondary" size="large" type="button" @click="openAuthModal">Вход</UiButton>
           <UiButton to="/register" variant="secondary" size="large">Регистрация</UiButton>
         </div>
         <UiButton to="/" variant="primary" size="small" class="header__login" @click="isAuth = true">Вход</UiButton>
       </div>
     </div>
     <HeaderMenuMobileModal v-model="isOpenMobileModal" :headerHeight="headerHeight" :closeButton="false"></HeaderMenuMobileModal>
-    <HeaderAuthUserModal v-model="isOpenAuthModal" />
+    <HeaderAuthUserModal />
   </header>
 </template>
 
 <script setup>
+import { useUserStore } from '~/store/userStore';
+import { useSettingStore } from '~/store/settingStore';
 
+const userStore = useUserStore();
+const settingStore = useSettingStore();
 
-
-const isAuth = ref(false);
+const isAuth = computed(() => userStore.isAuth);
 const isOpenMobileModal = ref(false);
-const isOpenAuthModal = ref(false);
 const header = ref(null);
 const headerMain = ref(null);
 const headerMainHeight = ref(null);
@@ -96,12 +98,20 @@ const headerMainOffsetTop = ref(0);
 const headerFiller = ref(0)
 const headerInfo = ref(null)
 
+function openAuthModal () {
+  settingStore.authModalStatus = true;
+}
+
 function updateHeaderHeight() {
   if (header) {
     headerHeight.value = header.value.offsetHeight;
     headerMainHeight.value = headerMain.value.offsetHeight;
   }
 }
+
+watch(() => headerMainHeight.value, (newVal) => {
+  settingStore.headerHeight = newVal;
+})
 
 const onScrollPage = () => {
   if (!headerFixed.value) {
@@ -125,13 +135,14 @@ onMounted(() => {
   onScrollPage();
   window.addEventListener('resize', updateHeaderHeight);
   window.addEventListener("scroll", onScrollPage)
-
+  if(localStorage.getItem('token')) {
+    userStore.checkAuth();
+  }
 });
 
 onUnmounted(() => {
   window.removeEventListener('resize', updateHeaderHeight);
   window.removeEventListener("scroll", onScrollPage)
-  
 });
 
 </script>
