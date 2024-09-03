@@ -8,6 +8,7 @@
         class="checkbox__input"
         :disabled="disabled"
         @change="emitChange"
+        :indeterminate="indeterminate"
       />
       <div class="checkbox__icon"></div>
       <slot></slot>
@@ -35,6 +36,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  indeterminate: {
+    type: Boolean,
+    default: false,
+  }
 });
 
 const emit = defineEmits(['update:modelValue']);
@@ -109,6 +114,10 @@ function emitChange() {
 
 .checkbox_type_round .checkbox__input:checked + .checkbox__icon::before {
   background-image: url('@/assets/svg/checked-circle.svg');
+}
+
+.checkbox_type_square .checkbox__input:indeterminate + .checkbox__icon::before {
+  background-image: url('@/assets/svg/checkbox-indeterminate.svg');
 }
 
 .checkbox_type_round .checkbox__icon::before {

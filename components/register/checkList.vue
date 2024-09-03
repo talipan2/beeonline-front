@@ -36,18 +36,25 @@
 
 <script setup>
 import { useOrganizationStore } from '~/store/organizationStore';
+import { useUserStore } from '~/store/userStore';
 
 
 const route = useRoute();
 const organizationStore = useOrganizationStore();
+const userStore = useUserStore();
 
-const steps = [
+const steps = computed(() => [
   { label: 'Регистрационные данные', path: '/register' },
   { label: 'Данные организации', path: '/register/step1' },
   { label: 'Карточка организации', path: '/register/step2' },
-  { label: 'Города фактического производства', path: '/register/step3' },
+  { 
+    label: userStore.role === 'customer' 
+      ? 'География фактического производства' 
+      : 'Города фактического производства', 
+    path: '/register/step3' 
+  },
   { label: 'Проверка', path: '/register/step4' },
-];
+]);
 
 const progressLevel = computed(() => {
   if (nullPercentage.value <= 10) return '5';
@@ -75,7 +82,7 @@ const isCurrentStep = (stepPath) => {
 };
 
 const isStepPassed = (stepPath) => {
-  return steps.findIndex(step => step.path === stepPath) < steps.findIndex(step => step.path === route.path);
+  return steps.value.findIndex(step => step.path === stepPath) < steps.value.findIndex(step => step.path === route.path);
 };
 
 

@@ -1,22 +1,22 @@
 <template>
-  <UiModal v-model="settingStore.chooseLocationModal" title="Выберите город" @confirm="() => confirm()" 
+  <UiModal v-model="settingStore.chooseLocationModal" title="Выберите город" @confirm="() => confirm()"
     class="choose-city-modal choose-city-modal-register modal">
     <template #header>
       <UiInput :placeholder="'Поиск города'">
         <SvgoSearchIcon class="svg-m" />
       </UiInput>
-      <div class="choose-city__count">
+      <div class="choose-city__count" v-if="userStore.role === 'performer'">
         <p class="choose-city__count-value">Выбрано локаций: {{ selectedCities.length || 0 }}/5</p>
       </div>
     </template>
     <template #content>
-      <button class="choose-city__back-btn"  :class="{'choose-city__back-btn_type_visible': activeLevel !== 'country'}" @click="goBack">
+      <button class="choose-city__back-btn" :class="{'choose-city__back-btn_type_visible': activeLevel !== 'country'}"
+        @click="goBack">
         <SvgoDropDownNew class="svg-m" />
         {{ selectedRegion?.name || selectedCountry?.name }}
       </button>
       <div class="choose-city">
-        <div class="choose-city__container"
-          :class="{ 'choose-city__item_type_selected': activeLevel === 'country' }">
+        <div class="choose-city__container" :class="{ 'choose-city__item_type_selected': activeLevel === 'country' }">
           <p class="choose-city__title">Страна</p>
           <ul class="choose-city__list">
             <li class="choose-city__item " v-for="country in countries"
@@ -27,9 +27,13 @@
         </div>
         <div class="choose-city__container" :class="{ 'choose-city__item_type_selected': activeLevel === 'region' }">
           <p class="choose-city__title">Регион</p>
-          <ul class="choose-city__list" v-if="selectedCountry" >
+          <ul class="choose-city__list" v-if="selectedCountry">
             <li class="choose-city__item" v-for="region in regions"
               :class="{ 'selected': region.id === selectedRegion?.id }" :key="region.id">
+              <UiCheckbox ref="regionCheckbox" :indeterminate="updateRegionIndeterminate(region)"
+                v-if="userStore.role === 'customer'" class="choose-city__checkbox" variant="square"
+                v-model="region.selected" :id="region.id" @change="selectAllCities(region)">
+              </UiCheckbox>
               <button @click="selectRegion(region)">{{ region.name }}</button>
             </li>
           </ul>
@@ -37,24 +41,28 @@
         <div class="choose-city__container" :class="{ 'choose-city__item_type_selected': activeLevel === 'city' }">
           <p class="choose-city__title">Город</p>
           <ul class="choose-city__list" v-if="selectedRegion">
-            <li class="choose-city__item" v-for="city in cities"
-              :key="city.id">
+            <li class="choose-city__item" v-if="userStore.role === 'customer'">
+              <UiCheckbox class="choose-city__checkbox" variant="square" v-model="selectedRegion.selected"
+                @change="selectAllCities(selectedRegion)">
+                Любой
+              </UiCheckbox>
+            </li>
+            <li class="choose-city__item" v-for="city in cities" :key="city.id">
               <UiCheckbox class="choose-city__checkbox" variant="square" v-model="city.selected" :id="city.id"
-                :disabled="!selectedCities.includes(city.id) && selectedCities.length >= 5"
-                @change="toggleCitySelection(city)"
-              >
+                :disabled="!city.selected && selectedCities.length >= 5 && userStore.role === 'performer'"
+                @change="toggleCitySelection(city)">
                 {{ city.name }}
               </UiCheckbox>
             </li>
           </ul>
         </div>
       </div>
-        <div class="choose-city__btn-container">
-          <UiButton type="button" class="choose-city__btn" variant="quinary" size="large" @click="handleSubmit">
-            Применить
-            <SvgoBtnArrow class="svg-l" />
-          </UiButton>
-        </div>
+      <div class="choose-city__btn-container">
+        <UiButton type="button" class="choose-city__btn" variant="quinary" size="large" @click="handleSubmit">
+          Применить
+          <SvgoBtnArrow class="svg-l" />
+        </UiButton>
+      </div>
     </template>
   </UiModal>
 </template>
@@ -62,55 +70,7 @@
 <script setup>
 import { useOrganizationStore } from '~/store/organizationStore';
 import { useSettingStore } from '~/store/settingStore';
-
-
-const props = defineProps({
-  modelValue: {
-    type: Array,
-    default: [],
-  },
-});
-
-const organizationStore = useOrganizationStore();
-const settingStore = useSettingStore();
-const selectedCities = ref([]);
-
-const emit = defineEmits(['update:modelValue']);
-
-const regions = ref([]);
-const cities = ref([]);
-const selectedCountry = ref(null);
-const selectedRegion = ref(null);
-const selectedCity = ref(null);
-const activeLevel = ref('country');
-
-function toggleCitySelection(city) {
-  if (selectedCities.value.includes(city.id)) {
-    selectedCities.value = selectedCities.value.filter(selectedCity => selectedCity.id !== city.id);
-  } else if(selectedCities.value.length < 5) {
-    selectedCities.value = [...selectedCities.value, { 
-      id: city.id, 
-      region: selectedRegion.value.name, 
-      country: selectedCountry.value.name,
-      countryId: selectedCountry.value.id,
-      city: city.name,
-      selected: false,
-    }];
-  }
-}
-
-function handleSubmit () {
-  organizationStore.registerOrg.countryId = selectedCities.value.map(city => city.id);
-  emit('update:modelValue', [...selectedCities.value]);
-  settingStore.chooseLocationModal = false;
-}
-
-function updateCitySelection() {
-  cities.value.forEach(city => {
-    city.selected = selectedCities.value.some(selectedCity => selectedCity.id === city.id);
-  });
-
-}
+import { useUserStore } from '~/store/userStore';
 
 const countries = ref([
   { id: '1', name: 'Россия' },
@@ -201,10 +161,92 @@ const citiesData = {
   ]
 };
 
+const props = defineProps({
+  modelValue: {
+    type: Array,
+    default: [],
+  },
+});
+
+const organizationStore = useOrganizationStore();
+const settingStore = useSettingStore();
+const userStore = useUserStore();
+const selectedCities = ref([]);
+
+const emit = defineEmits(['update:modelValue']);
+
+const regions = ref([]);
+const cities = ref([]);
+const selectedCountry = ref(null);
+const selectedRegion = ref(null);
+const selectedCity = ref(null);
+const activeLevel = ref('country');
+
+// выбор города с чекбокса
+function toggleCitySelection(city) {
+  if (selectedCities.value.find(selectedCity => selectedCity.id === city.id)) {
+    selectedCities.value = selectedCities.value.filter(selectedCity => selectedCity.id !== city.id);
+  } else if(selectedCities.value.length < 5 && userStore.role === 'performer') {
+    selectedCities.value = [...selectedCities.value, { 
+      id: city.id, 
+      region: selectedRegion.value.name, 
+      country: selectedCountry.value.name,
+      countryId: selectedCountry.value.id,
+      city: city.name,
+      selected: false,
+    }];
+  } else if (userStore.role === 'customer' && !selectedCities.value.includes(city.id)) {
+    selectedCities.value = [...selectedCities.value, { 
+      id: city.id, 
+      region: selectedRegion.value.name, 
+      country: selectedCountry.value.name,
+      countryId: selectedCountry.value.id,
+      city: city.name,
+      selected: false,
+    }];
+  }
+
+  selectedRegion.value.selected = cities.value.length > 0 && cities.value.every(city => city.selected);
+}
+
+// отправка родителю выбранных городов
+function handleSubmit () {
+  organizationStore.registerOrg.countryId = selectedCities.value.map(city => city.id);
+  emit('update:modelValue', [...selectedCities.value]);
+  settingStore.chooseLocationModal = false;
+}
+
+// обновление выбранных городов
+function updateCitySelection() {
+  for (const regionId in citiesData) {
+    if (citiesData.hasOwnProperty(regionId)) {
+      const regionCities = citiesData[regionId];
+      const selectedCitiesInRegion = selectedCities.value.filter(selectedCity => 
+        regionCities.some(city => city.id === selectedCity.id)
+      );
+
+      // Обновляем статус выбранности для каждого города
+      regionCities.forEach(city => {
+        city.selected = selectedCities.value.some(selectedCity => selectedCity.id === city.id);
+      });
+
+      // Обновляем статус выбранности региона
+      const region = regionsData[regionId.charAt(0)].find(region => region.id === regionId);
+      if (region) {
+        // Проверка, выбраны ли все города региона
+        const allCitiesSelected = regionCities.length > 0 && selectedCitiesInRegion.length === regionCities.length;
+        region.selected = allCitiesSelected;
+      }
+    }
+  }
+}
+
+// закрытие модального окна
 function confirm() {
   settingStore.chooseLocationModal = false;
 }
 
+// навигация по уровням
 function goBack() {
   if (activeLevel.value === 'city') {
     activeLevel.value = 'region';
@@ -222,7 +264,6 @@ function goBack() {
 function selectCountry(country) {
   selectedCountry.value = country;
   selectedRegion.value = null;
-  console.log(country.id)
   regions.value = regionsData[country.id]; 
   cities.value = []; 
   activeLevel.value = 'region';
@@ -234,8 +275,52 @@ function selectRegion(region) {
   activeLevel.value = 'city'
 }
 
+// выбор всех городов в регионе
+function selectAllCities(region) {
+  console.log(region)
+  if (region.selected) {
+    selectRegion(region);
+    cities.value.forEach((city) => {
+      if (!selectedCities.value.some(selectedCity => selectedCity.id === city.id)) {
+        selectedCities.value.push({
+          id: city.id,
+          region: selectedRegion.value.name,
+          country: selectedCountry.value.name,
+          countryId: selectedCountry.value.id,
+          city: city.name,
+          selected: true,
+        });
+      }
+    });
+  } else {
+    selectedCities.value = selectedCities.value.filter(selectedCity => {
+      return !cities.value.some(city => city.id === selectedCity.id);
+    });
+  }
+
+  cities.value.forEach(city => {
+    city.selected = selectedCities.value.some(selectedCity => selectedCity.id === city.id);
+  });
+}
+
+// добавление неопределенного состояния чекбоксу региона
+function updateRegionIndeterminate(region) {
+  const selectedRegion = citiesData[region.id];
+  const checkedCities = selectedRegion.filter(city => city.selected);
+
+  if (checkedCities.length > 0 && checkedCities.length < selectedRegion.length) {
+    region.selected = false;
+    return true;
+  } 
+
+  return false;
+}
+
+// отслеживание состояния выбранных городов в родителе
 watch(() => props.modelValue, (newVal) => {
-  selectedCities.value = newVal;
+  selectedCities.value = selectedCities.value.filter(selectedCity => {
+    return newVal.some(city => city.id === selectedCity.id);
+  });
   updateCitySelection();
 })
 
@@ -273,6 +358,10 @@ watch(() => props.modelValue, (newVal) => {
   label {
     font-size: 1em;
   }
+}
+
+.choose-city__item {
+  display: flex;
 }
 
 </style>

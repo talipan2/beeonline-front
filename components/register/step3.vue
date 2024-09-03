@@ -46,7 +46,7 @@ function deleteLocation(id) {
 }
 
 watch(() => selectedCities.value, (newVal) => {
-  organizationStore.registerOrg.selectedProductionCountries = [...organizationStore.registerOrg.selectedProductionCountries, ...newVal];
+  organizationStore.registerOrg.selectedProductionCountries = newVal;
 });
 
 function openAuthModal () {

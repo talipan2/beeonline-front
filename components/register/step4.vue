@@ -52,12 +52,7 @@
                     || '-' 
                   }}
                 </p>
-                <a class="register__check-company-more link" href="javascript:;">
-                  {{ organizationStore.registerOrg.selectedProductionCountries.length > 1 
-                    ? '+ еще&nbsp;' + (organizationStore.registerOrg.selectedProductionCountries.length - 1) 
-                    : '' 
-                  }}
-                </a>
+                <ModalsMoreCities />
               </div>
             </div>
           </div>
@@ -116,10 +111,12 @@ import { useUserStore } from '~/store/userStore';
 import defaultCompanyLogo from '@/assets/images/nophoto_pc.png';
 import { useOrganizationStore } from '~/store/organizationStore';
 import selectFlag from '~/utils/selectFlag';
+import { useTippy } from 'vue-tippy';
 
 const router = useRouter();
 const userStore = useUserStore();
 const organizationStore = useOrganizationStore();
+const moreCities = ref(null);
 
 
 </script>

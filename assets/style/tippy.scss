@@ -3,6 +3,7 @@
 }
 [data-tippy-root] {
   max-width: calc(100vw - 10px);
+  min-width: 28rem;
 }
 .tippy-box {
   position: relative;
@@ -21,19 +22,19 @@ background: #FFF;
   bottom: 0;
 }
 .tippy-box[data-placement^="top"] > .tippy-arrow:before {
-  bottom: -8px;
+  bottom: -50px;
   left: 0;
-  border-width: 8px 8px 0;
-  border-top-color: initial;
-  transform-origin: center top;
+  border-width: 0 7.5px 15px;
+  border-bottom-color: initial;
+  transform-origin: center bottom;
 }
 .tippy-box[data-placement^="bottom"] > .tippy-arrow {
   top: 0;
 }
 .tippy-box[data-placement^="bottom"] > .tippy-arrow:before {
-  top: -8px;
+  top: -15px;
   left: 0;
-  border-width: 0 8px 8px;
+  border-width: 0 7.5px 15px;
   border-bottom-color: initial;
   transform-origin: center bottom;
 }
@@ -61,7 +62,7 @@ background: #FFF;
 .tippy-arrow {
   width: 16px;
   height: 16px;
-  color: #d1d5db;
+  color: #6937a5;
 }
 .tippy-arrow:before {
   content: "";
@@ -73,9 +74,9 @@ background: #FFF;
   position: relative;
   // padding: 5px 9px;
   z-index: 1;
-overflow-y: auto;
-overflow-x: hidden;
-max-height: min(300px, 100vh);
+  overflow-y: auto;
+  overflow-x: hidden;
+// max-height: min(300px, 100vh);
 }
 
 .tippy-box[data-theme~='select'] {

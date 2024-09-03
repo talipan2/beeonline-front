@@ -70,7 +70,7 @@
             <img src="~/assets/images/header/search-icon.svg" alt="Поиск">
           </UiButton>
           <UiButton variant="secondary" size="large" type="button" @click="openAuthModal">Вход</UiButton>
-          <UiButton to="/register" variant="secondary" size="large">Регистрация</UiButton>
+          <HeaderChooseRegistrProfileDropdown />
         </div>
         <UiButton to="/" variant="primary" size="small" class="header__login" @click="isAuth = true">Вход</UiButton>
       </div>

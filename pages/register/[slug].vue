@@ -60,10 +60,12 @@ import selectRegion from '~/utils/selectRegion';
 import { useRoute } from '#app';
 import { useOrganizationStore } from '~/store/organizationStore';
 import { useSettingStore } from '~/store/settingStore';
+import { useUserStore } from '~/store/userStore';
 
 const route = useRoute();
 const organizationStore = useOrganizationStore();
 const settingStore = useSettingStore();
+const userStore = useUserStore();
 
 const currentComponent = computed(() => {
   switch (route.path) {
@@ -95,6 +97,8 @@ const onScrollPage = () => {
 onMounted(() => {
   onScrollPage();
   window.addEventListener("scroll", onScrollPage)
+  userStore.loadFromLocalStorage();
+
 });
 
 onUnmounted(() => {

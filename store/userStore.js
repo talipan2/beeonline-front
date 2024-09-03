@@ -7,6 +7,7 @@ export const useUserStore = defineStore('user', {
     userToken: null,
     isAuth: false,
     location: null,
+    role: null,
     settingUser: {
       location: 1,
       inn: null,
@@ -23,6 +24,11 @@ export const useUserStore = defineStore('user', {
     },
   }),
   actions: {
+    loadFromLocalStorage() {
+      if(localStorage.getItem('role')) {
+        this.role = localStorage.getItem('role');
+      }
+    },
     async authUser(email, password) {
       try {
         const response = await Api.authUser(email, password);
