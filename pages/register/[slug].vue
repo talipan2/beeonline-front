@@ -1,7 +1,7 @@
 <template>
   <section class="register container">
     <div class="register__container">
-      <RegisterCheckList class="register__checklist sticky" ref="leftSide" />
+      <CommonCheckList class="register__checklist sticky" ref="leftSide" />
       <div class="register__main">
         <component :is="currentComponent" />
       </div>
@@ -32,7 +32,7 @@
               </div>
             </div>
           </div>
-          <Advice class="register__advice sticky" v-else>
+          <CommonAdvice class="register__advice sticky" v-else>
             <p class="advice__text">ИНН используется в нашем сервисе:</p>
             <ul>
               <li>для автоматического заполнения вашего профиля</li>
@@ -40,7 +40,7 @@
               <li>для формирования платежных документов</li>
               <li>и наконец вы получаете галочку верифицированного пользователя, что повышает вас в поиске</li>
             </ul>
-          </Advice>
+          </CommonAdvice>
         </div>
       </div>
     </div>
@@ -111,6 +111,8 @@ onUnmounted(() => {
 
 <style lang="scss">
 .register {
+  padding-block: 10em;
+
   &__container {
     display: flex;
     justify-content: space-between;

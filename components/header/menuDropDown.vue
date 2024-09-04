@@ -59,8 +59,8 @@ const emit = defineEmits(['update:modelValue']);
 const userData = computed(() => userStore.userData);
 
   const dropdownMenuLinks = [
-    { label: 'Рабочий стол', value: '/' },
-    { label: 'Профиль', value: '/' },
+    { label: 'Рабочий стол', value: '/customer/desktop' },
+    { label: 'Профиль', value: '/customer/profile' },
     { label: 'Услуги', value: '/' },
     { label: 'Сообщения', value: '/' },
     { label: 'Сделки', value: '/' },

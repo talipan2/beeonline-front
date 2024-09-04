@@ -15,9 +15,9 @@
         </div>
       </div>
     </div>
-    <Advice class="checklist__advice">
+    <CommonAdvice class="checklist__advice">
       <p class="advice__text">Полностью заполненный профиль выше в списке поиска</p>
-    </Advice>
+    </CommonAdvice>
     <div class="checklist__collapse">
       <ul class="checklist__steps">
         <li v-for="step in steps" :key="step.path" :class="[

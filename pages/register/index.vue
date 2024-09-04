@@ -2,13 +2,13 @@
 <template>
   <section class="register container">
     <div class="register__container">
-      <RegisterCheckList class="register__checklist sticky" ref="leftSide"/>
+      <CommonCheckList class="register__checklist sticky" ref="leftSide"/>
       <div class="register__main">
         <RegisterDefaultRegisterComponent />
       </div>
       <div class="register__right-side" >
         <div class="register__right-side-container sticky" ref="rightSide">
-          <Advice class="register__advice">
+          <CommonAdvice class="register__advice">
             <p class="advice__text">ИНН используется в нашем сервисе:</p>
             <ul>
               <li>для автоматического заполнения вашего профиля</li>
@@ -16,7 +16,7 @@
               <li>для формирования платежных документов</li>
               <li>и наконец вы получаете галочку верифицированного пользователя, что повышает вас в поиске</li>
             </ul>
-          </Advice>
+          </CommonAdvice>
         </div>
       </div>
     </div>
@@ -148,10 +148,6 @@ onUnmounted(() => {
   }
 }
 
-.sticky {
-  position: sticky;
-  top:0;
-}
 
 
 </style>

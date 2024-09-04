@@ -1,6 +1,6 @@
 <template>
   <RegisterLayout title="Проверка вашего профиля">
-    <RegisterCheckCard title="Контактные данные"
+    <CommonProfileCheckCard title="Контактные данные"
       text="Указанные данные не разглашаются третьим лицам, и необходимы для успешной работы на портале">
       <div class="form-group">
         <div class="form-group-data">
@@ -14,9 +14,9 @@
       </div>
       <UiButton class="register__btn register__btn_type_tg" variant="telegram" size="large">Включить уведомления в
         Telegram</UiButton>
-    </RegisterCheckCard>
-    <RegisterCheckCard title="Карточка компании" text="Указанные данные будут видны другим участникам портала"
-      changeLink="/register/step2">
+    </CommonProfileCheckCard>
+    <CommonProfileCheckCard title="Карточка компании" text="Указанные данные будут видны другим участникам портала"
+      changeLink="/register/step2" changeLinkLabel="Изменить">
       <div class="register__check-company">
         <div class="register__check-company-container">
           <div class="register__check-company-logo">
@@ -62,10 +62,10 @@
           <p class="form-group-data__value">{{ organizationStore.registerOrg.companyDescription || '-' }}</p>
         </div>
       </div>
-    </RegisterCheckCard>
-    <RegisterCheckCard title="Данные организации"
+    </CommonProfileCheckCard>
+    <CommonProfileCheckCard title="Данные организации"
       text="Указанные данные не разглашаются третьим лицам, и необходимы для успешной работы на портале"
-      changeLink="/register/step1">
+      changeLink="/register/step1" changeLinkLabel="Изменить">
       <div class="register__organization-data">
         <div class="form-group-data">
           <p class="form-group-data__title">Юридическое названии организации</p>
@@ -102,7 +102,7 @@
         <UiButton type="button" class="register__btn" variant="senary" size="large" @click="router.back">Назад</UiButton>
         <UiButton class="register__btn" variant="quinary" size="large">Подтвердить </UiButton>
       </div>
-    </RegisterCheckCard>
+    </CommonProfileCheckCard>
   </RegisterLayout>
 </template>
 
@@ -123,33 +123,7 @@ const moreCities = ref(null);
 
 <style lang="scss">
 
-.form-group {
-  display: flex;
-  column-gap: 3em;
-  justify-content: space-between;
-  align-items: center;
 
-  flex-wrap: wrap;
-
-  &-data {
-    flex: 1 0 45%;
-    font-size: 1.3em;
-    margin-bottom: 2em;
-  }
-
-  &-data__title {
-    font-family: 'fira-sans', sans-serif;
-  }
-
-  &-data__value {
-    font-size: 1.23em;
-  }
-
-  &-data__container {
-    display: flex;
-    align-items: center;
-  }
-}
 .register {
   .register__btn_type_tg {
     text-wrap: wrap;

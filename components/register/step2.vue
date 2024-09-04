@@ -7,15 +7,7 @@
           <UiInput class="register__input" type="text" v-model="organizationStore.registerOrg.companyName" placeholder="Компания" :required="true" />
         </label>
         <div class="register__input-list register__input-list_type_company">
-          <label class="register__label">
-            Загрузить логотип компании
-            <div class="register__company-image">
-              <img src="~/assets/images/nophoto_pc.png">
-              <input type="file" name="logo" accept=".jpeg, .png, .jpg, .gif" @change="onFileChange">
-              <span class="register__company-image-title">Загрузить логотип (до 5Мб. Допустимый формат .jpeg, .png, .jpg,
-                .gif)</span>
-            </div>
-          </label>
+          <CommonImageLoad class="register__label" title="Загрузить логотип компании" />
           <label class="register__label">Описание *
             <div class="register__textarea">
               <textarea v-model="organizationStore.registerOrg.companyDescription" class="" name="description" rows="5"></textarea>

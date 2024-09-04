@@ -6,18 +6,7 @@
         <p class="register__text">Укажите город вашего производства. Если производств несколько - выберите несколько городов, но не более пяти.</p>
         <p class="register__text">Указанные города используются для автоматического добавления в новые услуги и позволят потенциальным заказчикам находить их в поиске по регионам.</p>
       </div>
-      <div class="register__city-container">
-        <div v-for="city in selectedCities" :key="city.id" class="register__location">
-          <SvgoChecked  class="svg-m register__selected-icon"/>
-          <p  class="register__city-selected">
-            {{city.city}}, {{ city.region}}, {{city.country}}
-          </p>
-          <button type="button" class="register__location-delete" @click="deleteLocation(city.id)">
-            <SvgoCancel class="svg-m" />
-          </button>
-        </div>
-      </div>
-        <UiButton type="button" class="register__btn register__btn_type_half" variant="tertiary" size="large" @click="openAuthModal">Выбрать город или регион</UiButton>
+      <CommonLocation />
       <div class="register__btn-container">
         <UiButton type="button" class="register__btn" variant="senary" size="large" @click="router.back">Назад</UiButton>
         <UiButton type="button" class="register__btn" variant="quinary" size="large" @click="router.push({path: '/register/step4'})">Далее
@@ -67,45 +56,10 @@ function openAuthModal () {
       margin-bottom: 3em;
     }
 
-    .register__btn_type_half {
-      max-width: 47%;
-      width: 100%;
-      margin-bottom: 2em;
-    }
-
     .register__btn {
       font-size: 1.2em;
       line-height: 1em;
     }
-  }
-
-  &__city-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5em 3em;
-    margin-bottom: 3em;
-  }
-
-  &__location {
-    flex: 0 1 45%;
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-    column-gap: .5em;
-  }
-
-  &__selected-icon {
-    width: 1.8em;
-  }
-
-  &__city-selected {
-    font-size: 1.6em;
-    line-height: 1em;
-    width: 100%;
-  }
-
-  &__location-delete {
-    line-height: 1em;
   }
 }
 

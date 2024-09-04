@@ -4,7 +4,8 @@
       <h5 class="register__check-card-title">
         {{ title }}
       </h5>
-      <NuxtLink :to="changeLink" class="register__check-card-link link" v-if="changeLink">Изменить</NuxtLink>
+      <NuxtLink :to="changeLink" class="register__check-card-link link" v-if="changeLink">{{ changeLinkLabel }}</NuxtLink>
+      <NuxtLink :to="changeLink" class="register__check-card-link link" v-if="changeLink">{{ secondLinkLabel }}</NuxtLink>
     </div>
     <p class="register__check-card-text">
       {{ text }}
@@ -28,6 +29,18 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  changeLinkLabel: {
+    type: String,
+    default: '',
+  },
+  secondLink: {
+    type: String,
+    default: '',
+  },
+  secondLinkLabel: {
+    type: String,
+    default: '',
+  } 
 });
 
 </script>
