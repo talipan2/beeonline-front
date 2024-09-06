@@ -103,17 +103,17 @@ const confirm = () => {
   }
 
 
-  &__input-container {
-    display: flex;
-    max-height: 6em;
+  // &__input-container {
+  //   display: flex;
+  //   max-height: 6em;
 
-  }
+  // }
 
-  &__input { 
-    padding: 0.93em;
-    position: relative;
-    flex: 1;
-  }
+  // &__input { 
+  //   padding: 0.93em;
+  //   position: relative;
+  //   flex: 1;
+  // }
 
   &__input_type-password {
     border-right: none;

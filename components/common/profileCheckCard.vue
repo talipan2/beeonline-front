@@ -1,13 +1,13 @@
 <template>
-  <div class="register__check-card">
-    <div class="register__check-card-container">
-      <h5 class="register__check-card-title">
+  <div class="check-card">
+    <div class="check-card__container">
+      <h5 class="check-card__title">
         {{ title }}
       </h5>
-      <NuxtLink :to="changeLink" class="register__check-card-link link" v-if="changeLink">{{ changeLinkLabel }}</NuxtLink>
-      <NuxtLink :to="changeLink" class="register__check-card-link link" v-if="changeLink">{{ secondLinkLabel }}</NuxtLink>
+      <NuxtLink :to="changeLink" class="check-card__link link" v-if="changeLink">{{ changeLinkLabel }}</NuxtLink>
+      <NuxtLink :to="changeLink" class="check-card__link link" v-if="changeLink">{{ secondLinkLabel }}</NuxtLink>
     </div>
-    <p class="register__check-card-text">
+    <p class="check-card__text">
       {{ text }}
     </p>
     <slot />
@@ -47,27 +47,42 @@ const props = defineProps({
 
 <style lang="scss">
 
-.register {
+.check-card {
+  margin-bottom: 7.5em;
 
-  &__check-card {
+  .form-group-data {
+      margin-bottom: 2em;
+    }
+  
+    .form-group__title {
+      font-family: 'fira-sans', sans-serif;
+      margin-bottom: 0;
+    }
+
+    .form-group__value {
+      font-size: 1.6rem;
+      margin-top: 0;
+    }
+
+  &__card {
     margin-bottom: 7.5em;
   }
   
-  &__check-card-container {
+  &__container {
     display: flex;
     align-items: center;
     column-gap: 3em;
     margin-bottom: 1.5em;  
   }
   
-  &__check-card-text {
+  &__text {
     font-size: 1.3em;
     padding-bottom: 1.53em;
     margin-bottom: 1.53em;
     border-bottom: 1px solid var(--border-color-secondary);
   }
 
-  &__check-card-link {
+  &__link {
     color: var(--text-color-ternary);
     font-size: 1.2em;
   }

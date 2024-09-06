@@ -8,6 +8,7 @@
       :disabled="disabled"
       :placeholder="placeholder"
       :required="required"
+      :id="id"
     />
     <slot />
   </div>
@@ -35,6 +36,10 @@ const props = defineProps({
   required: {
     type: Boolean,
     default: false,
+  },
+  id: {
+    type: String,
+    default: '',
   }
 });
 
@@ -48,11 +53,11 @@ function updateValue(value) {
 
 <style lang="scss">
   .input-container {
+    box-sizing: border-box;
     display: flex;
     border: 1px solid var(--border-color-secondary);
     background-color: var(--bg-secondary-color);
     padding: 1rem;
-    font-size: 16px;
 
     &:focus-within {
       border-color: var(--border-color-input-focus);
@@ -69,7 +74,7 @@ function updateValue(value) {
   .input {
     width: 100%;
     border: none;
-    font-size: 1.6rem;
+    font-size: 1em;
     padding: 0;
     color: var(--text-color-monodecimal);
 

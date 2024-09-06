@@ -1,25 +1,27 @@
 <template>
-  <RegisterLayout title="Карточка организации" description="Указанные данные увидят другие участники портала.">
+  <RegisterLayout :title="title" :description="description" :block-title="blockTitle">
     <form @submit="handleSubmit">
-      <div class="register__input-container">
-        <label class="register__label ">
-          Название компании *
-          <UiInput class="register__input" type="text" v-model="organizationStore.registerOrg.companyName" placeholder="Компания" :required="true" />
-        </label>
-        <div class="register__input-list register__input-list_type_company">
-          <CommonImageLoad class="register__label" title="Загрузить логотип компании" />
-          <label class="register__label">Описание *
-            <div class="register__textarea">
-              <textarea v-model="organizationStore.registerOrg.companyDescription" class="" name="description" rows="5"></textarea>
-            </div>
+      <label class="form-group__title" for="name">Название компании *
+        <UiInput class="form-group__value" type="text" id="name" v-model="organizationStore.registerOrg.companyName" placeholder="Компания" :required="true" />
+      </label>
+      <label class="form-group__title" for="site">Ссылка на сайт
+        <UiInput class="form-group__value" type="text" id="site" v-model="organizationStore.registerOrg.companyName"
+          placeholder="Компания" :required="true" />
+      </label>
+      <div class="form-group register__input-list_type_company">
+        <CommonImageLoad class="form-group-data" title="Загрузить логотип компании" />
+        <div class="form-group-data">
+          <label class="form-group__title">Описание *
           </label>
+          <UiTextArea v-model="organizationStore.registerOrg.companyDescription" :rows="5" />
         </div>
-        <div class="register__btn-container">
-          <UiButton type="button" class="register__btn" variant="senary" size="large" @click="router.back">Назад</UiButton>
-          <UiButton type="submit" class="register__btn" variant="quinary" size="large">Далее
-            <SvgoBtnArrow class="svg-lx" />
-          </UiButton>
-        </div>
+      </div>
+      <div class="register__btn-container" v-if="router.currentRoute.value.path.includes('/register')">
+        <UiButton type="button" class="register__btn" variant="senary" size="large" @click="router.back">Назад
+        </UiButton>
+        <UiButton type="submit" class="register__btn" variant="quinary" size="large">Далее
+          <SvgoBtnArrow class="svg-lx" />
+        </UiButton>
       </div>
     </form>
   </RegisterLayout>
@@ -28,6 +30,22 @@
 <script setup>
 import { useOrganizationStore } from '~/store/organizationStore';
 import { useUserStore } from '~/store/userStore';
+
+const props = defineProps({
+  blockTitle: {
+    type: String,
+    default: 'Регистрация исполнителя',
+  },
+  title: {
+    type: String,
+    default: 'Карточка организации',
+  },
+  description : {
+    type: String,
+    default: 'Указанные данные увидят другие участники портала.',
+  }
+
+})
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -54,27 +72,25 @@ const handleSubmit = (e) => {
 </script>
 
 <style lang="scss">
-.register {
+.register__input-list_type_company {
+  margin-top: 1em;
+}
 
-  &__input-list_type_company {
-    margin-top: 1em;
+.register__company-image {
+  margin-top: .5em;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #c4c4c4;
+  position: relative;
+  cursor: pointer;
+  padding-bottom: 63%;
+
+  input {
+    position: absolute;
+    width: 0;
   }
 
-  &__company-image {
-    margin-top: .5em;
-    display: flex;
-    flex-direction: column;
-    border: 1px solid #c4c4c4;
-    position: relative;
-    cursor: pointer;
-    padding-bottom: 63%;
-
-    input {
-      position: absolute;
-      width: 0;
-    }
-
-    span {
+  span {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -90,45 +106,46 @@ const handleSubmit = (e) => {
     line-height: 1;
     font-size: 12px;
 
-    }
-
-    img {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      height: 100%;
-      width: 100%;
-      object-fit: contain;
-      padding: 1em;
-      box-sizing: border-box;
-    }
   }
 
-  &__textarea {
-    padding-bottom: 63.1%;
-    position: relative;
-    margin-top: .5em;
+  img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+    padding: 1em;
+    box-sizing: border-box;
+  }
+}
 
-    textarea {
-      width: 100%;
-      height: 100%;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      position: absolute;
-      resize: none;
-      font-size: 1.23em;
-      padding: 0.625em;
-      box-sizing: border-box;
-      color: rgb(102, 112, 133);
+.register__textarea {
+  padding-bottom: 63.1%;
+  position: relative;
+  margin-top: .5em;
 
-      &:focus {
-        outline: none;
-      }
+  textarea {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    position: absolute;
+    resize: none;
+    font-size: 1.23em;
+    padding: 0.625em;
+    box-sizing: border-box;
+    color: rgb(102, 112, 133);
+
+    &:focus {
+      outline: none;
     }
   }
 }
+
+
 </style>

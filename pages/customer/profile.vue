@@ -7,20 +7,20 @@
           changeLink="/" changeLinkLabel="Изменить данные" secondLink="/" secondLinkLabel="Изменить пароль">
           <div class="form-group">
             <div class="form-group-data">
-              <div class="form-group-data__title">ФИО</div>
-              <div class="form-group-data__value">{{ userStore.userData.email || '-' }}</div>
+              <div class="form-group__title">ФИО</div>
+              <div class="form-group__value">{{ userStore.userData.email || '-' }}</div>
             </div>
             <div class="form-group-data">
-              <div class="form-group-data__title">Должность</div>
-              <div class="form-group-data__value">{{ userStore.userData.phone || '-' }}</div>
+              <div class="form-group__title">Должность</div>
+              <div class="form-group__value">{{ userStore.userData.phone || '-' }}</div>
             </div>
             <div class="form-group-data">
-              <div class="form-group-data__title">Почта представителя компании</div>
-              <div class="form-group-data__value">{{ userStore.userData.email || '-' }}</div>
+              <div class="form-group__title">Почта представителя компании</div>
+              <div class="form-group__value">{{ userStore.userData.email || '-' }}</div>
             </div>
             <div class="form-group-data">
-              <div class="form-group-data__title">Телефон представителя компании</div>
-              <div class="form-group-data__value">{{ userStore.userData.phone || '-' }}</div>
+              <div class="form-group__title">Телефон представителя компании</div>
+              <div class="form-group__value">{{ userStore.userData.phone || '-' }}</div>
             </div>
           </div>
           <UiButton class="profile__employees-btn" variant="primary" size="large">
@@ -32,19 +32,19 @@
           <div class="register__check-company">
             <div class="register__check-company-container">
               <div class="register__check-company-logo">
-                <p class="form-group-data__title">Логотип</p>
+                <p class="form-group__title">Логотип</p>
                 <div class="form-group-data__logo">
                   <img :src="organizationStore.registerOrg.companyLogo || defaultCompanyLogo" alt="">
                 </div>
               </div>
               <div class="register__check-company-details">
-                <div class="form-group-data">
-                  <p class="form-group-data__title">Название компании</p>
-                  <p class="form-group-data__value">{{ organizationStore.registerOrg.companyName || '-' }}</p>
+                <div class="form-group">
+                  <p class="form-group__title">Название компании</p>
+                  <p class="form-group__value">{{ organizationStore.registerOrg.companyName || '-' }}</p>
                 </div>
-                <div class="form-group-data">
-                  <p class="form-group-data__title">География фактического производства</p>
-                  <div class="form-group-data__container">
+                <div class="form-group">
+                  <p class="form-group__title">География фактического производства</p>
+                  <div class="form-group__container">
                     <i class="flag flag_round" :class="organizationStore.registerOrg.selectedProductionCountries[0]
                       ? selectFlag(organizationStore.registerOrg.selectedProductionCountries[0].countryId)
                       : ''" />
@@ -68,16 +68,16 @@
               </div>
             </div>
             <div class="form-group-data">
-              <p class="form-group-data__title">Описание</p>
-              <p class="form-group-data__value">{{ organizationStore.registerOrg.companyDescription || '-' }}</p>
+              <p class="form-group__title">Описание</p>
+              <p class="form-group__value">{{ organizationStore.registerOrg.companyDescription || '-' }}</p>
             </div>
             <div class="form-group-data">
-              <p class="form-group-data__title">Сайт</p>
-              <p class="form-group-data__value">{{ organizationStore.registerOrg.companyDescription || '-' }}</p>
+              <p class="form-group__title">Сайт</p>
+              <p class="form-group__value">{{ organizationStore.registerOrg.companyDescription || '-' }}</p>
             </div>
             <div class="form-group-data">
-              <p class="form-group-data__title">Социальные сети</p>
-              <p class="form-group-data__value">{{ organizationStore.registerOrg.companyDescription || '-' }}</p>
+              <p class="form-group__title">Социальные сети</p>
+              <p class="form-group__value">{{ organizationStore.registerOrg.companyDescription || '-' }}</p>
             </div>
           </div>
         </CommonProfileCheckCard>
@@ -86,39 +86,39 @@
           changeLink="/register/step1" changeLinkLabel="Изменить" secondLink="/" secondLinkLabel="Просмотр документов">
           <div class="register__organization-data">
             <div class="form-group-data">
-              <p class="form-group-data__title">Юридическое названии организации</p>
-              <p class="form-group-data__value">{{ organizationStore.registerOrg.companyName || '-' }}</p>
+              <p class="form-group__title">Юридическое названии организации</p>
+              <p class="form-group__value">{{ organizationStore.registerOrg.companyName || '-' }}</p>
             </div>
           </div>
           <div class="form-group">
             <div class="form-group-data">
-              <p class="form-group-data__title">Форма организации</p>
-              <p class="form-group-data__value">{{ organizationStore.registerOrg.organizationForm || '-' }}</p>
+              <p class="form-group__title">Форма организации</p>
+              <p class="form-group__value">{{ organizationStore.registerOrg.organizationForm || '-' }}</p>
             </div>
             <div class="form-group-data">
-              <p class="form-group-data__title">ИНН</p>
-              <p class="form-group-data__value">{{ organizationStore.registerOrg.inn || '-' }}</p>
+              <p class="form-group__title">ИНН</p>
+              <p class="form-group__value">{{ organizationStore.registerOrg.inn || '-' }}</p>
             </div>
             <div class="form-group-data">
-              <p class="form-group-data__title">КПП</p>
-              <p class="form-group-data__value">{{ organizationStore.registerOrg.kpp || '-' }}</p>
+              <p class="form-group__title">КПП</p>
+              <p class="form-group__value">{{ organizationStore.registerOrg.kpp || '-' }}</p>
             </div>
             <div class="form-group-data">
-              <p class="form-group-data__title">ОГРН</p>
-              <p class="form-group-data__value">{{ organizationStore.registerOrg.ogrn || '-' }}</p>
+              <p class="form-group__title">ОГРН</p>
+              <p class="form-group__value">{{ organizationStore.registerOrg.ogrn || '-' }}</p>
             </div>
             <div class="form-group-data">
-              <p class="form-group-data__title">Страна</p>
-              <p class="form-group-data__value">{{ organizationStore.registerOrg.location || '-' }}</p>
+              <p class="form-group__title">Страна</p>
+              <p class="form-group__value">{{ organizationStore.registerOrg.location || '-' }}</p>
             </div>
             <div class="form-group-data">
-              <p class="form-group-data__title">Валюта</p>
-              <p class="form-group-data__value">{{ organizationStore.registerOrg.location || '-' }}</p>
+              <p class="form-group__title">Валюта</p>
+              <p class="form-group__value">{{ organizationStore.registerOrg.location || '-' }}</p>
             </div>
           </div>
           <div class="form-group-data">
-            <p class="form-group-data__title">Юридический адрес</p>
-            <p class="form-group-data__value">{{ organizationStore.registerOrg.registerAddress || '-' }}</p>
+            <p class="form-group__title">Юридический адрес</p>
+            <p class="form-group__value">{{ organizationStore.registerOrg.registerAddress || '-' }}</p>
           </div>
         </CommonProfileCheckCard>
       </div>
@@ -143,6 +143,7 @@ const organizationStore = useOrganizationStore();
 <style lang="scss">
 
 .profile {
+
   .checklist {
     max-width: 25.5em;
   }
@@ -164,6 +165,41 @@ const organizationStore = useOrganizationStore();
       border-color: #d2c3e4;
       color: #212529;
     }
+  }
+}
+
+.register__check-company-container {
+  display: flex;
+  column-gap: 5.5%;
+  color: #565263;
+  margin-bottom: 1.53em;
+}
+.register__check-company-logo {
+  flex: 1 0 20%;
+  min-width: 9em;
+  font-size: 1.3em;
+
+  img {
+    width: 100%;
+    height: 100%;
+    border: 1px solid #d1d5db;
+    object-fit: cover;
+  }
+
+}
+.register__check-company-details {
+  flex: 1 0 80%;
+  display: flex;
+  flex-direction: column;
+  row-gap: 1.53em;
+
+  .form-group-data {
+    flex: 0;
+    margin-bottom: 0;
+  }
+
+  .flag {
+    margin-right: .5em;
   }
 }
 

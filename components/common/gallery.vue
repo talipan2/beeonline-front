@@ -1,146 +1,70 @@
 <template>
   <div class="gallery">
-    <div class="gallery-link">
-      <img src="~/assets/images/nophoto_img.png" alt="">
-      <div class="gallery-link__title">Загрузить ещё</div>
-      <input type="file" accept=".jpeg, .png, .jpg, .gif" @change="onFileChange">
-    </div>
-    <div class="gallery-link" v-for="(image, index) in images" :key="index">
-      <a :href="image.src">
-        <img :src="image.src">
-      </a>
-      <div class="gallery-link__load progress" v-if="image.loading">
-        <div class="gallery-link__progress">Сохранение...</div>
+    <h2 class="gallery__title">Галерея</h2>
+    <CommonGalleryLoad />
+    <p class="gallery__description">Если у вас есть видео о компании, вы можете указать ссылку на видео в
+      Youtube</p>
+    <label class="gallery__label" v-for="(link, index) in videoLinks" :key="index">Cсылка на видео в Youtube
+      <div class="gallery__link-add">
+        <UiInput class="gallery__link" />
+        <UiButton v-if="index === videoLinks.length - 1" class="gallery__btn" type="button" variant="quinary"
+          size="around" @click="addLink">
+          <SvgoAdd class="svg-m" />
+        </UiButton>
+        <UiButton v-else class="gallery__btn" type="button" variant="quinary" size="around"
+          @click="removeLink(index)">
+          <SvgoSub class="svg-m" />
+        </UiButton>
       </div>
-      <button class="gallery-link__del" @click="removeImage(index)">
-        <SvgoClose class="svg-l" fill="#6937a5"/>
-      </button>
-    </div>
+    </label>
   </div>
 </template>
 
 <script setup>
 
-const images = ref([]);
+const videoLinks = ref(['']); // Изначально один инпут
 
-const onFileChange = (event) => {
-  const file = event.target.files[0];
-  if (file && file.type.startsWith('image/')) {
-    const reader = new FileReader();
-    const newImage = { src: '', loading: true };
-    const index = images.value.length; // Get the current index
+const addLink = () => {
+  videoLinks.value.push(''); // Добавление нового пустого инпута
+};
 
-    images.value.push(newImage);
-
-    reader.onload = (e) => {
-      // Replace the entire object in the array to ensure reactivity
-      images.value[index] = { src: e.target.result, loading: false };
-    };
-
-    reader.readAsDataURL(file);
-  } else {
-    console.log('Invalid file type');
+const removeLink = (index) => {
+  if (videoLinks.value.length > 1) {
+    videoLinks.value.splice(index, 1); // Удаление инпута по индексу
   }
 };
 
-const removeImage = (index) => {
-  images.value.splice(index, 1);
-};
 </script>
 
 <style lang="scss">
 
 .gallery {
+  margin-bottom: 2.5em;
+}
+
+.gallery__title {
+  margin-bottom: .71em;
+}
+
+.gallery__link-add {
   display: flex;
-  flex-wrap: wrap;
-  column-gap: 2em;
-  row-gap: 2em;
-  padding-bottom: 2em;
-}
-
-.gallery-link{
-  position: relative;
-    display: block;
-    width: 100%;
-    height: 0;
-    padding-bottom: 16%;
-    box-shadow: 0 0 0 1px var(--border-color-secondary);
-    overflow: hidden;
-    flex: 0 1 16%;
-}
-
-.gallery-link>input {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    opacity: 0;
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-}
-
-.gallery-link img {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    object-fit: cover;
-    margin: auto;
-}
-
-.gallery-link__title {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    text-align: center;
-    background-color: rgba(0, 0, 0, 0.5);
-    color: var(--text-color-octonary);
-    min-height: 8%;
-    padding: 2rem 1rem;
-    line-height: 1;
-    font-size: 12px;
-}
-
-.gallery-link__load {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    top: auto;
-    height: 25px;
-    background-color: #6937a5;
-    background-image: linear-gradient(45deg, hsla(0, 0%, 100%, .15) 25%, transparent 0, transparent 50%, hsla(0, 0%, 100%, .15) 0, hsla(0, 0%, 100%, .15) 75%, transparent 0, transparent);
-    background-size: 1rem 1rem;
-}
-
-.gallery-link__progress {
-  height: 100%;
-  width: 100%;
-  color: #fff;
-  font-size: 16px;
-  font-weight: 800;
-  display: flex;
+  column-gap: 1em;
   align-items: center;
-  justify-content: center;
-  text-align: center;
-  text-shadow: 0 0 5px #000;
 }
 
-.gallery-link__del {
-  position: absolute;
-  top: 0;
-  right: 0;
-
-  svg {
-    width: 20px;  
-  }
+.gallery__description {
+  font-size: 1.6em;
+  line-height: 1.5em;
+  margin-bottom: 1.5em;
 }
 
+.gallery__link {
+  flex: 1 1 100%;
+}
+
+.gallery__label {
+  color: var(--text-color-secondary);
+  font-size: 1.3em;
+  line-height: 2em;
+}
 </style>

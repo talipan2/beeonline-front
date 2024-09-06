@@ -113,44 +113,60 @@ onUnmounted(() => {
 .register {
   padding-block: 10em;
 
-  &__container {
+  // .form-group-data {
+  //   margin-top: 0;
+  //   margin-bottom: 1em;
+  // }
+
+  // .form-group__title {
+  //   font-family: 'lato', sans-serif;
+  //   margin-bottom: .4em;
+  // }
+
+  // .form-group__value {
+  //   margin-top: .3em;
+  // }
+
+}
+
+  .register__container {
     display: flex;
     justify-content: space-between;
     column-gap: 14.2em;
   }
   
-  &__main {
+  .register__main {
     flex: 1 1 100%;
   }
 
-  &__title {
+  .register__title {
     font-size: 3.2em;
     margin-bottom: 1.71em;
   }
 
-  &__subtitle {
+  .register__subtitle {
     font-size: 3em;
     margin-bottom: .66em;
   }
 
-  &__text {
+  .register__text {
     font-size: 1.3em;
     margin-bottom: 1.46em;
   }
 
-  &__input-list {
-    display: flex;
-    column-gap: 3em;
-    row-gap: 1em;
-    flex-wrap: wrap;
-    margin-bottom: 1em;
-  }
+  // .register__input-list {
+  //   display: flex;
+  //   column-gap: 3em;
+  //   row-gap: 1em;
+  //   flex-wrap: wrap;
+  //   margin-bottom: 1em;
+  // }
 
   // &__input {
   //   margin-top: 0.31em;
   // }
 
-  &__label {
+  .register__label {
     font-size: 1.3em;
     flex: 1 0 45%;
     display: flex;
@@ -160,11 +176,11 @@ onUnmounted(() => {
     color: var(--text-color-secondary);
   }
 
-  &__checkbox {
+  .register__checkbox {
     margin-bottom: 3.6em;
   }
 
-  &__btn {
+  .register__btn {
     column-gap: .71em;
     max-width: 55%;
     text-transform: uppercase;
@@ -180,11 +196,11 @@ onUnmounted(() => {
     }
   }
 
-  &__checklist, &__advice {
+  .register__checklist, .register__advice {
     margin-top: 7em;
   }
 
-  &__soc-divider {
+  .register__soc-divider {
     display: flex;
     align-items: center;
     margin-bottom: 2.1em;
@@ -206,13 +222,13 @@ onUnmounted(() => {
 
   }
 
-  &__soc-text{
+  .register__soc-text{
     font-size: 1.3em;
     text-align: center;
   }
 
   
-  &__soc-links {
+  .register__soc-links {
     padding-block: 1em;
     margin-bottom: 3em;
     display: flex;
@@ -233,19 +249,17 @@ onUnmounted(() => {
     
   }
 
-  &__right-side {
+  .register__right-side {
     flex: 1 0 40em;
   }
 
 
-  &__preview-title {
+  .register__preview-title {
     font-size: 2.4em;
     margin-bottom: 0.83em;
     margin-top: 4.16em;
   }
 
-
-}
 
 .card {
   padding: 2em;

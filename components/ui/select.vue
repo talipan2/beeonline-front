@@ -48,7 +48,7 @@ function emitChange(event) {
 
   &__select {
     font-size: 1em;
-    padding: 0.62em;
+    padding: 1rem;
     width: 100%;
     border: 1px solid var(--border-color-secondary);
     appearance: none;

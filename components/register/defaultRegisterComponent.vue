@@ -2,24 +2,24 @@
   <RegisterLayout title="Контактные данные" description="Указанные данные не разглашаются третьим лицам и необходимы для успешной работы на
       портале.">
     <form @submit="handleSubmit">
-      <div class="register__input-list">
-        <label class="register__label">
+      <div class="form-group">
+        <label class="form-group-data form-group__title">
           Ваше имя *
-          <UiInput class="register__input" type="text" placeholder="Ваше имя" :required="true"
+          <UiInput class="form-group__value" type="text" placeholder="Ваше имя" :required="true"
             v-model="userData.name" />
         </label>
-        <label class="register__label">
+        <label class="form-group-data form-group__title">
           Ваша должность
-          <UiInput class="register__input" type="text" placeholder="Ваша должность" v-model="userData.jobTitle" />
+          <UiInput class="form-group__value" type="text" placeholder="Ваша должность" v-model="userData.jobTitle" />
         </label>
-        <label class="register__label">
+        <label class="form-group-data form-group__title">
           E-mail *
-          <UiInput class="register__input" type="email" placeholder="____@_____" :required="true"
+          <UiInput class="form-group__value" type="email" placeholder="____@_____" :required="true"
             v-model="userData.email" />
         </label>
-        <label class="register__label">
+        <label class="form-group-data form-group__title">
           Ваш телефон *
-          <UiInput class="register__input" type="tel" placeholder="Телефон" :required="true" v-model="userData.phone" />
+          <UiInput class="form-group__value" type="tel" placeholder="Телефон" :required="true" v-model="userData.phone" />
         </label>
       </div>
       <div class="register__checkbox">

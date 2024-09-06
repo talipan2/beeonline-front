@@ -22,13 +22,13 @@ import { useOrganizationStore } from '~/store/organizationStore';
 import { useSettingStore } from '~/store/settingStore';
 
 
-const props = defineProps({
-  buttonLabel: {
-    type: String,
-    default: 'Выбрать город',
-    required: true,
-  }
-})
+// const props = defineProps({
+//   buttonLabel: {
+//     type: String,
+//     default: 'Выбрать город',
+//     required: true,
+//   }
+// })
 
 const organizationStore = useOrganizationStore();
 const settingStore = useSettingStore();

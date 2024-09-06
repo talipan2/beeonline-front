@@ -1,13 +1,15 @@
 <template>
-  <label >
-    {{ title }}
+  <div>
+    <label class="form-group__title">
+      {{ title }}
+    </label>
     <div class="load-image">
-      <img src="~/assets/images/nophoto_pc.png">
-      <input type="file" name="logo" accept=".jpeg, .png, .jpg, .gif" @change="onFileChange">
-      <span class="load-image__title">Загрузить логотип (до 5Мб. Допустимый формат .jpeg, .png, .jpg,
-        .gif)</span>
-    </div>
-  </label>
+        <img src="~/assets/images/nophoto_pc.png">
+        <input type="file" name="logo" accept=".jpeg, .png, .jpg, .gif" @change="onFileChange">
+        <span class="load-image__title">Загрузить логотип (до 5Мб. Допустимый формат .jpeg, .png, .jpg,
+          .gif)</span>
+      </div>
+  </div>
 </template>
 
 <script setup>

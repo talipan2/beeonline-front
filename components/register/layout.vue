@@ -1,8 +1,8 @@
 <template>
   <div>
-    <h1 class="register__title">Регистрация исполнителя</h1>
-    <h2 class="register__subtitle">{{ title }}</h2>
-    <p class="register__text">{{ description }}</p>
+    <h1 class="register__title" v-if="blockTitle">{{ blockTitle }}</h1>
+    <h2 class="register__subtitle" v-if="title">{{ title }}</h2>
+    <p class="register__text" v-if="description">{{ description }}</p>
     <slot /> 
     <slot name="soc-reg"/>
   </div>
@@ -12,6 +12,10 @@
 
 const props = defineProps({
 
+  blockTitle: {
+    type: String,
+    default: 'Регистрация исполнителя',
+  },
   title: {
     type: String,
     default: '',

@@ -1,5 +1,5 @@
 <template>
-  <div class="sidebar sticky">
+  <div class="sidebar">
     <div class="sidebar__body">
       <nav class="sidebar__top">
         <NuxtLink v-for="link in sidebarTopLinks" :key="link.id" :to="link.value" class="sidebar__link link" active-class="active">

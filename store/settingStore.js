@@ -5,6 +5,8 @@ export const useSettingStore = defineStore("setting", {
     authModalStatus: false,
     chooseLocationModal: false,
     headerHeight: null,
+    trademarksModal: false,
+    exhibitionModal: false,
   }),
   actions: {
 

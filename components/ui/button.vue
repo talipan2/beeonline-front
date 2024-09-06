@@ -63,6 +63,7 @@ const handleClick = () => {
   display: flex;
   border: 2px solid transparent;
   align-items: center;
+  justify-content: center;
   text-wrap: nowrap;
   position: relative;
 }
@@ -70,7 +71,7 @@ const handleClick = () => {
 .btn-primary {
   background-color: var(--button-background-primary);
   color: var(--text-color-octonary);
-  font-size: 1.6rem;
+  // font-size: 1.6rem;
   font-weight: 600;
   line-height: 1em;
   
@@ -86,7 +87,7 @@ const handleClick = () => {
 .btn-secondary {
   background-color: var(--button-background-secondary);
   color: var(--text-color-quaternary);
-  font-size: 1.4rem;
+  // font-size: 1.4rem;
   font-weight: 600;
   line-height: 1em;
 
@@ -99,7 +100,7 @@ const handleClick = () => {
 .btn-tertiary {
   background-color: var(--button-background-quaternary);
   color: var(--text-color-ternary);
-  font-size: 1.4rem;
+  // font-size: 1.4rem;
   font-weight: 600;
   border: 2px solid var(--border-color-quaternary);
   line-height: 1em;
@@ -118,7 +119,7 @@ const handleClick = () => {
   background-color: hsla(0, 0%, 100%, 0.31);
   color: #fff;
   display: block;
-  font-size: 1.8rem;
+  // font-size: 1.8rem;
   line-height: 1em;
   transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 
@@ -132,8 +133,8 @@ const handleClick = () => {
 .btn-quinary {
   background-color: var(--button-background-primary);
   color: var(--text-color-octonary);
-  font-size: 1.8rem;
-  line-height: 1em;
+  // font-size: 1.8em;
+  // line-height: 1em;
 
   svg {
     fill: var(--text-color-octonary);
@@ -159,7 +160,7 @@ const handleClick = () => {
 }
 
 .btn-senary {
-  font-size: 1.6rem;
+  // font-size: 1.6rem;
   background-color: var(--button-background-quaternary);
   border-color: #fff;
   color: var(--text-color-primary);

@@ -122,4 +122,17 @@ computed: {
   }
 }
 
+.add-modal {
+  .modal-dialog {
+    width: 100%;
+    max-width: 400px;
+
+  }
+
+  .modal-content {
+    padding: 2rem;
+  }
+}
+
+
 </style>

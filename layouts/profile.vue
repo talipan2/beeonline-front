@@ -4,25 +4,53 @@
     <h1 class="profile__title">{{ title }}</h1>
     <div class="profile__container" :class="{ 'profile__container_type_second': !$slots.rightSide }">
       <div class="profile__left">
-        <CommonSidebar />
+        <CommonSidebar class="sticky" ref="leftSide" />
       </div>
       <div class="profile__content" :class="{ 'profile__content_type_full': !$slots.rightSide }">
         <slot name="content"/> 
       </div>
       <div class="profile__right" v-if="$slots.rightSide">
-        <slot name="rightSide" />
+        <div ref="rightSide" class="sticky">
+          <slot name="rightSide"  />
+        </div>
       </div>
     </div>
   </section>
 </template>
 
 <script setup>
+import { useSettingStore } from '~/store/settingStore';
+
 
 const props = defineProps({
   title: {
     type: String,
     default: '',
   }
+});
+
+const leftSide = ref(null);
+const rightSide = ref(null);
+const settingStore = useSettingStore();
+
+const onScrollPage = () => {
+  if (leftSide.value) {
+    leftSide.value.$el.style.top = `${settingStore.headerHeight + 30}px`;
+    if (rightSide.value) {
+      rightSide.value.style.top = `${settingStore.headerHeight + 30}px`;
+    }
+  } else {
+    console.log('Element not found');
+  }
+}
+
+onMounted(() => {
+  onScrollPage();
+  window.addEventListener("scroll", onScrollPage)
+});
+
+onUnmounted(() => {
+  window.removeEventListener("scroll", onScrollPage)
 });
 
 </script>

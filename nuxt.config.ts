@@ -1,6 +1,5 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  modules: ["nuxt-svgo", "nuxt-swiper", '@pinia/nuxt'],
+  modules: ["nuxt-svgo", "nuxt-swiper", '@pinia/nuxt', 'nuxt-tiptap-editor'],
   svgo: {
     defaultImport: 'component',
     autoImportPath: './assets/svg/',
@@ -21,6 +20,10 @@ export default defineNuxtConfig({
       },
     },
   },
+  tiptap: {
+    prefix: 'Tiptap',
+  },
+
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
 })

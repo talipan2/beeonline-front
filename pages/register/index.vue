@@ -57,54 +57,56 @@ onUnmounted(() => {
 .register {
   padding-block: 10em;
   position: relative;
+}
 
-  &__container {
+
+.register__container {
     display: flex;
     justify-content: space-between;
     column-gap: 14.2em;
   }
   
-  &__main {
+  .register__main {
     flex: 1 1 100%;
   }
 
-  &__title {
+  .register__title {
     font-size: 3.2em;
     margin-bottom: 1.71em;
   }
 
-  &__subtitle {
+  .register__subtitle {
     font-size: 3em;
     margin-bottom: .66em;
   }
 
-  &__text {
+  .register__text {
     font-size: 1.3em;
     margin-bottom: 1.46em;
   }
 
-  &__input-list {
-    display: flex;
-    column-gap: 3em;
-    row-gap: 1em;
-    flex-wrap: wrap;
-    margin-bottom: 2em;
-  }
+  // .register__input-list {
+  //   display: flex;
+  //   column-gap: 3em;
+  //   row-gap: 1em;
+  //   flex-wrap: wrap;
+  //   margin-bottom: 2em;
+  // }
 
-  &__input {
-    margin-top: 0.31em;
-  }
+  // .register__input {
+  //   margin-top: 0.31em;
+  // }
 
-  &__label {
+  .register__label {
     font-size: 1.3em;
     flex: 1 0 40%;
   }
 
-  &__checkbox {
+  .register__checkbox {
     margin-bottom: 3.6em;
   }
 
-  &__btn {
+  .register__btn {
     column-gap: .71em;
     max-width: 55%;
     text-transform: uppercase;
@@ -119,7 +121,11 @@ onUnmounted(() => {
     }
   }
 
-  &__btn_type_secondary {
+  .register__checklist, .register__advice {
+    margin-top: 7em;
+  }
+
+  .register__btn_type_secondary {
     width: 100%;
     max-width: 66%;
     
@@ -128,11 +134,9 @@ onUnmounted(() => {
     }
   }
 
-  &__checklist, &__advice {
+  .register__checklist, .register__advice {
     margin-top: 7em;
   }
-
-}
 
 .register__checklist {
   max-width: 25.5em;
@@ -147,6 +151,8 @@ onUnmounted(() => {
     margin-bottom: 1.8em;
   }
 }
+
+
 
 
 

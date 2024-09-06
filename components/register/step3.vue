@@ -1,13 +1,13 @@
 <template>
   <div>
-  <RegisterLayout title="Города фактического производства *">
+  <RegisterLayout :title="title" :block-title="blockTitle">
     <div class="register__step-three">
       <div class="register__text-container">
         <p class="register__text">Укажите город вашего производства. Если производств несколько - выберите несколько городов, но не более пяти.</p>
         <p class="register__text">Указанные города используются для автоматического добавления в новые услуги и позволят потенциальным заказчикам находить их в поиске по регионам.</p>
       </div>
-      <CommonLocation />
-      <div class="register__btn-container">
+      <CommonLocation buttonLabel="Добавить город"/>
+      <div class="register__btn-container" v-if="router.currentRoute.value.path.includes('/register')">
         <UiButton type="button" class="register__btn" variant="senary" size="large" @click="router.back">Назад</UiButton>
         <UiButton type="button" class="register__btn" variant="quinary" size="large" @click="router.push({path: '/register/step4'})">Далее
           <SvgoBtnArrow class="svg-lx" />
@@ -15,14 +15,26 @@
       </div>
     </div>
   </RegisterLayout>
-    <RegisterChooseCityModal v-model="selectedCities"/>
   </div>
 </template>
 
 <script setup>
+
 import { useOrganizationStore } from '~/store/organizationStore';
 import { useSettingStore } from '~/store/settingStore';
-;
+
+const props = defineProps({
+  blockTitle: {
+    type: String,
+    default: 'Регистрация исполнителя',
+  },
+  title: {
+    type: String,
+    default: 'Города фактического производства *',
+  },
+})
+
+
 const router = useRouter();
 const settingStore = useSettingStore();
 const organizationStore = useOrganizationStore();
@@ -46,22 +58,22 @@ function openAuthModal () {
 
 <style lang="scss">
 
-.register {
-  &__step-three {
-    .register__text{
-      margin-bottom: 0;
-    }
+.register__step-three {
+  .register__text{
+    margin-bottom: 0;
+    font-size: 1.3em;
+  }
 
-    .register__text-container {
-      margin-bottom: 3em;
-    }
+  .register__text-container {
+    margin-bottom: 3em;
+  }
 
-    .register__btn {
-      font-size: 1.2em;
-      line-height: 1em;
-    }
+  .register__btn {
+    font-size: 1.2em;
+    line-height: 1em;
   }
 }
+
 
 
 </style>

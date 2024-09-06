@@ -2,51 +2,25 @@
   <NuxtLayout name="profile" title="Обновление публичной карточки компании">
     <template #content>
       <div class="pub-card">
-        <h2 class="pub-card__title">Основные данные компании</h2>
-        <div class="pub-card__main">
-          <CommonImageLoad class="pub-card__image" />
-          <div class="pub-card__main-data">
-            <div class="form-group">
-              <div class="form-group-data">
-                <div class="form-group-data__title">Название компании</div>
-                <UiInput />
-              </div>
-              <div class="form-group-data">
-                <div class="form-group-data__title">Ссылка на сайт</div>
-                <UiInput />
-              </div>
-            </div>
-            <div class="form-group-data">
-              <div class="form-group-data__title">Описание</div>
-              <UiTextArea class="pub-card__description-input" />
-            </div>
+        <component 
+          :is="currentComponent" 
+          blockTitle="" 
+          :title="title" 
+          description=""
+        />
+        <div class="form-group">
+          <div class="form-group-data">
+            <UiButton type="button" class="form-group-data__btn" variant="senary" size="large" v-if="currentStep !== 1"
+              @click="prevStep">Назад</UiButton>
           </div>
-        </div>
-        <div class="pub-card__location">
-          <h3 class="pub-card__block-title">География фактического производства (по-умолчанию)*</h3>
-          <p class="pub-card__location-description">
-            Укажите предпочтительные города или регионы производства заказа.<br>
-            Указанные города и регионы используются для автоматического добавления
-            в новые заказы и позволят потенциальным исполнителям находить их в поиске.
-          </p>
-          <CommonLocation buttonLabel="Добавить город или регион" />
-        </div>
-        <div class="pub-card__gallery">
-          <h3 class="pub-card__block-title">Галерея</h3>
-          <CommonGallery />
-          <p class="pub-card__gallery-description">Если у вас есть видео о компании, вы можете указать ссылку на видео в
-            Youtube</p>
-          <label class="pub-card__gallery-label" v-for="(link, index) in videoLinks" :key="index">Cсылка на видео в Youtube
-            <div class="pub-card__gallery-link-add">
-              <UiInput class="pub-card__gallery-link" />
-              <UiButton v-if="index === videoLinks.length - 1" class="pub-card__gallery-btn" type="button" variant="quinary" size="around" @click="addLink">
-                <SvgoAdd class="svg-m" />
-              </UiButton>
-              <UiButton v-else class="pub-card__gallery-btn" type="button" variant="quinary" size="around" @click="removeLink(index)">
-                <SvgoSub class="svg-m" />
-              </UiButton>
-            </div>
-          </label>
+          <div class="form-group-data">
+            <UiButton v-if="currentStep < 5" type="submit" class="form-group-data__btn" variant="quinary" size="large" @click="nextStep">Далее
+              <SvgoBtnArrow class="svg-lx" />
+            </UiButton>
+            <UiButton v-if="currentStep >= 5" type="submit" class="form-group-data__btn" variant="quinary" size="large">Отправить на проверку
+              <SvgoBtnArrow class="svg-lx" />
+            </UiButton>
+          </div>
         </div>
       </div>
     </template>
@@ -55,23 +29,57 @@
 
 <script setup>
 
-const videoLinks = ref(['']); // Изначально один инпут
+import Step1 from '~/components/register/step2.vue';
+import Step2 from '~/components/register/step3.vue';
+import Gallery from '~/components/common/gallery.vue';
+import trademarksAndExhibition from '~/components/common/trademarksAndExhibition.vue';
+import addSocials from '~/components/common/addSocials.vue';
 
-const addLink = () => {
-  videoLinks.value.push(''); // Добавление нового пустого инпута
-};
+const currentStep = ref(1);
+const title = ref('');
 
-const removeLink = (index) => {
-  if (videoLinks.value.length > 1) {
-    videoLinks.value.splice(index, 1); // Удаление инпута по индексу
+const currentComponent = computed(() => {
+  switch (currentStep.value) {
+    case 1:
+      title.value = 'Основные данные компании';
+      return Step1
+    case 2:
+      title.value = 'Города фактического производства (по-умолчанию)*';
+      return Step2
+    case 3:
+      return Gallery
+    case 4: 
+     return trademarksAndExhibition
+    case 5: 
+     return addSocials
+    default:
+      return Step1;
   }
-};
+})
+
+const nextStep = () => {
+  if (currentStep.value < 5) {
+    currentStep.value++;
+  }
+}
+
+const prevStep = () => {
+  if (currentStep.value > 1) {
+    currentStep.value--;
+  }
+}
 
 </script>
 
 <style lang="scss">
 
 .pub-card {
+  max-width: 60%;
+
+  &__btn-container {
+
+  }
+
   &__title {
     margin-block: 1.25em .78em;
   }
@@ -135,9 +143,10 @@ const removeLink = (index) => {
   }
 
 
-  .load-image {
-    padding-bottom: 100%;
-  }
+  // .load-image {
+  //   padding-bottom: 100%;
+  // }
 }
+
 
 </style>
