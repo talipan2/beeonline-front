@@ -85,17 +85,9 @@ onUnmounted(() => {
     margin-bottom: 1.46em;
   }
 
-  // .register__input-list {
-  //   display: flex;
-  //   column-gap: 3em;
-  //   row-gap: 1em;
-  //   flex-wrap: wrap;
-  //   margin-bottom: 2em;
-  // }
-
-  // .register__input {
-  //   margin-top: 0.31em;
-  // }
+  .register__right-side {
+    flex: 1 0 40em;
+  }
 
   .register__label {
     font-size: 1.3em;
@@ -151,9 +143,5 @@ onUnmounted(() => {
     margin-bottom: 1.8em;
   }
 }
-
-
-
-
 
 </style>

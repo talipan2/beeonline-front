@@ -25,11 +25,19 @@
 </template>
 
 <script setup>
+import { useUserStore } from '~/store/userStore';
 
-const sidebarTopLinks = [
-  { id: 1, label: 'Рабочий стол', value: '/customer/desktop' },
-  { id: 2, label: 'Профиль', value: '/customer/profile' },
-  { id: 3, label: 'Услуги', value: '/' },
+
+const userStore = useUserStore();
+
+const getSidebarLinks = (role) => [
+  { id: 1, label: 'Рабочий стол', value: `/${role}/desktop` },
+  { id: 2, label: 'Профиль', value: `/${role}/profile` },
+  {
+    id: 3,
+    label: role === 'performer' ? 'Услуги' : 'Заказы',
+    value: '/',
+  },
   { id: 4, label: 'Сообщения', value: '/' },
   { id: 5, label: 'Сделки', value: '/' },
   { id: 6, label: 'Избранное', value: '/' },
@@ -38,7 +46,9 @@ const sidebarTopLinks = [
   { id: 9, label: 'Уведомления', value: '/' },
   { id: 10, label: 'Техническая поддержка', value: '/' },
   { id: 11, label: 'Новости', value: '/' },
-]
+];
+
+const sidebarTopLinks = getSidebarLinks(userStore.role);
 
 </script>
 

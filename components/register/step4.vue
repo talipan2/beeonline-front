@@ -100,7 +100,7 @@
       </div>
       <div class="register__btn-container">
         <UiButton type="button" class="register__btn" variant="senary" size="large" @click="router.back">Назад</UiButton>
-        <UiButton class="register__btn" variant="quinary" size="large">Подтвердить </UiButton>
+        <UiButton type="button" class="register__btn" variant="quinary" size="large" @click="handleSubmit">Подтвердить </UiButton>
       </div>
     </CommonProfileCheckCard>
   </RegisterLayout>
@@ -118,6 +118,49 @@ const userStore = useUserStore();
 const organizationStore = useOrganizationStore();
 const moreCities = ref(null);
 
+
+const handleSubmit = () => {
+  organizationStore.setOrganization({
+    name: organizationStore.registerOrg.companyName,
+    userId: userStore.userData.id,
+    phone: userStore.userData.phone,
+    email: userStore.userData.email,
+    organizationForm: organizationStore.registerOrg.organizationForm,
+    inn: organizationStore.registerOrg.inn,
+    kpp: organizationStore.registerOrg.kpp,
+    ogrn: organizationStore.registerOrg.ogrn,
+    legalAddress: organizationStore.registerOrg.legalAddress,
+    urlSite: organizationStore.registerOrg.urlSite,
+    selfEmployed: organizationStore.registerOrg.selfEmployed,
+    location: organizationStore.registerOrg.location,
+  }).then((res) => {
+    if(res.data && res.data.id) {
+      organizationStore.setPubCard({
+        id: res.data.id,
+        // id: 46,
+        name: organizationStore.registerOrg.companyName,
+        logo: organizationStore.registerOrg.companyLogo,
+        type: userStore.role,
+        description: organizationStore.registerOrg.companyDescription,
+        status: 1,
+        
+      }).then((res) => {
+        if(res.data) {
+          router.push('/')
+        }
+      })
+    }
+  })
+  // organizationStore.setPubCard({
+  //   id: res.data.id,
+  //   id: 46,
+  //   name: organizationStore.registerOrg.companyName,
+  //   logo: organizationStore.registerOrg.companyLogo,
+  //   type: userStore.role,
+  //   description: organizationStore.registerOrg.companyDescription,
+  //   status: 1,
+  // })
+}
 
 </script>
 

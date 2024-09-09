@@ -1,8 +1,8 @@
 <template>
   <div>
-    <NuxtLayout name="profile" title="Кабинет заказчика">
+    <NuxtLayout name="profile" title="Кабинет исполнителя">
       <template #header>
-        <UiBreadCrumb :list="[{label: 'Главная', link: '/'}, { label: 'Кабинет заказчика', link: '/customer' }, { label: 'Профиль', link: '' }]" />
+        <UiBreadCrumb :list="[{label: 'Главная', link: '/'}, { label: 'Кабинет исполнителя', link: '/performer' }, { label: 'Профиль', link: '' }]" />
       </template>
       <template #content>
         <Profile />
@@ -22,7 +22,7 @@
 <style lang="scss">
 
 .profile {
-
+  
   .checklist {
     max-width: 25.5em;
   }

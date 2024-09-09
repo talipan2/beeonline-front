@@ -7,7 +7,7 @@ export const useUserStore = defineStore('user', {
     userToken: null,
     isAuth: false,
     location: null,
-    role: null,
+    role: "performer",
     settingUser: {
       location: 1,
       inn: null,
@@ -33,11 +33,10 @@ export const useUserStore = defineStore('user', {
       try {
         const response = await Api.authUser(email, password);
         if(response.data) {
-          console.log(response.data)
-          // this.userData = response.data.user;
           this.isAuth = true;
           this.userToken = response.data.access_token;
           localStorage.setItem('token', this.userToken);
+          this.userData = response.data.user;
         }
       } catch (error) {
         throw error;
@@ -47,12 +46,11 @@ export const useUserStore = defineStore('user', {
     async registerUser(name, email, job='', phone) {
       try {
         const response = await Api.registerUser(name, email, job, phone);
-        console.log(response)
         if(response.data) {
-          // this.userData = response.data.user;
           this.isAuth = true;
           this.userToken = response.data.access_token;
           localStorage.setItem('token', this.userToken);
+          this.userData = response.data.user;
         }
       } catch (error) {
         throw error;
@@ -63,16 +61,13 @@ export const useUserStore = defineStore('user', {
       try {
         const response = await Api.checkAuth();
         if(response.data) {
-          // this.userData = response.data.user;
           this.isAuth = true;
-          this.userToken = response.data.user.token;
-          localStorage.setItem('token', this.userToken);
-          console.log(response.data.user)
+          this.userData = response.data.user;
+
         }
       } catch (error) {
-        // this.userToken = null;
-        // localStorage.removeItem('token');
-        // this.isAuth = false;
+        this.userToken = null;
+        this.isAuth = false;
         throw error;
       }
     },
@@ -84,6 +79,7 @@ export const useUserStore = defineStore('user', {
           this.userToken = null;
           localStorage.removeItem('token');
           this.isAuth = false;
+          this.userData = {};
         }
       } catch (error) {
         throw error;

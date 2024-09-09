@@ -1,6 +1,6 @@
 <template>
   <section class="profile container">
-    <UiBreadCrumb />
+    <slot name="header" />
     <h1 class="profile__title">{{ title }}</h1>
     <div class="profile__container" :class="{ 'profile__container_type_second': !$slots.rightSide }">
       <div class="profile__left">

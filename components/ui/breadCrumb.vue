@@ -1,59 +1,34 @@
 <template>
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
+  <nav aria-label="breadcrumb" class="container">
+    <ul class="breadcrumb">
       <li
-        v-for="(crumb, index) in breadcrumbs"
+        v-for="(crumb, index) in list"
         :key="index"
         class="breadcrumb-item"
-        :class="{ active: index === breadcrumbs.length - 1 }"
+        :class="{ active: index === list.length - 1 }"
       >
         <NuxtLink
-          v-if="crumb.link && index !== breadcrumbs.length - 1"
+          v-if="crumb.link && index !== list.length - 1"
           :to="crumb.link"
         >
-          {{ crumb.name }}
+          {{ crumb.label }}
         </NuxtLink>
-        <span v-else>{{ crumb.name }}</span>
+        <span v-else>{{ crumb.label }}</span>
       </li>
-    </ol>
+    </ul>
   </nav>
 </template>
 
 <script setup>
-import { useRoute } from 'vue-router';
-// Словарь для перевода сегментов пути на русский язык
-const translations = {
-  services: 'Каталог услуг',
-}
-const route = useRoute();
-const breadcrumbs = computed(() => {
-  const paths = route.path.split('/').filter(path => path);
-  const crumbs = [{
-    name: 'Главная',
-    link: '/'
-  }];
-  paths.forEach((path, index) => {
-    let name;
-    if (translations[path]) {
-      name = translations[path];
-    } else if (!isNaN(path)) {
-      const prevPath = paths[index - 1];
-      if (prevPath === 'services') {
-        name = 'Услуга';
-      } else {
-        name = `ID: ${path}`;
-      }
-    } else {
-      name = path.charAt(0).toUpperCase() + path.slice(1);
-    }
-    crumbs.push({
-      name,
-      link: '/' + paths.slice(0, index + 1).join('/')
-    });
-  });
-  crumbs[crumbs.length - 1].link = null;
-  return crumbs;
+
+const props = defineProps({
+  list: {
+    type: Array,
+    default: () => []
+  }
 });
+
+
 </script>
 
 <style lang="scss">
@@ -62,6 +37,7 @@ const breadcrumbs = computed(() => {
     column-gap: 1em;
     font-size: 1.6em;
     padding: 0;
+    margin-block: 2em 0;
     li {
       display: flex;
       align-items: center;

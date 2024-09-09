@@ -8,7 +8,7 @@
         </label>
         <div class="add-socials__input">
           <SvgoTelegram class="svg-lx" />
-          <UiInput class="form-group__value" type="text" placeholder="" />
+          <UiInput class="form-group__value" v-model="organizationStore.pubCards.url_tg" type="text" placeholder="" />
         </div>
       </div>
       <div class="add-socials__item">
@@ -17,7 +17,7 @@
         </label>
         <div class="add-socials__input">
           <SvgoVk class="svg-lx" />
-          <UiInput class="form-group__value" type="text" placeholder="" />
+          <UiInput class="form-group__value" v-model="organizationStore.pubCards.url_vk" type="text" placeholder="" />
         </div>
       </div>
       <div class="add-socials__item">
@@ -26,12 +26,20 @@
         </label>
         <div class="add-socials__input">
           <SvgoYoutube class="svg-lx" />
-          <UiInput class="form-group__value" type="text" placeholder="" />
+          <UiInput class="form-group__value" v-model="organizationStore.pubCards.url_yt" type="text" placeholder="" />
         </div>
       </div>
     </div>
   </div>  
 </template>
+
+<script setup>
+import { useOrganizationStore } from '~/store/organizationStore';
+
+
+const organizationStore = useOrganizationStore();
+
+</script>
 
 <style lang="scss">
 

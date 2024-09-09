@@ -16,12 +16,17 @@
         <SvgoClose class="svg-l" fill="#6937a5"/>
       </button>
     </div>
+      <button type="button" @click="handleSubmit">отпарвить</button>
   </div>
 </template>
 
 <script setup>
+import { useOrganizationStore } from '~/store/organizationStore';
+
 
 const images = ref([]);
+const formData = new FormData();
+const organizationStore = useOrganizationStore();
 
 const onFileChange = (event) => {
   const file = event.target.files[0];
@@ -37,15 +42,27 @@ const onFileChange = (event) => {
       images.value[index] = { src: e.target.result, loading: false };
     };
 
+    formData.append('image[]', file);
     reader.readAsDataURL(file);
+  //   for (let pair of formData.entries()) {
+  //   console.log(`${pair[0]}: ${pair[1].name}`);
+  // }
   } else {
     console.log('Invalid file type');
   }
 };
 
+const handleSubmit = (event) => {
+  organizationStore.setGallery(formData);
+}
+
 const removeImage = (index) => {
   images.value.splice(index, 1);
 };
+
+watch(images.value, () => {
+  organizationStore.pubCardGallery = formData;
+})
 </script>
 
 <style lang="scss">

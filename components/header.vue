@@ -83,9 +83,11 @@
 <script setup>
 import { useUserStore } from '~/store/userStore';
 import { useSettingStore } from '~/store/settingStore';
+import { useOrganizationStore } from '~/store/organizationStore';
 
 const userStore = useUserStore();
 const settingStore = useSettingStore();
+const organizationStore = useOrganizationStore();
 
 const isAuth = computed(() => userStore.isAuth);
 const isOpenMobileModal = ref(false);
@@ -137,6 +139,8 @@ onMounted(() => {
   window.addEventListener("scroll", onScrollPage)
   if(localStorage.getItem('token')) {
     userStore.checkAuth();
+    organizationStore.getSelfOrganization();
+    organizationStore.getSelfPubCard();
   }
 });
 

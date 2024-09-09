@@ -49,7 +49,7 @@
           </label>
           <label class="form-group-data form-group__title">
             КПП *
-            <UiInput class="form-group__value" type="text" placeholder="____________" :disabled="true"
+            <UiInput class="form-group__value" type="text" placeholder="____________" 
               v-model="organizationStore.registerOrg.kpp" :required="!skipInn" />
           </label>
           <label class="form-group-data form-group__title register__label_type_select">
@@ -59,12 +59,12 @@
           <label class="form-group-data form-group__title">
             ОГРН *
             <UiInput class="form-group__value" type="text" placeholder="____________" :required="!skipInn"
-              :disabled="true" v-model="organizationStore.registerOrg.ogrn" />
+               v-model="organizationStore.registerOrg.ogrn" />
           </label>
         </div>
         <label class="form-group-data form-group__title">
           Юридический адрес *
-          <UiInput class="form-group__value" type="text" placeholder="" :required="!skipInn" :disabled="true"
+          <UiInput class="form-group__value" type="text" placeholder="" :required="!skipInn" 
             v-model="organizationStore.registerOrg.legalAddress" />
         </label>
       </div>
@@ -88,7 +88,7 @@
         </label>
         <label class="form-group__title">
           Юридический адрес *
-          <UiInput class="form-group__value" type="text" placeholder="____________" :disabled="true"
+          <UiInput class="form-group__value" type="text" placeholder="____________" 
             v-model="organizationStore.registerOrg.kpp" :required="!skipInn" />
         </label>
         <div>

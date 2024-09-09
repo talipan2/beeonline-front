@@ -38,7 +38,7 @@ watch(() => props.modelValue, (newValue) => {
 });
 
 function emitChange(event) {
-  emit('update:modelValue', internalValue.value);
+  emit('update:modelValue', internalValue.id);
 }
 </script>
 

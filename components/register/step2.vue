@@ -2,10 +2,12 @@
   <RegisterLayout :title="title" :description="description" :block-title="blockTitle">
     <form @submit="handleSubmit">
       <label class="form-group__title" for="name">Название компании *
-        <UiInput class="form-group__value" type="text" id="name" v-model="organizationStore.registerOrg.companyName" placeholder="Компания" :required="true" />
+        <UiInput class="form-group__value" type="text" id="name" 
+          v-model="organizationData.companyName" placeholder="Компания" :required="true" 
+        />
       </label>
       <label class="form-group__title" for="site">Ссылка на сайт
-        <UiInput class="form-group__value" type="text" id="site" v-model="organizationStore.registerOrg.companyName"
+        <UiInput class="form-group__value" type="text" id="site" v-model="organizationData.site"
           placeholder="Компания" :required="true" />
       </label>
       <div class="form-group register__input-list_type_company">
@@ -13,7 +15,7 @@
         <div class="form-group-data">
           <label class="form-group__title">Описание *
           </label>
-          <UiTextArea v-model="organizationStore.registerOrg.companyDescription" :rows="5" />
+          <UiTextArea v-model="organizationData.description" :rows="5" />
         </div>
       </div>
       <div class="register__btn-container" v-if="router.currentRoute.value.path.includes('/register')">
@@ -29,7 +31,6 @@
 
 <script setup>
 import { useOrganizationStore } from '~/store/organizationStore';
-import { useUserStore } from '~/store/userStore';
 
 const props = defineProps({
   blockTitle: {
@@ -44,25 +45,28 @@ const props = defineProps({
     type: String,
     default: 'Указанные данные увидят другие участники портала.',
   }
-
 })
 
 const router = useRouter();
-const userStore = useUserStore();
 const organizationStore = useOrganizationStore();
 
-const imagePreview = ref(null);
+const isRegister = computed(() => router.currentRoute.value.path.includes('/register'));
 
-const onFileChange = (event) => {
-  const file = event.target.files[0];
-  if (file && file.type.startsWith('image/')) {
-    imagePreview.value = URL.createObjectURL(file);
-    organizationStore.registerOrg.companyLogo = imagePreview.value
+const organizationData = computed(() => {
+  if (isRegister.value) {
+    return {
+      companyName: organizationStore.registerOrg.companyName,
+      site: organizationStore.registerOrg.siteUrl,
+      description: organizationStore.registerOrg.companyDescription,
+    };
   } else {
-    console.log('Invalid file type');
+    return {
+      companyName: organizationStore.pubCards.name,
+      site: organizationStore.pubCards.url_site,
+      description: organizationStore.pubCards.description,
+    };
   }
-};
-
+});
 
 const handleSubmit = (e) => {
   e.preventDefault();
