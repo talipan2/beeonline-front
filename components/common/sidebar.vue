@@ -36,7 +36,7 @@ const getSidebarLinks = (role) => [
   {
     id: 3,
     label: role === 'performer' ? 'Услуги' : 'Заказы',
-    value: '/',
+    value: role === 'performer' ? '/performer/services' : '/customer/orders',
   },
   { id: 4, label: 'Сообщения', value: '/' },
   { id: 5, label: 'Сделки', value: '/' },

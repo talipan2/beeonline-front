@@ -14,12 +14,14 @@
     "@tiptap/extension-text-style": "^2.6.6",
     "@tiptap/starter-kit": "^2.6.6",
     "axios": "^1.7.5",
+    "flatpickr": "^4.6.13",
     "nuxt": "^3.12.4",
     "nuxt-svgo": "^4.0.3",
     "nuxt-swiper": "^1.2.2",
     "nuxt-tiptap-editor": "^1.2.1",
     "vue": "latest",
     "vue-final-modal": "^4.5.4",
+    "vue-flatpickr-component": "^11.0.5",
     "vue-tippy": "^6.4.4"
   },
   "devDependencies": {

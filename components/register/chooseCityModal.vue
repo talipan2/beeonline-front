@@ -19,7 +19,7 @@
         <div class="choose-city__container" :class="{ 'choose-city__item_type_selected': activeLevel === 'country' }">
           <p class="choose-city__title">Страна</p>
           <ul class="choose-city__list">
-            <li class="choose-city__item " v-for="country in countries"
+            <li class="choose-city__item " v-for="country in locations.country"
               :class="{ 'selected': country.id === selectedCountry?.id }" :key="country.id">
               <button @click="selectCountry(country)">{{ country.name }}</button>
             </li>
@@ -27,7 +27,7 @@
         </div>
         <div class="choose-city__container" :class="{ 'choose-city__item_type_selected': activeLevel === 'region' }">
           <p class="choose-city__title">Регион</p>
-          <ul class="choose-city__list" v-if="selectedCountry">
+          <ul class="choose-city__list" >
             <li class="choose-city__item" v-for="region in regions"
               :class="{ 'selected': region.id === selectedRegion?.id }" :key="region.id">
               <UiCheckbox ref="regionCheckbox" :indeterminate="updateRegionIndeterminate(region)"
@@ -35,6 +35,7 @@
                 v-model="region.selected" :id="region.id" @change="selectAllCities(region)">
               </UiCheckbox>
               <button @click="selectRegion(region)">{{ region.name }}</button>
+              
             </li>
           </ul>
         </div>
@@ -71,95 +72,11 @@
 import { useOrganizationStore } from '~/store/organizationStore';
 import { useSettingStore } from '~/store/settingStore';
 import { useUserStore } from '~/store/userStore';
+import { useLocationStore } from '~/store/locationStore';
 
-const countries = ref([
-  { id: '1', name: 'Россия' },
-  { id: '2', name: 'Италия' },
-  { id: '3', name: 'Германия' },
-]);
+const locationStore = useLocationStore();
 
-const regionsData = {
-  '1': [
-    { id: '11', name: 'Московская область' },
-    { id: '12', name: 'Ленинградская область' }
-  ],
-  '2': [
-    { id: '21', name: 'Лацио' },
-    { id: '22', name: 'Тоскана' },
-    { id: '21', name: 'Лацио' },
-    { id: '22', name: 'Тоскана' },
-    { id: '21', name: 'Лацио' },
-    { id: '22', name: 'Тоскана' },
-    { id: '21', name: 'Лацио' },
-    { id: '22', name: 'Тоскана' },
-    { id: '21', name: 'Лацио' },
-    { id: '22', name: 'Тоскана' },
-    { id: '21', name: 'Лацио' },
-    { id: '22', name: 'Тоскана' },
-    { id: '21', name: 'Лацио' },
-    { id: '22', name: 'Тоскана' },
-    { id: '21', name: 'Лацио' },
-    { id: '22', name: 'Тоскана' },
-    { id: '21', name: 'Лацио' },
-    { id: '22', name: 'Тоскана' },
-    { id: '21', name: 'Лацио' },
-    { id: '22', name: 'Тоскана' },
-    { id: '21', name: 'Лацио' },
-    { id: '22', name: 'Тоскана' },
-    { id: '21', name: 'Лацио' },
-    { id: '22', name: 'Тоскана' },
-    { id: '21', name: 'Лацио' },
-    { id: '22', name: 'Тоскана' },
-    { id: '21', name: 'Лацио' },
-    { id: '22', name: 'Тоскана' },
-    { id: '21', name: 'Лацио' },
-    { id: '22', name: 'Тоскана' },
-    { id: '21', name: 'Лацио' },
-    { id: '22', name: 'Тоскана' },
-  ],
-  '3': [
-    { id: '31', name: 'Бавария' },
-    { id: '32', name: 'Берлин' }
-  ]
-};
-
-const citiesData = {
-  '11': [
-    { id: '111', name: 'Москва' },
-    { id: '112', name: 'Подольск' },
-    { id: '113', name: 'Москва' },
-    { id: '114', name: 'Подольск' },
-    { id: '115', name: 'Москва' },
-    { id: '116', name: 'Подольск' },
-    { id: '117', name: 'Москва' },
-    { id: '118', name: 'Подольск' },
-    { id: '119', name: 'Москва' },
-    { id: '1191', name: 'Подольск' },
-    { id: '1192', name: 'Москва' },
-    { id: '1193', name: 'Подольск' },
-    { id: '1194', name: 'Москва' },
-    { id: '1195', name: 'Подольск' }
-  ],
-  '12': [
-    { id: '121', name: 'Санкт-Петербург' },
-    { id: '122', name: 'Выборг' }
-  ],
-  '21': [
-    { id: '211', name: 'Рим' },
-    { id: '212', name: 'Витербо' }
-  ],
-  '22': [
-    { id: '221', name: 'Флоренция' },
-    { id: '222', name: 'Пиза' }
-  ],
-  '31': [
-    { id: '311', name: 'Мюнхен' },
-    { id: '312', name: 'Нюрнберг' }
-  ],
-  '32': [
-    { id: '321', name: 'Берлин' }
-  ]
-};
+const locations = computed(() => locationStore.locations )
 
 const props = defineProps({
   modelValue: {
@@ -184,29 +101,67 @@ const activeLevel = ref('country');
 
 // выбор города с чекбокса
 function toggleCitySelection(city) {
-  if (selectedCities.value.find(selectedCity => selectedCity.id === city.id)) {
-    selectedCities.value = selectedCities.value.filter(selectedCity => selectedCity.id !== city.id);
-  } else if(selectedCities.value.length < 5 && userStore.role === 'performer') {
-    selectedCities.value = [...selectedCities.value, { 
-      id: city.id, 
-      region: selectedRegion.value.name, 
-      country: selectedCountry.value.name,
-      countryId: selectedCountry.value.id,
-      city: city.name,
-      selected: false,
-    }];
-  } else if (userStore.role === 'customer' && !selectedCities.value.includes(city.id)) {
-    selectedCities.value = [...selectedCities.value, { 
-      id: city.id, 
-      region: selectedRegion.value.name, 
-      country: selectedCountry.value.name,
-      countryId: selectedCountry.value.id,
-      city: city.name,
-      selected: false,
-    }];
+  if (!selectedCities.value.some(selectedCity => selectedCity.id === selectedRegion.value.id)) {
+
+    if (selectedCities.value.find(selectedCity => selectedCity.id === city.id)) {
+      selectedCities.value = selectedCities.value.filter(selectedCity => selectedCity.id !== city.id);
+    } else if(selectedCities.value.length < 5 && userStore.role === 'performer') {
+      selectedCities.value = [...selectedCities.value, { 
+        id: city.id, 
+        region: selectedRegion.value.name, 
+        country: selectedCountry.value.name,
+        countryId: selectedCountry.value.id,
+        city: city.name,
+        selected: false,
+      }];
+    } else if (userStore.role === 'customer' && !selectedCities.value.includes(city.id)) {
+      selectedCities.value = [...selectedCities.value, { 
+        id: city.id, 
+        region: selectedRegion.value.name, 
+        country: selectedCountry.value.name,
+        countryId: selectedCountry.value.id,
+        city: city.name,
+        selected: false,
+      }];
+    }
+    selectedRegion.value.selected = cities.value.length > 0 && cities.value.every(city => city.selected);
+  } else {
+    selectedRegion.value.cities.forEach(regionCity => {
+      // Добавляем все города региона, кроме того, с которого сняли выбор
+      if (regionCity.id !== city.id) {
+        const alreadySelected = selectedCities.value.some(selectedCity => selectedCity.id === regionCity.id);
+        if (!alreadySelected) {
+          selectedCities.value.push({
+            id: regionCity.id, 
+            region: selectedRegion.value.name, 
+            country: selectedCountry.value.name,
+            countryId: selectedCountry.value.id,
+            city: regionCity.name,
+            selected: false,
+          });
+        }
+      }
+    });
+
+    // Убираем регион из selectedCities
+    selectedCities.value = selectedCities.value.filter(selectedCity => selectedCity.id !== selectedRegion.value.id);
   }
 
-  selectedRegion.value.selected = cities.value.length > 0 && cities.value.every(city => city.selected);
+
+  if(selectedRegion.value.cities.every(city => city.selected)) {
+    selectedCities.value.push({
+     id: selectedRegion.value.id,
+     region: selectedRegion.value.name,
+     country: selectedCountry.value.name,
+     countryId: selectedCountry.value.id,
+     selected: true
+   })
+    selectedCities.value = selectedCities.value.filter(selectedCity => 
+      !selectedRegion.value.cities.some(city => city.id === selectedCity.id)
+    );
+  } else {
+    selectedCities.value = selectedCities.value.filter(selectedCity => selectedCity.id !== selectedRegion.value.id);
+  }
 }
 
 // отправка родителю выбранных городов
@@ -218,27 +173,20 @@ function handleSubmit () {
 
 // обновление выбранных городов
 function updateCitySelection() {
-  for (const regionId in citiesData) {
-    if (citiesData.hasOwnProperty(regionId)) {
-      const regionCities = citiesData[regionId];
-      const selectedCitiesInRegion = selectedCities.value.filter(selectedCity => 
-        regionCities.some(city => city.id === selectedCity.id)
-      );
-
-      // Обновляем статус выбранности для каждого города
-      regionCities.forEach(city => {
-        city.selected = selectedCities.value.some(selectedCity => selectedCity.id === city.id);
-      });
-
-      // Обновляем статус выбранности региона
-      const region = regionsData[regionId.charAt(0)].find(region => region.id === regionId);
-      if (region) {
-        // Проверка, выбраны ли все города региона
-        const allCitiesSelected = regionCities.length > 0 && selectedCitiesInRegion.length === regionCities.length;
-        region.selected = allCitiesSelected;
+  locations.value.country.forEach(country => {
+    country.regions.forEach(region => {
+      region.selected = selectedCities.value.some(selectedCity => selectedCity.id === region.id);
+      if(region.selected) {
+        region.cities.forEach(city => {
+          city.selected = true;
+        })
+      } else {
+        region.cities.forEach(city => {
+          city.selected = selectedCities.value.some(selectedCity => selectedCity.id === city.id);
+        })
       }
-    }
-  }
+    })
+  })
 }
 
 // закрытие модального окна
@@ -264,51 +212,45 @@ function goBack() {
 function selectCountry(country) {
   selectedCountry.value = country;
   selectedRegion.value = null;
-  regions.value = regionsData[country.id]; 
+  regions.value = country.regions;
   cities.value = []; 
   activeLevel.value = 'region';
+  locationStore.selectedCountry = country;
 }
 
 function selectRegion(region) {
   selectedRegion.value = region;
-  cities.value = citiesData[region.id];
+  cities.value = region.cities;
   activeLevel.value = 'city'
+  locationStore.selectedRegion = region;
 }
 
 // выбор всех городов в регионе
 function selectAllCities(region) {
-  console.log(region)
-  if (region.selected) {
-    selectRegion(region);
-    cities.value.forEach((city) => {
-      if (!selectedCities.value.some(selectedCity => selectedCity.id === city.id)) {
-        selectedCities.value.push({
-          id: city.id,
-          region: selectedRegion.value.name,
-          country: selectedCountry.value.name,
-          countryId: selectedCountry.value.id,
-          city: city.name,
-          selected: true,
-        });
-      }
-    });
-  } else {
-    selectedCities.value = selectedCities.value.filter(selectedCity => {
-      return !cities.value.some(city => city.id === selectedCity.id);
-    });
-  }
-
-  cities.value.forEach(city => {
-    city.selected = selectedCities.value.some(selectedCity => selectedCity.id === city.id);
-  });
+ if(region.selected) {
+   selectedCities.value.push({
+     id: region.id,
+     region: region.name,
+     country: selectedCountry.value.name,
+     countryId: selectedCountry.value.id,
+     selected: true
+   })
+   region.cities.forEach(city => {
+     city.selected = true;
+   });
+ } else {
+   selectedCities.value = selectedCities.value.filter(selectedCity => selectedCity.id !== region.id);
+   region.cities.forEach(city => {
+     city.selected = false;
+   });
+ }
 }
 
 // добавление неопределенного состояния чекбоксу региона
 function updateRegionIndeterminate(region) {
-  const selectedRegion = citiesData[region.id];
-  const checkedCities = selectedRegion.filter(city => city.selected);
+  const checkedCities = region.cities.filter(city => city.selected);
 
-  if (checkedCities.length > 0 && checkedCities.length < selectedRegion.length) {
+  if (checkedCities.length > 0 && checkedCities.length < region.cities.length) {
     region.selected = false;
     return true;
   } 
@@ -318,11 +260,26 @@ function updateRegionIndeterminate(region) {
 
 // отслеживание состояния выбранных городов в родителе
 watch(() => props.modelValue, (newVal) => {
-  selectedCities.value = selectedCities.value.filter(selectedCity => {
-    return newVal.some(city => city.id === selectedCity.id);
-  });
-  updateCitySelection();
+  if (newVal && newVal.length > 0) {
+      selectedCities.value = [...newVal]; 
+      updateCitySelection();
+    } else {
+      selectedCities.value = [];
+      console.log('Cleared selectedCities');
+    }
 })
+
+watch(() => settingStore.chooseLocationModal, (newVal) => {
+  updateCitySelection();
+  if(newVal === true) {
+    if(locationStore.selectedCountry){
+      selectCountry(locationStore.selectedCountry);
+      if(locationStore.selectedRegion) {
+        selectRegion(locationStore.selectedRegion);
+      }
+    }
+  }
+});
 
 </script>
 

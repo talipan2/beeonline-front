@@ -50,7 +50,7 @@
   </section>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 
 .services__container {
   display: grid;

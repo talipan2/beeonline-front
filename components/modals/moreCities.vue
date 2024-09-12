@@ -1,17 +1,18 @@
 <template>
   <UiNewDropdown>
     <a class="register__check-company-more link" ref="moreCities" href="javascript:;">
-      {{ organizationStore.registerOrg.selectedProductionCountries.length > 1
-        ? '+ еще&nbsp;' + (organizationStore.registerOrg.selectedProductionCountries.length - 1)
+      {{ list.length > 1
+        ? '+ еще&nbsp;' + (list.length - 1)
         : ''
       }}
     </a>
     <template #content>
       <div class="cities">
-        <h4 class="cities__title">География фактического производства</h4>
+        <h4 class="cities__title">{{ title }}</h4>
         <ul class="cities__list">
-          <li class="cities__item" v-for="city in organizationStore.registerOrg.selectedProductionCountries" :key="city.id">
-            {{ city.city }}, {{ city.region }}, {{ city.country }}
+          <li class="cities__item" v-for="item in list.slice(1)" :key="item.id">
+            <!-- {{ city.city }}, {{ city.region }}, {{ city.country }} -->
+            {{ item }}
           </li>
         </ul>
       </div>
@@ -27,6 +28,14 @@ const props = defineProps({
   placement: {
     type: String,
     default: 'top',
+  },
+  title: {
+    type: String,
+    default: 'Регионы',
+  },
+  list: {
+    type: Object,
+    default: () => [],
   }
 });
 
@@ -38,6 +47,10 @@ const organizationStore = useOrganizationStore();
 
 .cities {
   padding: 2.4rem;
+
+  &__check-company-more {
+    white-space: nowrap;
+  }
 
   &__title {
     font-size: 1.8rem;

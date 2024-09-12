@@ -1,9 +1,10 @@
 <template>
   <Tippy
     ref="tippy"
+    class="tippy"
     :interactive="true"
     :hideOnClick="true"
-    trigger="click"
+    :trigger="trigger"
     :placement="placement"
     :offset="calculateOffset"
     :arrow="arrow"
@@ -27,6 +28,10 @@
     arrow: {
       type: Boolean,
       default: true
+    },
+    trigger: {
+      type: String,
+      default: 'click',
     }
   });
 
@@ -49,3 +54,11 @@
 };
 
 </script>
+
+<style lang="scss"> 
+
+.tippy {
+  display: inline-block;
+}
+
+</style>

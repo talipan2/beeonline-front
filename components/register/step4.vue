@@ -52,7 +52,7 @@
                     || '-' 
                   }}
                 </p>
-                <ModalsMoreCities />
+                <ModalsMoreCities title="География фактического производства" :list="organizationStore.registerOrg.selectedProductionCountries"/>
               </div>
             </div>
           </div>

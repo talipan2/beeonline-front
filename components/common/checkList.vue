@@ -3,7 +3,7 @@
     <div class="checklist__header">
       <div class="checklist__header-left">
         <div class="checklist__head">
-          <div class="checklist__title">Заполнение профиля</div>
+          <div class="checklist__title">{{ title }}</div>
           <div class="checklist__status">низкое</div>
         </div>
         <div class="checklist__progress" :class="progressClass">
@@ -16,7 +16,7 @@
       </div>
     </div>
     <CommonAdvice class="checklist__advice">
-      <p class="advice__text">Полностью заполненный профиль выше в списке поиска</p>
+      <p class="advice__text">{{ adviceTitle }}</p>
     </CommonAdvice>
     <div class="checklist__collapse">
       <ul class="checklist__steps">
@@ -38,23 +38,43 @@
 import { useOrganizationStore } from '~/store/organizationStore';
 import { useUserStore } from '~/store/userStore';
 
+const props = defineProps({
+  title: {
+    type: String,
+    default: '',
+    required: true,
+  },
+  adviceTitle: {
+    type: String,
+    default: '',
+    required: true,
+  },
+  checkList: {
+    type: Array,
+    default: () => [],
+    required: true,
+  }
+})
+
 
 const route = useRoute();
 const organizationStore = useOrganizationStore();
 const userStore = useUserStore();
 
-const steps = computed(() => [
-  { label: 'Регистрационные данные', path: '/register' },
-  { label: 'Данные организации', path: '/register/step1' },
-  { label: 'Карточка организации', path: '/register/step2' },
-  { 
-    label: userStore.role === 'customer' 
-      ? 'География фактического производства' 
-      : 'Города фактического производства', 
-    path: '/register/step3' 
-  },
-  { label: 'Проверка', path: '/register/step4' },
-]);
+const steps = computed(() => props.checkList);
+
+// const steps = computed(() => [
+//   { label: 'Регистрационные данные', path: '/register' },
+//   { label: 'Данные организации', path: '/register/step1' },
+//   { label: 'Карточка организации', path: '/register/step2' },
+//   { 
+//     label: userStore.role === 'customer' 
+//       ? 'География фактического производства' 
+//       : 'Города фактического производства', 
+//     path: '/register/step3' 
+//   },
+//   { label: 'Проверка', path: '/register/step4' },
+// ]);
 
 const progressLevel = computed(() => {
   if (nullPercentage.value <= 10) return '5';

@@ -137,6 +137,7 @@ onMounted(() => {
   onScrollPage();
   window.addEventListener('resize', updateHeaderHeight);
   window.addEventListener("scroll", onScrollPage)
+  userStore.role = localStorage.getItem('role');
   if(localStorage.getItem('token')) {
     userStore.checkAuth();
     organizationStore.getSelfOrganization();

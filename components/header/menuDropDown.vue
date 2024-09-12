@@ -89,9 +89,11 @@ const logOut = () => {
 const handleSwitchRole = () => {
   if (userStore.role === 'customer') {
     userStore.role = 'performer';
+    localStorage.setItem('role', 'performer');
     router.push({ path: '/performer/profile' })
   } else {
     userStore.role = 'customer';
+    localStorage.setItem('role', 'customer');
     router.push({ path: '/customer/profile' })
   }
 }

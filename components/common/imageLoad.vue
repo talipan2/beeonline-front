@@ -1,14 +1,13 @@
 <template>
   <div>
-    <label class="form-group__title">
+    <label class="form-group__title" v-if="title">
       {{ title }}
     </label>
     <div class="load-image">
-        <img src="~/assets/images/nophoto_pc.png">
-        <input type="file" name="logo" accept=".jpeg, .png, .jpg, .gif" @change="onFileChange">
-        <span class="load-image__title">Загрузить логотип (до 5Мб. Допустимый формат .jpeg, .png, .jpg,
-          .gif)</span>
-      </div>
+      <img src="~/assets/images/nophoto_pc.png">
+      <input type="file" name="logo" accept=".jpeg, .png, .jpg, .gif" @change="onFileChange">
+      <span class="load-image__title">{{ label }}</span>
+    </div>
   </div>
 </template>
 
@@ -20,6 +19,10 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  label: {
+    type: String,
+    default: 'Загрузить логотип (до 5Мб. Допустимый формат .jpeg, .png, .jpg, .gif)',
+  }
 });
 
 const organizationStore = useOrganizationStore();
@@ -48,7 +51,8 @@ const onFileChange = (event) => {
   border: 1px solid #c4c4c4;
   position: relative;
   cursor: pointer;
-  padding-bottom: 63%;
+  // padding-bottom: 63%;
+  padding-bottom: 100%;
 
   input {
     position: absolute;

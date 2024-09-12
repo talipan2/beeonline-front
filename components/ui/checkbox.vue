@@ -1,8 +1,7 @@
 <template>
   <div :class="['checkbox', variantClass]">
-    <label :for="id" class="checkbox__label">
+    <label class="checkbox__label">
       <input
-        :id="id"
         type="checkbox"
         v-model="internalValue"
         class="checkbox__input"
@@ -21,11 +20,8 @@ import { ref, computed } from 'vue';
 
 const props = defineProps({
   modelValue: {
-    type: Boolean,
+    type: Boolean, 
     default: false,
-  },
-  id: {
-    type: String,
   },
   variant: {
     type: String,
@@ -37,6 +33,10 @@ const props = defineProps({
     default: false,
   },
   indeterminate: {
+    type: Boolean,
+    default: false,
+  },
+  required: {
     type: Boolean,
     default: false,
   }
@@ -54,6 +54,7 @@ watch(() => props.modelValue, (newValue) => {
 });
 
 function emitChange() {
+  console.log(internalValue.value)
   emit('update:modelValue', internalValue.value);
 }
 </script>

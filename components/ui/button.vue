@@ -6,7 +6,7 @@
   >
     <slot />
   </NuxtLink>
-  <button v-else :class="buttonClass" :disabled="disabled" @click="handleClick">
+  <button v-else :class="buttonClass" :type="type" :disabled="disabled" @click="handleClick">
     <slot />
   </button>
 </template>
