@@ -11,7 +11,7 @@ export const useEntityStore = defineStore('entity', {
       batch: '',
       patterns: '',
       price: '',
-      rawMaterials: '',
+      rawMaterials: [],
       completionDate: '',
       description: '',
       termsOfCooperation: '',
@@ -65,9 +65,43 @@ export const useEntityStore = defineStore('entity', {
       patterns: [
         { id: 1, label: "Есть лекала" },
         { id: 0, label: "Нужен конструктор" },
+      ],
+      availabilityStm: [
+        { id: 1, label: "Да" },
+        { id: 0, label: "Нет" },
+      ],
+      freeTestSamples: [
+        { id: 0, label: "По запросу" },
+        { id: 1, label: "Да" },
+        { id: 2, label: "Нет" },
+      ],
+      minLot: [
+        {id: 1, label: 'до 100'}, 
+        {id: 2, label: 'от 100 до 500'}, 
+        {id: 3, label: 'от 500 до 1 000'}, 
+        {id: 4, label: '1 000 и выше'}
       ]
     }
   }),
+  getters: {
+    // Универсальный геттер для получения массива label по массиву id или одиночному id
+    getEntityLabelById: (state) => (type, ids) => {
+      const data = state.entityData[type]; // Берём массив по типу
+      if (!data) return 'Тип данных не найден';
+
+      if (Array.isArray(ids)) {
+        // Если ids - это массив, возвращаем массив label
+        return ids.map(id => {
+          const entity = data.find(item => item.id == id);
+          return entity ? entity.label : `${type} с id ${id} не найдено`;
+        });
+      } else {
+        // Если это одиночный id, возвращаем один label
+        const entity = data.find(item => item.id == ids);
+        return entity ? entity.label : `${type} с id ${ids} не найден`;
+      }
+    }
+  },
   actions: {
 
   },

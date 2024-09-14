@@ -166,7 +166,7 @@ function toggleCitySelection(city) {
 
 // отправка родителю выбранных городов
 function handleSubmit () {
-  organizationStore.registerOrg.countryId = selectedCities.value.map(city => city.id);
+  // organizationStore.registerOrg.countryId = selectedCities.value.map(city => city.id);
   emit('update:modelValue', [...selectedCities.value]);
   settingStore.chooseLocationModal = false;
 }

@@ -9,7 +9,7 @@
       />
     </template>
     <template #content>
-      <component :is="currentComponent" :title="title" role="performer"/>
+      <component :is="currentComponent" :title="title" role="performer" :data="data"/>
     </template>
     <template #right>
       <div class="h4">Предварительный просмотр услуги</div>
@@ -23,6 +23,8 @@ import Step1 from '~/components/createEntity/step1.vue';
 import Step2 from '~/components/createEntity/step2.vue';
 import Step3 from '~/components/createEntity/step3.vue';
 import Step4 from '~/components/createEntity/step4.vue';
+import { useEntityStore } from '~/store/entityStore';
+import { useLocationStore } from '~/store/locationStore';
 
 const router = useRouter();
 const title = ref('');
@@ -47,6 +49,9 @@ const currentComponent = computed(() => {
   }
 })
 
+const entityStore = useEntityStore();
+const locationStore = useLocationStore();
+
 const checkList = computed(() => [
   { label: 'Что нужно сделать', path: '/services/create/step1' },
   { label: 'Подробное описание', path: '/services/create/step2' },
@@ -54,19 +59,41 @@ const checkList = computed(() => [
   { label: 'Проверка', path: '/services/create/step4' },
 ]);
 
+const service = computed(() => entityStore.service)
+const locationList = computed(() => locationStore.locations)
+
+const location = computed(() => {
+  if (service.value.placeOfProductionId && locationList.value) {
+    return service.value.placeOfProductionId.map(id => locationStore.getLocationById(id));
+  }
+  return [];
+});
+
 const servicesData = computed(() => ({
-  name: '',
-  logo: '',
+  name: data.value.name,
+  logo: data.value.logo,
   data: [
-    {id: 1, name: 'Категории', value: []},
-    {id: 2, name: 'Место производства', value: []},
-    {id: 3, name: 'Мин. партия', value: []},
-    {id: 4, name: 'Наличие СТМ', value: null},
-    {id: 5, name: 'Бесплатные тестовые образцы', value: null},
-    {id: 6, name: 'Сырье', value: []},
-    {id: 7, name: 'Описание', value: ''},
+    {id: 1, name: 'Категории', value: data.value.categories},
+    {id: 2, name: 'Место производства', value: data.value.placeOfProductionId},
+    {id: 3, name: 'Мин. партия', value: data.value.minLot},
+    {id: 4, name: 'Наличие СТМ', value: data.value.availabilityStm},
+    {id: 5, name: 'Бесплатные тестовые образцы', value: data.value.freeTestSamples},
+    {id: 6, name: 'Сырье', value: data.value.rawMaterials},
+    {id: 7, name: 'Описание', value: data.value.description},
   ],
 }))
 
+const data = computed(() => ({
+  name: service.value.name,
+  logo: service.value.logo,
+  categories: computed(() => entityStore.getEntityLabelById('categories', service.value.categories)).value,
+  placeOfProductionId: location.value,
+  availabilityStm: computed(() => entityStore.getEntityLabelById('availabilityStm', service.value.availabilityStm)).value,
+  freeTestSamples: computed(() => entityStore.getEntityLabelById('freeTestSamples', service.value.freeTestSamples)).value,
+  minLot: computed(() => entityStore.getEntityLabelById('minLot', service.value.minLot)).value,
+  rawMaterials: computed(() => entityStore.getEntityLabelById('rawMaterials', service.value.rawMaterials)).value,
+  description: service.value.description,
+  termsOfCooperation: service.value.termsOfCooperation
+}))
 
 </script>

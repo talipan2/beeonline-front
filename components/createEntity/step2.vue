@@ -8,7 +8,7 @@
             Фото 
             <CommonTooltip text="Допустимы изображения размером до 5Мб" />
           </label>
-          <CommonImageLoad class="form-group-value" label="Загрузить еще"/>
+          <CommonImageLoad v-model="data.logo" label="Загрузить еще"/>
         </div>
       </div>
       <div class="entity__data">
@@ -22,19 +22,19 @@
         <div class="entity__data-group">
           <div class="entity__data-item">
             <p class="form-group__title entity__label">Сырье *</p>
-            <UiCheckboxGroup class="entity__group" v-model="selectedGroup.raw" :options="[{id: 5, label: 'Собственное'}, {id: 6, label: 'Давальческое'}]" />
+            <UiCheckboxGroup class="entity__group" v-model="data.rawMaterials" :options="[{id: 5, label: 'Собственное'}, {id: 6, label: 'Давальческое'}]" />
           </div>
           <div class="entity__data-item">
             <p class="form-group__title entity__label">Наличие СТМ *</p>
-            <UiRadioButtonGroup class="entity__group" v-model="selectedGroup.stm" :options="[{value: '1', label: 'Да'}, {value: '0', label: 'Нет'}]" />
+            <UiRadioButtonGroup class="entity__group" v-model="data.availabilityStm" :options="[{value: '1', label: 'Да'}, {value: '0', label: 'Нет'}]" />
           </div>
           <div class="entity__data-item">
             <p class="form-group__title entity__label">Бесплатные образцы *</p>
-            <UiRadioButtonGroup class="entity__group" v-model="selectedGroup.sample" :options="[{value: '0', label: 'По запросу'}, {value: '1', label: 'Да'}, {value: '2', label: 'Нет'}]" />
+            <UiRadioButtonGroup class="entity__group" v-model="data.freeTestSamples" :options="[{value: '0', label: 'По запросу'}, {value: '1', label: 'Да'}, {value: '2', label: 'Нет'}]" />
           </div>
           <div class="entity__data-item">
             <p class="form-group__title entity__label">Мин. партия *</p>
-            <UiCheckboxGroup class="entity__group" v-model="selectedGroup.minPart" :options="minPart" />
+            <UiCheckboxGroup class="entity__group" v-model="data.minLot" :options="minPart" />
           </div>
         </div>
       </div>
@@ -42,7 +42,7 @@
         <div class="entity__data-group">
           <div class="entity__data-item">
             <p class="form-group__title entity__label">Сырье *</p>
-            <UiCheckboxGroup class="entity__group" v-model="data.rawMaterials" :options="[{id: 5, label: 'Собственное'}, {id: 6, label: 'Давальческое'}]" />
+            <UiRadioButtonGroup class="entity__group" v-model="data.rawMaterials" :options="[{value: 5, label: 'Собственное'}, {value: 6, label: 'Давальческое'}]" />
           </div>
           <div class="entity__data-item">
             <p class="form-group__title entity__label">Лекала *</p>
@@ -98,12 +98,10 @@ const props = defineProps({
 })
 
 const router = useRouter();
-const userStore = useUserStore();
 const entityStore = useEntityStore();
-const role = computed(() => userStore.role);
 
 const data = computed(() => {
-  if(role.value === 'performer') {
+  if(props.role === 'performer') {
     return entityStore.service
   } else return entityStore.order
 })
@@ -137,7 +135,7 @@ const handleSubmit = (event) => {
 
 .entity {
   &__photo {
-    max-width: 33%;
+    // max-width: 33%;
   }
 
   &__label {

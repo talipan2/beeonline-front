@@ -1,5 +1,5 @@
 <template>
-  <UiNewDropdown>
+  <UiNewDropdown :placement="placement">
     <a class="register__check-company-more link" ref="moreCities" href="javascript:;">
       {{ list.length > 1
         ? '+ еще&nbsp;' + (list.length - 1)
@@ -40,6 +40,10 @@ const props = defineProps({
 });
 
 const organizationStore = useOrganizationStore();
+
+watch(() => props.placement, (newVal) => {
+  console.log(placement)
+});
 
 </script>
 

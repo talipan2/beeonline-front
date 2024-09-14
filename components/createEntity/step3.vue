@@ -1,19 +1,19 @@
 <template>
   <div class="entity">
     <h1 class="entity__title">География и Сроки</h1>
-    <div v-if="role === 'customer'">
+    <div v-if="role == 'customer'">
       <p class="entity__text">Укажите дату до которой заказ будет актуален</p>
       <CommonCalendar v-model="data.completionDate" class="entity__calendar" />
     </div>
     <h2 class="entity__subtitle">Города фактического производства заказа</h2>
     <div class="entity__text-container">
-      <p class="entity__text" v-if="userStore.role === 'performer'">
+      <p class="entity__text" v-if="role === 'performer'">
         Укажите город вашего производства. Если производств несколько - выберите несколько городов, но не более пяти.
       </p>
       <p class="entity__text" v-else>
         Укажите предпочтительные города или регионы производства заказа.
       </p>
-      <p class="entity__text" v-if="userStore.role === 'performer'">
+      <p class="entity__text" v-if="role === 'performer'">
         Потенциальный заказчик сможет вас найти по регионам указанных городов.
       </p>
       <p class="entity__text" v-else>
@@ -40,13 +40,21 @@
 import { useEntityStore } from '~/store/entityStore';
 import { useUserStore } from '~/store/userStore';
 
+const props = defineProps({
+  role: {
+    type: String,
+    default: '',
+    required: true,
+  }
+})
+
 const router = useRouter();
 const userStore = useUserStore();
 const entityStore = useEntityStore();
 
-const role = computed(() => userStore.role);
+// const role = computed(() => userStore.role);
 const data = computed(() => {
-  if(role.value === 'performer') {
+  if(props.role === 'performer') {
     return entityStore.service
   } else return entityStore.order
 })
@@ -57,17 +65,10 @@ const locationData = ref({
 })
 
 watch(() => locationData.value, (newVal) => {
-  // console.log(locationData.value)
   data.value.placeOfProductionId = locationData.value.locationId
   data.value.placeOfProduction = locationData.value.fullNameLocation
 }, {deep: true});
 
-// onMounted(() => {
-//   if(data.value) {
-//     locationData.value.locationId = data.value.placeOfProductionId
-//     locationData.value.fullNameLocation = data.value.placeOfProduction
-//   }
-// })
 
 </script>
 

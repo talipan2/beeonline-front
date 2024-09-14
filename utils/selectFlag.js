@@ -1,5 +1,4 @@
 export default function(id) {
-  
   switch (parseInt(id)) {
     case (1):
       return 'flag_russia';

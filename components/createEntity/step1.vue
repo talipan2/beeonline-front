@@ -35,6 +35,11 @@ const props = defineProps({
     default: '',
     required: true,
   },
+  role: {
+    type: String,
+    default: '',
+    required: true,
+  }
 })
 
 const entityStore = useEntityStore();
@@ -43,10 +48,9 @@ const userStore = useUserStore();
 const router = useRouter();
 const selectedCategory = ref([]);
 
-const role = computed(() => userStore.role);
 
 const data = computed(() => {
-  if(userStore.role === 'performer') {
+  if(props.role === 'performer') {
     return entityStore.service
   } else return entityStore.order
 })

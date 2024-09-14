@@ -40,7 +40,7 @@
 
   const calculateOffset = ({ placement }) => {
   if(props.placement === 'bottom-end') {
-    return [0, 5];
+    return [0, 14];
   } else {
     if (placement.startsWith('top')) {
     return [0, 0]; // Смещение 0

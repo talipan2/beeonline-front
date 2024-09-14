@@ -248,14 +248,22 @@ img {
   }
 
   .prop__value {
-
     display: inline;
-    word-break: break-all;
+    align-items: center;
+
+    i {
+      margin-right: .2em;
+      margin-top: -.2em;
+    }
+    span {
+      margin-right: .2em;
+    }
   }
 
   .prop_type_text {
     display: flex;
     flex-direction: column;
+    // word-break: break-all;
   }
 }
 
