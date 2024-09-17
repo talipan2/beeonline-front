@@ -1,5 +1,5 @@
 <template>
-  <div class="preview-entity" v-if="data && data.data">
+  <div class="preview-entity">
     <h3 class="preview-entity__title">{{ data.name }}</h3>
     <div class="preview-entity__content">
       <div class="image-box">

@@ -1,38 +1,39 @@
 <template>
   <div class="entity">
     <h1 class="entity__title">География и Сроки</h1>
-    <div v-if="role == 'customer'">
-      <p class="entity__text">Укажите дату до которой заказ будет актуален</p>
-      <CommonCalendar v-model="data.completionDate" class="entity__calendar" />
-    </div>
-    <h2 class="entity__subtitle">Города фактического производства заказа</h2>
-    <div class="entity__text-container">
-      <p class="entity__text" v-if="role === 'performer'">
-        Укажите город вашего производства. Если производств несколько - выберите несколько городов, но не более пяти.
-      </p>
-      <p class="entity__text" v-else>
-        Укажите предпочтительные города или регионы производства заказа.
-      </p>
-      <p class="entity__text" v-if="role === 'performer'">
-        Потенциальный заказчик сможет вас найти по регионам указанных городов.
-      </p>
-      <p class="entity__text" v-else>
-        Указанные города и регионы используются для автоматического добавления в новые заказы и позволят потенциальным
-        исполнителям находить их в поиске.
-      </p>
-    </div>
-    <CommonLocation :buttonLabel="role === 'performer' ? 'Выбрать город' : 'Выбрать город или регион'"
-      v-model="locationData"/>
-    <div class="form-group">
-      <UiButton type="button"
-        @click="router.push(`${role === 'performer' ? '/services/create/step2' : '/orders/create/step2'}`)"
-        class="form-group-data form-group-data__btn" variant="tertiary" size="large">Назад</UiButton>
-      <UiButton type="button"
-        @click="router.push(`${role === 'performer' ? '/services/create/step4' : '/orders/create/step4'}`)"
-        class="form-group-data form-group-data__btn" variant="quinary" size="large">Далее
-        <SvgoBtnArrow class="svg-lx" />
-      </UiButton>
-    </div>
+    <form @submit.prevent="handleSubmit">
+      <div v-if="role == 'customer'">
+        <p class="entity__text">Укажите дату до которой заказ будет актуален</p>
+        <CommonCalendar v-model="data.completionDate" class="entity__calendar" />
+      </div>
+      <h2 class="entity__subtitle">Города фактического производства заказа</h2>
+      <div class="entity__text-container">
+        <p class="entity__text" v-if="role === 'performer'">
+          Укажите город вашего производства. Если производств несколько - выберите несколько городов, но не более пяти.
+        </p>
+        <p class="entity__text" v-else>
+          Укажите предпочтительные города или регионы производства заказа.
+        </p>
+        <p class="entity__text" v-if="role === 'performer'">
+          Потенциальный заказчик сможет вас найти по регионам указанных городов.
+        </p>
+        <p class="entity__text" v-else>
+          Указанные города и регионы используются для автоматического добавления в новые заказы и позволят потенциальным
+          исполнителям находить их в поиске.
+        </p>
+      </div>
+      <CommonLocation :buttonLabel="role === 'performer' ? 'Выбрать город' : 'Выбрать город или регион'"
+        v-model="locationData"/>
+      <div class="form-group">
+        <UiButton type="button"
+          @click="router.push(`${role === 'performer' ? '/services/create/step2' : '/orders/create/step2'}`)"
+          class="form-group-data form-group-data__btn" variant="tertiary" size="large">Назад</UiButton>
+        <UiButton type="submit"
+          class="form-group-data form-group-data__btn" variant="quinary" size="large">Далее
+          <SvgoBtnArrow class="svg-lx" />
+        </UiButton>
+      </div>
+    </form>
   </div>
 </template>
 

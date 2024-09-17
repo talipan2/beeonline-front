@@ -8,7 +8,7 @@
       />
     </template>
     <template #content>
-      <component :is="currentComponent" :title="title" role="customer" :data="data"/>
+      <component :is="currentComponent" :title="title" role="customer" @submit="handleSubmit" :formatData="data" :data="order"/>
     </template>
     <template #right>
       <div class="h4">Предварительный просмотр заказа</div>
@@ -24,12 +24,65 @@ import Step3 from '~/components/createEntity/step3.vue';
 import Step4 from '~/components/createEntity/step4.vue';
 import { useEntityStore } from '~/store/entityStore';
 import { useLocationStore } from '~/store/locationStore';
+import { useOrganizationStore } from '~/store/organizationStore';
+import { useUserStore } from '~/store/userStore';
 
 const router = useRouter();
 const entityStore = useEntityStore();
+const userStore = useUserStore();
+const organizationStore = useOrganizationStore();
 const locationStore = useLocationStore();
 const title = ref('');
 
+const handleSubmit = computed(() => {
+  switch (router.currentRoute.value.params.slug) {
+    case 'step1':
+      return (() => {
+        entityStore.addNewOrder(
+          {
+            userId: userStore.userData.id,
+            organizationId: organizationStore.organization.id, 
+            name: order.value.name, 
+            category: order.value.categories
+          }
+        ).then(() => router.push('/orders/create/step2'))
+        .catch(error => console.log(error));
+      });
+    case 'step2':
+      return (() =>{
+          entityStore.editOrder(1, {
+            description: order.value.description,
+            rawMaterials: order.value.rawMaterials,
+            price: order.value.price,
+            batch: order.value.batch,
+            patterns: order.value.patterns,
+            termsOfCooperation: order.value.termsOfCooperation
+          }).then(() => router.push('/orders/create/step3'))
+          .catch(error => console.log(error));
+        });
+    case 'step3':
+    return (() =>{
+          entityStore.editOrder(1, {
+            completionDate: order.value.completionDate
+          }).then(() => router.push('/orders/create/step4'))
+          .catch(error => console.log(error));
+        });
+    case 'step4':
+      return (() => router.push('/orders/services'));
+    default:
+    return (() => {
+        entityStore.addNewOrder(
+          {
+            userId: userStore.userData.id,
+            organizationId: organizationStore.organization.id, 
+            name: order.value.name, 
+            category: order.value.categories
+          }
+        ).then(() => router.push('/orders/create/step2'))
+        .catch(error => console.log(error));
+      });
+  }
+})
 
 const currentComponent = computed(() => {
   switch (router.currentRoute.value.params.slug) {

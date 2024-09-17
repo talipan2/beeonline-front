@@ -1,6 +1,6 @@
 <template>
   <UiNewDropdown :placement="placement">
-    <a class="register__check-company-more link" ref="moreCities" href="javascript:;">
+    <a class="register__check-company-more link more-list" ref="moreCities" href="javascript:;">
       {{ list.length > 1
         ? '+ еще&nbsp;' + (list.length - 1)
         : ''
@@ -10,7 +10,7 @@
       <div class="cities">
         <h4 class="cities__title">{{ title }}</h4>
         <ul class="cities__list">
-          <li class="cities__item" v-for="item in list.slice(1)" :key="item.id">
+          <li class="cities__item" v-for="(item, index) in list.slice(1)" :key="index">
             <!-- {{ city.city }}, {{ city.region }}, {{ city.country }} -->
             {{ item }}
           </li>

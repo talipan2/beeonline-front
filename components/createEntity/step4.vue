@@ -6,102 +6,102 @@
       change-link-label="Изменить" change-link="/services/create" />
     <div class="form-group-data">
       <p class="form-group__title">Заголовок</p>
-      <p class="form-group__value">{{ data.name || 'не указан' }}</p>
+      <p class="form-group__value">{{ formatData.name || 'не указан' }}</p>
     </div>
     <div class="form-group">
       <div class="form-group-data">
         <p class="form-group__title">Категории</p>
         <p class="form-group__value">
-          {{ data.categories[0] || 'не указан' }}
+          {{ (formatData.categories && formatData.categories.length > 0) ? formatData.categories[0] : 'не указан' }}
           <ModalsMoreCities 
-            :list="data.categories" 
+            :list="formatData.categories" 
             title="Категории" 
             placement="bottom-end" 
-            v-if="Array.isArray(data.categories) && data.categories && data.categories.length >= 1"
+            v-if="Array.isArray(formatData.categories) && formatData.categories && formatData.categories.length >= 1"
           />
           </p>
       </div>
       <div class="form-group-data">
         <p class="form-group__title">Место производства</p>
         <p class="form-group__value">
-          <i class="flag flag_round" v-if="data.placeOfProductionId[0]" 
-            :class="data.placeOfProductionId[0] 
+          <i class="flag flag_round" v-if="formatData.placeOfProductionId && formatData.placeOfProductionId[0]" 
+            :class="formatData.placeOfProductionId[0]
             ? flagClass
             :''" 
           />
-          {{ data.placeOfProductionId[0] || '-' }} 
+          {{ (formatData.placeOfProductionId && formatData.placeOfProductionId.length > 0) ? formatData.placeOfProductionId[0] : 'не указан' }}
           <ModalsMoreCities 
-            :list="data.placeOfProductionId" 
+            :list="formatData.placeOfProductionId" 
             title="Место производства" 
             placement="bottom-end" 
-            v-if="Array.isArray(data.placeOfProductionId) && data.placeOfProductionId && data.placeOfProductionId.length >= 1"
+            v-if="Array.isArray(formatData.placeOfProductionId) && formatData.placeOfProductionId && formatData.placeOfProductionId.length >= 1"
           />
         </p>
       </div>
       <div class="form-group-data" v-if="entityOfRole === 'services'">
         <p class="form-group__title">Мин. партия</p>
         <p class="form-group__value">
-          {{ data.minLot[0] || '-' }}
+          {{ (formatData.minLot && formatData.minLot.length > 0) ? formatData.minLot[0] : 'не указан' }}
           <ModalsMoreCities 
-            :list="data.minLot" 
+            :list="formatData.minLot" 
             title="Мин. партия" 
             placement="bottom-end" 
-            v-if="Array.isArray(data.minLot) && data.minLot && data.minLot.length >= 1"
+            v-if="Array.isArray(formatData.minLot) && formatData.minLot && formatData.minLot.length >= 1"
           />
         </p>
       </div>
       <div class="form-group-data" v-if="entityOfRole === 'services'">
         <p class="form-group__title">Наличие СТМ</p>
-        <p class="form-group__value">{{ data.availabilityStm || '-' }}</p>
+        <p class="form-group__value">{{ formatData.availabilityStm || 'не указан' }}</p>
       </div>
       <div class="form-group-data" v-if="entityOfRole === 'services'">
         <p class="form-group__title">Бесплатные тестовые образцы</p>
-        <p class="form-group__value">{{ data.freeTestSamples || '-' }}</p>
+        <p class="form-group__value">{{ formatData.freeTestSamples || 'не указан' }}</p>
       </div>
       <div class="form-group-data" v-if="entityOfRole === 'services'">
         <p class="form-group__title">Сырье</p>
         <p class="form-group__value">
-          {{ data.rawMaterials[0] || '-' }}
+          {{ (formatData.rawMaterials && formatData.rawMaterials.length > 0) ? formatData.rawMaterials[0] : 'не указан' }}
           <ModalsMoreCities 
-            :list="data.rawMaterials" 
+            :list="formatData.rawMaterials" 
             title="Сырье" 
             placement="bottom-end" 
-            v-if="Array.isArray(data.rawMaterials) && data.rawMaterials && data.rawMaterials.length >= 1"
+            v-if="Array.isArray(formatData.rawMaterials) && formatData.rawMaterials && formatData.rawMaterials.length >= 1"
           />
         </p>
       </div>
       <div class="form-group-data" v-if="entityOfRole === 'orders'">
         <p class="form-group__title">Партия</p>
-        <p class="form-group__value">{{ data.batch || '-' }}</p>
+        <p class="form-group__value">{{ formatData.batch || 'не указан' }}</p>
       </div>
       <div class="form-group-data" v-if="entityOfRole === 'orders'">
         <p class="form-group__title">Лекала</p>
-        <p class="form-group__value">{{ data.patterns || '-' }}</p>
+        <p class="form-group__value">{{ formatData.patterns || 'не указан' }}</p>
       </div>
       <div class="form-group-data" v-if="entityOfRole === 'orders'">
         <p class="form-group__title">Сырье</p>
         <p class="form-group__value">
-          {{ data.rawMaterials[0] || '-' }}
+          {{ (formatData.rawMaterials && formatData.rawMaterials.length > 0) ? formatData.rawMaterials[0] : 'не указан' }}
           <ModalsMoreCities 
-            :list="data.rawMaterials" 
+            :list="formatData.rawMaterials" 
             title="Сырье" 
             placement="bottom-end" 
-            v-if="Array.isArray(data.rawMaterials) && data.rawMaterials && data.rawMaterials.length >= 1"
+            v-if="Array.isArray(formatData.rawMaterials) && formatData.rawMaterials && formatData.rawMaterials.length >= 1"
           />
         </p>
       </div>
       <div class="form-group-data" v-if="entityOfRole === 'orders'">
         <p class="form-group__title">Срок выполнения</p>
-        <p class="form-group__value">{{ data.completionDate || '-' }}</p>
+        <p class="form-group__value">{{ formatData.completionDate || '-' }}</p>
       </div>
     </div>
     <div class="form-group-data">
       <p class="form-group__title">Описание</p>
-      <p class="form-group__value">{{ data.description|| '-' }}</p>
+      <p class="form-group__value">{{ formatData.description|| '-' }}</p>
     </div>
     <div class="form-group-data">
       <p class="form-group__title">Условия сотрудничества</p>
-      <p class="form-group__value">{{ data.termsOfCooperation || '-' }}</p>
+      <p class="form-group__value">{{ formatData.termsOfCooperation || '-' }}</p>
     </div>
     <UiCheckbox class="form-group-data" v-if="entityOfRole === 'order'">
       Использовать &nbsp;<a>безопасную сделку.</a>
@@ -111,7 +111,7 @@
     </UiCheckbox>
     <div class="form-group">
       <UiButton type="button" @click="router.push('/orders/create/step3')" class="form-group-data form-group-data__btn" variant="tertiary" size="large">Назад</UiButton>
-      <UiButton type="button" @click="router.push('/services/create/step4')" class="form-group-data form-group-data__btn" variant="quinary" size="large">Подтвердить
+      <UiButton type="button" @click="handleSubmit" class="form-group-data form-group-data__btn" variant="quinary" size="large">Подтвердить
       </UiButton>
     </div>
   </div>
@@ -132,7 +132,7 @@ const props = defineProps({
     default: 'customer',
     required: true,
   },
-  data: {
+  formatData: {
     type: Object,
     default: {},
     required: true,
@@ -153,9 +153,15 @@ const entity = computed(() => {
 
 const flagClass = computed(() => selectFlag(entity.value.placeOfProduction[0].countryId))
 
-watch(() => props.data, () => {
-  console.log(props.data)
-}, {deep: true});
+const handleSubmit = () => {
+  if(entityOfRole.value === 'orders') {
+    router.push('/customer/orders')
+    entityStore.orderList = [...entityStore.orderList, props.formatData]
+  } else {
+    entityStore.servicesList = [...entityStore.servicesList, props.formatData]
+    router.push('/performer/services')
+  }
+}
 
 </script>
 

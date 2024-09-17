@@ -6,11 +6,27 @@
     </template>
     <template #content>
       <Entity 
+        role="customer"
         title="Все заказы"
         subtitle="Размещайте список своих заказов в каталоге заказчиков и ищите исполнителей в кратчайшие сроки с учетом именно ваших потребностей"
         btnLabel="Создать заказ"
-        btnLink="/orders/create" 
+        btnLink="/orders/create"
+        :data="ordersList"
       />
     </template>
   </NuxtLayout>
 </template>
+
+<script setup>
+
+import { useEntityStore } from '~/store/entityStore';
+
+const entityStore = useEntityStore();
+
+const ordersList = computed(() => entityStore.ordersList)
+
+onMounted(() => {
+  entityStore.getOrders();
+});
+
+</script>

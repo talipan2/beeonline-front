@@ -94,17 +94,22 @@ const props = defineProps({
     type: String,
     default: '',
     required: true,
+  },
+  data: {
+    type: Object,
+    default: () => {},
+    required: true
   }
 })
 
 const router = useRouter();
 const entityStore = useEntityStore();
 
-const data = computed(() => {
-  if(props.role === 'performer') {
-    return entityStore.service
-  } else return entityStore.order
-})
+// const data = computed(() => {
+//   if(props.role === 'performer') {
+//     return entityStore.service
+//   } else return entityStore.order
+// })
 
 const selectedGroup = ref({
   raw: [],
@@ -120,14 +125,9 @@ const minPart = [
   {id: 4, label: '1 000 и выше'}
 ]
 
-const handleSubmit = (event) => {
-  event.preventDefault();
-  if (props.role === 'performer') {
-    router.push('/services/create/step3');
-  } else {
-    router.push('/orders/create/step3');
-  }
-}
+watch(() => props.data, (newVal) => {
+  console.log(props.data)
+}, {deep: true})
 
 </script>
 
@@ -135,7 +135,9 @@ const handleSubmit = (event) => {
 
 .entity {
   &__photo {
-    // max-width: 33%;
+    .load-image {
+      flex-grow: 0;
+    }
   }
 
   &__label {

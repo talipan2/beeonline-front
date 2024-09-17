@@ -1,5 +1,5 @@
 <template>
-  <section class="profile container">
+  <section class="profile container" :class="className">
     <slot name="header" />
     <h1 class="profile__title">{{ title }}</h1>
     <div class="profile__container" :class="{ 'profile__container_type_second': !$slots.rightSide }">
@@ -24,6 +24,10 @@ import { useSettingStore } from '~/store/settingStore';
 
 const props = defineProps({
   title: {
+    type: String,
+    default: '',
+  },
+  className: {
     type: String,
     default: '',
   }
@@ -92,5 +96,13 @@ onUnmounted(() => {
     // border: 1px solid red;
   }
 }
+
+.entity-edit {
+  
+  .profile__content {
+    flex: 0 1 50%;
+  }
+}
+
 
 </style>

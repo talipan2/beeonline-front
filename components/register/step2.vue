@@ -76,8 +76,13 @@ const handleSubmit = (e) => {
 </script>
 
 <style lang="scss">
+
 .register__input-list_type_company {
   margin-top: 1em;
+
+  .load-image {
+    padding-bottom: 62%;
+  }
 }
 
 .register__company-image {

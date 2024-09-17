@@ -1,8 +1,11 @@
 import { defineStore } from 'pinia';
+import orderApi from '~/api/orderApi';
+import serviceApi from '~/api/serviceApi';
 
 export const useEntityStore = defineStore('entity', {
   state: () => ({
     order: {
+      id: '',
       name: '',
       imageUrl: '',
       categories: [],
@@ -17,6 +20,7 @@ export const useEntityStore = defineStore('entity', {
       termsOfCooperation: '',
     },
     service: {
+      id: '',
       name: '',
       imageUrl: '',
       categories: [],
@@ -28,6 +32,8 @@ export const useEntityStore = defineStore('entity', {
       rawMaterials: [],
       description: '',
     },
+    ordersList: [],
+    servicesList: [],
     entityData: {
       categories: [
         { id: 1, label: "Вязаный трикотаж" },
@@ -103,6 +109,86 @@ export const useEntityStore = defineStore('entity', {
     }
   },
   actions: {
+    async getOrders() {
+      try {
+        const response = await orderApi.getOrders();
+        if(response.data) {
+          this.entityData = response.data;
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
 
-  },
+    async getServices() {
+      try {
+        const response = await serviceApi.getServices();
+        console.log(response.data)
+        if(response.data) {
+          this.servicesList = response.data.data;
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    async getService(id) {
+      try {
+        const response = await serviceApi.getService(id);
+        if(response.data) {
+          return response.data
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    async addNewService(data) {
+      try {
+        const response = await serviceApi.setService({
+          user_id: data.userId,
+          organization_id: data.organizationId,
+          name: data.name,
+          description: 'test',
+        });
+        if(response.data & response.data.id) {
+          this.service.id = response.data.id;
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    async addNewOrder(data) {
+      try {
+        const response = await orderApi.setOrder({
+          user_id: data.userId,
+          organization_id: data.organizationId,
+          name: data.name,
+        });
+        if(response.data) {
+          this.order.id = response.data.id;
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    async editService(id, data) {
+      console.log(data)
+      try {
+        const response = await serviceApi.editService(this.service.id || id, data);
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    async editOrder(id, data) {
+      try {
+        const response = await orderApi.editOrder(this.order.id || id, data);
+      } catch (error) {
+        throw error;
+      }
+    }
+  }
 });

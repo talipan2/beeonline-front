@@ -19,8 +19,8 @@ export default {
       legal_address: data.legalAddress,
       url_site: data.urlSite,
       is_foreigner: data.selfEmployed,
-      country_id: 37,
-      currency_id: 82,
+      country_id: data.location,
+      currency_id: data.currencyId,
     }, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -45,10 +45,7 @@ export default {
 
   // получение организации пользователя
   async getSelfOrganization() {
-    return axios.get(`organizations`, {
-      params: {
-        user_id: 88
-      }
+    return axios.get(`organizations/${2}`, {
     }, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`

@@ -9,7 +9,7 @@
       />
     </template>
     <template #content>
-      <component :is="currentComponent" :title="title" role="performer" :data="data"/>
+      <component :is="currentComponent" :title="title" role="performer" :formatData="data" :data="service" @submit="handleSubmit"/>
     </template>
     <template #right>
       <div class="h4">Предварительный просмотр услуги</div>
@@ -25,9 +25,58 @@ import Step3 from '~/components/createEntity/step3.vue';
 import Step4 from '~/components/createEntity/step4.vue';
 import { useEntityStore } from '~/store/entityStore';
 import { useLocationStore } from '~/store/locationStore';
+import { useOrganizationStore } from '~/store/organizationStore';
+import { useUserStore } from '~/store/userStore';
 
 const router = useRouter();
+const organizationStore = useOrganizationStore();
+const userStore = useUserStore();
 const title = ref('');
+
+const handleSubmit = computed(() => {
+  switch (router.currentRoute.value.params.slug) {
+    case 'step1':
+      return (() => {
+        entityStore.addNewService(
+          {
+            userId: userStore.userData.id,
+            organizationId: organizationStore.organization.id, 
+            name: service.value.name, 
+            category: service.categories
+          }
+        ).then(() => router.push('/services/create/step2'))
+        .catch(error => console.log(error));
+      });
+    case 'step2':
+      return (() =>{
+          entityStore.editService(1, {
+            description: service.value.description,
+            rawMaterials: service.value.rawMaterials,
+            availabilityStm: service.value.availabilityStm,
+            freeTestSamples: service.value.freeTestSamples,
+            minLot: service.value.minLot,
+            termsOfCooperation: service.value.termsOfCooperation
+          }).then(() => router.push('/services/create/step3'))
+          .catch(error => console.log(error));
+        });
+    case 'step3':
+      return (() => router.push('/services/create/step4'));
+    case 'step4':
+      return (() => router.push('/performer/services'));
+    default:
+    return (() => {
+        entityStore.addNewService(
+          {
+            userId: userStore.userData.id,
+            organizationId: organizationStore.organization.id, 
+            name: service.value.name, 
+            category: service.categories
+          }
+        ).then(() => router.push('/services/create/step2'))
+        .catch(error => console.log(error));
+      });
+  }
+})
 
 const currentComponent = computed(() => {
   switch (router.currentRoute.value.params.slug) {
@@ -85,7 +134,7 @@ const servicesData = computed(() => ({
 
 const data = computed(() => ({
   name: service.value.name,
-  logo: service.value.logo,
+  logo: service.value.gallery,
   categories: computed(() => entityStore.getEntityLabelById('categories', service.value.categories)).value,
   placeOfProductionId: location.value,
   availabilityStm: computed(() => entityStore.getEntityLabelById('availabilityStm', service.value.availabilityStm)).value,

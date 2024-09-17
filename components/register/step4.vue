@@ -132,7 +132,8 @@ const handleSubmit = () => {
     legalAddress: organizationStore.registerOrg.legalAddress,
     urlSite: organizationStore.registerOrg.urlSite,
     selfEmployed: organizationStore.registerOrg.selfEmployed,
-    location: organizationStore.registerOrg.location,
+    location: 1,
+    currencyId: 1
   }).then((res) => {
     if(res.data && res.data.id) {
       organizationStore.setPubCard({

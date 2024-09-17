@@ -1,10 +1,17 @@
 <template>
   <div class="entity">
     <h1 class="entity__title">{{ title }}</h1>
-    <form @submit="handleSubmit">
-      <div class="form-group">
+    <CommonAlerts :alerts="['Заголовок обязателен', 'Категория продукции обязательна']" />
+    <form @submit.prevent="handleSubmit">
+      <div class="form-group" v-if="router.currentRoute.value.name.includes('create')">
         <label class="form-group-data form-group__title">
           Введите заголовок {{ role === 'performer' ? 'услуги' : 'заказа' }} *
+          <UiInput v-model="data.name" class="form-group__value" :required="true"/>
+        </label>
+      </div>
+      <div class="form-group" v-else>
+        <label class="form-group-data form-group__title">
+          Название {{ role === 'performer' ? 'услуги' : 'заказа' }} *
           <UiInput v-model="data.name" class="form-group__value" :required="true"/>
         </label>
       </div>
@@ -39,34 +46,28 @@ const props = defineProps({
     type: String,
     default: '',
     required: true,
+  },
+  handleBack: {
+    type: Function
+  },
+  data: {
+    type: Object,
+    default: () => {},
+    required: true
   }
+
 })
 
 const entityStore = useEntityStore();
 const userStore = useUserStore();
-
 const router = useRouter();
 const selectedCategory = ref([]);
 
 
-const data = computed(() => {
-  if(props.role === 'performer') {
-    return entityStore.service
-  } else return entityStore.order
-})
-
 const isDisabled = (id) => {
-  return data.value.length >= 4 && !data.value.includes(id);
+  return props.data.categories.length >= 4 && !props.data.categories.includes(id);
 };
 
-const handleSubmit = (event) => {
-  event.preventDefault();
-  if(props.role === 'performer') {
-    router.push('/services/create/step2');
-  } else {
-    router.push('/orders/create/step2');
-  }
-}
 
 const categories = [
   { id: 1, label: "Вязаный трикотаж" },

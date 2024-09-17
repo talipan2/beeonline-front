@@ -17,8 +17,7 @@
       <div class="divider mb-30"></div>
     </div>
     <div class="entitys__cards">
-      <CardsEntityCards name="nenenen" />
-      <CardsEntityCards name="sertssttstsvices" />
+      <CardsEntityCards v-for="(service, index) in data" :key="index" :data="service" :role="role"/>
     </div>
 
   </section>
@@ -27,6 +26,11 @@
 <script setup>
 
 const props = defineProps({
+  role: {
+    type: String,
+    default: '',
+    required: true,
+  },
   title: {
     type: String,
     default: 'Все услуги',
@@ -47,7 +51,7 @@ const props = defineProps({
     default: '',
     required: true,
   },
-  cards: {
+  data: {
     type: Array,
     default: () => [],
   }

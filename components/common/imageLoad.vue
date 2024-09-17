@@ -90,14 +90,11 @@ const removeImage = (index) => {
 }
 
 .load-image {
-  margin-top: .5em;
-  display: flex;
-  flex-direction: column;
   border: 1px solid #c4c4c4;
   position: relative;
   cursor: pointer;
   padding-bottom: 33%;
-  flex: 0 1 33%;
+  flex: 1 1 33%;
   overflow: hidden;
 
   input {
@@ -129,8 +126,9 @@ const removeImage = (index) => {
   img {
     position: absolute;
     inset: 0;
-    object-fit: cover;
+    object-fit: contain;
     box-sizing: border-box;
+    height: 100%;
   }
 
   &__load {
