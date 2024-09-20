@@ -146,7 +146,6 @@ onMounted(() => {
 		canvas.addEventListener(
 			"mousemove",
 			(e) => {
-				console.log(1);
 				mID && cancelManualMove();
 
 				onMouseMove(e);

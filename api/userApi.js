@@ -9,7 +9,6 @@ export default {
 
   // регистрация пользователя
   async registerUser(name, email, job, phone) {
-    console.log(email)
     return axios.post('register', { name, email, phone })  
   },
 

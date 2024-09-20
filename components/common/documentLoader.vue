@@ -35,7 +35,6 @@ const handleFileChange = (event) => {
   selectedFile.value = fileInput.files[0];
   formData.append('file', selectedFile.value);
   fileUrl.value = URL.createObjectURL(selectedFile.value);
-  console.log({url: fileUrl.value, file: formData.get('file')})
   emit('update:modelValue', {url:fileUrl.value, file: formData.get('file')});
 }
 

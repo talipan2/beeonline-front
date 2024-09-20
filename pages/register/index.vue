@@ -2,7 +2,7 @@
 <template>
   <section class="register container">
     <div class="register__container">
-      <CommonCheckList class="register__checklist sticky" ref="leftSide"/>
+      <CommonCheckList class="register__checklist sticky" ref="leftSide" title="Заполнение профиля" :checkList="checkList" adviceTitle="Полностью заполненный профиль выше в списке поиска"/>
       <div class="register__main">
         <RegisterDefaultRegisterComponent />
       </div>
@@ -31,7 +31,13 @@ const settingStore = useSettingStore();
 const rightSide = ref(null);
 const leftSide = ref(null);
 
-
+const checkList = [
+  {label: 'Регистрационные данные', value: '/register'},
+  {label: 'Данные организации', value: '/register/step1'},
+  {label: 'Карточка организации', value: '/register/step2'},
+  {label: 'Города фактического производства', value: '/register/step3'},
+  {label: 'Проверка', value: '/register/step4'}
+]
 
 const onScrollPage = () => {
   if (rightSide.value) {

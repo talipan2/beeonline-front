@@ -22,44 +22,43 @@
           <div class="register__check-company-logo">
             <p class="form-group__title">Логотип</p>
             <div class="form-group-data__logo">
-              <img :src="organizationStore.registerOrg.companyLogo  || defaultCompanyLogo" alt="">
+              <img :src="registerData.companyLogo  || defaultCompanyLogo" alt="">
             </div>
           </div>
           <div class="register__check-company-details">
             <div class="form-group-data">
               <p class="form-group__title">Название</p>
-              <p class="form-group__value">{{ organizationStore.registerOrg.companyName || '-' }}</p>
+              <p class="form-group__value">{{ registerData.companyName || '-' }}</p>
             </div>
             <div class="form-group-data">
               <p class="form-group__title">География фактического производства</p>
               <div class="form-group__container">
                 <i class="flag flag_round" 
-                  :class="organizationStore.registerOrg.selectedProductionCountries[0] 
-                  ? selectFlag(organizationStore.registerOrg.selectedProductionCountries[0].countryId) 
+                  :class="registerData.selectedProductionCountries && registerData.selectedProductionCountries[0]
+                  ? selectFlag(registerData.selectedProductionCountries[0].countryId) 
                   :''" 
                 />
                 <p class="register__check-company-city">
-                  {{ 
-                    ( organizationStore.registerOrg.selectedProductionCountries[0] 
+                  {{
+                    (registerData.selectedProductionCountries && registerData.selectedProductionCountries[0] 
                     ?
-                      `
-                      ${organizationStore.registerOrg.selectedProductionCountries[0].city},
-                      ${organizationStore.registerOrg.selectedProductionCountries[0].region},
-                      ${organizationStore.registerOrg.selectedProductionCountries[0].country}
-                      &nbsp;
-                      `
+                      locationStore.getLocationsByIds(registerData.locationId)[0]
                     : '')
-                    || '-' 
+                    || '-'
                   }}
+                  &nbsp;
                 </p>
-                <ModalsMoreCities title="География фактического производства" :list="organizationStore.registerOrg.selectedProductionCountries"/>
+                <ModalsMoreCities 
+                  title="География фактического производства" 
+                  :list="locationStore.getLocationsByIds(registerData.locationId)" 
+                />
               </div>
             </div>
           </div>
         </div>
         <div class="form-group-data">
           <p class="form-group__title">Описание</p>
-          <p class="form-group__value">{{ organizationStore.registerOrg.companyDescription || '-' }}</p>
+          <p class="form-group__value">{{ registerData.companyDescription || '-' }}</p>
         </div>
       </div>
     </CommonProfileCheckCard>
@@ -69,34 +68,34 @@
       <div class="register__organization-data">
         <div class="form-group-data">
           <p class="form-group__title">Юридическое названии организации</p>
-          <p class="form-group__value">{{ organizationStore.registerOrg.companyName || '-' }}</p>
+          <p class="form-group__value">{{ registerData.companyName || '-' }}</p>
         </div>
       </div>
       <div class="form-group">
         <div class="form-group-data">
           <p class="form-group__title">Форма организации</p>
-          <p class="form-group__value">{{ organizationStore.registerOrg.organizationForm || '-' }}</p>
+          <p class="form-group__value">{{ registerData.organizationForm || '-' }}</p>
         </div>
         <div class="form-group-data">
           <p class="form-group__title">ИНН</p>
-          <p class="form-group__value">{{ organizationStore.registerOrg.inn || '-' }}</p>
+          <p class="form-group__value">{{ registerData.inn || '-' }}</p>
         </div>
         <div class="form-group-data">
           <p class="form-group__title">КПП</p>
-          <p class="form-group__value">{{ organizationStore.registerOrg.kpp || '-' }}</p>
+          <p class="form-group__value">{{ registerData.kpp || '-' }}</p>
         </div>
         <div class="form-group-data">
           <p class="form-group__title">ОГРН</p>
-          <p class="form-group__value">{{ organizationStore.registerOrg.ogrn || '-' }}</p>
+          <p class="form-group__value">{{ registerData.ogrn || '-' }}</p>
         </div>
       </div>
       <div class="form-group-data">
         <p class="form-group__title">Страна</p>
-        <p class="form-group__value">{{ organizationStore.registerOrg.location || '-' }}</p>
+        <p class="form-group__value">{{ registerData.location || '-' }}</p>
       </div>
       <div class="form-group-data">
         <p class="form-group__title">Юридический адрес</p>
-        <p class="form-group__value">{{ organizationStore.registerOrg.registerAddress || '-' }}</p>
+        <p class="form-group__value">{{ registerData.registerAddress || '-' }}</p>
       </div>
       <div class="register__btn-container">
         <UiButton type="button" class="register__btn" variant="senary" size="large" @click="router.back">Назад</UiButton>
@@ -107,42 +106,43 @@
 </template>
 
 <script setup>
-import { useUserStore } from '~/store/userStore';
 import defaultCompanyLogo from '@/assets/images/nophoto_pc.png';
-import { useOrganizationStore } from '~/store/organizationStore';
 import selectFlag from '~/utils/selectFlag';
-import { useTippy } from 'vue-tippy';
+import { useUserStore } from '~/store/userStore';
+import { useOrganizationStore } from '~/store/organizationStore';
+import { useLocationStore } from '~/store/locationStore';
 
 const router = useRouter();
 const userStore = useUserStore();
 const organizationStore = useOrganizationStore();
-const moreCities = ref(null);
+const locationStore = useLocationStore();
 
+const registerData = computed(() => organizationStore.registerOrg);
 
 const handleSubmit = () => {
   organizationStore.setOrganization({
-    name: organizationStore.registerOrg.companyName,
+    name: registerData.value.companyName,
     userId: userStore.userData.id,
     phone: userStore.userData.phone,
     email: userStore.userData.email,
-    organizationForm: organizationStore.registerOrg.organizationForm,
-    inn: organizationStore.registerOrg.inn,
-    kpp: organizationStore.registerOrg.kpp,
-    ogrn: organizationStore.registerOrg.ogrn,
-    legalAddress: organizationStore.registerOrg.legalAddress,
-    urlSite: organizationStore.registerOrg.urlSite,
-    selfEmployed: organizationStore.registerOrg.selfEmployed,
+    organizationForm: registerData.value.organizationForm,
+    inn: registerData.value.inn,
+    kpp: registerData.value.kpp,
+    ogrn: registerData.value.ogrn,
+    legalAddress: registerData.value.legalAddress,
+    urlSite: registerData.value.urlSite,
+    selfEmployed: registerData.value.selfEmployed,
     location: 1,
-    currencyId: 1
+    currencyId: 1,
   }).then((res) => {
     if(res.data && res.data.id) {
       organizationStore.setPubCard({
         id: res.data.id,
         // id: 46,
-        name: organizationStore.registerOrg.companyName,
-        logo: organizationStore.registerOrg.companyLogo,
+        name: registerData.value.companyName,
+        logo: registerData.value.companyLogo,
         type: userStore.role,
-        description: organizationStore.registerOrg.companyDescription,
+        description: registerData.value.companyDescription,
         status: 1,
         
       }).then((res) => {
@@ -152,15 +152,6 @@ const handleSubmit = () => {
       })
     }
   })
-  // organizationStore.setPubCard({
-  //   id: res.data.id,
-  //   id: 46,
-  //   name: organizationStore.registerOrg.companyName,
-  //   logo: organizationStore.registerOrg.companyLogo,
-  //   type: userStore.role,
-  //   description: organizationStore.registerOrg.companyDescription,
-  //   status: 1,
-  // })
 }
 
 </script>
@@ -215,11 +206,7 @@ const handleSubmit = () => {
 }
 
 .register__check-company-city {
-  font-size: 1.23em;
-}
-
-.register__check-company-more {
-  font-size: 1.23em;
+  font-size: 1.6em;
 }
 
 .form-group-data__logo {

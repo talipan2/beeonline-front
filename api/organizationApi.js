@@ -6,7 +6,6 @@ export default {
 
   // создание организации
   async setOrganization(data) {
-    console.log(data)
     return axios.post('organizations', {
       name: data.name,
       user_id: data.userId,
@@ -45,7 +44,7 @@ export default {
 
   // получение организации пользователя
   async getSelfOrganization() {
-    return axios.get(`organizations/${2}`, {
+    return axios.get(`organizations/${1}`, {
     }, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -55,7 +54,7 @@ export default {
 
   // получение публичной карточки пользователя
   async getSelfPubCard() {
-    return axios.get(`pubcards/${10}`,  {
+    return axios.get(`pubcards/${1}`,  {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }

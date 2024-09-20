@@ -46,6 +46,11 @@ const props = defineProps({
     type: String,
     default: '',
     required: true,
+  },
+  data: {
+    type: Object,
+    default: {},
+    required: true,
   }
 })
 
@@ -54,20 +59,20 @@ const userStore = useUserStore();
 const entityStore = useEntityStore();
 
 // const role = computed(() => userStore.role);
-const data = computed(() => {
+const dataLocation = computed(() => {
   if(props.role === 'performer') {
     return entityStore.service
   } else return entityStore.order
 })
 
 const locationData = ref({
-  locationId: data.value.placeOfProductionId,
-  fullNameLocation: data.value.placeOfProduction,
+  locationId: dataLocation.value.placeOfProductionId,
+  fullNameLocation: dataLocation.value.placeOfProduction,
 })
 
 watch(() => locationData.value, (newVal) => {
-  data.value.placeOfProductionId = locationData.value.locationId
-  data.value.placeOfProduction = locationData.value.fullNameLocation
+  dataLocation.value.placeOfProductionId = locationData.value.locationId
+  dataLocation.value.placeOfProduction = locationData.value.fullNameLocation
 }, {deep: true});
 
 

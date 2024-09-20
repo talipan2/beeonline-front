@@ -10,17 +10,25 @@
               :list="data.placeOfProductionId" 
               title="Регионы" 
               placement="bottom-end" 
-              v-if="Array.isArray(data.minLot) && data.minLot && data.minLot.length >= 1"
+              v-if="Array.isArray(data.placeOfProductionId) && data.placeOfProductionId && data.placeOfProductionId.length >= 1"
             />
           </span>
         </div>
-        <i class="flag flag_round" :class="organizationStore.registerOrg.selectedProductionCountries[0]
-          ? selectFlag(organizationStore.registerOrg.selectedProductionCountries[0].countryId)
+        <i class="flag flag_round" :class="data.placeOfProductionId && data.placeOfProductionId[0]
+          ? selectFlag(placeOfProductionId[0].countryId)
           : ''" />
       </div>
-      <div class="entity-card__details">
+      <div class="entity-card__details" v-if="role === 'customer'">
+        <p class="entity-card__details-name">Размер партии</p>
+        <p class="entity-card__details-value">{{ Number(data.batch) || 'Не указано' }}</p>
+      </div>
+      <div class="entity-card__details" v-else>
         <p class="entity-card__details-name">Минимальная партия</p>
-        <p class="entity-card__details-value">{{ 'Не указано' }}</p>
+        <p class="entity-card__details-value">{{  'Не указано' }}</p>
+      </div>
+      <div class="entity-card__details" v-if="role === 'customer'">
+        <p class="entity-card__details-name">Срок выполнения</p>
+        <p class="entity-card__details-value">До {{ formatDate(data.completionDate) || 'Не указано' }}</p>
       </div>
     </div>
     <div class="props">
@@ -32,26 +40,26 @@
         <p class="prop__name">Категории:</p>
         <p class="prop__value">{{ 'Не указано' }}</p>
       </div>
-      <div class="prop">
+      <div class="prop" v-if="role === 'performer'">
         <p class="prop__name">Наличие СТМ:</p>
         <p class="prop__value"> {{ data.availabilityStm }}</p>
       </div>
-      <div class="prop">
+      <div class="prop" v-if="role === 'performer'">
         <p class="prop__name">Бесплатные образцы:</p>
         <p class="prop__value">{{ data.freeSamples }}</p>
       </div>
     </div>
     <div class="entity-card__footer">
-      <UiButton :to="`${role === 'performer' ? `/performer/services/edit/${1}` : `/customer/orders/edit/${1}`}`" class="entity-card__btn" variant="quinary" size="large">Изменить</UiButton>
+      <UiButton :to="`${role === 'performer' ? `/performer/services/edit/${data.id}` : `/customer/orders/edit/${data.id}`}`" class="entity-card__btn" variant="quinary" size="large">Изменить</UiButton>
       <UiButton type="button" class="entity-card__btn" variant="quinary" size="large">Опубликовать</UiButton>
-      <p class="entity-card__status">На модерации</p>
+      <p class="entity-card__status">{{ data.status }}</p>
     </div>
-    <NuxtLink class="entity-card__link" :to="`/performer/services/show/${data.id}`"></NuxtLink>
+    <NuxtLink class="entity-card__link" :to="`/performer/services/show/${data.id}`" v-if="role === 'performer'"></NuxtLink>
+    <NuxtLink class="entity-card__link" :to="`/customer/orders/show/${data.id}`" v-else></NuxtLink>
   </div>
 </template>
 
 <script setup>
-import { useOrganizationStore } from '~/store/organizationStore';
 import { selectFlag } from '#imports';
 
 
@@ -68,7 +76,6 @@ const props = defineProps({
   }
 })
 
-const organizationStore = useOrganizationStore();
 const isLinkHovered = ref(false);
 
 </script>

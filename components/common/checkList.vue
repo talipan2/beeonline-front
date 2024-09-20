@@ -19,15 +19,29 @@
       <p class="advice__text">{{ adviceTitle }}</p>
     </CommonAdvice>
     <div class="checklist__collapse">
-      <ul class="checklist__steps">
-        <li v-for="step in steps" :key="step.path" :class="[
+      <ul class="checklist__steps" v-if="!valueCheck">
+        <li  v-for="step in steps" :key="step.path" :class="[
           'checklist__step',
           {
-            'checklist__step_current': isCurrentStep(step.path),
-            'checklist__step_passed': isStepPassed(step.path)
+            'checklist__step_current': currentStep === step.value,
+            'checklist__step_passed': isStepPassed(step.value)
           }
         ]">
           {{ step.label }}
+        </li>
+      </ul>
+      <ul class="checklist__steps" v-if="valueCheck">
+        <div class="divider"></div>
+        <li  v-for="(step, index) in checkList" :key="index" :class="[
+          'checklist__step',
+          {
+            'checklist__step_current': step.value == 'chapter-current',
+            'checklist__step_passed': step.value !== null || step.value !== '',
+            'checklist__step_crossed': step.value == null || step.value == '',
+            'checklist__chapter': step.value == 'chapter'
+          }
+        ]">
+          {{ step.label }} 
         </li>
       </ul>
     </div>
@@ -36,7 +50,6 @@
 
 <script setup>
 import { useOrganizationStore } from '~/store/organizationStore';
-import { useUserStore } from '~/store/userStore';
 
 const props = defineProps({
   title: {
@@ -53,28 +66,18 @@ const props = defineProps({
     type: Array,
     default: () => [],
     required: true,
+  },
+  valueCheck: {
+    type: Boolean,
+    default: false,
   }
 })
 
-
 const route = useRoute();
+const router = useRouter();
 const organizationStore = useOrganizationStore();
-const userStore = useUserStore();
 
 const steps = computed(() => props.checkList);
-
-// const steps = computed(() => [
-//   { label: 'Регистрационные данные', path: '/register' },
-//   { label: 'Данные организации', path: '/register/step1' },
-//   { label: 'Карточка организации', path: '/register/step2' },
-//   { 
-//     label: userStore.role === 'customer' 
-//       ? 'География фактического производства' 
-//       : 'Города фактического производства', 
-//     path: '/register/step3' 
-//   },
-//   { label: 'Проверка', path: '/register/step4' },
-// ]);
 
 const progressLevel = computed(() => {
   if (nullPercentage.value <= 10) return '5';
@@ -96,13 +99,16 @@ const progressClass = computed(() => {
   if (nullPercentage.value <= 60) return 'checklist_50';
   return '';
 });
+const currentStep = ref(null);
 
-const isCurrentStep = (stepPath) => {
-  return route.path === stepPath;
-};
+onMounted(() => {
+  if(process.client) {
+    currentStep.value = router.currentRoute.value.fullPath;
+  }
+})
 
 const isStepPassed = (stepPath) => {
-  return steps.value.findIndex(step => step.path === stepPath) < steps.value.findIndex(step => step.path === route.path);
+  return steps.value.findIndex(step => step.value === stepPath) < steps.value.findIndex(step => step.value === route.path);
 };
 
 
@@ -112,10 +118,6 @@ const nullPercentage = computed(() => {
   const nullCount = Object.values(registerOrg).filter(value => value === null || value === '' || (Array.isArray(value) && value.length === 0)).length;
   return parseInt((nullCount / totalFields) * 100);
 });
-
-watch(() => nullPercentage.value, (newVal) => {
-  console.log(newVal)
-})
 
 </script>
 
@@ -240,7 +242,7 @@ watch(() => nullPercentage.value, (newVal) => {
     list-style: none;
     padding: 0 0 1px;
     margin: 0;
-    margin-top: 5em;
+    margin-top: 3em;
     font-weight: 400;
 }
 
@@ -276,6 +278,11 @@ watch(() => nullPercentage.value, (newVal) => {
 
 .checklist__step_crossed:before {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='none'%3E%3Cpath d='M5 5L15 15M5 15L15 5' stroke='%23de5434' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E%0A");
+}
+
+.checklist__chapter {
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #D9D9D9;
 }
 
 @media (min-width: 768px) {

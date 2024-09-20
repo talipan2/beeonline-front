@@ -7,7 +7,7 @@ export const useUserStore = defineStore('user', {
     userToken: null,
     isAuth: false,
     location: null,
-    role: "performer",
+    role: null,
     settingUser: {
       location: 1,
       inn: null,

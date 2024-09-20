@@ -1,36 +1,15 @@
 <template>
   <section class="register container">
     <div class="register__container">
-      <CommonCheckList class="register__checklist sticky" ref="leftSide" />
+      <CommonCheckList class="register__checklist sticky" ref="leftSide" title="Заполнение профиля" :checkList="checkList" adviceTitle="Полностью заполненный профиль выше в списке поиска" />
       <div class="register__main">
-        <component :is="currentComponent" />
+        <component :is="currentComponent" :data="organizationStore.registerOrg" :blockTitle="blockTitle"/>
       </div>
       <div class="register__right-side">
         <div class="register__right-side-container sticky" ref="rightSide">
-          <div class="register__preview" v-if="route.path === '/register/step2' || route.path === '/register/step4'">
+          <div class="register__preview" v-if="['/register/step2', '/register/step4'].includes(route.path)">
             <h4 class="register__preview-title">Так вашу компанию будут видеть другие участники</h4>
-            <div class="card">
-              <h5 class="card__title">{{ organizationStore.registerOrg.companyName || 'Название компании' }}</h5>
-              <div class="card__content">
-                <div class="card__image">
-                  <img class="" :src="organizationStore.registerOrg.companyLogo || defaultCompanyLogo" alt="">
-                </div>
-                <div class="card__details">
-                  <div class="card__details-container">
-                    <span class="rate"></span>
-                    <p>(0 отзывов)</p>
-                  </div>
-                  <div class="card__details-container">
-                    <i class="flag flag_round" :class="selectFlag(organizationStore.registerOrg.location)"></i>
-                    <p>{{ selectRegion(organizationStore.registerOrg.location) }}</p>
-                  </div>
-                  <div class="card__details-container">
-                    <SvgoCase class="svg-m" fill="#C4C4C4" />
-                    <p>Нет услуг</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <CardsPublic :data="organizationStore.registerOrg"/>
           </div>
           <CommonAdvice class="register__advice sticky" v-else>
             <p class="advice__text">ИНН используется в нашем сервисе:</p>
@@ -49,13 +28,10 @@
 
 <script setup>
 import defaultRegisterComponent from '~/components/register/defaultRegisterComponent.vue';
-import registerStep1Vue from '~/components/register/step1.vue';
+import registerStep1 from '~/components/register/step1.vue';
 import registerStep2 from '~/components/register/step2.vue';
 import registerStep3  from '~/components/register/step3.vue';
 import registerStep4  from '~/components/register/step4.vue';
-import defaultCompanyLogo from '@/assets/images/nophoto_pc.png';
-import selectFlag from '~/utils/selectFlag';
-import selectRegion from '~/utils/selectRegion';
 
 import { useRoute } from '#app';
 import { useOrganizationStore } from '~/store/organizationStore';
@@ -67,10 +43,18 @@ const organizationStore = useOrganizationStore();
 const settingStore = useSettingStore();
 const userStore = useUserStore();
 
+const blockTitle = computed(() => {
+  const titles = {
+    customer: 'Регистрация заказчика',
+    performer: 'Регистрация исполнителя'
+  };
+  return titles[userStore.role] || 'Регистрация';
+});
+
 const currentComponent = computed(() => {
   switch (route.path) {
     case '/register/step1':
-      return registerStep1Vue
+      return registerStep1
     case '/register/step2':
       return registerStep2
     case '/register/step3':
@@ -78,9 +62,17 @@ const currentComponent = computed(() => {
     case '/register/step4':
       return registerStep4
     default:
-      return defaultRegisterComponent
+      return registerStep1
   }
 })
+
+const checkList = [
+  {label: 'Регистрационные данные', value: '/register'},
+  {label: 'Данные организации', value: '/register/step1'},
+  {label: 'Карточка организации', value: '/register/step2'},
+  {label: 'Города фактического производства', value: '/register/step3'},
+  {label: 'Проверка', value: '/register/step4'}
+]
 
 const rightSide = ref(null);
 const leftSide = ref(null);
@@ -97,8 +89,6 @@ const onScrollPage = () => {
 onMounted(() => {
   onScrollPage();
   window.addEventListener("scroll", onScrollPage)
-  userStore.loadFromLocalStorage();
-
 });
 
 onUnmounted(() => {
@@ -259,77 +249,6 @@ onUnmounted(() => {
     margin-bottom: 0.83em;
     margin-top: 4.16em;
   }
-
-
-.card {
-  padding: 2em;
-  box-shadow: -2px -2px 0 #6937a5, 0 1px 1px rgba(0, 0, 0, 0.15);
-  background-color: var(--bg-secondary-color);
-  &__title {
-    font-size: 1.8em;
-    margin-bottom: 0.83em;
-    padding-bottom: 0.83em;
-    border-bottom: 1px solid #C4C4C4;
-  }
-
-  &__content {
-    display: flex;
-    column-gap: 2em;
-  }
-
-  &__image {
-    flex: 0 0 10.8em;
-    border: 1px solid #D9D9D9;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    max-width: 10.8em;
-    height: 10.8em;
-
-    img {
-      object-fit: cover;
-      height: 100%;
-    }
-  }
-
-  &__details {
-    display: flex;
-    flex-direction: column;
-    row-gap: .4em;
-  }
-
-  &__details-container {
-    display: flex;
-    column-gap: 1em;
-    align-items: center;
-    font-size: 1.2em;
-  }
-}
-
-.rate {
-  display: inline-flex;
-    position: relative;
-    width: 8em;
-    height: 1.6em;
-    font-size: 10px;
-    flex-shrink: 0;
-}
-
-.rate:before, .rate:after {
-    content: "";
-    height: 100%;
-    background: url(~/assets/svg/stars.svg);
-    background-size: 1.6em;
-}
-
-.rate:before {
-    background-position: 0 100%;
-}
-
-.rate:after {
-    background-position: 100% 0;
-    flex: 1 1 auto;
-}
 
 .register__checklist {
   max-width: 25.5em;

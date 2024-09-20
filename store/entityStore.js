@@ -113,7 +113,18 @@ export const useEntityStore = defineStore('entity', {
       try {
         const response = await orderApi.getOrders();
         if(response.data) {
-          this.entityData = response.data;
+          this.ordersList = response.data.data;
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    async getOrder(id) {
+      try {
+        const response = await orderApi.getOrder(id);
+        if(response.data) {
+          return response.data
         }
       } catch (error) {
         throw error;
@@ -123,7 +134,6 @@ export const useEntityStore = defineStore('entity', {
     async getServices() {
       try {
         const response = await serviceApi.getServices();
-        console.log(response.data)
         if(response.data) {
           this.servicesList = response.data.data;
         }
@@ -151,8 +161,9 @@ export const useEntityStore = defineStore('entity', {
           name: data.name,
           description: 'test',
         });
-        if(response.data & response.data.id) {
-          this.service.id = response.data.id;
+
+        if(response.data && response.data.data.id) {
+          this.service.id = response.data.data.id;
         }
       } catch (error) {
         throw error;
@@ -166,8 +177,8 @@ export const useEntityStore = defineStore('entity', {
           organization_id: data.organizationId,
           name: data.name,
         });
-        if(response.data) {
-          this.order.id = response.data.id;
+        if(response.data && response.data.data.id) {
+          this.order.id = response.data.data.id;
         }
       } catch (error) {
         throw error;
@@ -175,7 +186,6 @@ export const useEntityStore = defineStore('entity', {
     },
 
     async editService(id, data) {
-      console.log(data)
       try {
         const response = await serviceApi.editService(this.service.id || id, data);
       } catch (error) {

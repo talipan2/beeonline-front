@@ -27,7 +27,7 @@ const serviceProps = computed(() => {
     props: {
       minLot: {label: "Партии", value: service.value.min_lot},
       category: { label: "Категория", value: service.value.category },
-      rawMaterials: {label: "Сырье", value: [service.value.materials_own ? 'Собственное' : '', service.value.materials_polling ? 'Давальческое' : ''].filter(Boolean).join(' / ')},
+      rawMaterials: {label: "Сырье", value: [service.value.materials_own ? 'Собственное' : '', service.value.materials_tolling ? 'Давальческое' : ''].filter(Boolean).join(' / ')},
       availabilityStm: {label: "Наличие СТМ", value: service.value.availabilityStm ? 'Да' : 'Нет'},
       freeSamples: {label: "Бесплатные образцы", value: formatFreeSamples(service.value.free_samples)},
       placeOfProduction: {label: "Место производства", value: service.value.location || ''},
@@ -50,7 +50,6 @@ const formatFreeSamples = (freeSamples) => {
 
 onMounted(() => {
   entityStore.getService(router.currentRoute.value.params.id).then((res) => service.value = res.data)
-  console.log(service.value)
 })
 
 </script>

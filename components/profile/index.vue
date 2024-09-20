@@ -43,12 +43,12 @@
             <div class="form-group">
               <p class="form-group__title">География фактического производства</p>
               <div class="form-group__container">
-                <i class="flag flag_round" :class="organizationStore.registerOrg.selectedProductionCountries[0]
+                <i class="flag flag_round" :class="organizationStore.registerOrg.selectedProductionCountries && organizationStore.registerOrg.selectedProductionCountries[0]
                   ? selectFlag(organizationStore.registerOrg.selectedProductionCountries[0].countryId)
                   : ''" />
                 <p class="register__check-company-city">
                   {{
-                    (organizationStore.registerOrg.selectedProductionCountries[0]
+                    (organizationStore.registerOrg.selectedProductionCountries && organizationStore.registerOrg.selectedProductionCountries[0]
                       ?
                       `
                   ${organizationStore.registerOrg.selectedProductionCountries[0].city},

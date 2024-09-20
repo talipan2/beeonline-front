@@ -43,10 +43,11 @@ const cardData = computed(() => {
     id: item.id,
     name: item.name,
     placeOfProduction: item.location || [],
-    rawMaterials: [item.materials_own ? 'Собственное' : '', item.materials_polling ? 'Давальческое' : ''].filter(Boolean),
+    rawMaterials: [item.materials_own ? 'Собственное' : '', item.materials_tolling ? 'Давальческое' : ''].filter(Boolean),
     availabilityStm: item.is_stm ? 'Да' : 'Нет',
     freeSamples: formatFreeSamples(item.free_samples),
     minLot: item.minLot,
+    status: item.status || "На модерации",
   }})
 })
 

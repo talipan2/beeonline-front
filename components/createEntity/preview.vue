@@ -55,11 +55,6 @@ const entity = computed(() => {
 
 const flagClass = computed(() => selectFlag(entity.value.placeOfProduction[0].countryId))
 
-
-watch(() => props.data, (newVal) => {
-  console.log(props.data)
-});
-
 </script>
 
 <style lang="scss">

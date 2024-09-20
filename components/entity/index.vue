@@ -126,6 +126,7 @@ const categoriesList = [
   &__cards {
     display: flex;
     gap: 3em;
+    flex-wrap: wrap;
   }
 
 }

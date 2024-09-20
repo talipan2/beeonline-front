@@ -20,7 +20,7 @@ import { useEntityStore } from '~/store/entityStore';
 const router = useRouter();
 const entityStore = useEntityStore();
 
-const currentStep = ref(4);
+const currentStep = ref(1);
 const title = ref('');
 const alertsList = ref([]);
 const id = router.currentRoute.value.params.id;
@@ -56,7 +56,6 @@ const formatData = computed(() => {
 
 
 const handleSubmit = computed(() => {
-  console.log(currentStep.value)
   switch (currentStep.value) {
     case 1:
       return (() => {
@@ -109,7 +108,6 @@ const currentComponent = computed(() => {
 
 onMounted(() => {
   entityStore.getService(id).then(res => service.value = res.data)
-  console.log(service.value)
 })
 
 </script>

@@ -1,6 +1,8 @@
 <template>
-  <RegisterLayout title="Контактные данные" description="Указанные данные не разглашаются третьим лицам и необходимы для успешной работы на
-      портале.">
+  <RegisterLayout 
+    :block-title="`${role === 'customer' ? 'Регистрация заказчика' : 'Регистрация исполнителя'}`"
+    title="Контактные данные" 
+    description="Указанные данные не разглашаются третьим лицам и необходимы для успешной работы на портале.">
     <form @submit="handleSubmit">
       <div class="form-group">
         <label class="form-group-data form-group__title">
@@ -23,7 +25,7 @@
         </label>
       </div>
       <div class="register__checkbox">
-        <UiCheckbox>
+        <UiCheckbox :required="true"> 
           Я согласен(а) с&nbsp;<NuxtLink to="/">политикой конфиденциальности.</NuxtLink>
         </UiCheckbox>
       </div>
@@ -42,6 +44,8 @@
 import { useUserStore } from '~/store/userStore';
 const userStore = useUserStore();
 const router = useRouter();
+
+const role = computed(() => userStore.role);
 
 const userData = ref({
   name: '',

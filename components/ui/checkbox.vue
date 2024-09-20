@@ -8,6 +8,7 @@
         :disabled="disabled"
         @change="emitChange"
         :indeterminate="indeterminate"
+        :required="required"
       />
       <div class="checkbox__icon"></div>
       <slot></slot>
@@ -49,14 +50,14 @@ const variantClass = computed(() => {
   return props.variant === 'round' ? 'checkbox_type_round' : 'checkbox_type_square';
 });
 
+function emitChange() {
+  emit('update:modelValue', internalValue.value);
+}
+
 watch(() => props.modelValue, (newValue) => {
   internalValue.value = newValue;
 });
 
-function emitChange() {
-  console.log(internalValue.value)
-  emit('update:modelValue', internalValue.value);
-}
 </script>
 
 <style lang="scss">

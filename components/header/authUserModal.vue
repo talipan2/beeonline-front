@@ -17,7 +17,7 @@
           <UiButton class="auth-modal__btn" variant="tertiary" size="large">Войти без пароля</UiButton>
         </div>
         <div class="auth-modal__btn-container">
-          <UiCheckbox variant="square" >
+          <UiCheckbox variant="square" class="auth-modal__checkbox">
             Запомнить меня
           </UiCheckbox>
           <NuxtLink to="" class="auth-modal__link">Забыли пароль?</NuxtLink>
@@ -103,17 +103,18 @@ const confirm = () => {
   }
 
 
-  // &__input-container {
-  //   display: flex;
-  //   max-height: 6em;
+  &__input-container {
+    display: flex;
+    max-height: 6em;
 
-  // }
+  }
 
-  // &__input { 
-  //   padding: 0.93em;
-  //   position: relative;
-  //   flex: 1;
-  // }
+  &__input { 
+    font-size: 1.6em;
+    padding: 1.25em;
+    position: relative;
+    flex: 1;
+  }
 
   &__input_type-password {
     border-right: none;
@@ -135,6 +136,12 @@ const confirm = () => {
     }
   }
 
+  &__checkbox {
+    .checkbox__label {
+      font-size: 1.6em;
+      color: #000;
+    }
+  }
 
   &__btn-container {
     display: flex;
@@ -180,6 +187,8 @@ const confirm = () => {
     p {
       white-space: nowrap;
       font-size: 1.2em;
+      color: #757575;
+      font-family: 'Inter', sans-serif;
     }
 
   }

@@ -31,15 +31,16 @@
     flex: 1 1 100%;
     line-height: 1.5;
     font-size: 1em;
-    color: var(--text-color-secondary);
   }
 
   .advice__title {
     font-size: 1.6em;
+    color: var(--text-color-secondary);
   }
 
   .advice__text {
     font-size: 1.2rem;
+    color: var(--text-color-secondary);
   }
 }
 

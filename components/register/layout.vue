@@ -14,7 +14,7 @@ const props = defineProps({
 
   blockTitle: {
     type: String,
-    default: 'Регистрация исполнителя',
+    default: '',
   },
   title: {
     type: String,

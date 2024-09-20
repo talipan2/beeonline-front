@@ -20,10 +20,6 @@ function selectCity(city) {
   location.value = city
 }
 
-watch(() => location.value, (newVal) => {
-  console.log(newVal)
-});
-
 </script>
 
 <style lang="scss">

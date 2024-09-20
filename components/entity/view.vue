@@ -10,7 +10,8 @@
       </div>
       <div class="form-group">
         <div class="view-entity__btn">
-          <UiButton :to="`/performer/services/edit/${data.id}`" variant="senary" size="around">Изменить</UiButton>
+          <UiButton :to="`/performer/services/edit/${data.id}`" variant="senary" size="around" v-if="role === 'performer'">Изменить</UiButton>
+          <UiButton :to="`/customer/orders/edit/${data.id}`" variant="senary" size="around" v-if="role === 'customer'">Изменить</UiButton>
         </div>
         <div class="view-entity__view">
           <SvgoViews class="svg-l" fill="#6937a5"/>
@@ -39,6 +40,11 @@ const props = defineProps({
   data: {
     type: Object,
     default: {},
+    required: true,
+  },
+  role: {
+    type: String,
+    default: '',
     required: true,
   }
 })

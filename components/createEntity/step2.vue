@@ -42,7 +42,7 @@
         <div class="entity__data-group">
           <div class="entity__data-item">
             <p class="form-group__title entity__label">Сырье *</p>
-            <UiRadioButtonGroup class="entity__group" v-model="data.rawMaterials" :options="[{value: 5, label: 'Собственное'}, {value: 6, label: 'Давальческое'}]" />
+            <UiRadioButtonGroup class="entity__group" v-model="data.rawMaterials" :options="[{value: 0, label: 'Собственное'}, {value: 1, label: 'Давальческое'}]" />
           </div>
           <div class="entity__data-item">
             <p class="form-group__title entity__label">Лекала *</p>
@@ -124,10 +124,6 @@ const minPart = [
   {id: 3, label: 'от 500 до 1 000'}, 
   {id: 4, label: '1 000 и выше'}
 ]
-
-watch(() => props.data, (newVal) => {
-  console.log(props.data)
-}, {deep: true})
 
 </script>
 

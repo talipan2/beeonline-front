@@ -1,7 +1,7 @@
 <template>
   <div class="location">
     <div class="location__city-container">
-      <div v-for="city in modelValue.fullNameLocation" :key="city.id" class="location__location">
+      <div v-for="city in selectedCities" :key="city.id" class="location__location">
         <SvgoChecked class="svg-m location__selected-icon" />
         <p class="location__city-selected">
           {{ city.city ? `${city.city},` : '' }} {{ city.region }}, {{ city.country }}
@@ -18,7 +18,6 @@
 </template>
 
 <script setup>
-import { useOrganizationStore } from '~/store/organizationStore';
 import { useSettingStore } from '~/store/settingStore';
 
 
@@ -35,7 +34,6 @@ const props = defineProps({
   }
 })
 
-const organizationStore = useOrganizationStore();
 const settingStore = useSettingStore();
 
 const emit = defineEmits(['update:modelValue']);
@@ -44,7 +42,6 @@ const selectedCities = ref([]);
 
 function deleteLocation(id) {
   selectedCities.value = selectedCities.value.filter(selectedCity => selectedCity.id !== id);
-  // organizationStore.registerOrg.countryId = organizationStore.registerOrg.countryId.filter(cityId => cityId !== id);
 }
 
 function openAuthModal () {
@@ -52,9 +49,11 @@ function openAuthModal () {
 }
 
 watch(() => selectedCities.value, (newVal) => {
-  // console.log(selectedCities.value)
-  organizationStore.registerOrg.selectedProductionCountries = newVal;
-  emit('update:modelValue', {fullNameLocation: newVal, locationId: selectedCities.value.map(city => city.id)});
+  if(selectedCities.value) {
+    emit('update:modelValue', {fullNameLocation: newVal, locationId: selectedCities.value.map(city => city.id)});
+  } else {
+    emit('update:modelValue', {fullNameLocation: [], locationId: []});
+  }
 });
 
 onMounted(() => {

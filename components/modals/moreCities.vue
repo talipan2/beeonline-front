@@ -1,17 +1,16 @@
 <template>
   <UiNewDropdown :placement="placement">
-    <a class="register__check-company-more link more-list" ref="moreCities" href="javascript:;">
+    <a class="more-btn link more-list" ref="moreCities" href="javascript:;">
       {{ list.length > 1
         ? '+ еще&nbsp;' + (list.length - 1)
         : ''
       }}
     </a>
     <template #content>
-      <div class="cities">
-        <h4 class="cities__title">{{ title }}</h4>
-        <ul class="cities__list">
-          <li class="cities__item" v-for="(item, index) in list.slice(1)" :key="index">
-            <!-- {{ city.city }}, {{ city.region }}, {{ city.country }} -->
+      <div class="more-modal">
+        <h4 class="more-modal__title">{{ title }}</h4>
+        <ul class="more-modal__list">
+          <li class="more-modal__item" v-for="(item, index) in list.slice(1)" :key="index">
             {{ item }}
           </li>
         </ul>
@@ -21,8 +20,6 @@
 </template>
 
 <script setup>
-import { useOrganizationStore } from '~/store/organizationStore';
-
 
 const props = defineProps({
   placement: {
@@ -36,24 +33,23 @@ const props = defineProps({
   list: {
     type: Object,
     default: () => [],
-  }
-});
-
-const organizationStore = useOrganizationStore();
-
-watch(() => props.placement, (newVal) => {
-  console.log(placement)
+  },
 });
 
 </script>
 
 <style lang="scss">
 
-.cities {
+.more-btn {
+  font-size: 1em;
+}
+
+.more-modal {
   padding: 2.4rem;
 
   &__check-company-more {
     white-space: nowrap;
+    font-size: 1.6rem;
   }
 
   &__title {

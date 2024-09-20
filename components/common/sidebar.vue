@@ -48,7 +48,7 @@ const getSidebarLinks = (role) => [
   { id: 11, label: 'Новости', value: '/' },
 ];
 
-const sidebarTopLinks = getSidebarLinks(userStore.role);
+const sidebarTopLinks = computed(() => getSidebarLinks(userStore.role));
 
 </script>
 

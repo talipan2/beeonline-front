@@ -65,11 +65,16 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue']);
 const userData = computed(() => userStore.userData);
 const router = useRouter();
+const role = computed(() => userStore.role)
 
-  const dropdownMenuLinks = [
-    { label: 'Рабочий стол', value: '/customer/desktop' },
-    { label: 'Профиль', value: '/customer/profile' },
-    { label: 'Услуги', value: '/' },
+const dropdownMenuLinks = computed(() => {
+  return [
+    { label: 'Рабочий стол', value: `/${role.value}/desktop` },
+    { label: 'Профиль', value: `/${role.value}/profile` },
+    { 
+      label: `${role.value === 'customer' ? 'Заказы' : 'Услуги'}`, 
+      value: `/${role.value}/${role.value === 'customer' ? 'orders' : 'services'}` 
+    },
     { label: 'Сообщения', value: '/' },
     { label: 'Сделки', value: '/' },
     { label: 'Избранное', value: '/' },
@@ -79,6 +84,8 @@ const router = useRouter();
     { label: 'Техническая поддержка', value: '/' },
     { label: 'Новости', value: '/' },
   ]
+})
+
 
 const logOut = () => {
   userStore.logOut()
@@ -146,6 +153,14 @@ const handleSwitchRole = () => {
     font-size: 1em;
     margin-bottom: 0.214em;
     line-height: 1.2em;
+  }
+
+  .header__dropdown-links.router-link-active {
+    background-color: #fff;
+
+    &:hover {
+      background-color: var(--button-background-tertiary-hover);
+    }
   }
 
   .header__dropdown-change-role {

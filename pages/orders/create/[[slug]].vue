@@ -34,6 +34,14 @@ const organizationStore = useOrganizationStore();
 const locationStore = useLocationStore();
 const title = ref('');
 
+const validSteps = ['step1', 'step2', 'step3', 'step4'];
+
+onBeforeMount(() => {
+  if (!validSteps.includes(router.currentRoute.value.params.slug)) {
+    router.replace({ name: 'orders-create-slug', params: { slug: 'step1' } });
+  }
+})
+
 const handleSubmit = computed(() => {
   switch (router.currentRoute.value.params.slug) {
     case 'step1':
@@ -50,7 +58,7 @@ const handleSubmit = computed(() => {
       });
     case 'step2':
       return (() =>{
-          entityStore.editOrder(1, {
+          entityStore.editOrder(order.value.id, {
             description: order.value.description,
             rawMaterials: order.value.rawMaterials,
             price: order.value.price,
@@ -62,7 +70,7 @@ const handleSubmit = computed(() => {
         });
     case 'step3':
     return (() =>{
-          entityStore.editOrder(1, {
+          entityStore.editOrder(order.value.id, {
             completionDate: order.value.completionDate
           }).then(() => router.push('/orders/create/step4'))
           .catch(error => console.log(error));
@@ -105,21 +113,13 @@ const currentComponent = computed(() => {
 })
 
 const checkList = computed(() => [
-  { label: 'Что нужно сделать', path: '/orders/create/step1' },
-  { label: 'Подробное описание', path: '/orders/create/step2' },
-  { label: 'География', path: '/orders/create/step3' },
-  { label: 'Проверка', path: '/orders/create/step4' },
+  { label: 'Что нужно сделать', value: '/orders/create/step1' },
+  { label: 'Подробное описание', value: '/orders/create/step2' },
+  { label: 'География', value: '/orders/create/step3' },
+  { label: 'Проверка', value: '/orders/create/step4' },
 ]);
 
 const order = computed(() => entityStore.order)
-const locationList = computed(() => locationStore.locations)
-
-const location = computed(() => {
-  if (order.value.placeOfProductionId && locationList.value) {
-    return order.value.placeOfProductionId.map(id => locationStore.getLocationById(id));
-  }
-  return [];
-});
 
 const ordersData = computed(() => ({
   name: order.value.name,
@@ -139,7 +139,7 @@ const data = computed(() => ({
   name: order.value.name,
   logo: order.value.logo,
   categories: computed(() => entityStore.getEntityLabelById('categories', order.value.categories)).value,
-  placeOfProductionId: location.value,
+  placeOfProductionId: computed(() => locationStore.getLocationsByIds(order.value.placeOfProductionId)).value,
   batch: order.value.batch,
   patterns: computed(() => entityStore.getEntityLabelById('patterns', order.value.patterns)).value,
   rawMaterials: computed(() => entityStore.getEntityLabelById('rawMaterials', order.value.rawMaterials)).value,

@@ -16,7 +16,7 @@
           Указанные города и регионы используются для автоматического добавления в новые заказы и позволят потенциальным исполнителям находить их в поиске.
         </p>
       </div>
-      <CommonLocation buttonLabel="Добавить город"/>
+      <CommonLocation buttonLabel="Добавить город" v-model="selectedCities"/>
       <div class="register__btn-container" v-if="router.currentRoute.value.path.includes('/register')">
         <UiButton type="button" class="register__btn" variant="senary" size="large" @click="router.back">Назад</UiButton>
         <UiButton type="button" class="register__btn" variant="quinary" size="large" @click="router.push({path: '/register/step4'})">Далее
@@ -31,7 +31,6 @@
 <script setup>
 
 import { useOrganizationStore } from '~/store/organizationStore';
-import { useSettingStore } from '~/store/settingStore';
 import { useUserStore } from '~/store/userStore';
 
 const props = defineProps({
@@ -47,24 +46,15 @@ const props = defineProps({
 
 
 const router = useRouter();
-const settingStore = useSettingStore();
 const organizationStore = useOrganizationStore();
 const userStore = useUserStore();
 const selectedCities = ref([]);
 
-
-function deleteLocation(id) {
-  selectedCities.value = selectedCities.value.filter(selectedCity => selectedCity.id !== id);
-  organizationStore.registerOrg.countryId = organizationStore.registerOrg.countryId.filter(cityId => cityId !== id);
-}
-
 watch(() => selectedCities.value, (newVal) => {
-  organizationStore.registerOrg.selectedProductionCountries = newVal;
+  organizationStore.registerOrg.selectedProductionCountries = newVal.fullNameLocation;
+  organizationStore.registerOrg.locationId = newVal.locationId;
 });
 
-function openAuthModal () {
-  settingStore.chooseLocationModal = true;
-}
 
 </script>
 

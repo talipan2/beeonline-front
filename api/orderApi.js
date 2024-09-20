@@ -31,7 +31,7 @@ export default {
     if(name !== '') params.name = name
     if(description !== '') params.description = description
     if(termsOfCooperation !== '') params.conditions = termsOfCooperation
-    if(rawMaterials !== '') params.material = Boolean(rawMaterials)
+    if(rawMaterials !== '') params.material = rawMaterials
     if(price !== '') params.price = price
     if(batch !== '') params.batch = batch
     if(patterns !== '') params.patterns = Boolean(patterns)

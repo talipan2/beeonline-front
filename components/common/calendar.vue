@@ -38,8 +38,8 @@ const picker = ref(null);
 const date = ref('');
 const config = ref({
     altFormat: 'd.m.Y',
-    altInput: false,
-    dateFormat: 'd.m.Y', 
+    altInput: true,
+    dateFormat: 'Y-m-d', 
     locale: Russian,
     minDate: new Date(),
     altInputClass: 'input',

@@ -31,52 +31,19 @@ import { useUserStore } from '~/store/userStore';
 const router = useRouter();
 const organizationStore = useOrganizationStore();
 const userStore = useUserStore();
-const title = ref('');
+const entityStore = useEntityStore();
+const locationStore = useLocationStore();
 
-const handleSubmit = computed(() => {
-  switch (router.currentRoute.value.params.slug) {
-    case 'step1':
-      return (() => {
-        entityStore.addNewService(
-          {
-            userId: userStore.userData.id,
-            organizationId: organizationStore.organization.id, 
-            name: service.value.name, 
-            category: service.categories
-          }
-        ).then(() => router.push('/services/create/step2'))
-        .catch(error => console.log(error));
-      });
-    case 'step2':
-      return (() =>{
-          entityStore.editService(1, {
-            description: service.value.description,
-            rawMaterials: service.value.rawMaterials,
-            availabilityStm: service.value.availabilityStm,
-            freeTestSamples: service.value.freeTestSamples,
-            minLot: service.value.minLot,
-            termsOfCooperation: service.value.termsOfCooperation
-          }).then(() => router.push('/services/create/step3'))
-          .catch(error => console.log(error));
-        });
-    case 'step3':
-      return (() => router.push('/services/create/step4'));
-    case 'step4':
-      return (() => router.push('/performer/services'));
-    default:
-    return (() => {
-        entityStore.addNewService(
-          {
-            userId: userStore.userData.id,
-            organizationId: organizationStore.organization.id, 
-            name: service.value.name, 
-            category: service.categories
-          }
-        ).then(() => router.push('/services/create/step2'))
-        .catch(error => console.log(error));
-      });
+const service = computed(() => entityStore.service)
+const title = ref('');
+const validSteps = ['step1', 'step2', 'step3', 'step4'];
+
+onBeforeMount(() => {
+  if (!validSteps.includes(router.currentRoute.value.params.slug)) {
+    router.replace({ name: 'services-create-slug', params: { slug: 'step1' } });
   }
 })
+
 
 const currentComponent = computed(() => {
   switch (router.currentRoute.value.params.slug) {
@@ -92,31 +59,18 @@ const currentComponent = computed(() => {
     case 'step4':
       title.value = 'Подробное описание';
       return Step4
-    default:
-      title.value = 'Создание услуги';
-      return Step1;
   }
 })
 
-const entityStore = useEntityStore();
-const locationStore = useLocationStore();
 
-const checkList = computed(() => [
-  { label: 'Что нужно сделать', path: '/services/create/step1' },
-  { label: 'Подробное описание', path: '/services/create/step2' },
-  { label: 'География', path: '/services/create/step3' },
-  { label: 'Проверка', path: '/services/create/step4' },
-]);
 
-const service = computed(() => entityStore.service)
-const locationList = computed(() => locationStore.locations)
+const checkList = [
+  { label: 'Что нужно сделать', value: '/services/create/step1' },
+  { label: 'Подробное описание', value: '/services/create/step2' },
+  { label: 'География', value: '/services/create/step3' },
+  { label: 'Проверка', value: '/services/create/step4' },
+];
 
-const location = computed(() => {
-  if (service.value.placeOfProductionId && locationList.value) {
-    return service.value.placeOfProductionId.map(id => locationStore.getLocationById(id));
-  }
-  return [];
-});
 
 const servicesData = computed(() => ({
   name: data.value.name,
@@ -136,7 +90,7 @@ const data = computed(() => ({
   name: service.value.name,
   logo: service.value.gallery,
   categories: computed(() => entityStore.getEntityLabelById('categories', service.value.categories)).value,
-  placeOfProductionId: location.value,
+  placeOfProductionId: computed(() => locationStore.getLocationsByIds(service.value.placeOfProductionId)).value,
   availabilityStm: computed(() => entityStore.getEntityLabelById('availabilityStm', service.value.availabilityStm)).value,
   freeTestSamples: computed(() => entityStore.getEntityLabelById('freeTestSamples', service.value.freeTestSamples)).value,
   minLot: computed(() => entityStore.getEntityLabelById('minLot', service.value.minLot)).value,
@@ -144,5 +98,38 @@ const data = computed(() => ({
   description: service.value.description,
   termsOfCooperation: service.value.termsOfCooperation
 }))
+
+const handleSubmit = computed(() => {
+  switch (router.currentRoute.value.params.slug) {
+    case 'step1':
+      return (() => {
+        entityStore.addNewService(
+          {
+            userId: userStore.userData.id,
+            organizationId: organizationStore.organization.id, 
+            name: service.value.name, 
+            category: service.categories
+          }
+        ).then(() => router.push('/services/create/step2'))
+        .catch(error => console.log(error));
+      });
+    case 'step2':
+      return (() =>{
+          entityStore.editService(service.value.id, {
+            description: service.value.description,
+            rawMaterials: service.value.rawMaterials,
+            availabilityStm: service.value.availabilityStm,
+            freeTestSamples: service.value.freeTestSamples,
+            minLot: service.value.minLot,
+            termsOfCooperation: service.value.termsOfCooperation
+          }).then(() => router.push('/services/create/step3'))
+          .catch(error => console.log(error));
+        });
+    case 'step3':
+      return (() => router.push('/services/create/step4'));
+    case 'step4':
+      return (() => router.push('/performer/services'));
+  }
+})
 
 </script>

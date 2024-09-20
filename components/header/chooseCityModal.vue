@@ -184,7 +184,6 @@ function goBack() {
 function selectCountry(country) {
   selectedCountry.value = country;
   selectedRegion.value = null;
-  console.log(country.id)
   regions.value = regionsData[country.id]; 
   cities.value = []; 
   activeLevel.value = 'region';

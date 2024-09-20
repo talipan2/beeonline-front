@@ -1,5 +1,7 @@
 <template>
-  <RegisterLayout title="Данные организации"
+  <RegisterLayout 
+    :blockTitle="blockTitle"
+    title="Данные организации"
     description="Указанные данные не разглашаются третьим лицам и необходимы для успешной работы на сервисе.">
     <form @submit="handleSubmit">
       <div class="form-group__data register__label_type_location">
@@ -110,10 +112,20 @@
 
 <script setup>
 import { useOrganizationStore } from '~/store/organizationStore';
+import { useUserStore } from '~/store/userStore';
+
+const props = defineProps({
+  blockTitle: {
+    type: String,
+    default: '',
+  }
+})
 
 const router = useRouter();
 const organizationStore = useOrganizationStore();
+const userStore = useUserStore();
 
+const role = computed(() => userStore.role);
 const skipInn = ref(false);
 
 const locationList = ref([

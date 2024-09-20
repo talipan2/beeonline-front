@@ -66,8 +66,8 @@
           <HeaderMenuDropDown v-model="isAuth" />
         </div>
         <div class="header__auth" v-else>
-          <UiButton to="/" variant="secondary" size="around" class="header__search-icon"> 
-            <img src="~/assets/images/header/search-icon.svg" alt="Поиск">
+          <UiButton to="/" variant="secondary" size="around"> 
+            <SvgoSearchIcon class="svg-m" />
           </UiButton>
           <UiButton variant="secondary" size="large" type="button" @click="openAuthModal">Вход</UiButton>
           <HeaderChooseRegistrProfileDropdown />
@@ -149,6 +149,7 @@ onUnmounted(() => {
   window.removeEventListener('resize', updateHeaderHeight);
   window.removeEventListener("scroll", onScrollPage)
 });
+
 
 </script>
 

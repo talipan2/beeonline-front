@@ -4,7 +4,7 @@ import Api from '@/api/organizationApi';
 export const useOrganizationStore = defineStore('organization', {
   state: () => ({
     organization: {},
-    pubCards: [],
+    pubCards: {},
     pubCardGallery: null,
     registerOrg: {
       location: 1,
@@ -20,7 +20,10 @@ export const useOrganizationStore = defineStore('organization', {
       productionCountry: null,
       selfEmployed: false,
       registerAddress: null,
-      selectedProductionCountries: [],
+      selectedProductionCountries: {
+        fullNameLocation: [],
+        locationId: [],
+      },
       siteUrl: null,
     }
   }),
@@ -87,7 +90,6 @@ export const useOrganizationStore = defineStore('organization', {
       try {
         const response = await Api.setGallery(formData);
         if(response.data) {
-          console.log(response.data)
           this.pubCardGallery = response.data;
           return response.data;
         }

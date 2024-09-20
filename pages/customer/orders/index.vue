@@ -11,7 +11,7 @@
         subtitle="Размещайте список своих заказов в каталоге заказчиков и ищите исполнителей в кратчайшие сроки с учетом именно ваших потребностей"
         btnLabel="Создать заказ"
         btnLink="/orders/create"
-        :data="ordersList"
+        :data="cardData"
       />
     </template>
   </NuxtLayout>
@@ -23,7 +23,19 @@ import { useEntityStore } from '~/store/entityStore';
 
 const entityStore = useEntityStore();
 
-const ordersList = computed(() => entityStore.ordersList)
+const cardData = computed(() => {
+  return entityStore.ordersList.map(item => {
+    return {
+    id: item.id,
+    name: item.name,
+    placeOfProduction: item.location || [],
+    rawMaterials: !item.material ? ['Собственное'] : ['Давальческое'],
+    completionDate: item.deadline_at,
+    batch: item.batch,
+    category: item.categories || [],
+    status: item.status || 'На модерации',
+  }})
+})
 
 onMounted(() => {
   entityStore.getOrders();
