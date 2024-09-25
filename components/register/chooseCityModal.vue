@@ -2,7 +2,7 @@
   <UiModal v-model="settingStore.chooseLocationModal" title="Выберите город" @confirm="() => confirm()"
     class="choose-city-modal choose-city-modal-register modal">
     <template #header>
-      <UiInput :placeholder="'Поиск города'">
+      <UiInput name="Поиск города" :placeholder="'Поиск города'">
         <SvgoSearchIcon class="svg-m" />
       </UiInput>
       <div class="choose-city__count" v-if="userStore.role === 'performer'">
@@ -30,7 +30,7 @@
           <ul class="choose-city__list" >
             <li class="choose-city__item" v-for="region in regions"
               :class="{ 'selected': region.id === selectedRegion?.id }" :key="region.id">
-              <UiCheckbox ref="regionCheckbox" :indeterminate="updateRegionIndeterminate(region)"
+              <UiCheckbox :isValidated="false" ref="regionCheckbox" :indeterminate="updateRegionIndeterminate(region)"
                 v-if="userStore.role === 'customer'" class="choose-city__checkbox" variant="square"
                 v-model="region.selected" :id="region.id" @change="selectAllCities(region)">
               </UiCheckbox>
@@ -43,13 +43,13 @@
           <p class="choose-city__title">Город</p>
           <ul class="choose-city__list" v-if="selectedRegion">
             <li class="choose-city__item" v-if="userStore.role === 'customer'">
-              <UiCheckbox class="choose-city__checkbox" variant="square" v-model="selectedRegion.selected"
+              <UiCheckbox :isValidated="false" class="choose-city__checkbox" variant="square" v-model="selectedRegion.selected"
                 @change="selectAllCities(selectedRegion)">
                 Любой
               </UiCheckbox>
             </li>
             <li class="choose-city__item" v-for="city in cities" :key="city.id">
-              <UiCheckbox class="choose-city__checkbox" variant="square" v-model="city.selected" :id="city.id"
+              <UiCheckbox :isValidated="false" class="choose-city__checkbox" variant="square" v-model="city.selected" :id="city.id"
                 :disabled="!city.selected && selectedCities.length >= 5 && userStore.role === 'performer'"
                 @change="toggleCitySelection(city)">
                 {{ city.name }}

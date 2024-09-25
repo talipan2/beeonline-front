@@ -8,7 +8,7 @@
       />
     </template>
     <template #content>
-      <component :is="currentComponent" :title="title" role="customer" @submit="handleSubmit" :formatData="data" :data="order"/>
+      <component :is="currentComponent" :title="title" role="customer" :handleSubmit="handleSubmit" :formatData="data" :data="order"/>
     </template>
     <template #right>
       <div class="h4">Предварительный просмотр заказа</div>
@@ -42,7 +42,7 @@ onBeforeMount(() => {
   }
 })
 
-const handleSubmit = computed(() => {
+const currentHandleSubmit = computed(() => {
   switch (router.currentRoute.value.params.slug) {
     case 'step1':
       return (() => {
@@ -91,6 +91,10 @@ const handleSubmit = computed(() => {
       });
   }
 })
+
+const handleSubmit = () => {
+  currentHandleSubmit.value();
+}
 
 const currentComponent = computed(() => {
   switch (router.currentRoute.value.params.slug) {

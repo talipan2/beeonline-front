@@ -1,5 +1,5 @@
 export default defineNuxtConfig({
-  modules: ["nuxt-svgo", "nuxt-swiper", '@pinia/nuxt', 'nuxt-tiptap-editor',],
+  modules: ["nuxt-svgo", "nuxt-swiper", '@pinia/nuxt', 'nuxt-tiptap-editor', '@vee-validate/nuxt'],
   svgo: {
     defaultImport: 'component',
     autoImportPath: './assets/svg/',

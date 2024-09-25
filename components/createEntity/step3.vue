@@ -51,6 +51,11 @@ const props = defineProps({
     type: Object,
     default: {},
     required: true,
+  },
+  handleSubmit: {
+    type: Function,
+    default: () => ({}),
+    required: true,
   }
 })
 

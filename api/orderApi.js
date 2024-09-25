@@ -2,27 +2,15 @@ import axios from "axios";
 
 export default {
   async getOrders() {
-    return axios.get(`orders`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    })
+    return axios.get(`orders`)
   },
 
   async getOrder(id) {
-    return axios.get(`orders/${id}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    })
+    return axios.get(`orders/${id}`)
   },
 
   async setOrder(data) {
-    return axios.post(`orders`, data, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    })
+    return axios.post(`orders`, data)
   },
 
   async editOrder(id, data) {
@@ -36,10 +24,6 @@ export default {
     if(batch !== '') params.batch = batch
     if(patterns !== '') params.patterns = Boolean(patterns)
     if(completionDate !== '') params.deadline_at = completionDate
-    return axios.patch(`orders/${id}`, params, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      }
-    })
+    return axios.patch(`orders/${id}`, params)
   },
 }

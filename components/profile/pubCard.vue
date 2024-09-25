@@ -1,6 +1,6 @@
 <template>
   <div class="pub-card">
-    <component :is="currentComponent" blockTitle="" :title="title" description="" />
+    <component :is="currentComponent" blockTitle="" :title="title" description="" :data="data"/>
     <div class="form-group">
       <div class="form-group-data">
         <UiButton type="button" class="form-group-data__btn" variant="senary" size="large" v-if="currentStep !== 1"
@@ -33,6 +33,20 @@ const organizationStore = useOrganizationStore();
 const userStore = useUserStore();
 const currentStep = ref(1);
 const title = ref('');
+
+const data = computed(() => ({
+    id: organizationStore.pubCards.id,
+    companyName: organizationStore.pubCards.name,
+    description: organizationStore.pubCards.description,
+    site: organizationStore.pubCards.url_site,
+    tg: organizationStore.pubCards.url_tg,
+    vk: organizationStore.pubCards.url_vk,
+    yt: organizationStore.pubCards.url_yt
+}))
+
+watch(() => data.value, (newVal) => {
+  console.log(data.value)
+}, {deep: true});
 
 const currentComponent = computed(() => {
   switch (currentStep.value) {
@@ -79,15 +93,20 @@ const prevStep = () => {
 
 const handleSubmit = () => {
   organizationStore.editPubCards({
-    id: organizationStore.pubCards.id,
-    name: organizationStore.pubCards.name,
-    description: organizationStore.pubCards.description,
-    url_site: organizationStore.pubCards.url_site,
-    url_tg: organizationStore.pubCards.url_tg,
-    url_vk: organizationStore.pubCards.url_vk,
-    url_yt: organizationStore.pubCards.url_yt,
+    id: data.value.id,
+    name: data.value.companyName,
+    description: data.value.description,
+    url_site: data.value.site,
+    url_tg: data.value.url_tg,
+    url_vk:data.value.url_vk,
+    url_yt: data.value.url_yt,
   });
 }
+
+onMounted(() => {
+  organizationStore.getSelfPubCard()
+})
+
 </script>
 
 <style lang="scss">

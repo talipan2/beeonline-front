@@ -3,50 +3,71 @@
     <h2 class="add-socials__title">Социальные сети</h2>
     <div class="add-socials__container">
       <div class="add-socials__item">
-        <label class="form-group-data form-group__title">
-          Telegram
-        </label>
+        <label class="form-group-data form-group__title"> Telegram </label>
         <div class="add-socials__input">
           <SvgoTelegram class="svg-lx" />
-          <UiInput class="form-group__value" v-model="organizationStore.pubCards.url_tg" type="text" placeholder="" />
+          <UiInput
+            :rules="{ url }"
+            name="url_tg"
+            label="Ссылка на Telegram"
+            class="form-group__value"
+            v-model="data.url_tg"
+            type="text"
+            placeholder=""
+          />
         </div>
       </div>
       <div class="add-socials__item">
-        <label class="form-group-data form-group__title">
-          VK
-        </label>
+        <label class="form-group-data form-group__title"> VK </label>
         <div class="add-socials__input">
           <SvgoVk class="svg-lx" />
-          <UiInput class="form-group__value" v-model="organizationStore.pubCards.url_vk" type="text" placeholder="" />
+          <UiInput
+            :rules="{ url }"
+            name="url_vk"
+            label="Ссылка на VK"
+            class="form-group__value"
+            v-model="data.url_vk"
+            type="text"
+            placeholder=""
+          />
         </div>
       </div>
       <div class="add-socials__item">
-        <label class="form-group-data form-group__title">
-          Youtube
-        </label>
+        <label class="form-group-data form-group__title"> Youtube </label>
         <div class="add-socials__input">
           <SvgoYoutube class="svg-lx" />
-          <UiInput class="form-group__value" v-model="organizationStore.pubCards.url_yt" type="text" placeholder="" />
+          <UiInput
+            :rules="{ url }"
+            name="url_yt"
+            label="Ссылка на Youtube"
+            class="form-group__value"
+            v-model="data.url_yt"
+            type="text"
+            placeholder=""
+          />
         </div>
       </div>
     </div>
-  </div>  
+  </div>
 </template>
 
 <script setup>
-import { useOrganizationStore } from '~/store/organizationStore';
 
-
-const organizationStore = useOrganizationStore();
+const props = defineProps({
+  data: {
+    type: Object,
+    default: () => ({}),
+    required: true,
+  }
+})
 
 </script>
 
 <style lang="scss">
-
 .add-socials {
   margin-bottom: 2em;
   &__title {
-    margin-bottom: .78em;
+    margin-bottom: 0.78em;
   }
 
   &__container {
@@ -68,8 +89,5 @@ const organizationStore = useOrganizationStore();
     align-items: center;
     column-gap: 1.5em;
   }
-
-
 }
-
 </style>

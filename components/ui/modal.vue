@@ -3,9 +3,11 @@
     class=""
     :content-class="contentClass"
     overlay-transition="vfm-fade"
-    content-transition="vfm-slide-up"
-    :clickToClose="clickToClose"
-    :escToClose="clickToClose"
+    :hideOverlay="overlayHide"
+    content-transition="vfm-fade"
+    :clickToClose="false"
+    :escToClose="false"
+    :background="background"
   >
     <div class="modal-content">
 
@@ -55,6 +57,14 @@ props: {
   closeButton: {
     type: Boolean,
     default: true
+  },
+  overlayHide: {
+    type: Boolean,
+    default: false
+  },
+  background: {
+    type: String,
+    default: "non-interactive",
   }
 
 },

@@ -31,7 +31,7 @@
             <div></div>
             <!-- <SvgoBurgerMenuIcon class="svg-l header__menu-icon"/> -->
           </button>
-          <NuxtLink class="header__logo" to="https://test.bee-online.ru">
+          <NuxtLink class="header__logo" to="/">
             <SvgoLogo class="header__logo-img" filled alt="Логотип" />
           </NuxtLink>
           <UiButton to="/" variant="primary" size="large" class="header__logo-button">Разместить заказ</UiButton>

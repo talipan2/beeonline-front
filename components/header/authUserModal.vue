@@ -1,84 +1,167 @@
 <template>
-  <UiModal title="Авторизация" v-model="settingStore.authModalStatus" @confirm="() => confirm()" class="auth-modal modal">
+  <UiModal
+    title="Авторизация"
+    v-model="settingStore.authModalStatus"
+    @confirm="() => confirm()"
+    class="auth-modal modal"
+  >
     <template #header />
     <template #content>
-      <form class="auth-modal__form" @submit="handleSubmit">
-        <UiInput class="auth-modal__input" placeholder="E-mail" v-model="email"/>
+      <Form class="auth-modal__form" as="form" @submit="handleSubmit">
+        <UiInput
+          :rules="{ required: true, min: 6, email: true }"
+          class="auth-modal__input"
+          placeholder="E-mail"
+          v-model="email"
+          name="email"
+          label="E-mail"
+        />
         <div class="auth-modal__input-container">
-          <UiInput type="password" placeholder="Пароль" class="auth-modal__input auth-modal__input_type-password" v-model="password">
-        </UiInput>
-          <button class="auth-modal__show-password">
-            <SvgoViews class="svg-lx" fill="#6937a5"/>
-          </button>
+          <UiInput
+            :rules="{ required: true, min: 6 }"
+            :type="isShowPassword ? 'text' : 'password'"
+            name="password"
+            label="Пароль"
+            placeholder="Пароль"
+            class="auth-modal__input auth-modal__input_type-password"
+            v-model="password"
+          >
+            <template #action>
+              <button
+                type="button"
+                class="auth-modal__show-password"
+                @click="() => (isShowPassword = !isShowPassword)"
+              >
+                <SvgoViews class="svg-lx" fill="#6937a5" />
+              </button>
+            </template>
+          </UiInput>
         </div>
 
         <div class="auth-modal__btn-container">
-          <UiButton type="submit" class="auth-modal__btn" variant="quinary" size="large">Войти</UiButton>
-          <UiButton class="auth-modal__btn" variant="tertiary" size="large">Войти без пароля</UiButton>
+          <UiButton
+            type="submit"
+            class="auth-modal__btn"
+            variant="quinary"
+            size="large"
+            >Войти</UiButton
+          >
+          <UiButton class="auth-modal__btn" variant="tertiary" size="large"
+            >Войти без пароля</UiButton
+          >
         </div>
         <div class="auth-modal__btn-container">
-          <UiCheckbox variant="square" class="auth-modal__checkbox">
+          <UiCheckbox
+            v-model="isRemember"
+            variant="square"
+            class="auth-modal__checkbox"
+          >
             Запомнить меня
           </UiCheckbox>
           <NuxtLink to="" class="auth-modal__link">Забыли пароль?</NuxtLink>
         </div>
-      </form>
+      </Form>
       <div class="auth-modal__soc-reg">
         <div class="auth-modal__soc-divider">
           <p>Или войти через</p>
         </div>
-          <div class="auth-modal__soc-links">
-            <a href="https://test.bee-online.ru/auth/google?action=auth">
-              <SvgoGoogle class="svg-lx" />
-            </a>
-            <a href="https://test.bee-online.ru/auth/vkontakte?action=auth">
-              <SvgoVkontakte class="svg-lx"/>
-            </a>
-          </div>
+        <div class="auth-modal__soc-links">
+          <a href="https://test.bee-online.ru/auth/google?action=auth">
+            <SvgoGoogle class="svg-lx" />
+          </a>
+          <a href="https://test.bee-online.ru/auth/vkontakte?action=auth">
+            <SvgoVkontakte class="svg-lx" />
+          </a>
         </div>
+      </div>
+      <Alerts />
     </template>
     <template #footer>
       <h3 class="auth-modal__subtitle">Впервые на портале?</h3>
-      <p class="auth-modal__text">Зарегистрируйтесь на портале и получите полный доступ к функционалу. Выберите, кем вы являетесь:</p>
+      <p class="auth-modal__text">
+        Зарегистрируйтесь на портале и получите полный доступ к функционалу.
+        Выберите, кем вы являетесь:
+      </p>
       <div class="auth-modal__btn-container">
-        <UiButton class="auth-modal__btn"  variant="quinary" size="large">Заказчик</UiButton>
-        <UiButton class="auth-modal__btn"  variant="quinary" size="large">Исполнитель</UiButton>
+        <UiButton
+          type="button"
+          class="auth-modal__btn"
+          @click="registerCustomer"
+          variant="quinary"
+          size="large"
+          >Заказчик</UiButton
+        >
+        <UiButton
+          type="button"
+          class="auth-modal__btn"
+          variant="quinary"
+          @click="registerPerformer"
+          size="large"
+          >Исполнитель</UiButton
+        >
       </div>
     </template>
   </UiModal>
 </template>
 
 <script setup>
-
-import { useUserStore } from '~/store/userStore';
-import { useSettingStore } from '~/store/settingStore';
+import { useUserStore } from "~/store/userStore";
+import { useSettingStore } from "~/store/settingStore";
 
 const userStore = useUserStore();
 const settingStore = useSettingStore();
+const router = useRouter();
 
-const email = ref('');
-const password = ref('');
+const email = ref("");
+const password = ref("");
+const isRemember = ref(false);
+const isShowPassword = ref(false);
 
-const handleSubmit = (event) => {
-  event.preventDefault();
-  userStore.authUser(email.value, password.value).then((res) => {
-    settingStore.authModalStatus = false;
-    console.log(res)
-  }).catch((err) => {
-    console.log(err)
-  })
-}
+const registerCustomer = () => {
+  userStore.role = "customer";
+  router.push({ path: "/register" });
+  settingStore.authModalStatus = false;
+};
+
+const registerPerformer = () => {
+  userStore.role = "performer";
+  router.push({ path: "/register" });
+  settingStore.authModalStatus = false;
+};
+
+const handleSubmit = () => {
+  userStore
+    .authUser(email.value, password.value, isRemember.value)
+    .then((res) => {
+      settingStore.authModalStatus = false;
+      console.log(res);
+    })
+    .catch((err) => {
+      console.log(err);
+      settingStore.alertModal.isOpen = true;
+      settingStore.alertModal.text = "Неверный логин или пароль.";
+      settingStore.alertModal.status = "error";
+    });
+};
 
 const confirm = () => {
   settingStore.authModalStatus = false;
 };
 
+watch(
+  () => settingStore.authModalStatus,
+  (newVal) => {
+    if (!newVal) {
+      email.value = "";
+      password.value = "";
+    }
+  }
+);
 </script>
 
-<style lang="scss" >
-
+<style lang="scss">
 .auth-modal {
-  font-family: 'lato', sans-serif;
+  font-family: "lato", sans-serif;
 
   .modal-dialog {
     max-width: 40em;
@@ -102,14 +185,13 @@ const confirm = () => {
     margin-bottom: 1em;
   }
 
+  // &__input-container {
+  //   display: flex;
+  //   // max-height: 6em;
 
-  &__input-container {
-    display: flex;
-    max-height: 6em;
+  // }
 
-  }
-
-  &__input { 
+  &__input {
     font-size: 1.6em;
     padding: 1.25em;
     position: relative;
@@ -131,7 +213,7 @@ const confirm = () => {
     &:hover {
       background-color: var(--button-background-primary);
       svg {
-        fill: var(--button-background-quaternary)
+        fill: var(--button-background-quaternary);
       }
     }
   }
@@ -175,12 +257,13 @@ const confirm = () => {
     display: flex;
     align-items: center;
 
-    &::before, &::after {
+    &::before,
+    &::after {
       content: "";
       display: block;
       flex: 1 1 100%;
       height: 1px;
-      background-color: #F0F0F0;
+      background-color: #f0f0f0;
       width: 100%;
     }
 
@@ -188,11 +271,10 @@ const confirm = () => {
       white-space: nowrap;
       font-size: 1.2em;
       color: #757575;
-      font-family: 'Inter', sans-serif;
+      font-family: "Inter", sans-serif;
     }
-
   }
-  
+
   &__soc-links {
     padding-block: 1em;
     margin-bottom: 3em;
@@ -205,29 +287,23 @@ const confirm = () => {
     svg {
       border-radius: 3em;
     }
-    
+
     a:hover {
       svg {
         box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.3);
       }
-
     }
-    
   }
 
   &__subtitle {
-    font-family: 'fira-sans', sans-serif;
+    font-family: "fira-sans", sans-serif;
     font-size: 2.4em;
-    margin-bottom: .83;
+    margin-bottom: 0.83;
   }
 
   &__text {
     font-size: 1.3em;
     margin-bottom: 1.53em;
   }
-
-
-
 }
-
 </style>

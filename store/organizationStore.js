@@ -76,6 +76,7 @@ export const useOrganizationStore = defineStore('organization', {
 
     async editPubCards(data) {
       try {
+        console.log(data);
         const response = await Api.editPubCard(data);
         if(response.data) {
           this.pubCards = response.data;

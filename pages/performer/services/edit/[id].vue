@@ -5,7 +5,7 @@
         :list="[{ label: 'Главная', link: '/' }, { label: 'Кабинет исполнителя', link: '/performer' }, { label: 'Список услуг', link: '/performer/services' }, { label: 'Редактирование услуги', link: '' }]" />
     </template>
     <template #content>
-      <component :is="currentComponent" :title="title" role="performer" :formatData="formatData"  @submit="handleSubmit" :handleBack="previousStep" :data="serviceData"/>
+      <component :is="currentComponent" :title="title" role="performer" :formatData="formatData"  :handleSubmit="handleSubmit" :handleBack="previousStep" :data="serviceData"/>
     </template>    
   </NuxtLayout>
 </template>
@@ -32,8 +32,8 @@ const serviceData = computed(() => ({
   logo: service.value.gallery,
   categories: service.value.categories || [],
   placeOfProductionId: service.value.placeOfProductionId || [],
-  availabilityStm: service.value.is_stm,
-  freeTestSamples: service.value.free_samples,
+  availabilityStm: Number(service.value.is_stm),
+  freeTestSamples: Number(service.value.free_samples),
   minLot: service.value.min_lot || [],
   rawMaterials: [service.value.materials_own ? 5 : '', service.value.materials_tolling ? 6 : ''].filter(Boolean) || [],
   description: service.value.description,
@@ -55,7 +55,7 @@ const formatData = computed(() => {
 })
 
 
-const handleSubmit = computed(() => {
+const currentHandleSubmit = computed(() => {
   switch (currentStep.value) {
     case 1:
       return (() => {
@@ -77,11 +77,15 @@ const handleSubmit = computed(() => {
     case 3:
       return (() => currentStep.value = 4);
     case 4:
-      return (() => currentStep.value = 4);
+      return (() => router.push('/performer/services'));
     default:
       return (() => currentStep.value = 2);
   }
 })
+
+const handleSubmit = () => {
+  currentHandleSubmit.value()
+}
 
 const previousStep = () => {
   if (currentStep.value > 1) {

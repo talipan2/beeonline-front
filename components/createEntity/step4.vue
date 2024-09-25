@@ -81,7 +81,7 @@
       <div class="form-group-data" v-if="entityOfRole === 'orders'">
         <p class="form-group__title">Сырье</p>
         <p class="form-group__value">
-          {{ (formatData.rawMaterials && formatData.rawMaterials.length > 0) ? formatData.rawMaterials[0] : 'не указан' }}
+          {{ (formatData.rawMaterials && formatData.rawMaterials.length > 0) ? formatData.rawMaterials : 'не указан' }}
           <ModalsMoreCities 
             :list="formatData.rawMaterials" 
             title="Сырье" 
@@ -136,7 +136,11 @@ const props = defineProps({
     type: Object,
     default: {},
     required: true,
-  }
+  },
+  handleSubmit: {
+    type: Function,
+    default: () => ({}),
+  },
 });
 
 const entityOfRole = computed(() =>{
@@ -152,16 +156,6 @@ const entity = computed(() => {
 });
 
 const flagClass = computed(() => selectFlag(entity.value.placeOfProduction[0].countryId))
-
-const handleSubmit = () => {
-  if(entityOfRole.value === 'orders') {
-    router.push('/customer/orders')
-    entityStore.orderList = [...entityStore.orderList, props.formatData]
-  } else {
-    entityStore.servicesList = [...entityStore.servicesList, props.formatData]
-    router.push('/performer/services')
-  }
-}
 
 </script>
 

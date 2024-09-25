@@ -29,14 +29,18 @@ export const useUserStore = defineStore('user', {
         this.role = localStorage.getItem('role');
       }
     },
-    async authUser(email, password) {
+    async authUser(email, password, isRemember = false) {
       try {
         const response = await Api.authUser(email, password);
         if(response.data) {
           this.isAuth = true;
           this.userToken = response.data.access_token;
-          localStorage.setItem('token', this.userToken);
           this.userData = response.data.user;
+          if(isRemember) {
+            localStorage.setItem('token', this.userToken);
+          } else {
+            sessionStorage.setItem('token', this.userToken);
+          }
         }
       } catch (error) {
         throw error;

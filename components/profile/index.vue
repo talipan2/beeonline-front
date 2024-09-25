@@ -79,14 +79,14 @@
         </div>
         <div class="form-group-data">
           <p class="form-group__title">Социальные сети</p>
-          <div class="form-group__container">
-            <a class="profile__soc-link" :href="organizationStore.pubCards.url_tg" target="_blank">
+          <div class="form-group__container" v-if="organizationStore.pubCards.url_tg || organizationStore.pubCards.url_yt || organizationStore.pubCards.url_vk">
+            <a class="profile__soc-link" :href="organizationStore.pubCards.url_tg" target="_blank"  v-if="organizationStore.pubCards.url_tg">
               <SvgoTelegram class="svg-l" />
             </a>
-            <a class="profile__soc-link" :href="organizationStore.pubCards.url_yt" target="_blank">
+            <a class="profile__soc-link" :href="organizationStore.pubCards.url_yt" target="_blank"  v-if="organizationStore.pubCards.url_yt">
               <SvgoYoutube class="svg-l" />
             </a>
-            <a class="profile__soc-link" :href="organizationStore.pubCards.url_vk" target="_blank">
+            <a class="profile__soc-link" :href="organizationStore.pubCards.url_vk" target="_blank"  v-if="organizationStore.pubCards.url_vk">
               <SvgoVk class="svg-l" />
             </a>
           </div>

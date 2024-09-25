@@ -5,7 +5,7 @@
         :list="[{ label: 'Главная', link: '/' }, { label: 'Кабинет заказчика', link: '/customer' }, { label: 'Список заказов', link: '/customer/orders' }, { label: 'Редактирование заказа', link: '' }]" />
     </template>
     <template #content>
-      <component :is="currentComponent" :title="title" role="customer" :formatData="formatData"  @submit="handleSubmit" :handleBack="previousStep" :data="orderData"/>
+      <component :is="currentComponent" :title="title" role="customer" :formatData="formatData"  :handleSubmit="handleSubmit" :handleBack="previousStep" :data="orderData"/>
     </template>    
   </NuxtLayout>
 </template>
@@ -26,6 +26,7 @@ const id = router.currentRoute.value.params.id;
 
 const order = ref({})
 const orderData = computed(() => ({
+  id: order.value.id,
   name: order.value.name,
   description: order.value.description,
   gallery: order.value.gallery || [],
@@ -54,39 +55,43 @@ const formatData = computed(() => {
   }
 })
 
-
-const handleSubmit = computed(() => {
+const currentHandleSubmit = computed(() => {
   switch (currentStep.value) {
     case 1:
       return (() => {
-        entityStore.editOrder(id, {
-          name: order.value.name,
+        entityStore.editOrder(orderData.value.id, {
+          name: orderData.value.name,
         }).then(() => currentStep.value = 2)
       });
     case 2:
       return (() => {
-        entityStore.editOrder(id, {
-          description: order.value.description,
-          rawMaterials: order.value.rawMaterials,
-          price: order.value.price,
-          batch: order.value.batch,
-          patterns: order.value.patterns,
-          termsOfCooperation: order.value.termsOfCooperation
+        entityStore.editOrder(orderData.value.id, {
+          description: orderData.value.description,
+          rawMaterials: orderData.value.rawMaterials,
+          price: orderData.value.price,
+          batch: orderData.value.batch,
+          patterns: orderData.value.patterns,
+          termsOfCooperation: orderData.value.termsOfCooperation
         }).then(() => currentStep.value = 3)
       });
     case 3:
       return (() =>{
-        entityStore.editOrder(order.value.id, {
-          completionDate: order.value.completionDate
+        entityStore.editOrder(orderData.value.id, {
+          completionDate: orderData.value.completionDate
         }).then(() => currentStep.value = 4)
         .catch(error => console.log(error));
       });
     case 4:
-      return (() => currentStep.value = 4);
+      return (() => router.push('/customer/orders'));
     default:
       return (() => currentStep.value = 2);
   }
 })
+
+
+const handleSubmit = () => {
+  currentHandleSubmit.value()
+}
 
 const previousStep = () => {
   if (currentStep.value > 1) {
@@ -114,6 +119,10 @@ const currentComponent = computed(() => {
 onMounted(() => {
   entityStore.getOrder(id).then(res => order.value = res.data)
 })
+
+watch(() => orderData.value, (newVal) => {
+  console.log(orderData.value)
+}, {deep: true});
 
 </script>
 

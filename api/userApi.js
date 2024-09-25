@@ -14,20 +14,12 @@ export default {
 
   // проверка авторизации
   async checkAuth() {
-      return axios.get('auth-check', {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        }
-      });
+      return axios.get('auth-check');
   },
 
   // выход пользователя
    async logOut() {
-    return axios.post('logout', {}, {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      }
-    })
+    return axios.post('logout', {})
   },
 
 }

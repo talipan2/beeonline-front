@@ -8,3 +8,15 @@
     </template>
   </NuxtLayout>
 </template>
+
+<script setup>
+import { useOrganizationStore } from '~/store/organizationStore';
+
+
+const organizationStore = useOrganizationStore();
+
+onMounted(() => {
+  organizationStore.getPubCard()
+})
+
+</script>

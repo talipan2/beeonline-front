@@ -9,7 +9,7 @@
       />
     </template>
     <template #content>
-      <component :is="currentComponent" :title="title" role="performer" :formatData="data" :data="service" @submit="handleSubmit"/>
+      <component :is="currentComponent" :title="title" role="performer" :formatData="data" :data="service" :handleSubmit="handleSubmit"/>
     </template>
     <template #right>
       <div class="h4">Предварительный просмотр услуги</div>
@@ -62,15 +62,12 @@ const currentComponent = computed(() => {
   }
 })
 
-
-
 const checkList = [
   { label: 'Что нужно сделать', value: '/services/create/step1' },
   { label: 'Подробное описание', value: '/services/create/step2' },
   { label: 'География', value: '/services/create/step3' },
   { label: 'Проверка', value: '/services/create/step4' },
 ];
-
 
 const servicesData = computed(() => ({
   name: data.value.name,
@@ -99,7 +96,7 @@ const data = computed(() => ({
   termsOfCooperation: service.value.termsOfCooperation
 }))
 
-const handleSubmit = computed(() => {
+const currentHandleSubmit = computed(() => {
   switch (router.currentRoute.value.params.slug) {
     case 'step1':
       return (() => {
@@ -128,8 +125,15 @@ const handleSubmit = computed(() => {
     case 'step3':
       return (() => router.push('/services/create/step4'));
     case 'step4':
-      return (() => router.push('/performer/services'));
+      return (() => {
+        router.push('/performer/services')
+        entityStore.resetService()
+      });
   }
 })
+
+const handleSubmit = () => {
+  currentHandleSubmit.value();
+}
 
 </script>

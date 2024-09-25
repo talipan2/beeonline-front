@@ -1,31 +1,75 @@
 <template>
-  <RegisterLayout :title="title" :description="description" :block-title="blockTitle">
-    <form @submit="handleSubmit">
-      <label class="form-group__title" for="name">Название компании *
-        <UiInput class="form-group__value" type="text" id="name" 
-          v-model="data.companyName" placeholder="Компания" :required="true" 
+  <RegisterLayout
+    :title="title"
+    :description="description"
+    :block-title="blockTitle"
+  >
+    <Form @submit="handleSubmit">
+      <label class="form-group__title" for="name"
+        >Название компании *
+        <UiInput
+          :rules="{ required: true, min: 2 }"
+          name="name"
+          label="Название компании"
+          class="form-group__value"
+          type="text"
+          id="name"
+          v-model="data.companyName"
+          placeholder="Компания"
+          :required="true"
         />
       </label>
-      <label class="form-group__title" for="site">Ссылка на сайт
-        <UiInput class="form-group__value" type="text" id="site" v-model="data.site"
-          placeholder="Компания" :required="true" />
+      <label class="form-group__title" for="site"
+        >Ссылка на сайт
+        <UiInput
+          :rules="{ url }"
+          name="site"
+          label="Ссылка на сайт"
+          class="form-group__value"
+          type="text"
+          id="site"
+          v-model="data.site"
+          placeholder="Компания"
+        />
       </label>
       <div class="form-group register__input-list_type_company">
-        <CommonImageLoad class="form-group-data" title="Загрузить логотип компании" />
+        <CommonImageLoad
+          class="form-group-data"
+          title="Загрузить логотип компании"
+        />
         <div class="form-group-data">
-          <label class="form-group__title">Описание *
-          </label>
-          <UiTextArea v-model="data.description" :rows="5" />
+          <label class="form-group__title">Описание * </label>
+          <UiTextArea
+            :rules="{ required: true, min: 5 }"
+            name="description"
+            label="Описание"
+            v-model="data.description" 
+            :rows="5"
+          />
         </div>
       </div>
-      <div class="register__btn-container" v-if="router.currentRoute.value.path.includes('/register')">
-        <UiButton type="button" class="register__btn" variant="senary" size="large" @click="router.back">Назад
+      <div
+        class="register__btn-container"
+        v-if="router.currentRoute.value.path.includes('/register')"
+      >
+        <UiButton
+          type="button"
+          class="register__btn"
+          variant="senary"
+          size="large"
+          @click="router.back"
+          >Назад
         </UiButton>
-        <UiButton type="submit" class="register__btn" variant="quinary" size="large">Далее
+        <UiButton
+          type="submit"
+          class="register__btn"
+          variant="quinary"
+          size="large"
+          >Далее
           <SvgoBtnArrow class="svg-lx" />
         </UiButton>
       </div>
-    </form>
+    </Form>
   </RegisterLayout>
 </template>
 
@@ -34,44 +78,45 @@
 const props = defineProps({
   blockTitle: {
     type: String,
-    default: '',
+    default: "",
   },
   title: {
     type: String,
-    default: 'Карточка организации',
+    default: "Карточка организации",
   },
-  description : {
+  description: {
     type: String,
-    default: 'Указанные данные увидят другие участники портала.',
+    default: "Указанные данные увидят другие участники портала.",
   },
   data: {
     type: Object,
-    default: {},
+    default: () => {},
     required: true,
-  }
-})
+  },
+});
 
 const router = useRouter();
 
-const handleSubmit = (e) => {
-  e.preventDefault();
-  router.push('/register/step3');
-}
-
+const handleSubmit = () => {
+  router.push("/register/step3");
+};
 </script>
 
 <style lang="scss">
-
 .register__input-list_type_company {
   margin-top: 1em;
 
   .load-image {
     padding-bottom: 62%;
   }
+
+  .text-area__container {
+    padding-bottom: 62%;
+  }
 }
 
 .register__company-image {
-  margin-top: .5em;
+  margin-top: 0.5em;
   display: flex;
   flex-direction: column;
   border: 1px solid #c4c4c4;
@@ -99,7 +144,6 @@ const handleSubmit = (e) => {
     padding: 1em;
     line-height: 1;
     font-size: 12px;
-
   }
 
   img {
@@ -119,7 +163,7 @@ const handleSubmit = (e) => {
 .register__textarea {
   padding-bottom: 63.1%;
   position: relative;
-  margin-top: .5em;
+  margin-top: 0.5em;
 
   textarea {
     width: 100%;
@@ -140,6 +184,4 @@ const handleSubmit = (e) => {
     }
   }
 }
-
-
 </style>

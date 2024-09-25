@@ -6,6 +6,7 @@
       <div class="calendar__container">
         <div class="input-container">
           <flat-pickr
+            name="date"
             class="input"
             ref="picker"
             v-model="date"

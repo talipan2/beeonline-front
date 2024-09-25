@@ -1,29 +1,29 @@
 <template>
-  <div :class="['checkbox', variantClass]">
-    <label class="checkbox__label">
-      <input
-        type="checkbox"
-        v-model="internalValue"
-        class="checkbox__input"
-        :disabled="disabled"
-        @change="emitChange"
-        :indeterminate="indeterminate"
-        :required="required"
-      />
-      <div class="checkbox__icon"></div>
-      <slot></slot>
-    </label>
-  </div>
+  <Field :rules="rules" v-slot="{ field, errors }" type="checkbox" :name="name" :value="true" :unchecked-value="false" :label="label">
+    <div :class="['checkbox', variantClass, field.class,  $attrs.class]">
+      <label class="checkbox__label">
+        <input
+          type="checkbox"
+          class="checkbox__input"
+          v-bind="field"
+          :name="name"
+          :disabled="disabled"
+          :indeterminate="indeterminate"
+        />
+        <div class="checkbox__icon"></div>
+        <slot></slot>
+      </label>
+      <div class="invalid-error" v-if="isValidated">
+        <span v-if="errors.length" class="invalid-error__text">{{ errors[0] }}</span>
+      </div>
+    </div>
+  </Field>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue';
 
 const props = defineProps({
-  modelValue: {
-    type: Boolean, 
-    default: false,
-  },
   variant: {
     type: String,
     default: 'square',
@@ -37,30 +37,40 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  required: {
+  rules: {
+    type: [String, Object],
+    default: '',
+  },
+  isValidated: {
     type: Boolean,
-    default: false,
+    default: true,
   }
 });
 
-const emit = defineEmits(['update:modelValue']);
-const internalValue = ref(props.modelValue);
+// const emit = defineEmits(['update:modelValue']);
+// const internalValue = ref(props.modelValue);
 
 const variantClass = computed(() => {
   return props.variant === 'round' ? 'checkbox_type_round' : 'checkbox_type_square';
 });
 
-function emitChange() {
-  emit('update:modelValue', internalValue.value);
-}
+// function emitChange() {
+//   emit('update:modelValue', internalValue.value);
+// }
 
-watch(() => props.modelValue, (newValue) => {
-  internalValue.value = newValue;
-});
+// watch(() => props.modelValue, (newValue) => {
+//   internalValue.value = newValue;
+// });
 
 </script>
 
 <style lang="scss">
+.invalid {
+  .checkbox__icon::before {
+    border-color: var(--text-color-danger);
+  }
+}
+
 .checkbox__label {
   cursor: pointer;
   display: flex;

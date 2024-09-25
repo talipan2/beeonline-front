@@ -65,8 +65,8 @@ export const useEntityStore = defineStore('entity', {
         { id: 27, label: "Разработка лекал" },
       ],
       rawMaterials: [
-        { id: 5, label: "Собственное" },
-        { id: 6, label: "Давальческое" },
+        { id: 1, label: "Собственное" },
+        { id: 0, label: "Давальческое" },
       ],
       patterns: [
         { id: 1, label: "Есть лекала" },
@@ -198,6 +198,38 @@ export const useEntityStore = defineStore('entity', {
         const response = await orderApi.editOrder(this.order.id || id, data);
       } catch (error) {
         throw error;
+      }
+    },
+    resetService() {
+      this.service = {
+        id: '',
+        name: '',
+        imageUrl: '',
+        categories: [],
+        placeOfProduction: [],
+        placeOfProductionId: [],
+        minLot: [],
+        availabilityStm: '',
+        freeTestSamples: '',
+        rawMaterials: [],
+        description: '',
+      };
+    },
+    resetOrder() {
+      this.order = {
+        id: '',
+        name: '',
+        imageUrl: '',
+        categories: [],
+        placeOfProduction: [],
+        placeOfProductionId: [],
+        batch: '',
+        patterns: '',
+        price: '',
+        rawMaterials: [],
+        completionDate: '',
+        description: '',
+        termsOfCooperation: '',
       }
     }
   }

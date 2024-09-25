@@ -1,5 +1,6 @@
 <template>
-  <div class="checkbox-group">
+  <Field :rules="rules" v-model="internalValue" v-slot="{ errors }" :name="name" :label="label">
+  <div class="checkbox-group" :class="$attrs.class">
     <UiCheckbox
       v-for="option in options"
       :key="option.id"
@@ -10,10 +11,17 @@
       :required="required"
       @update:modelValue="handleChange(option.id, $event)"
       :variant="variant"
+      :isValidated="false"
+      :name="`checkbox-${option.id}`"
+      :class="{'invalid': errors.length }"
     >
       {{ option.label }}
     </UiCheckbox>
+    <div class="invalid-error">
+      <span v-if="errors.length" class="invalid-error__text">{{ errors[0] }}</span>
+    </div>
   </div>
+  </Field>
 </template>
 
 <script setup>
@@ -44,8 +52,21 @@ const props = defineProps({
   disabled: {
     type: Function,
     default: () => false,
+  },
+  name: {
+    type: String,
+    default: 'checkbox-group',
+  },
+  rules: {
+    type: [String, Object],
+    default: '',
+  },
+  isValidated: {
+    type: Boolean,
+    default: true,
   }
 });
+
 
 const emit = defineEmits(['update:modelValue']);
 const internalValue = ref([...props.modelValue]);

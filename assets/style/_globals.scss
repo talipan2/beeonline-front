@@ -183,7 +183,7 @@ img {
   display: flex;
   column-gap: 3em;
   justify-content: space-between;
-  align-items: center;
+  // align-items: center;
   flex-wrap: wrap;
 }
 
@@ -303,6 +303,28 @@ img {
 
 .mb-30{
   margin-block: 3rem;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.invalid-error {
+  font-size: 1rem;
+  line-height: 1em !important;
+  color: #6937a5;
+  margin-top: .5rem;
+  flex: 1 1 100%;
+  min-height: 1.5rem;
+  max-height: 1.5rem;
+}
+
+.invalid {
+  input {
+    color: var(--text-color-danger);
+  }
 }
 
 .container {

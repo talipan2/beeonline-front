@@ -1,73 +1,95 @@
 <template>
   <div class="entity">
     <h1 class="entity__title">{{ title }}</h1>
-    <CommonAlerts :alerts="['Заголовок обязателен', 'Категория продукции обязательна']" />
-    <form @submit.prevent="handleSubmit">
-      <div class="form-group" v-if="router.currentRoute.value.name.includes('create')">
+    <Form @submit="handleSubmit" as="form">
+      <div
+        class="form-group"
+        v-if="router.currentRoute.value.name.includes('create')"
+      >
         <label class="form-group-data form-group__title">
-          Введите заголовок {{ role === 'performer' ? 'услуги' : 'заказа' }} *
-          <UiInput v-model="data.name" class="form-group__value" :required="true"/>
+          Введите заголовок {{ role === "performer" ? "услуги" : "заказа" }} *
+          <UiInput
+            :rules="{ required: true, min: 2 }"
+            name="name"
+            label="Заголовок"
+            v-model="data.name"
+            class="form-group__value"
+            :required="true"
+          />
         </label>
       </div>
       <div class="form-group" v-else>
-        <label class="form-group-data form-group__title">
-          Название {{ role === 'performer' ? 'услуги' : 'заказа' }} *
-          <UiInput v-model="data.name" class="form-group__value" :required="true"/>
-        </label>
+        <!-- <label class="form-group-data form-group__title">
+          Название {{ role === "performer" ? "услуги" : "заказа" }} *
+          <UiInput
+            :rules="{ required: true, min: 2 }"
+            name="Название заказа"
+            v-model="data.name"
+            class="form-group__value"
+            :required="true"
+          />
+        </label> -->
       </div>
       <h2 class="entity__subtitle">Категория продукции</h2>
       <p class="entity__description">Выберите до 4 категорий</p>
       <div class="entity__variants-list">
-        <UiCheckboxGroup :options="categories" v-model="data.categories" :disabled="isDisabled" />
+        <UiCheckboxGroup
+          name="categories"
+          :rules="{ minSelected: 1 }"
+          :options="categories"
+          v-model="data.categories"
+          :disabled="isDisabled"
+        />
       </div>
       <div class="form-group">
         <div class="form-group-data"></div>
-        <UiButton type="submit" class="form-group-data form-group-data__btn" variant="quinary" size="large">Далее
+        <UiButton
+          type="submit"
+          class="form-group-data form-group-data__btn"
+          variant="quinary"
+          size="large"
+          >Далее
           <SvgoBtnArrow class="svg-lx" />
         </UiButton>
       </div>
-    </form>
-    <div>{{ selectedCategory }}</div>
+    </Form>
   </div>
 </template>
 
 <script setup>
-import { useEntityStore } from '~/store/entityStore';
-import { useUserStore } from '~/store/userStore';
-
-
 const props = defineProps({
   title: {
     type: String,
-    default: '',
+    default: "",
     required: true,
   },
   role: {
     type: String,
-    default: '',
+    default: "",
     required: true,
   },
   handleBack: {
-    type: Function
+    type: Function,
   },
   data: {
     type: Object,
     default: () => {},
-    required: true
-  }
+    required: true,
+  },
+  handleSubmit: {
+    type: Function,
+    default: () => ({}),
+    required: true,
+  },
+});
 
-})
-
-const entityStore = useEntityStore();
-const userStore = useUserStore();
 const router = useRouter();
-const selectedCategory = ref([]);
-
 
 const isDisabled = (id) => {
-  return props.data.categories.length >= 4 && !props.data.categories.includes(id);
+  return (
+    props.data.categories.length >= 4 && !props.data.categories.includes(id)
+  );
 };
-
 
 const categories = [
   { id: 1, label: "Вязаный трикотаж" },
@@ -98,24 +120,22 @@ const categories = [
   { id: 26, label: "Вязаные аксессуары" },
   { id: 27, label: "Разработка лекал" },
 ];
-
 </script>
 
 <style lang="scss">
-
 .entity {
   &__title {
-    margin-bottom: .7em;
+    margin-bottom: 0.7em;
   }
 
   &__subtitle {
     font-size: 2.4em;
-    margin-block: 1.25em .83em;
+    margin-block: 1.25em 0.83em;
   }
 
   &__description {
     font-size: 1.3em;
-    padding-bottom: .38em;
+    padding-bottom: 0.38em;
     border-bottom: 1px solid var(--border-color-secondary);
     margin-bottom: 2.3em;
   }
@@ -135,5 +155,4 @@ const categories = [
     }
   }
 }
-
 </style>

@@ -1,20 +1,29 @@
 <template>
-  <div class="text-area">
-    <textarea 
-      class="text-area__input" 
-      :name="name" 
-      :value="modelValue" 
-      @input="$emit('update:modelValue', $event.target.value)"
-      :rows="rows" 
-      :required="required"
-      :disabled="disabled" 
-    />
-  </div>
+  <Field :rules="rules" v-slot="{ field, errors, meta }" :name="name" :label="label">
+    <div class="text-area">
+      <div class="text-area__container" :class="[field.class, $attrs.class]">
+        <textarea 
+          class="text-area__input" 
+          v-bind="field"
+          :rows="rows" 
+          :disabled="disabled"
+          @input="field.handleChange"
+        />
+      </div>
+        <div class="invalid-error">
+          <span v-if="errors.length && meta.touched" class="invalid-error__text">{{ errors[0] }}</span>
+        </div>
+    </div>
+  </Field>
 </template>
 
 <script setup>
 
 const props = defineProps({
+  label: {
+    type: String,
+    default: '',
+  },
   name: {
     type: String,
     default: '',
@@ -23,17 +32,13 @@ const props = defineProps({
     type: Number,
     default: 8,
   },
-  modelValue: {
-    type: String,
-    default: '',
-  },
-  required: {
-    type: Boolean,
-    default: false,
-  },
   disabled: {
     type: Boolean,
     default: false,
+  },
+  rules: {
+    type: [String, Object],
+    default: '',
   }
 })
 
@@ -41,9 +46,9 @@ const props = defineProps({
 
 <style lang="scss">
 
-.text-area {
+.text-area__container {
   position: relative;
-  padding-bottom: 63.1%;
+  padding-bottom:30%;
   margin-top: .5em;
 }
 

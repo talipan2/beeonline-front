@@ -1,57 +1,57 @@
 <template>
-  <div class="radio-buttons">
-    <label
-      v-for="option in options"
-      :key="option.value"
-      class="radio-buttons__label"
-    >
-      <input
-        type="radio"
-        :name="name"
-        :value="option.value"
-        v-model="selectedValue"
-        @change="handleChange"
-        class="radio-buttons__input"
-      />
-      <div class="radio-buttons__icon"></div>
-      <span>{{ option.label }}</span>
-    </label>
-  </div>
+  <Field
+    :rules="rules"
+    v-slot="{ errors, field, meta, value, handleChange }"
+    :name="name"
+  >
+    {{ field }} {{ value }}
+    <div class="radio-buttons" :class="$attrs.class">
+      <label
+        v-for="option in options"
+        :key="option.value"
+        class="radio-buttons__label"
+      >
+        <input
+          type="radio"
+          :name="name"
+          :value="option.value"
+          v-model="field.value"
+          @input="handleChange($event.target.value)"
+          :checked="field.value === option.value"
+          class="radio-buttons__input"
+        />
+        <div class="radio-buttons__icon"></div>
+        <span>{{ option.label }}</span>
+      </label>
+      <div class="invalid-error">
+        <span
+          v-if="errors.length && meta.touched"
+          class="invalid-error__text"
+          >{{ errors[0] }}</span
+        >
+      </div>
+    </div>
+  </Field>
 </template>
 
 <script setup>
-import { ref, watch, defineProps, defineEmits } from 'vue';
-
 const props = defineProps({
-  modelValue: {
-    type: String,
-    default: '',
-  },
   options: {
     type: Array,
     required: true,
   },
   name: {
     type: String,
-    default: '',
+    default: "",
+  },
+  rules: {
+    type: [Object, String],
+    default: "",
   },
 });
-
-const emit = defineEmits(['update:modelValue']);
-const selectedValue = ref(props.modelValue);
-
-watch(() => props.modelValue, (newValue) => {
-    selectedValue.value = newValue;
-  }
-);
-
-const handleChange = () => {
-  emit('update:modelValue', selectedValue.value);
-};
 </script>
 
 <style lang="scss">
-
 .radio-buttons__label {
   cursor: pointer;
   display: flex;
@@ -73,7 +73,7 @@ const handleChange = () => {
 }
 
 .radio-buttons__icon::before {
-  content: '';
+  content: "";
   display: inline-block;
   width: 1.8rem;
   height: 1.8rem;
@@ -90,13 +90,12 @@ const handleChange = () => {
   border-radius: 2px;
   min-width: 1rem;
   position: relative;
-  transition: border-color .2s ease-in-out;
+  transition: border-color 0.2s ease-in-out;
   border-radius: 50%;
-
 }
 
 .radio-buttons__input:focus + .radio-buttons__icon::before {
-  box-shadow: 0 0 0 .2rem hsla(240, 2%, 87%, .5);
+  box-shadow: 0 0 0 0.2rem hsla(240, 2%, 87%, 0.5);
 }
 
 .radio-buttons__label:hover .radio-buttons__icon::before {
@@ -104,7 +103,7 @@ const handleChange = () => {
 }
 
 .radio-buttons .radio-buttons__input:checked + .radio-buttons__icon::before {
-  background-image: url('@/assets/svg/checked-circle.svg');
+  background-image: url("@/assets/svg/checked-circle.svg");
 }
 
 .radio-buttons__label {

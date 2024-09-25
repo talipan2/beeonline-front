@@ -6,7 +6,7 @@
       Youtube</p>
     <label class="gallery__label" v-for="(link, index) in videoLinks" :key="index">Cсылка на видео в Youtube
       <div class="gallery__link-add">
-        <UiInput class="gallery__link" v-model="videoLinks[index]" />
+        <UiInput class="gallery__link" v-model="videoLinks[index]" :name='`url_yt-${index}`' label="Ссылка на видео" :rules="{ url }"/>
         <UiButton v-if="index === videoLinks.length - 1" class="gallery__btn" type="button" variant="quinary"
           size="around" @click="addLink">
           <SvgoAdd class="svg-m" />
@@ -23,8 +23,13 @@
 <script setup>
 import { useOrganizationStore } from '~/store/organizationStore';
 
-
-const organizationStore = useOrganizationStore();
+const props = defineProps({
+  data: {
+    type: Object,
+    default: () => ({}),
+    required: true,
+  },
+})
 
 const videoLinks = ref(['']); // Изначально один инпут
 
@@ -39,7 +44,7 @@ const removeLink = (index) => {
 };
 
 watch(() => videoLinks.value, (newVal) => {
-  organizationStore.pubCards.url_yt = newVal;
+  props.data.url_yt = newVal;
 }, {deep: true});
 
 </script>
