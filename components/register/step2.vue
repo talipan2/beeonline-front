@@ -74,6 +74,8 @@
 </template>
 
 <script setup>
+import { useUserStore } from '~/store/userStore';
+
 
 const props = defineProps({
   blockTitle: {
@@ -96,9 +98,16 @@ const props = defineProps({
 });
 
 const router = useRouter();
+const userStore = useUserStore();
+
+const role = computed(() => userStore.role);
 
 const handleSubmit = () => {
-  router.push("/register/step3");
+  if(role.value === "customer") {
+    router.push("/register/step4");
+  } else  if(role.value === "performer") {
+    router.push("/register/step3");
+  }
 };
 </script>
 

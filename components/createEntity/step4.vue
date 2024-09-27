@@ -1,14 +1,19 @@
 <template>
   <div class="entity entity_step-check">
     <h1 class="entity__title">{{ entityOfRole === 'services' ? 'Проверка вашей услуги' : 'Проверка вашего заказа' }}</h1>
-    <CommonProfileCheckCard :title="entityOfRole === 'services' ? 'Услуга' : 'Заказ'"
+    <!-- <CommonProfileCheckCard :title="entityOfRole === 'services' ? 'Услуга' : 'Заказ'"
       text="Указанные данные не разглашаются третьим лицам, и необходимы для успешной работы на сервисе"
-      change-link-label="Изменить" change-link="/services/create" />
+      change-link-label="Изменить" change-link="/services/create" /> -->
+      <div class="form-group">
+        <div class="form-group-data form-group-data__btn entity_step-check__link">
+          <NuxtLink to="/orders/create/step1" class="link" variant="quinary" size="large">Изменить</NuxtLink>
+        </div>
+        <UiButton type="button"  @click="handleSubmit" class="form-group-data form-group-data__btn " variant="quinary" size="large">Подтвердить</UiButton>
+    </div>
     <div class="form-group-data">
       <p class="form-group__title">Заголовок</p>
       <p class="form-group__value">{{ formatData.name || 'не указан' }}</p>
-    </div>
-    <div class="form-group">
+    </div>    <div class="form-group">
       <div class="form-group-data">
         <p class="form-group__title">Категории</p>
         <p class="form-group__value">
@@ -103,15 +108,21 @@
       <p class="form-group__title">Условия сотрудничества</p>
       <p class="form-group__value">{{ formatData.termsOfCooperation || '-' }}</p>
     </div>
-    <UiCheckbox class="form-group-data" v-if="entityOfRole === 'order'">
+    <UiCheckbox v-model="data.isSafeDeal" class="form-group-data" v-if="entityOfRole === 'orders'" :isValidated="false">
       Использовать &nbsp;<a>безопасную сделку.</a>
+      <CommonTooltip
+        text='Безопасная сделка'
+      />
     </UiCheckbox>
-    <UiCheckbox class="form-group-data" v-if="entityOfRole === 'order'">
-      Согласен на размещение заказа в телеграм-канале "Аутсорсинг в легпроме".
+    <UiCheckbox v-model="data.isAgreedOrderPlacement" class="form-group-data" v-if="entityOfRole === 'orders'" :isValidated="false">
+      Согласен на размещение заказа в телеграм-канале &nbsp;<a>"Аутсорсинг в легпроме"</a>. 
+      <CommonTooltip class=""
+        text='Аутсорсинг в легпроме'
+      />
     </UiCheckbox>
     <div class="form-group">
-      <UiButton type="button" @click="router.push('/orders/create/step3')" class="form-group-data form-group-data__btn" variant="tertiary" size="large">Назад</UiButton>
-      <UiButton type="button" @click="handleSubmit" class="form-group-data form-group-data__btn" variant="quinary" size="large">Подтвердить
+      <UiButton type="button"  @click="router.push('/orders/create/step3')" class="form-group-data form-group-data__btn" variant="tertiary" size="large">Назад</UiButton>
+      <UiButton type="button"  @click="handleSubmit" class="form-group-data form-group-data__btn" variant="quinary" size="large">Подтвердить
       </UiButton>
     </div>
   </div>
@@ -141,6 +152,11 @@ const props = defineProps({
     type: Function,
     default: () => ({}),
   },
+  data: {
+    type: Object,
+    default: () => ({}),
+    required: true,
+  }
 });
 
 const entityOfRole = computed(() =>{
@@ -178,6 +194,13 @@ const flagClass = computed(() => selectFlag(entity.value.placeOfProduction[0].co
   .form-group__value {
     line-height: 1.5em;
     margin-top: 0;
+  }
+
+  &__link {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    
   }
 
 }

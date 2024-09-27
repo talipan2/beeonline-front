@@ -67,17 +67,25 @@ const props = defineProps({
 
   &__props {
     margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
   }
 
   &__prop {
     font-size: 1.6rem;
-    display: flex;
+    display: inline-block;
     column-gap: 0.625em;
     margin-bottom: 0.625em;
   }
 
+  &__prop-name {
+    display: inline;
+  }
+
   &__prop-value {
+    display: inline;
     font-size: 1.6rem;
+    margin-left: .5em;
   }
 
   &__btn {

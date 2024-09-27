@@ -19,7 +19,7 @@
         </label>
       </div>
       <div class="form-group" v-else>
-        <!-- <label class="form-group-data form-group__title">
+        <label class="form-group-data form-group__title">
           Название {{ role === "performer" ? "услуги" : "заказа" }} *
           <UiInput
             :rules="{ required: true, min: 2 }"
@@ -28,18 +28,25 @@
             class="form-group__value"
             :required="true"
           />
-        </label> -->
+        </label>
       </div>
       <h2 class="entity__subtitle">Категория продукции</h2>
       <p class="entity__description">Выберите до 4 категорий</p>
       <div class="entity__variants-list">
         <UiCheckboxGroup
           name="categories"
+          label="Категории"
           :rules="{ minSelected: 1 }"
           :options="categories"
           v-model="data.categories"
           :disabled="isDisabled"
+          :isDropDown="true" 
         />
+      </div>
+      <div v-if="role == 'customer'" class="entity__data">
+        <h2 class="entity__subtitle">Сроки</h2>
+        <p class="entity__description">Укажите дату до которой заказ будет актуален</p>
+        <CommonCalendar v-model="data.completionDate" class="entity__calendar" />
       </div>
       <div class="form-group">
         <div class="form-group-data"></div>
@@ -57,6 +64,7 @@
 </template>
 
 <script setup>
+
 const props = defineProps({
   title: {
     type: String,
@@ -82,6 +90,7 @@ const props = defineProps({
     required: true,
   },
 });
+
 
 const router = useRouter();
 
@@ -130,7 +139,7 @@ const categories = [
 
   &__subtitle {
     font-size: 2.4em;
-    margin-block: 1.25em 0.83em;
+    margin-block: .25em 0.83em;
   }
 
   &__description {
@@ -141,7 +150,7 @@ const categories = [
   }
 
   &__variants-list {
-    margin-bottom: 1.8em;
+    margin-bottom: 4em;
 
     .checkbox {
       flex: 1 1 47%;

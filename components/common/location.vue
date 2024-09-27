@@ -29,7 +29,7 @@ const props = defineProps({
   },
   modelValue: {
     type: Object,
-    default: {},
+    default: () => {},
     required: true,
   }
 })
@@ -38,7 +38,7 @@ const settingStore = useSettingStore();
 
 const emit = defineEmits(['update:modelValue']);
 
-const selectedCities = ref([]);
+const selectedCities = ref(props.modelValue.fullNameLocation);
 
 function deleteLocation(id) {
   selectedCities.value = selectedCities.value.filter(selectedCity => selectedCity.id !== id);
@@ -56,9 +56,9 @@ watch(() => selectedCities.value, (newVal) => {
   }
 });
 
-onMounted(() => {
-  selectedCities.value = props.modelValue.fullNameLocation
-})
+// onMounted(() => {
+//   selectedCities.value = props.modelValue.fullNameLocation
+// })
 
 </script> 
 

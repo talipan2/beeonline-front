@@ -44,11 +44,12 @@ const props = defineProps({
 const organizationStore = useOrganizationStore();
 const imagePreview = ref(null);
 const isLoading = ref(false);
+const formData = new FormData();
 
 const emit = defineEmits(['update:modelValue']);
 
 const onFileChange = (event) => {
-  const file = event.target.files[0];
+  const file = event.target.files[0]
   
   if (file && file.type.startsWith('image/')) {
     // Установить состояние загрузки
@@ -58,8 +59,10 @@ const onFileChange = (event) => {
     
     reader.onload = (e) => {
       imagePreview.value = e.target.result;
-      emit('update:modelValue', imagePreview.value);
-      
+      console.log(e.target.result);
+      formData.append('logo', file);
+      emit('update:modelValue', file);
+      console.log(formData.get('logo'));
       isLoading.value = false;
     };
     

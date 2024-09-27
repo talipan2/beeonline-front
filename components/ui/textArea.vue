@@ -1,13 +1,14 @@
 <template>
   <Field :rules="rules" v-slot="{ field, errors, meta }" :name="name" :label="label">
-    <div class="text-area">
-      <div class="text-area__container" :class="[field.class, $attrs.class]">
+    <div class="text-area" :class="[field.class, $attrs.class]">
+      <div class="text-area__container" >
         <textarea 
           class="text-area__input" 
           v-bind="field"
           :rows="rows" 
           :disabled="disabled"
           @input="field.handleChange"
+          ref="refValue"
         />
       </div>
         <div class="invalid-error">
@@ -18,6 +19,7 @@
 </template>
 
 <script setup>
+import { useTippy } from 'vue-tippy';
 
 const props = defineProps({
   label: {
@@ -39,6 +41,27 @@ const props = defineProps({
   rules: {
     type: [String, Object],
     default: '',
+  },
+  alertMessage: {
+    type: String,
+    default: ''
+  }
+})
+
+
+const refValue = ref(null);
+
+onMounted(() => {
+  if(props.alertMessage) {
+    useTippy(refValue.value, {
+      className: 'text-area__tippy',
+      content: props.alertMessage,
+      placement: 'right',
+      theme: 'text-area',
+      trigger: 'focus',
+      hideOnClick: false,
+      arrow: true,
+    })
   }
 })
 

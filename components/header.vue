@@ -34,7 +34,7 @@
           <NuxtLink class="header__logo" to="/">
             <SvgoLogo class="header__logo-img" filled alt="Логотип" />
           </NuxtLink>
-          <UiButton to="/" variant="primary" size="large" class="header__logo-button">Разместить заказ</UiButton>
+          <UiButton type="button" @click="handleCreateOrder" variant="primary" size="large" class="header__logo-button">Разместить заказ</UiButton>
         </div>
         <nav class="header__menu-links">
           <ul class="header__menu-list">
@@ -88,6 +88,7 @@ import { useOrganizationStore } from '~/store/organizationStore';
 const userStore = useUserStore();
 const settingStore = useSettingStore();
 const organizationStore = useOrganizationStore();
+const router = useRouter();
 
 const isAuth = computed(() => userStore.isAuth);
 const isOpenMobileModal = ref(false);
@@ -99,6 +100,17 @@ const headerFixed = ref(false);
 const headerMainOffsetTop = ref(0);
 const headerFiller = ref(0)
 const headerInfo = ref(null)
+
+const handleCreateOrder = () => {
+  if (!isAuth.value) {
+    router.push('/register');
+    userStore.role = 'customer'
+    localStorage.setItem('role', 'customer');
+    settingStore.isCreateOrder = true
+  } else {
+    router.push('/orders/create/step1');
+  }
+}
 
 function openAuthModal () {
   settingStore.authModalStatus = true;

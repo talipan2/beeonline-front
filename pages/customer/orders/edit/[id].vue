@@ -61,7 +61,13 @@ const currentHandleSubmit = computed(() => {
       return (() => {
         entityStore.editOrder(orderData.value.id, {
           name: orderData.value.name,
-        }).then(() => currentStep.value = 2)
+          completionDate: orderData.value.completionDate
+        })
+        .then(() => currentStep.value = 2)
+        .catch(error => {
+          console.log(error)
+          scrollToError(error)
+        });
       });
     case 2:
       return (() => {
@@ -72,15 +78,15 @@ const currentHandleSubmit = computed(() => {
           batch: orderData.value.batch,
           patterns: orderData.value.patterns,
           termsOfCooperation: orderData.value.termsOfCooperation
-        }).then(() => currentStep.value = 3)
-      });
-    case 3:
-      return (() =>{
-        entityStore.editOrder(orderData.value.id, {
-          completionDate: orderData.value.completionDate
         }).then(() => currentStep.value = 4)
-        .catch(error => console.log(error));
       });
+    // case 3:
+    //   return (() =>{
+    //     entityStore.editOrder(orderData.value.id, {
+    //       completionDate: orderData.value.completionDate
+    //     }).then(() => currentStep.value = 4)
+    //     .catch(error => console.log(error));
+    //   });
     case 4:
       return (() => router.push('/customer/orders'));
     default:

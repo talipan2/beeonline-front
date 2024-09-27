@@ -26,4 +26,10 @@ export default {
     if(completionDate !== '') params.deadline_at = completionDate
     return axios.patch(`orders/${id}`, params)
   },
+
+  async uploadLogo(id, data) {
+    const formData = new FormData();
+    formData.append('logo', data);
+    return axios.post(`/orders/${id}/upload-logo`, formData, {headers: {'Content-Type': 'multipart/form-data'}})
+  }
 }

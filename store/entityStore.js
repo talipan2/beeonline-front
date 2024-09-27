@@ -18,6 +18,8 @@ export const useEntityStore = defineStore('entity', {
       completionDate: '',
       description: '',
       termsOfCooperation: '',
+      isSafeDeal: true,
+      isAgreedOrderPlacement: true
     },
     service: {
       id: '',
@@ -231,6 +233,29 @@ export const useEntityStore = defineStore('entity', {
         description: '',
         termsOfCooperation: '',
       }
+    },
+
+    async uploadServiceLogo(id, data) {
+      try {
+        const response = await serviceApi.uploadLogo(id, data);
+        if(response.data) {
+          console.log(response.data)
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    async uploadOrderLogo(id, data) {
+      try {
+        const response = await orderApi.uploadLogo(id, data);
+        if(response.data) {
+          console.log(response.data)
+        }
+      } catch (error) {
+        throw error;
+      }
     }
+    
   }
 });

@@ -8,192 +8,153 @@
             Фото
             <CommonTooltip text="Допустимы изображения размером до 5Мб" />
           </label>
-          <CommonImageLoad v-model="data.logo" label="Загрузить еще" />
+          <CommonImageLoad v-model="data.logo" label="Загрузить еще" class="form-group__value" />
         </div>
       </div>
       <div class="entity__data">
         <label class="form-group__title entity__label">
           Описание *
-          <CommonTooltip
-            :text="`Пожалуйста, опишите ${
+          <CommonTooltip :text="`Пожалуйста, опишите ${
               role === 'performer' ? 'услугу' : 'заказ'
-            } максимально подробно. Указание контактов (телефон, email) - запрещено.`"
-          />
+            } максимально подробно. Указание контактов (телефон, email) - запрещено.`" />
         </label>
-        <UiTextArea
-          name="description"
-          label="Описание"
-          :rules="{ required: true, min: 10 }"
+        <UiTextArea 
+          :rules="{ required: true, min: 10 }" 
+          name="description" 
+          label="Описание" 
           v-model="data.description"
-          class="form-group-value"
+          class="form-group__value"
         />
       </div>
       <div class="entity__data" v-if="role === 'performer'">
         <div class="entity__data-group">
           <div class="entity__data-item">
-            <p class="form-group__title entity__label">Сырье *</p>
-            <UiCheckboxGroup
-              :rules="{ minSelected: 1 }"
-              name="rawMaterials"
-              label="Сырье"
-              class="entity__group"
-              v-model="data.rawMaterials"
-              :options="[
+            <p class="form-group__title entity__label">
+              Сырье *
+            </p>
+            <UiCheckboxGroup :rules="{ minSelected: 1 }" name="rawMaterials" label="Сырье"
+              class="entity__group form-group__value" v-model="data.rawMaterials" :options="[
                 { id: 1, label: 'Собственное' },
                 { id: 0, label: 'Давальческое' },
-              ]"
-            />
+              ]" />
           </div>
           <div class="entity__data-item">
             <p class="form-group__title entity__label">Наличие СТМ *</p>
-            <UiRadioButtonGroup
-              name="is_stm"
-              label="наличие СТМ"
-              :rules="{ required: true }"
-              class="entity__group"
-              v-model="data.availabilityStm"
-              :options="[
+            <UiRadioButtonGroup name="is_stm" label="наличие СТМ" :rules="{ required: true }"
+              class="entity__group form-group__value" v-model="data.availabilityStm" :options="[
                 { value: 1, label: 'Да' },
                 { value: 0, label: 'Нет' },
-              ]"
-            />
+              ]" />
           </div>
           <div class="entity__data-item">
             <p class="form-group__title entity__label">Бесплатные образцы *</p>
-            <UiRadioButtonGroup
-              :rules="{ required: true }"
-              name="free_samples"
-              label="Бесплатные образцы"
-              class="entity__group"
-              v-model="data.freeTestSamples"
-              :options="[
+            <UiRadioButtonGroup :rules="{ required: true }" name="free_samples" label="Бесплатные образцы"
+              class="entity__group form-group__value" v-model="data.freeTestSamples" :options="[
                 { value: 0, label: 'По запросу' },
                 { value: 1, label: 'Да' },
                 { value: 2, label: 'Нет' },
-              ]"
-            />
+              ]" />
           </div>
           <div class="entity__data-item">
             <p class="form-group__title entity__label">Мин. партия *</p>
-            <UiCheckboxGroup
-              :rules="{ minSelected: 1 }"
-              name="min_lot"
-              label="Мин. партия"
-              class="entity__group"
-              v-model="data.minLot"
-              :options="minPart"
-            />
+            <UiCheckboxGroup :rules="{ minSelected: 1 }" name="min_lot" label="Мин. партия"
+              class="entity__group form-group__value" v-model="data.minLot" :options="minPart" />
           </div>
         </div>
       </div>
       <div class="entity__data entity__data_type_customer" v-else>
         <div class="entity__data-group">
           <div class="entity__data-item">
-            <p class="form-group__title entity__label">Сырье *</p>
-            <UiRadioButtonGroup
-              :rules="{ required: true }"
-              name="rawMaterials"
-              label="Сырье"
-              class="entity__group"
-              v-model="data.rawMaterials"
-              :options="[
+            <p class="form-group__title entity__label">
+              Сырье *
+              <CommonTooltip text="Написать про сырье" />
+              </p>
+            <UiRadioButtonGroup :rules="{ required: true }" name="rawMaterials" label="Сырье"
+              class="entity__group form-group__value" v-model="data.rawMaterials" :options="[
                 { value: 1, label: 'Собственное' },
                 { value: 0, label: 'Давальческое' },
-              ]"
-            />
+              ]" />
           </div>
           <div class="entity__data-item">
-            <p class="form-group__title entity__label">Лекала *</p>
-            <UiRadioButtonGroup
-              :rules="{ required: true }"
-              name="pattern"
-              label="Лекала"
-              class="entity__group"
-              v-model="data.patterns"
-              :options="[
+            <p class="form-group__title entity__label">
+              Лекала *
+              <CommonTooltip text="Написать про лекала" />
+              </p>
+            <UiRadioButtonGroup :rules="{ required: true }" name="pattern" label="Лекала"
+              class="entity__group form-group__value" v-model="data.patterns" :options="[
                 { value: 1, label: 'Есть лекала' },
                 { value: 0, label: 'Нужен конструктор' },
-              ]"
-            />
+              ]" />
           </div>
           <div class="entity__data-item">
-            <label class="form-group__title entity__label"
-              >Партия *
-              <CommonTooltip
-                text="Укажите количество в единицах измерения - шт/метров."
-            /></label>
-            <UiInput
-              :rules="{ required: true }"
-              name="batch"
-              label="Партия"
-              v-model="data.batch"
-              class="form-group__value"
-              type="number"
-            />
+            <label class="form-group__title entity__label">Партия *
+              <CommonTooltip text="Укажите количество в единицах измерения - шт." />
+            </label>
+            <UiInput :rules="{ required: true }" name="batch" label="Партия" v-model="data.batch"
+              class="form-group__value" type="number" />
           </div>
           <div class="entity__data-item">
             <label class="form-group__title entity__label">
               Предпочтительная цена *
-              <CommonTooltip
-                text="Укажите предпочтительную цену за единицу товара"
-              />
+              <CommonTooltip text="Укажите предпочтительную цену за единицу товара" />
             </label>
-            <UiInput
-              :rules="{ required: true }"
-              name="price"
-              label="Предпочтительная цена"
-              v-model="data.price"
-              class="form-group__value"
-              type="number"
-            />
+            <UiInput :rules="{ required: true }" name="price" label="Предпочтительная цена" v-model="data.price"
+              class="form-group__value" type="number" />
           </div>
         </div>
       </div>
       <div class="entity__data">
         <label class="form-group__title entity__label">
-          Условия сотрудничества *<CommonTooltip
-            :text="`Опишите условия, на которых вы готовы сотрудничать с ${
+          Условия сотрудничества *
+          <CommonTooltip :text="`Опишите условия, на которых вы готовы сотрудничать с ${
               role === 'performer' ? 'заказчиками' : 'исполнителями заказа'
-            }`"
-          />
+            }`" />
         </label>
-        <UiTextArea
-          name="conditions"
-          label="Условия сотрудничества"
+        <UiTextArea 
           :rules="{ required: true, min: 10 }"
-          v-model="data.termsOfCooperation"
-          class="form-group-value"
+          name="conditions" 
+          label="Условия сотрудничества" 
+          v-model="data.termsOfCooperation" 
+          class="form-group__value"
+          alertMessage="Напишите об условиях сотрудничества"
         />
       </div>
       <div class="entity__data" v-if="role === 'performer'">
-        <CommonDocumentLoader
-          text="Готовое техническое задание (ТЗ) и фото изделия можно прикрепить сюда."
-        />
+        <CommonDocumentLoader text="Готовое техническое задание (ТЗ) и фото изделия можно прикрепить сюда." />
       </div>
-      <div class="entity__data" v-else>
+      <div class="entity__data" v-if="role === 'customer'">
         <CommonDocumentLoader
-          text="Готовое техническое задание (ТЗ) и фото изделия можно прикрепить сюда. Исполнители лучше поймут задачу и качественно выполнят заказ. Разрешено загружать файлы форматом - doc, .docx, .xls, .xlsx, .ppt, .pptx, .rtf, .pdf, .jpeg, .png, .jpg, .gif, .psd, .djvu, .fb2, .ps, .zip, .rar"
-        />
+          text="Готовое техническое задание (ТЗ) и фото изделия можно прикрепить сюда. Исполнители лучше поймут задачу и качественно выполнят заказ. Разрешено загружать файлы форматом - doc, .docx, .xls, .xlsx, .ppt, .pptx, .rtf, .pdf, .jpeg, .png, .jpg, .gif, .psd, .djvu, .fb2, .ps, .zip, .rar" />
+      </div>
+      <div class="entity__data" v-if="role === 'customer'">
+        <h2 class="entity__subtitle">Города фактического производства заказа</h2>
+        <div class="entity__text-container">
+          <p class="entity__text" v-if="role === 'performer'">
+            Укажите город вашего производства. Если производств несколько - выберите несколько городов, но не более
+            пяти.
+          </p>
+          <p class="entity__text" v-else>
+            Укажите предпочтительные города или регионы производства заказа.
+          </p>
+          <p class="entity__text" v-if="role === 'performer'">
+            Потенциальный заказчик сможет вас найти по регионам указанных городов.
+          </p>
+          <p class="entity__text" v-else>
+            Указанные города и регионы используются для автоматического добавления в новые заказы и позволят
+            потенциальным
+            исполнителям находить их в поиске.
+          </p>
+        </div>
+        <CommonLocation :buttonLabel="role === 'performer' ? 'Выбрать город' : 'Выбрать город или регион'"
+          v-model="locationData" />
       </div>
       <div class="form-group">
-        <UiButton
-          type="button"
-          @click="
+        <UiButton type="button" @click="
             router.push(
               `/${role === 'performer' ? 'services' : 'orders'}/create/step1`
             )
-          "
-          class="form-group-data form-group-data__btn"
-          variant="tertiary"
-          size="large"
-          >Назад</UiButton
-        >
-        <UiButton
-          type="submit"
-          class="form-group-data form-group-data__btn"
-          variant="quinary"
-          size="large"
-          >Далее
+          " class="form-group-data form-group-data__btn" variant="tertiary" size="large">Назад</UiButton>
+        <UiButton type="submit" class="form-group-data form-group-data__btn" variant="quinary" size="large">Далее
           <SvgoBtnArrow class="svg-lx" />
         </UiButton>
       </div>
@@ -202,6 +163,7 @@
 </template>
 
 <script setup>
+
 const props = defineProps({
   role: {
     type: String,
@@ -210,7 +172,7 @@ const props = defineProps({
   },
   data: {
     type: Object,
-    default: () => {},
+    default: () => ({}),
     required: true,
   },
   handleSubmit: {
@@ -220,11 +182,21 @@ const props = defineProps({
   },
 });
 
-const router = useRouter();
-
 watch(() => props.data, (newVal) => {
   console.log(props.data)
-}, {deep: true});
+}, {deep: true})
+
+const router = useRouter();
+
+const locationData = ref({
+  locationId: props.data.placeOfProductionId,
+  fullNameLocation: props.data.placeOfProduction,
+})
+
+watch(()=> locationData.value, (newVal) => {
+  props.data.placeOfProductionId = newVal.locationId
+  props.data.placeOfProduction = newVal.fullNameLocation
+})
 
 const minPart = [
   { id: 1, label: "до 100" },
@@ -232,6 +204,7 @@ const minPart = [
   { id: 3, label: "от 500 до 1 000" },
   { id: 4, label: "1 000 и выше" },
 ];
+
 </script>
 
 <style lang="scss">
@@ -244,7 +217,7 @@ const minPart = [
 
   &__label {
     display: flex;
-    column-gap: 0.3em;
+    // column-gap: 0.3em;
     margin-bottom: 0.5em;
     align-items: flex-end;
   }

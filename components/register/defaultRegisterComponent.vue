@@ -80,13 +80,13 @@
 </template>
 
 <script setup>
+import { useSettingStore } from "~/store/settingStore";
 import { useUserStore } from "~/store/userStore";
 const userStore = useUserStore();
+const settingStore = useSettingStore();
 const router = useRouter();
 
-
 const role = computed(() => userStore.role);
-
 const userData = ref({
   name: "",
   jobTitle: "",
@@ -94,10 +94,7 @@ const userData = ref({
   phone: "",
   privacyPolicy: false,
 });
-
-watch(() => userData.value.privacyPolicy, (newVal) => {
-  console.log(newVal)
-});
+const isCreateOrder = computed(() => settingStore.isCreateOrder);
 
 const handleSubmit = () => {
   userStore
@@ -108,12 +105,23 @@ const handleSubmit = () => {
       userData.value.phone
     )
     .then((res) => {
-      router.push({ path: "/register/step1" });
+      if (isCreateOrder.value) {
+        router.push({ path: "/orders/create/step1" });
+      } else {
+        router.push({ path: "/register/step1" });
+      }
     })
     .catch((err) => {
       console.log(err);
     });
 };
+
+onMounted(() => {
+  if(router.currentRoute.value.query && router.currentRoute.value.query.role && router.currentRoute.value.query.action === 'create-order') {
+    userStore.role = router.currentRoute.value.query.role
+    isCreateOrder.value = true
+  }
+})
 </script>
 
 <style lang="scss"></style>

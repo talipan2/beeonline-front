@@ -26,6 +26,7 @@ const props = defineProps({
 
 <style lang="scss">
 .tooltip {
+  margin-left: .3rem;
   display: flex;
 
   [data-tippy-root] {

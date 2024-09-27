@@ -1,5 +1,8 @@
 <template>
   <RegisterLayout title="Проверка вашего профиля">
+    <div class="register__btn-container">
+      <UiButton type="button" class="register__btn" variant="quinary" size="large" @click="handleSubmit">Подтвердить </UiButton>
+    </div>
     <CommonProfileCheckCard title="Контактные данные"
       text="Указанные данные не разглашаются третьим лицам, и необходимы для успешной работы на портале">
       <div class="form-group">

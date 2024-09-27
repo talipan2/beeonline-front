@@ -1,10 +1,9 @@
 <template>
   <Field
     :rules="rules"
-    v-slot="{ errors, field, meta, value, handleChange }"
+    v-slot="{ errors, field, meta, handleChange }"
     :name="name"
   >
-    {{ field }} {{ value }}
     <div class="radio-buttons" :class="$attrs.class">
       <label
         v-for="option in options"

@@ -2,10 +2,10 @@
   <div class="entity">
     <h1 class="entity__title">География и Сроки</h1>
     <form @submit.prevent="handleSubmit">
-      <div v-if="role == 'customer'">
+      <!-- <div v-if="role == 'customer'">
         <p class="entity__text">Укажите дату до которой заказ будет актуален</p>
         <CommonCalendar v-model="data.completionDate" class="entity__calendar" />
-      </div>
+      </div> -->
       <h2 class="entity__subtitle">Города фактического производства заказа</h2>
       <div class="entity__text-container">
         <p class="entity__text" v-if="role === 'performer'">
@@ -49,7 +49,7 @@ const props = defineProps({
   },
   data: {
     type: Object,
-    default: {},
+    default: () => ({}),
     required: true,
   },
   handleSubmit: {

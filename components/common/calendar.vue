@@ -33,10 +33,12 @@ const props = defineProps({
   }
 })
 
+console.log(props.modelValue)
+
 const emit = defineEmits(['update:modelValue']);
 
 const picker = ref(null);
-const date = ref('');
+const date = ref(props.modelValue);
 const config = ref({
     altFormat: 'd.m.Y',
     altInput: true,
@@ -50,9 +52,9 @@ watch(() => date.value, (newVal) => {
   emit('update:modelValue', newVal);
 });
 
-onMounted(() => {
-  date.value = props.modelValue || ''
-})
+watch(() => props.modelValue, (newVal) => {
+  date.value = newVal;
+});
 
 </script>
 

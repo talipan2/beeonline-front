@@ -6,7 +6,6 @@
           type="checkbox"
           class="checkbox__input"
           v-bind="field"
-          :name="name"
           :disabled="disabled"
           :indeterminate="indeterminate"
         />
@@ -36,6 +35,14 @@ const props = defineProps({
   indeterminate: {
     type: Boolean,
     default: false,
+  },
+  name: {
+    type: String,
+    default: '',
+  },
+  label: {
+    type: String,
+    default: '',
   },
   rules: {
     type: [String, Object],

@@ -7,6 +7,7 @@ export const useSettingStore = defineStore("setting", {
     headerHeight: null,
     trademarksModal: false,
     exhibitionModal: false,
+    isCreateOrder: false,
     alertModal: {
       isOpen: false,
       status: null,

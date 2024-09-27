@@ -26,4 +26,8 @@ export default {
     return axios.patch(`services/${id}`, params)
   },
 
+  async uploadLogo(id, data) {
+    return axios.post(`services/${id}/upload-logo`, {data})
+  }
+
 }

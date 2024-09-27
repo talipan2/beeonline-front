@@ -27,12 +27,18 @@
         </div>
         <div class="choose-city__container" :class="{ 'choose-city__item_type_selected': activeLevel === 'region' }">
           <p class="choose-city__title">Регион</p>
-          <ul class="choose-city__list" >
+          <ul class="choose-city__list" v-if="selectedCountry">
+            <li class="choose-city__item" v-if="userStore.role === 'customer'">
+              <UiCheckbox :isValidated="false" class="choose-city__checkbox" variant="square"
+                @change="selectAllRegions(selectedCountry)" name='region-all' v-model="selectedCountry.selected">
+                Любой
+              </UiCheckbox>
+            </li>
             <li class="choose-city__item" v-for="region in regions"
               :class="{ 'selected': region.id === selectedRegion?.id }" :key="region.id">
               <UiCheckbox :isValidated="false" ref="regionCheckbox" :indeterminate="updateRegionIndeterminate(region)"
                 v-if="userStore.role === 'customer'" class="choose-city__checkbox" variant="square"
-                v-model="region.selected" :id="region.id" @change="selectAllCities(region)">
+                v-model="region.selected" :id="region.id" @change="selectAllCities(region)" :name="`region-${region.id}`">
               </UiCheckbox>
               <button @click="selectRegion(region)">{{ region.name }}</button>
               
@@ -44,13 +50,13 @@
           <ul class="choose-city__list" v-if="selectedRegion">
             <li class="choose-city__item" v-if="userStore.role === 'customer'">
               <UiCheckbox :isValidated="false" class="choose-city__checkbox" variant="square" v-model="selectedRegion.selected"
-                @change="selectAllCities(selectedRegion)">
+                @change="selectAllCities(selectedRegion)" name='city-all'>
                 Любой
               </UiCheckbox>
             </li>
             <li class="choose-city__item" v-for="city in cities" :key="city.id">
               <UiCheckbox :isValidated="false" class="choose-city__checkbox" variant="square" v-model="city.selected" :id="city.id"
-                :disabled="!city.selected && selectedCities.length >= 5 && userStore.role === 'performer'"
+                :disabled="!city.selected && selectedCities.length >= 5 && userStore.role === 'performer'" :name='`city-${city.id}`'
                 @change="toggleCitySelection(city)">
                 {{ city.name }}
               </UiCheckbox>
@@ -84,6 +90,10 @@ const props = defineProps({
     default: [],
   },
 });
+
+watch(() => props.modelValue, (newVal) => {
+  console.log('1231231', props.modelValue)
+})
 
 const organizationStore = useOrganizationStore();
 const settingStore = useSettingStore();
@@ -173,6 +183,7 @@ function handleSubmit () {
 
 // обновление выбранных городов
 function updateCitySelection() {
+  console.log('locations.value', locations.value)
   locations.value.country.forEach(country => {
     country.regions.forEach(region => {
       region.selected = selectedCities.value.some(selectedCity => selectedCity.id === region.id);
@@ -187,6 +198,7 @@ function updateCitySelection() {
       }
     })
   })
+  console.log(locations.value, '2222222222222')
 }
 
 // закрытие модального окна
@@ -246,6 +258,33 @@ function selectAllCities(region) {
  }
 }
 
+function selectAllRegions(country) {
+  if(country.selected) {
+    country.regions.forEach(region => {
+      selectedCities.value.push({
+        id: region.id,
+        region: region.name,
+        country: country.name,
+        countryId: country.id,
+        selected: true
+      })
+      region.selected = true;
+      region.cities.forEach(city => {
+        city.selected = true;
+      })
+    })
+  } else {
+    country.regions.forEach(region => {
+      region.selected = false;
+      selectedCities.value = selectedCities.value.filter(selectedCity => selectedCity.id !== region.id);
+      region.cities.forEach(city => {
+        city.selected = false;
+      })
+    })
+  }
+}
+
+
 // добавление неопределенного состояния чекбоксу региона
 function updateRegionIndeterminate(region) {
   const checkedCities = region.cities.filter(city => city.selected);
@@ -260,6 +299,7 @@ function updateRegionIndeterminate(region) {
 
 // отслеживание состояния выбранных городов в родителе
 watch(() => props.modelValue, (newVal) => {
+  console.log('newVal', props.modelValue);
   if (newVal && newVal.length > 0) {
       selectedCities.value = [...newVal]; 
       updateCitySelection();
@@ -270,6 +310,7 @@ watch(() => props.modelValue, (newVal) => {
 })
 
 watch(() => settingStore.chooseLocationModal, (newVal) => {
+  console.log(locationStore.selectedCountry);
   updateCitySelection();
   if(newVal === true) {
     if(locationStore.selectedCountry){

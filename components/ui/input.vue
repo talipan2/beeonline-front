@@ -1,7 +1,7 @@
 <template>
   <Field :rules="rules" v-slot="{ field, errors, meta }" :label="label" :type="type">
-    <div class="input">
-      <div class="input-container" :class="[field.class, $attrs.class, {'invalid': errors.length && meta.touched}] " >
+    <div class="input" >
+      <div class="input-container" :class="[field.class, $attrs.class, {'invalid': errors.length && meta.touched}]" >
         <input
           class="input__field"
           :type="type"
@@ -89,6 +89,7 @@ function updateValue(value) {
     border: 1px solid var(--border-color-secondary);
     background-color: var(--bg-secondary-color);
     padding: 1rem;
+    width: 100%;
 
     &:focus-within {
       border-color: var(--border-color-input-focus);
