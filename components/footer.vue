@@ -17,7 +17,7 @@
                 <NuxtLink to="https://test.bee-online.ru/orders" class="footer__link">Найти заказчика</NuxtLink>
               </li>
               <li class="footer__links-item">
-                <NuxtLink to="https://test.bee-online.ru/members" class="footer__link">Участники портала</NuxtLink>
+                <NuxtLink to="/members" class="footer__link">Участники портала</NuxtLink>
               </li>
               <li class="footer__links-item">
                 <NuxtLink to="https://test.bee-online.ru/contacts" class="footer__link">Контакты</NuxtLink>

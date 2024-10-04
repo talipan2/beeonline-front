@@ -1,10 +1,10 @@
 <template>
   <div class="location">
     <div class="location__city-container">
-      <div v-for="city in selectedCities" :key="city.id" class="location__location">
+      <div v-for="(city) in selectedCities" :key="city.id" class="location__location">
         <SvgoChecked class="svg-m location__selected-icon" />
         <p class="location__city-selected">
-          {{ city.city ? `${city.city},` : '' }} {{ city.region }}, {{ city.country }}
+          {{ locationStore.getLocationsByIds([city.id])[0] }}
         </p>
         <button type="button" class="location__location-delete" @click="deleteLocation(city.id)">
           <SvgoCancel class="svg-m" />
@@ -13,11 +13,12 @@
     </div>
     <UiButton type="button" class="location__btn" variant="tertiary" size="large"
       @click="openAuthModal">{{ buttonLabel }}</UiButton>
-    <RegisterChooseCityModal v-model="selectedCities"/>
+    <RegisterChooseCityModal v-model="selectedCities" :maxSelected="maxSelected" :type="type"/>
   </div>
 </template>
 
 <script setup>
+import { useLocationStore } from '~/store/locationStore';
 import { useSettingStore } from '~/store/settingStore';
 
 
@@ -31,10 +32,20 @@ const props = defineProps({
     type: Object,
     default: () => {},
     required: true,
+  },
+  type: {
+    type: String,
+    default: 'selectCities',
+    validate: (value) => ['selectCity','selectCities', 'selectRegions', 'selectCountry'].includes(value),
+  },
+  maxSelected: {
+    type: Number,
+    default: null,
   }
 })
 
 const settingStore = useSettingStore();
+const locationStore = useLocationStore();
 
 const emit = defineEmits(['update:modelValue']);
 

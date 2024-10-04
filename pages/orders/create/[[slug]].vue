@@ -143,7 +143,7 @@ const order = computed(() => entityStore.order)
 
 const ordersData = computed(() => ({
   name: order.value.name,
-  logo: URL.createObjectURL(order.value.logo),
+  logo: '',
   data: [
     { id: 1, name: 'Категории', value: data.value.categories },
     { id: 2, name: 'Место производства', value: data.value.placeOfProductionId },

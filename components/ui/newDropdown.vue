@@ -32,7 +32,12 @@
     trigger: {
       type: String,
       default: 'click',
+    },
+    offset: {
+      type: Array,
+      default: () => ([]),
     }
+
   });
 
   const tippy = ref(null);
@@ -40,15 +45,15 @@
 
   const calculateOffset = ({ placement }) => {
   if(props.placement === 'bottom-end') {
-    return [0, 14];
+    return props.offset.length > 0 ? props.offset : [0, 14];
   } else {
     if (placement.startsWith('top')) {
-    return [0, 0]; // Смещение 0
+    return props.offset.length > 0 ? props.offset : [0, 0]; // Смещение 0
   }
   if (placement.startsWith('bottom')) {
-    return [0, 20]; // Смещение больше
+    return props.offset.length > 0 ? props.offset : [0, 20]; // Смещение больше
   }
-  return [0, 5]; // Небольшое смещение
+  return [props.offset.length > 0 ? props.offset : 0, 5]; // Небольшое смещение
   }
 
 };
@@ -59,6 +64,35 @@
 
 .tippy {
   display: inline-block;
+}
+
+.tippy-box {
+  border: none;
+  box-shadow: 0 0 .5em rgba(0, 0, 0, 0.1);
+}
+
+.dropdown__container {
+  display: flex;
+  flex-direction: column;
+  row-gap: .5rem;
+  font-size: 1em;
+  padding: 1.25em;
+
+  .dropdown__item {
+    line-height: 2em;
+    padding-inline: .4em;
+    width: 100%;
+    text-align: left;
+
+    &:hover {
+      background-color: #e9ecef;
+      color: #16181b;
+    }
+  }
+
+  .dropdown__item_type_active {
+    background-color: var(--button-background-primary);
+  }
 }
 
 </style>

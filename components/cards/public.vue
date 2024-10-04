@@ -7,8 +7,7 @@
       </div>
       <div class="card__details">
         <div class="card__details-container">
-          <span class="rate"></span>
-          <p>(0 отзывов)</p>
+          <CommonRating :isCountReviews="false" />
         </div>
         <div class="card__details-container">
           <i class="flag flag_round" :class="selectFlag(data.location)"></i>
@@ -17,6 +16,16 @@
         <div class="card__details-container">
           <SvgoCase class="svg-m" fill="#C4C4C4" />
           <p>Нет услуг</p>
+        </div>
+        <div class="props" v-if="isPropsVisible">
+          <div class="prop">
+            <p class="prop__name">Сырье:</p>
+            <p class="prop__value">-</p>
+          </div>
+          <div class="prop">
+            <p class="prop__name">Категории:</p>
+            <p class="prop__value">-</p>
+          </div>
         </div>
       </div>
     </div>
@@ -42,7 +51,11 @@ const props = defineProps({
   isDescription: {
     type: Boolean,
     default: false,
-  }
+  },
+  isPropsVisible: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 </script>
@@ -103,31 +116,6 @@ const props = defineProps({
     align-items: center;
     font-size: 1.2em;
   }
-}
-
-.rate {
-  display: inline-flex;
-    position: relative;
-    width: 8em;
-    height: 1.6em;
-    font-size: 10px;
-    flex-shrink: 0;
-}
-
-.rate:before, .rate:after {
-    content: "";
-    height: 100%;
-    background: url(~/assets/svg/stars.svg);
-    background-size: 1.6em;
-}
-
-.rate:before {
-    background-position: 0 100%;
-}
-
-.rate:after {
-    background-position: 100% 0;
-    flex: 1 1 auto;
 }
 
 </style>

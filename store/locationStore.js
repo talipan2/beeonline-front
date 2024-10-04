@@ -86,19 +86,23 @@ export const useLocationStore = defineStore("location", {
   getters: {
     getLocationsByIds: (state) => (ids) => {
       if(!ids || !Array.isArray(ids) ) return []
-
       const result = [];
       for (const id of ids) {
         for (const country of state.locations.country) {
+          console.log('qqqqqqqqqqqqq', country.id, id)
+          if (country.id === id) {
+            result.push(country.name)
+          }
           for (const region of country.regions) {
+            if (region.id === id) {
+              result.push(`${region.name}, ${country.name}`)
+            }
             for (const city of region.cities) {
               if (city.id === id) {
                 result.push(`${city.name}, ${region.name}, ${country.name}`);
               }
             }
-            if (region.id === id) {
-              result.push(`${region.name}, ${country.name}`)
-            }
+
           }
         }
       }

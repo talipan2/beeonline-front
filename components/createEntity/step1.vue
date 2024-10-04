@@ -40,6 +40,7 @@
           :options="categories"
           v-model="data.categories"
           :disabled="isDisabled"
+          :priorityShowed="[2, 4, 6, 10]"
           :isDropDown="true" 
         />
       </div>

@@ -22,7 +22,7 @@
         <div class="radio-buttons__icon"></div>
         <span>{{ option.label }}</span>
       </label>
-      <div class="invalid-error">
+      <div class="invalid-error" v-if="rules">
         <span
           v-if="errors.length && meta.touched"
           class="invalid-error__text"
@@ -51,6 +51,13 @@ const props = defineProps({
 </script>
 
 <style lang="scss">
+
+.radio-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+
 .radio-buttons__label {
   cursor: pointer;
   display: flex;

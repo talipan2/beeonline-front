@@ -1,18 +1,13 @@
 <template>
-  <section class="profile container" :class="className">
+  <section class="catalog container" :class="className">
     <slot name="header" />
-    <h1 class="profile__title">{{ title }}</h1>
-    <div class="profile__container" :class="{ 'profile__container_type_second': !$slots.rightSide }">
-      <div class="profile__left">
-        <ProfileSidebar class="sticky" ref="leftSide" />
+    <h1 class="catalog__title">{{ title }}</h1>
+    <div class="catalog__container">
+      <div class="catalog__left">
+        <slot name="leftSide"/>
       </div>
-      <div class="profile__content" :class="{ 'profile__content_type_full': !$slots.rightSide }">
+      <div class="catalog__content">
         <slot name="content"/> 
-      </div>
-      <div class="profile__right" v-if="$slots.rightSide">
-        <div ref="rightSide" class="sticky">
-          <slot name="rightSide"  />
-        </div>
       </div>
     </div>
   </section>
@@ -20,7 +15,6 @@
 
 <script setup>
 import { useSettingStore } from '~/store/settingStore';
-
 
 const props = defineProps({
   title: {
@@ -61,10 +55,10 @@ onUnmounted(() => {
 
 <style lang="scss">
 
-.profile {
+.catalog {
   &__container {
     display: flex;
-    column-gap: 10em;
+    column-gap: 14em;
     margin-bottom: 10em;
   }
 
@@ -73,33 +67,23 @@ onUnmounted(() => {
   }
 
   &__title {
-    font-size: 3.2em;
-    margin: 1.25em 0 0.78em;
+    font-size: 3.6rem;
+    margin: 1.38em 0 0.78em;
   }
 
   &__left {
     flex: 0 0 17%;
-    // border: 1px solid red;
   }
 
   &__content {
-    flex: 1 1 33%;
-    // border: 1px solid red;
+    flex: 1 1 100%;
   }
 
-  &__content_type_full {
-    flex: 0 1 74%;
-  }
-
-  &__right {
-    flex: 0 0 33%;
-    // border: 1px solid red;
-  }
 }
 
 .entity-edit {
   
-  .profile__content {
+  .catalog__content {
     flex: 0 1 50%;
   }
 }

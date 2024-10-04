@@ -17,7 +17,7 @@ const props = defineProps({
   variant: {
     type: String,
     default: 'primary',
-    validator: value => ['primary', 'secondary', 'tertiary', 'quaternary', 'quinary', 'senary', 'telegram'].includes(value),
+    validator: value => ['primary', 'secondary', 'tertiary', 'quaternary', 'quinary', 'senary', 'telegram', 'default'].includes(value),
   },
   size: {
     type: String,
@@ -47,7 +47,7 @@ const buttonClass = computed(() => {
     'btn',
     `btn-${props.variant}`,
     `btn-${props.size}`,
-    { 'btn-disabled': props.disabled && isButton.value },
+    { 'btn-disabled': props.disabled },
   ];
 });
 

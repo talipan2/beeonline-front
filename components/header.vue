@@ -39,10 +39,10 @@
         <nav class="header__menu-links">
           <ul class="header__menu-list">
             <li class="header__links-item">
-              <NuxtLink to="https://test.bee-online.ru/services" class="header__link">Найти исполнителя</NuxtLink>
+              <NuxtLink to="/services" class="header__link">Найти исполнителя</NuxtLink>
             </li>
             <li class="header__links-item">
-              <NuxtLink to="https://test.bee-online.ru/orders" class="header__link">Найти заказчика</NuxtLink>
+              <NuxtLink to="/orders" class="header__link">Найти заказчика</NuxtLink>
             </li>
             <li class="header__links-item">
               <NuxtLink href="https://test.bee-online.ru/members" class="header__link">Участники портала</NuxtLink>

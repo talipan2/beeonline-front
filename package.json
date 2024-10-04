@@ -10,12 +10,14 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@fancyapps/ui": "^5.0.36",
     "@pinia/nuxt": "^0.5.4",
     "@tiptap/extension-text-style": "^2.6.6",
     "@tiptap/starter-kit": "^2.6.6",
     "@vee-validate/i18n": "^4.13.2",
     "@vee-validate/nuxt": "^4.13.2",
     "@vee-validate/rules": "^4.13.2",
+    "@vueform/slider": "^2.1.10",
     "axios": "^1.7.5",
     "flatpickr": "^4.6.13",
     "maska": "^3.0.2",

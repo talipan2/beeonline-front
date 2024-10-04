@@ -69,7 +69,7 @@ a, button {
 }
 
 svg, path, circle, g {
-  transition: fill .1s ease, box-shadow .2s ease, stroke .1s ease;
+  transition: fill .1s ease, box-shadow .2s ease, stroke .1s ease, transform .5s ease;
 }
 
 button {
@@ -326,6 +326,33 @@ input[type="number"]::-webkit-inner-spin-button {
     color: var(--text-color-danger);
   }
 }
+
+
+.rate {
+  display: inline-flex;
+    position: relative;
+    width: 8em;
+    height: 1.6em;
+    font-size: 10px;
+    flex-shrink: 0;
+}
+
+.rate:before, .rate:after {
+    content: "";
+    height: 100%;
+    background: url(~/assets/svg/stars.svg);
+    background-size: 1.6em;
+}
+
+.rate:before {
+    background-position: 0 100%;
+}
+
+.rate:after {
+    background-position: 100% 0;
+    flex: 1 1 auto;
+}
+
 
 .container {
   max-width: var(--container-width);
