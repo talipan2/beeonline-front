@@ -25,10 +25,11 @@
     "nuxt-svgo": "^4.0.3",
     "nuxt-swiper": "^1.2.2",
     "nuxt-tiptap-editor": "^1.2.1",
-    "vue": "latest",
+    "vue": "^3.4.37",
     "vue-final-modal": "^4.5.4",
     "vue-flatpickr-component": "^11.0.5",
-    "vue-tippy": "^6.4.4"
+    "vue-tippy": "^6.4.4",
+    "vue-yandex-maps": "^2.1.4"
   },
   "devDependencies": {
     "sass": "^1.77.8"

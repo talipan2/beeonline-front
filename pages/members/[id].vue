@@ -1,3 +1,54 @@
 <template>
-  <h1>12312312312</h1>
+  <NuxtLayout name="details-entity">
+    <template #header>
+      <UiBreadCrumb
+        :list="[
+          { label: 'Главная', link: '/' },
+          { label: 'Участники портала', link: '/orders' },
+          { label: `${pubCard.name || ''}`, link: '' },
+        ]"
+      />
+    </template>
+    <template #content>
+      <CatalogMembersDetails :data="pubCard"/>
+    </template>
+    <template #rightSide>
+      <CatalogOtherEntityCompany :type="pubCard.type"/>
+      <div class="views">
+        <p>Просмотры: {{ pubCard.viewCount }}</p>
+      </div>
+    </template>
+  </NuxtLayout>
 </template>
+
+<script setup>
+import { useOrganizationStore } from '~/store/organizationStore';
+
+const router = useRouter();
+const organizationStore = useOrganizationStore();
+const data = ref({});
+
+const pubCard = computed(() => {
+  return {
+    id: data.value.id,
+    name: data.value.name,
+    logo: data.value.logo,
+    description: data.value.description,
+    type: data.value.type,
+    siteUrl: data.value.url_site,
+    tgUrl: data.value.url_tg,
+    vkUrl: data.value.url_vk,
+    ytUrl: data.value.url_yt,
+    viewCount: data.value.view_count,
+    fillRating: data.value.fill_rating,
+    statusComment: data.value.status_comment,
+    updatedAt: formatDate(data.value.updated_at),
+    entityCount: 1,
+  }
+})
+
+onMounted(async() => {
+  data.value = await organizationStore.getPubCard(router.currentRoute.value.params.id)
+})
+
+</script>

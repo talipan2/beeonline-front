@@ -1,28 +1,33 @@
 <template>
   <div class="list-card">
     <div class="list-card__col-1">
-      <div class="list-card__container">
-        <h5 class="list-card__title">{{ 'Название компании' }}</h5>
-        <CommonRating />
+      <div class="image-box">
+        <img :src="defaultLogoImage" alt="">
       </div>
     </div>
     <div class="list-card__col-2">
+      <div class="list-card__container">
+        <h5 class="list-card__title">{{ data.name || 'Название компании' }}</h5>
+        <CommonRating />
+      </div>
+    </div>
+    <div class="list-card__col-3">
       <div class="list-card__location">
         <i class="flag flag_round"></i>
         <p>{{ 'qweqweqweqw' }}</p>
       </div>
     </div>
-    <div class="list-card__props list-card__col-3">
+    <div class="list-card__props list-card__col-4">
       <p class="list-card__prop">1 услуга</p>
     </div>
-    <div class="list-card__props list-card__col-4">
+    <div class="list-card__props list-card__col-5">
       <p class="list-card__prop-name">Сырье:</p>
       <div class="list-card__prop-container">
         <p class="list-card__prop-value">Собственное</p>
         <p class="list-card__prop-value">Давальческое</p>
       </div>
     </div>
-    <div class="list-card__props list-card__col-5">
+    <div class="list-card__props list-card__col-6">
       <p class="list-card__prop-name">Категории:</p>
       <div class="list-card__prop-container">
         <p class="list-card__prop-value">Вязаный трикотаж</p>
@@ -32,6 +37,18 @@
     </div>
   </div>
 </template>
+
+<script setup>
+import defaultLogoImage from '~/assets/images/nophoto_pc.png';
+
+const props = defineProps({
+  data: {
+    type: Object,
+    default: () => ({})
+  }
+})
+
+</script>
 
 <style lang="scss">
 
@@ -45,26 +62,31 @@
   width: 100%;
 
   &__col-1 {
-    flex: 1 1 25%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
+    flex: 0 0 7%;
 
+    .image-box {
+      max-width: 100%;
+      padding-top: 100%;
+    }
   }
 
   &__col-2 {
-    flex: 0 1 16%;
+    flex: 1 1 25%;
   }
 
   &__col-3 {
-    flex: 0 1 9%;
+    flex: 0 1 16%;
   }
 
   &__col-4 {
-    flex: 0 1 12%;
+    flex: 0 1 9%;
   }
 
   &__col-5 {
+    flex: 0 1 12%;
+  }
+
+  &__col-6 {
     flex: 0 1 33%;
   }
 

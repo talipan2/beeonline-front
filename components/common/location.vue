@@ -34,9 +34,15 @@ const props = defineProps({
     required: true,
   },
   type: {
-    type: String,
+    type: [String, Array],
     default: 'selectCities',
-    validate: (value) => ['selectCity','selectCities', 'selectRegions', 'selectCountry'].includes(value),
+    validate: (value) => {
+      const validTypes = ['selectCity', 'selectCities', 'selectRegions', 'selectCountry'];
+      if (Array.isArray(value)) {
+        return value.every(v => validTypes.includes(v));
+      }
+      return validTypes.includes(value);
+    },
   },
   maxSelected: {
     type: Number,

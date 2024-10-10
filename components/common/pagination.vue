@@ -30,7 +30,7 @@
           variant="tertiary"
           size="around"
           v-else
-          disabled="true"
+          :disabled="true"
         >
           {{page}}
         </UiButton>

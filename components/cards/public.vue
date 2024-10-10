@@ -1,40 +1,46 @@
 <template>
-  <div class="card">
-    <h5 class="card__title">{{ data.companyName || 'Название компании' }}</h5>
-    <div class="card__content">
-      <div class="card__image">
-        <img class="" :src="data.companyLogo || defaultCompanyLogo" alt="">
+  <div class="card-pub" :class="{'card-pub_type_list': isList}">
+    <h5 class="card-pub__title">{{ data.name || 'Название компании' }}</h5>
+    <div class="card-pub__content">
+      <div class="card-pub__image">
+        <img class="" :src="data.logo || defaultCompanyLogo" alt="">
       </div>
-      <div class="card__details">
-        <div class="card__details-container">
-          <CommonRating :isCountReviews="false" />
+      <div class="card-pub__details">
+        <div class="card-pub__details-container">
+          <CommonRating :isCountRating="false" />
         </div>
-        <div class="card__details-container">
+        <div class="card-pub__details-container">
           <i class="flag flag_round" :class="selectFlag(data.location)"></i>
           <p>{{ selectRegion(data.location) || '-' }} </p>
         </div>
-        <div class="card__details-container">
+        <div class="card-pub__details-container">
           <SvgoCase class="svg-m" fill="#C4C4C4" />
-          <p>Нет услуг</p>
+          <p>
+            {{ data.entityCount 
+              ? (data.entityCount + ' ' + plural(data.entityCount, { one: 'услуга', few: 'услуги', many: 'услуг' }) ) 
+              : 'Нет услуг' 
+            }}
+          </p>
         </div>
         <div class="props" v-if="isPropsVisible">
           <div class="prop">
             <p class="prop__name">Сырье:</p>
-            <p class="prop__value">-</p>
+            <p class="prop__value">Не указано</p>
           </div>
           <div class="prop">
             <p class="prop__name">Категории:</p>
-            <p class="prop__value">-</p>
+            <p class="prop__value">Не указано</p>
           </div>
         </div>
       </div>
     </div>
-      <div class="card__description" v-if="isDescription">
-        <div class="form-group__title">
-          Описание
-          <p class="form-group__value">{{ data.description || '-' }}</p>
-        </div>
+    <div class="card-pub__description" v-if="isDescription">
+      <div class="form-group__title" >
+        Описание
       </div>
+      <p class="form-group__value">{{ data.description || '-' }}</p>
+    </div>
+    <NuxtLink class="card-pub__link" :to="`/members/${data.id}`" v-if="isList"></NuxtLink>
   </div>
 </template>
 
@@ -56,16 +62,24 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  isList: {
+    type: Boolean,
+    default: false,
+  }
 })
 
 </script>
 
 <style lang="scss">
 
-.card {
+.card-pub {
   padding: 2em;
   box-shadow: -2px -2px 0 #6937a5, 0 1px 1px rgba(0, 0, 0, 0.15);
   background-color: var(--bg-secondary-color);
+  transition: box-shadow .2s ease;
+  position: relative;
+  flex-grow: 1;
+
   &__title {
     font-size: 1.8em;
     margin-bottom: 0.83em;
@@ -76,6 +90,7 @@ const props = defineProps({
   &__content {
     display: flex;
     column-gap: 2em;
+    margin-bottom: 1em;
   }
 
   &__image {
@@ -97,11 +112,22 @@ const props = defineProps({
   &__description {
     .form-group__title {
       font-size: 1.4em;
+      margin-bottom: .35em;
+      line-height: 1em;
     }
 
     .form-group__value {
-      font-size: .85em;
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-family: 'fira-sans', sans-serif;
+      font-size: 1.2em;
+      margin-block: 0;
     }
+
+    flex-grow: 1;
   }
 
   &__details {
@@ -116,6 +142,15 @@ const props = defineProps({
     align-items: center;
     font-size: 1.2em;
   }
+
+  &__link {
+    position: absolute;
+    inset: 0;
+  }
+}
+
+.card-pub_type_list:hover {
+  box-shadow: -2px -2px 0 #6937a5, 0px 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 </style>

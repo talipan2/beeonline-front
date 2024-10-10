@@ -2,10 +2,10 @@
   <div class="range-slider">
     <div class="form-group">
       <div class="form-group-data">
-        <UiInput v-model="sliderData[0]" class="form-group__value input_type_min" />
+        <UiInput v-model="sliderData[0]" class="form-group__value input_type_min" name="min"/>
       </div>
       <div class="form-group-data">
-        <UiInput v-model="sliderData[1]" class="form-group__value input_type_max" />
+        <UiInput v-model="sliderData[1]" class="form-group__value input_type_max" name="max" />
       </div>
     </div>
 

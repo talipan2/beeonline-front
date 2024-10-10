@@ -1,8 +1,8 @@
 import axios from "axios";
 
 export default {
-  async getServices() {
-    return axios.get(`services`)
+  async getServices(page, limit=1) {
+    return axios.get(`services?limit=${limit}`)
   },
 
   async getService(id) {

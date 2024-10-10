@@ -1,5 +1,5 @@
 <template>
-  <div class="badge">
+  <div class="badge" v-if="badge">
     <p class="badge__text">{{ badge }}</p>
   </div>
 </template>

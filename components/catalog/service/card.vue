@@ -81,12 +81,15 @@ watch(() => props.data, (newVal) => {
 
   &__body {
     display: flex;
+    column-gap: 1em;
     margin-top: 1.5em;
     margin-bottom: 1.5em;
   }
 
   &__content {
-    flex: 1;
+    flex: 0 1 48%;
+    max-width: 48%;
+
   }
 
   &__image {

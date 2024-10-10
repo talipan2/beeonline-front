@@ -85,12 +85,14 @@ button {
 p {
   font-size: 1em;
   margin: 0;
+  overflow-wrap: break-word;
 }
 
 h1, h2, h3, h4, h5, .h1, .h2, .h3, .h4, .h5 {
   font-weight: 400;
   margin: 0;
   font-family: 'fira-sans', sans-serif;
+  overflow-wrap: break-word;
 }
 
 h1, .h1 {
@@ -351,6 +353,11 @@ input[type="number"]::-webkit-inner-spin-button {
 .rate:after {
     background-position: 100% 0;
     flex: 1 1 auto;
+}
+
+.views {
+  margin-top: 1em;
+  font-size: 1.6rem;
 }
 
 

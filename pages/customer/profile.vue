@@ -37,8 +37,8 @@ const checkListArray = [
 
 const cardsData = computed(() => {
   return {
-    companyName: pubCard.value.name,
-    companyLogo: pubCard.value.logo,
+    name: pubCard.value.name,
+    logo: pubCard.value.logo,
     description: pubCard.value.description,
   }
 })

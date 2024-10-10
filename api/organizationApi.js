@@ -45,6 +45,10 @@ export default {
     return axios.get(`pubcards/${1}`)
   },
 
+  async getPubCard(id) {
+    return axios.get(`pubcards/${id}`)
+  },
+
   // редактирование публичной карточки пользователя
   async editPubCard(data) {
     return axios.patch(`pubcards/${data.id}`, {
@@ -55,6 +59,10 @@ export default {
       url_vk: data.url_vk,
       url_yt: data.url_yt,
     })
+  },
+
+  async getPubCards() {
+    return axios.get(`pubcards`)
   },
 
   // редактирование галерей публичной карточки пользователя

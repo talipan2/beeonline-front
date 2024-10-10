@@ -3,7 +3,7 @@
     <slot name="header" />
     <div class="entity-detail__container">
       <div class="entity-detail__main">
-        <div class="entity-detail__title-container">
+        <div class="entity-detail__title-container" v-if="title">
           <h1 class="entity-detail__title">{{ title }}</h1>
           <CommonBadge :badge="badge" />
         </div>
@@ -60,8 +60,8 @@ const props = defineProps({
   }
 
   &__main {
-    flex: 0 1 50%;
-    max-width: 50%;
+    flex: 0 1 60%;
+    max-width: 60%;
   }
 
   &__right-side {

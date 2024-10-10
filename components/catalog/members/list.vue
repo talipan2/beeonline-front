@@ -1,13 +1,20 @@
 <template>
-  <div class="members" :class="{ 'members_type_list': currentViewSetting === 'list', 'members_type_map': currentViewSetting === 'map'}">
+  <div class="members" 
+    :class="{ 
+      'members_type_grid': currentViewSetting === 'grid',
+      'members_type_list': currentViewSetting === 'list', 
+      'members_type_map': currentViewSetting === 'map'
+    }"
+  >
     <div class="members__header">
       <div class="members__sort">
-        <div class="members__sort-title">Сортировать:</div>
+        <div class="members__sort-title" v-if="currentViewSetting === 'grid' || currentViewSetting === 'list'">Сортировать:</div>
         <UiNewDropdown
           :arrow="false"
           :placement="'bottom-start'"
           :offset="[0, 0]"
           ref="sortDropdown"
+          v-if="currentViewSetting === 'grid' || currentViewSetting === 'list'"
         >
           <button class="members__sort-btn">
             {{ currentSortList.value }}
@@ -28,7 +35,7 @@
         </UiNewDropdown>
       </div>
       <div class="members__count">
-        <p class="members__count-text">{{ 10 }} компаний из {{ 546 }}</p>
+        <p class="members__count-text">{{ currentListLength + ' ' + plural(currentListLength, { one: 'компания', few: 'компании', many: 'компаний'}) }} из {{ 546 }}</p>
       </div>
       <div class="members__view-setting">
         <UiButton
@@ -72,19 +79,28 @@
 
     <!-- grid -->
     <div class="members__list" v-if="currentViewSetting === 'grid'">
-      <div class="members__item" v-for="item in 2" :key="item">
-        <CardsPublic :is-props-visible="true" :is-description="true" />
+      <div class="members__item" v-for="item in 20" :key="item">
+        <CardsPublic :is-props-visible="true" :is-description="true" :isList="true" :data="data[0]"/>
       </div>
     </div>
 
     <!-- list -->
     <div class="members__list" v-if="currentViewSetting === 'list'">
-      <div class="members__item" v-for="item in 2" :key="item">
-        <CatalogMembersListCard />
+      <div class="members__item" v-for="item in 20" :key="item">
+        <CatalogMembersListCard :data="data[0]" />
       </div>
     </div>
 
-    <CommonPagination />
+    <!-- map -->
+    <div class="members__list" v-if="currentViewSetting === 'map'">
+      <CatalogMembersMap class="members__map" v-model="currentPubCard"/>
+      <div class="members__card">
+        <CardsPublic :is-props-visible="true" :is-description="true" v-if="currentPubCard !== null" :isList="true"/>
+        <p class="members__card-title" v-else>Выберите точку на карте</p>
+      </div>
+    </div>
+
+    <!-- <CommonPagination /> -->
   </div>
 
 
@@ -99,9 +115,13 @@ const props = defineProps({
   },
 });
 
+const router = useRouter();
 const sortDropdown = ref(null);
-const currentViewSetting = ref("grid");
+const currentViewSetting = ref(null);
+const currentPubCard = ref(null);
+const currentListLength = computed(() => [props.data].length);
 
+console.log(currentListLength.value)
 const currentSortList = ref({
   id: 1,
   name: "По просмотрам",
@@ -118,15 +138,17 @@ const changeViewSetting = (item) => {
   switch (item) {
     case "grid":
       currentViewSetting.value = "grid";
+      router.replace({ query: { view: "grid" } });
       break;
     case "list":
       currentViewSetting.value = "list";
+      router.replace({ query: { view: "list" } });
+
       break;
     case "map":
       currentViewSetting.value = "map";
-      break;
-    default:
-      currentViewSetting.value = "grid";
+      router.replace({ query: { view: "map" } });
+
       break;
   }
 };
@@ -162,9 +184,28 @@ const changeSortList = (item) => {
       };
       break;
   }
-
   sortDropdown.value.tippy.hide();
 };
+
+onMounted(() => {
+  if (router.currentRoute.value.query.view) {
+    switch (router.currentRoute.value.query.view) {
+      case "grid":
+        currentViewSetting.value = "grid";
+        break;
+      case "list":
+        currentViewSetting.value = "list";
+        break;
+      case "map":
+        currentViewSetting.value = "map";
+        break;
+    }
+  } else {
+    currentViewSetting.value = "grid";
+  }
+})
+
+
 </script>
 
 <style lang="scss">
@@ -185,9 +226,7 @@ const changeSortList = (item) => {
     display: flex;
     align-items: center;
     column-gap: 3em;
-    padding-bottom: 3.5em;
-    border-bottom: 1px solid var(--border-color-secondary);
-    margin-bottom: 5em;
+    padding-bottom: 1.5em;
   }
 
   &__count {
@@ -231,6 +270,24 @@ const changeSortList = (item) => {
     align-items: center;
     column-gap: 0.5rem;
   }
+
+  &__card-title {
+    font-size: 1.6em;
+  }
+
+}
+
+.members_type_grid {
+  .members__header {
+    padding-bottom: 3.5em;
+    margin-bottom: 5em;
+    border-bottom: 1px solid var(--border-color-secondary);
+  }
+
+  .members__item {
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 .members_type_list .members__list {
@@ -245,10 +302,29 @@ const changeSortList = (item) => {
     border-top: 1px solid var(--border-color-secondary);
 
   }
-
 }
 
+.members_type_map {
 
+  .members__list {
+    display: flex;
+
+    .members__map {
+      flex: 0 1 61%;
+      max-width: 61%;
+    }
+    .members__card {
+      flex: 0 1 36%;
+    }
+  }
+
+  .members__header {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 1.5em;
+    justify-content: end;
+  }
+}
 
 .members_type_list .members__header {
   border: none;

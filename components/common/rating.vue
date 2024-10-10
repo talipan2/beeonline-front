@@ -1,21 +1,33 @@
 <template>
   <div class="rating">
     <div class="rate" :style="{ '--rating': rating + '%' }"></div>
-    <p class="rating__reviews">({{ 0 }} отзывов)</p>
-    <p class="rating__count" v-if="isCountReviews">({{ 0 }})</p>
+    <p class="rating__reviews" v-if="isCountReviews">({{ reviews + " " + plural(reviews, {one: 'отзыв', few: 'отзыва', many: 'отзывов'}) }})</p>
+    <p class="rating__count" v-if="isCountRating">({{ rating }})</p>
   </div>
 </template>
 
 <script setup>
+import { is } from '@vee-validate/rules';
+
 
 const props = defineProps({
+  rating: {
+    type: Number,
+    default: 0,
+  },
   isCountReviews: {
     type: Boolean,
     default: true,
+  },
+  isCountRating: {
+    type: Boolean,
+    default: true,
+  },
+  reviews: {
+    type: Number,
+    default: 0,
   }
 })
-
-const rating = ref(100);
 
 </script>
 

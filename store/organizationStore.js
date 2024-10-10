@@ -5,6 +5,7 @@ export const useOrganizationStore = defineStore('organization', {
   state: () => ({
     organization: {},
     pubCards: {},
+    pubCardsList: [],
     pubCardGallery: null,
     registerOrg: {
       location: 1,
@@ -82,6 +83,28 @@ export const useOrganizationStore = defineStore('organization', {
           this.pubCards = response.data;
           return response.data;
         }
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    async getPubCardsList() {
+      try {
+        const response = await Api.getPubCards();
+        if(response.data) {
+          this.pubCardsList = response.data.data;
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    async getPubCard(id) {
+      try {
+        const response = await Api.getPubCard(id);
+        if(response.data) {
+          return response.data.data;
+        }        
       } catch (error) {
         throw error;
       }
