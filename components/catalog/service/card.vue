@@ -70,13 +70,14 @@ watch(() => props.data, (newVal) => {
   }
 
   &__header {
+    border-bottom: 1px solid var(--border-color-secondary);
+
     h3 {
       font-size: 1.8rem;
       line-height: 1.2em;
       margin-bottom: 1.5em;
     }
 
-    border-bottom: 1px solid var(--border-color-secondary);
   }
 
   &__body {

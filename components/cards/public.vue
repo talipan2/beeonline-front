@@ -110,6 +110,8 @@ const props = defineProps({
   }
 
   &__description {
+    flex-grow: 1;
+
     .form-group__title {
       font-size: 1.4em;
       margin-bottom: .35em;
@@ -126,8 +128,6 @@ const props = defineProps({
       font-size: 1.2em;
       margin-block: 0;
     }
-
-    flex-grow: 1;
   }
 
   &__details {
