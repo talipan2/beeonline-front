@@ -19,6 +19,7 @@
     "@vee-validate/rules": "^4.13.2",
     "@vueform/slider": "^2.1.10",
     "axios": "^1.7.5",
+    "chart.js": "^4.4.6",
     "flatpickr": "^4.6.13",
     "maska": "^3.0.2",
     "nuxt": "^3.12.4",
@@ -26,12 +27,14 @@
     "nuxt-swiper": "^1.2.2",
     "nuxt-tiptap-editor": "^1.2.1",
     "vue": "^3.4.37",
+    "vue-chartjs": "^5.3.1",
     "vue-final-modal": "^4.5.4",
     "vue-flatpickr-component": "^11.0.5",
     "vue-tippy": "^6.4.4",
     "vue-yandex-maps": "^2.1.4"
   },
   "devDependencies": {
+    "@nuxt/devtools": "^1.6.0",
     "sass": "^1.77.8"
   }
 }

@@ -120,6 +120,7 @@ img {
   height: auto;
 }
 
+// размеры свг иконок
 .svg-lx {
   width: var(--svg-size-desktop-lx);
   height: auto;
@@ -156,6 +157,7 @@ img {
   margin: 0;
 }
 
+// стили для обозначения стран
 .flag {
   display: inline-block;
   vertical-align: middle;
@@ -181,6 +183,7 @@ img {
 .flag_fr { background-position: 0 -10em; }
 
 
+// стили для форм
 .form-group {
   display: flex;
   column-gap: 3em;
@@ -230,6 +233,8 @@ img {
   align-items: center;
 }
 
+
+// пропсы
 .props {
   font-size: 1.2em;
   display: flex;
@@ -271,6 +276,26 @@ img {
   }
 }
 
+
+// информация в карточках
+.details {
+  font-size: 1em;
+  display: flex;
+  align-items: center;
+  column-gap: .5em;
+
+  .details__image {
+    flex: 0 0 auto
+  }
+
+  .details__content {
+    flex: 1;
+    line-height: 1em;
+  }
+}
+
+
+// аватарка пользователя
 .image-box{
   position: relative;
   flex: 0 0 30%;
@@ -278,7 +303,7 @@ img {
   max-width: 30%;
   height: 0;
   padding-top: 30%;
-  background-color: #D9D9D9;
+  // background-color: #D9D9D9;
   margin-right: 5%;
 
   img {
@@ -288,15 +313,19 @@ img {
     height: 100%;
     object-fit: contain;
     border: 1px solid #D9D9D9;
+    box-sizing: border-box;
   }
 }
 
+
+// sticky
 .sticky {
   position: sticky;
   top:0;
 }
 
 
+// разделитель
 .divider {
   border: 0;
   border-top: 1px solid #c4c4c4;
@@ -307,12 +336,22 @@ img {
   margin-block: 3rem;
 }
 
+.divider-vertical {
+  border: 0;
+  border-left: 1px solid #c4c4c4;
+  margin-inline: 1rem;
+}
+
+
+// отключение кнопок в input type number
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
+
+// алерты
 .invalid-error {
   font-size: 1rem;
   line-height: 1em !important;
@@ -330,6 +369,7 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 
+// рейтинг
 .rate {
   display: inline-flex;
     position: relative;
@@ -361,6 +401,72 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 
+// новости
+.news-body {
+  font-size: 1.4rem;
+
+  img {
+    width: inherit;
+    height: auto;
+  }
+
+  a {
+    position: relative;
+    z-index: 2;
+    line-height: 1.4em;
+    &:hover {
+      text-decoration: underline;
+      color: var(--text-color-ternary);
+    }
+  }
+
+  figure {
+    margin: 0;
+  } 
+}
+
+.highlighted-element {
+  position: relative;
+  z-index: 102;
+  background-color: #fff;
+  /* отступы, чтобы фон был больше */
+  margin: -20px;
+  padding: 20px;
+  transition: background-color .3s ease;
+}
+
+// статус пополнения
+
+.replenishment, .removal {
+  display: flex;
+  align-items: center;
+  column-gap: .2em;
+  font-size: 1em;
+  line-height: 1em;
+}
+
+.removal {
+  color: #b42318;
+
+  path {
+    stroke: #f04438;
+  }
+}
+
+.replenishment {
+  color: #027a48;
+
+  svg {
+    transform: rotate(180deg);
+
+    path {
+      stroke: #12b76a;
+    }
+  }
+}
+
+
+// контейнер для контента
 .container {
   max-width: var(--container-width);
   margin-inline: auto;
@@ -371,7 +477,28 @@ input[type="number"]::-webkit-inner-spin-button {
     padding-inline: var(--container-padding-x);
   }
 
+  // @include high-resolution-2k {
+  //   max-width: var(--container-width-2k);
+  // }
+
+  // @include high-resolution-4k {
+  //   max-width: var(--container-width-4k);
+  // }
+
 }
+
+
+// @include high-resolution-2k {
+//   html {
+//     font-size: clamp(8px, calc((2.2vw) * .333333), 13px);
+//   }
+// }
+
+// @include high-resolution-4k {
+//   html {
+//     font-size: clamp(13px, calc((2.2vw) * .333333), 20px);
+//   }
+// }
 
 @include tablet {
   html {

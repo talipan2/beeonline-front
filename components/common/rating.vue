@@ -1,14 +1,14 @@
 <template>
   <div class="rating">
-    <div class="rate" :style="{ '--rating': rating + '%' }"></div>
-    <p class="rating__reviews" v-if="isCountReviews">({{ reviews + " " + plural(reviews, {one: 'отзыв', few: 'отзыва', many: 'отзывов'}) }})</p>
+    <div class="rate" :style="{ '--rating': (rating / 5) * 100 + '%' }"></div>
+    <p class="rating__reviews" v-if="isCountReviews">
+      ({{ reviews }}<span v-if="isReviewText">{{" " + plural(reviews, { one: "отзыв", few: "отзыва", many: "отзывов" })}}</span>)
+    </p>
     <p class="rating__count" v-if="isCountRating">({{ rating }})</p>
   </div>
 </template>
 
 <script setup>
-import { is } from '@vee-validate/rules';
-
 
 const props = defineProps({
   rating: {
@@ -23,59 +23,61 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  isReviewText: {
+    type: Boolean,
+    default: true,
+  },
   reviews: {
     type: Number,
     default: 0,
-  }
-})
-
+  },
+});
 </script>
 
 <style lang="scss">
-
 .rating {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 
-    &__reviews {
-      font-size: 1.3rem;
-    }
+  &__reviews {
+    font-size: 1.3rem;
+  }
 
-    &__count {
-      font-size: 1.6rem;
-    }
+  &__count {
+    font-size: 1.6rem;
+  }
 }
 
 .rate {
-    display: inline-flex;
-    position: relative;
-    width: 8em;
-    height: 1.6em;
-    font-size: 10px;
-    flex-shrink: 0;
-    margin-right: 12px; 
+  display: inline-flex;
+  position: relative;
+  width: 8em;
+  height: 1.6em;
+  font-size: 10px;
+  flex-shrink: 0;
+  margin-right: 12px;
 }
 
 .rate_choice {
-    cursor: pointer;
-    font-size: 20px;
+  cursor: pointer;
+  font-size: 20px;
 }
 
-.rate:before, .rate:after {
-    content: "";
-    height: 100%;
-    background: url(~/assets/svg/stars.svg);
-    background-size: 1.6em;
+.rate:before,
+.rate:after {
+  content: "";
+  height: 100%;
+  background: url(~/assets/svg/stars.svg);
+  background-size: 1.6em;
 }
 
 .rate:before {
-    background-position: 0 100%;
-    width: var(--rating, 0%);
+  background-position: 0 100%;
+  width: var(--rating, 0%);
 }
 
 .rate:after {
-    background-position: 100% 0;
-    flex: 1 1 auto;
+  background-position: 100% 0;
+  flex: 1 1 auto;
 }
-
 </style>

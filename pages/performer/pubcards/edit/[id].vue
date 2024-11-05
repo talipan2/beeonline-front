@@ -1,7 +1,7 @@
 <template>
   <NuxtLayout name="profile" title="Обновление публичной карточки компании">
     <template #header>
-      <UiBreadCrumb :list="[{label: 'Главная', link: '/'}, { label: 'Кабинет исполнителя', link: '/performer'}, { label: 'Карточка компании', link: '' }]" />
+      <UiBreadCrumb :list="[{label: 'Главная', link: '/'}, { label: 'Кабинет исполнителя', link: '/performer/desktop'}, { label: 'Карточка компании', link: '' }]" />
     </template>
     <template #content>
       <ProfilePubCard />

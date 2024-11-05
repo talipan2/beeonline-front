@@ -8,7 +8,7 @@
     </a>
     <template #content>
       <div class="more-modal">
-        <h4 class="more-modal__title">{{ title }}</h4>
+        <h4 v-if="title" class="more-modal__title">{{ title }}</h4>
         <ul class="more-modal__list">
           <li class="more-modal__item" v-for="(item, index) in list.slice(1)" :key="index">
             {{ item }}

@@ -1,0 +1,136 @@
+<template>
+  <div class="entity-filter">
+    <UiSelect
+      v-for="(filter, index) in filters"
+      :key="index"
+      class="entity-filter__select"
+      :options="getOptions(filter)"
+      v-model="selectedFilters[filter]"
+    />
+  </div>
+</template>
+
+<script setup>
+import { useEntityStore } from '~/store/entityStore';
+
+const props = defineProps({
+  filters: {
+    type: Array,
+    required: true,
+    default: () => [],
+  },
+  activeFilters: {
+    type: Object,
+    default: () => ({}),
+  },
+  resetFilters: {
+    type: Boolean,
+    default: false,
+  }
+});
+
+const entityStore = useEntityStore();
+const selectedFilters = ref({});
+const emit = defineEmits(['setFilters']);
+
+// Инициализируем значения фильтров
+props.filters.forEach((filter) => {
+  selectedFilters.value[filter] = 'all'; // значение по умолчанию
+});
+
+// Функция для возвращения нужных опций в зависимости от типа фильтра
+const getOptions = (type) => {
+  switch (type) {
+    case 'category':
+      return categoryOptions.value;
+    case 'minLot':
+      return minLotOptions.value;
+    case 'date':
+      return dateOptions.value;
+    case 'statusReview':
+      return statusReviewOptions;
+    case 'participant':
+      return participantOptions;
+  }
+};
+
+// Создаем объект конфигураций для каждого фильтра
+const categoryOptions = computed(() => [
+  { id: 0, label: 'Все категории', value: 'all' },
+  ...entityStore.entityData.categories.map((category) => {
+    return { id: category.id, label: category.label, value: category.id };
+  })
+]);
+
+const minLotOptions = computed(() => [
+  { id: 0, label: 'Любой размер партии', value: 'all' },
+  ...entityStore.entityData.minLot.map((minLot) => {
+    return { id: minLot.id, label: minLot.label, value: minLot.id };
+  })
+]);
+
+const dateOptions = computed(() => [
+  { id: 0, label: 'Любой срок выполнения', value: 'all' },
+  { id: 1, label: '1 неделя', value: 'week' },
+  { id: 2, label: '1 месяц', value: 'month' },
+  { id: 3, label: '1 год', value: 'year' },
+]);
+
+const statusReviewOptions = [
+  { id: 0, label: "Все отзывы", value: "all" },
+  { id: 1, label: "Положительные", value: "positive" },
+  { id: 2, label: "Отрицательные", value: "negative" },
+];
+
+const participantOptions = [
+  { id: 0, label: "От всех участников", value: "all" },
+  { id: 1, label: "От исполнителей", value: "performer" },
+  { id: 2, label: "От заказчиков", value: "customer" },
+  { id: 3, label: "От поставщиков", value: "supplier" },
+];
+
+// Сброс фильтров
+const resetFilters = () => {
+  Object.keys(selectedFilters.value).forEach((key) => {
+    selectedFilters.value[key] = 'all'; 
+  });
+}
+
+// ОТправка родителю выбранных фильтров
+watch(() => selectedFilters.value, (newVal) => {
+  emit('setFilters', newVal);
+}, { deep: true });
+
+
+// установки активных фильтров при обновлении страницы
+watch(() => props.activeFilters, (newVal, oldVal) => {
+  if (Object.keys(newVal).length !== 0 &&JSON.stringify(newVal) !== JSON.stringify(oldVal)) {
+    selectedFilters.value = { ...newVal }; // Обновляем выбранные фильтры
+  }
+
+  if (Object.keys(newVal).length === 0) {
+    resetFilters();
+  }
+}, { deep: true, immediate: true });
+
+</script>
+
+<style lang="scss">
+
+.entity-filter {
+  display: flex;
+  font-size: 1.6rem;
+  margin-bottom: 2em;
+  column-gap: 2em;
+
+  &__select {
+    flex: 0 1 33%;
+  }
+
+  .select__select {
+    padding: .875em;
+    color: var(--text-color-senary);
+  }
+}
+
+</style>

@@ -4,11 +4,14 @@
       <UiBreadCrumb
         :list="[{ label: 'Главная', link: '/' }, { label: 'Каталог услуг', link: '' }]" />
     </template>
+    <template #title>
+      <CommonTutorial :data="tutorialRefs"/>
+    </template>
     <template #leftSide>
-      <CatalogServiceFilter />
+      <CatalogServiceFilter v-model="tutorialRefs"/>
     </template>
     <template #content>
-      <CatalogServiceList :data="servicesList"/>
+      <CatalogServiceList :data="servicesList" @updateServiceCardRef="updateServiceCardRef"/>
     </template>
   </NuxtLayout>
 </template>
@@ -16,10 +19,20 @@
 <script setup>
 import { useEntityStore } from '~/store/entityStore';
 
-
 const entityStore = useEntityStore();
 
 const servicesList = computed(() => entityStore.servicesList);
+
+const tutorialRefs = ref([]);
+
+const serviceCardRef = ref([]);
+
+const updateServiceCardRef = (newVal) => {
+  serviceCardRef.value = newVal
+  if(newVal) {
+    tutorialRefs.value = [...tutorialRefs.value, {component: serviceCardRef.value, content: 'Нажмите, чтобы просмотреть услугу'}]
+  }
+}
 
 onMounted(() => {
   entityStore.getServices()

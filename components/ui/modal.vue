@@ -5,8 +5,8 @@
     overlay-transition="vfm-fade"
     :hideOverlay="overlayHide"
     content-transition="vfm-fade"
-    :clickToClose="false"
-    :escToClose="false"
+    :clickToClose="true"
+    :escToClose="true"
     :background="background"
   >
     <div class="modal-content">
@@ -132,13 +132,12 @@ computed: {
   }
 }
 
-.add-modal {
+.add-modal, .error-modal {
   .modal-dialog {
     width: 100%;
     max-width: 400px;
 
   }
-
   .modal-content {
     padding: 2rem;
   }

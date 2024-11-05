@@ -5,7 +5,7 @@
         <SvgoUser class="svg-m" />
         Кабинет
         <span class="d-none" v-if="userStore.role === 'performer'"> исполнителя</span>
-        <span class="d-none" v-else> заказчика</span>
+        <span class="d-none" v-if="userStore.role === 'customer'"> заказчика</span>
         <SvgoDropDown class="svg-m" />
       </UiButton>
     </template>

@@ -4,7 +4,7 @@
     <h1 class="profile__title">{{ title }}</h1>
     <div class="profile__container" :class="{ 'profile__container_type_second': !$slots.rightSide }">
       <div class="profile__left">
-        <ProfileSidebar class="sticky" ref="leftSide" />
+        <ProfileSidebar class="sticky" ref="leftSide" :role="role" />
       </div>
       <div class="profile__content" :class="{ 'profile__content_type_full': !$slots.rightSide }">
         <slot name="content"/> 
@@ -20,7 +20,7 @@
 
 <script setup>
 import { useSettingStore } from '~/store/settingStore';
-
+import { useUserStore } from '~/store/userStore';
 
 const props = defineProps({
   title: {
@@ -32,6 +32,9 @@ const props = defineProps({
     default: '',
   }
 });
+
+const userStore = useUserStore();
+const role = computed(() => userStore.role);
 
 const leftSide = ref(null);
 const rightSide = ref(null);
@@ -88,7 +91,7 @@ onUnmounted(() => {
   }
 
   &__content_type_full {
-    flex: 0 1 74%;
+    flex: 1 1 74%;
   }
 
   &__right {
@@ -101,6 +104,52 @@ onUnmounted(() => {
   
   .profile__content {
     flex: 0 1 50%;
+  }
+}
+
+.notifications-layout {
+
+  .profile__container {
+    column-gap: 3em;
+  }
+
+  .profile__content {
+    flex: 1 1 50%;
+  }
+
+  .profile__right {
+    flex: 0 0 26%;
+  }
+}
+
+.reviews-layout {
+
+  .profile__container {
+    column-gap: 3em;
+  }
+
+  .profile__content {
+    flex: 1 1 50%;
+  }
+
+  .profile__right {
+    flex: 0 0 30%;
+  }
+}
+
+.news-layout {
+  .profile__content {
+    flex: 0 1 50%;
+  }
+}
+
+.document-layout {
+  .profile__container {
+    column-gap: 15em;
+  }
+
+  .profile__content {
+    flex: 0 1 33%;
   }
 }
 

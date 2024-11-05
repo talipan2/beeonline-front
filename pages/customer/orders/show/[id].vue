@@ -2,7 +2,7 @@
   <NuxtLayout name="profile" title="Карточка заказа" class="entity-edit">
     <template #header>
       <UiBreadCrumb
-        :list="[{ label: 'Главная', link: '/' }, { label: 'Кабинет заказчика', link: '/performer' }, { label: 'Список заказов', link: '/performer/services' }, { label: 'Заказ', link: '' }]" />
+        :list="[{ label: 'Главная', link: '/' }, { label: 'Кабинет заказчика', link: '/performer/desktop' }, { label: 'Список заказов', link: '/performer/services' }, { label: 'Заказ', link: '' }]" />
     </template>
     <template #content>
       <EntityView :data="orderProps" role="customer"/>

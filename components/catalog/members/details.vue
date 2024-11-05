@@ -50,7 +50,7 @@
     </div>
     <div class="member-details__content-container">
       <h3 class="member-details__content-title" style="color: red">отзывы</h3>
-      <CommonReviews />
+      <ReviewsEntity />
     </div>
     <div class="member-details__activity" style="color: red">
       <p>Последняя активность: {{ data.updatedAt }}</p>
@@ -65,7 +65,7 @@ const props = defineProps({
   data: {
     type: Object,
     default: () => ({}),
-  }
+  },
 })
 
 </script>

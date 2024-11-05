@@ -1,7 +1,7 @@
 <template>
   <div class="orders">
     <div class="orders__list">
-      <div class="orders__item" v-for="data in orderData" :key="data">
+      <div class="orders__item" v-for="(data, index) in orderData" :key="index" v-bind="setFirstCardRef(index)">
         <CatalogOrdersCard  :data="data" />
       </div>
     </div>
@@ -21,6 +21,8 @@ const props = defineProps({
 })
 
 const entityStore = useEntityStore();
+const firstCardRef = ref(null);
+const emit = defineEmits(['updateOrderCardRef']);
 
 const orderData = computed(() => {
   return props.data.map(item => {
@@ -41,6 +43,14 @@ const orderData = computed(() => {
   });
 });
 
+
+const setFirstCardRef = (index) => {
+  return index === 0 ? { ref: firstCardRef } : {};
+};
+
+watch(() => firstCardRef.value, (newVal) => {
+  emit('updateOrderCardRef', firstCardRef.value[0]);
+}, {deep: true})
 
 </script>
 

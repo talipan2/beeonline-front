@@ -1,7 +1,7 @@
 <template>
   <div class="orders">
     <div class="orders__list">
-      <div class="orders__item" v-for="(data, index) in ordersData" :key="index">
+      <div class="orders__item" v-for="(data, index) in ordersData" :key="index" v-bind="setFirstCardRef(index)">
         <CatalogServiceCard :data="data" />
       </div>
     </div>
@@ -17,6 +17,18 @@ const props = defineProps({
     default: () => ([]),
   }
 })
+
+const firstCardRef = ref(null);
+
+const emit = defineEmits(['updateServiceCardRef']);
+
+const setFirstCardRef = (index) => {
+  return index === 0 ? { ref: firstCardRef } : {};
+};
+
+watch(() => firstCardRef.value, (newVal) => {
+  emit('updateServiceCardRef', firstCardRef.value[0]);
+}, {deep: true})
 
 const ordersData = computed(() => {
   return props.data.map((item) => {
@@ -36,8 +48,6 @@ const ordersData = computed(() => {
       ],
     }
   })
-
-
 })
 
 </script>

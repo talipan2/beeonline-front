@@ -7,7 +7,7 @@ export const useUserStore = defineStore('user', {
     userToken: null,
     isAuth: false,
     location: null,
-    role: null,
+    role: '',
     settingUser: {
       location: 1,
       inn: null,
@@ -22,8 +22,37 @@ export const useUserStore = defineStore('user', {
       selfEmployed: false,
       registerAddress: null,
     },
+    token: null,
   }),
   actions: {
+
+    // setToken(token) {
+    //   this.token = token;
+      
+    //   // Используем куки для сохранения токена
+    //   const tokenCookie = useCookie('token');
+    //   tokenCookie.value = token; // Устанавливаем куки
+    // },
+
+    // // Метод для удаления токена
+    // clearToken() {
+    //   this.token = null;
+
+    //   // Очищаем куки
+    //   const tokenCookie = useCookie('token');
+    //   tokenCookie.value = null;
+    // },
+
+    // // Метод для загрузки токена из куки
+    // loadTokenFromCookie() {
+    //   const tokenCookie = useCookie('token');
+    //   this.token = tokenCookie.value; // Получаем токен из куки
+
+    //   if (this.token) {
+    //     return this.checkAuth(); // Проверка авторизации, если токен найден
+    //   }
+    // },
+
     loadFromLocalStorage() {
       if(localStorage.getItem('role')) {
         this.role = localStorage.getItem('role');
@@ -50,11 +79,13 @@ export const useUserStore = defineStore('user', {
     async registerUser(name, email, job='', phone) {
       try {
         const response = await Api.registerUser(name, email, job, phone);
+        console.log(response)
         if(response.data) {
           this.isAuth = true;
           this.userToken = response.data.access_token;
           localStorage.setItem('token', this.userToken);
           this.userData = response.data.user;
+          this.setToken(this.userToken);
         }
       } catch (error) {
         throw error;
@@ -67,8 +98,9 @@ export const useUserStore = defineStore('user', {
         if(response.data) {
           this.isAuth = true;
           this.userData = response.data.user;
-
+          // useCookie('role').value = 'customer';
         }
+        return response.data;
       } catch (error) {
         this.userToken = null;
         this.isAuth = false;

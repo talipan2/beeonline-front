@@ -45,7 +45,7 @@
               <NuxtLink to="/orders" class="header__link">Найти заказчика</NuxtLink>
             </li>
             <li class="header__links-item">
-              <NuxtLink href="https://test.bee-online.ru/members" class="header__link">Участники портала</NuxtLink>
+              <NuxtLink to="/members" class="header__link">Участники портала</NuxtLink>
             </li>
           </ul>
         </nav>
@@ -151,7 +151,7 @@ onMounted(() => {
   window.addEventListener("scroll", onScrollPage)
   userStore.role = localStorage.getItem('role');
   if(localStorage.getItem('token')) {
-    userStore.checkAuth();
+    // userStore.checkAuth();
     organizationStore.getSelfOrganization();
     organizationStore.getSelfPubCard();
   }

@@ -1,0 +1,10 @@
+<template>
+  <NuxtLayout name="profile" title="Избранное" class="favorites-layout">
+    <template #header>
+      <UiBreadCrumb :list="[{label: 'Главная', link: '/'}, { label: 'Кабинет заказчика', link: '/customer/desktop' }, { label: 'Избранное', link: '' }]" />
+    </template>
+    <template #content>
+      <Favorites />
+    </template>
+  </NuxtLayout>
+</template>

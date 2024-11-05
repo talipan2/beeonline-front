@@ -40,7 +40,8 @@
       </div>
       <p class="form-group__value">{{ data.description || '-' }}</p>
     </div>
-    <NuxtLink class="card-pub__link" :to="`/members/${data.id}`" v-if="isList"></NuxtLink>
+    <slot name="favorite-delete" />
+    <NuxtLink class="card-pub__link" :to="`/members/${data.id}`" v-if="isList" :target="linkBlank ? '_blank' : ''"></NuxtLink>
   </div>
 </template>
 
@@ -65,7 +66,12 @@ const props = defineProps({
   isList: {
     type: Boolean,
     default: false,
+  },
+  linkBlank: {
+    type: Boolean,
+    default: false,
   }
+  
 })
 
 </script>
@@ -73,6 +79,8 @@ const props = defineProps({
 <style lang="scss">
 
 .card-pub {
+  display: flex;
+  flex-direction: column;
   padding: 2em;
   box-shadow: -2px -2px 0 #6937a5, 0 1px 1px rgba(0, 0, 0, 0.15);
   background-color: var(--bg-secondary-color);

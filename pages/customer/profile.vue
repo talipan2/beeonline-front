@@ -2,7 +2,7 @@
   <div>
     <NuxtLayout name="profile" title="Кабинет заказчика">
       <template #header>
-        <UiBreadCrumb :list="[{label: 'Главная', link: '/'}, { label: 'Кабинет заказчика', link: '/customer' }, { label: 'Профиль', link: '' }]" />
+        <UiBreadCrumb :list="[{label: 'Главная', link: '/'}, { label: 'Кабинет заказчика', link: '/customer/desktop' }, { label: 'Профиль', link: '' }]" />
       </template>
       <template #content>
         <Profile />

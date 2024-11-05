@@ -122,6 +122,7 @@ const showedPages = computed(() => {
 
 <style lang="scss">
 .pagination {
+  font-size: 1.6rem;
   margin-top: 4em;
   display: flex;
   justify-content: center;
@@ -129,14 +130,14 @@ const showedPages = computed(() => {
   &__container {
     display: flex;
     align-items: center;
-    column-gap: 0.5em;
+    column-gap: 0.3em;
   }
 
   &__btn {
-    font-family: "fire", sans-serif;
+    font-family: "fira-sans", sans-serif;
     width: 2.5em;
     height: 2.5em;
-    font-size: 1.6em;
+    font-size: 1em;
     border: none;
     padding: 0.625em;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);

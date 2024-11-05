@@ -1,13 +1,13 @@
 <template>
-  <CommonSidebar>
+  <CommonSidebar class="profile-sidebar">
     <template #body>
-      <nav class="sidebar__top">
+      <nav class="sidebar__top" v-if="role">
         <NuxtLink
           v-for="link in sidebarTopLinks"
           :key="link.id"
           :to="link.value"
           class="sidebar__link link"
-          active-class="active"
+          :class="{ 'active': isActiveLink(link.value) }"
         >
           {{ link.label }}
         </NuxtLink>
@@ -38,25 +38,84 @@
 <script setup>
 import { useUserStore } from "~/store/userStore";
 
+const props = defineProps({
+  role: {
+    type: String,
+    required: true,
+  },
+})
+
 const userStore = useUserStore();
+const router = useRouter();
 
 const getSidebarLinks = (role) => [
   { id: 1, label: "Рабочий стол", value: `/${role}/desktop` },
-  { id: 2, label: "Профиль", value: `/${role}/profile` },
-  {
-    id: 3,
-    label: role === "performer" ? "Услуги" : "Заказы",
-    value: role === "performer" ? "/performer/services" : "/customer/orders",
-  },
-  { id: 4, label: "Сообщения", value: "/" },
-  { id: 5, label: "Сделки", value: "/" },
-  { id: 6, label: "Избранное", value: "/" },
-  { id: 7, label: "Отзывы", value: "/" },
-  { id: 8, label: "Баланс и платные услуги", value: "/" },
-  { id: 9, label: "Уведомления", value: "/" },
-  { id: 10, label: "Техническая поддержка", value: "/" },
-  { id: 11, label: "Новости", value: "/" },
+  { id: 2, label: "Bee-online Gifts", value: `/` },
+  { id: 3, label: "Профиль", value: `/${role}/profile` },
+  { id: 4, label: role === "performer" ? "Услуги" : "Заказы", value: role === "performer" ? "/performer/services" : "/customer/orders", },
+  { id: 5, label: "Проверка контрагентов", value: `/${role}/org_check` },
+  { id: 6, label: "Сообщения", value: "/" },
+  { id: 7, label: "Сделки", value: "/" },
+  { id: 8, label: "Документы", value: `/${role}/documentation` },
+  { id: 9, label: "Избранное", value: `/${role}/favorites` },
+  { id: 10, label: "Отзывы", value: `/${role}/my-reviews` },
+  { id: 11, label: "Баланс и платные услуги", value: "/" },
+  { id: 12, label: "Уведомления", value: `/${role}/notifications` },
+  { id: 13, label: "Новости", value: "/news" },
 ];
 
-const sidebarTopLinks = computed(() => getSidebarLinks(userStore.role));
+const sidebarTopLinks = computed(() => getSidebarLinks(props.role));
+
+const isActiveLink = (link) => {
+  if (link.includes('/reviews') || link.includes('/my-reviews')) {
+    return router.currentRoute.value.path.includes(link) || router.currentRoute.value.path.includes('/reviews');
+  }
+  if(link.includes('/services') || link.includes('/orders')) {
+    return router.currentRoute.value.path.includes(link);
+  }
+  if(link.includes('/news')) {
+    return router.currentRoute.value.path.includes(link);
+  }
+  return router.currentRoute.value.path === link;
+};
+
 </script>
+
+<style lang="scss">
+
+.profile-sidebar {
+
+  .sidebar {
+    
+    &__top {
+      margin-left: -0.78em;
+    }
+
+    &__link {
+      font-size: 1.6em;
+      padding: .5em;
+      line-height: 1em;
+    }
+
+    &__bottom-link {
+      font-size: 1.6em;
+      padding-block: .3em;
+      line-height: 1em;
+      display: flex;
+      align-items: center;
+      column-gap: .3em;
+    }
+  }
+
+  .active {
+      background-color: var(--button-background-primary);
+      color: var(--text-color-hover-secondary);
+
+      &:hover {
+        color: var(--text-color-hover-secondary);
+        text-decoration: none;
+      }
+    }
+}
+
+</style>

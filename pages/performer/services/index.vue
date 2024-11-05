@@ -2,7 +2,7 @@
   <NuxtLayout name="profile" title="Услуги">
     <template #header>
       <UiBreadCrumb
-        :list="[{ label: 'Главная', link: '/' }, { label: 'Кабинет исполнителя', link: '/performer' }, { label: 'Список услуг', link: '' }]" />
+        :list="[{ label: 'Главная', link: '/' }, { label: 'Кабинет исполнителя', link: '/performer/desktop' }, { label: 'Список услуг', link: '' }]" />
     </template>
     <template #content>
       <Entity

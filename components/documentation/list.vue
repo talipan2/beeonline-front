@@ -1,0 +1,172 @@
+<template>
+  <div class="file">
+    <div class="file__list">
+      <div class="divider" v-if="changed && dataList.length"></div>
+      <div class="file__item" v-for="item in dataList" :key="item.id">
+        <div class="file__data">
+          <svg class="file__icon" :class="selectIconClass(item.type)" width="50" height="50" viewBox="0 0 50 50">
+            <text x="13" y="33" :class="selectIconClass(item.type)">{{ item.type }}</text>
+            <g>
+              <path d="M13 23V6h17m0 0l7 7m-7-7v7h7m0 0v10M13 36v8h24v-8" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+            </g>
+          </svg>
+          <a class="file__name" :href="item.url" download>{{ item.name }}</a>
+        </div>
+        <button v-if="changed" class="file__remove link" type="button" @click="removeFile(item.id)"></button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+
+const props = defineProps({
+  dataList: {
+    type: Array,
+    default: () => [],
+  },
+  changed: {
+    type: Boolean,
+    default: false
+  },
+
+})
+
+const emit = defineEmits();
+
+function selectIconClass(type) {
+  switch (type) {
+    case 'jpg':
+      return 'file__icon_jpg';
+    case 'jpeg':
+      return 'file__icon_jpeg';
+    case 'bmp':
+      return 'file__icon_bmp';
+    case 'svg':
+      return 'file__icon_svg';
+    case 'png':
+      return 'file__icon_png';
+    case 'doc':
+      return 'file__icon_doc';
+    case 'docx':
+      return 'file__icon_docx';
+    case 'xml':
+      return 'file__icon_xml';
+    case 'pdf':
+      return 'file__icon_pdf';
+    default:
+      return 'file__icon_image';
+  }
+}
+
+function removeFile(id) {
+  emit('removeFile', id);
+}
+
+</script>
+
+<style lang="scss">
+
+.file {
+  &__list {
+    display: flex;
+    flex-direction: column;
+    font-size: 1.3em;
+    margin-bottom: 1em;
+  }
+
+  .divider {
+    margin: 0;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    // border-top: 1px solid var(--border-color-secondary);
+  }
+
+  &__item:not(:last-child) {
+    border-bottom: 1px solid var(--border-color-secondary);
+  }
+
+  &__data {
+    display: flex;
+    align-items: center;
+    padding: .76em 1.5em .76em 0;
+
+    svg {
+      text {
+        font-size: .61em;
+        text-transform: uppercase;
+      }
+    }
+  }
+
+  &__name {
+    font-size: 1.23em;
+  }
+
+  &__remove {
+    position: relative;
+    width: 2em;
+    height: 2em;
+  }
+
+  &__remove:hover {
+    &::before,
+    &::after {
+      background-color: #44246c;
+    }
+  }
+    
+
+  &__remove::before,
+  &__remove::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    width: 1.4em;
+    height: 2px;
+    border-radius: 2px;
+    background-color: #565263;
+    transition: background-color 0.2s ease;
+  }
+
+  &__remove::after {
+    transform: rotate(-45deg);
+  }
+
+  &__remove::before {
+    transform: rotate(45deg);
+  }
+
+  &__icon_image,
+  &__icon_png,
+  &__icon_jpg,
+  &__icon_jpeg,
+  &__icon_bmp,
+  &__icon_svg {
+      color: #ED6C59;
+      fill: #ED6C59;
+  }
+
+  &__icon_doc,
+  &__icon_docx,
+  &__icon_xml {
+      color: #2980B9;
+      fill: #2980B9;
+  }
+
+  &__icon_pdf {
+      color: #FA8E23;
+      fill: #FA8E23;
+  }
+}
+
+</style>

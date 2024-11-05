@@ -54,6 +54,7 @@
   --border-color-tertiary: #f7f7f7;
   --border-color-quaternary: #6937a5;
   --border-color-quinary: #e9ecef;
+  --border-color-senary: #dcdce4;
 
   --border-color-input-focus: #aa85d6;
 
@@ -64,6 +65,8 @@
   --box-shadow-input: 0 0 0 .2rem rgba(105,55,165,.25);
 
   --container-width: 1520px;
+  --container-width-2k: 2067px; // Для 2K экранов
+  --container-width-4k: 3100px; // Для 4K экранов
 
   --container-padding-x: 13px;
 

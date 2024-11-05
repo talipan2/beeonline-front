@@ -1,0 +1,201 @@
+<template>
+  <div class="desktop">
+    <div class="desktop__card-container">
+      <DesktopCard title="Карточка организации" :link="{ url: getLinkWithRole('/pubcards/edit/1'), text: 'Изменить'}" >
+        <template #body>
+          <CardsPublic class="desktop__pub-card" :is-props-visible="true" :is-description="true" :data="pubCard"/>
+        </template>
+      </DesktopCard>
+      <DesktopCard title="Баланс" :link="{ url: getLinkWithRole('/pubcards/edit/1'), text: 'Пополнить баланс'}">
+        <template #body>
+          <div class="desktop__balance balance-card">
+            <div class="balance-card__header">
+              <p class="balance-card__balance">{{ '559,03' }} ₽ <span class="balance-card__currency"> руб.</span></p>
+              <p class="balance-card__balance">{{ '190' }} <span class="balance-card__currency"> баллов</span></p>
+            </div>
+            <div class="balance-card__details-list">
+              <div class="balance-card__details-header ">
+                <p class="balance-card__details-date desktop__selected">Дата и время</p>
+                <p class="balance-card__details-sum desktop__selected">Сумма</p>
+                <p class="balance-card__details-type desktop__selected">Операция</p>
+              </div>
+              <div class="balance-card__details-item" v-for="item in 5" :key="item">
+                <p class="balance-card__details-date">28.10.2024 <span class="balance-card__details-time desktop__selected">12:00</span></p>
+                <div class="balance-card__details-sum replenishment">
+                  <SvgoBalanceArrow class="balance-card__details-status" />
+                  1000
+                </div>
+                <p class="balance-card__details-type">Пополнение баллов</p>
+              </div>
+            </div>
+            <NuxtLink class="balance-card__link link">Все последние транзакции</NuxtLink>
+          </div>
+        </template>
+      </DesktopCard>
+    </div>
+    <DesktopStats :role="role"/>
+      <div class="desktop__card-container">
+        <DesktopCard title="Отзывы (8)" :link="{ url: getLinkWithRole('/my-reviews'), text: 'Все отзывы'}">
+          <template #body>
+            <DesktopSelectableEntity class="desktop__chats" :label="['Отзывы о нас', 'Мои отзывы']" data="">
+              <template #firstPage >
+                <DesktopReviewRating :role="role"/>
+                <DesktopSelectableEntityCard v-for="(item, index) in 2" :key="index" btnLabel="Читать полный отзыв" :isRating="true"/>
+              </template>
+              <template #secondPage>
+                <DesktopSelectableEntityCard v-for="(item, index) in 3" :key="index" btnLabel="Читать полный отзыв" :isRating="true"/>
+              </template>
+            </DesktopSelectableEntity>
+          </template>
+        </DesktopCard>
+        <DesktopCard title="Чаты (8)" :link="{ url: getLinkWithRole('/my-reviews'), text: 'Все чаты'}">
+          <template #body>
+            <DesktopSelectableEntity class="desktop__chats" :label="['Все чаты', 'Непрочитанные']" data="">
+              <template #firstPage >
+                <DesktopSelectableEntityCard v-for="(item, index) in 3" :key="index" btnLabel="Читать полностью"/>
+              </template>
+              <template #secondPage>
+                <DesktopSelectableEntityCard v-for="(item, index) in 3" :key="index" btnLabel="Читать полностью"/>
+              </template>
+            </DesktopSelectableEntity>
+          </template>
+        </DesktopCard>
+      </div>
+      <DesktopEntityList :getEntity="getEntity" :role="role" :filterList="filterList"/>
+  </div>
+</template>
+
+<script setup>
+import { useOrganizationStore } from '~/store/organizationStore';
+
+const props = defineProps({
+  getEntity: {
+    type: Function,
+    required: true
+  },
+  role: {
+    type: String,
+    required: true,
+  },
+  filterList: {
+    type: Array,
+    required: true
+  },
+})
+
+const organizationStore = useOrganizationStore();
+
+const pubCard = computed(() => organizationStore.pubCards);
+
+function getLinkWithRole(link) {
+  return `/${props.role}${link}`
+}
+
+onMounted(() => {
+  organizationStore.getSelfPubCard()
+})
+
+</script>
+
+<style lang="scss">
+
+.desktop {
+  &__card-container {
+    display: flex;
+    column-gap: 3em;
+  }
+
+  .card-pub{
+    box-shadow: none;
+    padding: 0;
+
+    .card-pub__title {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .card-pub__description .form-group__value {
+      -webkit-line-clamp: 6;
+      color: #8b92a1;
+    }
+  }
+
+  &__selected { 
+    color: #a9abac;
+  }
+
+  &__title {
+    font-size: 1.8em;
+    margin-bottom: 1.66em;
+  }
+
+}
+
+.balance-card {
+  font-family: 'fira-sans', sans-serif;
+  font-size: 1rem;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: .625em;
+  }
+
+  &__balance {
+    font-size: 4em;
+    font-weight: 600;
+    color: var(--text-color-ternary);
+  }
+
+  &__currency {
+    font-size: .35em;
+    font-weight: 400;
+    color: var(--text-color-primary);
+  }
+
+  &__details-list {
+    display: flex;
+    flex-direction: column;
+    font-size: 1.4em;
+    margin-bottom: 3em;
+  }
+
+  &__details-header {
+    display: flex;
+    padding-block: .5em;
+    margin-bottom: .5em;
+    border-bottom: 1px solid var(--border-color-senary); 
+  }
+
+  &__details-date {
+    flex: 0 1 25%;
+  }
+
+  &__details-sum {
+    flex: 0 1 25%;
+    display: flex;
+  }
+
+  &__details-type {
+    flex: 1 1 50%;
+  }
+
+  &__details-item {
+    display: flex;
+    padding-block: .5em;
+  }
+
+  &__details-status {
+    width: 1.3em;
+    height: auto;
+  }
+
+  &__link {
+    font-size: 1.2em;
+    text-transform: uppercase;
+  }
+
+}
+
+</style>

@@ -31,14 +31,15 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['update:modelValue']);
-const internalValue = ref(props.modelValue);
+const internalValue = ref(props.modelValue || (props.options.length > 0 ? props.options[0].value || props.options[0].id : null));
 
 watch(() => props.modelValue, (newValue) => {
   internalValue.value = newValue;
+  console.log(newValue)
 });
 
 function emitChange(event) {
-  emit('update:modelValue', internalValue.id);
+  emit('update:modelValue', internalValue.value);
 }
 </script>
 
@@ -53,7 +54,8 @@ function emitChange(event) {
     border: 1px solid var(--border-color-secondary);
     appearance: none;
     background: #fff url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='15'%3E%3Cpath stroke='%23343a40' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='m12 6-4.5 4L3 6' fill='none'/%3E%3C/svg%3E") right 1rem center/15px 15px no-repeat;
-  
+    cursor: pointer;
+
     &:focus {
       border-color: var(--border-color-input-focus);
       box-shadow: 0 0 0 .2rem rgba(105, 55, 165, .25);
@@ -61,6 +63,7 @@ function emitChange(event) {
       outline: none;
     }
   }
+
 }
 
 </style>

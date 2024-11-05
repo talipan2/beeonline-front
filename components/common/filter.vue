@@ -1,20 +1,22 @@
 <template>
-  <CommonSidebar>
+  <CommonSidebar class="filter">
     <template #body>
       <div class="sidebar__top">
-        <div class="filter">
+        <div class="filter__container">
           <slot name="body" />
           <div class="filter__bottom">
             <slot name="bottom" />
           </div>
           <div class="form-group">
-            <UiButton
-              variant="quinary"
-              size="large"
-              class="form-group-data__btn"
-            >
-              Применить фильтр
-            </UiButton>
+            <div class="form-group-data__btn" ref="submitRef">
+              <UiButton
+                variant="quinary"
+                size="large"
+                class="form-group-data__btn"
+              >
+                Применить фильтр
+              </UiButton>
+            </div>
             <UiButton
               variant="default"
               size="large"
@@ -31,6 +33,13 @@
 </template>
 
 <script setup>
+
+const submitRef = ref(null);
+const emit = defineEmits(['updateTutorialRefSubmit']);
+
+watch(() => submitRef.value, (newVal) => {
+  emit('updateTutorialRefSubmit', newVal);
+}, {deep: true})
 
 </script>
 
@@ -57,6 +66,7 @@
     .location__location {
       flex-basis: 100%;
     }
+
     .btn {
       max-width: 100%;
       margin-bottom: 0;
@@ -74,30 +84,33 @@
     }
   }
 
-}
+  .sidebar__top {
+    border-bottom: none;
+    margin-left: 0;
 
-.sidebar__top {
-  border-bottom: none;
-  margin-left: 0;
-  .checkbox-group__btn {
-    width: 100%;
-    justify-content: space-between;
-    padding: 0;
-    font-size: 1.6rem;
-    text-transform: none;
-    margin-top: 1.25em;
+    .checkbox-group__btn {
+      width: 100%;
+      justify-content: space-between;
+      padding: 0;
+      font-size: 1.6rem;
+      text-transform: none;
+      margin-top: 1.25em;
 
-    svg {
-      width: 1.3rem;
-      height: 1.3rem;
+      svg {
+        width: 1.3rem;
+        height: 1.3rem;
+      }
+    }
+
+    .checkbox-group__btn_type_active {
+      svg {
+        transform: rotate(180deg);
+      }
     }
   }
 
-  .checkbox-group__btn_type_active {
-    svg {
-      transform: rotate(180deg);
-    }
-  }
 }
+
+
 
 </style>

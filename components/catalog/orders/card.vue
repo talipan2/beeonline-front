@@ -22,7 +22,8 @@
         </div>
       </div>
     </div>
-    <NuxtLink class="order-card__link" :to="`/orders/${data.id}`"></NuxtLink>
+    <slot name="favorite-delete" />
+    <NuxtLink class="order-card__link" :to="`/orders/${data.id}`" :target="linkBlank ? '_blank' : ''"></NuxtLink>
   </div>
 </template>
 
@@ -36,6 +37,10 @@ const props = defineProps({
   data: {
     type: Object,
     default: {},
+  },
+  linkBlank: {
+    type: Boolean,
+    default: false,
   }
 })
 
@@ -55,9 +60,10 @@ const flagClass = computed(() => selectFlag(entity.value.placeOfProduction[0].co
 
 <style lang="scss">
 .order-card {
+  flex: 1;
   box-shadow: var(--box-shadow-primary);
   padding: 2em;
-  margin-top: 2em;
+  // margin-top: 2em;
   background-color: #fff;
   position: relative;
   transition: box-shadow .2s ease;

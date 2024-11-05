@@ -116,6 +116,7 @@ export const useEntityStore = defineStore('entity', {
         const response = await orderApi.getOrders();
         if(response.data) {
           this.ordersList = response.data.data;
+          return response.data.data
         }
       } catch (error) {
         throw error;
@@ -138,6 +139,7 @@ export const useEntityStore = defineStore('entity', {
         const response = await serviceApi.getServices();
         if(response.data) {
           this.servicesList = response.data.data;
+          return response.data.data
         }
       } catch (error) {
         throw error;

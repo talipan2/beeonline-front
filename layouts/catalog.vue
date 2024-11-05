@@ -1,7 +1,10 @@
 <template>
   <section class="catalog container" :class="className">
     <slot name="header" />
-    <h1 class="catalog__title">{{ title }}</h1>
+    <h1 class="catalog__title">
+      {{ title }}
+      <slot name="title" />
+    </h1>
     <div class="catalog__container">
       <div class="catalog__left">
         <slot name="leftSide"/>
@@ -38,8 +41,12 @@ const props = defineProps({
   }
 
   &__title {
+    display: flex;
+    align-items: center;
+    column-gap: .5em;
     font-size: 3.6rem;
     margin: 1.38em 0 0.78em;
+    line-height: 1em;
   }
 
   &__left {

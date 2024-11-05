@@ -35,7 +35,8 @@
         </div>
       </div>
     </div>
-    <NuxtLink class="service-card__link" :to="`/services/${data.id}`"></NuxtLink>
+    <slot name="favorite-delete" />
+    <NuxtLink class="service-card__link" :to="`/services/${data.id}`" :target="linkBlank ? '_blank' : ''"></NuxtLink>
   </div>
 </template>
 
@@ -47,6 +48,10 @@ const props = defineProps({
     type: Object,
     default: () => ({}),
   },
+  linkBlank: {
+    type: Boolean,
+    default: false,
+  }
 });
 
 watch(() => props.data, (newVal) => {
@@ -58,6 +63,7 @@ watch(() => props.data, (newVal) => {
 <style lang="scss">
 
 .service-card {
+  flex: 1;
   padding: 2rem;
   box-shadow: var(--box-shadow-primary);
   background-color: #fff;

@@ -1,0 +1,104 @@
+<template>
+  <div class="desktop-entity">
+    <h2 class="desktop__title" v-if="role == 'customer'">Заказы</h2>
+    <h2 class="desktop__title" v-if="role == 'performer'">Услуги</h2>
+    <div :class="{ loading: isLoading }">
+      <CommonSelectorListButtons :buttonsList="selectorButtons" @updateActiveButton="currentEntityType" />
+        <CommonFilterSelectList :filters="filterList" @setFilters="setFilters" :activeFilters="activeFilter"/>
+        <div class="desktop-entity__list" >
+          <!-- <CommonAlerts type="warning" alert="Нет заказов с данными параметрами"/> -->
+            <DesktopEntityCard v-for="(item, index) in currentEntityList" :key="index" />
+        </div>
+      </div>
+  </div>
+</template>
+
+<script setup>
+
+const props = defineProps({
+  role: {
+    type: String,
+    required: true,
+  },
+  getEntity: {
+    type: Function,
+    required: true,
+  },
+  filterList: {
+    type: Array,
+    required: true,
+  }
+})
+
+const isLoading = ref(true);  // Состояние загрузки
+const activeFilter = ref({}) // Активные фильтры
+const currentEntityList = ref([]); // Текущий список сущностей
+
+const selectorButtons = [
+  { id: 1, label: 'Активные', value: 'active', count: computed(() => currentEntityList.value.length), },
+  { id: 2, label: 'Черновики', value: 'draft', count: computed(() => currentEntityList.value.length), },
+  { id: 3, label: 'В архиве', value: 'archive', count: computed(() => currentEntityList.value.length) },
+];
+
+const currentButton = ref(selectorButtons[0].value); // Текущая кнопка
+
+// функция обновления активной кнопки
+const currentEntityType = (type) => {
+  currentButton.value = type;
+}
+
+// Имитируем запрос за данными и скрытие анимации после его завершения
+const fetchData = async (type, filter) => {
+  isLoading.value = true;
+  try {
+    currentEntityList.value = await props.getEntity(type, filter);
+  } catch (error) {
+    console.error("Ошибка при загрузке данных:", error);
+  } finally {
+    isLoading.value = false; 
+  }
+};
+
+const setFilters = (filters) => {
+  activeFilter.value = filters
+}
+
+// сброс фильтров при изменении списка сущности
+watch(() => currentButton.value, (newVal) => {
+  activeFilter.value = {}
+  fetchData(newVal)
+}, {deep: true});
+
+// для установки фильтров при обновлении страницы с query параметров
+
+// onMounted(() => {
+//   const query = router.currentRoute.value.query;
+  
+//   if (Object.keys(query).length > 0) {
+//     activeFilter.value = { ...activeFilter.value, ...query };
+//   }
+// });
+
+onMounted(() => {
+  fetchData(currentButton.value);
+});
+
+</script>
+
+<style lang="scss">
+.desktop-entity {
+  &__list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 2em;
+  }
+  
+  .loading {
+    opacity: .6;
+    pointer-events: none;
+  }
+}
+
+
+</style>

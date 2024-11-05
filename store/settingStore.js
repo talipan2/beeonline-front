@@ -12,7 +12,10 @@ export const useSettingStore = defineStore("setting", {
       isOpen: false,
       status: null,
       text: null,
-    }
+    },
+    reviewModalStatus: false,
+    errorModal: false,
+    errorModalMessage: '',
   }),
   actions: {
 

@@ -2,7 +2,7 @@
   <NuxtLayout name="profile" title="Карточка услуги" class="entity-edit">
     <template #header>
       <UiBreadCrumb
-        :list="[{ label: 'Главная', link: '/' }, { label: 'Кабинет исполнителя', link: '/performer' }, { label: 'Список услуг', link: '/performer/services' }, { label: 'Услуга', link: '' }]" />
+        :list="[{ label: 'Главная', link: '/' }, { label: 'Кабинет исполнителя', link: '/performer/desktop' }, { label: 'Список услуг', link: '/performer/services' }, { label: 'Услуга', link: '' }]" />
     </template>
     <template #content>
       <EntityView :data="serviceProps"/>

@@ -1,5 +1,20 @@
 export default defineNuxtConfig({
-  modules: ["nuxt-svgo", "nuxt-swiper", '@pinia/nuxt', 'nuxt-tiptap-editor', '@vee-validate/nuxt', 'vue-yandex-maps/nuxt'],
+  modules: [
+    "nuxt-svgo", 
+    "nuxt-swiper", 
+    '@pinia/nuxt', 
+    'nuxt-tiptap-editor', 
+    '@vee-validate/nuxt', 
+    'vue-yandex-maps/nuxt',
+    '@nuxt/devtools'
+  ],
+  ssr: false,
+  runtimeConfig: {
+    public: {
+      baseUrl: process.env.API_BASE_URL,
+    },
+    baseUrl: process.env.API_BASE_URL
+  },
   svgo: {
     defaultImport: 'component',
     autoImportPath: './assets/svg/',
@@ -28,5 +43,11 @@ export default defineNuxtConfig({
   },
 
   compatibilityDate: '2024-04-03',
-  devtools: { enabled: true },
+  devtools: {
+    enabled: true,
+
+    timeline: {
+      enabled: true,
+    },
+  },
 })

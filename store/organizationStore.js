@@ -93,6 +93,7 @@ export const useOrganizationStore = defineStore('organization', {
         const response = await Api.getPubCards();
         if(response.data) {
           this.pubCardsList = response.data.data;
+          return response.data.data;
         }
       } catch (error) {
         throw error;
