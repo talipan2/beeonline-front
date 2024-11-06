@@ -8,7 +8,7 @@
             <slot name="bottom" />
           </div>
           <div class="form-group">
-            <div class="form-group-data__btn" ref="submitRef">
+            <div class="filter__submit" ref="submitRef">
               <UiButton
                 variant="quinary"
                 size="large"
@@ -107,6 +107,10 @@ watch(() => submitRef.value, (newVal) => {
         transform: rotate(180deg);
       }
     }
+  }
+
+  &__submit {
+    width: 100%;
   }
 
 }

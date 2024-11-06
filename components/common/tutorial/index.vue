@@ -16,6 +16,7 @@
 import { ref, computed } from "vue";
 import { useTippy } from "vue-tippy";
 import CommonTutorialLayout from "@/components/common/tutorial/layout.vue";
+import { useSettingStore } from "~/store/settingStore";
 
 const props = defineProps({
   data: {
@@ -23,6 +24,10 @@ const props = defineProps({
     default: () => [],
   },
 });
+
+const settingStore = useSettingStore();
+
+const locationModal = computed(() => settingStore.chooseLocationModal);
 
 let tippyInstance = null;
 const currentTip = ref(0); // Хранит текущий индекс подсказки
@@ -70,6 +75,7 @@ const showTip = (index) => {
       hideOnClick: false,
       interactive: true,
       duration: 500,
+      zIndex: 200,
       onClickOutside(instance) {
         showNextTip();
       },
@@ -111,6 +117,7 @@ const startTutorial = () => {
 
 // Функция для показа следующей подсказки
 const showNextTip = () => {
+  if(locationModal.value) return
   if (currentTip.value < tutorialLength.value - 1) {
     tippyInstance.hide(); // Скрываем текущую подсказку
     currentTip.value++; // Переходим к следующему индексу
