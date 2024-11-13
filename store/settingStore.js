@@ -16,6 +16,7 @@ export const useSettingStore = defineStore("setting", {
     reviewModalStatus: false,
     errorModal: false,
     errorModalMessage: '',
+    addFileModal: false,
   }),
   actions: {
 

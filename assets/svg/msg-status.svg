@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100" height="20" fill="none">
+	<g stroke-width="2">
+		<path d="M61 11l3 3 9-8.5m-4.5 7L70 14l8.5-8.5" stroke="#6937a5"/>
+		<path d="M44 11l3 3 9-8.5" stroke="#6937a5"/>
+		<path d="M25 5L35 15M25 15L35 5" stroke="red"/>
+	</g>
+	<g fill="#000">
+		<circle cx="5" cy="10" r="1">
+			<animate attributeName="opacity" values="1;0;1" keyTimes="0;0.5;1" dur="1s" repeatCount="indefinite"/>
+		</circle>
+		<circle cx="10" cy="10" r="1">
+			<animate attributeName="opacity" values="0.5;1;0.5;0;0.5" keyTimes="0;0.25;0.5;0.75;1" dur="1s" repeatCount="indefinite"/>
+		</circle>
+		<circle cx="15" cy="10" r="1">
+			<animate attributeName="opacity" values="0;1;0" keyTimes="0;0.5;1" dur="1s" repeatCount="indefinite"/>
+		</circle>
+	</g>
+	<circle cx="90" cy="10" r="3" fill="#6937a5" opacity="0.5"/>
+</svg>

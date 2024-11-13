@@ -465,6 +465,32 @@ input[type="number"]::-webkit-inner-spin-button {
   }
 }
 
+// цвета для иконок загруженных файлов по формату
+
+.file {
+  &__icon_image,
+  &__icon_png,
+  &__icon_jpg,
+  &__icon_jpeg,
+  &__icon_bmp,
+  &__icon_svg {
+      color: #ED6C59;
+      fill: #ED6C59;
+  }
+
+  &__icon_doc,
+  &__icon_docx,
+  &__icon_xml {
+      color: #2980B9;
+      fill: #2980B9;
+  }
+
+  &__icon_pdf {
+      color: #FA8E23;
+      fill: #FA8E23;
+  }
+}
+
 
 // контейнер для контента
 .container {

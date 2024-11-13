@@ -1,8 +1,8 @@
 <template>
   <div class="file">
     <div class="file__list">
-      <div class="divider" v-if="changed && dataList.length"></div>
-      <div class="file__item" v-for="item in dataList" :key="item.id">
+      <div class="divider" v-if="changed && dataList.length && divider"></div>
+      <div class="file__item" :class="{'add-divider': divider}" v-for="item in dataList" :key="item.id">
         <div class="file__data">
           <svg class="file__icon" :class="selectIconClass(item.type)" width="50" height="50" viewBox="0 0 50 50">
             <text x="13" y="33" :class="selectIconClass(item.type)">{{ item.type }}</text>
@@ -11,7 +11,7 @@
                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
             </g>
           </svg>
-          <a class="file__name" :href="item.url" download>{{ item.name }}</a>
+          <a class="file__name" :href="item.url" download>{{ item.name }}<span v-if="downloadText" class="file__download"><br/>Скачать</span></a>
         </div>
         <button v-if="changed" class="file__remove link" type="button" @click="removeFile(item.id)"></button>
       </div>
@@ -30,33 +30,54 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  divider: {
+    type: Boolean,
+    default: true,
+  },
+  downloadText: {
+    type: Boolean,
+    default: false
+  },
+  variant: {
+    type: String,
+    validator: value => ['default', 'dark', 'light'].includes(value),
+    default: 'default',
+  }
 
 })
 
-const emit = defineEmits();
+const emit = defineEmits(['removeFile']);
 
 function selectIconClass(type) {
-  switch (type) {
-    case 'jpg':
-      return 'file__icon_jpg';
-    case 'jpeg':
-      return 'file__icon_jpeg';
-    case 'bmp':
-      return 'file__icon_bmp';
-    case 'svg':
-      return 'file__icon_svg';
-    case 'png':
-      return 'file__icon_png';
-    case 'doc':
-      return 'file__icon_doc';
-    case 'docx':
-      return 'file__icon_docx';
-    case 'xml':
-      return 'file__icon_xml';
-    case 'pdf':
-      return 'file__icon_pdf';
-    default:
-      return 'file__icon_image';
+  if (props.variant === 'default') {
+    switch (type) {
+      case 'jpg':
+        return 'file__icon_jpg';
+      case 'jpeg':
+        return 'file__icon_jpeg';
+      case 'bmp':
+        return 'file__icon_bmp';
+      case 'svg':
+        return 'file__icon_svg';
+      case 'png':
+        return 'file__icon_png';
+      case 'doc':
+        return 'file__icon_doc';
+      case 'docx':
+        return 'file__icon_docx';
+      case 'xml':
+        return 'file__icon_xml';
+      case 'pdf':
+        return 'file__icon_pdf';
+      default:
+        return 'file__icon_image';
+    }
+  }
+  if (props.variant === 'dark') {
+    return 'file__icon_dark';
+  }
+  if (props.variant === 'light') {
+    return 'file__icon_light';
   }
 }
 
@@ -106,6 +127,10 @@ function removeFile(id) {
 
   &__name {
     font-size: 1.23em;
+  }
+
+  &__download {
+    font-size: .8em;
   }
 
   &__remove {
@@ -166,6 +191,16 @@ function removeFile(id) {
   &__icon_pdf {
       color: #FA8E23;
       fill: #FA8E23;
+  }
+
+  &__icon_dark {
+    color: var(--text-color-ternary);
+    fill: var(--text-color-ternary);
+  }
+
+  &__icon_light {
+    color: #fff;
+    fill: #fff;
   }
 }
 

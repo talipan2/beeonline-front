@@ -15,7 +15,7 @@
         <slot />
       </div>
         <slot name="action" />
-        <div class="invalid-error">
+        <div class="invalid-error" v-if="rules">
           <span v-if="errors.length && meta.touched" class="invalid-error__text">{{ errors[0] }}</span>
         </div>
     </div>

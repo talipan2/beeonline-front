@@ -1,7 +1,7 @@
 <template>
   <div class="documentation-loading">
     <CommonDocumentLoader text="Загрузить jpeg, pdf, doc, zip" :isList="true" :dataList="dataList" v-model="formData" @addFile="addFile"/>
-    <DocumentationList :dataList="dataList" @removeFile="removeFile" :changed="true"/>
+    <CommonFileList :dataList="dataList" @removeFile="removeFile" :changed="true"/>
     <UiButton class="documentation-loading__btn" variant="quinary" size="around">Сохранить</UiButton>
     <DocumentationErrorModal />
   </div>
