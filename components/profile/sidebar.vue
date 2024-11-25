@@ -50,7 +50,7 @@ const router = useRouter();
 
 const getSidebarLinks = (role) => [
   { id: 1, label: "Рабочий стол", value: `/${role}/desktop` },
-  { id: 2, label: "Bee-online Gifts", value: `/` },
+  { id: 2, label: "Bee-online Gifts", value: `/bonus` },
   { id: 3, label: "Профиль", value: `/${role}/profile` },
   { id: 4, label: role === "performer" ? "Услуги" : "Заказы", value: role === "performer" ? "/performer/services" : "/customer/orders", },
   { id: 5, label: "Проверка контрагентов", value: `/${role}/org_check` },

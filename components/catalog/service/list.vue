@@ -1,7 +1,7 @@
 <template>
-  <div class="orders">
-    <div class="orders__list">
-      <div class="orders__item" v-for="(data, index) in ordersData" :key="index" v-bind="setFirstCardRef(index)">
+  <div class="services">
+    <div class="services__list">
+      <div class="services__item" v-for="(data, index) in ordersData" :key="index" v-bind="setFirstCardRef(index)">
         <CatalogServiceCard :data="data" />
       </div>
     </div>
@@ -54,12 +54,13 @@ const ordersData = computed(() => {
 
 <style lang="scss">
 
-.orders {
+.services {
 
   &__list {
     display: flex;
     flex-wrap: wrap;
     gap: 3rem;
+    justify-content: space-between;
   }
 
   &__item {

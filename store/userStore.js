@@ -85,7 +85,6 @@ export const useUserStore = defineStore('user', {
           this.userToken = response.data.access_token;
           localStorage.setItem('token', this.userToken);
           this.userData = response.data.user;
-          this.setToken(this.userToken);
         }
       } catch (error) {
         throw error;

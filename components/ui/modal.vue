@@ -8,6 +8,7 @@
     :clickToClose="true"
     :escToClose="true"
     :background="background"
+    :lockScroll="lockScroll"
   >
     <div class="modal-content">
 
@@ -65,6 +66,10 @@ props: {
   background: {
     type: String,
     default: "non-interactive",
+  },
+  lockScroll: {
+    type: Boolean,
+    default: true
   }
 
 },

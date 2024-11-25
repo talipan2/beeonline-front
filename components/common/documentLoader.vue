@@ -5,7 +5,7 @@
       <span v-if="!$slots.action">{{ selectedFile !== null && !isList ? selectedFile.name : text }}</span>
       <slot name="action" />
       <input type="file"
-        accept=".doc, .docx, .xls, .xlsx, .ppt, .pptx, .rtf, .pdf, .jpeg, .png, .jpg, .gif, .psd, .djvu, .fb2, .ps, .zip, .rar"
+        :accept=allowedExtensions
         @change="handleFileChange">
     </label>
   </div>
@@ -14,15 +14,10 @@
 <script setup>
 import { useSettingStore } from '~/store/settingStore';
 
-
 const props = defineProps({
   text: {
     type: String,
     default: 'Загрузить'
-  },
-  modelValue: {
-    type: FormData,
-    default: {}
   },
   isList: {
     type: Boolean,
@@ -30,37 +25,35 @@ const props = defineProps({
   },
   extension: {
     type: [Array],
-    default: ['jpeg', 'jpg', 'png', 'pdf', 'doc', 'zip']
+    default: [
+      "jpeg", "jpeg", "png", "bmp", "pdf",
+      "doc", "docx", "xls", "xlsx", "ppt", 
+      "pptx", "zip", "rar", "7z"
+    ]
+  },
+  maxSize: {
+    type: Number,
+    default: 2048,
   }
 })
 
-const emit = defineEmits(['update:modelValue', 'addFile']);
-const settingStore = useSettingStore();
-
+const emit = defineEmits(['addFile']);
 const selectedFile = ref(null);
-
-
+const settingStore = useSettingStore();
 const allowedExtensions = computed(() => props.extension);
 
 const handleFileChange = (event) => {
-  const formData = ref(new FormData());
   const fileInput = event.target;
   selectedFile.value = fileInput.files[0];
   const fileExtension = selectedFile.value.name.split('.').pop().toLowerCase();
   if(!allowedExtensions.value.includes(fileExtension)) {
-    // settingStore.errorModal = true;
-    // settingStore.errorModalText = `Файл "${selectedFile.value.name}" должен быть файлом типа: jpeg, pdf, doc, zip.`;
+    settingStore.alertModal.isOpen = true;
+    settingStore.alertModal.text = `Файл "${selectedFile.value.name}" должен быть типа: ${allowedExtensions.value.join(', ')}`;
+    settingStore.alertModal.status = "error";
     fileInput.value = '';
     return
   }
-  if(props.isList) {
-    formData.value.append('file[]', selectedFile.value);
-    emit('addFile', selectedFile.value);
-    emit('update:modelValue', formData.value);
-  } else {
-    formData.append('file', selectedFile.value);
-    emit('update:modelValue', formData.value);
-  }
+  emit('addFile', selectedFile.value);
   fileInput.value = '';
 }
 

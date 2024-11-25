@@ -10,6 +10,10 @@
   </div>
 </template>
 
+<script setup>
+
+</script>
+
 <style lang="scss">
 .main {
   font-family: "Inter", sans-serif;

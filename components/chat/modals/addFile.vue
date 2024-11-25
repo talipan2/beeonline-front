@@ -13,6 +13,7 @@
               @removeFile="$emit('removeFile', $event)" 
               :divider="false" 
               :download-text="true"
+              variant="dark"
             />
           </div>
           <div class="form-group">
@@ -29,7 +30,7 @@
           </div>
         </div>
         <div class="add-file-modal__footer">
-          <CommonDocumentLoader class="add-file-modal__loader add-file-modal__btn" v-model="formData" @addFile="$emit('addFile', $event)" :is-list="true">
+          <CommonDocumentLoader class="add-file-modal__loader add-file-modal__btn" @addFile="$emit('addFile', $event)">
             <template #action>
               <UiButton class="add-file-modal__btn" type="button" variant="quinary" size="large" >Добавить</UiButton>
             </template>
@@ -50,47 +51,21 @@ const props = defineProps({
     type: Array,
     default: [],
   },
-  modelValue: {
-    type: FormData,
-    default: () => new FormData(),
-  }
 })
 
-const formData = ref(new FormData());
-
-
 const settingStore = useSettingStore();
-const emit = defineEmits(['clearFiles', 'update:modelValue', 'addFile', 'removeFile']);
+const emit = defineEmits(['clearFiles', 'addFile', 'removeFile']);
 
 function confirm() {
   settingStore.addFileModal = false;
   emit('clearFiles');
 }
 
-
-// watch(() => props.fileList, () => {
-//   if(props.fileList.length !== 0) {
-//     props.modelValue.forEach((file) => {
-//       formData.append('file[]', file);
-//     })
-//   }
-//   emit('update:modelValue', formData);
-// }, {deep: true})
-
-watch(() => formData.value, () => {
-  const newFormData = new FormData();
-
-  formData.value.forEach((value, key) => {
-    newFormData.append(key, value);
-  });
-
-  props.modelValue.forEach((value, key) => {
-    newFormData.append(key, value);
-  });
-
-  // Обновляем modelValue с новыми файлами
-  emit('update:modelValue', newFormData);
-}, { deep: true });
+watch(() => props.fileList, (newVal) => {
+  if(!newVal.length) {
+    settingStore.addFileModal = false;
+  }
+}, {deep: true});
 
 </script>
 

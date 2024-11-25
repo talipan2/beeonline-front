@@ -10,13 +10,13 @@
           :placeholder="placeholder"
           @input="updateValue($event.target.value)"
           :id="id"
-          @keydown="onKeyDown"
+          @keypress="onKeyDown"
         />
         <slot />
       </div>
         <slot name="action" />
         <div class="invalid-error" v-if="rules">
-          <span v-if="errors.length && meta.touched" class="invalid-error__text">{{ errors[0] }}</span>
+          <span v-if="errors.length && meta.touched" class="invalid-error__text">{{ customErrorMessage || errors[0] }}</span>
         </div>
     </div>
   </Field>
@@ -46,30 +46,34 @@ const props = defineProps({
     type: [String, Object],
     default: '',
   },
-  mask: {
-    type: String,
-    default: '',
-  },
   label: {
     type: String,
     default: '',
+  },
+  customErrorMessage: {
+    type: String,
+    default: '',
+  },
+  phonePlus: {
+    type: Boolean,
+    default: false,
   }
 });
-
-const internalValue = computed(() => props.modelValue);
- 
 
 const emit = defineEmits(['update:modelValue']);
 
 function onKeyDown(event) {
-  if ((props.type === 'number' || props.type === 'tel') && ['e', 'E', '+', '-'].includes(event.key)) {
+  if (props.type === 'number' && ['e', 'E', '+', '-'].includes(event.key) ) {
+    event.preventDefault();
+  }
+  if(props.type === 'tel' && !/^[0-9]*$/.test(event.key)) {
     event.preventDefault();
   }
 }
 
 function updateValue(value) {
-  if(props.type == 'number' || props.type == 'tel') {
-    value = value.replace(/[eE\+\-]/g, "").replace(/\D/g, "");
+  if(props.phonePlus && !value.startsWith('+')) {
+    value = `+${value}`
   }
   emit('update:modelValue', value);
 }

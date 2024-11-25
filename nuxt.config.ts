@@ -21,7 +21,7 @@ export default defineNuxtConfig({
     explicitImportsOnly: true,
   },
   yandexMaps: {
-    apikey: '82de5ac1-09a8-46fc-a4f9-0d964a74531d',
+    apikey: process.env.YANDEX_MAPS_API_KEY,
   },
   alias: {
     pinia: "/node_modules/@pinia/nuxt/node_modules/pinia/dist/pinia.mjs"

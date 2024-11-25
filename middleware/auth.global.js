@@ -3,6 +3,7 @@ import axios from "axios";
 
 export default defineNuxtRouteMiddleware(async(to, from) => {
   const userStore = useUserStore();
+  const router = useRouter();
   // try {
   //   // Делаем запрос с авторизацией
   //   const { data } = await axios.get(`http://localhost:8080/api/auth-check`, {
@@ -26,9 +27,15 @@ export default defineNuxtRouteMiddleware(async(to, from) => {
   //     if(to.path !== '/') navigateTo('/'); 
   // }
 
+  const publicPaths = ['/', '/login', '/register', '/services', '/orders', '/members'];
+  if (publicPaths.includes(to.path)) {
+    return;
+  }
+
   try {
     await userStore.checkAuth();
   } catch (error) {
+    router.push({ path: '/login' });
     console.error('Ошибка при проверке авторизации:', error);
   }
 

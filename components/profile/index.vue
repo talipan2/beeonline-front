@@ -21,7 +21,7 @@
           <div class="form-group__value">{{ userStore.userData.phone || '-' }}</div>
         </div>
       </div>
-      <UiButton class="profile__employees-btn" variant="primary" size="large">
+      <UiButton :to="role ? `/${role}/staff` : '/'" class="profile__employees-btn" variant="primary" size="large">
         Сотрудники
       </UiButton>
     </CommonProfileCheckCard>
@@ -144,6 +144,8 @@ import defaultCompanyLogo from '~/assets/images/nophoto_pc.png';
 
 const userStore = useUserStore();
 const organizationStore = useOrganizationStore();
+
+const role = computed(() => userStore.role);
 
 </script>
 

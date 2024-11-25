@@ -35,9 +35,16 @@
             <SvgoYoutube class="svg-l" />
           </NuxtLink>
         </div>
-        <UiButton class="member-details__btn" variant="tertiary" size="around">
-          <SvgoFavorite class="svg-m" />
-        </UiButton>
+        <div class="member-details__btn-container">
+          <UiButton class="member-details__btn" variant="quinary" size="large">
+            <SvgoMessage class="svg-m" fill="#6937a5" />
+            Написать {{ pubCardType }}
+          </UiButton>
+          <UiButton class="member-details__btn" variant="tertiary" size="around">
+            <SvgoFavorite class="svg-m" />
+          </UiButton>
+
+        </div>
       </div>
     </div>
     <div class="member-details__content-container">
@@ -66,6 +73,15 @@ const props = defineProps({
     type: Object,
     default: () => ({}),
   },
+})
+
+const pubCardType = computed(() => {
+  switch (props.data.type) {
+    case 'performer':
+      return 'исполнителю'
+    case 'customer':
+      return 'заказчику'
+  }
 })
 
 </script>
@@ -118,6 +134,18 @@ const props = defineProps({
   &__activity {
     display: flex;
     justify-content: flex-end;
+  }
+
+  &__btn-container {
+    display: flex;
+    align-items: center;
+    column-gap: 1em;
+  }
+
+  &__btn {
+    font-size: 1.2rem;
+    column-gap: 1em;
+    text-transform: uppercase;
   }
 }
 

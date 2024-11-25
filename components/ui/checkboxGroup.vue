@@ -125,7 +125,7 @@ const sortedOptions = computed(() => {
 });
 
 const visibilityElement = computed(() =>
-  showAllElement.value && props.isDropDown
+  (showAllElement.value && props.isDropDown) || !props.isDropDown
     ? sortedOptions.value
     : sortedOptions.value.slice(0, props.countShowed)
 );

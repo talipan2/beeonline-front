@@ -1,7 +1,7 @@
 <template>
   <div class="service-card">
     <div class="service-card__header">
-      <h3>{{ data.name }}</h3>
+      <h3>{{ data.name || 'не указано' }}</h3>
     </div>
     <div class="service-card__body">
       <div class="service-card__content">
@@ -13,12 +13,12 @@
       <div class="service-card__content">
         <div class="service-card__props">
           <div class="service-card__prop">
-            <p class="service-card__prop-name">{{data.location[0] ? data.location : 'Не указано'}}</p>
+            <p class="service-card__prop-name">{{data.location && data.location[0] ? data.location : 'Не указано'}}</p>
             <p class="service-card__prop-value"><i class="flag flag_round"></i></p>
           </div>
           <div class="service-card__prop">
             <p class="service-card__prop-name">Минимальная партия:</p>
-            <p class="service-card__prop-value">{{ data.minLot[0] ? data.minLot : 'Не указано' }}</p>
+            <p class="service-card__prop-value">{{ data.minLot && data.minLot[0] ? data.minLot : 'Не указано' }}</p>
           </div>
           <div class="service-card__prop">
             <p class="service-card__prop-name">Просмотры:</p>
@@ -28,7 +28,7 @@
       </div>
     </div>
     <div class="service-card__footer">
-      <div class="props">
+      <div class="props" v-if="data.data">
         <div class="prop" v-for="prop in data.data" :key="prop.id">
           <p class="prop__name">{{ prop.name }}</p>
           <p class="prop__value">{{ prop.value || 'не указано' }}</p>

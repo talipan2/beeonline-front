@@ -1,9 +1,10 @@
 <template>
   <div class="tooltip">
     <UiNewDropdown placement="top" trigger="mouseenter focus">
-      <div class="tooltip__wrapper">
+      <div class="tooltip__wrapper" v-if="!$slots.trigger">
         ?
       </div>
+      <slot name="trigger"></slot>
       <template #content>
         <div class="tooltip__content">
           <p class="tooltip__text">{{ text }}</p>
@@ -69,6 +70,7 @@ const props = defineProps({
     font-size: 1.4rem;
     padding: 0.17em .35em;
     text-align: center;
+    white-space: pre-wrap;
   }
   &__wrapper {
     display: flex;

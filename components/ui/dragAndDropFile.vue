@@ -1,15 +1,17 @@
 <template>
-  <div class="dropzone-wrapper">
-    <div v-if="isVisible" class="dropzone"
+    <div v-if="isVisible || visible" class="dropzone"
       @dragover.prevent="onDragOver"
       @dragleave.prevent="onDragLeave"
       @drop.prevent="onDrop"
+      :class="{ 'dropzone_dragover': isDragOver }"
     >
+      <!-- <CommonDocumentLoader class="dropzone__loader" @addFile="$emit('addFile', $event)" @removeFile="$emit('removeFile', $event)">
+        <template #action></template>
+      </CommonDocumentLoader> -->
       <p class="dropzone__text">{{ text }}</p>
       <p class="dropzone__text">{{ maxSizeText }}</p>
       <p class="dropzone__text">{{ acceptText }}</p>
     </div>
-  </div>
 </template>
 
 <script setup>
@@ -17,9 +19,8 @@ import { useSettingStore } from '~/store/settingStore';
 
 
 const props = defineProps({
-  drabbleComponent: {
+  draggableComponent: {
     type: Object,
-    default: null,
     required: true,
   },
   text: {
@@ -27,23 +28,26 @@ const props = defineProps({
     default: 'Перетащите документ сюда или нажмите, чтобы загрузить.'
   },
   maxSize: {
-    type: String,
-    default: '5 МБ'
+    type: Number,
+    default: 1024
   },
   accept: {
     type: Array,
-    default: ['.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.rtf', '.pdf', '.jpeg', '.png', '.jpg', '.gif', '.psd', '.djvu', '.ps', '.zip', '.rar']
+    default: [
+      "jpg", "jpeg", "png", "bmp", "pdf",
+      "doc", "docx", "xls", "xlsx", "ppt", 
+      "pptx", "zip", "rar", "7z"
+    ]
   },
-  modelValue: {
-    type: FormData,
-    default: () => new FormData(),
-    required: true,
-  },
+  visible: {
+    type: Boolean,
+    default: false
+  }
 })
 
-const emit = defineEmits(['update:modelValue', 'addFile']);
 const settingStore = useSettingStore();
-const maxSizeText = computed(() => "Максимальный размер файла: " + props.maxSize + ".");
+const emit = defineEmits(['update:modelValue', 'addFile']);
+const maxSizeText = computed(() => "Максимальный размер файла: " + Number.parseFloat(props.maxSize / 1024).toFixed(0) + " Мб.");
 const acceptText = computed(() => "Допустимые расширения: " + props.accept.join(', ')  + ".");
 
 // Управляет видимостью drop-зоны
@@ -54,61 +58,60 @@ watch(() => isVisible.value, (newVal) => {
   console.log(isVisible.value)
 }, {deep: true})
 
-// Функция для отображения drop-зоны при перетаскивании
-const onDragEnter = (event) => {
-  console.log(1)
-  if (event.dataTransfer?.types?.includes('Files')) {
+
+const onDragOver = () => {
+  isDragOver.value = true;
+  if(!props.visible) {
     isVisible.value = true;
   }
 };
 
-// Функция скрытия drop-зоны при уходе из неё
-const onDragOver = () => {
-  isDragOver.value = true;
-  isVisible.value = true;
-};
-
 const onDragLeave = () => {
   isDragOver.value = false;
-  setTimeout(() => {
-    if (!isDragOver.value) isVisible.value = false;
-  }, 100);
+  if(!props.visible) {
+    setTimeout(() => {
+      if (!isDragOver.value) isVisible.value = false;
+    }, 100);
+  }
 };
 
 // Обработка события drop
 const onDrop = (event) => {
   isDragOver.value = false;
-  isVisible.value = false;
-  settingStore.addFileModal = true;
+  if(!props.visible) {
+    isVisible.value = false;
+  }
   handleFiles(event.dataTransfer.files); // Обработка файлов
 };
 
 // Обработка файлов
 const handleFiles = (fileList) => {
-  const formData = new FormData();
   const acceptedFiles = Array.from(fileList);
   acceptedFiles.forEach((file, index) => {
-    formData.append(`file[]`, file);
+    const fileExtension = file.name.split('.').pop().toLowerCase();
+    if(!props.accept.includes(fileExtension)) {
+      settingStore.alertModal.isOpen = true;
+      settingStore.alertModal.text = `Файл "${file.name}" должен быть типа: ${props.accept.join(', ')}`;
+      settingStore.alertModal.status = "error";
+      return
+    }
     emit('addFile', file);
   });
-
-  emit('update:modelValue', formData);
-  console.log("Загруженные файлы:", formData);
 };
 
 
 onMounted(async () => {
   await nextTick();
-  if (props.drabbleComponent) {
-    props.drabbleComponent.addEventListener('dragenter', onDragOver);
-    props.drabbleComponent.addEventListener('dragleave', onDragLeave);
+  if (props.draggableComponent) {
+    props.draggableComponent.addEventListener('dragenter', onDragOver);
+    props.draggableComponent.addEventListener('dragleave', onDragLeave);
   }
 });
 
 onUnmounted(() => {
-  if (props.drabbleComponent) {
-    props.drabbleComponent.removeEventListener('dragenter', onDragOver);
-    props.drabbleComponent.removeEventListener('dragleave', onDragLeave);
+  if (props.draggableComponent) {
+    props.draggableComponent.removeEventListener('dragenter', onDragOver);
+    props.draggableComponent.removeEventListener('dragleave', onDragLeave);
   }
 });
 </script>
@@ -119,16 +122,39 @@ onUnmounted(() => {
   position: absolute;
   inset: 0;
   font-size: 1.4rem;
+  padding: 2em;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   row-gap: .5em;
   background-color: #f0f4fb;
+  border: 1px solid #a29699;
   color: #716568;
   cursor: pointer;
-  border: 1px dashed #a29699;
   z-index: 99;
+
+  &__text {
+    text-align: center;
+    line-height: 1.5em;
+  }
+
+  &_dragover {
+    border: 1px dashed #a29699;
+
+  }
+
+  &__loader {
+    position: absolute;
+    inset: 0;
+
+    .add-file__input {
+      margin-block: 0;
+      width: 100%;
+      height: 100%;
+    }
+  }
 }
+
 </style>
 

@@ -7,6 +7,7 @@
       :class="status"
       background="interactive"
       :focusTrap="false"
+      :lockScroll="false"
     >
     <template #content>
       <div class="alert-container">
@@ -25,7 +26,7 @@ import { useSettingStore } from '~/store/settingStore';
 const props = defineProps({
   status: {
     type: String,
-    default: 'success',
+    default: 'error',
     validator: value => ['success', 'error'].includes(value),
   }
 })
@@ -35,7 +36,9 @@ const settingStore = useSettingStore();
 watch(() =>  settingStore.alertModal.isOpen, (newVal) => {
   if(newVal === true) {
     setTimeout(() => {
-      settingStore.alertModal.isOpen = false;
+      confirm();
+      settingStore.alertModal.text = null;
+      settingStore.alertModal.status = null;
     }, 5000)
   }
 });
@@ -59,22 +62,17 @@ const confirm = () => {
   .modal-dialog {
     bottom: 2%;
     top: auto;
-    max-width: 30rem;
+    max-width: 50rem;
     width: 100%;
   }
 
   .modal-body {
-    padding: 1rem;
-  }
-}
-
-.error {
-  .modal-body {
+    font-family: 'fira-sans', sans-serif;
+    font-size: 1.4rem;
+    padding: 1rem 3rem 1rem 1rem;
     background-color: #fff;
     box-shadow: var(--box-shadow-primary);
     border: none;
-    font-size: 1.4rem;
-    font-family: 'fira-sans', sans-serif;
   }
   
   .modal-content {
@@ -89,20 +87,26 @@ const confirm = () => {
     }
 
     .alert__text {
-      color: var(--text-color-danger);
-      line-height: 1em;
+      line-height: 1.5em;
+      text-align: center;
     }
   }
 }
 
-    // Таймер-индикатор
+.error {
+  .alert__text {
+    color: var(--text-color-ternary);
+  }
+}
+
+// Таймер-индикатор
 .alert__timer {
   position: absolute;
   top: 0;
   left: 0;
   height: 2px;
   width: 100%;
-  background-color: var(--text-color-danger);
+  background-color: var(--text-color-ternary);
   animation: shrink 5s linear forwards;
 }
 

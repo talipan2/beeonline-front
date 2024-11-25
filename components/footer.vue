@@ -4,26 +4,26 @@
       <div class="footer__menu container">
         <div class="footer__menu-links">
           <div class="footer__logo">
-            <NuxtLink to="https://test.bee-online.ru">
+            <NuxtLink to="/">
               <UiImage src="/assets/images/footer/footer-logo.svg" alt="Логотип"/>
             </NuxtLink>
           </div>
           <nav class="footer__nav">
             <ul class="footer__list">
               <li class="footer__links-item">
-                <NuxtLink to="https://test.bee-online.ru/services" class="footer__link">Найти исполнителя</NuxtLink>
+                <NuxtLink to="/services" class="footer__link">Найти исполнителя</NuxtLink>
               </li>
               <li class="footer__links-item">
-                <NuxtLink to="https://test.bee-online.ru/orders" class="footer__link">Найти заказчика</NuxtLink>
+                <NuxtLink to="/orders" class="footer__link">Найти заказчика</NuxtLink>
               </li>
               <li class="footer__links-item">
                 <NuxtLink to="/members" class="footer__link">Участники портала</NuxtLink>
               </li>
               <li class="footer__links-item">
-                <NuxtLink to="https://test.bee-online.ru/contacts" class="footer__link">Контакты</NuxtLink>
+                <NuxtLink to="/contacts" class="footer__link">Контакты</NuxtLink>
               </li>
               <li class="footer__links-item">
-                <NuxtLink to="https://test.bee-online.ru/help" class="footer__link">Помощь</NuxtLink>
+                <NuxtLink to="/help" class="footer__link">Помощь</NuxtLink>
               </li>
             </ul>
           </nav>
@@ -37,17 +37,17 @@
       <div class="footer__additionally container">
         <ul class="footer__additionally-list">
           <li class="footer__additionally-item">
-            <NuxtLink to="https://test.bee-online.ru/page-policy" class="footer__additionally-link">Политика
+            <NuxtLink to="/page-policy" class="footer__additionally-link">Политика
               конфиденциальности</NuxtLink>
           </li>
           <li class="footer__additionally-item">
-            <NuxtLink to="https://test.bee-online.ru/page-oferta" class="footer__additionally-link">Оферта</NuxtLink>
+            <NuxtLink to="/page-oferta" class="footer__additionally-link">Оферта</NuxtLink>
           </li>
           <li class="footer__additionally-item">
-            <NuxtLink to="https://test.bee-online.ru/page-requisites" class="footer__additionally-link">Реквизиты</NuxtLink>
+            <NuxtLink to="/page-requisites" class="footer__additionally-link">Реквизиты</NuxtLink>
           </li>
           <li class="footer__additionally-item">
-            <NuxtLink to="https://test.bee-online.ru/sitemap" class="footer__additionally-link">Карта сайта</NuxtLink>
+            <NuxtLink to="/sitemap" class="footer__additionally-link">Карта сайта</NuxtLink>
           </li>
         </ul>
       </div>

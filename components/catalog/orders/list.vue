@@ -18,6 +18,10 @@ const props = defineProps({
     type: Array,
     default: () => ([]),
   },
+  isPagination: {
+    type: Boolean,
+    default: true,
+  }
 })
 
 const entityStore = useEntityStore();
@@ -62,10 +66,12 @@ watch(() => firstCardRef.value, (newVal) => {
     display: flex;
     flex-wrap: wrap;
     gap: 3rem;
+    justify-content: space-between;
   }
 
   &__item {
     flex: 0 1 48%;
+    display: flex;
   }
 }
 

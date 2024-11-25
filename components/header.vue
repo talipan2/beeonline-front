@@ -50,23 +50,23 @@
           </ul>
         </nav>
         <div class="header__auth" v-if="isAuth">
-          <UiButton to="/" variant="secondary" size="around">
+          <UiButton to="/search" variant="secondary" size="around">
             <SvgoSearchIcon class="svg-m" />
           </UiButton>
-          <UiButton to="/" variant="secondary" size="around">
+          <UiButton :to="role ? `/${role}/favorites` : '/'" variant="secondary" size="around">
             <SvgoFavorite class="svg-m" />
           </UiButton>
-          <UiButton to="/" variant="secondary" size="around">
+          <UiButton to="/chat" variant="secondary" size="around">
             <SvgoMessage class="svg-m" />
           </UiButton>
-          <UiButton to="/" variant="secondary" size="around">
+          <UiButton :to="role ? `/${role}/notifications` : '/'" variant="secondary" size="around">
             <SvgoNotice class="svg-m" />
             <UiAlertBadge />
           </UiButton>
           <HeaderMenuDropDown v-model="isAuth" />
         </div>
         <div class="header__auth" v-else>
-          <UiButton to="/" variant="secondary" size="around"> 
+          <UiButton to="/search" variant="secondary" size="around"> 
             <SvgoSearchIcon class="svg-m" />
           </UiButton>
           <UiButton variant="secondary" size="large" type="button" @click="openAuthModal">Вход</UiButton>
@@ -100,6 +100,11 @@ const headerFixed = ref(false);
 const headerMainOffsetTop = ref(0);
 const headerFiller = ref(0)
 const headerInfo = ref(null)
+const role = computed(() => {
+  if(userStore.role) {
+    return userStore.role
+  }
+})
 
 const handleCreateOrder = () => {
   if (!isAuth.value) {
@@ -151,7 +156,7 @@ onMounted(() => {
   window.addEventListener("scroll", onScrollPage)
   userStore.role = localStorage.getItem('role');
   if(localStorage.getItem('token')) {
-    // userStore.checkAuth();
+    userStore.checkAuth();
     organizationStore.getSelfOrganization();
     organizationStore.getSelfPubCard();
   }

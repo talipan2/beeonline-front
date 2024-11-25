@@ -101,12 +101,14 @@ export const useEntityStore = defineStore('entity', {
         // Если ids - это массив, возвращаем массив label
         return ids.map(id => {
           const entity = data.find(item => item.id == id);
-          return entity ? entity.label : `${type} с id ${id} не найдено`;
+          // return entity ? entity.label : `${type} с id ${id} не найдено`;
+          return entity ? entity.label : null;
         });
       } else {
         // Если это одиночный id, возвращаем один label
         const entity = data.find(item => item.id == ids);
-        return entity ? entity.label : `${type} с id ${ids} не найден`;
+        // return entity ? entity.label : `${type} с id ${ids} не найден`;
+        return entity ? entity.label : null;
       }
     }
   },

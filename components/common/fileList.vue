@@ -11,15 +11,24 @@
                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
             </g>
           </svg>
-          <a class="file__name" :href="item.url" download>{{ item.name }}<span v-if="downloadText" class="file__download"><br/>Скачать</span></a>
+          <a class="file__name" :href="item.url" download>{{ item.name }}<span v-if="downloadText"
+              class="file__download"><br />Скачать</span></a>
         </div>
         <button v-if="changed" class="file__remove link" type="button" @click="removeFile(item.id)"></button>
+      </div>
+      <div class="progress doc-new-attach__progress" v-if="settingStore.uploadLoading">
+        <div class="progress-bar progress-bar-striped progress-bar-animated" :style="{
+          // width: file.progress + '%',
+          width: '100%',
+        }"></div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
+import { useSettingStore } from '~/store/settingStore';
+
 
 const props = defineProps({
   dataList: {
@@ -45,7 +54,7 @@ const props = defineProps({
   }
 
 })
-
+const settingStore = useSettingStore();
 const emit = defineEmits(['removeFile']);
 
 function selectIconClass(type) {
@@ -116,11 +125,18 @@ function removeFile(id) {
     display: flex;
     align-items: center;
     padding: .76em 1.5em .76em 0;
+    cursor: pointer;
 
     svg {
       text {
         font-size: .61em;
         text-transform: uppercase;
+      }
+    }
+
+    &:hover {
+      .file__name {
+        color: var(--text-color-hover-primary);
       }
     }
   }
@@ -201,6 +217,57 @@ function removeFile(id) {
   &__icon_light {
     color: #fff;
     fill: #fff;
+  }
+}
+
+.progress {
+  background-color: #e9ecef;
+  border-radius: 1px;
+  font-size: 1.2rem;
+  height: 1rem;
+  line-height: 0
+}
+
+.progress,.progress-bar {
+  display: flex;
+  overflow: hidden
+}
+
+.progress-bar {
+  background-color: #6937a5;
+  color: #fff;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  transition: width .6s ease;
+  white-space: nowrap
+}
+
+.progress-bar-striped {
+  background-image: linear-gradient(45deg,hsla(0,0%,100%,.15) 25%,transparent 0,transparent 50%,hsla(0,0%,100%,.15) 0,hsla(0,0%,100%,.15) 75%,transparent 0,transparent);
+  background-size: 1rem 1rem
+}
+
+.progress-bar-animated {
+  animation: progress-bar-stripes 1s linear infinite
+}
+
+@keyframes progress-bar-stripes {
+  0% {
+      background-position: 1rem 0
+  }
+
+  to {
+      background-position: 0 0
+  }
+}
+
+@media (prefers-reduced-motion:reduce) {
+  .progress-bar {
+      transition: none
+  }
+  .progress-bar-animated {
+    animation: none
   }
 }
 

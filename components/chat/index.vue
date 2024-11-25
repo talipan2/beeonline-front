@@ -14,6 +14,7 @@
 				<ChatMessageWindow :init_chat_id="chatId"/>
 			</div>
 		</div>
+		<Alerts/>
 	</div>
 </template>
 

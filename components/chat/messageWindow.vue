@@ -26,7 +26,7 @@
             <div class="dialog-head__buttons">
               <UiButton class="dialog-head__btn dialog-head__btn_type_colored" v-if="chat.deal" :to="`/deals/`" variant="tertiary" size="around" target="_blank" >Открыть сделку</UiButton>
               <UiButton class="dialog-head__btn" v-else :to="`/deals/`" variant="quinary" size="around" target="_blank" >Начать работу</UiButton>
-              <UiButton class="dialog-head__btn dialog-head__btn_type_colored" :to="`/deals/`" variant="tertiary" size="around" target="_blank">
+              <UiButton class="dialog-head__btn dialog-head__btn_type_colored" type="button" @click="settingStore.addReviewModal=true" variant="tertiary" size="around" target="_blank">
                 <SvgoDealIcon class="svg-m" fill="#6937a5"/>
                 Оставить отзыв
               </UiButton>
@@ -68,17 +68,21 @@
       <template v-if="chat && !chat.id">Чтобы начать чат отправьте первое сообщение</template>
       <template v-else>Выберите чат</template>
     </div>
-    <UiDragAndDropFile v-if="chat && chat.id" :drabbleComponent="chatContainer" v-model="formData" @addFile="addFile"/>
+    <UiDragAndDropFile v-if="chat && chat.id" :draggableComponent="chatContainer" @addFile="addFile"/>
   </div>
   <div class="dialog__bottom" v-if="!onlyBody">
     <form @submit="submitMessage" class="dialog__form">
-      <CommonDocumentLoader class="dialog__form-loader" v-model="formData" @addFile="addFile" :is-list="true">
-        <template #action>
-          <UiButton type="button" class="dialog__form-btn" variant="default">
-            <SvgoFileDrop class="svg-m"/>
-          </UiButton>
+      <CommonTooltip :text="tooltipMessage">
+        <template #trigger>
+          <CommonDocumentLoader class="dialog__form-loader" @addFile="addFile">
+            <template #action>
+              <UiButton type="button" class="dialog__form-btn" variant="default">
+                <SvgoFileDrop class="svg-m"/>
+              </UiButton>
+            </template>
+          </CommonDocumentLoader>
         </template>
-      </CommonDocumentLoader>
+      </CommonTooltip>
       <input class="dialog__form-message" 
         v-model="message" 
         placeholder="Сообщение" 
@@ -89,7 +93,8 @@
       <button type="submit" class="dialog__form-submit">Отправить</button>
     </form>
   </div>
-  <ChatModalsAddFile v-model="formData" :fileList="addedFiles" @addFile="addFile" @removeFile="removeFile" @clearFiles="clearFiles"/>
+  <ChatModalsAddFile :fileList="addedFiles" @addFile="addFile" @removeFile="removeFile" @clearFiles="clearFiles"/>
+  <ChatModalsReview />
 </template>
 
 <script setup>
@@ -130,8 +135,22 @@ const props = defineProps({
 const addedFiles = ref([]);
 const formData = ref(new FormData());
 const settingStore = useSettingStore();
+const maxFilesCount = 2;
+const maxFileSize = 2048;
+const acceptFile = ['jpg', 'jpeg', 'png', 'bmp', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'zip', 'rar', '7z']
+
+const tooltipMessage = 
+  "Максимальный размер файла: " + Number.parseFloat(maxFileSize / 1024).toFixed(0) + " Мб.\n" 
+  + " Допустимые расширения: " + acceptFile.join(', ');
+;
 
 function addFile(item) {
+  if(addedFiles.value.length >= maxFilesCount) {
+    settingStore.alertModal.isOpen = true;
+    settingStore.alertModal.text = `Максимальное количество файлов: ${maxFilesCount}.`;
+    settingStore.alertModal.status = "error";
+    return;
+  };
   addedFiles.value.push({
     id: crypto.randomUUID(),
     name: item.name,
@@ -139,36 +158,27 @@ function addFile(item) {
     type: item.name.split('.').pop().toLowerCase(),
     file: item
   })
+
   if(!settingStore.addFileModal) {
     settingStore.addFileModal = true;
   }
 }
 
-function removeFile(id) {
-  addedFiles.value = addedFiles.value.filter(item => item.id !== id);
-
+// отслеживаем изменения в массиве для обновления формдата
+watch(addedFiles, (newFiles) => {
   const newFormData = new FormData();
-  addedFiles.value.forEach(item => {
+  newFiles.forEach(item => {
     newFormData.append('file[]', item.file);
   });
+  formData.value = newFormData; 
+}, { deep: true });
 
-  // обновляем formData
-  formData.value = newFormData;
+function removeFile(id) {
+  addedFiles.value = addedFiles.value.filter(item => item.id !== id);
 }
 
 function clearFiles() {
   addedFiles.value = [];
-
-  // // очистка формдата
-  // const keysToDelete = [];
-  // formData.value.forEach((value, key) => {
-  //   if (key.startsWith('file[')) {
-  //     keysToDelete.push(key);
-  //   }
-  // });
-
-  // // удаление каждого ключа
-  // keysToDelete.forEach((key) => formData.value.delete(key));
   formData.value.delete('file[]');
 }
 

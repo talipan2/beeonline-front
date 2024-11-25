@@ -1,0 +1,81 @@
+<template>
+  <div class="card transactions" :class="{
+    card_loading: loading,
+  }">
+    <div class="card__content">
+      <h2 class="card__title">Транзакции</h2>
+
+      <div class="table-wrap">
+        <table class="transactions__table table table-striped" v-if="transactions.length">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Сумма</th>
+              <th>Описание</th>
+              <th>Время</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template v-for="(transaction, index) in transactions" :key="index">
+              <tr>
+                <td>{{ transaction.id }}</td>
+                <td>{{ transaction.amount }}</td>
+                <td>
+                  <div v-if="transaction.bonus">{{ transaction.bonus.name }}</div>
+                  <div class="text-secondary" v-if="transaction.comment && transaction.comment.length">{{
+                    transaction.comment }}</div>
+                </td>
+                <td>{{ transaction.created_at }}</td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="transactions__alert alert alert-primary" v-if="!loading && !transactions.length">
+        Транзакций нет
+      </div>
+      <div class="transactions__more" v-if="page < lastPage">
+        <UiButton variant="quinary" class="bonus-more-btn" size="large" @click="loadMore">Загрузить еще</UiButton>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { useBonusStore } from '~/store/bonusStore';
+
+
+const bonusStore = useBonusStore();
+const loading = ref(false);
+const transactions = ref([]);
+const page = ref(1);
+const lastPage = ref(1);
+
+onMounted(async () => {
+  loading.value = true;
+  setTimeout(() => {
+    loading.value = false;
+    page.value = bonusStore.transactions.current_page;
+    lastPage.value = bonusStore.transactions.last_page;
+    transactions.value = bonusStore.transactions.data;
+  }, 1000);
+})
+
+
+</script>
+
+<style lang="scss">
+
+.transactions {
+  &__table {
+      font-size: 1.4rem;
+  }
+
+  &__more {
+    font-size: 1.6em;
+    display: flex;
+    justify-content: start;
+  }
+}
+</style>

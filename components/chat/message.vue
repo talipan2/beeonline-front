@@ -17,7 +17,7 @@
       </div>
       <file-list-new v-if="message.files && message.files.length" v-model:files-value="message.files" :readonly="true"
         :style="message.own ? 'dark' : 'light'" />
-      <CommonFileList :data-list="file" :variant="message.own ? 'light' : 'dark' "/>
+      <CommonFileList v-if="file.length" :data-list="file" :variant="message.own ? 'light' : 'dark' " :download-text="true"/>
     </div>
     <div class="message__right">
       <div class="message__time">{{ time }}</div>

@@ -78,11 +78,7 @@
     </div>
 
     <!-- grid -->
-    <div class="members__list" v-if="currentViewSetting === 'grid'">
-      <div class="members__item" v-for="item in 20" :key="item">
-        <CardsPublic :is-props-visible="true" :is-description="true" :isList="true" :data="data[0]"/>
-      </div>
-    </div>
+    <CatalogMembersListDefault v-if="currentViewSetting === 'grid'" :data="data"/>
 
     <!-- list -->
     <div class="members__list" v-if="currentViewSetting === 'list'">
@@ -100,7 +96,7 @@
       </div>
     </div>
 
-    <!-- <CommonPagination /> -->
+    <CommonPagination v-if="isPagination"/>
   </div>
 
 
@@ -113,6 +109,10 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+  isPagination: {
+    type: Boolean,
+    default: false
+  }
 });
 
 const router = useRouter();
@@ -216,6 +216,7 @@ onMounted(() => {
     display: flex;
     flex-wrap: wrap;
     gap: 3rem;
+    justify-content: space-between;
   }
 
   &__item {

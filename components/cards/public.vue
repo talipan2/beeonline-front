@@ -38,7 +38,7 @@
       <div class="form-group__title" >
         Описание
       </div>
-      <p class="form-group__value">{{ data.description || '-' }}</p>
+      <p class="form-group__value prop_type_hidden">{{ data.description || '-' }}</p>
     </div>
     <slot name="favorite-delete" />
     <NuxtLink class="card-pub__link" :to="`/members/${data.id}`" v-if="isList" :target="linkBlank ? '_blank' : ''"></NuxtLink>

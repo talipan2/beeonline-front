@@ -1,6 +1,6 @@
 <template>
   <Field :rules="rules" v-slot="{ field, errors, meta }" :name="name" :label="label">
-    <div class="text-area" :class="[field.class, $attrs.class]">
+    <div class="text-area" :class="[field.class, $attrs.class, {'invalid': errors.length && meta.touched}]">
       <div class="text-area__container" >
         <textarea 
           class="text-area__input" 
@@ -11,7 +11,7 @@
           ref="refValue"
         />
       </div>
-        <div class="invalid-error">
+        <div class="invalid-error" v-if="errorShow">
           <span v-if="errors.length && meta.touched" class="invalid-error__text">{{ errors[0] }}</span>
         </div>
     </div>
@@ -45,6 +45,10 @@ const props = defineProps({
   alertMessage: {
     type: String,
     default: ''
+  },
+  errorShow: {
+    type: Boolean,
+    default: true,
   }
 })
 

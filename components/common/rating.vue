@@ -1,10 +1,29 @@
 <template>
   <div class="rating">
-    <div class="rate" :style="{ '--rating': (rating / 5) * 100 + '%' }"></div>
-    <p class="rating__reviews" v-if="isCountReviews">
-      ({{ reviews }}<span v-if="isReviewText">{{" " + plural(reviews, { one: "отзыв", few: "отзыва", many: "отзывов" })}}</span>)
-    </p>
-    <p class="rating__count" v-if="isCountRating">({{ rating }})</p>
+    <div class="rating__wrapper">
+      <div class="rate" v-if="isSelected" :class="{ 'rate_selected': hoverRating }"
+        :style="{ '--rating': (hoverRating !== null ? hoverRating : selectedRating || 0) / 5 * 100 + '%' }" 
+        @mouseleave="clearHoverRating" 
+        @mousemove="setHoverRating" 
+        @click="setRating">
+      </div>
+      <div class="rate" v-else
+        :style="{ '--rating': (rating / 5) * 100 + '%' }">
+      </div>
+      <p v-if="isSelected && selectedRating > 0" class="rate__choice">{{ `${selectedRating}/5` }}</p>
+      <p class="rating__reviews" v-if="isCountReviews">
+        ({{ reviews }}<span v-if="isReviewText">{{" " + plural(reviews, { one: "отзыв", few: "отзыва", many: "отзывов" })}}</span>)
+      </p>
+      <p class="rating__count" v-if="isCountRating">({{ rating }})</p>
+    </div>
+    <UiInput 
+      v-model="selectedRating"
+      type="number"
+      class="rating__input"
+      name="rating"
+      :rules="{ required: true }"
+      customErrorMessage="Поставьте оценку"
+    />
   </div>
 </template>
 
@@ -31,13 +50,43 @@ const props = defineProps({
     type: Number,
     default: 0,
   },
+  isSelected: {
+    type: Boolean,
+    default: false,
+  },
+  modelValue: {
+    type: Number,
+    default: 0,
+  }
 });
+
+const hoverRating = ref(null);
+const selectedRating = ref(null);
+const emit = defineEmits(['update:modelValue']);
+
+function setHoverRating(event) {
+  const { width, left } = event.currentTarget.getBoundingClientRect();
+  const mouseX = event.clientX - left;
+  hoverRating.value = Math.ceil((mouseX / width) * 5);
+}
+
+function clearHoverRating() {
+  hoverRating.value = null;
+}
+
+function setRating() {
+  selectedRating.value = hoverRating.value;
+  emit('update:modelValue', selectedRating.value);
+}
 </script>
 
 <style lang="scss">
 .rating {
-  display: flex;
-  align-items: center;
+
+  &__wrapper {
+    display: flex;
+    align-items: center;
+  }
 
   &__reviews {
     font-size: 1.3rem;
@@ -45,6 +94,10 @@ const props = defineProps({
 
   &__count {
     font-size: 1.6rem;
+  }
+
+  &__input {
+    display: none;
   }
 }
 
@@ -80,4 +133,14 @@ const props = defineProps({
   background-position: 100% 0;
   flex: 1 1 auto;
 }
+
+.rate_selected {
+  cursor: pointer;
+}
+
+.rate__choice {
+  font-size: 1em;
+  color: #565263;
+}
+
 </style>
