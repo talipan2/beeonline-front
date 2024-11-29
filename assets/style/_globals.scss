@@ -386,6 +386,16 @@ input[type="number"]::-webkit-inner-spin-button {
     background-position: top calc(.25em + .5rem) right calc(.25em + .5rem);
     padding-right: calc(1em + 2rem);
   }
+
+  select {
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%236937a5'%3E%3Ccircle cx='6' cy='6' r='4.5'/%3E%3Cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3E%3Ccircle cx='6' cy='8.2' r='.6' fill='%236937a5' stroke='none'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='15'%3E%3Cpath stroke='%23343a40' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='m12 6-4.5 4L3 6' fill='none'/%3E%3C/svg%3E");
+    background-position: right calc(1.5em + .5rem) center, right calc(1rem) center;
+    background-repeat: no-repeat;
+    background-size: 1em 1em, 15px 15px;
+    border-color: #6937a5;
+    padding-right: calc(1em + 2rem);
+  }
 }
 
 .input-container.invalid {
@@ -586,6 +596,42 @@ input[type="number"]::-webkit-inner-spin-button {
     margin-top: .75rem;
     padding: .75rem 1.75rem;
   }
+}
+
+// Скрытие Google Translate
+#goog-gt-tt {
+  display: none !important;
+}
+
+.skiptranslate {
+  display: none !important;
+}
+body {
+  top: 0 !important;
+}
+
+body iframe {
+  display: none !important;
+}
+
+.goog-tooltip {
+  display: none !important;
+}
+
+.VIpgJd-ZVi9od-aZ2wEe-OiiCO-ti6hGc {
+  display: none !important;
+}
+
+.goog-te-banner-frame, 
+.goog-te-menu-frame, 
+.goog-te-gadget {
+    pointer-events: none !important;
+}
+
+font font {
+  background: transparent !important;
+  color: inherit !important;
+  box-shadow: none !important;
 }
 
 // контейнер для контента

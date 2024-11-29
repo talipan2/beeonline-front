@@ -36,8 +36,7 @@
     offset: {
       type: Array,
       default: () => ([]),
-    }
-
+    },
   });
 
   const tippy = ref(null);

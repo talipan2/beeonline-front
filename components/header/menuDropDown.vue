@@ -32,16 +32,22 @@
       <UiButton type="button" variant="tertiary" size="centered" class="header__dropdown-change-role" 
       @click="handleSwitchRole" v-if="userStore.role === 'performer'">
         <SvgoEnter class="svg-m" />
-        Переключиться<br>на заказчика
+        <span>
+          Переключиться<br>на заказчика
+        </span>
       </UiButton>
       <UiButton type="button" variant="tertiary" size="centered" class="header__dropdown-change-role" 
       @click="handleSwitchRole" v-else>
         <SvgoEnter class="svg-m" />
-        Переключиться<br>на исполнителя
+        <span>
+          Переключиться<br>на исполнителя
+        </span>
       </UiButton>
-      <UiButton to="/" variant="tertiary" size="centered" class="header__dropdown-change-role">
+      <UiButton type="button" variant="tertiary" size="centered" class="header__dropdown-change-role">
         <SvgoEnter class="svg-m" />
-        В кабинет<br>менеджера сделок
+        <span>
+          В кабинет<br>менеджера сделок
+        </span>
       </UiButton>
       <div class="header__dropdown-logout">
         <a class="header__dropdown-links" href="javascript:;" @click="logOut">Выход</a>
@@ -174,6 +180,7 @@ const handleSwitchRole = () => {
     text-align: left;
     width: 100%;
     box-sizing: border-box;
+    text-wrap: wrap;
 
     & svg {
       fill: var(--text-color-ternary)
@@ -182,7 +189,6 @@ const handleSwitchRole = () => {
     &:last-child {
       margin-bottom: 0;
     }
-
   } 
 
   .header__dropdown-logout {

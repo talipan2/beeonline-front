@@ -1,12 +1,23 @@
 <template>
   <div>
-    <button class="header__location" @click="isOpen = true">
-      <SvgoMapPin class="svg-m" filled />
-      <span class="header__location-value">
-        {{location ? location : 'Город не задан'}}
-      </span>
-    </button>
-    <HeaderChooseCityModal v-model="isOpen" :location="location" @selectCity="selectCity"/>
+    <UiNewDropdown placement="bottom-end" trigger="manual" ref="tippy">
+      <button class="header__location" @click="isOpen = true">
+        <SvgoMapPin class="svg-m" filled />
+        <span class="header__location-value">
+          {{ location ? location : 'Город не задан' }}
+        </span>
+      </button>
+      <template #content>
+        <div class="confirmation-city">
+          <p class="confirmation-city__title">Это ваш город?</p>
+          <div class="confirmation-city__container">
+            <UiButton type="button" class="confirmation-city__btn" variant="quinary" size="large" @click="hideConfirmationModal">Да</UiButton>
+            <UiButton type="button" class="confirmation-city__btn" variant="tertiary" size="large" @click="hideConfirmationModal">Нет</UiButton>
+          </div>
+        </div>
+      </template>
+    </UiNewDropdown>
+    <HeaderChooseCityModal v-model="isOpen" :location="location" @selectCity="selectCity" />
   </div>
 </template>
 
@@ -15,6 +26,24 @@
 
 const isOpen = ref(false);
 const location = ref(null);
+const tippy = ref(null);
+
+onMounted(async () => {
+  await nextTick(); // Дожидаемся, пока компонент полностью инициализируется
+  if (tippy.value) {
+    showConfirmationModal()
+  } else {
+    console.error('Tippy instance is not available');
+  }
+});
+
+function showConfirmationModal() {
+  tippy.value.tippy.show();
+};
+
+function hideConfirmationModal() {
+  tippy.value.tippy.hide();
+};
 
 function selectCity(city) {
   location.value = city
@@ -40,6 +69,28 @@ function selectCity(city) {
     .header__location-value {
       font-size: 1em;
       color: var(--text-color-octonary);
+    }
+  }
+
+  .confirmation-city {
+    font-size: 1rem;
+    padding: 2em;
+
+    &__title {
+      font-family: "Inter", sans-serif;
+      font-size: 1.7em;
+      margin-bottom: 1em;
+      color: var(--text-color-primary);
+    }
+
+    &__container {
+      display: flex;
+      column-gap: 1em;
+    }
+
+    &__btn {
+      flex: 0 1 50%;
+      font-size: 1.2em;
     }
   }
 </style>

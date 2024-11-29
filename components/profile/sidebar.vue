@@ -15,21 +15,26 @@
     </template>
     <template #bottom>
       <nav class="sidebar__bottom">
-        <a href="javascript:;" class="sidebar__bottom-link">
+        <button v-if="role === 'customer'" @click="handleChangeRole('performer')" class="sidebar__bottom-link">
           <SvgoAdduser class="svg-m" fill="#6937a5" />
           Кабинет исполнителя
-        </a>
+        </button>
+        <button v-if="role === 'performer'" @click="handleChangeRole('customer')" class="sidebar__bottom-link">
+          <SvgoAdduser class="svg-m" fill="#6937a5" />
+          Кабинет заказчика
+        </button>
         <NuxtLink
           class="sidebar__bottom-link"
-          href="https://test.bee-online.ru/support"
+          :to="`/support`"
+          :class="{ 'sidebar__bottom-link_type_active': isActiveLink('/support') }"
         >
           <SvgoSupport class="svg-m" fill="#6937a5" />
           Техническая поддержка
         </NuxtLink>
-        <a href="javascript:;" class="sidebar__bottom-link">
+        <button @click="handleLogout" href="javascript:;" class="sidebar__bottom-link">
           <SvgoEnter class="svg-m" fill="#6937a5" />
           Выйти
-        </a>
+        </button>
       </nav>
     </template>
   </CommonSidebar>
@@ -47,6 +52,20 @@ const props = defineProps({
 
 const userStore = useUserStore();
 const router = useRouter();
+
+function handleChangeRole(role) {
+  if(role === 'customer') {
+    userStore.role = 'customer';
+    router.push({ path: '/customer/desktop' })
+  } else if(role === 'performer') {
+    userStore.role = 'performer';
+    router.push({ path: '/performer/desktop' })
+  }
+}
+
+function handleLogout() {
+  userStore.logOut();
+}
 
 const getSidebarLinks = (role) => [
   { id: 1, label: "Рабочий стол", value: `/${role}/desktop` },
@@ -104,6 +123,15 @@ const isActiveLink = (link) => {
       display: flex;
       align-items: center;
       column-gap: .3em;
+
+      &:hover {
+        color: var(--text-color-hover-primary);
+        text-decoration: none;
+      }
+
+      &_type_active {
+        color: var(--text-color-hover-primary);
+      }
     }
   }
 

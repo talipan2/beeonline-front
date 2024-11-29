@@ -1,25 +1,27 @@
 <template>
   <header class="header container" ref="header" :class="{ 'header_fixed': headerFixed }">
-    <div class="header__info" ref="headerInfo">
-      <ul class="header__list">
-        <!-- <li class="header__item">
-					<a href="#" class="header__link">О компании</a>
-				</li> -->
-        <li class="header__item">
-          <NuxtLink to="https://test.bee-online.ru/help" class="header__link">Помощь</NuxtLink>
-        </li>
-        <li class="header__item">
-          <NuxtLink to="https://test.bee-online.ru/contacts" class="header__link">Контакты</NuxtLink>
-        </li>
-      </ul>
-      <ul class="header__list">
-        <li class="header__item header__item_type-lang">
-          <HeaderChooseLang />
-        </li>
-        <li class="header__item header__item_type-location">
-          <HeaderLocation />
-        </li>
-      </ul>
+    <div class="header__top-side" ref="headerInfo">
+      <div class="header__info" >
+        <ul class="header__list">
+          <!-- <li class="header__item">
+            <a href="#" class="header__link">О компании</a>
+          </li> -->
+          <li class="header__item">
+            <NuxtLink to="https://test.bee-online.ru/help" class="header__link">Помощь</NuxtLink>
+          </li>
+          <li class="header__item">
+            <NuxtLink to="https://test.bee-online.ru/contacts" class="header__link">Контакты</NuxtLink>
+          </li>
+        </ul>
+        <ul class="header__list">
+          <li class="header__item header__item_type-lang">
+            <HeaderChooseLang />
+          </li>
+          <li class="header__item header__item_type-location">
+            <HeaderLocation />
+          </li>
+        </ul>
+      </div>
     </div>
     <div class="header__filler" ref="headerFiller"></div>
     <div class="header__main" ref="headerMain" >
@@ -219,7 +221,7 @@ onUnmounted(() => {
   .header__list {
     align-items: center;
     column-gap: 1.14em; // 16
-    display: flex
+    display: flex;
   }
 
   .header__item {

@@ -1,39 +1,124 @@
 <template>
-  <UiDropDown :options="dropdownOptions" v-model="selectedOption">
-    <template #trigger>
+  <UiNewDropdown
+    placement="bottom"
+    :arrow="false"
+    class="header__lang-dropdown"
+    :offset="[0, 0]"
+    translate="no"
+  >
+    <div>
       <button class="header__lang">
-        <component :is="selectedOptionChosen.img" v-if="selectedOptionChosen.img" class="header__lang-icon" />
-        {{ selectedOptionChosen.label }}
-        <SvgoDropDownNew class="svg-s header__lang-dropdown"/>
+        <component
+          :is="selectedOption.img"
+          v-if="selectedOption.img"
+          class="header__lang-icon"
+        />
+        {{ selectedOption.label }}
+        <SvgoDropDownNew class="svg-s header__lang-dropdown" />
       </button>
+    </div>
+    <template #content>
+      <div class="header__lang-list">
+        <button
+          class="header__lang-item"
+          :class="{'active': selectedOption.value === button.value}"
+          v-for="(button, index) in dropdownOptions"
+          :key="index"
+          @click="handleChangeLang(button)"
+          translate="no"
+        >
+          <component
+            :is="button.img"
+            v-if="button.img"
+            class="header__lang-icon"
+          />
+          {{ button.label }}
+        </button>
+      </div>
     </template>
-    <template #default="{ item }">
-      <button class="header__lang-item">
-        <component :is="item.img" v-if="item.img" />
-        {{ item.label }}
-      </button>
-    </template>
-  </UiDropDown>
+  </UiNewDropdown>
 </template>
 
 <script setup>
-import SvgoRuIcon from '~/assets/svg/ru-icon.svg';
-import SvgoEnIcon from '~/assets/svg/en-icon.svg';
-import SvgoDeIcon from '~/assets/svg/de-icon.svg';
-import SvgoItIcon from '~/assets/svg/it-icon.svg';
+import SvgoRuIcon from "~/assets/svg/ru-icon.svg";
+import SvgoEnIcon from "~/assets/svg/en-icon.svg";
+import SvgoDeIcon from "~/assets/svg/de-icon.svg";
+import SvgoItIcon from "~/assets/svg/it-icon.svg";
 
 const dropdownOptions = [
-  { label: 'RU', value: 'RU', img: SvgoRuIcon},
-  { label: 'EN', value: 'EN', img: SvgoEnIcon},
-  { label: 'DE', value: 'DE', img: SvgoDeIcon},
-  { label: 'IT', value: 'IT', img: SvgoItIcon},
+  { label: "RU", value: "ru", img: markRaw(SvgoRuIcon) },
+  { label: "EN", value: "en", img: markRaw(SvgoEnIcon) },
+  { label: "DE", value: "de", img: markRaw(SvgoDeIcon) },
+  { label: "IT", value: "it", img: markRaw(SvgoItIcon) },
 ];
 
 const selectedOption = ref(dropdownOptions[0]);
 
-const selectedOptionChosen = computed(() => {
-  const selected = dropdownOptions.find(option => option.value === selectedOption.value);
-  return selected ? selected : dropdownOptions[0];
+const handleChangeLang = (lang) => {
+  selectedOption.value = dropdownOptions.find(
+    (item) => item.value === lang.value
+  );
+
+  if (lang.value === config.langDefault) {
+    clearTranslateCookies();
+    location.reload();
+  } else {
+    clearTranslateCookies();
+    setTranslateCookie(lang.value);
+    location.reload();
+    if(!document.querySelector('script[src*="translate.google.com"]')) {
+      initGoogleTranslate();
+    }
+  }
+
+};
+
+const config = {
+  lang: "ru",
+  langDefault: "ru",
+};
+
+function setTranslateCookie(lang) {
+  const cookieValue = `/${config.langDefault}/${lang}`;
+  document.cookie = `googtrans=${cookieValue}; path=/; domain=${location.hostname};`;
+  document.cookie = `googtrans2=${cookieValue}; path=/; domain=${location.hostname};`;
+}
+
+function clearTranslateCookies() {
+  const cookieValue = `/${config.langDefault}/${config.lang}`;
+  document.cookie = `googtrans=${cookieValue}; max-age=-1; path=/; domain=` + location.hostname;
+  document.cookie = `googtrans2=${cookieValue}; max-age=-1; path=/; domain=` + location.hostname;
+}
+
+function initGoogleTranslate() {
+  if (!document.querySelector('script[src*="translate.google.com"]')) {
+    const script = document.createElement("script");
+    script.src =
+      "https://translate.google.com/translate_a/element.js?cb=googleTranslateCallback";
+    script.async = true;
+    document.head.appendChild(script);
+  }
+}
+
+window.googleTranslateCallback = function () {
+  new google.translate.TranslateElement({
+    pageLanguage: config.langDefault,
+    includedLanguages: "ru,en,de,it",
+  });
+};
+
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(";").shift();
+}
+
+onMounted(() => {
+  const cookie = getCookie("googtrans");
+  if (cookie) {
+    selectedOption.value = dropdownOptions.find((item) => item.value === cookie.split('/').pop());
+    initGoogleTranslate();
+  } 
 });
 
 </script>
@@ -51,7 +136,6 @@ const selectedOptionChosen = computed(() => {
   color: var(--text-color-primary);
   column-gap: 0.285em;
 
-  
   @include hover {
     color: var(--text-color-ternary);
 
@@ -60,6 +144,16 @@ const selectedOptionChosen = computed(() => {
         fill: var(--text-color-ternary);
       }
     }
+  }
+}
+
+.header__item_type-lang {
+  min-width: 61px;
+  position: relative;
+  [data-tippy-root] {
+    min-width: auto;
+    max-width: auto;
+    width: 100%;
   }
 }
 
@@ -72,19 +166,14 @@ const selectedOptionChosen = computed(() => {
   width: 1.07em;
 }
 
-.header__lang-dropdown {
-  width: 0.571em;
-  height: auto;
-}
-
 .header__lang-item {
   border: none;
   width: 100%;
   font-size: 1em;
   display: flex;
   align-items: center;
-  column-gap: 0.28em;
-  padding-inline: 0.642em;
+  column-gap: 0.5em;
+  padding-inline: 0.7em;
   padding-block: 0.357em;
   background-color: inherit;
 
@@ -96,8 +185,16 @@ const selectedOptionChosen = computed(() => {
     min-width: 1.07em;
     width: 1.07em;
   }
+
+  @include hover {
+    background-color: var(--button-background-tertiary-hover);
+  }
 }
 
+.header__lang-item.active {
+  background-color: var(--button-background-primary);
+  color: var(--text-color-octonary);
+}
 
 @include mobile {
   .header__lang {
@@ -116,6 +213,5 @@ const selectedOptionChosen = computed(() => {
     font-size: 1.4em;
     column-gap: 0.285em;
   }
-  
 }
 </style>
