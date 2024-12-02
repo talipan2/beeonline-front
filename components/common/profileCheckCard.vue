@@ -5,7 +5,7 @@
         {{ title }}
       </h5>
       <NuxtLink :to="changeLink" class="check-card__link link" v-if="changeLink">{{ changeLinkLabel }}</NuxtLink>
-      <NuxtLink :to="changeLink" class="check-card__link link" v-if="changeLink">{{ secondLinkLabel }}</NuxtLink>
+      <NuxtLink :to="secondLink" class="check-card__link link" v-if="secondLink">{{ secondLinkLabel }}</NuxtLink>
     </div>
     <p class="check-card__text">
       {{ text }}

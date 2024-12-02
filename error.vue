@@ -1,13 +1,13 @@
 <template>
   <NuxtLayout name="default">
-    <section class="error">
-      <h1 class="error__title">К сожалению такая страница не найдена</h1>
-      <div class="error__container">
-        <span class="error__code">404</span>
-        <UiImage src="/assets/images/error.webp" class="error__image" />
+    <section class="error-page">
+      <h1 class="error-page__title">К сожалению такая страница не найдена</h1>
+      <div class="error-page__container">
+        <span class="error-page__code">404</span>
+        <UiImage src="/assets/images/error-page.webp" class="error-page__image" />
       </div>
-      <h2 class="error__message">Ошибка 404 - страница не найдена</h2>
-      <UiButton type="button" class="error__btn" variant="quinary" size="large" @click="goBack">
+      <h2 class="error-page__message">Ошибка 404 - страница не найдена</h2>
+      <UiButton type="button" class="error-page__btn" variant="quinary" size="large" @click="goBack">
         <SvgoBtnArrow class="svg-lx" />
         Назад
       </UiButton>
@@ -34,7 +34,7 @@ function goBack() {
 
 <style lang="scss">
 
-.error {
+.error-page {
   font-size: 1rem;
   display: flex;
   flex-direction: column;

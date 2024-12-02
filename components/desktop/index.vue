@@ -37,22 +37,61 @@
       <div class="desktop__card-container">
         <DesktopCard title="Отзывы (8)" :link="{ url: getLinkWithRole('/my-reviews'), text: 'Все отзывы'}">
           <template #body>
-            <DesktopSelectableEntity class="desktop__chats" :label="['Отзывы о нас', 'Мои отзывы']" data="">
+            <DesktopSelectableEntity class="desktop__chats" :label="['Отзывы о нас', 'Мои отзывы']" :count="[8, 10]">
               <template #firstPage >
-                <DesktopReviewRating :role="role"/>
-                <DesktopSelectableEntityCard v-for="(item, index) in 2" :key="index" btnLabel="Читать полный отзыв" :isRating="true"/>
+                <template v-if="false">
+                  <DesktopReviewRating :role="role"/>
+                  <DesktopSelectableEntityCard v-for="(item, index) in 2" :key="index" btnLabel="Читать полный отзыв" :isRating="true"/>
+                </template>
+                <template v-else>
+                  <DesktopEmptyCard 
+                    title="У вас нет отзывов" 
+                    text="Попросите ваших контрагентов оставить отзыв о работе с вами, чем больше отзывов, тем выше ваша карточка организации в поиске" 
+                  >
+                    <template #image>
+                      <SvgoEmptyReview class="svg-lx" />
+                    </template>
+                  </DesktopEmptyCard>
+                </template>
               </template>
               <template #secondPage>
-                <DesktopSelectableEntityCard v-for="(item, index) in 3" :key="index" btnLabel="Читать полный отзыв" :isRating="true"/>
+                <template v-if="false">
+                  <DesktopSelectableEntityCard v-for="(item, index) in 3" :key="index" btnLabel="Читать полный отзыв" :isRating="true"/>
+                </template>
+                <template v-else>
+                  <DesktopEmptyCard 
+                    title="Вы не оставляли отзывов"
+                  >
+                    <template #image>
+                      <SvgoEmptyReview class="svg-lx" />
+                    </template>
+                  </DesktopEmptyCard>
+                </template>
               </template>
             </DesktopSelectableEntity>
           </template>
         </DesktopCard>
         <DesktopCard title="Чаты (8)" :link="{ url: getLinkWithRole('/my-reviews'), text: 'Все чаты'}">
           <template #body>
-            <DesktopSelectableEntity class="desktop__chats" :label="['Все чаты', 'Непрочитанные']" data="">
-              <template #firstPage >
-                <DesktopSelectableEntityCard v-for="(item, index) in 3" :key="index" btnLabel="Читать полностью"/>
+            <DesktopSelectableEntity class="desktop__chats" :label="['Все чаты', 'Непрочитанные']" :count="[8, 10]" :disabledPage="[2]">
+              <template #firstPage>
+                <template v-if="false">
+                  <DesktopSelectableEntityCard v-for="(item, index) in 3" :key="index" btnLabel="Читать полностью"/>
+                </template>
+                <template v-else>
+                  <DesktopEmptyCard 
+                    title="Сообщений пока нет"
+                    text="У вас нет активных чатов, начните беседу в карточке участника"
+                  >
+                    <template #image>
+                      <SvgoEmptyMessage class="svg-lx" />
+                    </template>
+                    <template #button>
+                      <UiButton v-if="role === 'customer'" to="/services" variant="quinary" size="around">Каталог услуг</UiButton>
+                      <UiButton v-if="role === 'performer'" to="/orders" variant="quinary" size="around">Каталог заказов</UiButton>
+                    </template>
+                  </DesktopEmptyCard>
+                </template>
               </template>
               <template #secondPage>
                 <DesktopSelectableEntityCard v-for="(item, index) in 3" :key="index" btnLabel="Читать полностью"/>
@@ -132,6 +171,7 @@ onMounted(() => {
 }
 
 .balance-card {
+  flex: 1;
   font-family: 'fira-sans', sans-serif;
   font-size: 1rem;
 

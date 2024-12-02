@@ -3,11 +3,11 @@
     <div class="desktop-selectable-entity__buttons">
       <button type="button" class="desktop-selectable-entity__btn" :class="{ active: currentPage === 1 }" @click="selectPage(1)">
         {{ label[0] }}
-        <span>{{ 33 }}</span>
+        <span>{{ count[0] }}</span>
       </button>
       <button type="button" class="desktop-selectable-entity__btn" :class="{ active: currentPage === 2 }" @click="selectPage(2)">
         {{ label[1] }}
-        <span>{{ 33 }}</span>
+        <span>{{ count[1] }}</span>
       </button>
     </div>
     <transition name="fade" mode="out-in">
@@ -19,7 +19,6 @@
       <div class="desktop-selectable-entity__list" v-if="currentPage === 2">
         <slot name="secondPage" />
       </div>
-
     </transition>
   </div>
 </template>
@@ -31,15 +30,25 @@ const props = defineProps({
     type: Array,
     default: () => []
   },
+  count: {
+    type: Array,
+    default: () => []
+  },
   btnLabel: {
     type: String,
     default: 'Читать полностью'
+  },
+  disabledPage: {
+    type: Array,
+    default: () => []
   }
+
 })
 
 const currentPage = ref(1);
 
 const selectPage = (page) => {
+  if(props.disabledPage.includes(page) && props.count[page - 1] == 0) return
   currentPage.value = page
 }
 
@@ -51,6 +60,7 @@ const selectPage = (page) => {
   font-size: 1em;
   display: flex;
   flex-direction: column;
+  width: 100%;
 
   &__buttons {
     display: flex;
@@ -92,6 +102,7 @@ const selectPage = (page) => {
   &__list {
     display: flex;
     flex-direction: column;
+    flex: 1;
   }
 
   /* Стили для анимации перехода между страницами */

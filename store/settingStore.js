@@ -21,6 +21,7 @@ export const useSettingStore = defineStore("setting", {
     uploadLoading: false,
     bonusLevelModal: false,
     bonusInfoModal: false,
+    resetPasswordModal: false,
   }),
   actions: {
 

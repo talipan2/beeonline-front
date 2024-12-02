@@ -52,7 +52,7 @@ import defaultCompanyLogo from '@/assets/images/nophoto_pc.png';
 const props = defineProps({
   data: {
     type: Object,
-    default: {},
+    default: () => ({}),
     required: true,
   },
   isDescription: {

@@ -52,6 +52,7 @@ const props = defineProps({
   }
 
   &__body {
+    display: flex;
     border: 1px solid var(--border-color-senary);
     background-color: #fff;
     padding: 2.4em;

@@ -9,9 +9,11 @@
         <label class="form-group__title">
           Выберите вашу страну*
           <UiSelect
+            name="location"
             class="form-group__value"
             v-model="organizationStore.registerOrg.location"
             :options="locationList"
+            :errorShow="false"
           />
         </label>
       </div>
@@ -40,7 +42,7 @@
             label="ИНН"
             class="form-group__value"
             type="number"
-            placeholder="Компания"
+            placeholder="ИНН"
             :required="!skipInn"
             v-model="organizationStore.registerOrg.inn"
           />
@@ -53,7 +55,7 @@
             label="Название компании или ФИО"
             class="form-group__value"
             type="text"
-            placeholder="Компания"
+            placeholder="Название компании или ФИО"
             :required="true"
             v-model="organizationStore.registerOrg.companyName"
           />
@@ -66,7 +68,7 @@
             label="Адрес регистрации"
             class="form-group__value"
             type="text"
-            placeholder="Компания"
+            placeholder="Адрес регистрации"
             :required="true"
             v-model="organizationStore.registerOrg.registerAddress"
           />
@@ -92,10 +94,12 @@
               name="inn"
               label="ИНН"
               class="register__input"
-              type="number"
+              type="text"
               placeholder="____________"
               :required="!skipInn"
               v-model="organizationStore.registerOrg.inn"
+              :maxLength="10"
+              inputType="number"
             />
             <UiButton class="register__search-btn" variant="tertiary">
               <SvgoSearchIcon class="svg-m" />
@@ -123,10 +127,12 @@
               name="kpp"
               label="КПП"
               class="form-group__value"
-              type="number"
+              type="text"
               placeholder="____________"
               v-model="organizationStore.registerOrg.kpp"
               :required="!skipInn"
+              :maxLength="9"
+              inputType="number"
             />
           </label>
           <label
@@ -134,6 +140,7 @@
           >
             Форма организации *
             <UiSelect
+              name="organizationForm"
               class="form-group__value"
               v-model="organizationStore.registerOrg.organizationForm"
               :options="formOrganization"
@@ -146,10 +153,12 @@
               name="ogrn"
               label="ОГРН"
               class="form-group__value"
-              type="number"
+              type="text"
+              inputType="number"
               placeholder="____________"
               :required="!skipInn"
               v-model="organizationStore.registerOrg.ogrn"
+              :maxLength="13"
             />
           </label>
         </div>

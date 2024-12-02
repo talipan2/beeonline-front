@@ -47,13 +47,15 @@
         <label class="form-group-data form-group__title">
           Ваш телефон *
           <UiInput
-            :rules="{ required: true, min: 6, numeric: true }"
+            :rules="{ required: true, min: 16, max: 16 }"
             name="phone"
             label="Телефон"
             class="form-group__value"
             type="tel"
             placeholder="Телефон"
             v-model="userData.phone"
+            :phonePlus="true"
+            :max-length="16"
           />
         </label>
       </div>

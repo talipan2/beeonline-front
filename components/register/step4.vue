@@ -138,7 +138,7 @@ const handleSubmit = () => {
     location: 1,
     currencyId: 1,
   }).then((res) => {
-    if(res.data && res.data.id) {
+    if (res.data && res.data.id) {
       organizationStore.setPubCard({
         id: res.data.id,
         // id: 46,
@@ -147,10 +147,30 @@ const handleSubmit = () => {
         type: userStore.role,
         description: registerData.value.companyDescription,
         status: 1,
-        
+
       }).then((res) => {
-        if(res.data) {
+        if (res.data) {
           router.push('/')
+          organizationStore.registerOrg = {
+            location: 1,
+            inn: null,
+            KPP: null,
+            organizationForm: 'other',
+            ogrn: null,
+            legalAddress: null,
+            companyName: null,
+            companyLogo: null,
+            countryId: [],
+            companyDescription: null,
+            productionCountry: null,
+            selfEmployed: false,
+            registerAddress: null,
+            selectedProductionCountries: {
+              fullNameLocation: [],
+              locationId: [],
+            },
+            siteUrl: null,
+          }
         }
       })
     }

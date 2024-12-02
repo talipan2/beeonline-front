@@ -88,6 +88,7 @@ const currentDataSet = computed(() => {
 <style lang="scss">
 
 .stats {
+  flex: 1;
   &__list {
     display: flex;
     justify-content: space-between;

@@ -9,7 +9,7 @@
         <div class="register__right-side-container sticky" ref="rightSide">
           <div class="register__preview" v-if="['/register/step2', '/register/step4'].includes(route.path)">
             <h4 class="register__preview-title">Так вашу компанию будут видеть другие участники</h4>
-            <CardsPublic :data="organizationStore.registerOrg"/>
+            <CardsPublic :data="checkListCard"/>
           </div>
           <CommonAdvice class="register__advice sticky" v-else>
             <p class="advice__text">ИНН используется в нашем сервисе:</p>
@@ -95,7 +95,11 @@ onUnmounted(() => {
   window.removeEventListener("scroll", onScrollPage)
 });
 
-
+const checkListCard = computed(() => {
+  return {
+    name: organizationStore.registerOrg.companyName,
+  }
+})
 
 </script>
 

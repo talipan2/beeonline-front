@@ -2,7 +2,7 @@
   <div class="profile__checklist">
     <CommonProfileCheckCard title="Представитель компании"
       text="Указанные данные не разглашаются третьим лицам, и необходимы для успешной работы на портале" changeLink="/"
-      changeLinkLabel="Изменить данные" secondLink="/" secondLinkLabel="Изменить пароль">
+      changeLinkLabel="Изменить данные" :secondLink="`/${role}/profile/update_pwd`" secondLinkLabel="Изменить пароль">
       <div class="form-group">
         <div class="form-group-data">
           <div class="form-group__title">ФИО</div>

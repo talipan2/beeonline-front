@@ -95,7 +95,7 @@ const dropdownMenuLinks = computed(() => {
 
 const logOut = () => {
   userStore.logOut()
-  .then(res => console.log(res))
+  .then(res => router.push({ path: '/' }))
   .catch(err => console.log(err))
 };
 

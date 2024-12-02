@@ -64,7 +64,9 @@ function handleChangeRole(role) {
 }
 
 function handleLogout() {
-  userStore.logOut();
+  userStore.logOut()
+  .then(() => router.push({ path: '/' }))
+  .catch(err => console.log(err));
 }
 
 const getSidebarLinks = (role) => [

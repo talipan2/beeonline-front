@@ -11,6 +11,7 @@
           @input="updateValue($event.target.value)"
           :id="id"
           @keypress="onKeyDown"
+          :maxlength="maxLength"
         />
         <slot />
       </div>
@@ -57,6 +58,14 @@ const props = defineProps({
   phonePlus: {
     type: Boolean,
     default: false,
+  },
+  maxLength: {
+    type: Number,
+    default: null
+  },
+  inputType: {
+    type: String,
+    default: ''
   }
 });
 
@@ -67,6 +76,9 @@ function onKeyDown(event) {
     event.preventDefault();
   }
   if(props.type === 'tel' && !/^[0-9]*$/.test(event.key)) {
+    event.preventDefault();
+  }
+  if(props.inputType === 'number' && !/^[0-9]*$/.test(event.key)) {
     event.preventDefault();
   }
 }
