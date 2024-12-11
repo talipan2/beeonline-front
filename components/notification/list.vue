@@ -11,7 +11,7 @@
 <script setup>
 
 const router = useRouter()
-const selectedFilter = ref(null)
+const selectedFilter = ref('all')
 
 const filterOptions = [
   { id: 1, label: 'Все уведомления', value: 'all' },
@@ -49,6 +49,14 @@ onMounted(() => {
     }
     .select__option {
       color: #667085;
+    }
+
+    @include mobile {
+      max-width: 50%;
+    }
+
+    @include small-mobile {
+      max-width: 100%;
     }
   }
   

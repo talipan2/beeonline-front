@@ -1,7 +1,7 @@
 <template>
   <NuxtLayout name="create">
     <template #left>
-      <CommonCheckList class="sticky" 
+      <CommonCheckList class="create__checklist" 
         title="Создание заказа" 
         adviceTitle="Для публикации заказа нужно заполнить достаточно информации о заказе" 
         :checkList="checkList" 
@@ -11,6 +11,11 @@
       <component :is="currentComponent" :title="title" role="customer" :handleSubmit="handleSubmit" :formatData="data" :data="order"/>
     </template>
     <template #right>
+      <CommonCheckList class="create__checklist create__checklist_type_right" 
+        title="Создание заказа" 
+        adviceTitle="Для публикации заказа нужно заполнить достаточно информации о заказе" 
+        :checkList="checkList" 
+      />
       <div class="h4">Предварительный просмотр заказа</div>
       <CreateEntityPreview :data="ordersData"/>
     </template>
@@ -55,7 +60,8 @@ const currentHandleSubmit = computed(() => {
             organizationId: organizationStore.organization.id || null, 
             name: order.value.name, 
             category: order.value.categories,
-            completionDate: order.value.completionDate
+            completionDate: order.value.completionDate,
+            step: 1
 
           }
         ).then(() => router.push('/orders/create/step2'))
@@ -73,9 +79,15 @@ const currentHandleSubmit = computed(() => {
             price: order.value.price,
             batch: order.value.batch,
             patterns: order.value.patterns,
-            termsOfCooperation: order.value.termsOfCooperation
+            termsOfCooperation: order.value.termsOfCooperation,
+            step: 2,
           }).then(() => router.push('/orders/create/step4'))
           .catch(error => console.log(error));
+          if(order.value.logo) {
+            entityStore.uploadOrderGallery(order.value.id, order.value.logo)
+            .then((res) => console.log(res))
+            .catch(error => console.log(error));
+          }
         });
     // case 'step3':
     // return (() =>{
@@ -143,7 +155,7 @@ const order = computed(() => entityStore.order)
 
 const ordersData = computed(() => ({
   name: order.value.name,
-  logo: '',
+  logo: order.value.logo ? order.value.logo.getAll('image[]')[0] : '',
   data: [
     { id: 1, name: 'Категории', value: data.value.categories },
     { id: 2, name: 'Место производства', value: data.value.placeOfProductionId },
@@ -171,3 +183,20 @@ const data = computed(() => ({
   
 
 </script>
+
+<style lang="scss">
+
+.create__checklist_type_right {
+  display: none;
+
+  @include tablet {
+    display: block;
+    margin-bottom: 2.5rem;
+  }
+
+  @include mobile {
+    display: none;
+  }
+}
+
+</style>

@@ -6,15 +6,18 @@
       Youtube</p>
     <label class="gallery__label" v-for="(link, index) in videoLinks" :key="index">Cсылка на видео в Youtube
       <div class="gallery__link-add">
-        <UiInput class="gallery__link" v-model="videoLinks[index]" :name='`url_yt-${index}`' label="Ссылка на видео" :rules="{ url }"/>
-        <UiButton v-if="index === videoLinks.length - 1" class="gallery__btn" type="button" variant="quinary"
-          size="around" @click="addLink">
-          <SvgoAdd class="svg-m" />
-        </UiButton>
-        <UiButton v-else class="gallery__btn" type="button" variant="quinary" size="around"
-          @click="removeLink(index)">
-          <SvgoSub class="svg-m" />
-        </UiButton>
+        <UiInput class="gallery__link" v-model="videoLinks[index]" :name='`url_yt-${index}`' label="Ссылка на видео" :rules="{ url }">
+          <template #action>
+            <UiButton v-if="index === videoLinks.length - 1" class="gallery__btn" type="button" variant="quinary"
+              size="around" @click="addLink">
+              <SvgoAdd class="svg-m" />
+            </UiButton>
+            <UiButton v-else class="gallery__btn" type="button" variant="quinary" size="around"
+              @click="removeLink(index)">
+              <SvgoSub class="svg-m" />
+            </UiButton>
+          </template>
+        </UiInput>
       </div>
     </label>
   </div>
@@ -72,7 +75,7 @@ watch(() => videoLinks.value, (newVal) => {
 }
 
 .gallery__link {
-  flex: 1 1 100%;
+  flex: 0 1 85%;
 }
 
 .gallery__label {
@@ -80,4 +83,9 @@ watch(() => videoLinks.value, (newVal) => {
   font-size: 1.3em;
   line-height: 2em;
 }
+
+.gallery__btn {
+  margin-left: auto;
+}
+
 </style>

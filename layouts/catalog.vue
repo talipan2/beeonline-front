@@ -71,5 +71,21 @@ const props = defineProps({
   }
 }
 
+@include tablet {
+  .catalog {
+    &__container {
+      column-gap: 3em;
+    }
+  }
+}
+
+@include mobile {
+  .catalog {
+    max-width: 540px;
+    &__container {
+      flex-direction: column;
+    }
+  }
+}
 
 </style>

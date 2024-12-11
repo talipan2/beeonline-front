@@ -53,6 +53,9 @@ watch(() => props.activeBtn, (newVal) => {
   font-size: 1.6rem;
   display: flex;
   margin-bottom: 2.18em;
+  @include small-mobile {
+    margin-inline: calc(-1 * var(--container-padding-x));;
+  }
 
   &__btn {
     flex: 0 1 50%;
@@ -77,6 +80,27 @@ watch(() => props.activeBtn, (newVal) => {
       &:hover {
         color: #fff;
       }
+    }
+  }
+}
+
+@include mobile {
+  .selector-buttons {
+    font-size: 1rem;
+    &__btn {
+      font-size: 1.4em;
+      padding: 1em 1.42em;
+      flex-direction: column;
+      align-items: center;
+      row-gap: .3em;
+    }
+  }
+}
+
+@include small-mobile {
+  .selector-buttons {
+    &__btn {
+      padding-inline: .5em;
     }
   }
 }

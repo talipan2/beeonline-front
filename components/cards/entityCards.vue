@@ -83,14 +83,20 @@ const isLinkHovered = ref(false);
 <style lang="scss">
 
 .entity-card {
+  font-size: 1rem;
   position: relative;
   display: flex;
   flex-direction: column;
   flex: 0 1 45%;
   padding: 2em;
-  margin-bottom: 3em;
   box-shadow: var(--box-shadow-secondary);
   transition: box-shadow .2s ease-in-out;
+  background-color: #fff;
+
+  @include mobile {
+    flex-basis: 100%;
+    font-size: .9rem;
+  }
 
   &__title {
     font-size: 1.8em;
@@ -101,6 +107,10 @@ const isLinkHovered = ref(false);
 
   &__body {
     max-width: 66%;
+
+    @include mobile {
+      max-width: 100%;
+    }
   }
 
   .props {
@@ -132,12 +142,22 @@ const isLinkHovered = ref(false);
     column-gap: .83em;
     font-size: 1.2em;
     margin-top: 1.66em;
+
+    @include small-mobile {
+      flex-direction: column;
+      row-gap: 1em;
+      align-items: normal;
+    }
   }
 
   &__btn {
     flex: 0 1 36%;
     text-transform: uppercase;
     z-index: 1;
+
+    @include small-mobile {
+      flex-basis: 100%;
+    }
   }
 
   &__status {

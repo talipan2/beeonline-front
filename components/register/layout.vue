@@ -28,3 +28,17 @@ const props = defineProps({
 });
 
 </script>
+
+<style lang="scss">
+
+@include mobile {
+  .register {
+  
+    &__subtitle {
+      font-size: 2rem;
+      margin-block: 1em;
+    }
+  }
+}
+
+</style>

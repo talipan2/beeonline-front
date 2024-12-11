@@ -10,7 +10,7 @@
       showScaleInCopyrights: true,
     }"
     width="100%"
-    :height="isFullscreen ? '100dvh' : '600px'"
+    :height="!isMobile ? (isFullscreen ? '100dvh' : '600px') : '514px'"
   >
     <YandexMapDefaultSchemeLayer />
     <YandexMapDefaultFeaturesLayer />
@@ -112,7 +112,6 @@ const handleMapClick = (cords) => {
   currentPubCard.value = cords[0];
   emit("update:modelValue", cords);
   map.value.setLocation({center: cords, duration: 300});
-  console.log(map.value)
 };
 
 const toogleFullScreen = () => {
@@ -123,16 +122,31 @@ const toogleFullScreen = () => {
   }
 };
 
+const isMobile = ref(false);
+
+const handleMobile = () => {
+  isMobile.value = window.innerWidth < 887;
+}
+
 onMounted(() => {
   const handleFullscreenChange = async () => {
     isFullscreen.value = !!document.fullscreenElement;
   };
 
+  window.addEventListener("resize", handleMobile);
   document.addEventListener("fullscreenchange", handleFullscreenChange);
+
+  handleMobile();
 
   onBeforeUnmount(() => {
     document.removeEventListener("fullscreenchange", handleFullscreenChange);
   });
+
+  onBeforeUnmount(() => {
+    window.removeEventListener("resize", handleMobile);
+  });
+
+
 });
 </script>
 

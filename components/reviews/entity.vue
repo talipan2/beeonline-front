@@ -86,6 +86,8 @@ const props = defineProps({
 
 .reviews-entity {
   background-color: #fff;
+
+
   &__empty {
     font-size: 1em;
     background-color: #fff3cd;
@@ -112,13 +114,23 @@ const props = defineProps({
 
     h3 {
       font-size: 1.875em;
+
+      @include mobile {
+        font-size: 1.8rem;
+      }
     }
+
+
   }
 
   &__date {
     color: var(--text-color-ternary);
     font-size: .875em;
     font-weight: 400;
+
+    @include mobile {
+      font-size: 1.2rem;
+    }
   }
 
   &__review-content {
@@ -131,10 +143,20 @@ const props = defineProps({
     font-size: 1em;
     text-transform: uppercase;
     margin-bottom: .875em;
+
+    @include mobile {
+      font-size: 1.4rem;
+    }
   }
 
   &__review-title:not(:first-child) {
     margin-top: 2.625em;
+  }
+
+  &__review-text {
+    @include mobile {
+      font-size: 1.2rem;
+    }
   }
 
   &__answer {
@@ -146,6 +168,15 @@ const props = defineProps({
   &__answer-logo {
     flex: 0 1 13%;
     padding-top: 13%;
+
+    @include small-mobile {
+      flex: 0 0 25%;
+      padding-top: 25%;
+    }
+  }
+
+  &__answer-content {
+    flex: 0 1 75%;
   }
 
   &__answer-date {
@@ -157,10 +188,18 @@ const props = defineProps({
     font-family: 'lato', sans-serif;
     font-size: 0.93em;
     margin-bottom: 1.4em;
+
+    @include mobile {
+      font-size: 1.2rem;
+    }
   }
 
   &__answer-text {
     font-size: 0.93em;
+
+    @include mobile {
+      font-size: 1.2rem;
+    }
   }
 
   &__addition {
@@ -169,6 +208,19 @@ const props = defineProps({
     border-left: 2px solid var(--border-color-quaternary);
     padding-block: 1.25em;
     padding-left: 1.25em;
+  }
+
+  &__addition-date {
+    margin-bottom: 1em;
+    @include mobile {
+      font-size: 1.2rem;
+    }
+  }
+
+  &__addition-text {
+    @include mobile {
+      font-size: 1.2rem;
+    }
   }
 }
 

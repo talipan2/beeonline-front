@@ -88,6 +88,22 @@
   &__col_type_two {
     flex: 1 1 auto;
   }
+
+  @include mobile {
+    &__header {
+      display: none;
+    }
+
+    &__item {
+      align-items: flex-start;
+      flex-direction: column;
+      row-gap: 1em;
+    }
+
+    &__btn-container {
+      font-size: 1rem;
+    }
+  }
 }
 
 </style>

@@ -198,4 +198,11 @@ const showAction = computed(() => {
     }
   }
 }
+
+@include mobile {
+  .achievement {
+    font-size: .9rem;
+  }
+}
+
 </style>

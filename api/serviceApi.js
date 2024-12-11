@@ -14,7 +14,7 @@ export default {
   },
 
   async editService(id, data) {
-    const { name, description, termsOfCooperation, rawMaterials, minLot, availabilityStm, freeTestSamples} = data
+    const { name, description, termsOfCooperation, rawMaterials, minLot, availabilityStm, freeTestSamples, step} = data
     const params = {}
     if(name !== '') params.name = name
     if(description !== '') params.description = description
@@ -22,7 +22,8 @@ export default {
     if(rawMaterials && rawMaterials.length > 0) params.materials_own = rawMaterials.includes(1)
     if(rawMaterials && rawMaterials.length > 0) params.materials_tolling = rawMaterials.includes(0)
     if(availabilityStm !== '') params.is_stm = Boolean(availabilityStm)
-    if(freeTestSamples !== '') params.free_samples = freeTestSamples
+    if(freeTestSamples !== '') params.free_samples = String(freeTestSamples)
+    if(step !== '' || null) params.current_step = step
     return axios.patch(`services/${id}`, params)
   },
 

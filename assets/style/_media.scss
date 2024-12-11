@@ -1,8 +1,11 @@
 $desktop-breakpoint: 1740px;
-$tablet-breakpoint: 1300px;
-$mobile-breakpoint: 887px;
-$high-resolution-breakpoint-2k: 2560px;
-$high-resolution-breakpoint-4k: 3840px;
+$tablet-breakpoint: 1200px;
+$small-tablet-breakpoint: 991px;
+$mobile-breakpoint: 768px;
+$small-mobile-breakpoint: 480px;
+
+$mobile-content-width: 540px;
+
 
 
 @mixin desktop {
@@ -17,24 +20,23 @@ $high-resolution-breakpoint-4k: 3840px;
   }
 }
 
+@mixin small-tablet {
+  @media (max-width: $small-tablet-breakpoint) {
+    @content;
+  }
+}
+
 @mixin mobile {
   @media (max-width: $mobile-breakpoint) {
     @content;
   }
 }
 
-@mixin high-resolution-2k {
-  @media (min-width: $high-resolution-breakpoint-2k) and (max-width: $high-resolution-breakpoint-4k) {
+@mixin small-mobile {
+  @media (max-width: $small-mobile-breakpoint) {
     @content;
   }
 }
-
-@mixin high-resolution-4k {
-  @media (min-width: $high-resolution-breakpoint-4k) {
-    @content;
-  }
-}
-
 
 @mixin hover {
   @media (hover: hover) {

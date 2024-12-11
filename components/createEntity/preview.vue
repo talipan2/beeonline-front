@@ -46,7 +46,13 @@ const props = defineProps({
 const entityStore = useEntityStore();
 const userStore = useUserStore();
 
-const logo = computed(() => props.data.logo)
+const logo = computed(() => {
+  if(props.data.logo) {
+    return URL.createObjectURL(props.data.logo)
+  } else {
+    return ''
+  }
+})
 const entity = computed(() => {
   if(userStore.role === 'performer') {
     return entityStore.service
@@ -54,6 +60,10 @@ const entity = computed(() => {
 })
 
 const flagClass = computed(() => selectFlag(entity.value.placeOfProduction[0].countryId))
+
+watch(() => props.data, (newVal) => {
+  console.log(props.data)
+}, {deep: true})
 
 </script>
 

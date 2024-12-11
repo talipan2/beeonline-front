@@ -106,6 +106,17 @@ onMounted(() => {
 	opacity: 1;
 	transition: opacity .3s ease-in-out;
 
+	@include mobile {
+		font-size: .9rem;
+
+	}
+
+	&__content_scroll {
+		overflow-y: auto; /* Вертикальная прокрутка */
+		overflow-x: hidden; /* Отключить горизонтальную прокрутку */
+		max-height: 50em;
+	}
+	
 	&_loading {
 		pointer-events: none;
 		opacity: .6;
@@ -152,6 +163,10 @@ onMounted(() => {
 		margin-top: 0;
 		margin-bottom: 0;
 		color: #2A1947;
+
+		@include mobile {
+			font-size: 2rem;
+		}
 	}
 
 	&__subtitle {
@@ -203,5 +218,29 @@ onMounted(() => {
   font-weight: 400;
 }
 
+@include mobile {
+	.bonus {
+		flex-direction: column;
+
+		&__right-side {
+			order: 1;
+			display: flex;
+			flex-direction: column;
+			row-gap: 2em;
+		}
+
+		&__left-side {
+			order: 2;
+		}
+
+		&__banner_mobile {
+			display: block;
+		}
+
+		&__banner_desktop {
+			display: none;
+		}
+	}
+}
 
 </style>

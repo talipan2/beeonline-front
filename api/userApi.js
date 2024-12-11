@@ -8,8 +8,8 @@ export default {
   },
 
   // регистрация пользователя
-  async registerUser(name, email, job, phone) {
-    return axios.post('register', { name, email, phone })  
+  async registerUser(name, email, post, phone, role) {
+    return axios.post('register', { name, email, phone, post, role })  
   },
 
   // проверка авторизации
@@ -21,5 +21,13 @@ export default {
    async logOut() {
     return axios.post('logout', {})
   },
+
+  async getUser(id) {
+    return axios.get(`users/${id}`)
+  },
+
+  async resetPassword(data) {
+    return axios.post('change-password', {old_password: data.oldPassword, new_password: data.newPassword})
+  }
 
 }

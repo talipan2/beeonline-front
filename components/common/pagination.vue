@@ -129,8 +129,10 @@ const showedPages = computed(() => {
 
   &__container {
     display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     align-items: center;
-    column-gap: 0.3em;
+    gap: 0.3em;
   }
 
   &__btn {

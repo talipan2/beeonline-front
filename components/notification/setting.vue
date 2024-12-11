@@ -94,6 +94,10 @@
   box-shadow: var(--box-shadow-primary);
   background-color: #fff;
 
+  @include tablet {
+    padding: 2.25rem;
+  }
+
   &__title {
     font-size: 1.5em;
     margin-bottom: 1.25em;

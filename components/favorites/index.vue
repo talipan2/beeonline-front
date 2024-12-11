@@ -270,6 +270,11 @@ onMounted(() => {
     column-gap: 1em;
     max-width: 46.8em;
     margin-inline: auto;
+
+    @include mobile {
+      flex-direction: column;
+      row-gap: 1em;
+    }
   }
 
   &__catalog-btn {
@@ -304,6 +309,14 @@ onMounted(() => {
   .entity-filter__select {
     flex: 0 1 31.5%;
 
+    @include tablet {
+      flex-basis: 48%;
+    }
+
+    @include mobile {
+      flex-basis: 100%;
+    }
+
   }
   .select__select {
     color: var(--text-color-senary);
@@ -320,6 +333,10 @@ onMounted(() => {
     display: flex;
     flex: 0 0 48%;
     font-size: 1rem;
+
+    @include mobile {
+      flex-basis: 100%;
+    }
   }
 
   &__delete {

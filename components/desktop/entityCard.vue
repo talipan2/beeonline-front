@@ -6,8 +6,8 @@
     <div class="desktop-entity-card__body">
       <div class="desktop-entity-card__header">
         <div class="desktop-entity-card__category">
-          <p class="desktop-entity-card__category-name">Униформа и спецодежда</p>
-          <ModalsMoreCities class="desktop-entity-card__category-list" placement="bottom-end" title="" :list="['Униформа и спецодежда', 'Униформа и спецодежда', 'Униформа и спецодежда']"/>
+          <p class="desktop-entity-card__category-name form-group__inline">Униформа и спецодежда</p>
+          <ModalsMoreCities class="desktop-entity-card__category-list form-group__inline" placement="bottom-end" title="" :list="['Униформа и спецодежда', 'Униформа и спецодежда', 'Униформа и спецодежда']"/>
         </div>
         <h3 class="desktop-entity-card__title">Пошив партии головных уборов по России</h3>
       </div>
@@ -40,7 +40,7 @@
 
 .desktop-entity-card {
   font-family: 'fira-sans', sans-serif;
-  flex: 1 1 45%;
+  flex: 1 1 40%;
   position: relative;
   max-width: 45%;
   display: flex;
@@ -72,9 +72,6 @@
 
   &__category {
     font-family: 'lato', sans-serif;
-    display: flex;
-    align-items: center;
-    column-gap: .5em;
     margin-bottom: 1em;
     line-height: 1em;
   }
@@ -84,6 +81,7 @@
     font-size: 1.2em;
     line-height: 1em;
     color: var(--text-color-ternary);
+    margin-right: .5em;
   }
 
   &__category-list {
@@ -135,6 +133,33 @@
   &__link {
     position: absolute;
     inset: 0;
+  }
+}
+
+@include mobile {
+  .desktop-entity-card {
+    flex-basis: 100%;
+    max-width: 100%;
+  }
+}
+
+@include small-mobile {
+  .desktop-entity-card {
+    &__title {
+      font-size: 1.2rem;
+    }
+
+    &__activity {
+      column-gap: .5rem;
+    }
+
+    &__activity-value {
+      font-size: 1rem;
+    }
+
+    &__status {
+      font-size: 1.2rem;
+    }
   }
 }
 

@@ -104,6 +104,10 @@ onUnmounted(() => {
   
   .profile__content {
     flex: 0 1 50%;
+
+    @include tablet {
+      flex-basis: 100%;
+    }
   }
 }
 
@@ -119,6 +123,10 @@ onUnmounted(() => {
 
   .profile__right {
     flex: 0 0 26%;
+
+    @include tablet{
+      flex-basis: 30%;
+    }
   }
 }
 
@@ -134,12 +142,20 @@ onUnmounted(() => {
 
   .profile__right {
     flex: 0 0 30%;
+
+    @include tablet{
+      flex-basis: 40%;
+    }
   }
 }
 
 .news-layout {
   .profile__content {
     flex: 0 1 50%;
+
+    @include tablet {
+      flex-basis: 70%;
+    }
   }
 }
 
@@ -151,7 +167,58 @@ onUnmounted(() => {
   .profile__content {
     flex: 0 1 33%;
   }
+
+  @include tablet {
+    .profile__content {
+      flex-basis: 50%;
+    }
+  }
+
+  @include mobile {
+    .profile__content {
+      flex-basis: 100%;
+    }
+  }
 }
 
+
+@include tablet {
+  .profile {
+    max-width: 960px;
+
+    &__container {
+      margin-bottom: 2em;
+    }
+
+    &__left {
+      display: none;
+    }
+  }
+}
+
+@include small-tablet {
+  .profile {
+    max-width: var(--tablet-content-width);
+  }
+}
+
+@include mobile {
+  .profile {
+    max-width: var(--mobile-content-width);
+
+    &__container {
+      flex-direction: column;
+      row-gap: 2em;
+    }
+
+    &__title {
+      font-size: 2rem;
+    }
+
+    &__right {
+      // display: none;
+    }
+  }
+}
 
 </style>

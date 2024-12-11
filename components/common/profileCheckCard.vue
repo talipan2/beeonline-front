@@ -70,6 +70,7 @@ const props = defineProps({
   
   &__container {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     column-gap: 3em;
     margin-bottom: 1.5em;  
@@ -85,6 +86,14 @@ const props = defineProps({
   &__link {
     color: var(--text-color-ternary);
     font-size: 1.2em;
+  }
+}
+
+@include mobile {
+  .check-card {
+    &__title {
+      font-size: 1.4rem;
+    }
   }
 }
 

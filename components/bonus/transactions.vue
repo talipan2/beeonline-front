@@ -25,7 +25,7 @@
                   <div class="text-secondary" v-if="transaction.comment && transaction.comment.length">{{
                     transaction.comment }}</div>
                 </td>
-                <td>{{ transaction.created_at }}</td>
+                <td>{{ formatDate(transaction.created_at, 'DD.MM.YYYY mm:HH') }}</td>
               </tr>
             </template>
           </tbody>
@@ -76,6 +76,15 @@ onMounted(async () => {
     font-size: 1.6em;
     display: flex;
     justify-content: start;
+  }
+}
+
+@include mobile {
+  .transactions {
+    padding: 21px 6px !important;
+    &__table {
+      font-size: 1.2rem;
+    }
   }
 }
 </style>

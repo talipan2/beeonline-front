@@ -155,6 +155,13 @@ const props = defineProps({
     position: absolute;
     inset: 0;
   }
+
+  @include small-mobile {
+    &__image {
+      flex-basis: 35%;
+      max-width: 35%;
+    }
+  }
 }
 
 .card-pub_type_list:hover {

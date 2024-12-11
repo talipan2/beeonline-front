@@ -125,4 +125,12 @@ const selectPage = (page) => {
 
 }
 
+@include small-mobile {
+  .desktop-selectable-entity {
+    &__btn {
+      font-size: 1.2em;
+    }
+  }
+}
+
 </style>

@@ -4,14 +4,14 @@
       <UiBreadCrumb 
         :list="[
           {label: 'Главная', link: '/'}, 
-          { label: 'Кабинет заказчика', link: '/customer/desktop' },
-          { label: 'Профиль', link: '/customer/profile' },
+          { label: 'Кабинет исполнителя', link: '/performer/desktop' },
+          { label: 'Профиль', link: '/performer/profile' },
           { label: 'Смена пароля', link: '' }
         ]" 
       />
     </template>
     <template #content>
-      <ProfileUpdatePassword role="customer"/>
+      <ProfileUpdatePassword role="performer"/>
     </template>
   </NuxtLayout>
 </template>

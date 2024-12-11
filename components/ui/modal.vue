@@ -5,10 +5,10 @@
     overlay-transition="vfm-fade"
     :hideOverlay="overlayHide"
     content-transition="vfm-fade"
-    :clickToClose="true"
+    :clickToClose="clickToClose"
     :escToClose="true"
     :background="background"
-    :lockScroll="lockScroll"
+    :lockScroll="true"
   >
     <div class="modal-content">
 
@@ -78,6 +78,29 @@ computed: {
     return `modal-dialog ${this.colClass}`
   }
 },
+
+methods: {
+    customLockScroll(isLock) {
+      const screenWidth = window.innerWidth;
+
+      if (isLock) {
+        // Блокируем прокрутку
+        document.body.style.overflow = 'hidden';
+
+        // Компенсируем padding-right только на десктопах
+        if (screenWidth > 768) {
+          const scrollbarWidth =
+            window.innerWidth - document.documentElement.clientWidth;
+          document.body.style.paddingRight = `${scrollbarWidth}px`;
+        }
+      } else {
+        // Сбрасываем прокрутку и padding
+        document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
+      }
+    },
+  },
+
 }
 </script>
 

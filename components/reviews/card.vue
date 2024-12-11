@@ -59,16 +59,47 @@ const router = useRouter();
   padding-block: .625em;
   border-top: 1px solid var(--border-color-secondary);
 
+  @include tablet {
+    font-size: 1.5rem;
+  }
+  
+  @include mobile {
+    font-size: 1.3rem;
+    flex-wrap: wrap;
+    row-gap: 1em;
+  }
+
+  @include small-mobile {
+    box-shadow: -2px -2px 0 #6937a5, 0 1px 1px rgba(0, 0, 0, 0.15);
+    border-top: none;
+    padding: 1em;
+  }
+
   &:last-child {
     border-bottom: 1px solid var(--border-color-secondary)
   }
 
   &__col-1 {
     flex: 0 0 30%;
+
+    @include mobile {
+      flex: 0 1 50%;
+    }
+
+    @include small-mobile {
+      flex: 0 1 100%;
+    }
   }
 
   &__col-2 {
     flex: 0 0 20%;
+    @include mobile {
+      flex: 0 1 45%;
+    }
+
+    @include small-mobile {
+      flex: 0 1 100%;
+    }
   }
 
   &__col-3 {

@@ -35,13 +35,13 @@
             </div>
             <div class="form-group-data">
               <p class="form-group__title">География фактического производства</p>
-              <div class="form-group__container">
+              <div class="form-group__inline">
                 <i class="flag flag_round" 
                   :class="registerData.selectedProductionCountries && registerData.selectedProductionCountries[0]
                   ? selectFlag(registerData.selectedProductionCountries[0].countryId) 
                   :''" 
                 />
-                <p class="register__check-company-city">
+                <p class="register__check-company-city form-group__inline">
                   {{
                     (registerData.selectedProductionCountries && registerData.selectedProductionCountries[0] 
                     ?
@@ -51,7 +51,8 @@
                   }}
                   &nbsp;
                 </p>
-                <ModalsMoreCities 
+                <ModalsMoreCities
+                  class="register__more-cities form-group__inline"
                   title="География фактического производства" 
                   :list="locationStore.getLocationsByIds(registerData.locationId)" 
                 />
@@ -179,7 +180,7 @@ const handleSubmit = () => {
 
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 
 .register__check-company-container {
   display: flex;
@@ -213,8 +214,12 @@ const handleSubmit = () => {
 
 }
 
+.register__more-cities {
+  font-size: 1.4rem;
+}
+
 .register__check-company-details {
-  flex: 1 0 80%;
+  flex: 1 1 80%;
   display: flex;
   flex-direction: column;
   row-gap: 1.53em;
@@ -235,5 +240,21 @@ const handleSubmit = () => {
 .form-group-data__logo {
   width: 100%;
   height: 9.15em;
+}
+
+@include mobile {
+  .register__check-company-logo {
+    max-width: 20%;
+  }
+
+  .register__check-company-container {
+    flex-direction: column;
+    row-gap: 1em;
+  }
+  .register {
+    .tippy-box[data-placement^=top] > .tippy-arrow:before {
+      bottom: -3em;
+    }
+  }
 }
 </style>

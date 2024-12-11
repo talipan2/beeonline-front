@@ -69,6 +69,17 @@ const props = defineProps({
   &__item {
     font-size: 1.4rem;
   }
+
+  @include mobile {
+    &__title {
+      font-size: 1.4rem;
+    } 
+
+    &__item {
+      font-size: 1.2rem;
+    }
+  }
 }
+
 
 </style>

@@ -76,3 +76,14 @@ watch(() => props.data, (newVal) => {
 });
 
 </script>
+
+<style lang="scss">
+
+.line-chart {
+  canvas {
+    width: 100% !important;
+    height: 100% !important;
+  }
+}
+
+</style>

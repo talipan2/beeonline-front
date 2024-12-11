@@ -8,7 +8,7 @@
           <p class="view-entity__prop-value">{{ prop.value || 'Не указано' }}</p>
         </div>
       </div>
-      <div class="form-group">
+      <div class="form-group view-entity__btn-wrapper">
         <div class="view-entity__btn">
           <UiButton :to="`/performer/services/edit/${data.id}`" variant="senary" size="around" v-if="role === 'performer'">Изменить</UiButton>
           <UiButton :to="`/customer/orders/edit/${data.id}`" variant="senary" size="around" v-if="role === 'customer'">Изменить</UiButton>
@@ -55,7 +55,7 @@ const props = defineProps({
 <style lang="scss">
 
 .view-entity {
-  max-width: 50%;
+  max-width: 90%;
   &__container {
     margin-bottom: 5rem;
   }
@@ -63,6 +63,10 @@ const props = defineProps({
   &__title {
     font-size: 2.4rem;
     margin-bottom: .83em;
+
+    @include mobile {
+      font-size: 1.6rem;
+    }
   }
 
   &__props {
@@ -97,6 +101,28 @@ const props = defineProps({
     display: flex;
     align-items: center;
     font-size: 1.6rem;
+  }
+
+  @include tablet {
+    max-width: 100%;
+  }
+
+  @include mobile {
+    &__btn-wrapper {
+      flex-direction: row;
+    }
+
+    &__prop-name {
+      font-size: 1.4rem;
+    }
+
+    &__prop-value {
+      font-size: 1.4rem;
+    }
+
+    &__btn {
+      width: 40%;
+    }
   }
 }
 

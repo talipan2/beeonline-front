@@ -6,7 +6,8 @@
         <CommonFileList :dataList="dataList" />
       </div>
       <p v-else class="documentation__text">Файлы не загружены</p>
-      <UiButton to="/customer/documentation/custom/create" class="documentation__btn" variant="quinary" size="around">Загрузить</UiButton>
+      <UiButton v-if="!dataList.length" to="/customer/documentation/custom/create" class="documentation__btn" variant="quinary" size="around">Загрузить</UiButton>
+      <UiButton v-else to="/customer/documentation/custom/create" class="documentation__btn" variant="quinary" size="around">Изменить</UiButton>
     </div>
   </div>
 </template>
@@ -27,9 +28,17 @@ const props = defineProps({
 .documentation {
   font-size: 1rem;
 
+  @include mobile {
+    margin-bottom: 10rem;
+  }
+
   &__title {
     font-size: 2.8em;
     margin-bottom: .89em;
+
+    @include mobile {
+      font-size: 1.8rem;
+    }
   }
 
   &__text {
@@ -41,6 +50,10 @@ const props = defineProps({
     width: fit-content;
     text-transform: uppercase;
     padding: 1em;
+
+    @include mobile {
+      font-size: 1.2rem;
+    }
   }
 }
 

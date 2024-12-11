@@ -99,4 +99,10 @@ const props = defineProps({
     border-radius: 1em;
   }
 }
+
+@include mobile {
+  .bonus-score {
+    font-size: 0.9rem;
+  }
+}
 </style>

@@ -100,10 +100,13 @@
               v-model="organizationStore.registerOrg.inn"
               :maxLength="10"
               inputType="number"
-            />
-            <UiButton class="register__search-btn" variant="tertiary">
-              <SvgoSearchIcon class="svg-m" />
-            </UiButton>
+            >
+            <template #action>
+              <UiButton class="register__search-btn" variant="tertiary">
+                <SvgoSearchIcon class="svg-m" />
+              </UiButton>
+            </template>
+            </UiInput>
           </div>
         </label>
         <div class="form-group">
@@ -197,10 +200,13 @@
               placeholder="____________"
               :required="!skipInn"
               v-model="organizationStore.registerOrg.inn"
-            />
-            <UiButton class="register__search-btn" variant="tertiary">
-              <SvgoSearchIcon class="svg-m" />
-            </UiButton>
+            >
+              <template #action>
+                <UiButton class="register__search-btn" variant="tertiary">
+                  <SvgoSearchIcon class="svg-m" />
+                </UiButton>
+              </template>
+            </UiInput>
           </div>
         </label>
         <label class="form-group__title">

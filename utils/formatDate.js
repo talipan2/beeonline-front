@@ -7,6 +7,10 @@ export function formatDate(date, format = 'DD/MM/YYYY') {
   const month = String(dateObj.getMonth() + 1).padStart(2, '0'); // Месяцы с 0, поэтому +1
   const year = dateObj.getFullYear();
 
+  const hours = String(dateObj.getHours()).padStart(2, '0');
+  const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+  const seconds = String(dateObj.getSeconds()).padStart(2, '0');
+
   // Выбираем формат
   switch (format) {
     case 'DD/MM/YYYY':
@@ -15,6 +19,8 @@ export function formatDate(date, format = 'DD/MM/YYYY') {
       return `${year}-${month}-${day}`;
     case 'MM-DD-YYYY':
       return `${month}-${day}-${year}`;
+    case 'DD.MM.YYYY mm:HH':
+      return `${day}.${month}.${year} ${hours}:${minutes}`;
     default:
       // Если передан неизвестный формат, вернем стандартный 'DD/MM/YYYY'
       return `${day}/${month}/${year}`;

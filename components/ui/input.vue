@@ -93,56 +93,56 @@ function updateValue(value) {
 </script>
 
 <style lang="scss">
-  .input {
-    display: flex;
-    flex-wrap: wrap;
-    flex: 1 1 100%;
+.input {
+  display: flex;
+  flex-wrap: wrap;
+  flex: 1 1 100%;
+}
+
+.input-container {
+  box-sizing: border-box;
+  display: flex;
+  border: 1px solid var(--border-color-secondary);
+  background-color: var(--bg-secondary-color);
+  padding: 1rem;
+  width: 100%;
+
+  &:focus-within {
+    border-color: var(--border-color-input-focus);
+    box-shadow: var(--box-shadow-input);
   }
 
+  &:has(input:disabled) {
+    background-color: var(--button-disabled-background);
+    color: var(--button-disabled-color);
+  }
+
+}
+
+.input__field {
+  width: 100%;
+  border: none;
+  font-size: 1em;
+  padding: 0;
+  color: var(--text-color-monodecimal);
+  pointer-events: visible;
+
+  &::placeholder {
+    color: var(--text-color-senary);
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
+@include mobile {
   .input-container {
-    box-sizing: border-box;
-    display: flex;
-    border: 1px solid var(--border-color-secondary);
-    background-color: var(--bg-secondary-color);
-    padding: 1rem;
-    width: 100%;
-
-    &:focus-within {
-      border-color: var(--border-color-input-focus);
-      box-shadow: var(--box-shadow-input);
-    }
-
-    &:has(input:disabled) {
-      background-color: var(--button-disabled-background);
-      color: var(--button-disabled-color);
-    }
-    
+    padding: 10px;
   }
 
-  .input__field {
-    width: 100%;
-    border: none;
-    font-size: 1em;
-    padding: 0;
-    color: var(--text-color-monodecimal);
-    pointer-events: visible;
-
-    &::placeholder {
-      color: var(--text-color-senary);
-    }
-
-    &:focus {
-      outline: none;
-    }
+  .input {
+    font-size: 16px;
   }
-  
-  @include mobile {
-    .input-container {
-      padding: 10px;
-    }
-
-    .input {
-      font-size: 16px;
-    }
-  }
+}
 </style>

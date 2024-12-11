@@ -29,6 +29,7 @@ import trademarksAndExhibition from '~/components/common/trademarksAndExhibition
 import addSocials from '~/components/common/addSocials.vue';
 import { useUserStore } from '~/store/userStore';
 
+const router = useRouter();
 const organizationStore = useOrganizationStore();
 const userStore = useUserStore();
 const currentStep = ref(1);
@@ -101,6 +102,7 @@ const handleSubmit = () => {
     url_vk:data.value.url_vk,
     url_yt: data.value.url_yt,
   });
+  router.push(`/${userStore.role}/desktop`);
 }
 
 onMounted(() => {
@@ -174,6 +176,12 @@ onMounted(() => {
     font-size: 1.3em;
     line-height: 2em;
 
+  }
+}
+
+@include mobile {
+  .pub-card {
+    max-width: 100%;
   }
 }
 

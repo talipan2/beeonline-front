@@ -41,11 +41,12 @@ const picker = ref(null);
 const date = ref(props.modelValue);
 const config = ref({
     altFormat: 'd.m.Y',
-    altInput: true,
+    altInput: false,
     dateFormat: 'Y-m-d', 
     locale: Russian,
     minDate: new Date(),
     altInputClass: 'input',
+    disableMobile: true
 });
 
 watch(() => date.value, (newVal) => {
@@ -65,6 +66,7 @@ watch(() => props.modelValue, (newVal) => {
     overflow: hidden;
     border: none;
   }
+
   
   &__label {
     .input {

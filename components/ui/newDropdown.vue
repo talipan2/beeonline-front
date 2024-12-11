@@ -8,6 +8,7 @@
     :placement="placement"
     :offset="calculateOffset"
     :arrow="arrow"
+    :maxWidth="maxWidth"
   >
     <slot/>
     <template #content>
@@ -36,6 +37,10 @@
     offset: {
       type: Array,
       default: () => ([]),
+    },
+    maxWidth: {
+      type: String,
+      default: '350',
     },
   });
 
@@ -93,5 +98,6 @@
     background-color: var(--button-background-primary);
   }
 }
+
 
 </style>

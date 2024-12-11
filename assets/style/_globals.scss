@@ -120,6 +120,15 @@ img {
   height: auto;
 }
 
+a:active,
+button:active,
+input:active,
+label:active {
+  -webkit-tap-highlight-color: transparent;
+  outline: none; 
+  box-shadow: none; 
+}
+
 // размеры свг иконок
 .svg-lx {
   width: var(--svg-size-desktop-lx);
@@ -190,12 +199,20 @@ img {
   justify-content: space-between;
   // align-items: center;
   flex-wrap: wrap;
+
+  @include small-mobile {
+    flex-direction: column;
+  }
 }
 
 .form-group-data {
   flex: 1 0 45%;
   // font-size: 1.3em;
   margin-bottom: 1em;
+
+  @include mobile {
+    flex: 1 0 100%;
+  }
 }
 
 .form-group-data__btn {
@@ -218,6 +235,10 @@ img {
   line-height: 1.53em;
   margin-bottom: 1em;
   width: 100%;
+
+  @include small-mobile {
+    margin-bottom: .5em;
+  }
 }
 
 .form-group__value {
@@ -231,6 +252,11 @@ img {
 .form-group__container {
   display: flex;
   align-items: center;
+}
+
+.form-group__inline {
+  display: inline;
+  vertical-align: middle;
 }
 
 
@@ -544,6 +570,11 @@ input[type="number"]::-webkit-inner-spin-button {
   margin: -2em;
   padding: 2em;
   transition: background-color .3s ease;
+
+  @include mobile {
+    margin: -.5em;
+    padding: .5em;
+  }
 }
 
 // статус пополнения
@@ -610,9 +641,9 @@ body {
   top: 0 !important;
 }
 
-body iframe {
-  display: none !important;
-}
+// body iframe {
+//   display: none !important;
+// }
 
 .goog-tooltip {
   display: none !important;
@@ -644,38 +675,28 @@ font font {
   @include desktop {
     padding-inline: var(--container-padding-x);
   }
-
-  // @include high-resolution-2k {
-  //   max-width: var(--container-width-2k);
-  // }
-
-  // @include high-resolution-4k {
-  //   max-width: var(--container-width-4k);
-  // }
-
 }
 
 
-// @include high-resolution-2k {
-//   html {
-//     font-size: clamp(8px, calc((2.2vw) * .333333), 13px);
-//   }
-// }
-
-// @include high-resolution-4k {
-//   html {
-//     font-size: clamp(13px, calc((2.2vw) * .333333), 20px);
-//   }
-// }
 
 @include tablet {
   html {
-    font-size: clamp(6.5px, calc((2.2vw) * .333333), 10px);
+    font-size: clamp(8px, calc((2.2vw) * .333333), 10px);
   }
 }
 
 @include mobile{
   html {
     font-size: 10px;
+  }
+
+  main .register {
+    max-width: 540px;
+  }
+}
+
+@include small-mobile {
+  body {
+    padding-right: 0 !important;
   }
 }

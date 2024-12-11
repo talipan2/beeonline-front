@@ -18,12 +18,14 @@
 
 <script setup>
 import { useOrganizationStore } from '~/store/organizationStore';
+import { useUserStore } from '~/store/userStore';
 
 
 const organizationStore = useOrganizationStore();
 
 const pubCard = computed(() => organizationStore.pubCards);
 const organization = computed(() => organizationStore.organization);
+const userStore = useUserStore();
 
 const checkListArray = [
   { label: 'Данные организации', value: 'chapter'},
@@ -41,6 +43,16 @@ const cardsData = computed(() => {
     logo: pubCard.value.logo,
     description: pubCard.value.description,
   }
+})
+
+onMounted(() => {
+  userStore.getUserData(1)
+  .then((res) => {
+    console.log(res)
+  })
+  .catch((err) => {
+    console.log(err)
+  })
 })
 
 </script>

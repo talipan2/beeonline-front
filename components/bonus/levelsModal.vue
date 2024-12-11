@@ -50,7 +50,7 @@
           </div>
         </div>
 
-        <div class="card__content" 
+        <div class="card__content card__content_scroll" 
           v-if="levelGroups && levelGroups.length" 
           ref="levelGroupsContent" 
           :style="contentHeight ? { height: contentHeight + 'px' } : {}"
@@ -150,6 +150,12 @@ watch(() => levelGroupsContent.value, (newVal) => {
 
     &:hover {
       background-color: #d6dcee;}
+  }
+
+  @include mobile {
+    .modal-dialog {
+      width: 80%;
+    }
   }
 }
 

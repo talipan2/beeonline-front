@@ -26,7 +26,6 @@ const props = defineProps({
 });
 
 const settingStore = useSettingStore();
-
 const locationModal = computed(() => settingStore.chooseLocationModal);
 
 let tippyInstance = null;
@@ -48,7 +47,7 @@ const scrollToCenter = (element) => {
   const rect = element.getBoundingClientRect(); // Получаем размеры и положение элемента
   const windowHeight = window.innerHeight; // Высота окна
   const elementCenter = rect.top + window.scrollY + rect.height / 2; // Центр элемента
-  const scrollTo = elementCenter - windowHeight / 2; // Вычисляем, на сколько прокрутить
+  const scrollTo = elementCenter - windowHeight / 1.5 ; // Вычисляем, на сколько прокрутить
 
   window.scrollTo({
     top: scrollTo,
@@ -76,6 +75,16 @@ const showTip = (index) => {
       interactive: true,
       duration: 500,
       zIndex: 200,
+      popperOptions: {
+        modifiers: [
+          {
+            name: 'flip',
+            options: {
+              fallbackPlacements: ['top', 'bottom'],
+            },
+          },
+        ],
+      },
       onClickOutside(instance) {
         showNextTip();
       },
@@ -112,6 +121,7 @@ const startTutorial = () => {
     currentTip.value = 0; // Сбрасываем текущий индекс
     showTip(currentTip.value); // Показываем первую подсказку
     isOverlayVisible.value = true;
+    settingStore.catalogTutorialStatus = true;
   }
 };
 
@@ -137,14 +147,6 @@ const showNextTip = () => {
     z-index: 3;
   }
 
-  .tippy-arrow::after {
-    content: "";
-    position: absolute;
-    border-color: transparent;
-    border-style: solid;
-    z-index: 1;
-  }
-
   .tippy-box[data-placement^=right] > .tippy-arrow::after {
     left: -8px;
     border-width: 8px 8px 8px 0px;
@@ -160,6 +162,12 @@ const showNextTip = () => {
   .tippy-box[data-placement^="right"] > .tippy-arrow {
     left: 1px;
   }
+
+  .tippy-box[data-placement^="top"] > .tippy-arrow:before {
+    bottom: -10px;
+    border-width: 15px 7.5px 0;
+    border-top-color: initial; 
+  }
 }
 
 .tutorial {
@@ -173,10 +181,7 @@ const showNextTip = () => {
 
 .tutorial__overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  inset: 0;
   background: rgba(0, 0, 0, 0.5);
   z-index: 101;
 }

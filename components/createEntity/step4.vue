@@ -114,7 +114,7 @@
         text='Безопасная сделка'
       />
     </UiCheckbox>
-    <UiCheckbox v-model="data.isAgreedOrderPlacement" class="form-group-data" v-if="entityOfRole === 'orders'" :isValidated="false">
+    <UiCheckbox v-model="data.isAgreedOrderPlacement" class="form-group-data entity_step-check__checkbox" v-if="entityOfRole === 'orders'" :isValidated="false">
       Согласен на размещение заказа в телеграм-канале &nbsp;<a>"Аутсорсинг в легпроме"</a>. 
       <CommonTooltip class=""
         text='Аутсорсинг в легпроме'
@@ -200,8 +200,15 @@ const flagClass = computed(() => selectFlag(entity.value.placeOfProduction[0].co
     display: flex;
     align-items: center;
     justify-content: left;
-    
   }
+
+  &__checkbox {
+    .checkbox__label {
+      flex-wrap: wrap;
+    }
+  }
+
+
 
 }
 

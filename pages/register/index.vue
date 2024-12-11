@@ -2,12 +2,23 @@
 <template>
   <section class="register container">
     <div class="register__container">
-      <CommonCheckList class="register__checklist sticky" ref="leftSide" title="Заполнение профиля" :checkList="checkList" adviceTitle="Полностью заполненный профиль выше в списке поиска"/>
+      <CommonCheckList 
+        class="register__checklist register__checklist_type_left-side sticky" 
+        ref="leftSide" title="Заполнение профиля" 
+        :checkList="checkList" 
+        adviceTitle="Полностью заполненный профиль выше в списке поиска"
+      />
       <div class="register__main">
         <RegisterDefaultRegisterComponent />
       </div>
       <div class="register__right-side" >
         <div class="register__right-side-container sticky" ref="rightSide">
+          <CommonCheckList 
+            class="register__checklist register__checklist_type_right-side sticky" 
+            ref="leftSide" title="Заполнение профиля" 
+            :checkList="checkList" 
+            adviceTitle="Полностью заполненный профиль выше в списке поиска"
+          />
           <CommonAdvice class="register__advice">
             <p class="advice__text">ИНН используется в нашем сервисе:</p>
             <ul>
@@ -137,7 +148,7 @@ onUnmounted(() => {
   }
 
 .register__checklist {
-  max-width: 25.5em;
+  // max-width: 25.5em;
   flex: 1 0 25.5em;
 }
 
@@ -147,6 +158,73 @@ onUnmounted(() => {
 
   .advice__text {
     margin-bottom: 1.8em;
+  }
+}
+
+@media screen and (max-width: 1500px) {
+  .register {
+    &__container {
+      column-gap: 5em;
+    }
+  }
+}
+
+// @include tablet {
+//   .register {
+//     &__container {
+//       column-gap: 5em;
+//     }
+//   }
+// }
+
+
+@include mobile {
+  .register {
+    padding-block: 3.5rem 9rem;
+
+    &__container {
+      flex-direction: column;
+    }
+
+    &__btn-container {
+      flex-direction: column;
+    }
+
+    &__checklist {
+      display: none;
+    }
+
+    &__advice {
+      margin-top: 1em;
+    }
+
+    &__right-side {
+      flex-basis: auto;
+    }
+
+    &__btn {
+      font-size: 12px;
+      max-width: none;
+      width: 100%;
+      padding: 9px;
+      margin-bottom: 1em;
+    }
+
+    &__checkbox {
+      margin-bottom: 0;
+    }
+
+    &__title {
+      font-size: 2rem;
+    }
+
+    &__subtitle {
+      font-size: 1.6rem;
+    }
+
+    &__text {
+      font-size: 1.3rem;
+    }
   }
 }
 

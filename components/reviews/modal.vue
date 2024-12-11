@@ -9,7 +9,7 @@
         <div>
           <p class="form-group__title" v-if="reviewsState === 'my-reviews'">Текст вашего дополнения</p>
           <p class="form-group__title" v-if="reviewsState === 'reviews'" >Текст вашего ответа</p>
-          <UiTextArea />
+          <UiTextArea class="reviews-modal__textarea"/>
         </div>
         <div class="reviews-modal__btn-container">
           <UiButton class="reviews-modal__btn" type="button" variant="quinary" size="large" @click="() => confirm()">Отправить</UiButton>
@@ -46,10 +46,26 @@ function confirm() {
   .modal-dialog {
     max-width: 35%;
     width: 100%;
+
+    @include tablet {
+      max-width: 50%;
+    }
+
+    @include mobile {
+      max-width: 70%;
+    }
+
+    @include small-mobile {
+      max-width: 95%;
+    }
   }
 
   .modal-content {
     padding: 3.4em 2.5em 2.5em;
+
+    @include mobile {
+      padding: 1em;
+    }
   }
 
   &__header {
@@ -59,6 +75,10 @@ function confirm() {
     h3 {
       font-size: 1.75em;
       margin-bottom: .89em;
+
+      @include mobile {
+        font-size: 1.8rem;
+      }
     }
   }
 
@@ -71,6 +91,18 @@ function confirm() {
     font-size: .75em;
     flex: 0 1 33%;
     text-transform: uppercase;
+
+    @include mobile {
+      flex-basis: 100%;
+    }
+  }
+
+  &__textarea {
+    @include mobile {
+      .text-area__container {
+        padding-bottom: 50%;
+      }
+    }
   }
   
 }

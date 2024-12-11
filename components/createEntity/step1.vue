@@ -49,11 +49,10 @@
         <p class="entity__description">Укажите дату до которой заказ будет актуален</p>
         <CommonCalendar v-model="data.completionDate" class="entity__calendar" />
       </div>
-      <div class="form-group">
-        <div class="form-group-data"></div>
+      <div class="entity__btn-container">
         <UiButton
           type="submit"
-          class="form-group-data form-group-data__btn"
+          class="form-group-data__btn entity__btn"
           variant="quinary"
           size="large"
           >Далее
@@ -134,8 +133,13 @@ const categories = [
 
 <style lang="scss">
 .entity {
+  font-size: 1rem;
   &__title {
     margin-bottom: 0.7em;
+
+    @include mobile {
+      font-size: 2em;
+    }
   }
 
   &__subtitle {
@@ -164,5 +168,12 @@ const categories = [
       font-size: 1.6rem;
     }
   }
+
+  &__btn {
+    width: 50%;
+    margin-left: auto;
+    margin-top: 2em;
+  }
+
 }
 </style>

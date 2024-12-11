@@ -20,6 +20,12 @@
   .profile__content {
     max-width: 81%;
   }
+
+  @include tablet {
+    .profile__content {
+      max-width: 100%;
+    }
+  }
 }
 
 </style>

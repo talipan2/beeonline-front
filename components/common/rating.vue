@@ -17,6 +17,7 @@
       <p class="rating__count" v-if="isCountRating">({{ rating }})</p>
     </div>
     <UiInput 
+      v-if="isSelected"
       v-model="selectedRating"
       type="number"
       class="rating__input"

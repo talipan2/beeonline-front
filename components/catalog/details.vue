@@ -13,7 +13,7 @@
       </div>
     </div>
     <div class="orders-details__pub-card">
-      <div class="orders-details__pub-card-image">
+      <div class="orders-details__pub-card-image image-box">
         <img :src='defaultImage' alt="">
         <NuxtLink to="/" class="orders-details__pub-card-link"></NuxtLink>
       </div>
@@ -129,17 +129,11 @@ const role = computed(() => {
     column-gap: 1.87em;
     margin-bottom: 1.25em;
   }
-
-  &__pub-card-image {
-    flex: 0 0 13%;
+  
+  &__pub-card-image.image-box {
+    flex-basis: 13%;
+    padding-top: 13%;
     background-color: #fff;
-    box-shadow: 0 0 0 1px #E4E4E4;
-    position: relative;
-
-    img {
-      box-sizing: border-box;
-      padding: .5em;
-    }
   }
 
   &__pub-card-link {

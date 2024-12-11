@@ -5,7 +5,7 @@
         <CatalogServiceCard :data="data" />
       </div>
     </div>
-    <CommonPagination />
+    <!-- <CommonPagination /> -->
   </div>
 </template>
 
@@ -65,6 +65,23 @@ const ordersData = computed(() => {
 
   &__item {
     flex: 0 1 48%;
+  }
+
+}
+
+@include tablet {
+  .services {
+    &__list {
+      gap: 2em;
+    }
+  }
+}
+
+@include mobile {
+  .services {
+    &__item {
+      flex: 0 1 100%;
+    }
   }
 }
 

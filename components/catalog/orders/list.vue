@@ -5,7 +5,7 @@
         <CatalogOrdersCard  :data="data" />
       </div>
     </div>
-    <CommonPagination />
+    <!-- <CommonPagination /> -->
   </div>
 </template>
 
@@ -72,6 +72,22 @@ watch(() => firstCardRef.value, (newVal) => {
   &__item {
     flex: 0 1 48%;
     display: flex;
+  }
+}
+
+@include tablet {
+  .orders {
+    &__list {
+      gap: 2rem;
+    }
+  }
+}
+
+@include mobile {
+  .orders {
+    &__item {
+      flex: 0 1 100%;
+    }
   }
 }
 

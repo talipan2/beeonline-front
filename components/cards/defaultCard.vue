@@ -2,7 +2,7 @@
   <div class="default-card">
     <div class="default-card__content">
       <div class="default-card__image">
-        <img :src="card.logoUrl ? card.logoUrl.url : defaultImage" data-trademark-logo="">
+        <img :src="card.logoUrl ? card.logoUrl : defaultImage" data-trademark-logo="">
       </div>
       <div class="default-card__info">
         <p class="default-card__title">{{ card.title }}</p>
@@ -101,5 +101,13 @@ const editCard = () => {
 
 }
 
+@include mobile {
+  .default-card {
+    font-size: 1.2rem;
 
+    &__setting {
+      flex: 0 0 20%;
+    }
+  }
+}
 </style>

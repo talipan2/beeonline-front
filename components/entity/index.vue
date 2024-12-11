@@ -116,6 +116,10 @@ const categoriesList = [
 
   &__filter-container {
     max-width: 66%;
+
+    @include mobile {
+      max-width: 100%;
+    }
   }
 
   .form-group_type_entitys {
@@ -127,8 +131,11 @@ const categoriesList = [
     display: flex;
     gap: 3em;
     flex-wrap: wrap;
-  }
 
+    @include tablet {
+      gap: 1rem;
+    }
+  }
 }
 
 </style>

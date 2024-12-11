@@ -105,7 +105,8 @@ const currentHandleSubmit = computed(() => {
             userId: userStore.userData.id,
             organizationId: organizationStore.organization.id, 
             name: service.value.name, 
-            category: service.categories
+            category: service.categories,
+            step: 1
           }
         ).then(() => router.push('/services/create/step2'))
         .catch(error => console.log(error));
@@ -118,7 +119,8 @@ const currentHandleSubmit = computed(() => {
             availabilityStm: service.value.availabilityStm,
             freeTestSamples: service.value.freeTestSamples,
             minLot: service.value.minLot,
-            termsOfCooperation: service.value.termsOfCooperation
+            termsOfCooperation: service.value.termsOfCooperation,
+            step: 2
           }).then(() => router.push('/services/create/step3'))
           .catch(error => console.log(error));
         });

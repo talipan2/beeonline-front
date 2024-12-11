@@ -1,17 +1,26 @@
 <template>
   <section class="register container">
     <div class="register__container">
-      <CommonCheckList class="register__checklist sticky" ref="leftSide" title="Заполнение профиля" :checkList="checkList" adviceTitle="Полностью заполненный профиль выше в списке поиска" />
+      <CommonCheckList 
+        class="register__checklist register__checklist_type_left-side sticky" 
+        ref="leftSide"
+        title="Заполнение профиля" 
+        :checkList="checkList" 
+        adviceTitle="Полностью заполненный профиль выше в списке поиска" 
+      />
       <div class="register__main">
         <component :is="currentComponent" :data="organizationStore.registerOrg" :blockTitle="blockTitle"/>
       </div>
       <div class="register__right-side">
         <div class="register__right-side-container sticky" ref="rightSide">
-          <div class="register__preview" v-if="['/register/step2', '/register/step4'].includes(route.path)">
-            <h4 class="register__preview-title">Так вашу компанию будут видеть другие участники</h4>
-            <CardsPublic :data="checkListCard"/>
-          </div>
-          <CommonAdvice class="register__advice sticky" v-else>
+          <CommonCheckList 
+            class="register__checklist register__checklist_type_right-side" 
+            ref="leftSide"
+            title="Заполнение профиля" 
+            :checkList="checkList" 
+            adviceTitle="Полностью заполненный профиль выше в списке поиска" 
+          />
+          <CommonAdvice class="register__advice" v-if="['/register/step1'].includes(route.path)">
             <p class="advice__text">ИНН используется в нашем сервисе:</p>
             <ul>
               <li>для автоматического заполнения вашего профиля</li>
@@ -20,6 +29,13 @@
               <li>и наконец вы получаете галочку верифицированного пользователя, что повышает вас в поиске</li>
             </ul>
           </CommonAdvice>
+          <CommonAdvice class="register__advice sticky" v-if="['/register/step3'].includes(route.path) && userStore.role === 'performer'">
+            <p class="advice__text">без указания вашего места производства вы не сможете принимать заказы</p>
+          </CommonAdvice>
+          <div class="register__preview" v-if="['/register/step2', '/register/step3', '/register/step4'].includes(route.path)">
+            <h4 class="register__preview-title">Так вашу компанию будут видеть другие участники</h4>
+            <CardsPublic :data="checkListCard"/>
+          </div>
         </div>
       </div>
     </div>
@@ -247,6 +263,17 @@ const checkListCard = computed(() => {
     flex: 1 0 40em;
   }
 
+  .register__right-side-container:has(.register__advice) .register__preview-title {
+    margin-top: 1em; 
+  }
+
+  .register__right-side-container:has(.register__checklist_type_right-side) .register__advice {
+    margin-top: 3em; 
+  }
+
+  .register__right-side-container:has(.register__checklist_type_right-side) .register__preview-title {
+    margin-top: 3em; 
+  }
 
   .register__preview-title {
     font-size: 2.4em;
@@ -255,26 +282,30 @@ const checkListCard = computed(() => {
   }
 
 .register__checklist {
-  max-width: 25.5em;
+  // max-width: 25.5em;
 }
 
 
 
 @media (min-width: 768px) {
-    .checklist__header-right {
-        display: none;
-    }
+  .checklist__header-right {
+      display: none;
+  }
 }
 
 @media (max-width: 767px) {
-    .checklist__collapse {
-        display: none;
-    }
+  .checklist__collapse {
+      display: none;
+  }
 }
 
 .register__checklist {
-  max-width: 25.5em;
+  // max-width: 25.5em;
   flex: 1 0 25.5em;
+}
+
+.register__checklist_type_right-side {
+  display: none;
 }
 
 .register__advice {
@@ -286,5 +317,88 @@ const checkListCard = computed(() => {
   }
 }
 
+
+@media screen and (max-width: 1500px) {
+  .register {
+    &__container {
+      column-gap: 5em;
+    }
+  }
+}
+
+@include tablet {
+  .register {
+
+    &__container {
+      column-gap: 10em;
+      max-width: 960px;
+      margin-inline: auto;
+    }
+
+    &__checklist_type_left-side {
+      display: none;
+    }
+
+    &__checklist_type_right-side {
+      display: block;
+    }
+
+    &__right-side {
+      flex-basis: 40%;
+    }
+  }
+}
+
+
+@include mobile {
+  .register {
+    padding-block: 3.5rem 9rem;
+
+    &__checkbox {
+      margin-bottom: 0;
+    }
+
+    &__container {
+      flex-direction: column;
+    }
+
+    &__checklist {
+      display: none;
+    }
+
+    &__advice {
+      margin-top: 1em;
+    }
+
+    &__right-side {
+      flex-basis: auto;
+    }
+
+    &__preview-title {
+      margin-top: 1em;
+      font-size: 1.6rem;
+    }
+
+    &__btn {
+      font-size: 12px;
+      max-width: none;
+      width: 100%;
+      margin-bottom: 1em;
+      padding: 1.2em;
+    }
+
+    &__title {
+      font-size: 2rem;
+    }
+
+    &__subtitle {
+      font-size: 1.6rem;
+    }
+
+    &__text {
+      font-size: 1.3rem;
+    }
+  }
+}
 
 </style>

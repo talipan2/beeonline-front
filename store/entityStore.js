@@ -166,6 +166,7 @@ export const useEntityStore = defineStore('entity', {
           organization_id: data.organizationId,
           name: data.name,
           description: 'test',
+          current_step: data.step
         });
 
         if(response.data && response.data.data.id) {
@@ -182,6 +183,8 @@ export const useEntityStore = defineStore('entity', {
           user_id: data.userId,
           organization_id: data.organizationId,
           name: data.name,
+          deadline_at: data.completionDate,
+          current_step: data.step
         });
         if(response.data && response.data.data.id) {
           this.order.id = response.data.data.id;
@@ -250,9 +253,9 @@ export const useEntityStore = defineStore('entity', {
       }
     },
 
-    async uploadOrderLogo(id, data) {
+    async uploadOrderGallery(id, data) {
       try {
-        const response = await orderApi.uploadLogo(id, data);
+        const response = await orderApi.uploadGallery(id, data);
         if(response.data) {
           console.log(response.data)
         }

@@ -95,5 +95,33 @@ const props = defineProps({
     flex: 1 1 50%;
 
   }
+
+  @include mobile {
+    &__row {
+      flex-direction: column;
+    }
+
+    &__image {
+      flex: 1 1 178px;
+      height: 178px;
+      order: 0;
+      width: 100%;
+
+      &::before {
+        padding-top: 95%;
+        width: 95%;
+      }
+
+      img {
+        max-height: 90%;
+        max-width: 90%;
+        object-fit: contain;
+      }
+    }
+
+    &__list {
+      width: 100%;
+    }
+  }
 }
 </style>

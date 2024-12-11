@@ -16,7 +16,7 @@
           Указанные города и регионы используются для автоматического добавления в новые заказы и позволят потенциальным исполнителям находить их в поиске.
         </p>
       </div>
-      <CommonLocation buttonLabel="Добавить город" v-model="selectedCities"/>
+      <CommonLocation buttonLabel="Выбрать город или регион" v-model="selectedCities" class="register__location"/>
       <div class="register__btn-container" v-if="router.currentRoute.value.path.includes('/register')">
         <UiButton type="button" class="register__btn" variant="senary" size="large" @click="router.back">Назад</UiButton>
         <UiButton type="button" class="register__btn" variant="quinary" size="large" @click="router.push({path: '/register/step4'})">Далее
@@ -73,6 +73,22 @@ watch(() => selectedCities.value, (newVal) => {
   .register__btn {
     font-size: 1.2em;
     line-height: 1em;
+  }
+  .register__preview-title {
+    margin-top: 1em;
+  }
+}
+
+.register__preview-title {
+  margin-top: 1em;
+}
+
+@include small-mobile {
+  .register__location {
+    .location__btn {
+      width: 100%;
+      max-width: none;
+    }
   }
 }
 

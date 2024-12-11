@@ -22,6 +22,7 @@ import { useEntityStore } from '~/store/entityStore';
 const entityStore = useEntityStore();
 const ordersList = computed(() => entityStore.ordersList);
 
+const isTutorial = ref(false);
 const tutorialRefs = ref([]);
 const orderCardRef = ref([]);
 

@@ -16,17 +16,24 @@
         <SvgoClose class="svg-l" fill="#6937a5"/>
       </button>
     </div>
-      <button type="button" @click="handleSubmit">отпарвить</button>
   </div>
 </template>
 
 <script setup>
 import { useOrganizationStore } from '~/store/organizationStore';
 
+const props = defineProps({
+  modelValue: {
+    type: Array,
+    default: [],
+  }
+})
+
 
 const images = ref([]);
 const formData = new FormData();
 const organizationStore = useOrganizationStore();
+const emit = defineEmits(['update:modelValue']);
 
 const onFileChange = (event) => {
   const file = event.target.files[0];
@@ -38,26 +45,29 @@ const onFileChange = (event) => {
     images.value.push(newImage);
 
     reader.onload = (e) => {
-      // Replace the entire object in the array to ensure reactivity
-      images.value[index] = { src: e.target.result, loading: false };
+      images.value[index] = { src: e.target.result, loading: false, file: file };
     };
 
     formData.append('image[]', file);
     reader.readAsDataURL(file);
-  //   for (let pair of formData.entries()) {
-  //   console.log(`${pair[0]}: ${pair[1].name}`);
-  // }
+    emit('update:modelValue', formData);
   } else {
     console.log('Invalid file type');
   }
 };
 
-const handleSubmit = (event) => {
-  organizationStore.setGallery(formData);
-}
-
 const removeImage = (index) => {
   images.value.splice(index, 1);
+  formData.delete('image[]');
+  if(images.value.length > 0) {
+    images.value.forEach((image) => {
+      formData.append('image[]', image.file);
+      emit('update:modelValue', formData);
+    })
+  } else {
+    emit('update:modelValue', null);
+  }
+
 };
 
 watch(images.value, () => {
@@ -73,6 +83,11 @@ watch(images.value, () => {
   column-gap: 2em;
   row-gap: 2em;
   padding-bottom: 2em;
+
+  @include mobile {
+    gap: 1em;
+    padding-bottom: 1em;
+  }
 }
 
 .gallery-link{
@@ -84,6 +99,11 @@ watch(images.value, () => {
     box-shadow: 0 0 0 1px var(--border-color-secondary);
     overflow: hidden;
     flex: 0 1 23%;
+
+    @include mobile {
+      flex: 0 1 33%;
+      padding-bottom: 33%;
+    }
 }
 
 .gallery-link>input {

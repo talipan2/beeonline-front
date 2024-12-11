@@ -119,6 +119,7 @@ watch(() => props.activeFilters, (newVal, oldVal) => {
 
 .entity-filter {
   display: flex;
+  flex-wrap: wrap;
   font-size: 1.6rem;
   margin-bottom: 2em;
   column-gap: 2em;
@@ -130,6 +131,15 @@ watch(() => props.activeFilters, (newVal, oldVal) => {
   .select__select {
     padding: .875em;
     color: var(--text-color-senary);
+  }
+}
+
+@include mobile {
+  .entity-filter {
+    
+    &__select {
+      flex: 0 1 100%;
+    }
   }
 }
 

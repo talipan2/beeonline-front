@@ -8,7 +8,7 @@
             Фото
             <CommonTooltip text="Допустимы изображения размером до 5Мб" />
           </label>
-          <CommonImageLoad v-model="data.logo" label="Загрузить еще" class="form-group__value" />
+          <CommonGalleryLoad v-model="data.logo" label="Загрузить еще" class="form-group__value" />
         </div>
       </div>
       <div class="entity__data">
@@ -163,7 +163,6 @@
 </template>
 
 <script setup>
-
 const props = defineProps({
   role: {
     type: String,
@@ -212,6 +211,11 @@ const minPart = [
   &__photo {
     .load-image {
       flex-grow: 0;
+    }
+
+    .gallery-link {
+      padding-bottom: 29%;
+      flex: 0 1 29%;
     }
   }
 

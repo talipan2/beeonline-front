@@ -1,5 +1,5 @@
 <template>
-  <NuxtLayout name="profile" title="Премия Bee-online" class="chat-layout">
+  <NuxtLayout name="profile" title="Премия Bee-online" class="bonus-layout">
     <template #header>
       <UiBreadCrumb :list="[{label: 'Главная', link: '/'},{ label: 'Кабинет', link: `/${role}/desktop`}, { label: 'Сообщения', link: '' }]" />
     </template>

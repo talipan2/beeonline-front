@@ -60,6 +60,18 @@ const confirm = () => {
     &:hover {
       background-color: #d6dcee;}
   }
+
+  @include tablet {
+    .modal-dialog {
+      width: 50%;
+    }
+  }
+  
+  @include mobile {
+    .modal-dialog {
+      width: 90%;
+    }
+  }
 }
 
 </style>

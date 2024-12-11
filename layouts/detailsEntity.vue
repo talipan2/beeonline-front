@@ -52,6 +52,10 @@ const props = defineProps({
     display: inline;
     font-size: 3.2em;
     line-height: 1.2em;
+
+    @include mobile {
+      font-size: 2rem;
+    }
   }
 
   &__container {
@@ -60,13 +64,46 @@ const props = defineProps({
   }
 
   &__main {
-    flex: 0 1 60%;
-    max-width: 60%;
+    flex: 1 1 60%;
+    max-width: 70%;
   }
 
   &__right-side {
     flex: 0 1 33%;
     max-width: 33%;
+  }
+
+  @include tablet {
+    margin-inline: auto;
+    max-width: var(--desktop-content-width);
+  }
+
+  @include small-tablet {
+    max-width: var(--tablet-content-width);
+
+    &__main {
+      max-width: 60%;
+    }
+
+    &__right-side {
+      flex-basis: 40%;
+    }
+  }
+
+  @include mobile {
+    max-width: var(--mobile-content-width);
+
+    &__container {
+      flex-direction: column;
+    }
+
+    &__main {
+      max-width: 100%;
+    }
+
+    &__right-side {
+      max-width: 100%;
+    }
   }
 
 }

@@ -122,6 +122,7 @@ function removeFile(id) {
   }
 
   &__data {
+    flex: 1;
     display: flex;
     align-items: center;
     padding: .76em 1.5em .76em 0;
@@ -143,6 +144,8 @@ function removeFile(id) {
 
   &__name {
     font-size: 1.23em;
+    overflow-wrap: anywhere;
+    flex: 0 1 100%;
   }
 
   &__download {
@@ -185,6 +188,10 @@ function removeFile(id) {
 
   &__remove::before {
     transform: rotate(45deg);
+  }
+
+  &__icon {
+    flex: 0 0 15%;
   }
 
   &__icon_image,

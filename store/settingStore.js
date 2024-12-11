@@ -22,8 +22,13 @@ export const useSettingStore = defineStore("setting", {
     bonusLevelModal: false,
     bonusInfoModal: false,
     resetPasswordModal: false,
+    catalogTutorialStatus: false,
   }),
   actions: {
-
+    setAlert(status, text) {
+      this.alertModal.isOpen = true;
+      this.alertModal.status = status;
+      this.alertModal.text = text;
+    }
   }
 })

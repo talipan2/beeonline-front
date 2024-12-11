@@ -140,6 +140,12 @@ const pubCardType = computed(() => {
     display: flex;
     align-items: center;
     column-gap: 1em;
+
+    @include mobile {
+      flex-direction: column;
+      align-items: flex-start;
+      row-gap: 1em;
+    }
   }
 
   &__btn {

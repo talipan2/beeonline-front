@@ -14,7 +14,7 @@ export default {
   },
 
   async editOrder(id, data) {
-    const { name, description, termsOfCooperation, rawMaterials, price, batch, completionDate, patterns} = data
+    const { name, description, termsOfCooperation, rawMaterials, price, batch, completionDate, patterns, step} = data
     const params = {}
     if(name !== '') params.name = name
     if(description !== '') params.description = description
@@ -24,6 +24,7 @@ export default {
     if(batch !== '') params.batch = batch
     if(patterns !== '') params.patterns = Boolean(patterns)
     if(completionDate !== '') params.deadline_at = completionDate
+    params.current_step = step
     return axios.patch(`orders/${id}`, params)
   },
 
@@ -31,5 +32,9 @@ export default {
     const formData = new FormData();
     formData.append('logo', data);
     return axios.post(`/orders/${id}/upload-logo`, formData, {headers: {'Content-Type': 'multipart/form-data'}})
+  },
+
+  async uploadGallery(id, data) {
+    return axios.post(`/orders/${id}/upload-gallery`, data, {headers: {'Content-Type': 'multipart/form-data'}})
   }
 }

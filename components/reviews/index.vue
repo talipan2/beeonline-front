@@ -109,5 +109,13 @@ onMounted(() => {
   &__filter-select {
     flex: 0 1 30%;
   }
+
+  @include small-mobile {
+    &__list {
+      display: flex;
+      flex-direction: column;
+      row-gap: 1em;
+    }
+  }
 }
 </style>

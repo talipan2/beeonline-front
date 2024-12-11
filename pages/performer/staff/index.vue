@@ -27,4 +27,12 @@ const role = computed(() => userStore.role);
   }
 }
 
+@include mobile {
+  .staff-layout {
+    .profile__content {
+      flex: 0 1 100%;
+    }
+  }
+}
+
 </style>

@@ -40,6 +40,10 @@ const data = ref({});
   box-shadow: var(--box-shadow-primary);
   background-color: #fff;
 
+  @include mobile {
+    padding: 2rem;
+  }
+
   &__container {
     display: flex;
     margin-bottom: 2.5em;
@@ -49,10 +53,18 @@ const data = ref({});
     display: flex;
     flex-direction: column;
     row-gap: .5em;
+
+    @include small-tablet {
+      font-size: 1.4rem;
+    }
   }
 
   &__title {
     font-size: 1.5em;
+
+    @include small-tablet {
+      font-size: 1.6rem;
+    }
   }
   
   &__image {
@@ -66,6 +78,10 @@ const data = ref({});
     font-size: .75em;
     column-gap: .5em;
     text-transform: uppercase;
+
+    @include mobile {
+      padding: .9rem;
+    }
   }
 }
 

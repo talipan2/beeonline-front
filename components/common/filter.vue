@@ -1,7 +1,9 @@
 <template>
   <CommonSidebar class="filter">
     <template #body>
-      <div class="sidebar__top">
+      <UiButton v-show="!isFilterVisible && isMobile" @click="toggleFilter" type="button" class="sidebar__btn" variant="quinary" size="large">Показать фильтры</UiButton>
+
+      <div class="sidebar__top" v-show="!isMobile || (isMobile && isFilterVisible)">
         <div class="filter__container">
           <slot name="body" />
           <div class="filter__bottom">
@@ -18,6 +20,7 @@
               </UiButton>
             </div>
             <UiButton
+              type="button"
               variant="default"
               size="large"
               class="form-group-data__btn"
@@ -28,19 +31,65 @@
           </div>
         </div>
       </div>
+
+      <div class="sidebar__bottom" v-show="isFilterVisible && isMobile">
+        <UiButton  
+          @click="toggleFilter" 
+          type="button" 
+          class="sidebar__btn sidebar__btn_type_close" 
+          variant="quinary" 
+          size="large"
+        >
+          Скрыть фильтры
+        </UiButton>
+      </div>
     </template>
   </CommonSidebar>
 </template>
 
 <script setup>
+import { useSettingStore } from '~/store/settingStore';
 
+
+const props = defineProps({
+  isTutorial: {
+    type: Boolean,
+  }
+});
+
+const settingStore = useSettingStore();
 const submitRef = ref(null);
 const emit = defineEmits(['updateTutorialRefSubmit']);
+
+const isMobile = ref(false);
+const isFilterVisible = ref(false);
+
+function toggleFilter() {
+  isFilterVisible.value = !isFilterVisible.value;
+  settingStore.catalogTutorialStatus = isFilterVisible.value
+}
+
+const updateWidth = () => {
+  isMobile.value = window.innerWidth < 768;
+};
+
 
 watch(() => submitRef.value, (newVal) => {
   emit('updateTutorialRefSubmit', newVal);
 }, {deep: true})
 
+watch(() => settingStore.catalogTutorialStatus, (newVal) => {
+  isFilterVisible.value = newVal
+});
+
+onMounted(() => {
+  window.addEventListener('resize', updateWidth);
+  updateWidth();
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', updateWidth);
+});
 </script>
 
 <style lang="scss">
@@ -71,6 +120,13 @@ watch(() => submitRef.value, (newVal) => {
       max-width: 100%;
       margin-bottom: 0;
     }
+  }
+
+  .sidebar__btn {
+    font-size: 12px;
+    text-transform: uppercase;
+    width: 100%;
+    margin-bottom: 2em;
   }
 
   .checkbox-group {
@@ -109,12 +165,21 @@ watch(() => submitRef.value, (newVal) => {
     }
   }
 
+  .sidebar__bottom {
+    padding-top: 2em;
+    border-top: 1px solid var(--border-color-secondary);
+  }
+
   &__submit {
     width: 100%;
   }
 
 }
 
+
+@include mobile {
+
+}
 
 
 </style>

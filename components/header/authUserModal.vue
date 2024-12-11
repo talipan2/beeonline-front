@@ -42,10 +42,31 @@ const confirm = () => {
     margin-block: 1.66em 1.11em;
   }
 
-  .login__title {
-    font-size: 2.8em;
-    margin-block: 1.25em .9em;
+}
+
+@include tablet {
+  .auth-modal {
+    .modal-dialog {
+      max-width: none;
+      width: 40%;
+    }
   }
-  
+}
+
+@include mobile {
+  .auth-modal {
+    .modal-dialog {
+      width: 60%;
+    }
+  }
+}
+
+@include small-mobile {
+  .auth-modal {
+    .modal-dialog {
+      width: 96%;
+      
+    }
+  }
 }
 </style>

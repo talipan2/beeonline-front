@@ -28,7 +28,7 @@ export default {
 	display: flex;
 	gap: 3em;
 	padding: 4.4em;
-	background: var(--primary-color) url(/images/bg.jpg) no-repeat center/cover;
+	background: var(--primary-color) url(/assets/images/bonus/bg.jpg) no-repeat center/cover;
 	overflow: hidden;
 	color: #FFF;
 	position: relative;
@@ -70,6 +70,40 @@ export default {
 			width: 36em;
 			height: auto;
 			max-width: none;
+		}
+	}
+
+}
+
+@media screen and (max-width: 1500px) {
+	.bonus-banner {
+		font-size: 0.8rem;
+	}
+}
+
+@include mobile {
+	.bonus-banner {
+		padding: 40px 18px;
+
+		&__body {
+			flex-direction: column;
+			text-align: center;
+		}
+
+		&__title {
+			font-size: 24px;
+			text-align: center;
+			max-width: 100%;
+		}
+
+		&__description {
+			font-size: 14px;
+			text-align: center;
+			max-width: 100%;
+		}
+
+		&__image {
+			height: 200px;
 		}
 	}
 }

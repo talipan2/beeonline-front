@@ -48,10 +48,9 @@ export const useUserStore = defineStore('user', {
       }
     },
 
-    async registerUser(name, email, job='', phone) {
+    async registerUser(name, email, post, phone, role) {
       try {
-        const response = await Api.registerUser(name, email, job, phone);
-        console.log(response)
+        const response = await Api.registerUser(name, email, post, phone, role);
         if(response.data) {
           this.isAuth = true;
           this.userToken = response.data.access_token;
@@ -92,6 +91,16 @@ export const useUserStore = defineStore('user', {
         throw error;
       }
     },
+    async resetPassword(data) {
+      try {
+        const response = await Api.resetPassword(data);
+        if(response.data) {
+          return response.data;
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
 
     async setUserData(data) {
       try {
@@ -103,5 +112,16 @@ export const useUserStore = defineStore('user', {
         throw error;
       }
     },
+
+    async getUserData(id) {
+      try {
+        const response = await Api.getUser(id);
+        if(response.data) {
+          return response.data;
+        }
+      } catch (error) {
+        throw error;
+      }
+    }
   }
 });

@@ -1,5 +1,5 @@
 <template>
-  <nav aria-label="breadcrumb" class="container">
+  <nav aria-label="breadcrumb" class="breadcrumb-wrapper">
     <ul class="breadcrumb">
       <li
         v-for="(crumb, index) in list"
@@ -34,7 +34,8 @@ const props = defineProps({
 <style lang="scss" scoped>
   .breadcrumb {
     display: flex;
-    column-gap: 1em;
+    flex-wrap: wrap;
+    gap: 1em;
     font-size: 1.6em;
     padding: 0;
     margin-block: 2em 0;

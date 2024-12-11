@@ -134,5 +134,50 @@ const props = defineProps({
   }
 }
 
+@include mobile {
+  .staff {
+
+    &__item {
+      flex-wrap: wrap;
+      row-gap: 1em;
+      font-size: 1.3rem;
+      justify-content: space-between;
+    }
+
+    &__col-1,
+    &__col-2,
+    &__col-3,
+    &__col-4 {
+      flex: 0 1 47%;
+    }
+  }
+}
+
+@include small-mobile {
+  .staff {
+
+    &__item {
+      flex-direction: column;
+      align-items: flex-start;
+      row-gap: 1.5em;
+
+      .staff__item-btn {
+        font-size: 1.2rem;
+        padding: .75em 1em;
+      }
+    }
+
+    &__col-1,
+    &__col-2,
+    &__col-3,
+    &__col-4 {
+      flex-basis: 100%;
+    }
+
+    &__col-4 {
+      align-self: flex-end;
+    }
+  }
+}
 
 </style>

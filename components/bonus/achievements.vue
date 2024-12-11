@@ -220,5 +220,31 @@ onMounted(async () => {
     }
 
   }
+
+  @include mobile {
+    font-size: .8rem;
+
+    & &__image {
+      font-size: 5.6px;
+    }
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .achievement {
+    &__action {
+      display: none;
+    }
+
+    &__action-mobile {
+      display: block;
+      width: fit-content;
+      font-size: 1.2rem;
+      a {
+        color: var(--text-color-primary);
+        font-weight: 400;
+      }
+    }
+  }
 }
 </style>

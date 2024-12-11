@@ -186,4 +186,23 @@ const userNotifications = [
     }
   }
 }
+
+@include mobile {
+  .staff {
+    &__title {
+      margin-top: 1em;
+      font-size: 1.8rem;
+    }
+  }
+}
+
+@include small-mobile {
+  .staff-content {
+    .checkbox-group {
+      .checkbox {
+        flex: 0 1 100%;
+      }
+    }
+  }
+}
 </style>

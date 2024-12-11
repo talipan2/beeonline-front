@@ -3,7 +3,7 @@
     <CommonProfileCheckCard title="Представитель компании"
       text="Указанные данные не разглашаются третьим лицам, и необходимы для успешной работы на портале" changeLink="/"
       changeLinkLabel="Изменить данные" :secondLink="`/${role}/profile/update_pwd`" secondLinkLabel="Изменить пароль">
-      <div class="form-group">
+      <div class="form-group profile__representative">
         <div class="form-group-data">
           <div class="form-group__title">ФИО</div>
           <div class="form-group__value">{{ userStore.userData.email || '-' }}</div>
@@ -150,7 +150,7 @@ const role = computed(() => userStore.role);
 </script>
 
 
-<style lang="scss">
+<style lang="scss" scoped>
 
 .profile__employees-btn {
     font-size: 1.2em;
@@ -185,9 +185,12 @@ const role = computed(() => userStore.role);
   column-gap: 5.5%;
   color: #565263;
   margin-bottom: 1.53em;
+
+  
 }
 .register__check-company-logo {
   flex: 1 0 20%;
+  max-width: 20%;
   min-width: 9em;
   font-size: 1.3em;
 
@@ -200,7 +203,7 @@ const role = computed(() => userStore.role);
 
 }
 .register__check-company-details {
-  flex: 1 0 80%;
+  flex: 1 1 80%;
   display: flex;
   flex-direction: column;
   row-gap: 1.53em;
@@ -212,6 +215,21 @@ const role = computed(() => userStore.role);
 
   .flag {
     margin-right: .5em;
+  }
+}
+
+@include tablet {
+  .profile__representative {
+    .form-group-data {
+      flex-basis: 46%;
+    }
+  }
+}
+
+@include small-mobile {
+  .register__check-company-container {
+    flex-direction: column;
+    row-gap: 1rem;
   }
 }
 

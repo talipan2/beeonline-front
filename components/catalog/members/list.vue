@@ -90,7 +90,7 @@
     <!-- map -->
     <div class="members__list" v-if="currentViewSetting === 'map'">
       <CatalogMembersMap class="members__map" v-model="currentPubCard"/>
-      <div class="members__card">
+      <div class="members__card" ref="membersCard">
         <CardsPublic :is-props-visible="true" :is-description="true" v-if="currentPubCard !== null" :isList="true"/>
         <p class="members__card-title" v-else>Выберите точку на карте</p>
       </div>
@@ -104,6 +104,8 @@
 </template>
 
 <script setup>
+import { useSettingStore } from '~/store/settingStore';
+
 const props = defineProps({
   data: {
     type: Array,
@@ -115,13 +117,14 @@ const props = defineProps({
   }
 });
 
+const settingStore = useSettingStore();
 const router = useRouter();
 const sortDropdown = ref(null);
 const currentViewSetting = ref(null);
 const currentPubCard = ref(null);
 const currentListLength = computed(() => [props.data].length);
+const membersCard = ref(null);
 
-console.log(currentListLength.value)
 const currentSortList = ref({
   id: 1,
   name: "По просмотрам",
@@ -187,6 +190,14 @@ const changeSortList = (item) => {
   sortDropdown.value.tippy.hide();
 };
 
+watch(() => currentPubCard.value, (newVal) => {
+  if (newVal !== null && window.innerWidth < 887) {
+    const rect = membersCard.value.getBoundingClientRect(); 
+    const offset = window.scrollY + rect.top - settingStore.headerHeight - (window.innerHeight / 2);
+    smoothScroll(offset);
+  }
+})
+
 onMounted(() => {
   if (router.currentRoute.value.query.view) {
     switch (router.currentRoute.value.query.view) {
@@ -204,6 +215,7 @@ onMounted(() => {
     currentViewSetting.value = "grid";
   }
 })
+
 
 
 </script>
@@ -276,6 +288,12 @@ onMounted(() => {
     font-size: 1.6em;
   }
 
+  @include mobile {
+    &__item {
+      flex: 0 1 100%;
+    }
+  }
+
 }
 
 .members_type_grid {
@@ -332,4 +350,71 @@ onMounted(() => {
   margin-bottom: 1.5em;
   padding-bottom: 0;
 }
+
+@include tablet {
+  .members {
+    &__list {
+      gap: 2rem;
+    }
+  }
+}
+
+@include mobile {
+  .members {
+
+    &__header {
+      flex-wrap: wrap;
+      row-gap: 1em;
+    }
+
+    &_type_grid &__header {
+      column-gap: 1.5rem;
+      padding-bottom: 3rem;
+      margin-bottom: 4rem;
+    }
+
+    &__sort-title {
+      font-size: 1.4rem;
+    }
+
+    &__sort-btn {
+      font-size: 1.4rem;
+    }
+
+    [data-tippy-root] {
+      min-width: 23rem;
+    }
+
+    .dropdown__item {
+      font-size: 1.2rem;
+    }
+
+    &__count-text {
+      font-size: 1.4rem;
+    }
+
+    &__view-btn {
+      padding: .5rem;
+    }
+
+    &__map {
+      flex: 1 1 100%;
+      max-width: 100%;
+    }
+  }
+
+  .members_type_map {
+    .members__list {
+      .members__map {
+        flex: 1 1 100%;
+        max-width: 100%;
+        height: 514px;
+      }
+      .members__card {
+        flex: 1 1 100%;
+      }
+    }
+  }
+}
+
 </style>

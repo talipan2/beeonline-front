@@ -95,6 +95,7 @@ const userData = ref({
   email: "",
   phone: "",
   privacyPolicy: false,
+  role: role.value
 });
 const isCreateOrder = computed(() => settingStore.isCreateOrder);
 
@@ -104,7 +105,8 @@ const handleSubmit = () => {
       userData.value.name,
       userData.value.email,
       userData.value.jobTitle,
-      userData.value.phone
+      userData.value.phone,
+      userData.value.role
     )
     .then((res) => {
       if (isCreateOrder.value) {

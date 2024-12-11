@@ -122,4 +122,16 @@ watch(() => selectedCities.value, (newVal) => {
   }
 }
 
+@include mobile {
+  .location {
+    &__location {
+      flex: 0 1 100%;
+    }
+
+    &__btn {
+      max-width: 100%;
+    }
+  }
+}
+
 </style>

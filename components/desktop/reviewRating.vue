@@ -118,4 +118,11 @@ const getBarWidth = (count) => {
   }
 }
 
+@include small-mobile {
+  .review-rating {
+    flex-direction: column;
+    row-gap: 1rem;
+  }
+}
+
 </style>

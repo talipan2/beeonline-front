@@ -75,8 +75,10 @@
   --box-shadow-input: 0 0 0 .2rem rgba(105,55,165,.25);
 
   --container-width: 1520px;
-  --container-width-2k: 2067px; // Для 2K экранов
-  --container-width-4k: 3100px; // Для 4K экранов
+  
+  --desktop-content-width: 960px;
+  --tablet-content-width: 720px;
+  --mobile-content-width: 540px;
 
   --container-padding-x: 13px;
 

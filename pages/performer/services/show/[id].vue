@@ -5,7 +5,7 @@
         :list="[{ label: 'Главная', link: '/' }, { label: 'Кабинет исполнителя', link: '/performer/desktop' }, { label: 'Список услуг', link: '/performer/services' }, { label: 'Услуга', link: '' }]" />
     </template>
     <template #content>
-      <EntityView :data="serviceProps"/>
+      <EntityView :data="serviceProps" role="performer"/>
     </template>
   </NuxtLayout>
 </template>

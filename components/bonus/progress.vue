@@ -321,5 +321,13 @@ const handleOpenLevelModal = () => {
     font-size: 1.6em;
     line-height: 1.4;
   }
+
+  @include tablet {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  @include mobile {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 </style>

@@ -4,7 +4,7 @@
       <h3>{{ data.name || 'не указано' }}</h3>
     </div>
     <div class="service-card__body">
-      <div class="service-card__content">
+      <div class="service-card__content service-card__content_type_image" >
         <div class="service-card__image">
           <img :src="data.logo || defaultImage" alt="">
         </div>
@@ -130,6 +130,42 @@ watch(() => props.data, (newVal) => {
     inset: 0;
   }
 
+}
+
+@include tablet {
+  .service-card {
+
+    &__content {
+      flex: 1 1 50%;
+    }
+  }
+}
+
+@include mobile {
+  .service-card {
+
+    &__content {
+      max-width: none;
+      flex: 1 1 100%;
+      
+      &_type_image {
+        flex: 0;
+      }
+    }
+
+    &__prop {
+      display: inline;
+    }
+    
+    &__prop-name {
+      display: inline;
+    }
+
+    &__prop-value {
+      display: inline;
+      margin-left: .5em;
+    }
+  }
 }
 
 

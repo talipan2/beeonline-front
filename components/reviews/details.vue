@@ -43,6 +43,10 @@ const settingStore = useSettingStore();
 
   &__text {
     margin-bottom: 1.5em;
+
+    @include mobile {
+      font-size: 1.4rem;
+    }
   }
 
   &__rating {
@@ -51,20 +55,33 @@ const settingStore = useSettingStore();
     font-family: 'fira-sans', sans-serif;
     font-size: 1.75em;
     margin-bottom: .89em;
+    align-items: center;
 
     span {
       color: var(--text-color-ternary);
+    }
+
+    @include mobile {
+      font-size: 1.8rem;
     }
   }
 
   &__add {
     font-size: .75em;
-    text-transform: uppercase;
-    max-width: 33%;
+    max-width: 40%;
     margin-bottom: 4.15em;
 
     button {
+      text-transform: uppercase;
       width: 100%;
+    }
+
+    @include mobile {
+      max-width: 50%;
+    }
+
+    @include small-mobile {
+      max-width: 100%;
     }
   }
 }

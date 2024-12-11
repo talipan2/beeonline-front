@@ -75,7 +75,11 @@ const handleClick = () => {
   font-weight: 600;
   line-height: 1em;
   
-  &:hover {
+  // &:hover {
+  //   background-color: var(--button-background-primary-hover);
+  // }
+
+  @include hover {
     background-color: var(--button-background-primary-hover);
   }
 
@@ -91,7 +95,7 @@ const handleClick = () => {
   font-weight: 600;
   line-height: 1em;
 
-  &:hover {
+  @include hover {
     background-color: var(--button-background-secondary-hover);
     color: var(--text-color-quaternary);
   }
@@ -105,7 +109,7 @@ const handleClick = () => {
   border: 2px solid var(--border-color-quaternary);
   line-height: 1em;
 
-  &:hover {
+  @include hover {
     background-color: var(--button-background-primary);
     color: var(--text-color-octonary);
 
@@ -123,7 +127,7 @@ const handleClick = () => {
   line-height: 1em;
   transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 
-  &:hover {
+  @include hover {
     background-color: var(--button-background-quaternary-hover);
     color: var(--text-color-hover-primary)
   }
@@ -133,8 +137,6 @@ const handleClick = () => {
 .btn-quinary {
   background-color: var(--button-background-primary);
   color: var(--text-color-octonary);
-  // font-size: 1.8em;
-  // line-height: 1em;
 
   svg {
     fill: var(--text-color-octonary);
@@ -144,7 +146,7 @@ const handleClick = () => {
     }
   }
 
-  &:hover {
+  @include hover {
     border-color: var(--button-background-primary);
     background-color: var(--button-background-quaternary-hover);
     color: var(--text-color-primary);
@@ -166,7 +168,7 @@ const handleClick = () => {
   color: var(--text-color-primary);
   box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3);
 
-  &:hover {
+  @include hover {
     background-color: var(--button-background-primary);
     border-color: var(--button-background-primary);
     color: var(--text-color-octonary);
@@ -187,7 +189,7 @@ const handleClick = () => {
   border-color: #08c;
   color: var(--text-color-primary);
 
-  &:hover {
+  @include hover {
     background-color: #08c;
     border-color: #08c;
     color: var(--text-color-octonary);

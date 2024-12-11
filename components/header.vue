@@ -52,16 +52,16 @@
           </ul>
         </nav>
         <div class="header__auth" v-if="isAuth">
-          <UiButton to="/search" variant="secondary" size="around">
+          <UiButton class="header__page-link" to="/search" variant="secondary" size="around">
             <SvgoSearchIcon class="svg-m" />
           </UiButton>
-          <UiButton :to="role ? `/${role}/favorites` : '/'" variant="secondary" size="around">
+          <UiButton class="header__page-link" :to="role ? `/${role}/favorites` : '/'" variant="secondary" size="around">
             <SvgoFavorite class="svg-m" />
           </UiButton>
-          <UiButton to="/chat" variant="secondary" size="around">
+          <UiButton class="header__page-link" to="/chat" variant="secondary" size="around">
             <SvgoMessage class="svg-m" />
           </UiButton>
-          <UiButton :to="role ? `/${role}/notifications` : '/'" variant="secondary" size="around">
+          <UiButton class="header__page-link" :to="role ? `/${role}/notifications` : '/'" variant="secondary" size="around">
             <SvgoNotice class="svg-m" />
             <UiAlertBadge />
           </UiButton>
@@ -72,12 +72,19 @@
             <SvgoSearchIcon class="svg-m" />
           </UiButton>
           <UiButton variant="secondary" size="large" type="button" @click="openAuthModal">Вход</UiButton>
-          <HeaderChooseRegistrProfileDropdown />
+          <HeaderChooseRegistrProfileDropdown class="header__page-link"/>
         </div>
-        <UiButton to="/" variant="primary" size="small" class="header__login" @click="isAuth = true">Вход</UiButton>
+        <UiButton v-if="!isAuth" type="button" variant="primary" size="small" class="header__login" @click="openAuthModal">Вход</UiButton>
       </div>
     </div>
-    <HeaderMenuMobileModal v-model="isOpenMobileModal" :headerHeight="headerHeight" :closeButton="false"></HeaderMenuMobileModal>
+    <HeaderMenuMobileModal 
+      v-model="isOpenMobileModal" 
+      :headerHeight="headerHeight" 
+      :closeButton="false" 
+      :userName="userName" 
+      :role="role"
+      :isAuth="isAuth" 
+    />
     <HeaderAuthUserModal />
   </header>
 </template>
@@ -93,6 +100,7 @@ const organizationStore = useOrganizationStore();
 const router = useRouter();
 
 const isAuth = computed(() => userStore.isAuth);
+const userName = computed(() => userStore.userData ? userStore.userData.name : null);
 const isOpenMobileModal = ref(false);
 const header = ref(null);
 const headerMain = ref(null);
@@ -445,6 +453,18 @@ onUnmounted(() => {
 
 .header__menu-btn_active > :nth-child(3) {
     transform: rotate(-45deg);
+}
+
+@media screen and (max-width: 1325px) {
+  .header__page-link {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .header__logo-button {
+    display: none;
+  }
 }
 
 </style>

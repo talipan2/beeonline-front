@@ -24,7 +24,12 @@ const props = defineProps({
     max-width: 48%;
     display: flex;
     flex-direction: column;
+
+    @include mobile {
+      max-width: 100%;
+    }
   }
+
 }
 
 </style>

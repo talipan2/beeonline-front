@@ -27,19 +27,23 @@
 </template>
 
 <script setup>
+import { useSettingStore } from "~/store/settingStore";
 import { useUserStore } from "~/store/userStore";
 
+const settingStore = useSettingStore();
 const userStore = useUserStore();
 const router = useRouter();
 
 const registerCustomer = () => {
   userStore.role = "customer";
   router.push({ path: "/register" });
+  settingStore.authModalStatus = false;
 };
 
 const registerPerformer = () => {
   userStore.role = "performer";
   router.push({ path: "/register" });
+  settingStore.authModalStatus = false;
 };
 
 </script>

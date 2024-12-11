@@ -1,42 +1,44 @@
 <template>
-  <UiNewDropdown
-    placement="bottom"
-    :arrow="false"
-    class="header__lang-dropdown"
-    :offset="[0, 0]"
-    translate="no"
-  >
-    <div>
-      <button class="header__lang">
-        <component
-          :is="selectedOption.img"
-          v-if="selectedOption.img"
-          class="header__lang-icon"
-        />
-        {{ selectedOption.label }}
-        <SvgoDropDownNew class="svg-s header__lang-dropdown" />
-      </button>
-    </div>
-    <template #content>
-      <div class="header__lang-list">
-        <button
-          class="header__lang-item"
-          :class="{'active': selectedOption.value === button.value}"
-          v-for="(button, index) in dropdownOptions"
-          :key="index"
-          @click="handleChangeLang(button)"
-          translate="no"
-        >
+  <div class="choose-lang">
+    <UiNewDropdown
+      placement="bottom"
+      :arrow="false"
+      class="header__lang-dropdown"
+      :offset="[0, 0]"
+      translate="no"
+    >
+      <div>
+        <button class="header__lang">
           <component
-            :is="button.img"
-            v-if="button.img"
+            :is="selectedOption.img"
+            v-if="selectedOption.img"
             class="header__lang-icon"
           />
-          {{ button.label }}
+          {{ selectedOption.label }}
+          <SvgoDropDownNew class="svg-s header__lang-dropdown-icon" />
         </button>
       </div>
-    </template>
-  </UiNewDropdown>
+      <template #content>
+        <div class="header__lang-list">
+          <button
+            class="header__lang-item"
+            :class="{'active': selectedOption.value === button.value}"
+            v-for="(button, index) in dropdownOptions"
+            :key="index"
+            @click="handleChangeLang(button)"
+            translate="no"
+          >
+            <component
+              :is="button.img"
+              v-if="button.img"
+              class="header__lang-icon"
+            />
+            {{ button.label }}
+          </button>
+        </div>
+      </template>
+    </UiNewDropdown>
+  </div>
 </template>
 
 <script setup>
@@ -125,6 +127,10 @@ onMounted(() => {
 
 <style lang="scss">
 
+.choose-lang {
+  position: relative;
+}
+
 .header__lang {
   align-items: center;
   display: flex;
@@ -203,7 +209,7 @@ onMounted(() => {
     color: var(--text-color-octonary);
   }
 
-  .header__lang-dropdown {
+  .header__lang-dropdown-icon {
     path {
       fill: var(--text-color-octonary);
     }

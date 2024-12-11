@@ -13,13 +13,17 @@
     </div>
     <div class="brands-exhibitions__container">
       <h3 class="brands-exhibitions__title">Участие в выставках</h3>
+      <div class="brands-exhibitions__cards">
+        <CardsDefaultCard v-for="(exhibition, index) in exhibitionList" :key="index" :card="exhibition" @editCard="handleChangeCardExhibition($event)" 
+        @deleteCard="deleteExhibitionCard(index)"/>
+      </div>
       <div class="brands-exhibitions__btn-container form-group">
         <UiButton type="button" class="form-group-data__btn" variant="tertiary" size="large"
           @click="openExhibitionsModal">Добавить выставку</UiButton>
       </div>
     </div>
     <ModalsTrademarksModal v-model="trademarksList" :editCard="currentEditCard"/>
-    <ModalsExhibitionModal />
+    <ModalsExhibitionModal v-model="exhibitionList" :edit-card="currentEditCard"/>
   </div>
 </template>
 
@@ -43,17 +47,32 @@ const handleChangeCard = (card) => {
   openTrademarksModal();
 }
 
+const handleChangeCardExhibition = (card) => {
+  currentEditCard.value = card;
+  openExhibitionsModal();
+}
+
 const createNewCard = () => {
   currentEditCard.value = null;
   openTrademarksModal();
 }
 
+const createNewCardExhibition = () => {
+  currentEditCard.value = null;
+  openExhibitionsModal();
+}
 
+const exhibitionList = ref([]);
 const trademarksList = ref([]);
 
 const deleteTrademarkCard = (index) => {
   trademarksList.value.splice(index, 1);
 };
+
+const deleteExhibitionCard = (index) => {
+  exhibitionList.value.splice(index, 1);
+};
+
 
 </script>
 
@@ -82,6 +101,28 @@ const deleteTrademarkCard = (index) => {
     display: flex;
     flex-direction: column;
     row-gap: 1.5rem;
+  }
+}
+
+@include tablet {
+  .brands-exhibitions {
+
+    &__title {
+      font-size: 1.8rem;
+    }
+
+    &__btn-container {
+      max-width: 65%;
+    }
+  }
+}
+
+@include small-mobile {
+  .brands-exhibitions {
+
+    &__btn-container {
+      max-width: 100%;
+    }
   }
 }
 

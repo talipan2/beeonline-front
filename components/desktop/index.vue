@@ -13,7 +13,7 @@
               <p class="balance-card__balance">{{ '559,03' }} ₽ <span class="balance-card__currency"> руб.</span></p>
               <p class="balance-card__balance">{{ '190' }} <span class="balance-card__currency"> баллов</span></p>
             </div>
-            <div class="balance-card__details-list">
+            <div class="balance-card__details-list balance-card__details-list_type_desktop">
               <div class="balance-card__details-header ">
                 <p class="balance-card__details-date desktop__selected">Дата и время</p>
                 <p class="balance-card__details-sum desktop__selected">Сумма</p>
@@ -28,6 +28,27 @@
                 <p class="balance-card__details-type">Пополнение баллов</p>
               </div>
             </div>
+            <div class="balance-card__details-list balance-card__details-list_type_mobile">
+              <template  v-for="item in 5" :key="item">
+                <div class="balance-card__details-item-mobile">
+                  <div class="balance-card__details-item-line">
+                    <p class="balance-card__details-date desktop__selected">Дата и время</p>
+                    <p class="balance-card__details-date">28.10.2024 <span class="balance-card__details-time desktop__selected">12:00</span></p>
+                  </div>
+                  <div class="balance-card__details-item-line">
+                    <p class="balance-card__details-date desktop__selected">Сумма</p>
+                    <div class="balance-card__details-sum replenishment">
+                      <span>+</span>
+                      1000
+                    </div>
+                  </div>
+                  <div class="balance-card__details-item-line">
+                    <p class="balance-card__details-type desktop__selected">Операция</p>
+                    <p class="balance-card__details-type">Пополнение баллов</p>
+                  </div>
+                </div>
+              </template>
+            </div>
             <NuxtLink class="balance-card__link link">Все последние транзакции</NuxtLink>
           </div>
         </template>
@@ -39,7 +60,7 @@
           <template #body>
             <DesktopSelectableEntity class="desktop__chats" :label="['Отзывы о нас', 'Мои отзывы']" :count="[8, 10]">
               <template #firstPage >
-                <template v-if="false">
+                <template v-if="true">
                   <DesktopReviewRating :role="role"/>
                   <DesktopSelectableEntityCard v-for="(item, index) in 2" :key="index" btnLabel="Читать полный отзыв" :isRating="true"/>
                 </template>
@@ -55,7 +76,7 @@
                 </template>
               </template>
               <template #secondPage>
-                <template v-if="false">
+                <template v-if="true">
                   <DesktopSelectableEntityCard v-for="(item, index) in 3" :key="index" btnLabel="Читать полный отзыв" :isRating="true"/>
                 </template>
                 <template v-else>
@@ -75,7 +96,7 @@
           <template #body>
             <DesktopSelectableEntity class="desktop__chats" :label="['Все чаты', 'Непрочитанные']" :count="[8, 10]" :disabledPage="[2]">
               <template #firstPage>
-                <template v-if="false">
+                <template v-if="true">
                   <DesktopSelectableEntityCard v-for="(item, index) in 3" :key="index" btnLabel="Читать полностью"/>
                 </template>
                 <template v-else>
@@ -226,6 +247,24 @@ onMounted(() => {
     padding-block: .5em;
   }
 
+  &__details-item-line {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.1rem;
+  }
+
+  &__details-list_type_mobile {
+      display: none;
+    }
+
+  &__details-item-mobile {
+    display: flex;
+    flex-direction: column;
+    row-gap: .3em;
+    padding-block: 1em;
+    border-bottom: 1px solid var(--border-color-senary);
+  }
+
   &__details-status {
     width: 1.3em;
     height: auto;
@@ -236,6 +275,38 @@ onMounted(() => {
     text-transform: uppercase;
   }
 
+  
+}
+@include mobile {
+  .desktop {
+    &__card-container {
+      flex-direction: column;
+    }
+  }
+  
+  .balance-card {
+
+    &__balance {
+      font-size: 3.1rem;
+    }
+
+  }
+}
+
+@include small-mobile {
+  .balance-card {
+    &__details-list_type_desktop {
+      display: none;
+    }
+
+    &__details-list_type_mobile {
+      display: block;
+    }
+
+    &__details-date, &__details-sum, &__details-type {
+      flex: 0 1 auto;
+    }
+  }
 }
 
 </style>

@@ -70,7 +70,7 @@
         </div>
       </div>
       <Alerts />
-      <LoginFooter />
+      <LoginFooter/>
     </div>
   </div>
 </template>
@@ -136,12 +136,6 @@ const handleSubmit = () => {
     font-weight: 400;
     margin-bottom: 1em;
   }
-
-  // &__input-container {
-  //   display: flex;
-  //   // max-height: 6em;
-
-  // }
 
   &__input {
     font-size: 1.6em;
@@ -243,6 +237,36 @@ const handleSubmit = () => {
       }
     }
   }
+}
+.auth-modal {
+  .login__title {
+    font-size: 2.8em;
+    margin-block: 1.25em .9em;
+  }
+}
+
+@include mobile {
+  .auth {
+    &__title {
+      font-size: 1.8rem;
+    }
+
+    &__input {
+      padding: 1rem;
+      font-size: 1.6rem;
+    }
+
+    &__show-password {
+      flex: 0 2.5em;
+    }
+  }
+
+  .auth-modal {
+    .login__title {
+      font-size: 1.8em;
+    }
+  }
+
 }
 
 </style>

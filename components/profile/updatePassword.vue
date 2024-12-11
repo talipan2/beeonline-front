@@ -2,12 +2,13 @@
   <div class="profile-update-password">
     <h2 class="profile-update-password__title">Смена пароля</h2>
     <p class="profile-update-password__text">Указанные данные не разглашаются третьим лицам и необходимы для успешной работы на сервисе</p>
-    <Form class="profile-update-password__form">
+    <Form class="profile-update-password__form" @submit="handleResetPassword">
       <div class="form-group">
         <div class="form-group-data profile-update-password__old-password">
           <label class="form-group__title">
             Старый пароль*
             <UiInput
+              v-model="passwordData.oldPassword"
               :rules="{ required: true, min: 6 }"
               class="form-group__value" 
               name="oldPassword" 
@@ -22,18 +23,19 @@
         <div class="form-group-data">
           <label class="form-group__title">
             Новый пароль*
-            <UiInput 
+            <UiInput
+              v-model="passwordData.newPassword"
               :rules="{ required: true, min: 6 }"
               class="form-group__value" 
               name="newPassword" 
-              label="Старый пароль" 
+              label="Новый пароль" 
               :type="showNewPassword ? 'text' : 'password'" 
               placeholder="Не менее 6 символов"
             >
               <template #action>
                 <button
                   type="button"
-                  class="profile-update-password__show-password"
+                  class="profile-update-password__show-password form-group__value"
                   @click="showNewPassword = !showNewPassword"
                 >
                   <SvgoViews class="svg-lx" fill="#6937a5" />
@@ -45,11 +47,12 @@
         <div class="form-group-data">
           <label class="form-group__title">
             Подтвердите пароль
-            <UiInput 
-              :rules="{ required: true, min: 6 }"
+            <UiInput
+              v-model="passwordData.confirmPassword"
+              :rules="{ required: true, min: 6, confirmed: passwordData.newPassword }"
               class="form-group__value" 
               name="confirmPassword" 
-              label="Старый пароль" 
+              label="Подтвердите пароль" 
               :type="showConfirmPassword ? 'text' : 'password'" 
               placeholder="Не менее 6 символов"
             >
@@ -67,22 +70,55 @@
         </div>
       </div>
       <UiButton type="button" @click="settingStore.resetPasswordModal = true" class="profile-update-password__forgot-btn" variant="default">Забыли пароль</UiButton>
-      <UiButton class="profile-update-password__btn" variant="quinary" size="large">
+      <UiButton type="submit" class="profile-update-password__btn" variant="quinary" size="large">
         Изменить пароль
         <SvgoBtnArrow class="svg-lx" />  
       </UiButton>
     </Form>
     <ProfileResetPasswordModal />
+    <Alerts />
   </div>
 </template>
 
 <script setup>
 import { useSettingStore } from '~/store/settingStore';
+import { useUserStore } from '~/store/userStore';
 
+const props = defineProps({
+  role: {
+    type: String,
+    required: true,
+  },
+})
 
+const userStore = useUserStore();
 const settingStore = useSettingStore();
+const router = useRouter();
+
 const showNewPassword = ref(false);
 const showConfirmPassword = ref(false);
+const passwordData = ref({
+  oldPassword: '',
+  newPassword: '',
+  confirmPassword: '',
+})
+
+function handleResetPassword() {
+  if(passwordData.value.newPassword === passwordData.value.confirmPassword) {
+    userStore.resetPassword({
+      oldPassword: passwordData.value.oldPassword,
+      newPassword: passwordData.value.newPassword,
+    })
+    .then(res => {
+      settingStore.setAlert('success', 'Пароль успешно изменен');
+      router.push(`/${props.role}/profile`);
+    })
+    .catch(err => {
+      settingStore.setAlert('error', err.response.data.message);
+    })
+  }
+}
+
 
 </script>
 
@@ -93,6 +129,10 @@ const showConfirmPassword = ref(false);
   &__title {
     font-size: 2.4em;
     margin-bottom: .5em;
+
+    @include mobile {
+      font-size: 1.6em;
+    }
   }
 
   &__text {
@@ -107,8 +147,16 @@ const showConfirmPassword = ref(false);
     }
   }
 
+  .form-group-data {
+    margin-bottom: 0;
+  }
+
   &__old-password {
     flex: 0 1 47%;
+
+    @include mobile {
+      flex: 1;
+    }
   }
 
   &__forgot-btn {
@@ -120,6 +168,15 @@ const showConfirmPassword = ref(false);
     text-transform: uppercase;
     width: 60%;
     column-gap: 1em;
+
+    @include tablet {
+      font-size: 1.1rem;
+      padding: 7.5px;
+    }
+
+    @include small-mobile {
+      width: 100%;
+    }
   }
 
   &__show-password {
@@ -130,6 +187,7 @@ const showConfirmPassword = ref(false);
     align-items: center;
     justify-content: center;
     width: 3em;
+    box-sizing: border-box;
     margin-top: .6em;
 
     &:hover {
@@ -138,6 +196,11 @@ const showConfirmPassword = ref(false);
       svg {
         fill: #fff
       }
+    }
+
+    @include mobile {
+      width: 2em;
+      margin-top: .5em;
     }
   }
 

@@ -41,7 +41,7 @@
               </div>
             </div>
           </div>
-          <CommonChart class="desktop__chart" :data="currentDataSet" />
+          <CommonChart class="stats__chart" :data="currentDataSet" />
         </div>
       </div>
     </template>
@@ -97,7 +97,7 @@ const currentDataSet = computed(() => {
   }
 
   &__items-container {
-    flex: 1 1 auto;
+    flex: 1 0 50%;
     display: flex;
     justify-content: space-between;
   }
@@ -130,10 +130,53 @@ const currentDataSet = computed(() => {
     line-height: 1em;
   }
 
+  &__chart {
+    flex: 0 1 31%;
+    max-width: 31%;
+  }
+
   .active {
     color: var(--text-color-ternary);
   }
 
+   @include tablet {
+     &__list {
+       column-gap: 5em;
+     }
+   }
+
+  @include mobile {
+    &__list {
+      flex-direction: column;
+      align-items: normal;
+    }
+
+    &__items-container {
+      order: 1;
+    }
+
+    &__chart {
+      flex: 1 1 100%;
+      max-width: 100%;
+    }
+
+    &__item {
+      font-size: 1.4rem;
+    }
+  }
+}
+
+@include small-mobile {
+  .stats {
+    &__list {
+      row-gap: 1em;
+    }
+
+    &__items-container {
+      flex-direction: column;
+      row-gap: 1em;
+    }
+  }
 }
 
 </style>

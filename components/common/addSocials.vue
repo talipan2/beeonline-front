@@ -7,7 +7,6 @@
         <div class="add-socials__input">
           <SvgoTelegram class="svg-lx" />
           <UiInput
-            :rules="{ url }"
             name="url_tg"
             label="Ссылка на Telegram"
             class="form-group__value"
@@ -22,7 +21,6 @@
         <div class="add-socials__input">
           <SvgoVk class="svg-lx" />
           <UiInput
-            :rules="{ url }"
             name="url_vk"
             label="Ссылка на VK"
             class="form-group__value"
@@ -37,7 +35,6 @@
         <div class="add-socials__input">
           <SvgoYoutube class="svg-lx" />
           <UiInput
-            :rules="{ url }"
             name="url_yt"
             label="Ссылка на Youtube"
             class="form-group__value"
@@ -78,6 +75,15 @@ const props = defineProps({
       margin-left: 3.46em;
       margin-bottom: 0;
     }
+    
+  }
+
+  .form-group-value {
+    margin-top: 0;
+  }
+
+  .form-group__title {
+    margin-bottom: 1em;
   }
 
   &__item {

@@ -193,4 +193,39 @@ const handleSubmit = () => {
     }
   }
 }
+
+@include mobile {
+  .register {
+    &__input-list_type_company {
+      .load-image {
+        flex: 0 1 50%;
+        max-width: 50%;
+        padding-bottom: 50%;
+      }
+    }
+
+  }
+  .register__input-list_type_company {
+    .text-area__container {
+      padding-bottom: 50%;
+    }
+  }
+
+}
+
+@include small-mobile {
+  .register {
+    &__input-list_type_company {
+      flex-direction: row;
+
+      .form-group-data {
+        flex-basis: 100%;
+      }
+    }
+
+    &__btn-container {
+      flex-direction: column;
+    }
+  }
+}
 </style>
