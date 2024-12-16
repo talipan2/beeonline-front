@@ -23,6 +23,9 @@ export const useSettingStore = defineStore("setting", {
     bonusInfoModal: false,
     resetPasswordModal: false,
     catalogTutorialStatus: false,
+    payModalStatus: false,
+    replenishmentModalStatus: false,
+    balanceDocumentsModalStatus: false,
   }),
   actions: {
     setAlert(status, text) {

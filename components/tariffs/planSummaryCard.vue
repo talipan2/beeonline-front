@@ -1,0 +1,99 @@
+<template>
+  <TariffsCardLayout class="plan-summary">
+    <div class="plan-summary__header">
+      <h3 class="plan-summary__header-text">
+        Тариф:
+        <span class="plan-summary__text plan-summary__text_type_selection">{{ "Премиум" }}</span>
+      </h3>
+      <p class="plan-summary__text">
+        Срок подписки: до
+        <span class="plan-summary__text plan-summary__text_type_selection">
+          {{ "31.12.2022" }}
+        </span>
+        <span class="plan-summary__text plan-summary__text_type_status">
+          {{ "(Активен)" }}
+        </span>
+      </p>
+    </div>
+    <ul class="plan-summary__list">
+      <template v-for="item in availableUserFeatures" :key="item.id">
+        <li class="plan-summary__text">
+          {{ item.title }}
+          <span class="plan-summary__text plan-summary__text_type_selection">{{ item.value }}</span>
+        </li>
+      </template>
+    </ul>
+  </TariffsCardLayout>
+</template>
+
+<script setup>
+
+const availableUserFeatures = [
+  { id: 1, title: "Доступно проверок контрагента:", value: "10" },
+  { id: 2, title: "Доступно поднятие карточки исполнителя в топ:", value: "10" },
+  { id: 3, title: "Рассылка коммерческого сообщения на почту пользователям, с предоставлением отчета:", value: "10" },
+  { id: 4, title: "Верхний баннер в каталогах:", value: "10" },
+  { id: 5, title: "Боковой верхний в каталогах:", value: "10" },
+  { id: 6, title: "Боковой нижний в каталогах:", value: "10" },
+];
+
+</script>
+
+<style lang="scss">
+
+.plan-summary {
+  font-size: 1rem;
+
+  &__header {
+    display: flex;
+    column-gap: 1em;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1em;
+  }
+
+  &__header-text{
+    font-size: 1.8em;
+    font-weight: 400;
+    line-height: 1.2em;
+  }
+
+  &__text {
+    font-size: 1.2em;
+    font-weight: 400;
+    line-height: 1.2em;
+
+    &_type_selection {
+      font-size: 1em;
+      color: var(--text-color-ternary);
+    }
+
+    &_type_status {
+      margin-left: .5em;
+      font-size: 1em;
+      color: var(--text-color-tertiary);
+    }
+  }
+
+  &__list {
+    max-width: 70%;
+    font-size: 1.2em;
+    display: flex;
+    flex-direction: column;
+    row-gap: .8em;
+  }
+
+  @include small-tablet {
+    &__list {
+      max-width: 100%;
+    }
+  }
+
+  @include mobile {
+    &__header {
+      flex-wrap: wrap;
+    }
+  }
+}
+
+</style>

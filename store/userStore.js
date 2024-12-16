@@ -23,6 +23,9 @@ export const useUserStore = defineStore('user', {
       registerAddress: null,
     },
     token: null,
+    userBalance: 1000.20,
+    userBonuses: 100000,
+    userInvoicing: null, 
   }),
   actions: {
     loadFromLocalStorage() {

@@ -80,7 +80,7 @@ const getSidebarLinks = (role) => [
   { id: 8, label: "Документы", value: `/${role}/documentation` },
   { id: 9, label: "Избранное", value: `/${role}/favorites` },
   { id: 10, label: "Отзывы", value: `/${role}/my-reviews` },
-  { id: 11, label: "Баланс и платные услуги", value: "/" },
+  { id: 11, label: "Баланс и платные услуги", value: "/tariffs" },
   { id: 12, label: "Уведомления", value: `/${role}/notifications` },
   { id: 13, label: "Новости", value: "/news" },
 ];
