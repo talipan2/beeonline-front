@@ -103,7 +103,7 @@ const services = ref([
   },
   {
     id: 4,
-    name: 'Верхний баннер',
+    name: 'Верхний баннер в каталоге',
     price: 9000,
     priceUSD: 9,
     quantity: 0,
@@ -112,7 +112,7 @@ const services = ref([
   },
   {
     id: 5,
-    name: 'Боковой верхний баннер',
+    name: 'Боковой верхний баннер в каталоге',
     price: 4500,
     priceUSD: 45,
     period: 'неделя',
@@ -121,7 +121,7 @@ const services = ref([
   },
   {
     id: 6,
-    name: 'Боковой нижний баннер',
+    name: 'Боковой нижний баннер в каталоге',
     price: 3000,
     priceUSD: 30,
     period: 'неделя',
@@ -349,6 +349,19 @@ const handleReset = () => {
 
   @include mobile {
     display: block;
+
+    &__item {
+      column-gap: 24px;
+    }
+
+    &__checkbox {
+      flex: 1 1 55%;
+      max-width: 100%;
+    }
+
+    &__price {
+      flex: 0 1 auto;
+    }
   }
 
 }

@@ -10,7 +10,7 @@
         <CommonTabs class="tariffs__tabs" :tabs="tabsList" v-model="currentTab" v-if="!isInternational"/>
         <UiSelect class="tariffs__selector" :options="tabsList" v-model="currentTab" v-if="!isInternational" />
       </div>
-      <TariffsPriceTable :subDuration="currentTab" ref="priceTable" @select="selectTariff" v-if="!isInternational"/>
+      <TariffsPriceTable :subDuration="currentTab" @select="selectTariff" v-if="!isInternational"/>
       <TariffsInternational v-if="isInternational" @select="selectTariff"/>
     </div>
     <div class="tariffs__content">
@@ -56,8 +56,6 @@ const currentCurrency = computed(() => {
   return 'RUB';
 });
 
-const priceTable = ref(null);
-
 const currentPaymentData = ref({
   data: [],
   sum: 0,
@@ -67,7 +65,7 @@ const currentPaymentData = ref({
 const tabsList = ref([
   {id: 1, label: '1 месяц', value: '1'},
   {id: 2, label: '3 месяца', value: '3'},
-  {id: 3, label: '6 месяца', value: '6'},
+  {id: 3, label: '6 месяцев', value: '6'},
   {id: 4, label: '12 месяцев', value: '12'}
 ]);
 
@@ -82,12 +80,6 @@ function selectServices(services, total, currency) {
   currentPaymentData.value = {data: services, sum: total, currency: currency};
   settingStore.payModalStatus = true;
 }
-
-watch(() => currentTab.value, (newVal) => {
-  if(priceTable.value && priceTable.value.$el && window.innerWidth > 768) {
-    smoothScroll(priceTable.value.$el.offsetTop + priceTable.value.$el.offsetHeight - window.innerHeight);
-  }
-});
 
 
 // функция сброса при сабмите в модалке
@@ -120,7 +112,7 @@ const childReset = (reset) => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.4em;
+    margin-bottom: 2.4em;
   }
 
   &__title {
@@ -131,7 +123,7 @@ const childReset = (reset) => {
   }
 
   &__content {
-    margin-bottom: 4em;
+    margin-bottom: 9.6em;
   }
 
   &__selector {
@@ -142,6 +134,7 @@ const childReset = (reset) => {
     &__header {
       flex-direction: column;
       row-gap: 1.6rem;
+      margin-inline: -15px;
     }
 
     &__content-header {

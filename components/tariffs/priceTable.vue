@@ -12,12 +12,18 @@
         <thead>
           <tr>
             <th>Возможности</th>
-            <th v-for="(column, index) in columns" :key="index">{{ column.title }}</th>
+            <th v-for="(column, index) in columns" :key="index">
+              {{ column.title }}
+            </th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(row, rowIndex) in rows" :key="rowIndex">
-            <td>{{ row.feature }}</td>
+            <td>
+              <p class="tariffs-table__feature">
+                {{ row.feature }}
+              </p>
+            </td>
             <template v-for="(column, colIndex) in columns" :key="colIndex">
               <td class="tariffs-table__value">
                 <div v-if="row.values[colIndex] === true">
@@ -38,7 +44,7 @@
             <td class="tariffs-table__price">Цена</td>
             <template v-for="(column, colIndex) in columns" :key="colIndex">
               <td v-if="column.price !== null" class="tariffs-table__price-value">
-                <span v-if="discount !== null && column.value !== 'free'">{{ `(-${discount}%)`}}</span><br/>
+                <span v-if="discount !== null && column.value !== 'free'">{{ `(-${discount}%)`}}<br/></span>
                 {{ getPrice(column) }} ₽
               </td>
             </template>
@@ -252,6 +258,7 @@ const handlePayModal = (tariff, duration) => {
 
   tfoot tr td {
     border: none;
+    padding-block: 2.28em 1.14em;
   }
 
 
@@ -277,6 +284,11 @@ const handlePayModal = (tariff, duration) => {
 
   &__value {
     color: #989898;
+  }
+
+  &__feature {
+    max-width: 320px;
+    display: block;
   }
 
   &__icon {
@@ -327,12 +339,19 @@ const handlePayModal = (tariff, duration) => {
     font-weight: 700;
     line-height: 1.3em;
     color: var(--primary-color);
+    padding: .66em;
 
     span {
       font-size: .66em;
       line-height: 1em;
       font-weight: 600;
       color: #de5434;
+    }
+  }
+
+  @include tablet {
+    &__feature {
+      max-width: 250px;
     }
   }
 
