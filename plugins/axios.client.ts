@@ -10,9 +10,9 @@ export default defineNuxtPlugin((nuxtApp) => {
   axios.defaults.headers.common["Content-Type"] = "application/json; charset=UTF-8";
   axios.defaults.headers.common["ngrok-skip-browser-warning"] = "true";
 
+  // перехват запросов
   axios.interceptors.request.use((request) => {
     const token = localStorage.getItem("token") || sessionStorage.getItem("token") || null;
-    // const token = useCookie("token").value || null;
 
     if (token) {
       request.headers["Authorization"] = `Bearer ${token}`;
@@ -22,6 +22,24 @@ export default defineNuxtPlugin((nuxtApp) => {
   }, (error) => {
     return Promise.reject(error);
   });
+
+  // перехват ответов
+  axios.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      if (error.response && error.response.status === 404) {
+        throw createError({
+          statusCode: 404,
+          statusMessage: 'Page Not Found',
+          data: {
+            myCustomField: true
+          }
+        })
+      }
+
+      return Promise.reject(error);
+    }
+  );
 
   nuxtApp.provide("axios", axios);
 });

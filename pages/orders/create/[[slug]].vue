@@ -32,15 +32,18 @@ import { useLocationStore } from '~/store/locationStore';
 import { useOrganizationStore } from '~/store/organizationStore';
 import { useSettingStore } from '~/store/settingStore';
 import { useUserStore } from '~/store/userStore';
-import { scrollToError } from '~/utils/scrollToError';
 
 const router = useRouter();
+const route = useRoute();
 const entityStore = useEntityStore();
 const userStore = useUserStore();
 const settingStore = useSettingStore();
 const organizationStore = useOrganizationStore();
 const locationStore = useLocationStore();
 const title = ref('');
+
+// если есть заказ который находиться в статусе filling
+const fillingOrder = ref(null);
 
 const validSteps = ['step1', 'step2', 'step4'];
 
@@ -54,21 +57,30 @@ const currentHandleSubmit = computed(() => {
   switch (router.currentRoute.value.params.slug) {
     case 'step1':
       return (() => {
-        entityStore.addNewOrder(
-          {
-            userId: userStore.userData.id,
-            organizationId: organizationStore.organization.id || null, 
-            name: order.value.name, 
+        if(!order.value.id) {
+          entityStore.addNewOrder(
+            {
+              userId: userStore.userData.id,
+              organizationId: userStore.userData.organization_id || null, 
+              name: order.value.name, 
+              category: order.value.categories,
+              completionDate: order.value.completionDate,
+              status: 'filling',
+            }
+          ).then(() => {
+            entityStore.updateOrderStep(order.value.id, 1)
+            router.push('/orders/create/step2')
+          })
+          .catch(error => console.log(error));
+
+        } else {
+          entityStore.editOrder(order.value.id, {
+            name: order.value.name,
             category: order.value.categories,
             completionDate: order.value.completionDate,
-            step: 1
-
-          }
-        ).then(() => router.push('/orders/create/step2'))
-        .catch(error => {
-          console.log(error)
-          scrollToError(error)
-        });
+          }).then(() => router.push('/orders/create/step2'))
+          .catch(error =>  console.log(error));
+        }    
       });
     case 'step2':
       return (() =>{
@@ -80,24 +92,28 @@ const currentHandleSubmit = computed(() => {
             batch: order.value.batch,
             patterns: order.value.patterns,
             termsOfCooperation: order.value.termsOfCooperation,
-            step: 2,
-          }).then(() => router.push('/orders/create/step4'))
+            cities: order.value.locations.cities,
+            regions: order.value.locations.regions,
+          }).then(() => {
+            entityStore.updateOrderStep(order.value.id, 2)
+            entityStore.fillingOrder.currentStep = 2
+            router.push('/orders/create/step4')
+          })
           .catch(error => console.log(error));
-          if(order.value.logo) {
+
+          if(order.value.gallery && order.value.gallery.length) {
             entityStore.uploadOrderGallery(order.value.id, order.value.logo)
-            .then((res) => console.log(res))
-            .catch(error => console.log(error));
+          }
+          if(order.value.tzFiles && order.value.tzFiles.length) {
+            entityStore.uploadTzFiles(order.value.id, order.value.gallery)
           }
         });
-    // case 'step3':
-    // return (() =>{
-    //       entityStore.editOrder(order.value.id, {
-    //         completionDate: order.value.completionDate
-    //       }).then(() => router.push('/orders/create/step4'))
-    //       .catch(error => console.log(error));
-    //     });
     case 'step4':
       return (() => {
+        entityStore.editOrder(order.value.id, {
+          isSafeDeal: order.value.isSafeDeal,
+          status: 'under_moderation',
+        }).then(res => entityStore.fillingOrder = null);
         if(settingStore.isCreateOrder) {
           router.push('/register/step1')
           settingStore.isCreateOrder = false
@@ -105,19 +121,7 @@ const currentHandleSubmit = computed(() => {
           router.push('/customer/orders')
         }
       });
-    default:
-    return (() => {
-        entityStore.addNewOrder(
-          {
-            userId: userStore.userData.id,
-            organizationId: organizationStore.organization.id, 
-            name: order.value.name, 
-            category: order.value.categories
-          }
-        ).then(() => router.push('/orders/create/step2'))
-        .catch(error => console.log(error));
-      });
-  }
+  } 
 })
 
 const handleSubmit = () => {
@@ -130,17 +134,14 @@ const currentComponent = computed(() => {
       title.value = 'Создание заказа';
       return Step1
     case 'step2':
-      title.value = 'Подробное описание';
       return Step2
     case 'step3':
-      title.value = 'Подробное описание';
       return Step3
     case 'step4':
-      title.value = 'Подробное описание';
       return Step4
-    default:
-      title.value = 'Создание заказа';
-      return Step1;
+    // default:
+    //   title.value = 'Создание заказа';
+    //   return Step1;
   }
 })
 
@@ -151,11 +152,11 @@ const checkList = computed(() => [
   { label: 'Проверка', value: '/orders/create/step4' },
 ]);
 
-const order = computed(() => entityStore.order)
+const order = ref(entityStore.order);
 
 const ordersData = computed(() => ({
   name: order.value.name,
-  logo: order.value.logo ? order.value.logo.getAll('image[]')[0] : '',
+  logo: order.value.gallery.length > 0 ? order.value.gallery.getAll('image[]')[0] : '',
   data: [
     { id: 1, name: 'Категории', value: data.value.categories },
     { id: 2, name: 'Место производства', value: data.value.placeOfProductionId },
@@ -175,12 +176,59 @@ const data = computed(() => ({
   batch: order.value.batch,
   patterns: computed(() => entityStore.getEntityLabelById('patterns', order.value.patterns)).value,
   rawMaterials: computed(() => entityStore.getEntityLabelById('rawMaterials', order.value.rawMaterials)).value,
-  completionDate: order.value.completionDate,
+  completionDate: order.value.completionDate ? formatDate(order.value.completionDate) : '',
   description: order.value.description,
   termsOfCooperation: order.value.termsOfCooperation
 }))
 
   
+onBeforeMount(() => {
+  if(!entityStore.fillingOrder && !entityStore.fillingOrder?.id) {
+    entityStore.getOrganizationOrders(userStore.userData.organization_id)
+    .then((res) => {
+      if(res && res.data && res.data.orders && Array.isArray(res.data.orders)) {
+        res.data.orders.find(item => {
+          if(item.status === 'filling') {
+            entityStore.fillingOrder = {
+              id: item.id,
+              name: item.name,
+              description: item.description,
+              gallery: item.gallery || [],
+              termsOfCooperation: item.conditions,
+              batch: item.batch ? Number(item.batch) : '',
+              categories: item.category || [],
+              rawMaterials: item.material === null ? item.material : (!item.material ? 0 : 1),
+              patterns: item.pattern === null ? item.pattern : (!item.pattern ? 0 : 1),
+              price: item.price ? Number(item.price) : '',
+              completionDate: item.deadline_at,
+              cities: item.cities || [],
+              regions: item.regions || [],
+              currentStep: item.current_step,
+              isSafeDeal: item.is_safedeal,
+            }
+            order.value = entityStore.fillingOrder
+          }
+        })
+      }
+    })
+  } else {
+    order.value = entityStore.fillingOrder
+  }
+})
+
+onMounted(() => {
+  if(!entityStore.isRedirectedToStep) return
+  if(entityStore.fillingOrder && entityStore.fillingOrder.currentStep && entityStore.fillingOrder.currentStep === 1) {
+    router.push('/orders/create/step2')
+    entityStore.isRedirectedToStep = false;
+  }
+  if(entityStore.fillingOrder && entityStore.fillingOrder.currentStep && entityStore.fillingOrder.currentStep === 2) {
+    router.push('/orders/create/step4')
+    entityStore.isRedirectedToStep = false;
+  }
+})
+
+
 
 </script>
 

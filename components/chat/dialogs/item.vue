@@ -87,17 +87,12 @@ const getProductType = (product) => {
 }
 
 const handleClick = (dialog) => {
-  console.log(dialog)
   if (dialog.is_message_search) {
     emit('change:chat-by-message', dialog.last_message);
   } else {
     emit('change:chat', dialog.id);
   }
 }
-watch(() => props.dialog, (newVal) => {
-  console.log(newVal);
-}, {deep: true})
-
 
 function lastMessageTimeDiff(date) {
   const now = new Date();

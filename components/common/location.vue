@@ -1,12 +1,12 @@
 <template>
   <div class="location">
     <div class="location__city-container">
-      <div v-for="(city) in selectedCities" :key="city.id" class="location__location">
+      <div v-for="(location) in formattedLocation" :key="location.id" class="location__location">
         <SvgoChecked class="svg-m location__selected-icon" />
         <p class="location__city-selected">
-          {{ locationStore.getLocationsByIds([city.id])[0] }}
+          {{ location.name }}
         </p>
-        <button type="button" class="location__location-delete" @click="deleteLocation(city.id)">
+        <button type="button" class="location__location-delete" @click="deleteLocation(location.id, location.type)">
           <SvgoCancel class="svg-m" />
         </button>
       </div>
@@ -30,7 +30,7 @@ const props = defineProps({
   },
   modelValue: {
     type: Object,
-    default: () => {},
+    default: () => ({}),
     required: true,
   },
   type: {
@@ -53,29 +53,69 @@ const props = defineProps({
 const settingStore = useSettingStore();
 const locationStore = useLocationStore();
 
+
 const emit = defineEmits(['update:modelValue']);
 
-const selectedCities = ref(props.modelValue.fullNameLocation);
+const selectedCities = ref({
+  countries: [],
+  regions: [],
+  cities: []
+});
 
-function deleteLocation(id) {
-  selectedCities.value = selectedCities.value.filter(selectedCity => selectedCity.id !== id);
+// получение название локации по id
+const formattedLocation = computed(() => locationStore.getLocationsByIds( selectedCities.value.countries, selectedCities.value.regions, selectedCities.value.cities))
+
+function deleteLocation(id, type) {
+  if (!selectedCities.value) {
+    console.error('selectedCities не инициализирован');
+    return;
+  }
+
+  switch (type) {
+    case 'country':
+      selectedCities.value = {
+        ...selectedCities.value,
+        countries: selectedCities.value.countries.filter(country => country !== id),
+      };
+      break;
+    case 'region':
+      selectedCities.value = {
+        ...selectedCities.value,
+        regions: selectedCities.value.regions.filter(region => region !== id),
+      };
+      break;
+    case 'city':
+      selectedCities.value = {
+        ...selectedCities.value,
+        cities: selectedCities.value.cities.filter(city => city !== id),
+      };
+      break;
+    default:
+      console.warn('Неизвестный тип:', type);
+  }
 }
 
 function openAuthModal () {
   settingStore.chooseLocationModal = true;
 }
 
-watch(() => selectedCities.value, (newVal) => {
-  if(selectedCities.value) {
-    emit('update:modelValue', {fullNameLocation: newVal, locationId: selectedCities.value.map(city => city.id)});
-  } else {
-    emit('update:modelValue', {fullNameLocation: [], locationId: []});
+watch(() => props.modelValue, (newVal) => {
+  if(newVal) {
+    if(newVal.cities) {
+      selectedCities.value = {...selectedCities.value, cities: [...(newVal.cities || [])] };
+    }
+    if(newVal.regions) {
+      selectedCities.value = {...selectedCities.value, regions: [...(newVal.regions || [])] };
+    }
+    if(newVal.countries) {
+      selectedCities.value = {...selectedCities.value, countries: [...newVal.countries || []] };
+    }
   }
-});
+}, {immediate: true, once:true, deep: true})
 
-// onMounted(() => {
-//   selectedCities.value = props.modelValue.fullNameLocation
-// })
+watch((selectedCities), (newVal) => {
+  emit('update:modelValue', {...newVal});
+}, {deep: true},)
 
 </script> 
 

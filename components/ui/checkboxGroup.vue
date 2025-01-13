@@ -22,7 +22,7 @@
         :name="`${name}-${option.id}`"
         :class="{ invalid: errors.length }"
       >
-        {{ option.label }}
+        {{ option.label || option.name }}
       </UiCheckbox>
       <div class="invalid-error" v-if="isValidated">
         <span v-if="errors.length" class="invalid-error__text">{{
@@ -37,7 +37,7 @@
       @click="() => (showAllElement = !showAllElement)"
       :variant="typeButton.variant"
       :size="typeButton.size"
-      v-if="isDropDown"
+      v-if="isDropDown && options.length > countShowed"
     >
       {{ showAllElement ? "Свернуть" : "Показать еще" }}
       <slot name="btn-image" />

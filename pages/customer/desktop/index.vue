@@ -11,13 +11,23 @@
 
 <script setup>
 import { useEntityStore } from '~/store/entityStore';
+import { useUserStore } from '~/store/userStore';
 
 const entityStore = useEntityStore();
+const userStore = useUserStore();
 
 const filterList = ['category', 'minLot', 'date']; // Список фильтров
 
-function getEntity(type, filter) {
-  return entityStore.getServices(type, filter)
+async function getEntity(type) {
+  try {
+    const res = await entityStore.getOrganizationOrders(userStore.userData.organization_id);
+    if (res) {
+      return entityStore.organizationOrders;
+    }
+    return [];
+  } catch (error) {
+    console.error('Error fetching organization orders:', error);
+  }
 }
 
 </script>

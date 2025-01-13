@@ -1,7 +1,16 @@
 <template>
   <div class="desktop">
+    <div class="desktop__notify" v-if="!emailVerified">
+      <h2 class="desktop__notify-title">Уведомления</h2>
+      <CommonNotify
+        v-if="!emailVerified"
+        type="warning"
+        text="Ваша электронная почта не подтверждена. Для полноценной работы на портале и доступа ко всем функциям рекомендуем подтвердить."
+        btnText="Подтвердить"
+      />
+    </div>
     <div class="desktop__card-container">
-      <DesktopCard title="Карточка организации" :link="{ url: getLinkWithRole('/pubcards/edit/1'), text: 'Изменить'}" >
+      <DesktopCard title="Карточка организации" :link="{ url: getLinkWithRole(`/pubcards/edit/${pubCard.id}`), text: 'Изменить'}" >
         <template #body>
           <CardsPublic class="desktop__pub-card" :is-props-visible="true" :is-description="true" :data="pubCard"/>
         </template>
@@ -126,7 +135,7 @@
 </template>
 
 <script setup>
-import { useOrganizationStore } from '~/store/organizationStore';
+import { useUserStore } from '~/store/userStore';
 
 const props = defineProps({
   getEntity: {
@@ -143,17 +152,16 @@ const props = defineProps({
   },
 })
 
-const organizationStore = useOrganizationStore();
 
-const pubCard = computed(() => organizationStore.pubCards);
+
+const userStore = useUserStore();
+
+const pubCard = computed(() => userStore.userPubCard);
+const emailVerified = computed(() => userStore.userData.email_verified_at ? true : false);
 
 function getLinkWithRole(link) {
   return `/${props.role}${link}`
 }
-
-onMounted(() => {
-  organizationStore.getSelfPubCard()
-})
 
 </script>
 
@@ -163,6 +171,11 @@ onMounted(() => {
   &__card-container {
     display: flex;
     column-gap: 3em;
+  }
+
+  &__notify-title {
+    font-size: 1.8em;
+    margin-bottom: 1.55em;
   }
 
   .card-pub{

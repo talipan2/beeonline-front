@@ -10,6 +10,12 @@
 </template>
 
 <script setup>
+import { useOrganizationStore } from '~/store/organizationStore';
+import { useUserStore } from '~/store/userStore';
+
+
+const userStore = useUserStore();
+const organizationStore = useOrganizationStore();
 
 const dataList = ref([
   {
@@ -31,5 +37,23 @@ const dataList = ref([
     url:"blob:http://localhost:3000/5a5c26c4-90eb-4845-8208-a33d9b4b70fa"
   }
 ]);
+
+onMounted(() => {
+  if(userStore.userData.organization_id) {
+    organizationStore.getVerificationDocuments(userStore.userData.organization_id)
+    .then(res => {
+      if(res) {
+        dataList.value = res.map(item => {
+          return {
+            id: item.id,
+            name: 'Не приходит название и url с бека',
+            url: item.file_url,
+            type: 'pdf',
+          }
+        });
+      }
+    });
+  }
+})
 
 </script>

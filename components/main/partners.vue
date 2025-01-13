@@ -53,9 +53,9 @@
 
 .partners__title {
     color: var(--text-color-octonary);
-    font-family: SongerGrotesque,sans-serif;
+    font-family: 'Coolvetica',sans-serif;
     font-size: 7.2em;
-    font-weight: 700;
+    font-weight: 500;
     line-height: 1.14em;
     margin-block:0 .88em;
     max-width: 8.375em;

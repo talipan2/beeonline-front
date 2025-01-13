@@ -9,7 +9,7 @@
         adviceTitle="Полностью заполненный профиль выше в списке поиска" 
       />
       <div class="register__main">
-        <component :is="currentComponent" :data="organizationStore.registerOrg" :blockTitle="blockTitle"/>
+        <component :is="currentComponent" v-model="data" :blockTitle="blockTitle"/>
       </div>
       <div class="register__right-side">
         <div class="register__right-side-container sticky" ref="rightSide">
@@ -34,7 +34,7 @@
           </CommonAdvice>
           <div class="register__preview" v-if="['/register/step2', '/register/step3', '/register/step4'].includes(route.path)">
             <h4 class="register__preview-title">Так вашу компанию будут видеть другие участники</h4>
-            <CardsPublic :data="checkListCard"/>
+            <CardsPublic :data="checkListCard" :is-description="true"/>
           </div>
         </div>
       </div>
@@ -53,11 +53,15 @@ import { useRoute } from '#app';
 import { useOrganizationStore } from '~/store/organizationStore';
 import { useSettingStore } from '~/store/settingStore';
 import { useUserStore } from '~/store/userStore';
+import { useLocationStore } from '~/store/locationStore';
 
 const route = useRoute();
 const organizationStore = useOrganizationStore();
 const settingStore = useSettingStore();
 const userStore = useUserStore();
+const locationStore = useLocationStore();
+
+const data = ref(organizationStore.registerOrg);
 
 const blockTitle = computed(() => {
   const titles = {
@@ -114,6 +118,9 @@ onUnmounted(() => {
 const checkListCard = computed(() => {
   return {
     name: organizationStore.registerOrg.companyName,
+    description: organizationStore.registerOrg.description,
+    logo: organizationStore.registerOrg.companyLogo?.url,
+    location: organizationStore.registerOrg.locations,
   }
 })
 
@@ -273,6 +280,10 @@ const checkListCard = computed(() => {
 
   .register__right-side-container:has(.register__checklist_type_right-side) .register__preview-title {
     margin-top: 3em; 
+  }
+
+  .register__preview {
+    max-width: 40em;
   }
 
   .register__preview-title {

@@ -3,12 +3,12 @@
     <h3 class="preview-entity__title">{{ data.name }}</h3>
     <div class="preview-entity__content">
       <div class="image-box">
-        <img :src="logo || defaultImage" alt="">
+        <img :src="logo" alt="">
       </div>
       <div class="props">
-      <div class="prop" v-for="prop in data.data" :key="prop.id" :class="{ 'prop_type_text': prop.name === 'Описание' }">
+      <div class="prop" v-for="prop in data.data" :key="prop.id" :class="{ 'prop_type_text' : prop.name === 'Описание' }">
         <p class="prop__name">{{ prop.name }}:</p>
-        <p class="prop__value" >
+        <p class="prop__value" :class="{ 'prop_type_hidden' : prop.name === 'Описание' }">
           <i class="flag flag_round" v-if="prop.name === 'Место производства' && prop.value[0]" 
             :class="prop.value[0] 
             ? flagClass
@@ -18,7 +18,7 @@
             {{ Array.isArray(prop.value) ? (prop.value[0] || 'не указано') : (prop.value || 'не указано') }}
           </span>
           <ModalsMoreCities 
-            :list="prop.value" 
+            :list="prop.value.length > 1 ? prop.value.slice(1) : []" 
             :title="prop.name" 
             placement="bottom-end" 
             v-if="Array.isArray(prop.value) && prop.value && prop.value.length >= 1"
@@ -32,9 +32,6 @@
 
 <script setup>
 import defaultImage from '~/assets/images/nophoto_pc.png';
-import { selectFlag } from '#imports';
-import { useEntityStore } from '~/store/entityStore';
-import { useUserStore } from '~/store/userStore';
 
 const props = defineProps({
   data: {
@@ -43,27 +40,19 @@ const props = defineProps({
   }
 })
 
-const entityStore = useEntityStore();
-const userStore = useUserStore();
-
 const logo = computed(() => {
   if(props.data.logo) {
-    return URL.createObjectURL(props.data.logo)
+    return props.data.logo
   } else {
-    return ''
+    return defaultImage
   }
 })
-const entity = computed(() => {
-  if(userStore.role === 'performer') {
-    return entityStore.service
-  } else return entityStore.order
+
+const flagClass = computed(() => {
+  if(props.data.locationsData[0].countryId) {
+    return selectFlag(props.data.locationsData[0].countryId)
+  }
 })
-
-const flagClass = computed(() => selectFlag(entity.value.placeOfProduction[0].countryId))
-
-watch(() => props.data, (newVal) => {
-  console.log(props.data)
-}, {deep: true})
 
 </script>
 
@@ -71,6 +60,7 @@ watch(() => props.data, (newVal) => {
 
 .preview-entity {
   box-shadow: var(--box-shadow-primary);
+  background-color: var(--bg-secondary-color);
   padding: 2em;
   margin-top: 2em;
 

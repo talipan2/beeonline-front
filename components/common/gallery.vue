@@ -1,43 +1,67 @@
 <template>
   <div class="gallery">
     <h2 class="gallery__title">Галерея</h2>
-    <CommonGalleryLoad />
-    <p class="gallery__description">Если у вас есть видео о компании, вы можете указать ссылку на видео в
-      Youtube</p>
-    <label class="gallery__label" v-for="(link, index) in videoLinks" :key="index">Cсылка на видео в Youtube
-      <div class="gallery__link-add">
-        <UiInput class="gallery__link" v-model="videoLinks[index]" :name='`url_yt-${index}`' label="Ссылка на видео" :rules="{ url }">
-          <template #action>
-            <UiButton v-if="index === videoLinks.length - 1" class="gallery__btn" type="button" variant="quinary"
-              size="around" @click="addLink">
-              <SvgoAdd class="svg-m" />
-            </UiButton>
-            <UiButton v-else class="gallery__btn" type="button" variant="quinary" size="around"
-              @click="removeLink(index)">
-              <SvgoSub class="svg-m" />
-            </UiButton>
-          </template>
-        </UiInput>
-      </div>
-    </label>
+    <Form @submit="handleSubmit"> 
+      <CommonGalleryLoad v-model="data.gallery"/>
+      {{data.gallery}}
+      <p class="gallery__description">Если у вас есть видео о компании, вы можете указать ссылку на видео в
+        Youtube</p>
+      <label class="gallery__label" v-for="(link, index) in videoLinks" :key="index">Cсылка на видео в Youtube
+        <div class="gallery__link-add">
+          <UiInput class="gallery__link" v-model="videoLinks[index].external_url" :name='`url_yt-${index}`' label="Ссылка на видео" :rules="{ url: true }">
+            <template #action>
+              <UiButton v-if="index === videoLinks.length - 1" class="gallery__btn" type="button" variant="quinary"
+                size="around" @click="addLink">
+                <SvgoAdd class="svg-m" />
+              </UiButton>
+              <UiButton v-else class="gallery__btn" type="button" variant="quinary" size="around"
+                @click="removeLink(index)">
+                <SvgoSub class="svg-m" />
+              </UiButton>
+            </template>
+          </UiInput>
+        </div>
+      </label>
+      <slot></slot>
+    </Form>
   </div>
 </template>
 
 <script setup>
-import { useOrganizationStore } from '~/store/organizationStore';
 
 const props = defineProps({
-  data: {
+  modelValue: {
     type: Object,
     default: () => ({}),
     required: true,
   },
+  submitFunc: {
+    type: Function,
+    default: null,
+  }
 })
 
-const videoLinks = ref(['']); // Изначально один инпут
+const emit = defineEmits(['update:modelValue']);
+
+const data = computed({
+  get() {
+    return props.modelValue;
+  },
+  set(value) {
+    emit('update:modelValue', value);
+  }
+})
+
+const videoLinks = ref([{
+  services: 'Youtube',
+  external_url: ''
+}]);
 
 const addLink = () => {
-  videoLinks.value.push(''); // Добавление нового пустого инпута
+  videoLinks.value.push({
+    services: 'Youtube',
+    external_url: ''
+  }); // Добавление нового пустого инпута
 };
 
 const removeLink = (index) => {
@@ -46,9 +70,18 @@ const removeLink = (index) => {
   }
 };
 
-watch(() => videoLinks.value, (newVal) => {
-  props.data.url_yt = newVal;
-}, {deep: true});
+const handleSubmit = () => {
+  data.value.videos = [...videoLinks.value];
+  console.log(data.value.videos);
+  if(props.submitFunc) {
+    props.submitFunc();
+  } 
+}
+
+onMounted(() => {
+  videoLinks.value = data.value.videos.map(video => ({ services: video.services, external_url: video.external_url }))
+})
+
 
 </script>
 

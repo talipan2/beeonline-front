@@ -12,7 +12,7 @@
     <template #content>
       <div class="alert-container">
         <div class="alert__content">
-          <div class="alert__timer"></div>
+          <!-- <div class="alert__timer"></div> -->
           <p class="alert__text">{{ text }}</p>
         </div>
         </div>
@@ -71,8 +71,8 @@ const confirm = () => {
     font-size: 1.4rem;
     padding: 1rem 3rem 1rem 1rem;
     background-color: #fff;
-    box-shadow: var(--box-shadow-primary);
-    border: none;
+    border: 2px solid transparent;
+    overflow: hidden;
   }
   
   .modal-content {
@@ -82,7 +82,7 @@ const confirm = () => {
       transform: translateY(-50%);
       
       svg {
-        width: 1.5rem;
+        width: 2rem;
       }
     }
 
@@ -95,7 +95,33 @@ const confirm = () => {
 
 .error {
   .alert__text {
-    color: var(--text-color-ternary);
+    color: var(--text-color-danger);
+  }
+
+  .modal-body {
+    border-color: var(--text-color-danger);
+  }
+
+  .modal-close {
+    svg {
+      fill: var(--text-color-danger);
+    }
+  }
+}
+
+.success {
+  .alert__text {
+    color: var(--text-color-success);
+  }
+
+  .modal-body {
+    border-color: var(--text-color-success);
+  }
+
+  .modal-close {
+    svg {
+      fill: var(--text-color-success);
+    }
   }
 }
 

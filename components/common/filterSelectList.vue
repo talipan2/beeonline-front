@@ -6,6 +6,7 @@
       class="entity-filter__select"
       :options="getOptions(filter)"
       v-model="selectedFilters[filter]"
+      :return-value="true"
     />
   </div>
 </template>

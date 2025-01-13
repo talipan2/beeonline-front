@@ -5,112 +5,216 @@
     description="Указанные данные не разглашаются третьим лицам и необходимы для успешной работы на сервисе."
   >
     <Form @submit="handleSubmit" v-slot="{ }">
-      <div class="form-group__data register__label_type_location">
-        <label class="form-group__title">
-          Выберите вашу страну*
-          <UiSelect
-            name="location"
-            class="form-group__value"
-            v-model="organizationStore.registerOrg.location"
-            :options="locationList"
-            :errorShow="false"
-          />
-        </label>
-      </div>
-      <UiCheckbox
-        name="isSelfEmployed"
-        class="form-group-title register__checkbox"
-        v-if="organizationStore.registerOrg.location === 1"
-        variant="round"
-        v-model="organizationStore.registerOrg.selfEmployed"
-      >
-        Я самозанятый
-      </UiCheckbox>
+      <div :class="{'animation-loading': isSearchInn}">
+        <div class="form-group__data register__label_type_location">
+          <label class="form-group__title">
+            Выберите вашу страну*
+            <UiSelect
+              name="location"
+              class="form-group__value"
+              v-model="data.countryId"
+              :options="locationList"
+              :errorShow="false"
+            />
+          </label>
+        </div>
+        <UiCheckbox
+          name="isSelfEmployed"
+          class="form-group-title register__checkbox"
+          v-if="data.countryId === 1"
+          variant="round"
+          v-model="data.selfEmployed"
+        >
+          Я самозанятый
+        </UiCheckbox>
 
-      <div
-        class="form-group"
-        v-if="
-          organizationStore.registerOrg.selfEmployed &&
-          organizationStore.registerOrg.location === 1
-        "
-      >
-        <label class="form-group__title">
-          ИНН *
-          <UiInput
-            :rules="{ required: true, min: 10 }"
-            name="inn"
-            label="ИНН"
-            class="form-group__value"
-            type="number"
-            placeholder="ИНН"
-            :required="!skipInn"
-            v-model="organizationStore.registerOrg.inn"
-          />
-        </label>
-        <label class="form-group__title">
-          Название компании или ФИО *
-          <UiInput
-            :rules="{ required: true, min: 2 }"
-            name="name"
-            label="Название компании или ФИО"
-            class="form-group__value"
-            type="text"
-            placeholder="Название компании или ФИО"
-            :required="true"
-            v-model="organizationStore.registerOrg.companyName"
-          />
-        </label>
-        <label class="form-group__title">
-          Адрес регистрации *
-          <UiInput
-            :rules="{ required: true, min: 2 }"
-            name="legal_address"
-            label="Адрес регистрации"
-            class="form-group__value"
-            type="text"
-            placeholder="Адрес регистрации"
-            :required="true"
-            v-model="organizationStore.registerOrg.registerAddress"
-          />
-        </label>
-      </div>
-
-      <div
-        class="form-group"
-        v-else-if="
-          organizationStore.registerOrg.location === 1 &&
-          !organizationStore.registerOrg.selfEmployed
-        "
-      >
-        <label class="form-group__title">
-          ИНН организации*
-          <span
-            >(Введите ИНН и нажмите на кнопку поиска, чтобы система определила
-            вас)</span
-          >
-          <div class="form-group__value register__input-inn">
+        <div
+          class="form-group"
+          v-if="
+            data.selfEmployed &&
+            data.countryId === 1
+          "
+        >
+          <label class="form-group__title">
+            ИНН *
             <UiInput
-              :rules="{ required: true, min: 10 }"
+              :rules="skipInn ? {} : { required: true }"
               name="inn"
               label="ИНН"
-              class="register__input"
-              type="text"
-              placeholder="____________"
+              class="form-group__value"
+              type="number"
+              placeholder="ИНН"
               :required="!skipInn"
-              v-model="organizationStore.registerOrg.inn"
-              :maxLength="10"
-              inputType="number"
+              v-model="data.inn"
+            />
+          </label>
+          <label class="form-group__title">
+            Название компании или ФИО *
+            <UiInput
+              :rules="{ required: true, min: 2 }"
+              name="name"
+              label="Название компании или ФИО"
+              class="form-group__value"
+              type="text"
+              placeholder="Название компании или ФИО"
+              :required="true"
+              v-model="data.companyName"
+            />
+          </label>
+          <label class="form-group__title">
+            Адрес регистрации *
+            <UiInput
+              :rules="{ required: true, min: 2 }"
+              name="legal_address"
+              label="Адрес регистрации"
+              class="form-group__value"
+              type="text"
+              placeholder="Адрес регистрации"
+              :required="true"
+              v-model="data.registerAddress"
+            />
+          </label>
+        </div>
+
+        <div
+          class="form-group"
+          v-else-if="
+          data.countryId === 1 &&
+            !data.selfEmployed
+          "
+        >
+          <label class="form-group__title">
+            ИНН организации*
+            <span
+              >(Введите ИНН и нажмите на кнопку поиска, чтобы система определила
+              вас)</span
             >
-            <template #action>
-              <UiButton class="register__search-btn" variant="tertiary">
-                <SvgoSearchIcon class="svg-m" />
-              </UiButton>
-            </template>
-            </UiInput>
+            <div class="form-group__value register__input-inn">
+              <UiInput
+                :rules="skipInn ? {} : { required: true }"
+                name="inn"
+                label="ИНН"
+                class="register__input"
+                type="text"
+                placeholder="____________"
+                v-model="data.inn"
+                :maxLength="10"
+                inputType="number"
+              >
+              <template #action>
+                <UiButton type="button" class="register__search-btn" variant="tertiary" @click="handleSearchOrgByInn(data.inn)">
+                  <SvgoSearchIcon class="svg-m" />
+                </UiButton>
+              </template>
+              </UiInput>
+            </div>
+          </label>
+          <div class="form-group">
+            <label class="form-group-data form-group__title">
+              Юридическое название организации *
+              <UiInput
+                :rules="{ required: true, min: 2 }"
+                name="name"
+                label="Юридическое название организации"
+                class="form-group__value"
+                type="text"
+                placeholder="Компания"
+                :required="true"
+                v-model="data.organizationName"
+              />
+            </label>
+            <label class="form-group-data form-group__title">
+              КПП *
+              <UiInput
+                :rules="skipInn ? {} : { required: true }"
+                name="kpp"
+                label="КПП"
+                class="form-group__value"
+                type="text"
+                placeholder="____________"
+                v-model="data.kpp"
+                :required="!skipInn"
+                :maxLength="9"
+                :disabled="true"
+                inputType="number"
+              />
+            </label>
+            <label
+              class="form-group-data form-group__title register__label_type_select"
+            >
+              Форма организации *
+              <UiSelect
+                :rules="{ required: true }"
+                name="organizationForm"
+                class="form-group__value"
+                v-model="data.organizationForm"
+                :options="formOrganization"
+                :disabled="true"
+              />
+            </label>
+            <label class="form-group-data form-group__title">
+              ОГРН *
+              <UiInput
+                :rules="skipInn ? {} : { required: true }"
+                name="ogrn"
+                label="ОГРН"
+                class="form-group__value"
+                type="text"
+                inputType="number"
+                placeholder="____________"
+                :required="!skipInn"
+                v-model="data.ogrn"
+                :maxLength="13"
+                :disabled="true"
+              />
+            </label>
           </div>
-        </label>
-        <div class="form-group">
           <label class="form-group-data form-group__title">
+            Юридический адрес *
+            <UiInput
+              :rules="skipInn ? {} : { required: true }"
+              name="legal_address"
+              label="Юридический адрес"
+              class="form-group__value"
+              type="text"
+              placeholder=""
+              :required="!skipInn"
+              v-model="data.legalAddress"
+              :disabled="true"
+            />
+          </label>
+        </div>
+
+        <div
+          class="form-group"
+          v-if="data.countryId !== 1"
+        >
+          <label class="form-group__title">
+            Идентификационный номер организации*
+            <span
+              >(Введите номер и нажмите на кнопку поиска, чтобы система определила
+              вас)</span
+            >
+            <div class="form-group__value register__input-inn">
+              <UiInput
+                :rules="skipInn ? {} : { required: true, min: 2 }"
+                name="inn"
+                label="ИНН"
+                class="register__input"
+                type="text"
+                placeholder="____________"
+                :required="!skipInn"
+                v-model="data.inn"
+              >
+                <template #action>
+                  <UiButton type="button" class="register__search-btn" variant="tertiary" @click="handleSearchOrgByInn(data.inn)">
+                    <SvgoSearchIcon class="svg-m" />
+                  </UiButton>
+                </template>
+              </UiInput>
+            </div>
+          </label>
+          <label class="form-group__title">
             Юридическое название организации *
             <UiInput
               :rules="{ required: true, min: 2 }"
@@ -120,126 +224,31 @@
               type="text"
               placeholder="Компания"
               :required="true"
-              v-model="organizationStore.registerOrg.companyName"
+              v-model="data.organizationName"
             />
           </label>
-          <label class="form-group-data form-group__title">
-            КПП *
+          <label class="form-group__title">
+            Юридический адрес *
             <UiInput
-              :rules="{ required: true, min: 9 }"
-              name="kpp"
-              label="КПП"
+              :rules="skipInn ? {} : { required: true, min: 2 }"
+              name="legal_address"
+              label="Юридический адрес"
               class="form-group__value"
               type="text"
               placeholder="____________"
-              v-model="organizationStore.registerOrg.kpp"
+              v-model="data.kpp"
               :required="!skipInn"
-              :maxLength="9"
-              inputType="number"
+              :disabled="true"
             />
           </label>
-          <label
-            class="form-group-data form-group__title register__label_type_select"
-          >
-            Форма организации *
-            <UiSelect
-              name="organizationForm"
-              class="form-group__value"
-              v-model="organizationStore.registerOrg.organizationForm"
-              :options="formOrganization"
+          <div>
+            <CommonDocumentLoaderAndList 
+              :extension="['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'rtf', 'pdf', 'jpeg', 'png', 'jpg', 'gif', 'psd', 'djvu', 'fb2', 'ps', 'zip', 'rar']"
+              text="Прикрепите ИНН и ОГРН для верификации. Разрешено загружать файлы форматом - doc, .docx, .xls, .xlsx,
+                .ppt, .pptx, .rtf, .pdf, .jpeg, .png, .jpg, .gif, .psd, .djvu, .fb2, .ps, .zip, .rar"
+              v-model="data.verificationFiles"
             />
-          </label>
-          <label class="form-group-data form-group__title">
-            ОГРН *
-            <UiInput
-              :rules="{ required: true, min: 13 }"
-              name="ogrn"
-              label="ОГРН"
-              class="form-group__value"
-              type="text"
-              inputType="number"
-              placeholder="____________"
-              :required="!skipInn"
-              v-model="organizationStore.registerOrg.ogrn"
-              :maxLength="13"
-            />
-          </label>
-        </div>
-        <label class="form-group-data form-group__title">
-          Юридический адрес *
-          <UiInput
-            :rules="{ required: true, min: 5 }"
-            name="legal_address"
-            label="Юридический адрес"
-            class="form-group__value"
-            type="text"
-            placeholder=""
-            :required="!skipInn"
-            v-model="organizationStore.registerOrg.legalAddress"
-          />
-        </label>
-      </div>
-
-      <div
-        class="form-group"
-        v-if="organizationStore.registerOrg.location !== 1"
-      >
-        <label class="form-group__title">
-          Идентификационный номер организации*
-          <span
-            >(Введите номер и нажмите на кнопку поиска, чтобы система определила
-            вас)</span
-          >
-          <div class="form-group__value register__input-inn">
-            <UiInput
-              :rules="{ required: true, min: 2 }"
-              name="inn"
-              label="ИНН"
-              class="register__input"
-              type="text"
-              placeholder="____________"
-              :required="!skipInn"
-              v-model="organizationStore.registerOrg.inn"
-            >
-              <template #action>
-                <UiButton class="register__search-btn" variant="tertiary">
-                  <SvgoSearchIcon class="svg-m" />
-                </UiButton>
-              </template>
-            </UiInput>
           </div>
-        </label>
-        <label class="form-group__title">
-          Юридическое название организации *
-          <UiInput
-            :rules="{ required: true, min: 2 }"
-            name="name"
-            label="Юридическое название организации"
-            class="form-group__value"
-            type="text"
-            placeholder="Компания"
-            :required="true"
-            v-model="organizationStore.registerOrg.companyName"
-          />
-        </label>
-        <label class="form-group__title">
-          Юридический адрес *
-          <UiInput
-            :rules="{ required: true, min: 2 }"
-            name="legal_address"
-            label="Юридический адрес"
-            class="form-group__value"
-            type="text"
-            placeholder="____________"
-            v-model="organizationStore.registerOrg.kpp"
-            :required="!skipInn"
-          />
-        </label>
-        <div>
-          <CommonDocumentLoader
-            text="Прикрепите ИНН и ОГРН для верификации. Разрешено загружать файлы форматом - doc, .docx, .xls, .xlsx,
-              .ppt, .pptx, .rtf, .pdf, .jpeg, .png, .jpg, .gif, .psd, .djvu, .fb2, .ps, .zip, .rar"
-          />
         </div>
       </div>
 
@@ -263,11 +272,13 @@
         </UiButton>
       </div>
     </Form>
+    <InfoModal :text="innModalText" title="Ошибка"/>
   </RegisterLayout>
 </template>
 
 <script setup>
 import { useOrganizationStore } from "~/store/organizationStore";
+import { useSettingStore } from "~/store/settingStore";
 import { useUserStore } from "~/store/userStore";
 
 const props = defineProps({
@@ -275,14 +286,32 @@ const props = defineProps({
     type: String,
     default: "",
   },
+  modelValue: {
+    type: Object,
+    default: () => ({}),
+    required: true,
+  }
 });
 
 const router = useRouter();
 const organizationStore = useOrganizationStore();
+const settingStore = useSettingStore();
 const userStore = useUserStore();
+const emit = defineEmits(['update:modelValue']);
+
+const data = computed({
+  get() {
+    return props.modelValue;
+  },
+  set(value) {
+    emit("update:modelValue", value);
+  }
+});
 
 const role = computed(() => userStore.role);
 const skipInn = ref(false);
+const innModalText = ref("");
+const isSearchInn = ref(false);
 
 const locationList = ref([
   { id: 1, label: "Россия" },
@@ -301,9 +330,42 @@ const formOrganization = ref([
   { id: 3, value: "other", label: "Другое" },
 ]);
 
+const handleSearchOrgByInn = (inn) => {
+  if( inn === null || inn.length === 0 ) {
+    innModalText.value = "Укажите ИНН";
+    settingStore.infoModal = true;
+    return;
+  }
+  isSearchInn.value = true;
+  organizationStore.searchOrgByInn(inn)
+  .then((res) => {
+    if(res && res.data) {
+      data.value.kpp = res.data.kpp;
+      data.value.ogrn = res.data.ogrn;
+      data.value.legalAddress = res.data.address;
+      data.value.organizationName = res.data.name;
+      data.value.companyName = res.data.name;
+      data.value.organizationForm = organizationStore.getOrganizationFormByValue(res.data.org_form);
+    }
+  })
+  .catch(err => {
+    data.value.kpp = '';
+    data.value.ogrn = ''
+    data.value.legalAddress = '';
+    data.value.organizationName = '';
+    data.value.companyName = '';
+    data.value.organizationForm = organizationStore.getOrganizationFormByValue('Другое');
+    innModalText.value = "Организация не найдена";
+    settingStore.infoModal = true;
+    console.log(err);
+  })
+  .finally(() => isSearchInn.value = false);
+}
+
 const handleSubmit = () => {
   router.push({ path: "/register/step2" });
 };
+
 </script>
 
 <style lang="scss">

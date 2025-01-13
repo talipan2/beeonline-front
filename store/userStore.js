@@ -1,13 +1,17 @@
 import { defineStore } from 'pinia';
 import Api from '@/api/userApi';
+import { useSettingStore } from './settingStore';
 
 export const useUserStore = defineStore('user', {
   state: () => ({
     userData: {},
+    userOrganization: {},
+    userPubCard: {},
     userToken: null,
     isAuth: false,
     location: null,
     role: '',
+    userRoles: [],
     settingUser: {
       location: 1,
       inn: null,
@@ -40,6 +44,8 @@ export const useUserStore = defineStore('user', {
           this.isAuth = true;
           this.userToken = response.data.access_token;
           this.userData = response.data.user;
+          this.userRoles = response.data.user.roles;
+          this.role = response.data.user.role;
           if(isRemember) {
             localStorage.setItem('token', this.userToken);
           } else {
@@ -59,8 +65,14 @@ export const useUserStore = defineStore('user', {
           this.userToken = response.data.access_token;
           localStorage.setItem('token', this.userToken);
           this.userData = response.data.user;
+          this.userRoles = response.data.user.roles;
+          this.role = response.data.user.role;
+          this.userOrganizationId = response.data.user.organization_id;
         }
       } catch (error) {
+        if(error.response && error.response.data && error.response.data.message) {
+          useSettingStore().setAlert('error', error.response.data.message);
+        }
         throw error;
       }
     },
@@ -72,6 +84,21 @@ export const useUserStore = defineStore('user', {
           this.isAuth = true;
           this.userData = response.data.user;
           // useCookie('role').value = 'customer';
+          this.userRoles = response.data.user.roles;
+          this.role = response.data.user.role;
+          this.userOrganizationId = response.data.user.organization_id;
+          if(response.data.user && response.data.user.organization) {
+            this.userOrganization = response.data.user.organization;
+          }
+          if(response.data.user && response.data.user.public_cards) {
+            if(this.role === 'customer') {
+              const customerCard = response.data.user.public_cards.find(card => card.type === "customer");
+              this.userPubCard = customerCard;
+            } else if (this.role === 'performer') {
+              const performerCard = response.data.user.public_cards.find(card => card.type === "performer");
+              this.userPubCard = performerCard;
+            }
+          }
         }
         return response.data;
       } catch (error) {
@@ -105,9 +132,9 @@ export const useUserStore = defineStore('user', {
       }
     },
 
-    async setUserData(data) {
+    async setUserData(data, id) {
       try {
-        const response = await Api.setUserData(data);
+        const response = await Api.setUserData(data, id);
         if(response.data.user) {
           this.userData = response.data.user;
         }
@@ -119,7 +146,19 @@ export const useUserStore = defineStore('user', {
     async getUserData(id) {
       try {
         const response = await Api.getUser(id);
-        if(response.data) {
+        if(response.data && response.data.data) {
+          if(response.data.data.organization) {
+            this.userOrganization = response.data.data.organization;
+          }
+          if(response.data.data.public_cards) {
+            if(this.role === 'customer') {
+              const customerCard = response.data.data.public_cards.find(card => card.type === "customer");
+              this.userPubCard = customerCard;
+            } else if (this.role === 'performer') {
+              const performerCard = response.data.data.public_cards.find(card => card.type === "performer");
+              this.userPubCard = performerCard;
+            }
+          }
           return response.data;
         }
       } catch (error) {

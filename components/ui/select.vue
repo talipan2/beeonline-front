@@ -11,6 +11,7 @@
     >
       <select
         class="select__select"
+        :class="{'select_type_disabled': disabled}"
         v-bind="field"
         :disabled="disabled"
         :required="required"
@@ -19,7 +20,7 @@
           class="select__option"
           v-for="option in options"
           :key="option.id"
-          :value="option.value === undefined ? option.id : option.value"
+          :value="returnValue ? option.value : option.id"
           :disabled="option.disabled"
         >
           {{ option.label }}
@@ -62,6 +63,14 @@ const props = defineProps({
   errorShow: {
     type: Boolean,
     default: true,
+  },
+  returnId: {
+    type: Boolean,
+    default: true,
+  },
+  returnValue: {
+    type: Boolean,
+    default: false,
   }
 });
 
@@ -74,6 +83,7 @@ const props = defineProps({
     padding: 1rem;
     width: 100%;
     border: 1px solid var(--border-color-secondary);
+    color: var(--text-color-senary);
     appearance: none;
     background: #fff
       url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='15'%3E%3Cpath stroke='%23343a40' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='m12 6-4.5 4L3 6' fill='none'/%3E%3C/svg%3E")
@@ -86,6 +96,12 @@ const props = defineProps({
       color: var(--text-color-senary);
       outline: none;
     }
+  }
+
+  &_type_disabled {
+    background-color: var(--button-disabled-background);
+    color: var(--button-disabled-color);
+    cursor: default;
   }
 }
 </style>

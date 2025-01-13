@@ -124,7 +124,7 @@ function updateValue(value) {
   border: none;
   font-size: 1em;
   padding: 0;
-  color: var(--text-color-monodecimal);
+  color: var(--text-color-senary);
   pointer-events: visible;
 
   &::placeholder {

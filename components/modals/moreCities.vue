@@ -1,8 +1,8 @@
 <template>
   <UiNewDropdown :placement="placement">
     <a class="more-btn link more-list" ref="moreCities" href="javascript:;">
-      {{ list.length > 1
-        ? '+ еще&nbsp;' + (list.length - 1)
+      {{ list.length >= 1
+        ? '+ еще&nbsp;' + (list.length)
         : ''
       }}
     </a>
@@ -10,7 +10,7 @@
       <div class="more-modal">
         <h4 v-if="title" class="more-modal__title">{{ title }}</h4>
         <ul class="more-modal__list">
-          <li class="more-modal__item" v-for="(item, index) in list.slice(1)" :key="index">
+          <li class="more-modal__item" v-for="(item, index) in list" :key="index">
             {{ item }}
           </li>
         </ul>
@@ -46,6 +46,7 @@ const props = defineProps({
 
 .more-modal {
   padding: 2.4rem;
+  color: #000;
 
   &__check-company-more {
     white-space: nowrap;

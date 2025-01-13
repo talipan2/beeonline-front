@@ -35,4 +35,26 @@ const props = defineProps({
   }
 }
 
+@include tablet {
+  .info {
+    max-width: var(--desktop-content-width);
+  }
+}
+
+@include small-tablet {
+  .info {
+    max-width: var(--tablet-content-width);
+  }
+}
+
+@include mobile {
+  .info {
+    max-width: var(--mobile-content-width);
+
+    &__title {
+      font-size: 2.4rem;
+    }
+  }
+}
+
 </style>

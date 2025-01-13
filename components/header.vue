@@ -92,11 +92,13 @@
 <script setup>
 import { useUserStore } from '~/store/userStore';
 import { useSettingStore } from '~/store/settingStore';
-import { useOrganizationStore } from '~/store/organizationStore';
+import { useEntityStore } from '~/store/entityStore';
+import { useLocationStore } from '~/store/locationStore';
 
 const userStore = useUserStore();
 const settingStore = useSettingStore();
-const organizationStore = useOrganizationStore();
+const locationStore = useLocationStore();
+const entityStore = useEntityStore();
 const router = useRouter();
 
 const isAuth = computed(() => userStore.isAuth);
@@ -165,10 +167,10 @@ onMounted(() => {
   window.addEventListener('resize', updateHeaderHeight);
   window.addEventListener("scroll", onScrollPage)
   userStore.role = localStorage.getItem('role');
-  if(localStorage.getItem('token')) {
-    userStore.checkAuth();
-    organizationStore.getSelfOrganization();
-    organizationStore.getSelfPubCard();
+  // userStore.checkAuth();
+  if(entityStore.entityData.categories.length < 1) {
+    entityStore.getCategories();
+    locationStore.getLocations();
   }
 });
 

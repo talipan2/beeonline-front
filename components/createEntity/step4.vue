@@ -19,7 +19,7 @@
         <p class="form-group__value">
           {{ (formatData.categories && formatData.categories.length > 0) ? formatData.categories[0] : 'не указан' }}
           <ModalsMoreCities 
-            :list="formatData.categories" 
+            :list="formatData.categories.slice(1)" 
             title="Категории" 
             placement="bottom-end" 
             v-if="Array.isArray(formatData.categories) && formatData.categories && formatData.categories.length >= 1"
@@ -34,9 +34,11 @@
             ? flagClass
             :''" 
           />
-          {{ (formatData.placeOfProductionId && formatData.placeOfProductionId.length > 0) ? formatData.placeOfProductionId[0] : 'не указан' }}
+          {{ (formatData.placeOfProductionId && formatData.placeOfProductionId.length > 0 && formatData.placeOfProductionId[0].name) 
+            ? formatData.placeOfProductionId[0].name : 'не указан' 
+          }}
           <ModalsMoreCities 
-            :list="formatData.placeOfProductionId" 
+            :list="formatData.placeOfProductionId.map(item => item.name).slice(1)" 
             title="Место производства" 
             placement="bottom-end" 
             v-if="Array.isArray(formatData.placeOfProductionId) && formatData.placeOfProductionId && formatData.placeOfProductionId.length >= 1"
@@ -171,7 +173,7 @@ const entity = computed(() => {
   } else return entityStore.order
 });
 
-const flagClass = computed(() => selectFlag(entity.value.placeOfProduction[0].countryId))
+const flagClass = computed(() => selectFlag(props.formatData.placeOfProductionId[0].countryId));
 
 </script>
 

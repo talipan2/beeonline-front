@@ -15,20 +15,19 @@
 
 <script setup>
 import { useOrganizationStore } from '~/store/organizationStore';
+import { useUserStore } from '~/store/userStore';
 
+const userStore = useUserStore();
 
-const organizationStore = useOrganizationStore();
-
-const pubCard = computed(() => organizationStore.pubCards);
-const organization = computed(() => organizationStore.organization);
+const pubCard = computed(() => userStore.userPubCard);
 
 const checkListArray = [
   { label: 'Данные организации', value: 'chapter'},
   { label: 'Карточка компании', value: 'chapter-current'},
-  { label: 'Название', value: pubCard.value.name},
-  { label: 'Логотип', value: pubCard.value.logo},
-  { label: 'Описание', value: pubCard.value.description},
-  { label: 'География фактического производства', value: organization.value.country_id},
+  { label: 'Название', value: pubCard.value.name || ''},
+  { label: 'Логотип', value: pubCard.value.logo || ''},
+  { label: 'Описание', value: pubCard.value.description  || ''},
+  { label: 'География фактического производства', value: pubCard.value.cities || ''},
   { label: 'Активность', value: ''},
 ]
 

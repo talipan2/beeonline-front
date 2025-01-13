@@ -26,10 +26,6 @@ const staffData = ref({
   staffNotifications: [],
 });
 
-
-watch(() => staffData.value, (newVal) => {
-  console.log(newVal)
-}, {deep: true})
 </script>
 
 <style lang="scss">

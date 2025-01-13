@@ -6,68 +6,56 @@
       <div class="form-group profile__representative">
         <div class="form-group-data">
           <div class="form-group__title">ФИО</div>
-          <div class="form-group__value">{{ userStore.userData.email || '-' }}</div>
+          <div class="form-group__value">{{ userData.name }}</div>
         </div>
         <div class="form-group-data">
           <div class="form-group__title">Должность</div>
-          <div class="form-group__value">{{ userStore.userData.phone || '-' }}</div>
+          <div class="form-group__value">{{ userData.post }}</div>
         </div>
         <div class="form-group-data">
           <div class="form-group__title">Почта представителя компании</div>
-          <div class="form-group__value">{{ userStore.userData.email || '-' }}</div>
+          <div class="form-group__value">{{ userData.email }}</div>
         </div>
         <div class="form-group-data">
           <div class="form-group__title">Телефон представителя компании</div>
-          <div class="form-group__value">{{ userStore.userData.phone || '-' }}</div>
+          <div class="form-group__value">{{ userData.phone }}</div>
         </div>
       </div>
       <UiButton :to="role ? `/${role}/staff` : '/'" class="profile__employees-btn" variant="primary" size="large">
         Сотрудники
       </UiButton>
     </CommonProfileCheckCard>
-    <CommonProfileCheckCard title="Карточка компании" text="Указанные данные будут видны другим участникам портала"
-      :changeLink="userStore.role == 'customer' ? '/customer/pubcards/edit/1' : '/performer/pubcards/edit/1'" changeLinkLabel="Заполнить">
+    <CommonProfileCheckCard 
+      title="Карточка компании" 
+      text="Указанные данные будут видны другим участникам портала"
+      :changeLink="userStore.role == 'customer' 
+        ? `/customer/pubcards/edit/${pubCardData.id}` 
+        : `/performer/pubcards/edit/${pubCardData.id}`" changeLinkLabel="Заполнить"
+    >
       <div class="register__check-company">
         <div class="register__check-company-container">
           <div class="register__check-company-logo">
             <p class="form-group__title">Логотип</p>
-            <div class="form-group-data__logo">
-              <img :src="organizationStore.registerOrg.companyLogo || defaultCompanyLogo" alt="">
+            <div class="form-group-data__logo image-box image-box_type_logo">
+              <img :src="pubCardData.logo" alt="">
             </div>
           </div>
           <div class="register__check-company-details">
             <div class="form-group">
               <p class="form-group__title">Название компании</p>
-              <p class="form-group__value">{{ organizationStore.pubCards.name || '-' }}</p>
+              <p class="form-group__value">{{ pubCardData.companyName }}</p>
             </div>
             <div class="form-group">
               <p class="form-group__title">География фактического производства</p>
               <div class="form-group__container">
-                <i class="flag flag_round" :class="organizationStore.registerOrg.selectedProductionCountries && organizationStore.registerOrg.selectedProductionCountries[0]
-                  ? selectFlag(organizationStore.registerOrg.selectedProductionCountries[0].countryId)
-                  : ''" />
-                <p class="register__check-company-city">
-                  {{
-                    (organizationStore.registerOrg.selectedProductionCountries && organizationStore.registerOrg.selectedProductionCountries[0]
-                      ?
-                      `
-                  ${organizationStore.registerOrg.selectedProductionCountries[0].city},
-                  ${organizationStore.registerOrg.selectedProductionCountries[0].region},
-                  ${organizationStore.registerOrg.selectedProductionCountries[0].country}
-                  &nbsp;
-                  `
-                      : '')
-                    || '-'
-                  }}
-                </p>
-                <ModalsMoreCities />
+                <CommonLocationsList class="register__check-company-locations" :locationsList="pubCardData.locations"/>
               </div>
             </div>
           </div>
         </div>
         <div class="form-group-data">
           <p class="form-group__title">Описание</p>
-          <p class="form-group__value">{{ organizationStore.pubCards.description || '-' }}</p>
+          <p class="form-group__value">{{ pubCardData.description }}</p>
         </div>
         <div class="form-group-data" v-if="userStore.role === 'performer'">
           <p class="form-group__title">Собственные торговые марки</p>
@@ -75,18 +63,22 @@
         </div>
         <div class="form-group-data">
           <p class="form-group__title">Сайт</p>
-          <p class="form-group__value">{{ organizationStore.pubCards.url_site || '-' }}</p>
+          <a :href="pubCardData.siteUrl" target="_blank" class="form-group__value link">{{ pubCardData.siteUrl || '-' }}</a>
         </div>
-        <div class="form-group-data">
+        <div class="form-group-data" v-if="pubCardsVideo">
+          <p class="form-group__title">Галерея</p>
+          <CommonGalleryShow :videos="pubCardsVideo"/>
+        </div>
+        <div class="form-group-data"  v-if="pubCardData.url_tg || pubCardData.url_yt || pubCardData.url_vk">
           <p class="form-group__title">Социальные сети</p>
-          <div class="form-group__container" v-if="organizationStore.pubCards.url_tg || organizationStore.pubCards.url_yt || organizationStore.pubCards.url_vk">
-            <a class="profile__soc-link" :href="organizationStore.pubCards.url_tg" target="_blank"  v-if="organizationStore.pubCards.url_tg">
+          <div class="form-group__container">
+            <a class="profile__soc-link" :href="pubCardData.url_tg" target="_blank"  v-if="pubCardData.url_tg">
               <SvgoTelegram class="svg-l" />
             </a>
-            <a class="profile__soc-link" :href="organizationStore.pubCards.url_yt" target="_blank"  v-if="organizationStore.pubCards.url_yt">
+            <a class="profile__soc-link" :href="pubCardData.url_yt" target="_blank"  v-if="pubCardData.url_yt">
               <SvgoYoutube class="svg-l" />
             </a>
-            <a class="profile__soc-link" :href="organizationStore.pubCards.url_vk" target="_blank"  v-if="organizationStore.pubCards.url_vk">
+            <a class="profile__soc-link" :href="pubCardData.url_vk" target="_blank"  v-if="pubCardData.url_vk">
               <SvgoVk class="svg-l" />
             </a>
           </div>
@@ -99,38 +91,41 @@
       <div class="register__organization-data">
         <div class="form-group-data">
           <p class="form-group__title">Юридическое названии организации</p>
-          <p class="form-group__value">{{ organizationStore.organization.name || '-' }}</p>
+          <p class="form-group__value">{{ organizationData.companyName }}</p>
         </div>
       </div>
       <div class="form-group">
         <div class="form-group-data">
           <p class="form-group__title">Форма организации</p>
-          <p class="form-group__value">{{ organizationStore.organization.org_form || '-' }}</p>
+          <p class="form-group__value">{{ getOrganizationFormById(organizationData.orgForm) || '-' }}</p>
         </div>
         <div class="form-group-data">
           <p class="form-group__title">ИНН</p>
-          <p class="form-group__value">{{ organizationStore.organization.inn || '-' }}</p>
+          <p class="form-group__value">{{ organizationData.inn }}</p>
         </div>
         <div class="form-group-data">
           <p class="form-group__title">КПП</p>
-          <p class="form-group__value">{{ organizationStore.organization.kpp || '-' }}</p>
+          <p class="form-group__value">{{ organizationData.kpp }}</p>
         </div>
         <div class="form-group-data">
           <p class="form-group__title">ОГРН</p>
-          <p class="form-group__value">{{ organizationStore.organization.ogrn || '-' }}</p>
+          <p class="form-group__value">{{ organizationData.ogrn }}</p>
         </div>
         <div class="form-group-data">
           <p class="form-group__title">Страна</p>
-          <p class="form-group__value">{{ organizationStore.organization.country_id || '-' }}</p>
+          <p class="form-group__value">
+            <i class="flag flag_round" :class="organizationData.country ? selectFlag(organizationData.country) : ''" />
+            {{ locationStore.getCountryById(organizationData.country) }}
+          </p>
         </div>
         <div class="form-group-data">
           <p class="form-group__title">Валюта</p>
-          <p class="form-group__value">{{ organizationStore.organization.currency_id || '-' }}</p>
+          <p class="form-group__value">{{ organizationData.currency }}</p>
         </div>
       </div>
       <div class="form-group-data">
         <p class="form-group__title">Юридический адрес</p>
-        <p class="form-group__value">{{ organizationStore.organization.legal_address || '-' }}</p>
+        <p class="form-group__value">{{ organizationData.legalAddress }}</p>
       </div>
     </CommonProfileCheckCard>
   </div>
@@ -140,12 +135,64 @@
 import { useOrganizationStore } from '~/store/organizationStore';
 import { useUserStore } from '~/store/userStore';
 import defaultCompanyLogo from '~/assets/images/nophoto_pc.png';
+import { useLocationStore } from '~/store/locationStore';
 
 
 const userStore = useUserStore();
 const organizationStore = useOrganizationStore();
+const locationStore = useLocationStore();
 
 const role = computed(() => userStore.role);
+
+const isLoading = ref(false);
+const getOrganizationFormById = organizationStore.getOrganizationFormById;
+
+const userData = computed(() => ({
+  name: userStore.userData.name || '-',
+  post: userStore.userData.post || '-',
+  email: userStore.userData.email.replace(/(.{0,3})(?=@)/, (match) => '*'.repeat(match.length)) || '-',
+  phone: userStore.userData.phone.replace(/(\d{4})$/, '****') || '-',
+}));
+
+const organizationData = computed(() => ({
+  companyName: userStore.userOrganization?.name || '-',
+  orgForm: userStore.userOrganization?.org_form || '-',
+  inn: userStore.userOrganization?.inn || '-',
+  kpp: userStore.userOrganization?.kpp || '-',
+  ogrn: userStore.userOrganization?.ogrn || '-',
+  legalAddress: userStore.userOrganization?.legal_address || '-',
+  country: userStore.userOrganization?.country_id || '-',
+  currency: userStore.userOrganization?.currency || '-',
+}));
+
+const pubCardData = computed(() => ({
+  id: userStore.userPubCard?.id || '-',
+  companyName: userStore.userPubCard?.name || '-',
+  logo: userStore.userPubCard?.logo || defaultCompanyLogo,
+  description: userStore.userPubCard?.description || '-',
+  siteUrl: userStore.userPubCard?.url_site || null,
+  url_tg: userStore.userPubCard?.url_tg || null,
+  url_vk: userStore.userPubCard?.url_vk || null,
+  url_yt: userStore.userPubCard?.url_yt || null,
+  locations: {
+    regions: userStore.userPubCard && userStore.userPubCard.regions ? userStore.userPubCard.regions.map(region => region.id) : [],
+    cities: userStore.userPubCard && userStore.userPubCard.cities ? userStore.userPubCard.cities.map(city => city.id) : [],
+  },
+}));
+
+const pubCardsVideo = computed(() => {
+  console.log(userStore.userPubCard.videos);
+  if (userStore.userPubCard.videos && userStore.userPubCard.videos.length) {
+    return userStore.userPubCard.videos.map(video => video.external_url)
+  } else {
+    return []
+  }
+})
+
+onMounted(() => {
+  isLoading.value = true;
+  userStore.getUserData(userStore.userData.id).finally(() => isLoading.value = false);
+})
 
 </script>
 
@@ -216,6 +263,10 @@ const role = computed(() => userStore.role);
   .flag {
     margin-right: .5em;
   }
+}
+
+.register__check-company-locations {
+  font-size: 1.6em;
 }
 
 @include tablet {

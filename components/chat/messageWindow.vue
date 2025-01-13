@@ -13,7 +13,7 @@
           <div class="dialog-head" v-if="org.id != org_id">
             <div class="dialog-head__img">
               <img v-if="org.pubcard.logo" :src="org.pubcard.logo" :alt="org.pubcard.name" />
-              <img v-else src="../../assets/img/default.svg" :alt="org.pubcard.name" />
+              <img v-else src="../../assets/images/nophoto_pc.png" :alt="org.pubcard.name" />
             </div>
             <div class="dialog-head__info">
               <a :href="`/members/${org.id}/${org.pivot.org_type}`" target="_blank" class="dialog-head__info-title">
@@ -382,7 +382,6 @@ function prepareMessage(message) {
 
   message.date = date;
   message.own = message.user_id == user_id.value;
-  console.log(message.user_id, user_id.value);
   if (message.organization_id == org_id.value) {
     message.side = "right";
   } else {

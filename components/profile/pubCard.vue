@@ -1,22 +1,23 @@
 <template>
   <div class="pub-card">
-    <component :is="currentComponent" blockTitle="" :title="title" description="" :data="data"/>
-    <div class="form-group">
-      <div class="form-group-data">
-        <UiButton type="button" class="form-group-data__btn" variant="senary" size="large" v-if="currentStep !== 1"
-          @click="prevStep">Назад</UiButton>
-      </div>
-      <div class="form-group-data">
-        <UiButton v-if="currentStep < 5" type="submit" class="form-group-data__btn" variant="quinary" size="large"
-          @click="nextStep">Далее
-          <SvgoBtnArrow class="svg-lx" />
-        </UiButton>
-        <UiButton v-if="currentStep >= 5" type="button" @click="handleSubmit" class="form-group-data__btn"
-          variant="quinary" size="large">Отправить на проверку
-          <SvgoBtnArrow class="svg-lx" />
-        </UiButton>
-      </div>
-    </div>
+      <component :is="currentComponent" blockTitle="" :title="title" description="" v-model="data" :submitFunc="handleSubmit">
+        <div class="form-group">
+          <div class="form-group-data">
+            <UiButton type="button" class="form-group-data__btn" variant="senary" size="large" v-if="currentStep !== 1"
+              @click="prevStep">Назад</UiButton>
+          </div>
+          <div class="form-group-data">
+            <UiButton v-if="currentStep < 5" type="submit" class="form-group-data__btn" variant="quinary" size="large"
+              >Далее
+              <SvgoBtnArrow class="svg-lx" />
+            </UiButton>
+            <UiButton v-if="currentStep >= 5" type="submit" class="form-group-data__btn"
+              variant="quinary" size="large">Отправить на проверку
+              <SvgoBtnArrow class="svg-lx" />
+            </UiButton>
+          </div>
+        </div>
+      </component>
   </div>
 </template>
 
@@ -35,19 +36,20 @@ const userStore = useUserStore();
 const currentStep = ref(1);
 const title = ref('');
 
-const data = computed(() => ({
-    id: organizationStore.pubCards.id,
-    companyName: organizationStore.pubCards.name,
-    description: organizationStore.pubCards.description,
-    site: organizationStore.pubCards.url_site,
-    tg: organizationStore.pubCards.url_tg,
-    vk: organizationStore.pubCards.url_vk,
-    yt: organizationStore.pubCards.url_yt
-}))
-
-watch(() => data.value, (newVal) => {
-  console.log(data.value)
-}, {deep: true});
+const data = ref({
+  id: null,
+  companyName: '',
+  description: '',
+  companyLogo: null,
+  cities: null,
+  regions: null,
+  gallery: [],
+  urlSite: null,
+  urlTg: null,
+  urlVk: null,
+  urlYt: null,
+  videos: [],
+})
 
 const currentComponent = computed(() => {
   switch (currentStep.value) {
@@ -92,21 +94,56 @@ const prevStep = () => {
 }
 
 
-const handleSubmit = () => {
-  organizationStore.editPubCards({
-    id: data.value.id,
-    name: data.value.companyName,
-    description: data.value.description,
-    url_site: data.value.site,
-    url_tg: data.value.url_tg,
-    url_vk:data.value.url_vk,
-    url_yt: data.value.url_yt,
-  });
-  router.push(`/${userStore.role}/desktop`);
+async function handleSubmit() {
+
+  if (currentStep.value < 5) {
+    if (currentStep.value === 3 && userStore.role === 'customer') {
+      currentStep.value += 2;
+    } else {
+      currentStep.value++;
+    }
+  } else {
+    organizationStore.editPubCards({
+      id: data.value.id,
+      name: data.value.companyName,
+      description: data.value.description,
+      cities: data.value.locations.cities,
+      regions: data.value.locations.regions,
+      url_site: data.value.siteUrl,
+      url_tg: data.value.urlTg,
+      url_vk:data.value.urlVk,
+      url_yt: data.value.urlYt,
+      videos: data.value.videos
+    });
+    if(data.value.companyLogo && data.value.companyLogo.data) {
+      organizationStore.setPubCardLogo(data.value.id, data.value.companyLogo.data)
+    }
+    router.push(`/${userStore.role}/desktop`);
+  }
+}
+
+const handleUpdateData = (data) => {
+  data.value = data
 }
 
 onMounted(() => {
-  organizationStore.getSelfPubCard()
+  organizationStore.getPubCard(router.currentRoute.value.params.id)
+    .then(res => {
+      if (res) {
+        data.value.id = res.id;
+        data.value.companyName = res.name;
+        data.value.description = res.description;
+        data.value.siteUrl = res.url_site;
+        data.value.urlTg = res.url_tg;
+        data.value.urlVk = res.url_vk;
+        data.value.urlYt = res.url_yt;
+        data.value.companyLogo = res.logo;
+        data.value.locations = { regions: res.regions.map(region => region.id), cities: res.cities.map(city => city.id) };
+        data.value.gallery = res.gallery;
+        data.value.videos = res.videos;
+      }
+    })
+    .catch(err => console.log(err))
 })
 
 </script>
@@ -177,6 +214,10 @@ onMounted(() => {
     line-height: 2em;
 
   }
+}
+
+.tada {
+  color: var(--text-color-success);
 }
 
 @include mobile {

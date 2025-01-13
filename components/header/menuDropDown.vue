@@ -1,63 +1,89 @@
 <template>
-  <UiDropDown :options="dropdownMenuLinks" :type="'secondary'" class="header__menu-dropdown">
-    <template #trigger>
-      <UiButton type="button" variant="secondary" size="large" class="header__auth-link">
-        <SvgoUser class="svg-m" />
-        Кабинет
-        <span class="d-none" v-if="userStore.role === 'performer'"> исполнителя</span>
-        <span class="d-none" v-if="userStore.role === 'customer'"> заказчика</span>
-        <SvgoDropDown class="svg-m" />
-      </UiButton>
-    </template>
-    <template #dropdown-header>
+  <UiNewDropdown 
+    class="header__menu-dropdown"
+    :arrow="false"
+    placement="bottom-end"
+    :offset="[0, 0]"
+    dropdown-class="header__menu-dropdown-content"
+    ref="headerDropdown"
+  >
+    <UiButton type="button" variant="secondary" size="large" class="header__auth-link">
+      <SvgoUser class="svg-m" />
+      Кабинет
+      <span class="d-none" v-if="userStore.role === 'performer'"> исполнителя</span>
+      <span class="d-none" v-if="userStore.role === 'customer'"> заказчика</span>
+      <SvgoDropDown class="svg-m" />
+    </UiButton>
+    <template #content>
       <div class="header__user-info">
         <div class="header__user-image">
-          <img src="~/assets/images/header/profile-image.jpg" alt="">
+          <img :src="userCurrentPubCard.logo || defaultLogoImage" alt="">
         </div>
         <div class="header__user-data">
           <div class="header__user-name">{{ userData.name }}</div>
-          <div class="header__user-role">
+          <div class="header__user-role" v-if="userStore.role === 'performer'">
             Исполнитель
+          </div>
+          <div class="header__user-role" v-if="userStore.role === 'customer'">
+            Заказчик
           </div>
           <div class="header__user-role">
             (ID={{ userData.id }})
           </div>
         </div>
       </div>
-    </template>
-    <template #default="{ item }">
-      <NuxtLink class="header__dropdown-links" :to="item.value">{{ item.label }}</NuxtLink>
-    </template>
-    <template #dropdown-footer>
-      <UiButton type="button" variant="tertiary" size="centered" class="header__dropdown-change-role" 
-      @click="handleSwitchRole" v-if="userStore.role === 'performer'">
-        <SvgoEnter class="svg-m" />
-        <span>
-          Переключиться<br>на заказчика
-        </span>
-      </UiButton>
-      <UiButton type="button" variant="tertiary" size="centered" class="header__dropdown-change-role" 
-      @click="handleSwitchRole" v-else>
-        <SvgoEnter class="svg-m" />
-        <span>
-          Переключиться<br>на исполнителя
-        </span>
-      </UiButton>
-      <UiButton type="button" variant="tertiary" size="centered" class="header__dropdown-change-role">
-        <SvgoEnter class="svg-m" />
-        <span>
-          В кабинет<br>менеджера сделок
-        </span>
-      </UiButton>
+      <div class="header__menu-dropdown-links">
+        <template v-for="(item, index) in dropdownMenuLinks" :key="index">
+          <NuxtLink class="header__dropdown-links" :to="item.value">{{ item.label }}</NuxtLink>
+        </template>
+      </div>
+      <div class="header__menu-dropdown-settings">
+        <UiButton type="button" variant="tertiary" size="centered" class="header__dropdown-change-role" 
+        @click="handleSwitchRole" v-if="userStore.role === 'performer' && userData.roles.includes('customer')">
+          <SvgoEnter class="svg-m" />
+          <span>
+            Переключиться<br>на заказчика
+          </span>
+        </UiButton>
+        <UiButton type="button" variant="tertiary" size="centered" class="header__dropdown-change-role" 
+        @click="handleSwitchRole" v-if="userStore.role === 'customer' && userData.roles.includes('performer')">
+          <SvgoEnter class="svg-m" />
+          <span>
+            Переключиться<br>на исполнителя
+          </span>
+        </UiButton>
+        <UiButton type="button" variant="tertiary" size="centered" class="header__dropdown-change-role" 
+        @click="setRole('performer')" v-if="!userRoles.includes('performer')">
+          <SvgoEnter class="svg-m" />
+          <span>
+            Стать<br>исполнителем
+          </span>
+        </UiButton>
+        <UiButton type="button" variant="tertiary" size="centered" class="header__dropdown-change-role" 
+        @click="setRole('customer')" v-if="!userRoles.includes('customer')">
+          <SvgoEnter class="svg-m" />
+          <span>
+            Стать<br>заказчиком
+          </span>
+        </UiButton>
+        <!-- <UiButton type="button" variant="tertiary" size="centered" class="header__dropdown-change-role">
+          <SvgoEnter class="svg-m" />
+          <span>
+            В кабинет<br>менеджера сделок
+          </span>
+        </UiButton> -->
+      </div>
       <div class="header__dropdown-logout">
         <a class="header__dropdown-links" href="javascript:;" @click="logOut">Выход</a>
       </div>
     </template>
-  </UiDropDown>
+  </UiNewDropdown>
 </template>
 
 <script setup>
+import { useOrganizationStore } from '~/store/organizationStore';
 import { useUserStore } from '~/store/userStore';
+import defaultLogoImage from '~/assets/images/nophoto_pc.png'
 
 const userStore = useUserStore();
 
@@ -68,30 +94,42 @@ const props = defineProps({
   }
 });
 
+
 const emit = defineEmits(['update:modelValue']);
 const userData = computed(() => userStore.userData);
+const organizationStore = useOrganizationStore();
 const router = useRouter();
 const role = computed(() => userStore.role)
+const userRoles = computed(() => userStore.userRoles);
+const userCurrentPubCard = computed(() => userStore.userPubCard);
+
+const headerDropdown = ref(null);
 
 const dropdownMenuLinks = computed(() => {
   return [
     { label: 'Рабочий стол', value: `/${role.value}/desktop` },
+    { label: 'Bee-online Gifts', value: `/bonus` },
     { label: 'Профиль', value: `/${role.value}/profile` },
     { 
       label: `${role.value === 'customer' ? 'Заказы' : 'Услуги'}`, 
       value: `/${role.value}/${role.value === 'customer' ? 'orders' : 'services'}` 
     },
-    { label: 'Сообщения', value: '/' },
+    { label: 'Сообщения', value: '/chat' },
     { label: 'Сделки', value: '/' },
-    { label: 'Избранное', value: '/' },
-    { label: 'Отзывы', value: '/' },
-    { label: 'Баланс и платные услуги', value: '/' },
-    { label: 'Уведомления', value: '/' },
-    { label: 'Техническая поддержка', value: '/' },
-    { label: 'Новости', value: '/' },
+    { label: 'Избранное', value: `/${role.value}/favorites` },
+    { label: 'Отзывы', value: `/${role.value}/my-reviews` },
+    { label: 'Баланс и платные услуги', value: '/tariffs' },
+    { label: 'Уведомления', value: `/${role.value}/notifications` },
+    { label: 'Техническая поддержка', value: '/support' },
+    { label: 'Новости', value: '/news' },
   ]
 })
 
+watch(() => router.currentRoute.value.path, (newVal) => {
+  if(headerDropdown.value.tippy) {
+    headerDropdown.value.tippy.hide();
+  }
+})
 
 const logOut = () => {
   userStore.logOut()
@@ -99,16 +137,35 @@ const logOut = () => {
   .catch(err => console.log(err))
 };
 
-const handleSwitchRole = () => {
-  if (userStore.role === 'customer') {
-    userStore.role = 'performer';
-    localStorage.setItem('role', 'performer');
-    router.push({ path: '/performer/profile' })
-  } else {
-    userStore.role = 'customer';
-    localStorage.setItem('role', 'customer');
-    router.push({ path: '/customer/profile' })
+const handleSwitchRole = async () => {
+  const isCustomer = userStore.role === 'customer';
+  const newRole = isCustomer ? 'performer' : 'customer';
+  const redirectPath = isCustomer ? '/performer/profile' : '/customer/profile';
+
+  try {
+    await userStore.setUserData({ role: newRole }, userData.value.id);
+    userStore.role = newRole;
+    localStorage.setItem('role', newRole);
+    router.push({ path: redirectPath });
+  } catch (error) {
+    console.error(error);
   }
+};
+
+const setRole = (role) => {
+  userStore.setUserData({ role: role }, userData.value.id)
+    .then(res => {
+      userStore.role = role;
+      localStorage.setItem('role', role);
+      organizationStore.setPubCard({
+        id: userStore.userData.organization_id,
+        name: userStore.userData.public_cards[0].name,
+        status: 1,
+        type: role
+      })
+      router.push({ path: `/${role}/profile` });
+      
+    });
 }
 
 </script>
@@ -117,6 +174,16 @@ const handleSwitchRole = () => {
 
 .header__menu-dropdown {
   color: var(--text-color-monodecimal);
+}
+
+.header__menu-dropdown-content {
+  font-size: 1.4rem;
+  padding: 1.7em;
+  color: var(--text-color-monodecimal);
+}
+
+.header__menu-dropdown-links {
+  margin-bottom: 1em;
 }
 
 .header__auth-link {
@@ -139,35 +206,37 @@ const handleSwitchRole = () => {
       min-width: 2.57em;
       width: 2.57em;
       height: 2.57em;
-      border-radius: 2.57em;
+      border-radius: 100%;
       margin-right: 1.142em;
+      overflow: hidden;
   }
 
   .header__user-name {
       font-size: 1.142em;
-      line-height: 1em;
+      line-height: 1.2em;
   }
 
   .header__user-role {
       font-size: 0.857em;
-      font-weight: 300;
+      line-height: 1.2em;
+      font-weight: 400;
       text-transform: uppercase;
   }
 
   .header__dropdown-links {
     padding: .2em .42em;
+    margin-inline: -0.42em;
     font-size: 1em;
     margin-bottom: 0.214em;
     line-height: 1.2em;
-  }
-
-  .header__dropdown-links.router-link-active {
-    background-color: #fff;
 
     &:hover {
-      background-color: var(--button-background-tertiary-hover);
+      background-color: #e9ecef;
+      color: #16181b;
     }
   }
+
+
 
   .header__dropdown-change-role {
     column-gap: 1.25em;

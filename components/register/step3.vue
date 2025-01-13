@@ -16,13 +16,30 @@
           Указанные города и регионы используются для автоматического добавления в новые заказы и позволят потенциальным исполнителям находить их в поиске.
         </p>
       </div>
-      <CommonLocation buttonLabel="Выбрать город или регион" v-model="selectedCities" class="register__location"/>
-      <div class="register__btn-container" v-if="router.currentRoute.value.path.includes('/register')">
-        <UiButton type="button" class="register__btn" variant="senary" size="large" @click="router.back">Назад</UiButton>
-        <UiButton type="button" class="register__btn" variant="quinary" size="large" @click="router.push({path: '/register/step4'})">Далее
-          <SvgoBtnArrow class="svg-lx" />
-        </UiButton>
-      </div>
+      <Form @submit="handleSubmit">
+        <CommonLocation 
+          v-if="userStore.role === 'performer'" 
+          class="register__location"
+          buttonLabel="Выбрать город" 
+          v-model="data.locations"
+          :type="['selectCities']"
+          :max-selected="5" 
+        />
+        <CommonLocation 
+          v-if="userStore.role === 'customer'"
+          class="register__location"
+          buttonLabel="Выбрать город или регион" 
+          v-model="data.locations"
+          :type="['selectCities', 'selectRegions']" 
+        />
+        <div class="register__btn-container" v-if="router.currentRoute.value.path.includes('/register')">
+          <UiButton type="button" class="register__btn" variant="senary" size="large" @click="router.back">Назад</UiButton>
+          <UiButton type="button" class="register__btn" variant="quinary" size="large" @click="router.push({path: '/register/step4'})">Далее
+            <SvgoBtnArrow class="svg-lx" />
+          </UiButton>
+        </div>
+        <slot></slot>
+      </Form>
     </div>
   </RegisterLayout>
   </div>
@@ -42,19 +59,37 @@ const props = defineProps({
     type: String,
     default: 'Города фактического производства *',
   },
+  modelValue: {
+    type: Object,
+    required: true,
+  },
+  submitFunc: {
+    type: Function,
+    default: null,
+  }
 })
 
-
-const router = useRouter();
-const organizationStore = useOrganizationStore();
-const userStore = useUserStore();
-const selectedCities = ref([]);
-
-watch(() => selectedCities.value, (newVal) => {
-  organizationStore.registerOrg.selectedProductionCountries = newVal.fullNameLocation;
-  organizationStore.registerOrg.locationId = newVal.locationId;
+const data = computed({
+  get() {
+    return props.modelValue;
+  },
+  set(value) {
+    emit('update:modelValue', value);
+  }
 });
 
+const emit = defineEmits(['update:modelValue']);
+
+const router = useRouter();
+const userStore = useUserStore();
+
+const handleSubmit = () => {
+  if(props.submitFunc) {
+    props.submitFunc();
+  } else {
+    router.push({path: '/register/step4'});
+  }
+}
 
 </script>
 

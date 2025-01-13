@@ -3,7 +3,7 @@
     <div class="entitys__header">
       <p class="entitys__announce">{{ subtitle }}</p>
       <div class="entitys__btn-wrapper">
-        <UiButton :to="btnLink" class="entitys__btn" variant="quinary" size="large">{{ btnLabel }}</UiButton>
+        <UiButton type="button" @click="handleCreateEntity" class="entitys__btn" variant="quinary" size="large">{{ btnLabel }}</UiButton>
       </div>
       <div class="entitys__filter">
         <h2 class="entitys__title">{{ title }}</h2>
@@ -16,14 +16,19 @@
       </div>
       <div class="divider mb-30"></div>
     </div>
-    <div class="entitys__cards">
-      <CardsEntityCards v-for="(service, index) in data" :key="index" :data="service" :role="role"/>
+    <div class="entitys__cards" v-if="!isLoading">
+      <template v-if="data.length > 0">
+        <CardsEntityCards v-for="(service, index) in data" :key="index" :data="service" :role="role"/>
+      </template>
+      <CommonAlerts v-if="data.length === 0" type="warning" :alert="emptyAlertText"/>
     </div>
 
   </section>
 </template>
 
 <script setup>
+import { useEntityStore } from '~/store/entityStore'
+
 
 const props = defineProps({
   role: {
@@ -54,9 +59,18 @@ const props = defineProps({
   data: {
     type: Array,
     default: () => [],
-  }
+  },
+  isLoading: {
+    type: Boolean,
+    default: false,
+  },
+  emptyAlertText: {
+    type: String,
+    default: '',
+  },
 })
 
+const entityStore = useEntityStore();
 const selectedStatus = ref(1)
 const selectedCategory = ref(1)
 
@@ -86,7 +100,10 @@ const categoriesList = [
   { id: 17, label: 'Джинсовая одежда' },
 ]
 
-
+const handleCreateEntity = () => {
+  entityStore.isRedirectedToStep = true
+  navigateTo(props.btnLink)
+}
 
 </script>
 

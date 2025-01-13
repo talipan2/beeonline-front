@@ -66,10 +66,6 @@ const chartDataSets =[
 const currentViewSetting = ref(null)
 const isHover = ref(false)
 
-watch(() => currentViewSetting.value, (newVal) => {
-  console.log(newVal);
-}, {deep: true});
-
 const currentDataSet = computed(() => {
   switch (currentViewSetting.value) {
     case 'profile':

@@ -8,15 +8,20 @@ export const useOrganizationStore = defineStore('organization', {
     pubCardsList: [],
     pubCardGallery: null,
     registerOrg: {
-      location: 1,
+      countryId: 1,
       inn: null,
       KPP: null,
-      organizationForm: 'other',
+      organizationForm: 3,
       ogrn: null,
       legalAddress: null,
+      organizationName: null,
       companyName: null,
       companyLogo: null,
-      countryId: [],
+      description: null,
+      locations: {
+        regions: [],
+        cities: [],
+      },
       companyDescription: null,
       productionCountry: null,
       selfEmployed: false,
@@ -26,8 +31,35 @@ export const useOrganizationStore = defineStore('organization', {
         locationId: [],
       },
       siteUrl: null,
-    }
+      verificationFiles: [],
+    },
+    formOrganization: [
+      {
+        id: 1,
+        name: 'ООО',
+        value: 'ooo',
+      },
+      {
+        id: 2,
+        name: 'ИП',
+        value: 'ip',
+      },
+      {
+        id: 3,
+        name: 'Другое',
+        value: 'other',
+      }
+    ]
   }),
+  getters: {
+    getOrganizationFormById: (state) => (id) => {
+      return state.formOrganization.find(item => item.id == id)?.name
+    },
+
+    getOrganizationFormByValue: (state) => (value) => {
+      return state.formOrganization.find(item => item.name == value)?.id || this.formOrganization[2].id
+    },
+  },
   actions: {
     async setOrganization(data) {
       try {
@@ -53,9 +85,9 @@ export const useOrganizationStore = defineStore('organization', {
       }
     },
 
-    async getSelfOrganization() {
+    async getSelfOrganization(id) {
       try {
-        const response = await Api.getSelfOrganization();
+        const response = await Api.getOrganization(id);
         if(response.data) {
           this.organization = response.data.data;
         }
@@ -64,7 +96,7 @@ export const useOrganizationStore = defineStore('organization', {
       }
     },
 
-    async getSelfPubCard() {
+    async getSelfPubCard(id) {
       try {
         const response = await Api.getSelfPubCard();
         if(response.data) {
@@ -77,7 +109,6 @@ export const useOrganizationStore = defineStore('organization', {
 
     async editPubCards(data) {
       try {
-        console.log(data);
         const response = await Api.editPubCard(data);
         if(response.data) {
           this.pubCards = response.data;
@@ -121,6 +152,68 @@ export const useOrganizationStore = defineStore('organization', {
       } catch (error) {
         throw error;
       }
-    }
+    },
+
+    // поиск организации по инн
+    async searchOrgByInn(inn) {
+      try {
+        const response = await Api.searchInn(inn);
+        if(response.data && response.data.data) {
+          this.registerOrg.kpp = response.data.data.kpp;
+          this.registerOrg.ogrn = response.data.data.ogrn;
+          this.registerOrg.legalAddress = response.data.data.address;
+          this.registerOrg.organizationName = response.data.data.name;
+          this.registerOrg.companyName = response.data.data.name;
+          this.registerOrg.organizationForm = this.getOrganizationFormByValue(response.data.data.org_form);
+          return response.data;
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    async setVerificationDocuments(id,data) {
+      try {
+        const response = await Api.setVerificationDocuments(id,data);
+        if(response.data) {
+          return response.data;
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    async getVerificationDocuments(id) {
+      try {
+        const response = await Api.getVerificationDocuments(id);
+        if(response.data) {
+          return response.data;
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
+    
+    async deleteVerificationDocument(id) {
+      try {
+        const response = await Api.deleteVerificationDocument(id);
+        if(response.data) {
+          return response.data;
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    async setPubCardLogo(id, data) {
+      try {
+        const response = await Api.setPubCardLogo(id, data);
+        if(response.data) {
+          return response.data;
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
   }
 })

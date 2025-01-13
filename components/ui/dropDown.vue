@@ -11,8 +11,7 @@
         ref="dropdown">
         <slot name="dropdown-header" />
         <div class="dropdown__link_list">
-          <div v-for="(item, index) in options" :key="index" @click="selectItem(item)"
-            :class="{ selected: item.value === selectedValue }" class="dropdown-item">
+          <div v-for="(item, index) in options" :key="index" @click="selectItem(item)"  class="dropdown-item">
             <slot :item="item" />
           </div>
         </div>
@@ -40,6 +39,10 @@ const props = defineProps({
     type: String,
     default: 'primary',
     validator: value => ['primary', 'secondary'].includes(value),
+  },
+  isSelected: {
+    type: Boolean,
+    default: false
   }
 
 });
@@ -134,6 +137,10 @@ onMounted(() => {
     padding: 2.4rem;
     min-width: 27.6rem;
     box-sizing: border-box;
+  }
+
+  &__link_list {
+    margin-bottom: 1em;
   }
 }
 

@@ -4,7 +4,7 @@
       <h1 class="error-page__title">К сожалению такая страница не найдена</h1>
       <div class="error-page__container">
         <span class="error-page__code">404</span>
-        <UiImage src="/assets/images/error-page.webp" class="error-page__image" />
+        <UiImage src="/assets/images/error.webp" class="error-page__image" />
       </div>
       <h2 class="error-page__message">Ошибка 404 - страница не найдена</h2>
       <UiButton type="button" class="error-page__btn" variant="quinary" size="large" @click="goBack">
@@ -16,6 +16,13 @@
 </template>
 
 <script setup>
+
+const props = defineProps({
+  error: {
+    type: Object,
+    required: true,
+  }
+})
 
 const router = useRouter();
 

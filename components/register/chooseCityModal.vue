@@ -119,12 +119,12 @@ import { useLocationStore } from '~/store/locationStore';
 
 const locationStore = useLocationStore();
 
-const locations = computed(() => locationStore.locations )
+const locations = ref([]);
 
 const props = defineProps({
   modelValue: {
-    type: Array,
-    default: [],
+    type: Object,
+    default: () => {},
   },
   type: {
     type: [String, Array],
@@ -156,7 +156,6 @@ const locationTypes = computed(() => {
 
 const settingStore = useSettingStore();
 const userStore = useUserStore();
-const selectedCities = ref([]);
 
 const emit = defineEmits(['update:modelValue']);
 
@@ -166,6 +165,10 @@ const selectedCountry = ref(null);
 const selectedRegion = ref(null);
 const selectedCity = ref(null);
 const activeLevel = ref('country');
+
+const selectedCities = ref([]);
+const selectedRegionIds = ref([]);
+const selectedCountryIds = ref([]);
 
 const AddCityForSearchList = (city) => {
   if (selectedCities.value.find(selectedCity => selectedCity.id === city.id)) {
@@ -183,99 +186,72 @@ const AddCityForSearchList = (city) => {
   updateCitySelection();
 }
 
-// выбор города с чекбокса
+// выбор города с чекбокса  ИСПРАВЛЕНО
 function toggleCitySelection(city) {
-  if (!selectedCities.value.some(selectedCity => selectedCity.id === selectedRegion.value.id)) {
+  if (!selectedRegionIds.value.some(regionId => regionId === selectedRegion.value.id)) {
 
-    if (selectedCities.value.find(selectedCity => selectedCity.id === city.id)) {
-      selectedCities.value = selectedCities.value.filter(selectedCity => selectedCity.id !== city.id);
+    if (selectedCities.value.find(selectedCity => selectedCity === city.id)) {
+      selectedCities.value = selectedCities.value.filter(selectedCity => selectedCity !== city.id);
     } else if(selectedCities.value.length < props.maxSelected && props.maxSelected) {
-      selectedCities.value = [...selectedCities.value, { 
-        id: city.id, 
-        region: selectedRegion.value.name, 
-        country: selectedCountry.value.name,
-        countryId: selectedCountry.value.id,
-        city: city.name,
-        selected: false,
-      }];
+      selectedCities.value.push(city.id);
     } else if (!selectedCities.value.includes(city.id)) {
-      selectedCities.value = [...selectedCities.value, { 
-        id: city.id, 
-        region: selectedRegion.value.name, 
-        country: selectedCountry.value.name,
-        countryId: selectedCountry.value.id,
-        city: city.name,
-        selected: false,
-      }];
+      selectedCities.value.push(city.id);
     }
     selectedRegion.value.selected = cities.value.length > 0 && cities.value.every(city => city.selected);
   } else {
     selectedRegion.value.cities.forEach(regionCity => {
       // Добавляем все города региона, кроме того, с которого сняли выбор
       if (regionCity.id !== city.id) {
-        const alreadySelected = selectedCities.value.some(selectedCity => selectedCity.id === regionCity.id);
+        const alreadySelected = selectedCities.value.some(selectedCity => selectedCity === regionCity.id);
         if (!alreadySelected) {
-          selectedCities.value.push({
-            id: regionCity.id, 
-            region: selectedRegion.value.name, 
-            country: selectedCountry.value.name,
-            countryId: selectedCountry.value.id,
-            city: regionCity.name,
-            selected: false,
-          });
+          selectedCities.value.push(regionCity.id);
         }
       }
     });
 
     // Убираем регион из selectedCities
-    selectedCities.value = selectedCities.value.filter(selectedCity => selectedCity.id !== selectedRegion.value.id);
+    selectedRegionIds.value = selectedRegionIds.value.filter(selectedRegionId => selectedRegionId !== selectedRegion.value.id);
   }
 
   // добавление региона
   if(selectedRegion.value.cities.every(city => city.selected) && locationTypes.value.selectRegions) {
-    selectedCities.value.push({
-     id: selectedRegion.value.id,
-     region: selectedRegion.value.name,
-     country: selectedCountry.value.name,
-     countryId: selectedCountry.value.id,
-     selected: true
-   })
-    selectedCities.value = selectedCities.value.filter(selectedCity => 
-      !selectedRegion.value.cities.some(city => city.id === selectedCity.id)
-    );
+    
+    selectedRegionIds.value.push(selectedRegion.value.id);
+    selectedCities.value = selectedCities.value.filter(selectedCity => {
+      return !selectedRegion.value.cities.some(city => city.id === selectedCity)
+    });
+
   } else {
-    selectedCities.value = selectedCities.value.filter(selectedCity => selectedCity.id !== selectedRegion.value.id);
+    selectedCities.value = selectedCities.value.filter(selectedCity => selectedCity !== selectedRegion.value.id);
   }
+  
 }
 
 // отправка родителю выбранных городов
 function handleSubmit () {
-  // organizationStore.registerOrg.countryId = selectedCities.value.map(city => city.id);
-  emit('update:modelValue', [...selectedCities.value]);
-  settingStore.chooseLocationModal = false;
+  emit('update:modelValue', {countries: selectedCountryIds.value, regions: selectedRegionIds.value, cities: selectedCities.value});
+  confirm();
 }
 
 // обновление выбранных городов
 function updateCitySelection() {
   locations.value.country.forEach(country => {
     if(locationTypes.value.selectCountry) {
-      country.selected = selectedCities.value.some(selectedCity => selectedCity.id == country.id);
+      country.selected = selectedCountryIds.value.some(selectedCountryId => selectedCountryId == country.id);
     } else {
       country.selected = country.regions.every(region => region.selected);
     }
     country.regions.forEach(region => {
-      region.selected = selectedCities.value.some(selectedCity => selectedCity.id == region.id);
+      region.selected = selectedRegionIds.value.some(selectedRegionId => selectedRegionId == region.id);
       if(country.selected) {
-        country.regions.forEach(region => {
-          region.selected = true;
-        })
+        region.selected = true;
       } else if(region.selected) {
         region.cities.forEach(city => {
           city.selected = true;
         })
       } else {
         region.cities.forEach(city => {
-          city.selected = selectedCities.value.some(selectedCity => selectedCity.id == city.id);
+          city.selected = selectedCities.value.some(selectedCity => selectedCity == city.id);
         })
       }
     })
@@ -302,13 +278,16 @@ function goBack() {
   }
 }
 
-function selectCountry(country) {
+function selectCountry(country, regionClear = true) {
   selectedCountry.value = country;
   selectedRegion.value = null;
   regions.value = country.regions;
   cities.value = []; 
   activeLevel.value = 'region';
   locationStore.selectedCountry = country;
+  if(regionClear) {
+    locationStore.selectedRegion = null;
+  }
 }
 
 function selectRegion(region) {
@@ -332,16 +311,11 @@ function selectAllCities(region) {
   // 1. Если все регионы выбраны, добавляем страну и удаляем регионы
   if (allRegionsSelected && locationTypes.value.selectCountry) {
     selectedCountry.value.selected = true;
-    selectedCities.value.push({
-      id: selectedCountry.value.id,
-      country: selectedCountry.value.name,
-      countryId: selectedCountry.value.id,
-      selected: true
-    });
+    selectedCountryIds.value.push(selectedCountry.value.id);
 
     // Убираем регионы из selectedCities
     selectedCountry.value.regions.forEach(region => {
-      selectedCities.value = selectedCities.value.filter(selectedCity => selectedCity.id !== region.id);
+      selectedRegionIds.value = selectedRegionIds.value.filter(selectedRegionId => selectedRegionId !== region.id);
     });
 
   } else {
@@ -351,31 +325,19 @@ function selectAllCities(region) {
 
       // Добавляем все регионы, кроме убранного
       selectedCountry.value.regions.forEach(countryRegion => {
-        if (countryRegion.id !== region.id && !selectedCities.value.some(selectedCity => selectedCity.id === countryRegion.id)) {
+        if (countryRegion.id !== region.id && !selectedRegionIds.value.some(selectedRegionId => selectedRegionId === countryRegion.id)) {
           countryRegion.selected = true;
-          selectedCities.value.push({
-            id: countryRegion.id,
-            region: countryRegion.name,
-            country: selectedCountry.value.name,
-            countryId: selectedCountry.value.id,
-            selected: true
-          });
+          selectedRegionIds.value.push(countryRegion.id);
         }
       });
 
       // Удаляем страну из selectedCities, так как один регион убран
-      selectedCities.value = selectedCities.value.filter(selectedCity => selectedCity.id !== selectedCountry.value.id);
+      selectedCountryIds.value = selectedCountryIds.value.filter(selectedCountryId => selectedCountryId !== selectedCountry.value.id);
     }
 
     // 3. Если регион выбран, добавляем его и все города
     if (region.selected) {
-      selectedCities.value.push({
-        id: region.id,
-        region: region.name,
-        country: selectedCountry.value.name,
-        countryId: selectedCountry.value.id,
-        selected: true
-      });
+      selectedRegionIds.value.push(region.id);
 
       // Устанавливаем все города как выбранные
       region.cities.forEach(city => {
@@ -383,48 +345,48 @@ function selectAllCities(region) {
       });
     } else {
       // 4. Если регион убирается, удаляем его и все города
-      selectedCities.value = selectedCities.value.filter(selectedCity => selectedCity.id !== region.id);
+      selectedRegionIds.value = selectedRegionIds.value.filter(selectedRegionId => selectedRegionId !== region.id);
 
       // Убираем выбранные города региона
       region.cities.forEach(city => {
         city.selected = false;
-        selectedCities.value = selectedCities.value.filter(selectedCity => selectedCity.id !== city.id);
+        selectedCities.value = selectedCities.value.filter(selectedCity => selectedCity !== city.id);
       });
     }
   }
+
+
 }
 function selectAllRegions(country) {
+  // если страна выбрана
   if (country.selected) {
+    // добавляем страну если есть пропс с выбором стран
     if(locationTypes.value.selectCountry) {
-      selectedCities.value.push({
-        id: country.id,
-        country: country.name,
-        countryId: country.id,
-        selected: true
-      })
+      selectedCountryIds.value.push(country.id)
     }
+
+    // если страна выбрана удаляем регионы из массива и прописываем селектед для их отображения в списке
     country.regions.forEach(region => {
       region.selected = true;
-      selectedCities.value = selectedCities.value.filter(selectedCity => selectedCity.id !== region.id);
+      selectedRegionIds.value = selectedRegionIds.value.filter(selectedRegionId => selectedRegionId !== region.id);
+
+      // если нет пропса с выбором регионов, добавляем регионы в массив
       if(!locationTypes.value.selectCountry) {
-        selectedCities.value.push({
-          id: region.id,
-          region: region.name,
-          country: country.name,
-          countryId: country.id,
-          selected: true
-        })
+        selectedRegionIds.value.push(region.id);
       }
       region.cities.forEach(city => {
         city.selected = true;
       })
     });
   } else {
-    selectedCities.value = selectedCities.value.filter(selectedCity => selectedCity.id !== country.id);
+    // если страна не выбрана удаляем страну из массива
+    selectedCountryIds.value = selectedCountryIds.value.filter(selectCountryId => selectCountryId !== country.id);
     country.regions.forEach(region => {
       region.selected = false;
+
+      // если нет пропса с выбором стран, удаляем регионы из массив
       if(!locationTypes.value.selectCountry) {
-        selectedCities.value = selectedCities.value.filter(selectedCity => selectedCity.id !== region.id);
+        selectedRegionIds.value = selectedRegionIds.value.filter(selectedRegionIds => selectedRegionIds !== region.id);
       }
       region.cities.forEach(city => {
         city.selected = false;
@@ -458,26 +420,87 @@ function updateCountryIndeterminate(country) {
 }
 
 // отслеживание состояния выбранных городов в родителе
-watch(() => props.modelValue, (newVal) => {
-  if (newVal && newVal.length > 0) {
-      selectedCities.value = [...newVal]; 
-      updateCitySelection();
-    } else {
-      selectedCities.value = [];
-    }
-})
+watch(() => props.modelValue, (newVal, oldVal) => {
+
+  if (newVal) {
+    selectedCountryIds.value = [...newVal.countries];
+    selectedRegionIds.value = [...newVal.regions];
+    selectedCities.value = [...newVal.cities];
+    updateCitySelection();
+  } 
+}, {deep: true})
 
 watch(() => settingStore.chooseLocationModal, (newVal) => {
-  updateCitySelection();
   if(newVal === true) {
     if(locationStore.selectedCountry){
-      selectCountry(locationStore.selectedCountry);
+      selectCountry(locationStore.selectedCountry, false);
       if(locationStore.selectedRegion) {
         selectRegion(locationStore.selectedRegion);
       }
     }
   }
 });
+
+watch(() => props.modelValue, (newValue) => {
+  if (!newValue) return;
+  
+  const { cities = [], regions = [], countries = [] } = props.modelValue;
+
+  if(cities.length > 0) {
+    cities.forEach(city => {
+      selectedCities.value.push(city);
+    });
+  }
+
+  if(regions.length > 0) {
+    regions.forEach(region => {
+      selectedRegionIds.value.push(region);
+    })
+  }
+
+  if(countries.length > 0) {
+    countries.forEach(country => {
+      selectedCountryIds.value.push(country);
+    })
+  }
+  if(selectedCountryIds.value.length > 0 || selectedRegionIds.value.length > 0 || selectedCities.value.length > 0) {
+    
+  }
+}, { immediate: true, once: true });
+
+
+function searchRegionAndCountry(cityId, regionId) {
+  if(cityId) {
+    locations.value.country.forEach(country => {
+      country.regions.forEach(region => {
+        if(region.cities.some(city => city.id === cityId)) {
+          selectCountry(country);
+          selectRegion(region);
+        }
+      })
+    })
+  } else if(regionId) {
+    locations.value.country.forEach(country => {
+      if(country.regions.some(region => region.id === regionId)) {
+        selectCountry(country);
+      }
+    })
+  }
+}
+
+onMounted(() => {
+  locationStore.getLocations()
+  .then(res => {
+    locations.value = locationStore.locations
+    updateCitySelection();
+    if(selectedRegionIds.value.length > 0) {
+      searchRegionAndCountry(null, selectedRegionIds.value[0]);
+    } else if(selectedCities.value.length > 0) {
+      searchRegionAndCountry(selectedCities.value[0]);
+    }
+  })
+  .catch(err => console.log(err));
+})
 
 </script>
 
@@ -596,6 +619,10 @@ watch(() => settingStore.chooseLocationModal, (newVal) => {
 
   &__item {
     font-size: 1.6em;
+
+    button {
+      text-align: left;
+    }
   }
 
   .choose-city__container {

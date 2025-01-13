@@ -24,92 +24,52 @@
     </div>
     <h2 class="contacts-container__title">Менеджеры проекта</h2>
     <div class="contacts-container__managers">
-      <div class="contacts-container__manager">
+      <div class="contacts-container__manager" v-for="(manager, index) in managerList" :key="index">
         <div class="contacts-container__manager-image">
-          <img src="/assets/images/contacts-image.jpg" alt="">
+          <UiImage class="contacts-container__manager-pattern" :src="manager.img" :alt="manager.name" />
         </div>
         <div class="contacts-container__manager-text">
-          <p class="contacts-container__manager-name">Виктория</p>
-          <a href="tel:+79161341321">+7 (916) 134-13-21</a>
-          <a href="mailto:manager@rafi.moscow.ru">manager@rafi.moscow</a>
-        </div>
-      </div>
-      <div class="contacts-container__manager">
-        <div class="contacts-container__manager-image">
-          <img src="/assets/images/contacts-image.jpg" alt="">
-        </div>
-        <div class="contacts-container__manager-text"> 
-          <p class="contacts-container__manager-name">Юлия</p>
-          <a href="tel:+79036221886">+7 (903) 622-18-86</a>
-          <a href="mailto:adv1@profashion.ru">adv1@profashion.ru</a>
-        </div>
-      </div>
-      <div class="contacts-container__manager">
-        <div class="contacts-container__manager-image">
-          <img src="/assets/images/contacts-image.jpg" alt="">
-        </div>
-        <div class="contacts-container__manager-text">
-          <p class="contacts-container__manager-name">Татьяна</p>
-          <a href="tel:+79104586237">+7 (910) 458-62-37</a>
-          <a href="mailto:reklama@profashion.ru">reklama@profashion.ru</a>
-        </div>
-      </div>
-      <div class="contacts-container__manager">
-        <div class="contacts-container__manager-image">
-          <img src="/assets/images/contacts-image.jpg" alt="">
-        </div>
-        <div class="contacts-container__manager-text">
-          <p class="contacts-container__manager-name">Людмила</p>
-          <a href="tel:+79164202013">+7 (916) 420-20-13</a>
-          <a href="mailto:sales@profashion.ru">sales@profashion.ru</a>
-        </div>
-      </div>
-      <div class="contacts-container__manager">
-        <div class="contacts-container__manager-image">
-          <img src="/assets/images/contacts-image.jpg" alt="">
-        </div>
-        <div class="contacts-container__manager-text">
-          <p class="contacts-container__manager-name">Маргарита</p>
-          <a href="tel:+79096507336">+7 (909) 650-73-36</a>
-          <a href="mailto:sales2@profashion.ru">sales2@profashion.ru</a>
-        </div>
-      </div>
-      <div class="contacts-container__manager">
-        <div class="contacts-container__manager-image">
-          <img src="/assets/images/contacts-image.jpg" alt="">
-        </div>
-        <div class="contacts-container__manager-text">
-          <p class="contacts-container__manager-name">Ольга Ефимова</p>
-          <a href="tel:+79254105800">+7 (925) 410-58-00</a>
-          <a href="mailto:Pr@rafi.moscow">Pr@rafi.moscow</a>
-        </div>
-      </div>
-      <div class="contacts-container__manager">
-        <div class="contacts-container__manager-image">
-          <img src="/assets/images/contacts-image.jpg" alt="">
-        </div>
-        <div class="contacts-container__manager-text">
-          <p class="contacts-container__manager-name">Дарья</p>
-          <a href="tel:+79851271131">+7 (985) 127-11-31</a>
-          <a href="mailto:adv2@profashion.ru">adv2@profashion.ru</a>
+          <p class="contacts-container__manager-name">{{ manager.name }}</p>
+          <a :href="`tel:${formatPhone(manager.phone)}`">{{ manager.phone }}</a>
+          <a :href="`mailto:${manager.email}`">{{ manager.email }}</a>
         </div>
       </div>
     </div>
     <h2 class="contacts-container__title">По вопросам взаимодействия с Фондами и Центрами поддержки предпринимателей</h2>
     <div class="contacts-container__managers">
-      <div class="contacts-container__manager">
+      <div class="contacts-container__manager" v-for="(manager, index) in onIssuesOfInteraction" :key="index">
         <div class="contacts-container__manager-image">
-          <img src="/assets/images/contacts-image.jpg" alt="">
+          <UiImage class="contacts-container__manager-pattern" :src="manager.img" :alt="manager.name" />
         </div>
         <div class="contacts-container__manager-text">
-          <p class="contacts-container__manager-name">Виктория</p>
-          <a href="tel:+79161341321">+7 (916) 134-13-21</a>
-          <a href="mailto:manager@rafi.moscow.ru">manager@rafi.moscow</a>
+          <p class="contacts-container__manager-name">{{ manager.name }}</p>
+          <a :href="`tel:${formatPhone(manager.phone)}`">{{ manager.phone }}</a>
+          <a :href="`mailto:${manager.email}`">{{ manager.email }}</a>
         </div>
       </div>
     </div>
   </div>
 </template>
+
+<script setup>
+
+const managerList = [
+  {name: 'Виктория', phone: '+7 (916) 134-13-21', email: 'manager@rafi.moscow.ru', img: '/assets/images/managers/viktoria.jpg'},
+  {name: 'Юлия', phone: '+7 (903) 622-18-86', email: 'adv1@profashion.ru', img: '/assets/images/managers/julia.jpg'},
+  {name: 'Татьяна', phone: '+7 (910) 458-62-37', email: 'reklama@profashion.ru', img: '/assets/images/managers/tatiana.jpg'},
+  {name: 'Людмила', phone: '+7 (916) 420-20-13', email: 'sales@profashion.ru', img: '/assets/images/managers/ludmila.jpg'},
+  {name: 'Маргарита', phone: '+7 (909) 650-73-36', email: 'sales2@profashion.ru', img: '/assets/images/managers/margarita.jpg'},
+  {name: 'Ольга Ефимова', phone: '+7 (925) 410-58-00', email: 'Pr@rafi.moscow', img: '/assets/images/managers/olga.jpg'},
+  {name: 'Дарья', phone: '+7 (985) 127-11-31', email: 'adv2@profashion.ru', img: '/assets/images/managers/darya.jpg'},
+]
+
+const onIssuesOfInteraction = [
+  {name: 'Алёна', phone: '+7 (929) 968-88-58', email: 'promo@profashion.ru', img: '/assets/images/managers/alyona.jpg'},
+]
+
+const formatPhone = (phone) => phone.replace(/[\s()-]/g, '');
+
+</script>
 
 <style lang="scss">
 
@@ -125,9 +85,11 @@
   }
   &__contact-item {
     font-size: 1.19em;
-    display: flex;
-    align-items: center;
     margin-bottom: 1em;
+
+    a {
+      display: inline;
+    }
 
     span {
       margin-left: .3em;
@@ -146,7 +108,8 @@
   }
 
   &__manager {
-    flex: 0 1 30%;
+    flex: 1 1 29%;
+    max-width: 30%;
     display: flex;
     padding: 1.25em 1.25em 2.5em;
     column-gap: 1em;
@@ -173,6 +136,50 @@
     display: flex;
     flex-direction: column;
     row-gap: 1em;
+  }
+
+  @include tablet {
+    &__manager {
+      padding: .93em .93em 1.875em;
+      align-items: center;
+    }
+
+    &__manager-name {
+      margin-top: .8em;
+    }
+  }
+
+  @include small-tablet {
+    font-size: 1.4rem;
+
+    &__managers {
+      gap: 2em;
+    }
+
+    &__manager {
+      flex-basis: 45%;
+      max-width: 47%;
+    }
+
+    &__manager-name {
+      margin-top: 0;
+    }
+  }
+
+  @include mobile {
+    &__title {
+      margin-block: 2.5rem 1.8rem;
+      font-size: 1.6rem;
+    }
+
+    &__managers {
+      gap: 1.7rem;
+    }
+    
+    &__manager {
+      flex-basis: 100%;
+      max-width: 100%;
+    }
   }
 }
 

@@ -54,11 +54,6 @@ const acceptText = computed(() => "Допустимые расширения: " 
 const isVisible = ref(false);
 const isDragOver = ref(false);  // Состояние, когда файл находится над зоной
 
-watch(() => isVisible.value, (newVal) => {
-  console.log(isVisible.value)
-}, {deep: true})
-
-
 const onDragOver = () => {
   isDragOver.value = true;
   if(!props.visible) {

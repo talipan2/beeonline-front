@@ -12,7 +12,7 @@
       <div class="gallery-link__load progress" v-if="image.loading">
         <div class="gallery-link__progress">Сохранение...</div>
       </div>
-      <button class="gallery-link__del" @click="removeImage(index)">
+      <button class="gallery-link__del" @click="removeImage(image.id)">
         <SvgoClose class="svg-l" fill="#6937a5"/>
       </button>
     </div>
@@ -21,58 +21,68 @@
 
 <script setup>
 import { useOrganizationStore } from '~/store/organizationStore';
+import { useSettingStore } from '~/store/settingStore';
+import { useUserStore } from '~/store/userStore';
 
 const props = defineProps({
   modelValue: {
     type: Array,
     default: [],
+  },
+  logo: {
+    type: Boolean,
+    default: false,
   }
+
 })
 
 
 const images = ref([]);
-const formData = new FormData();
-const organizationStore = useOrganizationStore();
-const emit = defineEmits(['update:modelValue']);
+const userStore = useUserStore();
+const settingStore = useSettingStore();
+const emit = defineEmits(['update:modelValue', 'update:logo']);
 
 const onFileChange = (event) => {
   const file = event.target.files[0];
   if (file && file.type.startsWith('image/')) {
-    const reader = new FileReader();
-    const newImage = { src: '', loading: true };
-    const index = images.value.length; // Get the current index
+    const formData = new FormData();
+    formData.append('file', file);
 
-    images.value.push(newImage);
+    images.value.push({
+      src: URL.createObjectURL(file),
+      loading: true
+    })
 
-    reader.onload = (e) => {
-      images.value[index] = { src: e.target.result, loading: false, file: file };
-    };
+    if(props.logo && images.value.length === 1) {
+      emit('update:logo', URL.createObjectURL(file));
+    }
+    
+    settingStore.uploadFiles(userStore.userData.id, formData)
+    .then(res => {
+      if(res && res.media_id) {
+        images.value[images.value.length - 1] = {...images.value[images.value.length - 1], id: res.media_id, loading: false};
+        emit('update:modelValue', [...props.modelValue, { media_id: res.media_id, status: 'pending' }]);
+      } else {
+        images.value.splice(-1, 1);
+      }
+    })
+    .catch(err => {
+      console.log(err)
+    });
 
-    formData.append('image[]', file);
-    reader.readAsDataURL(file);
-    emit('update:modelValue', formData);
   } else {
     console.log('Invalid file type');
   }
 };
 
-const removeImage = (index) => {
-  images.value.splice(index, 1);
-  formData.delete('image[]');
-  if(images.value.length > 0) {
-    images.value.forEach((image) => {
-      formData.append('image[]', image.file);
-      emit('update:modelValue', formData);
-    })
-  } else {
-    emit('update:modelValue', null);
+const removeImage = (id) => {
+  images.value.splice(images.value.findIndex(image => image.id === id), 1);
+  emit('update:modelValue', props.modelValue.filter(item => item.media_id !== id));
+  if(images.value.length === 0) {
+    emit('update:logo', null);
   }
-
 };
 
-watch(images.value, () => {
-  organizationStore.pubCardGallery = formData;
-})
 </script>
 
 <style lang="scss">

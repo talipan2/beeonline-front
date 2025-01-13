@@ -1,0 +1,6 @@
+<svg class="product__gallery-play" width="40" height="40" viewBox="0 0 40 40">						
+  <g>
+    <circle cx="20" cy="20" r="19" fill="currentColor" stroke="#fff" stroke-width="2"></circle>
+    <path d="M28.688 18.757a1 1 0 0 1 0 1.732l-11.717 6.765a1 1 0 0 1-1.5-.866v-13.53a1 1 0 0 1 1.5-.866l11.717 6.765z" fill="#fff"></path>
+  </g>
+</svg>

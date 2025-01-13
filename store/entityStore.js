@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia';
 import orderApi from '~/api/orderApi';
 import serviceApi from '~/api/serviceApi';
+import organizationApi from '~/api/organizationApi';
+import commonApi from '~/api/commonApi';
 
 export const useEntityStore = defineStore('entity', {
   state: () => ({
@@ -19,53 +21,34 @@ export const useEntityStore = defineStore('entity', {
       description: '',
       termsOfCooperation: '',
       isSafeDeal: true,
-      isAgreedOrderPlacement: true
+      isAgreedOrderPlacement: true,
+      gallery: [],
+      tzFiles: [],
+      locations: [],
     },
+    fillingOrder: null,
+    fillingService: null,
+    isRedirectedToStep: true,
     service: {
       id: '',
       name: '',
-      imageUrl: '',
       categories: [],
-      placeOfProduction: [],
-      placeOfProductionId: [],
+      locations: [],
       minLot: [],
       availabilityStm: '',
       freeTestSamples: '',
       rawMaterials: [],
       description: '',
+      gallery: [],
+      termsOfCooperation: '',
+      logo: '',
     },
+    organizationServices: [],
+    organizationOrders: [],
     ordersList: [],
     servicesList: [],
     entityData: {
-      categories: [
-        { id: 1, label: "Вязаный трикотаж" },
-        { id: 2, label: "Верхняя одежда" },
-        { id: 3, label: "Детская одежда" },
-        { id: 4, label: "Женская одежда" },
-        { id: 5, label: "Головные уборы" },
-        { id: 6, label: "Мужская одежда" },
-        { id: 7, label: "Кроеный трикотаж" },
-        { id: 8, label: "Термобелье" },
-        { id: 9, label: "Носочно-чулочная продукция" },
-        { id: 10, label: "Униформа и спецодежда" },
-        { id: 11, label: "Сумки и аксессуары" },
-        { id: 12, label: "Ткани, фурнитура, материалы" },
-        { id: 13, label: "Верхний трикотаж" },
-        { id: 14, label: "СИЗ" },
-        { id: 15, label: "Большие размеры" },
-        { id: 16, label: "Джинсовая одежда" },
-        { id: 17, label: "Домашняя одежда и текстиль" },
-        { id: 18, label: "Изделия из меха и кожи" },
-        { id: 19, label: "Купальники" },
-        { id: 20, label: "Медицинская одежда" },
-        { id: 21, label: "Нижнее белье" },
-        { id: 22, label: "Спортивная одежда" },
-        { id: 23, label: "Школьная форма" },
-        { id: 24, label: "Печать на ткани" },
-        { id: 25, label: "Вышивка на ткани" },
-        { id: 26, label: "Вязаные аксессуары" },
-        { id: 27, label: "Разработка лекал" },
-      ],
+      categories: [],
       rawMaterials: [
         { id: 1, label: "Собственное" },
         { id: 0, label: "Давальческое" },
@@ -88,6 +71,14 @@ export const useEntityStore = defineStore('entity', {
         {id: 2, label: 'от 100 до 500'}, 
         {id: 3, label: 'от 500 до 1 000'}, 
         {id: 4, label: '1 000 и выше'}
+      ],
+      status: [
+        {id: 1, label: 'Активный', value: 'active'},
+        {id: 2, label: 'Черновик', value: 'draft'},
+        {id: 3, label: 'В архиве', value: 'archived'},
+        {id: 4, label: 'Заполнение', value: 'filling'},
+        {id: 5, label: 'На модерации', value: 'under_moderation'},
+        {id: 6, label: 'Отклонено', value: 'rejected'},
       ]
     }
   }),
@@ -102,17 +93,34 @@ export const useEntityStore = defineStore('entity', {
         return ids.map(id => {
           const entity = data.find(item => item.id == id);
           // return entity ? entity.label : `${type} с id ${id} не найдено`;
-          return entity ? entity.label : null;
+          return entity ? entity.label || entity.name : null;
         });
       } else {
         // Если это одиночный id, возвращаем один label
         const entity = data.find(item => item.id == ids);
         // return entity ? entity.label : `${type} с id ${ids} не найден`;
-        return entity ? entity.label : null;
+        return entity ? entity.label || entity.name : null;
       }
+    },
+
+    getEntityStatusByValue: (state) => (value) => {
+      const data = state.entityData.status;
+      const entity = data.find(item => item.value == value);
+      return entity ? entity.label : null;
     }
   },
   actions: {
+    async getCategories() {
+      try { 
+        const response = await commonApi.getCategories();
+        if(response.data) {
+          this.entityData.categories = response.data;
+          return response.data
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
     async getOrders() {
       try {
         const response = await orderApi.getOrders();
@@ -159,6 +167,30 @@ export const useEntityStore = defineStore('entity', {
       }
     },
 
+    async getOrganizationServices(id) {
+      try {
+        const response = await organizationApi.getOrganization(id);
+        if(response.data && response.data.data && response.data.data.services) {
+          this.organizationServices = response.data.data.services;
+          return response.data
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    async getOrganizationOrders(id) {
+      try {
+        const response = await organizationApi.getOrganization(id);
+        if(response.data && response.data.data && response.data.data.orders) {
+          this.organizationOrders = response.data.data.orders;
+          return response.data
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
+
     async addNewService(data) {
       try {
         const response = await serviceApi.setService({
@@ -166,12 +198,15 @@ export const useEntityStore = defineStore('entity', {
           organization_id: data.organizationId,
           name: data.name,
           description: 'test',
-          current_step: data.step
+          category: data.category,
+          current_step: data.step,
+          status: data.status
         });
 
         if(response.data && response.data.data.id) {
           this.service.id = response.data.data.id;
         }
+        return response.data.data
       } catch (error) {
         throw error;
       }
@@ -183,8 +218,9 @@ export const useEntityStore = defineStore('entity', {
           user_id: data.userId,
           organization_id: data.organizationId,
           name: data.name,
+          product_categories: data.category,
           deadline_at: data.completionDate,
-          current_step: data.step
+          status: data.status
         });
         if(response.data && response.data.data.id) {
           this.order.id = response.data.data.id;
@@ -245,9 +281,6 @@ export const useEntityStore = defineStore('entity', {
     async uploadServiceLogo(id, data) {
       try {
         const response = await serviceApi.uploadLogo(id, data);
-        if(response.data) {
-          console.log(response.data)
-        }
       } catch (error) {
         throw error;
       }
@@ -256,13 +289,37 @@ export const useEntityStore = defineStore('entity', {
     async uploadOrderGallery(id, data) {
       try {
         const response = await orderApi.uploadGallery(id, data);
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    async uploadTzFiles(id, data) {
+      try {
+        const response = await orderApi.uploadTzFiles(id, data);
         if(response.data) {
           console.log(response.data)
         }
       } catch (error) {
         throw error;
       }
-    }
+    },
+
+    async updateServiceStep(id, currentStep) {
+      try {
+        const response = await serviceApi.updateServiceStep(id, currentStep);
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    async updateOrderStep(id, currentStep) {
+      try {
+        const response = await orderApi.updateOrderStep(id, currentStep);
+      } catch (error) {
+        throw error;
+      }
+    },
     
   }
 });

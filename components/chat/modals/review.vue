@@ -93,7 +93,6 @@ const addFile = (file) => {
     url: URL.createObjectURL(file),
     type: file.name.split('.').pop().toLowerCase(),
   });
-  console.log(uploadedFiles.value)
 }
 
 const removeFile = (id) => {

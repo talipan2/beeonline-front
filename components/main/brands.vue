@@ -105,10 +105,11 @@ const breakpoints = {
 }
 
 .brands__title {
-    font-family: SongerGrotesque,sans-serif;
+    font-family: 'Coolvetica',sans-serif;
     font-size: 6.4em;
     line-height: 1.14em;
     margin-block: 0 .5em;
+    font-weight: 500;
 }
 
 .brands__link,.brands__title {

@@ -2,20 +2,20 @@
   <div class="entity-card" :class="{ 'entity-card_hover': isLinkHovered }" @mouseover="isLinkHovered = true" @mouseleave="isLinkHovered = false">
     <h3 class="entity-card__title">{{ data.name }}</h3>
     <div class="entity-card__body">
-      <div class="entity-card__details">
+      <div class="entity-card__details" v-if="entityLocations && entityLocations.length > 0">
         <div class="entity-card__region">
-          {{ 'Не указано' }}
+          {{ entityLocations && entityLocations.length > 0 ? entityLocations[0].name : 'Не указано' }}
           <span>
             <ModalsMoreCities 
-              :list="data.placeOfProductionId" 
+              :list="entityLocations.map(item => item.name)" 
               title="Регионы" 
               placement="bottom-end" 
-              v-if="Array.isArray(data.placeOfProductionId) && data.placeOfProductionId && data.placeOfProductionId.length >= 1"
+              v-if="Array.isArray(entityLocations) && entityLocations.length >= 1"
             />
           </span>
         </div>
-        <i class="flag flag_round" :class="data.placeOfProductionId && data.placeOfProductionId[0]
-          ? selectFlag(placeOfProductionId[0].countryId)
+        <i class="flag flag_round" :class="entityLocations && entityLocations[0]
+          ? selectFlag(entityLocations[0].countryId)
           : ''" />
       </div>
       <div class="entity-card__details" v-if="role === 'customer'">
@@ -38,7 +38,7 @@
       </div>
       <div class="prop">
         <p class="prop__name">Категории:</p>
-        <p class="prop__value">{{ 'Не указано' }}</p>
+        <p class="prop__value">{{ entityCategories && entityCategories.length > 0 ? entityCategories.join(' / ') : 'Не указано' }}</p>
       </div>
       <div class="prop" v-if="role === 'performer'">
         <p class="prop__name">Наличие СТМ:</p>
@@ -61,6 +61,8 @@
 
 <script setup>
 import { selectFlag } from '#imports';
+import { useEntityStore } from '~/store/entityStore';
+import { useLocationStore } from '~/store/locationStore';
 
 
 const props = defineProps({
@@ -76,7 +78,24 @@ const props = defineProps({
   }
 })
 
+const locationStore = useLocationStore();
+const entityStore = useEntityStore();
+
 const isLinkHovered = ref(false);
+
+const entityLocations = computed(() => {
+  if(props.data.locations && props.data.locations.cities && props.data.locations.regions) {
+    const regionsId = props.data.locations.regions.map(item => item.id);
+    const citiesId = props.data.locations.cities.map(item => item.id);
+    return locationStore.getLocationsByIds([], regionsId, citiesId)
+  }
+})
+
+const entityCategories = computed(() => {
+  if(props.data.category) {
+    return entityStore.getEntityLabelById('categories', props.data.category)
+  }
+})
 
 </script>
 

@@ -276,11 +276,11 @@ onUnmounted(() => {
 }
 
 .banner__title {
-  font-family: "SongerGrotesque", sans-serif;
+  font-family: "Coolvetica", sans-serif;
   font-size: 7.2em;
   color: var(--text-color-octonary);
   line-height: 1.14em;
-  font-weight: 700;
+  font-weight: 500;
   text-transform: uppercase;
   display: block;
   max-width: 13.22em;

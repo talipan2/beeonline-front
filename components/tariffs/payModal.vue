@@ -88,7 +88,6 @@ const handleOpenReplenishmentModal = () => {
 }
 
 const handlePayment = () => {
-  console.log(props.data)
   settingStore.payModalStatus = false;
   if(props.reset) props.reset();
   if(props.deleteResetFunction) props.deleteResetFunction();

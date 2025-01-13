@@ -9,8 +9,10 @@
       </template>
       <template #rightSide>
         <CommonCheckList adviceTitle="Полностью заполненный профиль выше в списке поиска" :checkList="checkListArray" :valueCheck="true"/>
-        <h3 class="right-side__title">Так вашу компанию будут видеть другие участники портала:</h3>
-        <CardsPublic :data="cardsData" isDescription/>
+        <template v-if="cardsData.name">
+          <h3 class="right-side__title">Так вашу компанию будут видеть другие участники портала:</h3>
+          <CardsPublic :data="cardsData" isDescription/>
+        </template>
       </template>
     </NuxtLayout>
   </div>
@@ -23,7 +25,7 @@ import { useUserStore } from '~/store/userStore';
 
 const organizationStore = useOrganizationStore();
 
-const pubCard = computed(() => organizationStore.pubCards);
+const pubCard = computed(() => userStore.userPubCard);
 const organization = computed(() => organizationStore.organization);
 const userStore = useUserStore();
 
@@ -46,13 +48,7 @@ const cardsData = computed(() => {
 })
 
 onMounted(() => {
-  userStore.getUserData(1)
-  .then((res) => {
-    console.log(res)
-  })
-  .catch((err) => {
-    console.log(err)
-  })
+  userStore.getUserData(userStore.userData.id)
 })
 
 </script>

@@ -5,11 +5,11 @@
     </label>
     <div class="form-group">
       <div class="load-image">
-        <img src="~/assets/images/nophoto_pc.png">
+        <img :src="imagePreview">
         <input type="file" name="logo" accept=".jpeg, .png, .jpg, .gif" @change="onFileChange">
         <span class="load-image__title">{{ label }}</span>
       </div>
-      <div class="load-image" v-if="imagePreview">
+      <!-- <div class="load-image" v-if="imagePreview">
         <img :src="imagePreview">
         <div class="load-image__load progress" v-if="isLoading">
           <div class="load-image__progress">Сохранение...</div>
@@ -17,13 +17,16 @@
         <button class="load-image__del" @click="removeImage(index)">
           <SvgoClose class="svg-l" fill="#6937a5"/>
         </button>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
 
 <script setup>
 import { useOrganizationStore } from '~/store/organizationStore';
+import defaultImage from '~/assets/images/nophoto_pc.png';
+import { useUserStore } from '~/store/userStore';
+import { useSettingStore } from '~/store/settingStore';
 
 const props = defineProps({
   title: {
@@ -35,16 +38,21 @@ const props = defineProps({
     default: 'Загрузить логотип (до 5Мб. Допустимый формат .jpeg, .png, .jpg, .gif)',
   },
   modelValue: {
-    type: String,
+    type: [String, Object],
     default: '',
+  },
+  maxSize: {
+    type: Number,
+    default: 5,
   }
 
 });
 
 const organizationStore = useOrganizationStore();
-const imagePreview = ref(null);
+const userStore = useUserStore();
+const settingStore = useSettingStore();
+const imagePreview = ref(props.modelValue || defaultImage);
 const isLoading = ref(false);
-const formData = new FormData();
 
 const emit = defineEmits(['update:modelValue']);
 
@@ -52,35 +60,26 @@ const onFileChange = (event) => {
   const file = event.target.files[0]
   
   if (file && file.type.startsWith('image/')) {
-    // Установить состояние загрузки
-    isLoading.value = true;
-    
-    const reader = new FileReader();
-    
-    reader.onload = (e) => {
-      imagePreview.value = e.target.result;
-      console.log(e.target.result);
-      formData.append('logo', file);
-      emit('update:modelValue', file);
-      console.log(formData.get('logo'));
-      isLoading.value = false;
-    };
-    
-    reader.onerror = () => {
-      console.log('Ошибка при загрузке файла');
-      isLoading.value = false;
-    };
-
-    reader.readAsDataURL(file);
+    if(file.size < props.maxSize * 1024 * 1024) {
+      imagePreview.value = URL.createObjectURL(file);
+      emit('update:modelValue', {data: file, url: imagePreview.value});
+    } else {
+      console.log('Файл слишком большой');
+    }
   } else {
     console.log('Неверный тип файла');
   }
 };
 
-const removeImage = (index) => {
-  imagePreview.value = '';
-  emit('update:modelValue', '');
-};
+watch(() => props.modelValue, (newVal) => {
+  try {
+    if (newVal) {
+      new URL(newVal);
+      imagePreview.value = newVal;
+    }
+  } catch (err) {}
+});
+
 
 </script>
 

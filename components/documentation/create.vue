@@ -1,35 +1,66 @@
 <template>
   <div class="documentation-loading">
-    <CommonDocumentLoader text="Загрузить jpeg, pdf, doc, zip" :isList="true" :dataList="dataList" v-model="formData" @addFile="addFile"/>
-    <CommonFileList :dataList="dataList" @removeFile="removeFile" :changed="true"/>
-    <UiButton class="documentation-loading__btn" variant="quinary" size="around">Сохранить</UiButton>
+    <CommonDocumentLoaderAndList 
+      :extension="['jpeg', 'pdf', 'doc', 'zip']"
+      text="Загрузить jpeg, pdf, doc, zip"
+      :is-list="true"
+      :changed="true"
+      v-model="dataListId"
+      :documentList="documentsList"
+    />
+    <UiButton 
+      type="button" 
+      class="documentation-loading__btn" 
+      variant="quinary" 
+      size="around" 
+      @click="handleSaveFiles"
+    >
+      Сохранить
+    </UiButton>
     <DocumentationErrorModal />
+    {{ dataListId }}
   </div>
 </template>
 
 <script setup>
+import { useOrganizationStore } from '~/store/organizationStore';
+import { useUserStore } from '~/store/userStore';
 
-const dataList = ref([]);
-const formData = new FormData();
 
-function addFile(file) {
-  dataList.value.push({ 
-    id: crypto.randomUUID(), 
-    name: file.name, 
-    url: URL.createObjectURL(file), 
-    type: file.name.split('.').pop().toLowerCase() 
-  });
+const organizationStore = useOrganizationStore();
+const userStore = useUserStore();
+
+const dataListId = ref([]);
+
+const documentsList = ref([]);
+
+const handleSaveFiles = () => {
+  organizationStore.setVerificationDocuments(userStore.userData.organization_id, dataListId.value)
 }
 
-function removeFile(id) {
-  dataList.value = dataList.value.filter(item => item.id !== id);
-
-  formData.delete('file[]');  // Удаляет все файлы с ключом 'file[]'
-  
-  dataList.value.forEach(item => {
-    formData.append('file[]', item.file);  // Добавляем файлы обратно в formData
-  });
-}
+onMounted(() => {
+  if(userStore.userData.organization_id) {
+    organizationStore.getVerificationDocuments(userStore.userData.organization_id)
+    .then(res => {
+      if(res) {
+        dataListId.value = res.map(item => {
+          return {
+            media_id: item.media_id,
+            status: item.status
+          }
+          });
+        documentsList.value = res.map(item => {
+          return {
+            id: item.media_id,
+            name: 'Не приходит название и url с бека',
+            url: item.file_url,
+            type: 'pdf',
+          }
+        });
+      }
+    });
+  }
+})
 
 </script>
 
@@ -42,6 +73,7 @@ function removeFile(id) {
     font-size: 1.2em;
     text-transform: uppercase;
     max-width: 50%;
+    width: 100%;
   }
 }
 

@@ -36,7 +36,6 @@ const confirm = () => {
 }
 
 function handleSubmit() {
-  console.log(sumReplenishment.value)
   confirm();
 }
 

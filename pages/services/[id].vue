@@ -1,5 +1,5 @@
 <template>
-  <NuxtLayout name="details-entity" title="Пошив крупной партии вязаных изделий ( свитеры, шапки, носки)" badge="Услуга">
+  <NuxtLayout name="details-entity" :title="formatData.name" badge="Услуга" v-if="!isLoading">
     <template #header>
       <UiBreadCrumb
         :list="[
@@ -28,21 +28,7 @@ const entityStore = useEntityStore();
 const organizationStore = useOrganizationStore();
 const data = ref({});
 const pubCard = ref({});
-// const formatData = computed(() => {
-//   if(!data.value) return {}
-//   return {
-//     conditions: data.value.conditions,
-//     description: data.value.description,
-//     freeSamples: entityStore.getEntityLabelById('freeTestSamples', data.value.free_samples),
-//     gallery: data.value.gallery,
-//     id: data.value.id,
-//     organizationId: data.value.organization_id,
-//     isStm: entityStore.getEntityLabelById('availabilityStm', data.value.is_stm),
-//     rawMaterials: [data.value.materials_own ? 'Собственное' : '', data.value.materials_tolling ? 'Давальческое' : ''].filter(Boolean),
-//     name: data.value.name,
-//   }
-// })
-
+const isLoading = ref(false);
 
 const formatData = computed(() => {
   if(!data.value) return []
@@ -64,19 +50,21 @@ const formatData = computed(() => {
 })
 
 onMounted(async() => {
+  isLoading.value = true;
+  try {
+    const serviceResponse = await entityStore.getService(router.currentRoute.value.params.id);
+    data.value = serviceResponse.data;
     try {
-      const serviceResponse = await entityStore.getService(router.currentRoute.value.params.id);
-      data.value = serviceResponse.data;
-      try {
-        const pubCardResponse = await organizationStore.getPubCard(data.value.organization_id);
-        pubCard.value = pubCardResponse;
-      } catch (err) {
-        console.error(err);
-      }
+      const pubCardResponse = await organizationStore.getPubCard(data.value.organization_id);
+      pubCard.value = pubCardResponse;
     } catch (err) {
       console.error(err);
     }
+  } catch (err) {
+    console.error(err);
+  } finally {
+    isLoading.value = false;
   }
-);
+});
 
 </script>

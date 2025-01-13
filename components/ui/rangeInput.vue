@@ -34,7 +34,6 @@ const sliderData = ref(props.modelValue);
 const emit = defineEmits(['update:modelValue']);
 
 watch(() => sliderData.value, (newVal) => {
-  console.log(newVal)
   emit('update:modelValue', newVal);
 });
 

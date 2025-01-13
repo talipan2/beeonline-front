@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import Api from "~/api/commonApi";
 
 export const useLocationStore = defineStore("location", {
   state: () => ({
@@ -84,29 +85,51 @@ export const useLocationStore = defineStore("location", {
     },
   }),
   getters: {
-    getLocationsByIds: (state) => (ids) => {
-      if(!ids || !Array.isArray(ids) ) return []
+    getLocationsByIds: (state) => (countryIds = [], regionIds = [], cityIds = []) => {
       const result = [];
-      for (const id of ids) {
-        for (const country of state.locations.country) {
-          console.log('qqqqqqqqqqqqq', country.id, id)
-          if (country.id === id) {
-            result.push(country.name)
+      if(state.locations && state.locations.country.length > 0) {
+        state.locations.country.forEach(country => {
+          // Если id страны есть то возвращаем название этой страны
+          if(countryIds.includes(country.id)) {
+            result.push({id: country.id, countryId: country.id, name: country.name, type: 'country'});
           }
-          for (const region of country.regions) {
-            if (region.id === id) {
-              result.push(`${region.name}, ${country.name}`)
-            }
-            for (const city of region.cities) {
-              if (city.id === id) {
-                result.push(`${city.name}, ${region.name}, ${country.name}`);
-              }
+          
+          country.regions.forEach(region => {
+
+            // Если id региона есть то возвращаем название этого региона и страны
+            if(regionIds.includes(region.id)) {
+              result.push({id: region.id, countryId: country.id, name: `${region.name}, ${country.name}`, type: 'region'});
             }
 
-          }
-        }
+            region.cities.forEach(city => {
+              // Если id города есть то возвращаем название этого города и региона и страны
+              if(cityIds.includes(city.id)) {
+                result.push({id: city.id, countryId: country.id, name: `${city.name}, ${region.name}, ${country.name}`, type: 'city'});
+              }
+            })
+          })
+        })
       }
-      return result.length > 0 ? result : [];
+
+      return result;
     },
-  }
+
+    getCountryById: (state) => (id) => {
+      if(state.locations.country.length == 0) return '';
+      const country = state.locations.country.find(country => country.id == id);
+      if(country && country.name) return country.name;
+    },
+  },
+  actions: {
+    async getLocations() {
+      try {
+        const response = await Api.getLocations();
+        if (response.data) {
+          this.locations = {country: [...response.data.locations]};
+        }
+      } catch (error) {
+        throw error;
+      }
+    }
+  },
 })

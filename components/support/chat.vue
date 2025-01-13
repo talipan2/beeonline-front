@@ -79,7 +79,6 @@ function prepareMessage(message) {
 
   message.date = date;
   message.own = message.user_id == user_id.value;
-  console.log(message.user_id, user_id.value);
   if (message.organization_id == org_id.value) {
     message.side = "right";
   } else {

@@ -54,7 +54,7 @@ const handleFileChange = (event) => {
     return
   }
   emit('addFile', selectedFile.value);
-  fileInput.value = '';
+  fileInput.value = null;
 }
 
 // onMounted(() => {

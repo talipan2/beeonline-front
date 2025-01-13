@@ -22,13 +22,13 @@
       <label class="form-group__title" for="site"
         >Ссылка на сайт
         <UiInput
-          :rules="{ url }"
+          :rules="{ url: true }"
           name="site"
           label="Ссылка на сайт"
           class="form-group__value"
           type="text"
           id="site"
-          v-model="data.site"
+          v-model="data.siteUrl"
           placeholder="Компания"
         />
       </label>
@@ -36,6 +36,7 @@
         <CommonImageLoad
           class="form-group-data"
           title="Загрузить логотип компании"
+          v-model="data.companyLogo"
         />
         <div class="form-group-data">
           <label class="form-group__title">Описание * </label>
@@ -69,13 +70,12 @@
           <SvgoBtnArrow class="svg-lx" />
         </UiButton>
       </div>
+      <slot></slot>
     </Form>
   </RegisterLayout>
 </template>
 
 <script setup>
-import { useUserStore } from '~/store/userStore';
-
 
 const props = defineProps({
   blockTitle: {
@@ -90,25 +90,37 @@ const props = defineProps({
     type: String,
     default: "Указанные данные увидят другие участники портала.",
   },
-  data: {
+  modelValue: {
     type: Object,
-    default: () => {},
     required: true,
   },
+  submitFunc: {
+    type: Function,
+    default: null,
+  }
 });
 
 const router = useRouter();
-const userStore = useUserStore();
+const emit = defineEmits(['update:modelValue']);
 
-const role = computed(() => userStore.role);
+const data = computed({
+  get() {
+    return props.modelValue;
+  },
+  set(value) {
+    emit("update:modelValue", value);
+  }
+});
+
 
 const handleSubmit = () => {
-  if(role.value === "customer") {
-    router.push("/register/step4");
-  } else  if(role.value === "performer") {
+  if(props.submitFunc) {
+    props.submitFunc();
+  } else {
     router.push("/register/step3");
-  }
+  } 
 };
+
 </script>
 
 <style lang="scss">

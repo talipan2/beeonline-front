@@ -28,6 +28,10 @@ export default {
 
   async resetPassword(data) {
     return axios.post('change-password', {old_password: data.oldPassword, new_password: data.newPassword})
+  },
+
+  async setUserData(data, id) {
+    return axios.patch(`users/${id}`, data)
   }
 
 }

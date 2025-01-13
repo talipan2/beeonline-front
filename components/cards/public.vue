@@ -2,17 +2,24 @@
   <div class="card-pub" :class="{'card-pub_type_list': isList}">
     <h5 class="card-pub__title">{{ data.name || 'Название компании' }}</h5>
     <div class="card-pub__content">
-      <div class="card-pub__image">
+      <div class="card-pub__image image-box">
         <img class="" :src="data.logo || defaultCompanyLogo" alt="">
       </div>
       <div class="card-pub__details">
         <div class="card-pub__details-container">
           <CommonRating :isCountRating="false" />
         </div>
-        <div class="card-pub__details-container">
-          <i class="flag flag_round" :class="selectFlag(data.location)"></i>
-          <p>{{ selectRegion(data.location) || '-' }} </p>
-        </div>
+        <!-- <div class="card-pub__details-container location-container">
+          <i class="flag flag_round" :class="selectFlag(data.location.length && data.location[0].countryId || '')"></i>
+          <p>{{ data.location.length && data.location[0].name || '-' }} </p>
+          <ModalsMoreCities 
+            :list="data.location.map(item => item.name)" 
+            title="Города фактического производства" 
+            placement="bottom-end" 
+            v-if="Array.isArray(data.location) && data.location && data.location.length >= 1"
+          />
+        </div> -->
+        <CommonLocationsList :locationsList="data.location"/>
         <div class="card-pub__details-container">
           <SvgoCase class="svg-m" fill="#C4C4C4" />
           <p>
@@ -34,7 +41,7 @@
         </div>
       </div>
     </div>
-    <div class="card-pub__description" v-if="isDescription">
+    <div class="card-pub__description" v-if="data.description">
       <div class="form-group__title" >
         Описание
       </div>
@@ -111,7 +118,6 @@ const props = defineProps({
     // height: 10.8em;
 
     img {
-      object-fit: cover;
       height: 100%;
     }
 

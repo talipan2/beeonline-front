@@ -1,27 +1,30 @@
 <template>
   <div class="brands-exhibitions">
-    <div class="brands-exhibitions__container">
-      <h3 class="brands-exhibitions__title">Собственные торговые марки</h3>
-      <div class="brands-exhibitions__cards">
-        <CardsDefaultCard v-for="(trademark, index) in trademarksList" :key="index" :card="trademark" @editCard="handleChangeCard($event)" 
-        @deleteCard="deleteTrademarkCard(index)"/>
+    <Form @submit="handleSubmit">
+      <div class="brands-exhibitions__container">
+        <h3 class="brands-exhibitions__title">Собственные торговые марки</h3>
+        <div class="brands-exhibitions__cards">
+          <CardsDefaultCard v-for="(trademark, index) in trademarksList" :key="index" :card="trademark" @editCard="handleChangeCard($event)" 
+          @deleteCard="deleteTrademarkCard(index)"/>
+        </div>
+        <div class="brands-exhibitions__btn-container form-group">
+          <UiButton type="button" class="form-group-data__btn" variant="tertiary" size="large"
+            @click="createNewCard">Добавить собственную торговую марку</UiButton>
+        </div>
       </div>
-      <div class="brands-exhibitions__btn-container form-group">
-        <UiButton type="button" class="form-group-data__btn" variant="tertiary" size="large"
-          @click="createNewCard">Добавить собственную торговую марку</UiButton>
+      <div class="brands-exhibitions__container">
+        <h3 class="brands-exhibitions__title">Участие в выставках</h3>
+        <div class="brands-exhibitions__cards">
+          <CardsDefaultCard v-for="(exhibition, index) in exhibitionList" :key="index" :card="exhibition" @editCard="handleChangeCardExhibition($event)" 
+          @deleteCard="deleteExhibitionCard(index)"/>
+        </div>
+        <div class="brands-exhibitions__btn-container form-group">
+          <UiButton type="button" class="form-group-data__btn" variant="tertiary" size="large"
+            @click="openExhibitionsModal">Добавить выставку</UiButton>
+        </div>
       </div>
-    </div>
-    <div class="brands-exhibitions__container">
-      <h3 class="brands-exhibitions__title">Участие в выставках</h3>
-      <div class="brands-exhibitions__cards">
-        <CardsDefaultCard v-for="(exhibition, index) in exhibitionList" :key="index" :card="exhibition" @editCard="handleChangeCardExhibition($event)" 
-        @deleteCard="deleteExhibitionCard(index)"/>
-      </div>
-      <div class="brands-exhibitions__btn-container form-group">
-        <UiButton type="button" class="form-group-data__btn" variant="tertiary" size="large"
-          @click="openExhibitionsModal">Добавить выставку</UiButton>
-      </div>
-    </div>
+      <slot></slot>
+    </Form>
     <ModalsTrademarksModal v-model="trademarksList" :editCard="currentEditCard"/>
     <ModalsExhibitionModal v-model="exhibitionList" :edit-card="currentEditCard"/>
   </div>
@@ -30,6 +33,16 @@
 <script setup>
 import { useSettingStore } from '~/store/settingStore';
 
+const props = defineProps({
+  modelValue: {
+    type: Object,
+    default: () => ({}),
+  },
+  submitFunc: {
+    type: Function,
+    default: null,
+  }
+})
 
 const settingStore = useSettingStore();
 const currentEditCard = ref(null);
@@ -72,6 +85,12 @@ const deleteTrademarkCard = (index) => {
 const deleteExhibitionCard = (index) => {
   exhibitionList.value.splice(index, 1);
 };
+
+const handleSubmit = () => {
+  if(props.submitFunc) {
+    props.submitFunc();
+  }
+}
 
 
 </script>

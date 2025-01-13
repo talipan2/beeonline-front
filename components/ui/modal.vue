@@ -8,7 +8,7 @@
     :clickToClose="clickToClose"
     :escToClose="true"
     :background="background"
-    :lockScroll="true"
+    :lockScroll="lockScroll"
   >
     <div class="modal-content">
 

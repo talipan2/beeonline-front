@@ -16,39 +16,59 @@ import Step2 from '~/components/createEntity/step2.vue';
 import Step3 from '~/components/createEntity/step3.vue';
 import Step4 from '~/components/createEntity/step4.vue';
 import { useEntityStore } from '~/store/entityStore';
+import { useLocationStore } from '~/store/locationStore';
 
 const router = useRouter();
 const entityStore = useEntityStore();
+const locationStore = useLocationStore();
 
 const currentStep = ref(1);
 const title = ref('');
 const id = router.currentRoute.value.params.id;
 
 const order = ref({})
-const orderData = computed(() => ({
-  id: order.value.id,
-  name: order.value.name,
-  description: order.value.description,
-  gallery: order.value.gallery || [],
-  termsOfCooperation: order.value.conditions,
-  batch: Number(order.value.batch),
-  categories: order.value.category || [],
-  rawMaterials: !order.value.material ? 0 : 1,
-  patterns: !order.value.pattern ? 0 : 1,
-  price: Number(order.value.price),
-  completionDate: order.value.deadline_at,
-  placeOfProduction: order.value.location || [],
-}))
+// const orderData = computed(() => ({
+//   id: order.value.id,
+//   name: order.value.name,
+//   description: order.value.description,
+//   gallery: order.value.gallery || [],
+//   termsOfCooperation: order.value.conditions,
+//   batch: Number(order.value.batch),
+//   categories: order.value.product_categories && order.value.product_categories.map(item => item.id) || [],
+//   rawMaterials: !order.value.material ? 0 : 1,
+//   patterns: !order.value.pattern ? 0 : 1,
+//   price: Number(order.value.price),
+//   completionDate: order.value.deadline_at,
+//   placeOfProduction: order.value.location || [],
+// }))
+
+const orderData = ref({
+  id: null,
+  name: '',
+  description: '',
+  gallery: [],
+  termsOfCooperation: '',
+  batch: '',
+  categories: [],
+  rawMaterials: null,
+  patterns: null,
+  price: null,
+  completionDate: '',
+  locations: [],
+  isSafeDeal: false,
+})
 
 const formatData = computed(() => {
   return {
     name: orderData.value.name,
     logo: orderData.value.logo,
-    categories: computed(() => entityStore.getEntityLabelById('categories', orderData.value.categories)).value,
-    placeOfProductionId: [],
+    categories: entityStore.getEntityLabelById('categories', orderData.value.categories),
+    placeOfProductionId: orderData.value.locations && orderData.value.locations.cities && orderData.value.locations.regions 
+      ? locationStore.getLocationsByIds([], orderData.value.locations.regions, orderData.value.locations.cities)
+      : [],
     batch: orderData.value.batch,
-    patterns: computed(() => entityStore.getEntityLabelById('patterns', orderData.value.patterns)).value,
-    rawMaterials: computed(() => entityStore.getEntityLabelById('rawMaterials', orderData.value.rawMaterials)).value,
+    patterns: entityStore.getEntityLabelById('patterns', orderData.value.patterns),
+    rawMaterials: entityStore.getEntityLabelById('rawMaterials', orderData.value.rawMaterials),
     completionDate: `До ${formatDate(orderData.value.completionDate)}`,
     description: orderData.value.description,
     termsOfCooperation: orderData.value.termsOfCooperation
@@ -59,9 +79,11 @@ const currentHandleSubmit = computed(() => {
   switch (currentStep.value) {
     case 1:
       return (() => {
+        console.log(orderData.value.categories)
         entityStore.editOrder(orderData.value.id, {
           name: orderData.value.name,
-          completionDate: orderData.value.completionDate
+          completionDate: orderData.value.completionDate,
+          categories: orderData.value.categories
         })
         .then(() => currentStep.value = 2)
         .catch(error => {
@@ -77,18 +99,18 @@ const currentHandleSubmit = computed(() => {
           price: orderData.value.price,
           batch: orderData.value.batch,
           patterns: orderData.value.patterns,
-          termsOfCooperation: orderData.value.termsOfCooperation
+          termsOfCooperation: orderData.value.termsOfCooperation,
+          cities: orderData.value.locations.cities,
+          regions: orderData.value.locations.regions
         }).then(() => currentStep.value = 4)
       });
-    // case 3:
-    //   return (() =>{
-    //     entityStore.editOrder(orderData.value.id, {
-    //       completionDate: orderData.value.completionDate
-    //     }).then(() => currentStep.value = 4)
-    //     .catch(error => console.log(error));
-    //   });
     case 4:
-      return (() => router.push('/customer/orders'));
+      return (() => {
+        entityStore.editOrder(orderData.value.id, {
+          isSafeDeal: orderData.value.isSafeDeal
+        })
+        router.push('/customer/orders')
+      });
     default:
       return (() => currentStep.value = 2);
   }
@@ -123,12 +145,26 @@ const currentComponent = computed(() => {
 })
 
 onMounted(() => {
-  entityStore.getOrder(id).then(res => order.value = res.data)
+  entityStore.getOrder(id).then(res => {
+    if(res && res.data) {
+      orderData.value = {
+        id: res.data.id,
+        name: res.data.name,
+        description: res.data.description,
+        gallery: res.data.gallery,
+        termsOfCooperation: res.data.conditions,
+        batch: Number(res.data.batch),
+        categories: res.data.product_categories && res.data.product_categories.map(item => item.id) || [],
+        rawMaterials: !res.data.material ? 0 : 1,
+        patterns: !res.data.pattern ? 0 : 1,
+        price: Number(res.data.price),
+        completionDate: res.data.deadline_at,
+        locations: res.data.cities && res.data.regions && {cities: res.data.cities.map(item => item.id), regions: res.data.regions.map(item => item.id)},
+        isSafeDeal: Boolean(res.data.is_safedeal)
+      }
+    }
+  })
 })
-
-watch(() => orderData.value, (newVal) => {
-  console.log(orderData.value)
-}, {deep: true});
 
 </script>
 

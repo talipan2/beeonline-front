@@ -44,6 +44,7 @@ const alertClass = computed(() => {
   padding: .75em 1.25em;
   position: relative;
   font-size: 1rem;
+  width: 100%;
 
   &__text {
     font-size: 1.6em;

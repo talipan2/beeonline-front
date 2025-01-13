@@ -13,12 +13,12 @@
       </div>
       <div class="register__right-side" >
         <div class="register__right-side-container sticky" ref="rightSide">
-          <CommonCheckList 
+          <!-- <CommonCheckList 
             class="register__checklist register__checklist_type_right-side sticky" 
             ref="leftSide" title="Заполнение профиля" 
             :checkList="checkList" 
             adviceTitle="Полностью заполненный профиль выше в списке поиска"
-          />
+          /> -->
           <CommonAdvice class="register__advice">
             <p class="advice__text">ИНН используется в нашем сервисе:</p>
             <ul>
@@ -31,6 +31,7 @@
         </div>
       </div>
     </div>
+    <Alerts />
   </section>
 </template>
 

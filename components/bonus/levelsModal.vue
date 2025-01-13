@@ -96,8 +96,6 @@ const props = defineProps({
     default: [],
   }
 })
-
-console.log(props.levelGroups)
 const settingStore = useSettingStore();
 
 const filter = ref({type: 'all'});
@@ -116,7 +114,6 @@ const confirm = () => {
 watch(() => levelGroupsContent.value, (newVal) => {
   if(filter.value.type === 'all' && settingStore.bonusLevelModal) {
     contentHeight.value = newVal.offsetHeight;
-    console.log(contentHeight.value)
   }
 }, {deep: true})
 

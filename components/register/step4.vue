@@ -24,8 +24,8 @@
         <div class="register__check-company-container">
           <div class="register__check-company-logo">
             <p class="form-group__title">Логотип</p>
-            <div class="form-group-data__logo">
-              <img :src="registerData.companyLogo  || defaultCompanyLogo" alt="">
+            <div class="image-box image-box_type_logo">
+              <img :src="registerData.companyLogo && registerData.companyLogo.url  || defaultCompanyLogo" alt="">
             </div>
           </div>
           <div class="register__check-company-details">
@@ -35,34 +35,13 @@
             </div>
             <div class="form-group-data">
               <p class="form-group__title">География фактического производства</p>
-              <div class="form-group__inline">
-                <i class="flag flag_round" 
-                  :class="registerData.selectedProductionCountries && registerData.selectedProductionCountries[0]
-                  ? selectFlag(registerData.selectedProductionCountries[0].countryId) 
-                  :''" 
-                />
-                <p class="register__check-company-city form-group__inline">
-                  {{
-                    (registerData.selectedProductionCountries && registerData.selectedProductionCountries[0] 
-                    ?
-                      locationStore.getLocationsByIds(registerData.locationId)[0]
-                    : '')
-                    || '-'
-                  }}
-                  &nbsp;
-                </p>
-                <ModalsMoreCities
-                  class="register__more-cities form-group__inline"
-                  title="География фактического производства" 
-                  :list="locationStore.getLocationsByIds(registerData.locationId)" 
-                />
-              </div>
+              <CommonLocationsList class="register__check-company-locations" :locationsList="registerData.locations"/>
             </div>
           </div>
         </div>
         <div class="form-group-data">
           <p class="form-group__title">Описание</p>
-          <p class="form-group__value">{{ registerData.companyDescription || '-' }}</p>
+          <p class="form-group__value">{{ registerData.description || '-' }}</p>
         </div>
       </div>
     </CommonProfileCheckCard>
@@ -72,13 +51,13 @@
       <div class="register__organization-data">
         <div class="form-group-data">
           <p class="form-group__title">Юридическое названии организации</p>
-          <p class="form-group__value">{{ registerData.companyName || '-' }}</p>
+          <p class="form-group__value">{{ registerData.organizationName || '-' }}</p>
         </div>
       </div>
       <div class="form-group">
         <div class="form-group-data">
           <p class="form-group__title">Форма организации</p>
-          <p class="form-group__value">{{ registerData.organizationForm || '-' }}</p>
+          <p class="form-group__value">{{ organizationStore.getOrganizationFormById(registerData.organizationForm) || '-' }}</p>
         </div>
         <div class="form-group-data">
           <p class="form-group__title">ИНН</p>
@@ -99,7 +78,7 @@
       </div>
       <div class="form-group-data">
         <p class="form-group__title">Юридический адрес</p>
-        <p class="form-group__value">{{ registerData.registerAddress || '-' }}</p>
+        <p class="form-group__value">{{ registerData.legalAddress || '-' }}</p>
       </div>
       <div class="register__btn-container">
         <UiButton type="button" class="register__btn" variant="senary" size="large" @click="router.back">Назад</UiButton>
@@ -125,53 +104,32 @@ const registerData = computed(() => organizationStore.registerOrg);
 
 const handleSubmit = () => {
   organizationStore.setOrganization({
-    name: registerData.value.companyName,
+    name: registerData.value.organizationName,
     userId: userStore.userData.id,
-    phone: userStore.userData.phone,
-    email: userStore.userData.email,
     organizationForm: registerData.value.organizationForm,
     inn: registerData.value.inn,
     kpp: registerData.value.kpp,
     ogrn: registerData.value.ogrn,
     legalAddress: registerData.value.legalAddress,
-    urlSite: registerData.value.urlSite,
     selfEmployed: registerData.value.selfEmployed,
-    location: 1,
+    countryId: registerData.value.countryId,
     currencyId: 1,
   }).then((res) => {
     if (res.data && res.data.id) {
+      organizationStore.setVerificationDocuments(res.data.id, registerData.value.verificationFiles)
       organizationStore.setPubCard({
         id: res.data.id,
-        // id: 46,
         name: registerData.value.companyName,
-        logo: registerData.value.companyLogo,
         type: userStore.role,
-        description: registerData.value.companyDescription,
+        description: registerData.value.description,
+        cities: registerData.value.locations.cities || [],
+        regions: registerData.value.locations.regions || [],
+        siteUrl: registerData.value.siteUrl,
         status: 1,
-
       }).then((res) => {
-        if (res.data) {
+        if (res.data && res.data.id) {
+          organizationStore.setPubCardLogo(res.data.id, registerData.value.companyLogo.data)
           router.push('/')
-          organizationStore.registerOrg = {
-            location: 1,
-            inn: null,
-            KPP: null,
-            organizationForm: 'other',
-            ogrn: null,
-            legalAddress: null,
-            companyName: null,
-            companyLogo: null,
-            countryId: [],
-            companyDescription: null,
-            productionCountry: null,
-            selfEmployed: false,
-            registerAddress: null,
-            selectedProductionCountries: {
-              fullNameLocation: [],
-              locationId: [],
-            },
-            siteUrl: null,
-          }
         }
       })
     }
@@ -231,6 +189,10 @@ const handleSubmit = () => {
   .flag {
     margin-right: .5em;
   }
+}
+
+.register__check-company-locations {
+  font-size: 1.6em;
 }
 
 .register__check-company-city {

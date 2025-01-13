@@ -56,10 +56,6 @@ const file = computed(() => {
   })
 })
 
-watch(() => props.message, (newVal) => {
-  console.log(props.message)
-}, {deep: true});
-
 const scrollToAnimate = ref(false);
 
 const isFirst = computed(() => {

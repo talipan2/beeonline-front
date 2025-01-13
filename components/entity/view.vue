@@ -5,7 +5,13 @@
       <div class="view-entity__props">
         <div class="view-entity__prop" v-for="prop in data.props" :key="prop">
           <p class="view-entity__prop-name">{{ prop.label }}:</p>
-          <p class="view-entity__prop-value">{{ prop.value || 'Не указано' }}</p>
+          <p class="view-entity__prop-value" v-if="!Array.isArray(prop.value)">{{ prop.value || 'Не указано' }}</p>
+          <p class="view-entity__prop-value" v-else>
+            <template v-for="(value, index) in prop.value" :key="index">
+              <span>{{ value }}</span>
+              <span class="inline-divider" v-if="index !== prop.value.length - 1"> / </span>
+            </template>
+          </p>
         </div>
       </div>
       <div class="form-group view-entity__btn-wrapper">

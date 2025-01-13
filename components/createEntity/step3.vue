@@ -1,7 +1,7 @@
 <template>
   <div class="entity">
     <h1 class="entity__title">География и Сроки</h1>
-    <form @submit.prevent="handleSubmit">
+    <Form @submit="handleSubmit">
       <!-- <div v-if="role == 'customer'">
         <p class="entity__text">Укажите дату до которой заказ будет актуален</p>
         <CommonCalendar v-model="data.completionDate" class="entity__calendar" />
@@ -22,8 +22,15 @@
           исполнителям находить их в поиске.
         </p>
       </div>
-      <CommonLocation :buttonLabel="role === 'performer' ? 'Выбрать город' : 'Выбрать город или регион'"
-        v-model="locationData"/>
+      <CommonLocation 
+        v-if="role === 'performer'" 
+        buttonLabel="Выбрать город"
+        v-model="data.locations" :type="['selectCities']"
+        :maxSelected="5"
+      />
+      <CommonLocation v-if="role === 'customer'" buttonLabel="Выбрать город или регион"
+        v-model="data.locations" :type="['selectCities', 'selectRegions']"
+      />
       <div class="form-group">
         <UiButton type="button"
           @click="router.push(`${role === 'performer' ? '/services/create/step2' : '/orders/create/step2'}`)"
@@ -33,7 +40,7 @@
           <SvgoBtnArrow class="svg-lx" />
         </UiButton>
       </div>
-    </form>
+    </Form>
   </div>
 </template>
 

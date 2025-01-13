@@ -12,7 +12,7 @@
   >
     <slot/>
     <template #content>
-      <div class="dropdown">
+      <div class="dropdown" :class="dropdownClass">
         <slot name="content"></slot>
       </div>
     </template>
@@ -41,6 +41,10 @@
     maxWidth: {
       type: String,
       default: '350',
+    },
+    dropdownClass: {
+      type: String,
+      default: '',
     },
   });
 

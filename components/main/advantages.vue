@@ -40,9 +40,9 @@
 
 .advantages__title {
   color: var(--text-color-hexadecimal);
-  font-family: SongerGrotesque, sans-serif;
+  font-family: 'Coolvetica', sans-serif;
   font-size: 6.4em;
-  font-weight: 700;
+  font-weight: 500;
   line-height: 1.14em;
   margin-block: 0 .375em;
   text-align: center;

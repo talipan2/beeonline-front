@@ -1,5 +1,5 @@
 <template>
-  <NuxtLayout name="details-entity" title="Пошив крупной партии вязаных изделий ( свитеры, шапки, носки)" badge="Заказ">
+  <NuxtLayout name="details-entity" :title="data.name" badge="Заказ">
     <template #header>
       <UiBreadCrumb
         :list="[

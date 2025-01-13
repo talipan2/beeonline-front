@@ -8,7 +8,7 @@
             Фото
             <CommonTooltip text="Допустимы изображения размером до 5Мб" />
           </label>
-          <CommonGalleryLoad v-model="data.logo" label="Загрузить еще" class="form-group__value" />
+          <CommonGalleryLoad v-model="data.gallery" :logo="true" @update:logo="handleSelectLogo" label="Загрузить еще" class="form-group__value" />
         </div>
       </div>
       <div class="entity__data">
@@ -116,15 +116,24 @@
           label="Условия сотрудничества" 
           v-model="data.termsOfCooperation" 
           class="form-group__value"
-          alertMessage="Напишите об условиях сотрудничества"
         />
       </div>
       <div class="entity__data" v-if="role === 'performer'">
-        <CommonDocumentLoader text="Готовое техническое задание (ТЗ) и фото изделия можно прикрепить сюда." />
+        <CommonDocumentLoaderAndList v-model="data.tzFiles" 
+          text="Готовое техническое задание (ТЗ) и фото изделия можно прикрепить сюда."
+          :extension="['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'rtf', 'pdf', 'jpeg', 'png', 'jpg', 'gif', 'psd', 'djvu', 'fb2', 'ps', 'zip', 'rar']"
+        />
       </div>
       <div class="entity__data" v-if="role === 'customer'">
-        <CommonDocumentLoader
-          text="Готовое техническое задание (ТЗ) и фото изделия можно прикрепить сюда. Исполнители лучше поймут задачу и качественно выполнят заказ. Разрешено загружать файлы форматом - doc, .docx, .xls, .xlsx, .ppt, .pptx, .rtf, .pdf, .jpeg, .png, .jpg, .gif, .psd, .djvu, .fb2, .ps, .zip, .rar" />
+        <CommonDocumentLoaderAndList v-model="data.tzFiles" 
+          text="Готовое техническое задание (ТЗ) и 
+          фото изделия можно прикрепить сюда. 
+          Исполнители лучше поймут задачу и качественно выполнят заказ. 
+          Разрешено загружать файлы форматом 
+          - doc, .docx, .xls, .xlsx, .ppt, .pptx, .rtf, .pdf, .jpeg, .png, .jpg, .gif, .psd, .djvu, .fb2, .ps, .zip, .rar"
+          :extension="['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'rtf', 'pdf', 'jpeg', 'png', 'jpg', 'gif', 'psd', 'djvu', 'fb2', 'ps', 'zip', 'rar']"
+        />
+        
       </div>
       <div class="entity__data" v-if="role === 'customer'">
         <h2 class="entity__subtitle">Города фактического производства заказа</h2>
@@ -145,15 +154,26 @@
             исполнителям находить их в поиске.
           </p>
         </div>
-        <CommonLocation :buttonLabel="role === 'performer' ? 'Выбрать город' : 'Выбрать город или регион'"
-          v-model="locationData" />
+        <CommonLocation 
+          v-if="role === 'performer'"
+          buttonLabel="Выбрать город"
+          v-model="data.locations"
+          :type="['selectCities']" 
+        />
+        <CommonLocation
+          v-if="role === 'customer'"
+          buttonLabel="Выбрать город или регион"
+          v-model="data.locations"
+          :type="['selectCities', 'selectRegions']" 
+        />
       </div>
       <div class="form-group">
-        <UiButton type="button" @click="
-            router.push(
-              `/${role === 'performer' ? 'services' : 'orders'}/create/step1`
-            )
-          " class="form-group-data form-group-data__btn" variant="tertiary" size="large">Назад</UiButton>
+        <UiButton
+          :to="`/${currentEntity}/create/step1`"
+          class="form-group-data form-group-data__btn" variant="tertiary" size="large"
+        >
+          Назад
+        </UiButton>
         <UiButton type="submit" class="form-group-data form-group-data__btn" variant="quinary" size="large">Далее
           <SvgoBtnArrow class="svg-lx" />
         </UiButton>
@@ -181,11 +201,19 @@ const props = defineProps({
   },
 });
 
-watch(() => props.data, (newVal) => {
-  console.log(props.data)
-}, {deep: true})
+const currentEntity = computed(() => {
+  if(props.role === 'performer') {
+    return 'services'
+  }else if(props.role === 'customer') {
+    return 'orders'
+  }
+})
 
 const router = useRouter();
+
+const handleSelectLogo = (url) => {
+  props.data.logo = url
+}
 
 const locationData = ref({
   locationId: props.data.placeOfProductionId,

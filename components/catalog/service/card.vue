@@ -54,10 +54,6 @@ const props = defineProps({
   }
 });
 
-watch(() => props.data, (newVal) => {
-  console.log(newVal)
-}, {deep: true})
-
 </script>
 
 <style lang="scss">

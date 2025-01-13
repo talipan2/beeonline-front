@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import uploadFilesApi from "~/api/uploadFilesApi";
 
 export const useSettingStore = defineStore("setting", {
   state: () => ({
@@ -26,12 +27,25 @@ export const useSettingStore = defineStore("setting", {
     payModalStatus: false,
     replenishmentModalStatus: false,
     balanceDocumentsModalStatus: false,
+    infoModal: false,
   }),
   actions: {
     setAlert(status, text) {
       this.alertModal.isOpen = true;
       this.alertModal.status = status;
       this.alertModal.text = text;
+    },
+
+    async uploadFiles(id, file) {
+      try {
+        const response = await uploadFilesApi.uploadFiles(id, file);
+        if (response.data) {
+          return response.data
+        }
+      } catch (error) {
+        console.error(error);
+      }
     }
   }
+
 })

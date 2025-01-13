@@ -227,7 +227,6 @@ watch(() => currentEntity.value, (newVal, oldVal) => {
 
 watch(() => activeFilter.value, (newVal) => {
   fetchData(currentEntity.value, newVal)
-  console.log(activeFilter.value)
 }, {deep: true});
 
 onMounted(() => {

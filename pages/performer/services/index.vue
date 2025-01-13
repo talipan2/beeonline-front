@@ -12,6 +12,8 @@
         btnLabel="Создать услугу"
         btnLink="/services/create" 
         :data="cardData"
+        :isLoading="isLoading"
+        emptyAlertText="Услуг нет"
       />
     </template>
   </NuxtLayout>
@@ -19,10 +21,11 @@
 
 <script setup>
 import { useEntityStore } from '~/store/entityStore';
+import { useUserStore } from '~/store/userStore';
 
 const entityStore = useEntityStore();
-
-const servicesList = computed(() => entityStore.servicesList)
+const userStore = useUserStore();
+const isLoading = ref(false);
 
 const formatFreeSamples = (freeSamples) => {
     switch (Number(freeSamples)) {
@@ -38,7 +41,7 @@ const formatFreeSamples = (freeSamples) => {
   }
 
 const cardData = computed(() => {
-  return entityStore.servicesList.map(item => {
+  return entityStore.organizationServices.map(item => {
     return {
     id: item.id,
     name: item.name,
@@ -47,12 +50,13 @@ const cardData = computed(() => {
     availabilityStm: item.is_stm ? 'Да' : 'Нет',
     freeSamples: formatFreeSamples(item.free_samples),
     minLot: item.minLot,
-    status: item.status || "На модерации",
+    status: entityStore.getEntityStatusByValue(item.status),
   }})
 })
 
 onMounted(() => {
-  entityStore.getServices()
+  isLoading.value = true
+  entityStore.getOrganizationServices(userStore.userData.organization_id).finally(() => isLoading.value = false);
 })
 
 </script>

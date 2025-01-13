@@ -34,7 +34,7 @@ const userStore = useUserStore();
 const entityStore = useEntityStore();
 const locationStore = useLocationStore();
 
-const service = computed(() => entityStore.service)
+const service = ref(entityStore.service)
 const title = ref('');
 const validSteps = ['step1', 'step2', 'step3', 'step4'];
 
@@ -72,9 +72,10 @@ const checkList = [
 const servicesData = computed(() => ({
   name: data.value.name,
   logo: data.value.logo,
+  locationsData: data.value.locations,
   data: [
     {id: 1, name: 'Категории', value: data.value.categories},
-    {id: 2, name: 'Место производства', value: data.value.placeOfProductionId},
+    {id: 2, name: 'Место производства', value: data.value.locations.map(item => item.name)},
     {id: 3, name: 'Мин. партия', value: data.value.minLot},
     {id: 4, name: 'Наличие СТМ', value: data.value.availabilityStm},
     {id: 5, name: 'Бесплатные тестовые образцы', value: data.value.freeTestSamples},
@@ -85,13 +86,13 @@ const servicesData = computed(() => ({
 
 const data = computed(() => ({
   name: service.value.name,
-  logo: service.value.gallery,
-  categories: computed(() => entityStore.getEntityLabelById('categories', service.value.categories)).value,
-  placeOfProductionId: computed(() => locationStore.getLocationsByIds(service.value.placeOfProductionId)).value,
-  availabilityStm: computed(() => entityStore.getEntityLabelById('availabilityStm', service.value.availabilityStm)).value,
-  freeTestSamples: computed(() => entityStore.getEntityLabelById('freeTestSamples', service.value.freeTestSamples)).value,
-  minLot: computed(() => entityStore.getEntityLabelById('minLot', service.value.minLot)).value,
-  rawMaterials: computed(() => entityStore.getEntityLabelById('rawMaterials', service.value.rawMaterials)).value,
+  logo: service.value.logo,
+  categories: entityStore.getEntityLabelById('categories', service.value.categories),
+  locations: locationStore.getLocationsByIds([], service.value.locations?.regions, service.value.locations?.cities),
+  availabilityStm: entityStore.getEntityLabelById('availabilityStm', service.value.availabilityStm),
+  freeTestSamples: entityStore.getEntityLabelById('freeTestSamples', service.value.freeTestSamples),
+  minLot: entityStore.getEntityLabelById('minLot', service.value.minLot),
+  rawMaterials: entityStore.getEntityLabelById('rawMaterials', service.value.rawMaterials),
   description: service.value.description,
   termsOfCooperation: service.value.termsOfCooperation
 }))
@@ -100,16 +101,29 @@ const currentHandleSubmit = computed(() => {
   switch (router.currentRoute.value.params.slug) {
     case 'step1':
       return (() => {
-        entityStore.addNewService(
-          {
-            userId: userStore.userData.id,
-            organizationId: organizationStore.organization.id, 
-            name: service.value.name, 
-            category: service.categories,
-            step: 1
-          }
-        ).then(() => router.push('/services/create/step2'))
-        .catch(error => console.log(error));
+        if(!service.value.id) {
+          entityStore.addNewService(
+            {
+              userId: userStore.userData.id,
+              organizationId: userStore.userData.organization_id, 
+              name: service.value.name, 
+              category: service.categories,
+              status: 'filling',
+            }
+          ).then((res) => {
+            if(res && res.id) {
+              entityStore.updateServiceStep(res.id, 1)
+              router.push('/services/create/step2')
+            }
+          })
+          .catch(error => console.log(error));
+        } else {
+          entityStore.editService(service.value.id, {
+            name: service.value.name,
+            category: service.value.categories,
+          }).then(() => router.push('/services/create/step2'))
+          .catch(error =>  console.log(error));
+        }
       });
     case 'step2':
       return (() =>{
@@ -121,14 +135,35 @@ const currentHandleSubmit = computed(() => {
             minLot: service.value.minLot,
             termsOfCooperation: service.value.termsOfCooperation,
             step: 2
-          }).then(() => router.push('/services/create/step3'))
+          }).then(() => {
+            entityStore.updateServiceStep(service.value.id, 2)
+            router.push('/services/create/step3')
+          })
           .catch(error => console.log(error));
+
+          entityStore.updateServiceStep(service.value.id, 2);
         });
     case 'step3':
-      return (() => router.push('/services/create/step4'));
+      return (() => {
+        if(service.value.locations && service.value.locations.cities) {
+          entityStore.editService(service.value.id, {
+            cities: service.value.locations.cities
+          }).then(() => {
+            entityStore.updateServiceStep(service.value.id, 3)
+            router.push('/services/create/step4')
+          })
+          .catch(error => console.log(error));
+        }
+      });
     case 'step4':
       return (() => {
-        router.push('/performer/services')
+        entityStore.editService(service.value.id, {
+          status: 'active'
+        }).then(() => {
+          entityStore.fillingService = null
+          router.push('/performer/services')
+        })
+        .catch(error => console.log(error));
         entityStore.resetService()
       });
   }
@@ -137,5 +172,56 @@ const currentHandleSubmit = computed(() => {
 const handleSubmit = () => {
   currentHandleSubmit.value();
 }
+
+onBeforeMount(() => {
+  if(!entityStore.fillingService && !entityStore.fillingService?.id) {
+    entityStore.getOrganizationServices(userStore.userData.organization_id)
+    .then((res) => {
+      if(res && res.data && res.data.services && Array.isArray(res.data.services)) {
+        res.data.services.find(item => {
+          if(item.status === 'filling') {
+            entityStore.fillingService = {
+              id: item.id,
+              name: item.name,
+              categories: [],
+              gallery: item.gallery || [],
+              logo: item.gallery || [],
+              description: item.description,
+              rawMaterials: [item.materials_own ? 5 : '', item.materials_tolling ? 6 : ''].filter(Boolean) || [],
+              locations: {
+                cities: item.cities || [],
+                regions: item.regions || []
+              },
+              availabilityStm: item.is_stm,
+              freeTestSamples: item.free_samples,
+              minLot: item.minLot || [],
+              termsOfCooperation: item.conditions,
+              currentStep: item.current_step,
+            }
+            service.value = {...entityStore.fillingService}
+          }
+        })
+      }
+    })
+  } else {
+    service.value = {...entityStore.fillingService}
+  }
+})
+
+onMounted(() => {
+  if(!entityStore.isRedirectedToStep) return
+  if(entityStore.fillingService && entityStore.fillingService.currentStep && entityStore.fillingService.currentStep === 1) {
+    router.push('/services/create/step2')
+    entityStore.isRedirectedToStep = false;
+  }
+  if(entityStore.fillingService && entityStore.fillingService.currentStep && entityStore.fillingService.currentStep === 2) {
+    router.push('/services/create/step3')
+    entityStore.isRedirectedToStep = false;
+  }
+  if(entityStore.fillingService && entityStore.fillingService.currentStep && entityStore.fillingService.currentStep === 3) {
+    router.push('/services/create/step4')
+    entityStore.isRedirectedToStep = false;
+  }
+})
 
 </script>
