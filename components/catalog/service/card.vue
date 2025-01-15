@@ -36,7 +36,7 @@
       </div>
     </div>
     <slot name="favorite-delete" />
-    <NuxtLink class="service-card__link" :to="`/services/${data.id}`" :target="linkBlank ? '_blank' : ''"></NuxtLink>
+    <NuxtLink v-if="linkTransition" class="service-card__link" :to="`/services/${data.id}`" :target="linkBlank ? '_blank' : ''"></NuxtLink>
   </div>
 </template>
 
@@ -51,6 +51,10 @@ const props = defineProps({
   linkBlank: {
     type: Boolean,
     default: false,
+  },
+  linkTransition: {
+    type: Boolean,
+    default: true,
   }
 });
 

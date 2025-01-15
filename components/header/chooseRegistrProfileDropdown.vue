@@ -1,6 +1,6 @@
 <template>
   <UiNewDropdown :arrow="false" :placement="'bottom-end'" ref="chooseRegisterRole">
-    <UiButton variant="secondary" size="large">Регистрация</UiButton>
+    <UiButton :variant="btnStyle" size="large">Регистрация</UiButton>
     <template #content >
       <div class="choose-register">
         <button class="choose-register__btn" @click="registerCustomer">Заказчик</button>
@@ -12,6 +12,13 @@
 
 <script setup>
 import { useUserStore } from '~/store/userStore';
+
+const props = defineProps({
+  btnStyle: {
+    type: String,
+    default: 'secondary',
+  }
+})
 
 const router = useRouter();
 const userStore = useUserStore();

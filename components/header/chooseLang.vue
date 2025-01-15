@@ -127,10 +127,6 @@ onMounted(() => {
 
 <style lang="scss">
 
-.choose-lang {
-  position: relative;
-}
-
 .header__lang {
   align-items: center;
   display: flex;
@@ -153,7 +149,7 @@ onMounted(() => {
   }
 }
 
-.header__item_type-lang {
+.choose-lang {
   min-width: 61px;
   position: relative;
   [data-tippy-root] {

@@ -2,13 +2,24 @@
   <section class="safe-transaction">
     <div class="safe-transaction__container container">
       <h3 class="safe-transaction__title">Подключить безопасную сделку</h3>
-      <p class="safe-transaction__text">Сервис по защите расчетов между участниками сделки</p>
+      <p class="safe-transaction__text">{{ text }}</p>
       <UiButton to="https://test.bee-online.ru/deals/main?utm_source=bs" variant="quaternary" size="xl" class="safe-transaction__link">Узнать подробнее</UiButton>
       <UiImage class="safe-transaction__image" src="/assets/images/main/safe-transaction/safe-transaction-img.png"/>
       <UiImage class="safe-transaction__pattern" src="/assets/images/main/safe-transaction/safe-transaction-pattern.png"/>
     </div>
   </section>
 </template>
+
+<script setup>
+
+const props = defineProps({
+  text: {
+    type: String,
+    default: 'Сервис по защите расчетов между участниками сделки',
+  }
+})
+
+</script>
 
 <style lang="scss">
 .safe-transaction {
