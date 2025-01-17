@@ -17,7 +17,7 @@
     <template #content>
       <div class="header__user-info">
         <div class="header__user-image">
-          <img :src="userCurrentPubCard.logo || defaultLogoImage" alt="">
+          <img :src="logo" alt="">
         </div>
         <div class="header__user-data">
           <div class="header__user-name">{{ userData.name }}</div>
@@ -101,7 +101,15 @@ const organizationStore = useOrganizationStore();
 const router = useRouter();
 const role = computed(() => userStore.role)
 const userRoles = computed(() => userStore.userRoles);
+
 const userCurrentPubCard = computed(() => userStore.userPubCard);
+
+const logo = computed(() => {
+  if ( userCurrentPubCard.value && userCurrentPubCard.value.logo) {
+    return userCurrentPubCard.value.logo;
+  }
+  return defaultLogoImage
+})
 
 const headerDropdown = ref(null);
 
@@ -163,6 +171,7 @@ const setRole = (role) => {
         status: 1,
         type: role
       })
+      userStore.checkAuth()
       router.push({ path: `/${role}/profile` });
       
     });

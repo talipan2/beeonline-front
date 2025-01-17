@@ -31,4 +31,12 @@ export default defineNuxtRouteMiddleware(async(to, from) => {
     }
   }
 
+  // try {
+  //   await userStore.checkAuth();
+  // } catch (error) {
+  //   if(publicPaths.includes(to.path)) return;
+  //   navigateTo('/login');
+  //   console.error('Ошибка при проверке авторизации:', error);
+  // }
+
 })

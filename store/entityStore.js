@@ -22,9 +22,16 @@ export const useEntityStore = defineStore('entity', {
       termsOfCooperation: '',
       isSafeDeal: true,
       isAgreedOrderPlacement: true,
+      logo: {
+        id: null,
+        url: null,
+      },
       gallery: [],
       tzFiles: [],
-      locations: [],
+      locations: {
+        regions: [],
+        cities: [],
+      },
     },
     fillingOrder: null,
     fillingService: null,
@@ -41,7 +48,12 @@ export const useEntityStore = defineStore('entity', {
       description: '',
       gallery: [],
       termsOfCooperation: '',
-      logo: '',
+      logo: {
+        id: null,
+        url: null,
+      },
+      gallery: [],
+      tzFiles: [],
     },
     organizationServices: [],
     organizationOrders: [],
@@ -197,8 +209,7 @@ export const useEntityStore = defineStore('entity', {
           user_id: data.userId,
           organization_id: data.organizationId,
           name: data.name,
-          description: 'test',
-          category: data.category,
+          product_categories: data.categories,
           current_step: data.step,
           status: data.status
         });
@@ -249,15 +260,21 @@ export const useEntityStore = defineStore('entity', {
       this.service = {
         id: '',
         name: '',
-        imageUrl: '',
         categories: [],
-        placeOfProduction: [],
-        placeOfProductionId: [],
+        locations: [],
         minLot: [],
         availabilityStm: '',
         freeTestSamples: '',
         rawMaterials: [],
         description: '',
+        gallery: [],
+        termsOfCooperation: '',
+        logo: {
+          id: null,
+          url: null,
+        },
+        gallery: [],
+        tzFiles: [],
       };
     },
     resetOrder() {
@@ -275,6 +292,18 @@ export const useEntityStore = defineStore('entity', {
         completionDate: '',
         description: '',
         termsOfCooperation: '',
+        isSafeDeal: true,
+        isAgreedOrderPlacement: true,
+        logo: {
+          id: null,
+          url: null,
+        },
+        gallery: [],
+        tzFiles: [],
+        locations: {
+          regions: [],
+          cities: [],
+        },
       }
     },
 
@@ -286,9 +315,41 @@ export const useEntityStore = defineStore('entity', {
       }
     },
 
+    async uploadServiceGallery(id, data) {
+      try {
+        const response = await serviceApi.uploadGallery(id, data);
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    async uploadServiceFiles(id, data) {
+      try {
+        const response = await serviceApi.uploadTzFiles(id, data);
+      } catch (error) {
+        throw error;
+      }
+    },
+
     async uploadOrderGallery(id, data) {
       try {
         const response = await orderApi.uploadGallery(id, data);
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    async uploadOrderLogo(id, data) {
+      try {
+        const response = await orderApi.uploadLogo(id, data);
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    async uploadOrderFiles(id, data) {
+      try {
+        const response = await orderApi.uploadTzFiles(id, data);
       } catch (error) {
         throw error;
       }

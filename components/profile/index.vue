@@ -63,7 +63,7 @@
         </div>
         <div class="form-group-data">
           <p class="form-group__title">Сайт</p>
-          <a :href="pubCardData.siteUrl" target="_blank" class="form-group__value link">{{ pubCardData.siteUrl || '-' }}</a>
+          <a :href="pubCardData.siteUrl" target="_blank" class="form-group__value link text-wrap">{{ pubCardData.siteUrl || '-' }}</a>
         </div>
         <div class="form-group-data" v-if="pubCardsVideo">
           <p class="form-group__title">Галерея</p>
@@ -150,8 +150,8 @@ const getOrganizationFormById = organizationStore.getOrganizationFormById;
 const userData = computed(() => ({
   name: userStore.userData.name || '-',
   post: userStore.userData.post || '-',
-  email: userStore.userData.email.replace(/(.{0,3})(?=@)/, (match) => '*'.repeat(match.length)) || '-',
-  phone: userStore.userData.phone.replace(/(\d{4})$/, '****') || '-',
+  email: userStore.userData.email && userStore.userData.email.replace(/(.{0,3})(?=@)/, (match) => '*'.repeat(match.length)) || '-',
+  phone: userStore.userData.phone && userStore.userData.phone.replace(/(\d{4})$/, '****') || '-',
 }));
 
 const organizationData = computed(() => ({

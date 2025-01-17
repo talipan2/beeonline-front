@@ -37,7 +37,7 @@
           name="categories"
           label="Категории"
           :rules="{ minSelected: 1 }"
-          :options="categories"
+          :options="categoryList"
           v-model="data.categories"
           :disabled="isDisabled"
           :priorityShowed="[2, 4, 6, 10]"
@@ -64,6 +64,8 @@
 </template>
 
 <script setup>
+import { useEntityStore } from '~/store/entityStore';
+
 
 const props = defineProps({
   title: {
@@ -91,6 +93,9 @@ const props = defineProps({
   },
 });
 
+const entityStore = useEntityStore();
+
+const categoryList = computed(() => entityStore.entityData.categories);
 
 const router = useRouter();
 

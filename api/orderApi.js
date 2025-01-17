@@ -31,7 +31,8 @@ export default {
       regions,
       isSafeDeal,
       status,
-      categories
+      categories,
+      gallery,
     } = data
     const params = {}
     if(name !== '') params.name = name
@@ -47,21 +48,20 @@ export default {
     if(isSafeDeal !== null) params.is_safedeal = isSafeDeal
     if(status) params.status = status
     if(categories && categories.length > 0) params.product_categories = categories
+    if(gallery && gallery.length > 0) params.gallery = gallery
     return axios.patch(`orders/${id}`, params)
   },
 
   async uploadLogo(id, data) {
-    const formData = new FormData();
-    formData.append('logo', data);
-    return axios.post(`/orders/${id}/upload-logo`, formData, {headers: {'Content-Type': 'multipart/form-data'}})
+    return axios.post(`/orders/${id}/attach-logo`, {media_id: data})
   },
 
   async uploadGallery(id, data) {
-    return axios.post(`/orders/${id}/upload-gallery`, data, {headers: {'Content-Type': 'multipart/form-data'}})
+    return axios.post(`/orders/${id}/attach-gallery`, {media_ids: [...data]})
   },
 
   async uploadTzFiles(id, data) {
-    return axios.post(`/orders/${id}/upload-tz-files`, data, {headers: {'Content-Type': 'multipart/form-data'}})
+    return axios.post(`/orders/${id}/attach-tz-files`, {media_ids: [...data]})
   },
 
   async updateOrderStep(id, currentStep) {

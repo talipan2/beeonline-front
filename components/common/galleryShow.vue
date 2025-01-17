@@ -10,8 +10,8 @@
     </template>
     <template v-for="(image, index) in images" :key="'image-' + index">
       <div class="gallery-show__item image-box">
-        <a :href="image" data-fancybox="gallery">
-          <img :src="image" alt="Gallery image">
+        <a :href="image.url" data-fancybox="gallery">
+          <img :src="image.url" alt="Gallery image">
         </a>
       </div>
     </template>
@@ -35,7 +35,7 @@ const videoList = ref([]);
 
 const getVideoThumbnail = (videoUrl) => {
   const videoId = extractYouTubeId(videoUrl);
-  return videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : '/placeholder.jpg';
+  return videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : null;
 };
 
 const extractYouTubeId = (url) => {

@@ -16,6 +16,7 @@
               <SvgoBtnArrow class="svg-lx" />
             </UiButton>
           </div>
+          {{ data }}
         </div>
       </component>
   </div>
@@ -40,7 +41,9 @@ const data = ref({
   id: null,
   companyName: '',
   description: '',
-  companyLogo: null,
+  companyLogo: {
+    id: null,
+  },
   cities: null,
   regions: null,
   gallery: [],
@@ -113,10 +116,14 @@ async function handleSubmit() {
       url_tg: data.value.urlTg,
       url_vk:data.value.urlVk,
       url_yt: data.value.urlYt,
-      videos: data.value.videos
+      videos: data.value.videos,
     });
-    if(data.value.companyLogo && data.value.companyLogo.data) {
-      organizationStore.setPubCardLogo(data.value.id, data.value.companyLogo.data)
+    if(data.value.companyLogo.id) {
+      organizationStore.setPubCardLogo(data.value.id, data.value.companyLogo.id);
+    }
+
+    if(data.value.gallery && data.value.gallery.length) {
+      organizationStore.setPubCardGallery(data.value.id, data.value.gallery.map(item => item.id));
     }
     router.push(`/${userStore.role}/desktop`);
   }
@@ -137,7 +144,7 @@ onMounted(() => {
         data.value.urlTg = res.url_tg;
         data.value.urlVk = res.url_vk;
         data.value.urlYt = res.url_yt;
-        data.value.companyLogo = res.logo;
+        data.value.companyLogo.url = res.logo;
         data.value.locations = { regions: res.regions.map(region => region.id), cities: res.cities.map(city => city.id) };
         data.value.gallery = res.gallery;
         data.value.videos = res.videos;

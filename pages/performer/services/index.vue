@@ -21,10 +21,12 @@
 
 <script setup>
 import { useEntityStore } from '~/store/entityStore';
+import { useLocationStore } from '~/store/locationStore';
 import { useUserStore } from '~/store/userStore';
 
 const entityStore = useEntityStore();
 const userStore = useUserStore();
+const locationStore = useLocationStore();
 const isLoading = ref(false);
 
 const formatFreeSamples = (freeSamples) => {
@@ -45,14 +47,15 @@ const cardData = computed(() => {
     return {
     id: item.id,
     name: item.name,
-    placeOfProduction: item.location || [],
+    placeOfProduction: locationStore.getLocationsByIds([], [], item.cities.map(item => item.id)) || [],
     rawMaterials: [item.materials_own ? 'Собственное' : '', item.materials_tolling ? 'Давальческое' : ''].filter(Boolean),
     availabilityStm: item.is_stm ? 'Да' : 'Нет',
     freeSamples: formatFreeSamples(item.free_samples),
-    minLot: item.minLot,
+    minLot: item.batches && item.batches.length ? item.batches.map(item => item.name) : [],
     status: entityStore.getEntityStatusByValue(item.status),
   }})
 })
+
 
 onMounted(() => {
   isLoading.value = true

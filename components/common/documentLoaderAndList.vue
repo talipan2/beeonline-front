@@ -3,6 +3,7 @@
     <CommonDocumentLoader :text="text" :isList="isList" :dataList="dataList" @addFile="addFile" :extension="extension"/>
     <CommonFileList :dataList="dataList" @removeFile="removeFile" :changed="changed"/>
     <Alerts/>
+    {{ modelValue }}
   </div>
 </template>
 
@@ -49,7 +50,7 @@ function addFile(file) {
   settingStore.uploadFiles(userStore.userData.id, formData.value)
     .then(res => {
       if(res && res.media_id) {
-        emit('update:modelValue', [...props.modelValue, { media_id: res.media_id, status: 'pending' }]);
+        emit('update:modelValue', [...props.modelValue, {id: res.media_id, url: URL.createObjectURL(file)} ]);
         dataList.value.push({ 
           id: res.media_id, 
           name: file.name, 
@@ -64,11 +65,23 @@ function addFile(file) {
 function removeFile(id) {
   dataList.value = dataList.value.filter(item => item.id !== id);
 
-  emit('update:modelValue', props.modelValue.filter(item => item.media_id !== id));
+  emit('update:modelValue', props.modelValue.filter(item => item.id !== id));
 }
 
 watch(() => props.documentList, () => {
   dataList.value = [...props.documentList];
 }, {deep: true})
 
+onMounted(() => {
+  if(props.modelValue && props.modelValue.length > 0 && Array.isArray(props.modelValue)) {
+    dataList.value = props.modelValue.map(item => { 
+      return {
+        id: item.id, 
+        name: item.url.split('/').pop(), 
+        url: item.url, 
+        type: item.url.split('.').pop().toLowerCase(), 
+      }
+    });
+  }
+})
 </script>

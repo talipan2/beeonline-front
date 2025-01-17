@@ -34,7 +34,11 @@ const formatData = computed(() => {
   if(!data.value) return []
   return {
       props: [
-        {name: 'Партии:', value: ['до 100'], link: ['1']},
+        {
+          name: 'Партии:', 
+          value: data.value.batches && data.value.batches.length && data.value.batches.map(item => item.name), 
+          link: [data.value.batches && data.value.batches.length && data.value.batches.map(item => item.id)]
+        },
         {name: 'Категории:', value: ["Детская одежда", 'Термобелье', 'Носочно-чулочная продукция',  'Сумки и аксессуары',  'Ткани, фурнитура, материалы'], link: ['1', '2', '3']},
         {name: 'Материалы:', value: [data.value.materials_own ? 'Собственное' : '', data.value.materials_tolling ? 'Давальческое' : ''].filter(Boolean), link: ['1', '2']},
         {name: 'Наличие СТМ:', value: entityStore.getEntityLabelById('availabilityStm', data.value.is_stm)},
@@ -45,6 +49,7 @@ const formatData = computed(() => {
       description: data.value.description,
       conditions: data.value.conditions,
       gallery: data.value.gallery,
+      tzFiles: data.value.tz_files,
       name: data.value.name
     }
 })

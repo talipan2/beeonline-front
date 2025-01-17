@@ -16,6 +16,8 @@
         <SvgoClose class="svg-l" fill="#6937a5"/>
       </button>
     </div>
+    {{ modelValue }}
+    {{ images }}
   </div>
 </template>
 
@@ -52,16 +54,15 @@ const onFileChange = (event) => {
       src: URL.createObjectURL(file),
       loading: true
     })
-
-    if(props.logo && images.value.length === 1) {
-      emit('update:logo', URL.createObjectURL(file));
-    }
     
     settingStore.uploadFiles(userStore.userData.id, formData)
     .then(res => {
       if(res && res.media_id) {
         images.value[images.value.length - 1] = {...images.value[images.value.length - 1], id: res.media_id, loading: false};
-        emit('update:modelValue', [...props.modelValue, { media_id: res.media_id, status: 'pending' }]);
+        emit('update:modelValue', [...props.modelValue, {id: res.media_id, url: URL.createObjectURL(file)} ]);
+        // if(props.logo && images.value.length === 1) {
+        //   emit('update:logo', { url: URL.createObjectURL(file), id: res.media_id});
+        // }
       } else {
         images.value.splice(-1, 1);
       }
@@ -75,13 +76,31 @@ const onFileChange = (event) => {
   }
 };
 
+watch(() => props.modelValue, (newVal) => {
+  if(images.value.length > 0 && newVal.length < 2) {
+    emit('update:logo', { url: images.value[0].src, id: images.value[0].id});
+  } else if (images.value.length === 0 ) {
+    emit('update:logo', { url: null, id: null});
+  }
+}, {deep: true})
+
 const removeImage = (id) => {
+  console.log(id)
   images.value.splice(images.value.findIndex(image => image.id === id), 1);
-  emit('update:modelValue', props.modelValue.filter(item => item.media_id !== id));
+  emit('update:modelValue', props.modelValue.filter(item => item.id !== id));
   if(images.value.length === 0) {
     emit('update:logo', null);
   }
 };
+
+onMounted(() => {
+  images.value = props.modelValue.map(item => {
+    return {
+      src: item.url,
+      id: item.id
+    }
+  });
+});
 
 </script>
 

@@ -5,7 +5,7 @@
         :list="[{ label: 'Главная', link: '/' }, { label: 'Кабинет заказчика', link: '/performer/desktop' }, { label: 'Список заказов', link: '/performer/services' }, { label: 'Заказ', link: '' }]" />
     </template>
     <template #content>
-      <EntityView :data="orderProps" role="customer"/>
+      <EntityView v-if="!isLoading" :data="orderProps" role="customer" type="order"/>
     </template>
   </NuxtLayout>
 </template>
@@ -19,13 +19,17 @@ const router = useRouter();
 const entityStore = useEntityStore();
 const locationStore = useLocationStore();
 const order = ref({});
+const isLoading = ref(false);
+
 const orderProps = computed(() => {
   return {
     id: order.value.id,
     name: order.value.name,
     description: order.value.description,
-    gallery: order.value.gallery || [],
+    gallery: order.value.gallery && order.value.gallery.length ? order.value.gallery.map(item => item.url) : [],
     conditions: order.value.conditions,
+    tzFiles: order.value.tz_files && order.value.tz_files.length ? order.value.tz_files.map(item => item.url) : [],
+    status: order.value.status,
     props: {
       batch: {label: "Размер партии", value: Number(order.value.batch)},
       category: { 
@@ -58,7 +62,10 @@ function getLocationNames(cities, regions) {
 }
 
 onMounted(() => {
-  entityStore.getOrder(router.currentRoute.value.params.id).then((res) => order.value = res.data)
+  isLoading.value = true;
+  entityStore.getOrder(router.currentRoute.value.params.id)
+  .then((res) => order.value = res.data)
+  .finally(() => isLoading.value = false)
 })
 
 </script>

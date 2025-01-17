@@ -6,7 +6,22 @@ export const useUserStore = defineStore('user', {
   state: () => ({
     userData: {},
     userOrganization: {},
-    userPubCard: {},
+    userPubCard: {
+      id: null,
+      name: null,
+      description: null,
+      logo: null,
+      gallery: null,
+      urlSite: null,
+      urlTg: null,
+      urlVk: null,
+      urlYt: null,
+      cities: null,
+      regions: null,
+      videos: null,
+      view_count: 0,
+      type: null
+    },
     userToken: null,
     isAuth: false,
     location: null,
@@ -90,12 +105,15 @@ export const useUserStore = defineStore('user', {
           if(response.data.user && response.data.user.organization) {
             this.userOrganization = response.data.user.organization;
           }
-          if(response.data.user && response.data.user.public_cards) {
-            if(this.role === 'customer') {
+          if(response.data.user && response.data.user.public_cards && response.data.user.public_cards.length > 0) {
+            
+            if(this.role === 'customer' ) {
               const customerCard = response.data.user.public_cards.find(card => card.type === "customer");
+              console.log(customerCard)
               this.userPubCard = customerCard;
             } else if (this.role === 'performer') {
               const performerCard = response.data.user.public_cards.find(card => card.type === "performer");
+              console.log(performerCard)
               this.userPubCard = performerCard;
             }
           }

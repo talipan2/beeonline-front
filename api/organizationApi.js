@@ -61,7 +61,7 @@ export default {
       url_yt: data.url_yt,
       cities: data.cities,
       regions: data.regions,
-      videos: data.videos
+      videos: data.videos,
     })
   },
 
@@ -86,7 +86,10 @@ export default {
 
   // загрузка документов
   async setVerificationDocuments(id, data) {
-    return axios.post(`organizations/${id}/verification-files`, {files: data});
+    const formatData = data.map((item) => {
+      return {media_id: item, status: 'pending'}
+    });
+    return axios.post(`organizations/${id}/verification-files`, {files: formatData});
   },
 
   // удаление документа
@@ -94,9 +97,11 @@ export default {
     return axios.patch(`verification-files/${id}`, data, {headers: {'Content-Type': 'multipart/form-data'}});
   },
 
-  async setPubCardLogo(id, data) {
-    const formData = new FormData();
-    formData.append('logo', data);
-    return axios.post(`pubcards/${id}/upload-logo`, formData, {headers: {'Content-Type': 'multipart/form-data'}})
+  async setPubCardLogo(id, imageId) {
+    return axios.post(`pubcards/${id}/attach-logo`, {media_id: imageId})
+  },
+
+  async setPubCardGallery(id, data) {
+    return axios.post(`pubcards/${id}/attach-gallery`, {media_ids: data})
   }
 }

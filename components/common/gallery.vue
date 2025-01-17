@@ -24,6 +24,7 @@
       </label>
       <slot></slot>
     </Form>
+    {{ modelValue }}
   </div>
 </template>
 
@@ -79,7 +80,9 @@ const handleSubmit = () => {
 }
 
 onMounted(() => {
-  videoLinks.value = data.value.videos.map(video => ({ services: video.services, external_url: video.external_url }))
+  if(data.value.videos && data.value.videos.length) {
+    videoLinks.value = data.value.videos.map(video => ({ services: video.services, external_url: video.external_url }))
+  }
 })
 
 

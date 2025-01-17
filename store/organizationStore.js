@@ -16,7 +16,10 @@ export const useOrganizationStore = defineStore('organization', {
       legalAddress: null,
       organizationName: null,
       companyName: null,
-      companyLogo: null,
+      companyLogo: {
+        id: null,
+        url: null,
+      },
       description: null,
       locations: {
         regions: [],
@@ -205,9 +208,9 @@ export const useOrganizationStore = defineStore('organization', {
       }
     },
 
-    async setPubCardLogo(id, data) {
+    async setPubCardLogo(id, imageId) {
       try {
-        const response = await Api.setPubCardLogo(id, data);
+        const response = await Api.setPubCardLogo(id, imageId);
         if(response.data) {
           return response.data;
         }
@@ -215,5 +218,16 @@ export const useOrganizationStore = defineStore('organization', {
         throw error;
       }
     },
+
+    async setPubCardGallery(id, data) { 
+      try {
+        const response = await Api.setPubCardGallery(id, data);
+        if(response.data) {
+          return response.data;
+        }
+      } catch (error) {
+        throw error;
+      }
+    }
   }
 })

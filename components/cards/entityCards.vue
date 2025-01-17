@@ -2,20 +2,18 @@
   <div class="entity-card" :class="{ 'entity-card_hover': isLinkHovered }" @mouseover="isLinkHovered = true" @mouseleave="isLinkHovered = false">
     <h3 class="entity-card__title">{{ data.name }}</h3>
     <div class="entity-card__body">
-      <div class="entity-card__details" v-if="entityLocations && entityLocations.length > 0">
+      <div class="entity-card__details" v-if="data.placeOfProduction && data.placeOfProduction.length > 0">
         <div class="entity-card__region">
-          {{ entityLocations && entityLocations.length > 0 ? entityLocations[0].name : 'Не указано' }}
-          <span>
+          {{ data.placeOfProduction[0] ? data.placeOfProduction[0].name : 'Не указано' }}
             <ModalsMoreCities 
-              :list="entityLocations.map(item => item.name)" 
+              :list="data.placeOfProduction.map(el => el.name).slice(1)" 
               title="Регионы" 
               placement="bottom-end" 
-              v-if="Array.isArray(entityLocations) && entityLocations.length >= 1"
+              v-if="Array.isArray(data.placeOfProduction) && data.placeOfProduction.length >= 1"
             />
-          </span>
         </div>
-        <i class="flag flag_round" :class="entityLocations && entityLocations[0]
-          ? selectFlag(entityLocations[0].countryId)
+        <i class="flag flag_round" :class="data.placeOfProduction && data.placeOfProduction[0]
+          ? selectFlag(data.placeOfProduction[0].countryId)
           : ''" />
       </div>
       <div class="entity-card__details" v-if="role === 'customer'">

@@ -48,11 +48,9 @@ const props = defineProps({
 
 });
 
-const organizationStore = useOrganizationStore();
-const userStore = useUserStore();
 const settingStore = useSettingStore();
-const imagePreview = ref(props.modelValue || defaultImage);
-const isLoading = ref(false);
+const imagePreview = ref(props.modelValue.url || defaultImage);
+const userStore = useUserStore();
 
 const emit = defineEmits(['update:modelValue']);
 
@@ -61,8 +59,15 @@ const onFileChange = (event) => {
   
   if (file && file.type.startsWith('image/')) {
     if(file.size < props.maxSize * 1024 * 1024) {
+      const formData = new FormData();
+      formData.append('file', file);
       imagePreview.value = URL.createObjectURL(file);
-      emit('update:modelValue', {data: file, url: imagePreview.value});
+      settingStore.uploadFiles(userStore.userData.id, formData)
+      .then(res => {
+        if(res && res.media_id) {
+          emit('update:modelValue', {id: res.media_id, url: imagePreview.value});
+        }
+      })
     } else {
       console.log('Файл слишком большой');
     }
@@ -73,12 +78,11 @@ const onFileChange = (event) => {
 
 watch(() => props.modelValue, (newVal) => {
   try {
-    if (newVal) {
-      new URL(newVal);
-      imagePreview.value = newVal;
+    if (newVal && newVal.url) {
+      imagePreview.value = newVal.url;
     }
   } catch (err) {}
-});
+}, {deep: true});
 
 
 </script>

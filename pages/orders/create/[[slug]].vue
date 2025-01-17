@@ -9,6 +9,7 @@
     </template>
     <template #content>
       <component :is="currentComponent" :title="title" role="customer" :handleSubmit="handleSubmit" :formatData="data" :data="order"/>
+      {{ order }}
     </template>
     <template #right>
       <CommonCheckList class="create__checklist create__checklist_type_right" 
@@ -102,10 +103,15 @@ const currentHandleSubmit = computed(() => {
           .catch(error => console.log(error));
 
           if(order.value.gallery && order.value.gallery.length) {
-            entityStore.uploadOrderGallery(order.value.id, order.value.logo)
+            entityStore.uploadOrderGallery(order.value.id, order.value.gallery.map(item => item.id))
           }
+
+          // if(order.value.logo && order.value.logo.id) {
+          //   entityStore.uploadOrderLogo(order.value.id, order.value.logo.id)
+          // }
+          
           if(order.value.tzFiles && order.value.tzFiles.length) {
-            entityStore.uploadTzFiles(order.value.id, order.value.gallery)
+            entityStore.uploadTzFiles(order.value.id, order.value.tzFiles)
           }
         });
     case 'step4':
@@ -156,7 +162,7 @@ const order = ref(entityStore.order);
 
 const ordersData = computed(() => ({
   name: order.value.name,
-  logo: order.value.gallery.length > 0 ? order.value.gallery.getAll('image[]')[0] : '',
+  logo: order.value.gallery && order.value.gallery.length ? order.value.gallery[0].url : '',
   data: [
     { id: 1, name: 'Категории', value: data.value.categories },
     { id: 2, name: 'Место производства', value: data.value.placeOfProductionId },
@@ -170,7 +176,7 @@ const ordersData = computed(() => ({
 
 const data = computed(() => ({
   name: order.value.name,
-  logo: order.value.logo,
+  logo: order.value.gallery && order.value.gallery.length ? order.value.gallery[0].url : '',
   categories: computed(() => entityStore.getEntityLabelById('categories', order.value.categories)).value,
   placeOfProductionId: computed(() => locationStore.getLocationsByIds(order.value.placeOfProductionId)).value,
   batch: order.value.batch,
@@ -201,10 +207,13 @@ onBeforeMount(() => {
               patterns: item.pattern === null ? item.pattern : (!item.pattern ? 0 : 1),
               price: item.price ? Number(item.price) : '',
               completionDate: item.deadline_at,
-              cities: item.cities || [],
-              regions: item.regions || [],
+              locations: {
+                cities: item.cities || [],
+                regions: item.regions || [],
+              },
               currentStep: item.current_step,
               isSafeDeal: item.is_safedeal,
+              logo: item.gallery && item.gallery.length ? item.gallery[0] : {url: null, id: null},
             }
             order.value = entityStore.fillingOrder
           }

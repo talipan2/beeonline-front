@@ -6,6 +6,7 @@
     </template>
     <template #content>
       <component :is="currentComponent" :title="title" role="customer" :formatData="formatData"  :handleSubmit="handleSubmit" :handleBack="previousStep" :data="orderData"/>
+      {{ orderData }}
     </template>    
   </NuxtLayout>
 </template>
@@ -27,20 +28,6 @@ const title = ref('');
 const id = router.currentRoute.value.params.id;
 
 const order = ref({})
-// const orderData = computed(() => ({
-//   id: order.value.id,
-//   name: order.value.name,
-//   description: order.value.description,
-//   gallery: order.value.gallery || [],
-//   termsOfCooperation: order.value.conditions,
-//   batch: Number(order.value.batch),
-//   categories: order.value.product_categories && order.value.product_categories.map(item => item.id) || [],
-//   rawMaterials: !order.value.material ? 0 : 1,
-//   patterns: !order.value.pattern ? 0 : 1,
-//   price: Number(order.value.price),
-//   completionDate: order.value.deadline_at,
-//   placeOfProduction: order.value.location || [],
-// }))
 
 const orderData = ref({
   id: null,
@@ -101,8 +88,19 @@ const currentHandleSubmit = computed(() => {
           patterns: orderData.value.patterns,
           termsOfCooperation: orderData.value.termsOfCooperation,
           cities: orderData.value.locations.cities,
-          regions: orderData.value.locations.regions
+          regions: orderData.value.locations.regions,
+          gallery: orderData.value.gallery,
         }).then(() => currentStep.value = 4)
+
+        if(orderData.value.gallery && orderData.value.gallery.length) {
+          const galleryIds = orderData.value.gallery.map(item => item.id)
+          entityStore.uploadOrderGallery(orderData.value.id, galleryIds)
+        }
+        
+        if(orderData.value.tzFiles && orderData.value.tzFiles.length) {
+          const tzFilesIds = orderData.value.tzFiles.map(item => item.id)
+          entityStore.uploadOrderFiles(orderData.value.id, tzFilesIds)
+        }
       });
     case 4:
       return (() => {
@@ -151,7 +149,9 @@ onMounted(() => {
         id: res.data.id,
         name: res.data.name,
         description: res.data.description,
+        logo: res.data.logo,
         gallery: res.data.gallery,
+        tzFiles: res.data.tz_files,
         termsOfCooperation: res.data.conditions,
         batch: Number(res.data.batch),
         categories: res.data.product_categories && res.data.product_categories.map(item => item.id) || [],
@@ -162,6 +162,7 @@ onMounted(() => {
         locations: res.data.cities && res.data.regions && {cities: res.data.cities.map(item => item.id), regions: res.data.regions.map(item => item.id)},
         isSafeDeal: Boolean(res.data.is_safedeal)
       }
+      console.log(orderData.value)
     }
   })
 })

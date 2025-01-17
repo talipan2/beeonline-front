@@ -23,10 +23,12 @@
 <script setup>
 
 import { useEntityStore } from '~/store/entityStore';
+import { useLocationStore } from '~/store/locationStore';
 import { useUserStore } from '~/store/userStore';
 
 const entityStore = useEntityStore();
 const userStore = useUserStore();
+const locationStore = useLocationStore()
 
 const isLoading = ref(false);
 
@@ -37,7 +39,7 @@ const cardData = computed(() => {
     return {
     id: item.id,
     name: item.name,
-    placeOfProduction: item.location || [],
+    placeOfProduction: locationStore.getLocationsByIds([], item.regions.map(item => item.id), item.cities.map(item => item.id)),
     rawMaterials: !item.material ? ['Собственное'] : ['Давальческое'],
     completionDate: item.deadline_at,
     batch: item.batch,

@@ -116,7 +116,9 @@ const handleSubmit = () => {
     currencyId: 1,
   }).then((res) => {
     if (res.data && res.data.id) {
-      organizationStore.setVerificationDocuments(res.data.id, registerData.value.verificationFiles)
+      if(registerData.value.verificationFiles && registerData.value.verificationFiles.length > 0) {
+        organizationStore.setVerificationDocuments(res.data.id, registerData.value.verificationFiles)
+      }
       organizationStore.setPubCard({
         id: res.data.id,
         name: registerData.value.companyName,
@@ -127,9 +129,13 @@ const handleSubmit = () => {
         siteUrl: registerData.value.siteUrl,
         status: 1,
       }).then((res) => {
-        if (res.data && res.data.id) {
-          organizationStore.setPubCardLogo(res.data.id, registerData.value.companyLogo.data)
+        userStore.checkAuth()
+        
+        if(res.data && res.data.id) {
           router.push('/')
+        }
+        if (res.data && res.data.id && registerData.value.companyLogo.id) {
+          organizationStore.setPubCardLogo(res.data.id, registerData.value.companyLogo.id)
         }
       })
     }

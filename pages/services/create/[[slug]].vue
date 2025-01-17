@@ -10,6 +10,7 @@
     </template>
     <template #content>
       <component :is="currentComponent" :title="title" role="performer" :formatData="data" :data="service" :handleSubmit="handleSubmit"/>
+      {{ service }}
     </template>
     <template #right>
       <div class="h4">Предварительный просмотр услуги</div>
@@ -71,7 +72,7 @@ const checkList = [
 
 const servicesData = computed(() => ({
   name: data.value.name,
-  logo: data.value.logo,
+  logo: service.value.gallery && service.value.gallery.length ? service.value.gallery[0].url : '',
   locationsData: data.value.locations,
   data: [
     {id: 1, name: 'Категории', value: data.value.categories},
@@ -86,7 +87,7 @@ const servicesData = computed(() => ({
 
 const data = computed(() => ({
   name: service.value.name,
-  logo: service.value.logo,
+  logo: service.value.gallery && service.value.gallery.length ? service.value.gallery[0] : {id: null, url: ''},
   categories: entityStore.getEntityLabelById('categories', service.value.categories),
   locations: locationStore.getLocationsByIds([], service.value.locations?.regions, service.value.locations?.cities),
   availabilityStm: entityStore.getEntityLabelById('availabilityStm', service.value.availabilityStm),
@@ -107,7 +108,7 @@ const currentHandleSubmit = computed(() => {
               userId: userStore.userData.id,
               organizationId: userStore.userData.organization_id, 
               name: service.value.name, 
-              category: service.categories,
+              categories: service.categories,
               status: 'filling',
             }
           ).then((res) => {
@@ -120,7 +121,7 @@ const currentHandleSubmit = computed(() => {
         } else {
           entityStore.editService(service.value.id, {
             name: service.value.name,
-            category: service.value.categories,
+            categories: service.value.categories,
           }).then(() => router.push('/services/create/step2'))
           .catch(error =>  console.log(error));
         }
@@ -141,7 +142,19 @@ const currentHandleSubmit = computed(() => {
           })
           .catch(error => console.log(error));
 
-          entityStore.updateServiceStep(service.value.id, 2);
+          // if(service.value.logo && service.value.logo.id) {
+          //   entityStore.uploadServiceLogo(service.value.id, service.value.logo.id)
+          // }
+
+          if(service.value.gallery && service.value.gallery.length) {
+            const galleryIds = service.value.gallery.map(item => item.id)
+            entityStore.uploadServiceGallery(service.value.id, galleryIds)
+          }
+
+          if(service.value.tzFiles && service.value.tzFiles.length) {
+            const tzFilesIds = service.value.tzFiles.map(item => item.id)
+            entityStore.uploadServiceFiles(service.value.id, tzFilesIds)
+          }
         });
     case 'step3':
       return (() => {
@@ -171,6 +184,7 @@ const currentHandleSubmit = computed(() => {
 
 const handleSubmit = () => {
   currentHandleSubmit.value();
+  entityStore.isRedirectedToStep = false
 }
 
 onBeforeMount(() => {
@@ -183,9 +197,9 @@ onBeforeMount(() => {
             entityStore.fillingService = {
               id: item.id,
               name: item.name,
-              categories: [],
+              categories: item.product_categories.map(item => item.id),
               gallery: item.gallery || [],
-              logo: item.gallery || [],
+              logo: item.gallery && item.gallery.length ? item.gallery[0] : {url: null, id: null},
               description: item.description,
               rawMaterials: [item.materials_own ? 5 : '', item.materials_tolling ? 6 : ''].filter(Boolean) || [],
               locations: {
@@ -197,14 +211,15 @@ onBeforeMount(() => {
               minLot: item.minLot || [],
               termsOfCooperation: item.conditions,
               currentStep: item.current_step,
+              tzFiles: item.tz_files || [],
             }
-            service.value = {...entityStore.fillingService}
+            service.value = entityStore.fillingService
           }
         })
       }
     })
-  } else {
-    service.value = {...entityStore.fillingService}
+  } else if(!service.value.length) {
+    service.value = entityStore.fillingService
   }
 })
 

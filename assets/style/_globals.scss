@@ -166,6 +166,12 @@ label:active {
   margin: 0;
 }
 
+// стили для переноса текста без пробелов
+
+.text-wrap {
+  word-break: break-all;
+}
+
 // стили для обозначения стран
 .flag {
   display: inline-block;

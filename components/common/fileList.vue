@@ -1,7 +1,8 @@
 <template>
   <div class="file">
+    {{ dataList }}
     <div class="file__list">
-      <div class="divider" v-if="changed && dataList.length && divider"></div>
+      <div class="divider" v-if="changed && dataList.length && divider || topDivider"></div>
       <div class="file__item" :class="{'add-divider': divider}" v-for="item in dataList" :key="item.id">
         <div class="file__data">
           <svg class="file__icon" :class="selectIconClass(item.type)" width="50" height="50" viewBox="0 0 50 50">
@@ -42,6 +43,10 @@ const props = defineProps({
   divider: {
     type: Boolean,
     default: true,
+  },
+  topDivider: {
+    type: Boolean,
+    default: false
   },
   downloadText: {
     type: Boolean,

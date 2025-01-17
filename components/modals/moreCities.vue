@@ -1,5 +1,5 @@
 <template>
-  <UiNewDropdown :placement="placement">
+  <UiNewDropdown :placement="placement" :offset="[0, 20]">
     <a class="more-btn link more-list" ref="moreCities" href="javascript:;">
       {{ list.length >= 1
         ? '+ еще&nbsp;' + (list.length)

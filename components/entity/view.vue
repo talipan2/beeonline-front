@@ -1,18 +1,21 @@
 <template>
   <section class="view-entity">
+    <EntityStatus class="view-entity__status" v-if="data.status" :status="data.status" :type="type"/>
     <div class="view-entity__container">
       <h3 class="view-entity__title">{{ data.name }}</h3>
       <div class="view-entity__props">
-        <div class="view-entity__prop" v-for="prop in data.props" :key="prop">
-          <p class="view-entity__prop-name">{{ prop.label }}:</p>
-          <p class="view-entity__prop-value" v-if="!Array.isArray(prop.value)">{{ prop.value || 'Не указано' }}</p>
-          <p class="view-entity__prop-value" v-else>
-            <template v-for="(value, index) in prop.value" :key="index">
-              <span>{{ value }}</span>
-              <span class="inline-divider" v-if="index !== prop.value.length - 1"> / </span>
-            </template>
-          </p>
-        </div>
+        <template v-for="prop in data.props" :key="prop">
+          <div class="view-entity__prop" v-if="prop.value">
+            <p class="view-entity__prop-name">{{ prop.label }}:</p>
+            <p class="view-entity__prop-value" v-if="!Array.isArray(prop.value)">{{ prop.value || 'Не указано' }}</p>
+            <p class="view-entity__prop-value" v-else>
+              <template v-for="(value, index) in prop.value" :key="index">
+                <span>{{ value }}</span>
+                <span class="inline-divider" v-if="index !== prop.value.length - 1"> / </span>
+              </template>
+            </p>
+          </div>
+        </template>
       </div>
       <div class="form-group view-entity__btn-wrapper">
         <div class="view-entity__btn">
@@ -25,17 +28,21 @@
         </div>
       </div>
     </div>
-    <div class="view-entity__container">
+    <div class="view-entity__container" v-if="data.description">
       <h3 class="view-entity__title">Описание</h3>
       <p class="view-entity__prop-value">{{ data.description || 'Не указано' }}</p>
     </div>
-    <div class="view-entity__container">
+    <div class="view-entity__container" v-if="data.conditions">
       <h3 class="view-entity__title">Условия сотрудничества</h3>
       <p class="view-entity__prop-value">{{ data.conditions || 'Не указано' }}</p>
     </div>
-    <div class="view-entity__container" v-if="data.gallery.length">
-      <h3 class="view-entity__title">Галерия</h3>
-      <p class="view-entity__prop-value">Описание</p>
+    <div class="view-entity__container" v-if="data.gallery &&data.gallery.length > 0">
+      <h3 class="view-entity__title">Галерея</h3>
+      <CommonGalleryShow :images="data.gallery" />
+    </div>
+    <div class="view-entity__container" v-if="data.tzFiles && data.tzFiles.length > 0">
+      <h3 class="view-entity__title">Технические требования</h3>
+      <CommonFileList class="view-entity__files" :data-list="formatDocumentsArray" divider top-divider/>
     </div>
   </section>
 </template>
@@ -52,9 +59,24 @@ const props = defineProps({
     type: String,
     default: '',
     required: true,
+  },
+  type: {
+    type: String,
+    default: '',
+    validator: value => ['order', 'service'].includes(value),
   }
 })
 
+const formatDocumentsArray = computed(() => {
+  if(!props.data.tzFiles || props.data.tzFiles.length === 0) return [];
+  return props.data.tzFiles.map(item => {
+    return {
+      name: item.split('/').pop(),
+      url: item,
+      type: item.split('.').pop()
+    }
+  })
+})
 
 </script>
 
@@ -64,6 +86,10 @@ const props = defineProps({
   max-width: 90%;
   &__container {
     margin-bottom: 5rem;
+  }
+
+  &__status {
+    margin-bottom: 2em;
   }
 
   &__title {
@@ -107,6 +133,12 @@ const props = defineProps({
     display: flex;
     align-items: center;
     font-size: 1.6rem;
+  }
+
+  &__files {
+    .file__icon {
+      flex: auto;
+    }
   }
 
   @include tablet {

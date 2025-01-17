@@ -27,7 +27,7 @@ import {Russian} from 'flatpickr/dist/l10n/ru.js';
 
 const props = defineProps({
   modelValue: {
-    type: String,
+    type: [String, null],
     default: '',
     required: true,
   }
@@ -36,7 +36,7 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue']);
 
 const picker = ref(null);
-const date = ref(props.modelValue);
+const date = ref('');
 const config = ref({
     altFormat: 'd.m.Y',
     altInput: false,
@@ -44,7 +44,8 @@ const config = ref({
     locale: Russian,
     minDate: new Date(),
     altInputClass: 'input',
-    disableMobile: true
+    disableMobile: true,
+    allowInvalidPreload: true
 });
 
 watch(() => date.value, (newVal) => {
@@ -52,8 +53,10 @@ watch(() => date.value, (newVal) => {
 });
 
 watch(() => props.modelValue, (newVal) => {
-  date.value = newVal;
-});
+  if(props.modelValue && picker.value?.fp) {
+    picker.value.fp.setDate(props.modelValue);
+  }
+}, {once: true});
 
 </script>
 

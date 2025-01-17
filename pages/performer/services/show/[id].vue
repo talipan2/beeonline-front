@@ -5,18 +5,22 @@
         :list="[{ label: 'Главная', link: '/' }, { label: 'Кабинет исполнителя', link: '/performer/desktop' }, { label: 'Список услуг', link: '/performer/services' }, { label: 'Услуга', link: '' }]" />
     </template>
     <template #content>
-      <EntityView :data="serviceProps" role="performer"/>
+      <EntityView v-if="!isLoading" :data="serviceProps" role="performer" type="service"/>
     </template>
   </NuxtLayout>
 </template>
 
 <script setup>
 import { useEntityStore } from '~/store/entityStore';
+import { useLocationStore } from '~/store/locationStore';
 
 
 const router = useRouter();
 const entityStore = useEntityStore();
 const service = ref({});
+const isLoading = ref(false);
+const locationStore = useLocationStore();
+
 const serviceProps = computed(() => {
   return {
     id: service.value.id,
@@ -24,15 +28,24 @@ const serviceProps = computed(() => {
     description: service.value.description,
     gallery: service.value.gallery || [],
     conditions: service.value.conditions,
+    tzFiles: service.value.tz_files && service.value.tz_files.length ? service.value.tz_files.map(item => item.url) : [],
+    status: service.value.status,
     props: {
-      minLot: {label: "Партии", value: service.value.min_lot},
-      category: { label: "Категория", value: service.value.category },
+      minLot: {label: "Партии", value: service.value.batches && service.value.batches.length ? service.value.batches.map(item => item.name) : []},
+      category: { label: "Категория", value: service.value.product_categories && service.value.product_categories.length ? service.value.product_categories.map(item => item.name) : []},
       rawMaterials: {label: "Сырье", value: [service.value.materials_own ? 'Собственное' : '', service.value.materials_tolling ? 'Давальческое' : ''].filter(Boolean).join(' / ')},
       availabilityStm: {label: "Наличие СТМ", value: service.value.availabilityStm ? 'Да' : 'Нет'},
       freeSamples: {label: "Бесплатные образцы", value: formatFreeSamples(service.value.free_samples)},
-      placeOfProduction: {label: "Место производства", value: service.value.location || ''},
+      placeOfProduction: {label: "Место производства", value: locations.value.map(item => item.name)},
     }
   }
+});
+
+const locations = computed(() => {
+  if (service.value.cities && service.value.cities.length) {
+    return locationStore.getLocationsByIds([], [], service.value.cities.map(item => item.id));
+  }
+  return [];
 });
 
 const formatFreeSamples = (freeSamples) => {
@@ -49,7 +62,10 @@ const formatFreeSamples = (freeSamples) => {
   }
 
 onMounted(() => {
-  entityStore.getService(router.currentRoute.value.params.id).then((res) => service.value = res.data)
+  isLoading.value = true;
+  entityStore.getService(router.currentRoute.value.params.id)
+  .then((res) => service.value = res.data)
+  .finally(() => isLoading.value = false)
 })
 
 </script>
