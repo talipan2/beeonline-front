@@ -5,7 +5,9 @@
         <h2 class="register-banner__title">Зарегистрируйтесь и мы поможем вам с подбором исполнителей.</h2>
         <UiButton variant="quinary" size="large" class="register-banner__btn">Зарегистрироваться</UiButton>
       </div>
-      <UiImage class="register-banner__image" :src="'/assets/images/welcome/registerBanner/register-banner-img.png'" alt="Фотография швеи" :class="{ 'animate': isVisible }"/>
+      <div class="register-banner__image-container">
+        <UiImage class="register-banner__image" :src="'/assets/images/welcome/registerBanner/register-banner-img.png'" alt="Фотография швеи" :class="{ 'animate': isVisible }"/>
+      </div>
     </div>
   </section>
 </template>
@@ -71,7 +73,7 @@ onMounted(() => {
     line-height: 1.2em;
     color: #32354c;
     font-weight: 700;
-    text-transform: uppercase;
+    // text-transform: uppercase;
     letter-spacing: 2px;
     margin-bottom: 2.33em;
   }
@@ -80,6 +82,39 @@ onMounted(() => {
     font-size: 1.8em;
     line-height: 1.33em;
     font-weight: 600;
+  }
+
+  @include desktop {
+    &__inner {
+      padding-inline: 16px;
+    }
+  }
+
+  @include tablet {
+    &__content {
+      flex: 0 1 50%;
+    }
+  }
+
+  @include small-tablet {
+    padding-block: 44px 24px;
+    &__inner {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      row-gap: 48px;
+    }
+
+    &__title {
+      font-size: 28px;
+      margin-bottom: 32px;
+    }
+
+    &__btn {
+      font-size: 16px;
+      width: fit-content;
+      margin-inline: auto;
+    }
   }
 
 }

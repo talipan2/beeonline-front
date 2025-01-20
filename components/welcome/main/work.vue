@@ -1,10 +1,12 @@
 <template>
   <section class="work" >
     <UiImage :src="'/assets/images/welcome/work/pattern.png'" alt="Паттерн" class="work__pattern" />
+    <UiImage :src="'/assets/images/welcome/work/pattern-mobile.png'" alt="Паттерн" class="work__pattern work__pattern-mobile" />
     <div class="work__container">
       <div class="work__text">
         <div class="work__text-container">
           <h2 class="work__title">Работаем нон-<br>стоп</h2>
+          <h2 class="work__title work__title_second">Работаем нон-стоп</h2>
           <p class="work__subtitle">От Калиниграда до Владивостока мы работаем в более чем в 10 часовых поясах</p>
         </div>
         <div class="work__time" ref="workSection">
@@ -30,28 +32,44 @@
           </template>
         </div>
       </div>
+      <div class="work__time work__time_mobile" ref="workSectionMobile">
+          <div class="work__time-container" :style="{ transform: `translateX(${-scrollX}px)` }">
+            <template v-for="(i, index) in 10" :key="index">
+              <div class="work__time-item">
+                <p>{{ i + 8 }}:00</p>
+              </div>
+            </template>
+          </div>
+          <p class="work__time-location">Москва</p>
+        </div>
     </div>
   </section>
 </template>
 
 <script setup>
+
 const workSection = ref(null); 
+const workSectionMobile = ref(null);
 const scrollX = ref(0);
 
 const handleScroll = () => {
-  if (!workSection.value) return;
+  if (!workSection.value || !workSectionMobile.value) return;
 
   const sectionTop = workSection.value.getBoundingClientRect().top;
+  const sectionTopMobile = workSectionMobile.value.getBoundingClientRect().top;
   const windowHeight = window.innerHeight;
-  console.log(sectionTop, windowHeight)
 
   // Когда блок в пределах видимости
-  if (sectionTop < windowHeight) {
+  if (sectionTop < windowHeight || sectionTopMobile < windowHeight) {
     const maxScroll = 0;
     const minScroll = 1400;
 
     // Вычисляем новое смещение с учетом скролла
-    scrollX.value = Math.min(minScroll, Math.max(maxScroll, 1600 - sectionTop * 2));
+    if(sectionTop) {
+      scrollX.value = Math.min(minScroll, Math.max(maxScroll, 1600 - sectionTop * 2.3));
+    } else if (sectionTopMobile) {
+      scrollX.value = Math.min(minScroll, Math.max(maxScroll, 1600 - sectionTopMobile * 2.3));
+    }
   }
 }
 
@@ -120,6 +138,10 @@ const cardData = computed(() => {
     top: 0;
     left: 0;
     width: 480px;
+
+    &-mobile {
+      display: none;
+    }
   }
 
   &__container {
@@ -153,7 +175,11 @@ const cardData = computed(() => {
     font-weight: 700;
     color: #fff;
     line-height: 1.2em;
-    text-transform: uppercase;
+    // text-transform: uppercase;
+
+    &_second {
+      display: none;
+    }
   }
 
   &__subtitle {
@@ -192,6 +218,10 @@ const cardData = computed(() => {
     opacity: .3;
     max-width: 520px;
     overflow: hidden;
+
+    &_mobile {
+      display: none;
+    }
   }
 
   &__time-container {
@@ -220,7 +250,137 @@ const cardData = computed(() => {
     margin-left: 20%;
   }
 
+  @include desktop {
+    &__container {
+      padding-right: 16px;
+    
+    }
+
+    &__text {
+      flex-basis: 50%;
+    }
+  }
+
+  @media screen and (max-width: 1400px) {
+    &__container {
+      padding-left: 16px;
+    }
+
+    &__time {
+      left: 0;
+      width: 100%;
+    }
+  }
+
+  @include small-tablet { 
+    overflow: hidden;
+    padding-block: 44px 20px;
+
+    &__container {
+      flex-direction: column;
+      height: auto;
+    }
+
+    &__pattern {
+      display: none;
+      
+      &-mobile {
+        display: block;
+        width: 60%;
+      }
+
+    }
+
+    &__cards-line_second {
+      display: none;
+    }
+
+    &__text {
+      flex-basis: auto;
+      max-width: 100%;
+    }
+
+    &__text-container {
+      align-items: center;
+      max-width: 100%;
+    }
+
+    &__title {
+      font-size: 28px;
+      font-weight: 400;
+      text-transform: none;
+      margin-bottom: 32px;
+      text-align: center;
+      display: none;
+
+      &_second {
+        display: block;
+      }
+    }
+
+    &__subtitle {
+      font-size: 16px;
+      text-align: center;
+      padding-inline: 27px;
+      margin-bottom: 56px;
+    }
+
+    &__time {
+      display: none;
+      max-width: 400px;
+      margin-inline: auto;
+      &_mobile {
+        display: block;
+        position: static;
+      }
+    }
+
+    &__time-container {
+      column-gap: 42px;
+    }
+
+    &__time-item {
+      font-size: 16px;
+    }
+
+    &__time-location {
+      margin-left: 96px;
+      font-size: 16px;
+    }
+
+    &__cards-container {
+      display: block;
+      margin-bottom: 56px;
+    }
+
+    &__cards-line_first {
+      flex-direction: row;
+      animation-name: moveRightCards;
+      column-gap: 40px;
+    }
+
+    &__card {
+      flex: 1 0 40%;
+    }
+  }
+
+  @include mobile {
+    &__card {
+      flex: 1 0 45%;
+    }
+  }
+
+  @include small-mobile {
+    &__card {
+      flex: 1 0 100%;
+      width: 100%;
+      max-width: 260px;
+      padding: 15px;
+      box-sizing: border-box;
+    }
+  }
 }
+
 
 @keyframes scrollDown {
   0% { transform: translateY(0); }
@@ -235,5 +395,15 @@ const cardData = computed(() => {
     transform: translateX(-200px);
   }
 }
+
+@keyframes moveRightCards {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
 
 </style>

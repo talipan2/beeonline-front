@@ -128,5 +128,23 @@ const categoryProps = [
   }
 }
 
+@include desktop {
+  .choose-category {
+
+    &__container {
+      justify-content: space-between;
+    }
+  }
+}
+
+@include tablet {
+  .choose-category {
+    padding-block: 96px 35px;
+    &__item {
+      flex: 1 1 48%;
+    }
+  }
+}
+
 </style>
 

@@ -9,10 +9,10 @@
       @swiper="onSwiper"
       @slideChange="onSlideChange"
     >
-      <SwiperSlide class="welcome-banner__container">
+      <!-- <SwiperSlide class="welcome-banner__container">
         <div class="welcome-banner__wrapper">
           <div class="welcome-banner__info">
-            <h1 class="welcome-banner__title">Пошив одежды на заказ</h1>
+            <h1 class="welcome-banner__title">Пошив одежды<br>на заказ</h1>
             <p class="welcome-banner__subtitle">
               Закажи пошив одежды с вашим брендированием 
               у сотен фабрик по всей стране
@@ -27,7 +27,7 @@
           <UiImage class="welcome-banner__image-left" :src="'/assets/images/welcome/banner/banner-1-1.png'" alt="Пошив одежды на заказ"/>
           <UiImage class="welcome-banner__image-right" :src="'/assets/images/welcome/banner/banner-1-2.png'" alt="Пошив одежды на заказ"/>
         </div>
-      </SwiperSlide>
+      </SwiperSlide> -->
       <SwiperSlide class="welcome-banner__container welcome-banner__container_type_second" v-for="(item, index) in sliderData" :key="index" :style="{ backgroundColor: item.color }">
         <div class="welcome-banner__wrapper welcome-banner__wrapper_type_second">
           <div class="welcome-banner__info welcome-banner__info_type_second">
@@ -39,7 +39,7 @@
                 <SvgoLinkArrow class="svg-l" />
               </div>
             </NuxtLink>
-            <UiImage :src="item.url" alt="Заказать на пошив вязаный трикотаж" class="welcome-banner__image" :class="{ 'welcome-banner__image_type_top': index  === 8 }"/>
+            <UiImage :src="item.url" alt="Заказать на пошив вязаный трикотаж" class="welcome-banner__image" :class="{ 'welcome-banner__image_type_top': index  === 9 }"/>
           </div>
         </div>
       </SwiperSlide>
@@ -72,6 +72,13 @@ const onSlideChange = (swiper) => {
 };
 
 const sliderData = [
+  {
+    id: 1, 
+    title: 'Пошив одежды на заказ ', 
+    subtitle: 'Закажи пошив одежды с вашим брендированием у сотен фабрик по всей стране', 
+    url: '/assets/images/welcome/banner/banner-1-1.png',
+    color: '#dcdce4'
+  },
   {
     id: 1, 
     title: 'Заказать на пошив вязаный трикотаж', 
@@ -260,7 +267,7 @@ const sliderData = [
     box-sizing: border-box;
     // padding-block: 14em 25em;
     background-color: #dcdce4;
-    height: 900px;
+    height: 90em;
   }
 
   // &__container_type_second {
@@ -272,6 +279,8 @@ const sliderData = [
     max-width: 1920px;
     margin-inline: auto;
     padding-block: 14em 25em;
+    box-sizing: border-box;
+    height: 100%;
 
     &_type_second {
       display: flex;
@@ -293,7 +302,7 @@ const sliderData = [
   &__info_type_second {
     margin-inline: 0;
     align-items: flex-start;
-    max-width: 600px;
+    max-width: 45em;
 
     .welcome-banner__title {
       text-align: left;
@@ -312,7 +321,7 @@ const sliderData = [
     font-size: 15em;
     font-weight: 500;
     line-height: 1em;
-    text-transform: uppercase;
+    // text-transform: uppercase;
     text-align: center;
     color: #fff;
     margin-bottom: .26em;
@@ -413,7 +422,7 @@ const sliderData = [
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    right: 80px;
+    right: 8em;
     display: flex;
     align-items: center;
     column-gap: 2em;
@@ -454,6 +463,109 @@ const sliderData = [
     user-select: none;
   }
 
+}
+
+@include desktop {
+  .welcome-banner {
+    &__info_type_second {
+      max-width: 37em;
+      .welcome-banner__title {
+        font-size: 8em;
+      }
+    }
+
+    &__wrapper_type_second {
+      padding-inline: 7em;
+    }
+
+    &__navigation {
+      right: 7em;
+    }
+  }
+      
+}
+
+@include tablet {
+  .welcome-banner {
+    &__image {
+      height: 90%;
+    }
+  
+  }
+}
+
+@include small-tablet {
+  
+  .welcome-banner {
+    margin-bottom: 0;
+    &__wrapper_type_second {
+      align-items: flex-start;
+      padding-top: 8em;
+      padding-inline: 1.3em;
+    }
+
+    &__info_type_second {
+      align-items: center;
+      margin-inline: auto;
+      max-width: 100%;
+      width: 100%;
+    }
+
+    &__info_type_second {
+
+      .welcome-banner__title {
+        text-align: center;
+        max-width: none;
+        font-size: 40px;
+        margin-bottom: 3.2rem;
+      }
+
+      .welcome-banner__subtitle {
+        text-align: center;
+        max-width: 30em;
+        font-size: 18px;
+        margin-bottom: 4rem;
+      }
+    }
+
+    &__container {
+      height: 72em;
+    }
+
+    &__image {
+      height: 46%;
+    }
+
+    &__navigation {
+      bottom: 0;
+      top: unset;
+      right: 0;
+      left: 0;
+      transform: unset;
+      justify-content: center;
+      backdrop-filter: blur(20px);
+      background: rgba(255, 255, 255, 0.1);
+      padding-block: 1.2rem;
+      column-gap: 4.8rem;
+    }
+
+    &__swiper-button {
+      width: 4.8rem;
+      height: 4.8rem;
+
+      svg {
+        width: 2.8rem;
+        height: 2.8rem; 
+      }
+    }
+
+    &__pagination {
+      font-size: 1.8em;
+      font-weight: 700;
+    }
+
+
+  }
 }
 
 </style>

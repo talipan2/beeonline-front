@@ -242,7 +242,7 @@ onUnmounted(() => {
     font-weight: 700;
     line-height: 1.2em;
     color: #32354c;
-    text-transform: uppercase;
+    // text-transform: uppercase;
   }
   
   &__btn {
@@ -261,6 +261,58 @@ onUnmounted(() => {
 
   path {
     transition: none;
+  }
+
+  @include desktop {
+    &__container {
+      padding-inline: 16px;
+      height: 85em;
+    }
+
+    .map-svg {
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+
+  @media screen and (max-width: 1400px) {
+    &__container {
+      height: 70em;
+    }
+  }
+
+  @include small-tablet {
+    &__container {
+      height: 450px;
+    }
+    
+    &__header {
+      flex-direction: column;
+      align-items: center;
+      row-gap: 32px;
+      padding-top: 34px;
+    }
+
+    &__title {
+      font-size: 28px;
+      text-align: center;
+    }
+
+    &__btn {
+      font-size: 16px;
+    }
+
+    .map-svg {
+      top: auto;
+      bottom: 32px;
+      transform: none;
+    }
+  }
+
+  @include mobile {
+    &__container {
+      height: 400px;
+    }
   }
 
 }

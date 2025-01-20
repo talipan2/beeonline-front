@@ -24,6 +24,7 @@ definePageMeta({
   &-container {
     max-width: 1440px;
     margin-inline: auto;
+    overflow: hidden;
   }
 
   &-block-wrapper {
@@ -54,7 +55,7 @@ definePageMeta({
     font-family: 'Coolvetica', sans-serif;
     font-size: 5.6em;
     line-height: 1.14em;
-    text-transform: uppercase;
+    // text-transform: uppercase;
     color: #242424;
     margin-bottom: .42em;
 
@@ -73,6 +74,39 @@ definePageMeta({
 
   &__safe-transaction {
     margin-block: 14.1em 22em;
+  }
+
+  @media screen and (max-width: 1740px) {
+    &-container {
+      max-width: 100%;
+      margin-inline: 16px;
+    }
+    
+  } 
+
+  @include mobile {
+    &-block-wrapper {
+      margin-bottom: 48px;
+    }
+
+    &-block-name {
+      font-size: 18px;
+    }
+
+    &-title {
+      font-size: 28px;
+      margin-bottom: 24px;
+    }
+
+    &-subtitle {
+      font-size: 16px;
+    }
+  }
+
+  @include small-mobile {
+    &-block-name {
+      font-size: 14px;
+    }
   }
 }
 

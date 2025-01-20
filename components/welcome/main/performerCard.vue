@@ -126,6 +126,10 @@ const props = defineProps({
     inset: 0;
   }
 
+  &__prop-name {
+    font-weight: 300;
+  }
+
   .prop__more {
     color: #6937a5;
 
@@ -153,12 +157,35 @@ const props = defineProps({
       flex: 1 1 100%;
       
       &_type_image {
-        flex: 0;
+        flex-basis: 40%;
+      }
+    }
+
+    &__header {
+      h3 {
+        font-size: 10px;
       }
     }
 
     &__prop {
-      display: inline;
+      font-size: 8px;
+    }
+
+    &__image {
+      width: 40px;
+      height: 40px;
+    }
+
+    &__company-name {
+      font-size: 8px;
+    }
+
+    &__body {
+      margin-block: 10px;
+    }
+
+    .props {
+      font-size: 8px;
     }
     
     &__prop-name {

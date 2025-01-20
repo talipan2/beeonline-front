@@ -28,6 +28,7 @@ const isPlaying = ref(false);
   &__play {
     position: relative;
     cursor: pointer;
+    height: 100%;
   }
 
   &__logo { 
@@ -61,6 +62,34 @@ const isPlaying = ref(false);
   &__video {
     width: 100%;
     height: 100%;
+  }
+
+  &__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @include tablet {
+    height: 500px;
+    margin-bottom: 120px;
+  }
+
+  @include mobile {
+    height: 350px;
+
+    &__logo {
+      width: 220px;
+    }
+
+    &__play-icon {
+      width: 56px;
+      height: 56px;
+    }
+  }
+
+  @include small-mobile {
+    height: 240px;
   }
 }
 

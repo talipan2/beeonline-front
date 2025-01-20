@@ -77,6 +77,7 @@
     right: -200px;
     width: 35.7em;
     height: auto;
+    z-index: 0;
   }
 
 
@@ -85,10 +86,12 @@
     justify-content: space-between;
     column-gap: 10em;
     margin-top: 9em;
+    position: relative;
+    z-index: 1;
   }
 
   &__col {
-    flex: 0 45%;
+    flex: 0 0 45%;
     display: flex;
     flex-direction: column;
     row-gap: 8em;
@@ -130,8 +133,12 @@
   &__col-image {
     display: grid;
     grid-template-columns: 63% auto;
-    grid-template-rows: auto auto;
+    grid-template-rows: max-content max-content;
     gap: 4em;
+
+    img {
+      height: 100%;
+    }
   }
 
   &__col-image-top {
@@ -146,6 +153,59 @@
   &__col-image-bottom-left {
     border-radius: 32px 0 320px 32px;
   }
+
+  @include desktop {
+    &__pattern {
+      right: 0px;
+    }
+  }
+
+  @include small-tablet {
+    overflow: visible;
+    padding-block: 85px 130px;
+    &__service-col {
+      row-gap: 5.6rem;
+    }
+
+    &__pattern {
+      top: 0;
+      width: 129px;
+    }
+
+  }
+
+  @include mobile {
+    &__container {
+      flex-direction: column;
+      row-gap: 4.8rem;
+    }
+
+    &__col {
+      order: 2;
+      row-gap: 5.6rem;
+    }
+
+    &__col-image {
+      order: 1;
+      grid-template-columns: 59% auto;
+      grid-template-rows: auto auto;
+      gap: 16px;
+
+      img {
+        object-fit: cover;
+      }
+    }
+
+    &__col-item {
+      align-items: center;
+      text-align: center;
+    }
+
+    &__col-item-title {
+      font-size: 1.8em;
+    }
+  }
+  
 }
 
 </style>
