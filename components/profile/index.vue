@@ -1,7 +1,7 @@
 <template>
   <div class="profile__checklist">
     <CommonProfileCheckCard title="Представитель компании"
-      text="Указанные данные не разглашаются третьим лицам, и необходимы для успешной работы на портале" changeLink="/"
+      text="Указанные данные не разглашаются третьим лицам, и необходимы для успешной работы на портале" :first-btn="handleOpenChangeUserDataModal"
       changeLinkLabel="Изменить данные" :secondLink="`/${role}/profile/update_pwd`" secondLinkLabel="Изменить пароль">
       <div class="form-group profile__representative">
         <div class="form-group-data">
@@ -65,9 +65,9 @@
           <p class="form-group__title">Сайт</p>
           <a :href="pubCardData.siteUrl" target="_blank" class="form-group__value link text-wrap">{{ pubCardData.siteUrl || '-' }}</a>
         </div>
-        <div class="form-group-data" v-if="pubCardsVideo">
+        <div class="form-group-data" v-if="pubCardsVideo || pubCardGallery">
           <p class="form-group__title">Галерея</p>
-          <CommonGalleryShow :videos="pubCardsVideo"/>
+          <CommonGalleryShow :images="pubCardGallery" :videos="pubCardsVideo"/>
         </div>
         <div class="form-group-data"  v-if="pubCardData.url_tg || pubCardData.url_yt || pubCardData.url_vk">
           <p class="form-group__title">Социальные сети</p>
@@ -87,7 +87,7 @@
     </CommonProfileCheckCard>
     <CommonProfileCheckCard title="Данные организации"
       text="Указанные данные не разглашаются третьим лицам, и необходимы для успешной работы на портале"
-      changeLink="/register/step1" changeLinkLabel="Изменить" secondLink="/" secondLinkLabel="Просмотр документов">
+      :first-btn="handleOpenChangeDataModal" changeLinkLabel="Изменить" secondLink="/" secondLinkLabel="Просмотр документов">
       <div class="register__organization-data">
         <div class="form-group-data">
           <p class="form-group__title">Юридическое названии организации</p>
@@ -128,6 +128,8 @@
         <p class="form-group__value">{{ organizationData.legalAddress }}</p>
       </div>
     </CommonProfileCheckCard>
+    <ProfileChageUserDataModal />
+    <ProfileChangeDataModal />
   </div>
 </template>
 
@@ -136,11 +138,13 @@ import { useOrganizationStore } from '~/store/organizationStore';
 import { useUserStore } from '~/store/userStore';
 import defaultCompanyLogo from '~/assets/images/nophoto_pc.png';
 import { useLocationStore } from '~/store/locationStore';
+import { useSettingStore } from '~/store/settingStore';
 
 
 const userStore = useUserStore();
 const organizationStore = useOrganizationStore();
 const locationStore = useLocationStore();
+const settingStore = useSettingStore();
 
 const role = computed(() => userStore.role);
 
@@ -188,6 +192,22 @@ const pubCardsVideo = computed(() => {
     return []
   }
 })
+
+const pubCardGallery = computed(() => {
+  if (userStore.userPubCard.gallery && userStore.userPubCard.gallery.length) {
+    return userStore.userPubCard.gallery.map(gallery => ({url: gallery.url}))
+  } else {
+    return []
+  }
+});
+
+const handleOpenChangeDataModal = () => {
+  settingStore.changeDataModal = true;
+}
+
+const handleOpenChangeUserDataModal = () => {
+  settingStore.changeUserDataModal = true;
+}
 
 onMounted(() => {
   isLoading.value = true;

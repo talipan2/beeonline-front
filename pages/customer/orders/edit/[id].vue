@@ -6,7 +6,10 @@
     </template>
     <template #content>
       <component :is="currentComponent" :title="title" role="customer" :formatData="formatData"  :handleSubmit="handleSubmit" :handleBack="previousStep" :data="orderData"/>
-      {{ orderData }}
+    </template>
+    <template #rightSide>
+      <div class="h4">Предварительный просмотр заказа</div>
+      <CreateEntityPreview :data="previewCardData"/>
     </template>    
   </NuxtLayout>
 </template>
@@ -45,12 +48,27 @@ const orderData = ref({
   isSafeDeal: false,
 })
 
+const previewCardData = computed(() => ({
+  name: orderData.value.name,
+  logo: orderData.value.gallery && orderData.value.gallery.length ? orderData.value.gallery[0].url : '',
+  countryId: formatData.value.locations && formatData.value.locations.length ? formatData.value.locations[0].countryId : null,
+  data: [
+    { id: 1, name: 'Категории', value: formatData.value.categories },
+    { id: 2, name: 'Место производства', value: formatData.value.locations.map(item => item.name) },
+    { id: 3, name: 'Партия', value: formatData.value.batch },
+    { id: 4, name: 'Лекала', value: formatData.value.patterns },
+    { id: 5, name: 'Сырье', value: formatData.value.rawMaterials },
+    { id: 6, name: 'Срок выполнения', value: formatData.value.completionDate },
+    { id: 7, name: 'Описание', value: formatData.value.description },
+  ],
+}))
+
 const formatData = computed(() => {
   return {
     name: orderData.value.name,
     logo: orderData.value.logo,
     categories: entityStore.getEntityLabelById('categories', orderData.value.categories),
-    placeOfProductionId: orderData.value.locations && orderData.value.locations.cities && orderData.value.locations.regions 
+    locations: orderData.value.locations && orderData.value.locations.cities && orderData.value.locations.regions 
       ? locationStore.getLocationsByIds([], orderData.value.locations.regions, orderData.value.locations.cities)
       : [],
     batch: orderData.value.batch,
@@ -162,7 +180,6 @@ onMounted(() => {
         locations: res.data.cities && res.data.regions && {cities: res.data.cities.map(item => item.id), regions: res.data.regions.map(item => item.id)},
         isSafeDeal: Boolean(res.data.is_safedeal)
       }
-      console.log(orderData.value)
     }
   })
 })

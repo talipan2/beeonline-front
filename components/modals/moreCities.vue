@@ -42,6 +42,8 @@ const props = defineProps({
 
 .more-btn {
   font-size: 1em;
+  position: relative;
+  z-index: 10;
 }
 
 .more-modal {

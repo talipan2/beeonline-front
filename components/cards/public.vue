@@ -2,30 +2,26 @@
   <div class="card-pub" :class="{'card-pub_type_list': isList}">
     <h5 class="card-pub__title">{{ data.name || 'Название компании' }}</h5>
     <div class="card-pub__content">
-      <div class="card-pub__image image-box">
+      <div class="card-pub__image image-box image-box_type_frame">
         <img class="" :src="data.logo || defaultCompanyLogo" alt="">
       </div>
       <div class="card-pub__details">
         <div class="card-pub__details-container">
           <CommonRating :isCountRating="false" />
         </div>
-        <!-- <div class="card-pub__details-container location-container">
-          <i class="flag flag_round" :class="selectFlag(data.location.length && data.location[0].countryId || '')"></i>
-          <p>{{ data.location.length && data.location[0].name || '-' }} </p>
-          <ModalsMoreCities 
-            :list="data.location.map(item => item.name)" 
-            title="Города фактического производства" 
-            placement="bottom-end" 
-            v-if="Array.isArray(data.location) && data.location && data.location.length >= 1"
-          />
-        </div> -->
-        <CommonLocationsList :locationsList="data.location"/>
+        <CommonLocationsList :locationsList="data.location" :is-country="true"/>
         <div class="card-pub__details-container">
           <SvgoCase class="svg-m" fill="#C4C4C4" />
-          <p>
+          <p v-if="data.type === 'performer'">
             {{ data.entityCount 
               ? (data.entityCount + ' ' + plural(data.entityCount, { one: 'услуга', few: 'услуги', many: 'услуг' }) ) 
               : 'Нет услуг' 
+            }}
+          </p>
+          <p v-if="data.type === 'customer'">
+            {{ data.entityCount 
+              ? (data.entityCount + ' ' + plural(data.entityCount, { one: 'заказ', few: 'заказы', many: 'заказов' }) ) 
+              : 'Нет заказов' 
             }}
           </p>
         </div>
@@ -48,7 +44,7 @@
       <p class="form-group__value prop_type_hidden">{{ data.description || '-' }}</p>
     </div>
     <slot name="favorite-delete" />
-    <NuxtLink class="card-pub__link" :to="`/members/${data.id}`" v-if="isList" :target="linkBlank ? '_blank' : ''"></NuxtLink>
+    <NuxtLink class="card-pub__link" :to="`/members/${data.id}/${data.type}`" v-if="isList" :target="linkBlank ? '_blank' : ''"></NuxtLink>
   </div>
 </template>
 
@@ -152,7 +148,7 @@ const props = defineProps({
 
   &__details-container {
     display: flex;
-    column-gap: 1em;
+    column-gap: .5em;
     align-items: center;
     font-size: 1.2em;
   }

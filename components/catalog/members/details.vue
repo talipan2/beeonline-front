@@ -1,22 +1,19 @@
 <template>
   <div class="member-details">
     <div class="member-details__header">
-      <div class="image-box">
-        <img :src="defaultLogoImage" alt="">
+      <div class="image-box image-box_type_frame">
+        <img :src="data.logo || defaultLogoImage" alt="">
       </div>
       <div class="member-details__header-content">
         <h1 class="member-details__title">{{ data.name || 'Не указано' }}</h1>
-        <CommonRating :rating="data.fillRating" />
-        <div class="member-details__props">
-          <i class="flag flag_round"></i>
-          <p class="member-details__location">{{ data.location || 'Не указано' }}</p>
-        </div>
+        <CommonRating :rating="data.fillRating" :is-count-rating="false" />
+        <CommonLocationsList class="member-details__locations" :locationsList="data.location" :is-country="true"/>
         <div class="member-details__props" v-if="data.siteUrl">
-          <SvgoWeb class="svg-m" />
+          <SvgoWeb class="svg-m" fill="#a9abac"/>
           <a :href="data.siteUrl" _target="_blank">{{ data.siteUrl }}</a>
         </div>
         <div class="member-details__props">
-          <SvgoCase class="svg-m" />
+          <SvgoCase class="svg-m" fill="#a9abac" />
           <p> 
             {{ data.entityCount 
               ? (data.entityCount + ' ' + plural(data.entityCount, { one: 'услуга', few: 'услуги', many: 'услуг' }) ) 
@@ -25,13 +22,13 @@
           </p>
         </div>
         <div class="member-details__soc">
-          <NuxtLink to="#" class="member-details__soc-link">
+          <NuxtLink :to="data.tgUrl" class="member-details__soc-link" v-if="data.tgUrl" :target="'_blank'">
             <SvgoTelegram class="svg-l" />
           </NuxtLink>
-          <NuxtLink to="#" class="member-details__soc-link">
+          <NuxtLink :to="data.vkUrl" class="member-details__soc-link" v-if="data.vkUrl" :target="'_blank'">
             <SvgoVkontakte class="svg-l" />
           </NuxtLink>
-          <NuxtLink to="#" class="member-details__soc-link">
+          <NuxtLink :to="data.ytUrl" class="member-details__soc-link" v-if="data.ytUrl" :target="'_blank'">
             <SvgoYoutube class="svg-l" />
           </NuxtLink>
         </div>
@@ -43,7 +40,6 @@
           <UiButton class="member-details__btn" variant="tertiary" size="around">
             <SvgoFavorite class="svg-m" />
           </UiButton>
-
         </div>
       </div>
     </div>
@@ -51,15 +47,15 @@
       <h3 class="member-details__content-title">Описание</h3>
       <p>{{ data.description || ' Компания «Интай-Текстиль» на протяжении 17 лет обеспечивает потребности в тканях производителей спецодежды, одежды для туристов, охотников и рыболовов, спортивной одежды. Компания отвечает запросам заказчиков по качеству ткани, своевременно обновляет ассортимент в соответствии с мировыми тенденциями рынка. Хорошо отлаженная логистика позволяет курировать доставку ткани от фабрики до производителя строго в согласованные сроки.  В «Интай-Текстиль» разработана гибкая система скидок. Сотрудничество с компанией – это гарантия качества, экономия времени и ресурсов заказчика, это выгодно всем! ' }}</p>
     </div>
-    <div class="member-details__content-container">
+    <div class="member-details__content-container" v-if="data.gallery">
       <h3 class="member-details__content-title">Галерея</h3>
-      <CommonGallerySlider />
+      <CommonGallerySlider :images="data.gallery" :videos="data.videos"/>
     </div>
     <div class="member-details__content-container">
       <h3 class="member-details__content-title" style="color: red">отзывы</h3>
       <ReviewsEntity />
     </div>
-    <div class="member-details__activity" style="color: red">
+    <div class="member-details__activity">
       <p>Последняя активность: {{ data.updatedAt }}</p>
     </div>
   </div>
@@ -108,6 +104,10 @@ const pubCardType = computed(() => {
     font-size: 2em;
     line-height: 1em;
     margin-bottom: .31em;
+  }
+
+  &__locations {
+    font-size: 1em;
   }
 
   &__props {

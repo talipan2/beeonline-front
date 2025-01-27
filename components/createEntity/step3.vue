@@ -1,11 +1,12 @@
 <template>
   <div class="entity">
     <h1 class="entity__title">География и Сроки</h1>
-    <Form @submit="handleSubmit">
+    <Form @submit="handleSubmit" v-slot="{ errors }">
       <!-- <div v-if="role == 'customer'">
         <p class="entity__text">Укажите дату до которой заказ будет актуален</p>
         <CommonCalendar v-model="data.completionDate" class="entity__calendar" />
       </div> -->
+      <CommonAlerts v-if="errors && errors.selectedLocations" :alert="errors.selectedLocations" />
       <h2 class="entity__subtitle">Города фактического производства заказа</h2>
       <div class="entity__text-container">
         <p class="entity__text" v-if="role === 'performer'">
@@ -27,9 +28,16 @@
         buttonLabel="Выбрать город"
         v-model="data.locations" :type="['selectCities']"
         :maxSelected="5"
+        :is-required="true"
+        errorLabel="Города производства"
       />
-      <CommonLocation v-if="role === 'customer'" buttonLabel="Выбрать город или регион"
-        v-model="data.locations" :type="['selectCities', 'selectRegions']"
+      <CommonLocation 
+        v-if="role === 'customer'" 
+        buttonLabel="Выбрать город или регион"
+        v-model="data.locations" 
+        :type="['selectCities', 'selectRegions']"
+        :is-required="true"
+        errorLabel="Города производства"
       />
       <div class="form-group">
         <UiButton type="button"

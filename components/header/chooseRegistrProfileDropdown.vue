@@ -27,14 +27,14 @@ const chooseRegisterRole = ref(null);
 const registerCustomer = () => {
   userStore.role = 'customer';
   localStorage.setItem('role', 'customer');
-  router.push({ path: '/register' })
+  router.push({ path: '/register', query: { role: 'customer' } })
   chooseRegisterRole.value.tippy.hide();
 }
 
 const registerPerformer = () => {
   userStore.role = 'performer';
   localStorage.setItem('role', 'performer');
-  router.push({ path: '/register' })
+  router.push({ path: '/register', query: { role: 'performer' } })
   chooseRegisterRole.value.tippy.hide();
 }
 

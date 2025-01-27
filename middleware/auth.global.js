@@ -4,7 +4,24 @@ import axios from "axios";
 export default defineNuxtRouteMiddleware(async(to, from) => {
   const userStore = useUserStore();
 
-  const publicPaths = ['/', '/login', '/register', '/services', '/orders', '/members'];
+  const publicPaths = [
+    '/', 
+    '/login', 
+    '/register', 
+    '/services', 
+    '/orders', 
+    '/members', 
+    '/contacts', 
+    '/help',
+    '/page-policy',
+    '/page-oferta',
+    '/page-requisites',
+    '/sitemap',
+    '/page-terms-of-use',
+    '/page-oferta-st',
+    '/page-oferta-ct',
+    '/welcome'
+  ];
 
   // if(!userStore.isAuth) {
   //   try {
@@ -21,22 +38,22 @@ export default defineNuxtRouteMiddleware(async(to, from) => {
   //     console.error('Ошибка при проверке авторизации:', error)}
   //   );
   // }
-  if(!userStore.isAuth) {
-    try {
-      await userStore.checkAuth();
-    } catch (error) {
-      if(publicPaths.includes(to.path)) return;
-      navigateTo('/login');
-      console.error('Ошибка при проверке авторизации:', error);
-    }
-  }
-
-  // try {
-  //   await userStore.checkAuth();
-  // } catch (error) {
-  //   if(publicPaths.includes(to.path)) return;
-  //   navigateTo('/login');
-  //   console.error('Ошибка при проверке авторизации:', error);
+  // if(!userStore.isAuth) {
+  //   try {
+  //     await userStore.checkAuth();
+  //   } catch (error) {
+  //     if(publicPaths.includes(to.path)) return;
+  //     navigateTo('/login');
+  //     console.error('Ошибка при проверке авторизации:', error);
+  //   }
   // }
+
+  try {
+    await userStore.checkAuth();
+  } catch (error) {
+    if(publicPaths.includes(to.path)) return;
+    console.error('Ошибка при проверке авторизации:', error);
+    return navigateTo('/login');
+  }
 
 })

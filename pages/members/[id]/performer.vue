@@ -13,7 +13,7 @@
       <CatalogMembersDetails :data="pubCard"/>
     </template>
     <template #rightSide>
-      <CatalogOtherEntityCompany :type="pubCard.type"/>
+      <CatalogOtherEntityCompany :type="pubCard.type" title="Актуальные услуги компании"/>
       <div class="views">
         <p>Просмотры: {{ pubCard.viewCount }}</p>
       </div>
@@ -42,8 +42,11 @@ const pubCard = computed(() => {
     viewCount: data.value.view_count,
     fillRating: data.value.fill_rating,
     statusComment: data.value.status_comment,
-    updatedAt: formatDate(data.value.updated_at),
+    updatedAt: formatDate(data.value.updated_at, 'DD.MM.YYYY, mm:HH'),
     entityCount: 1,
+    gallery: data.value.gallery && data.value.gallery.length && data.value.gallery.map(item => item.url),
+    videos: data.value.videos && data.value.videos.length && data.value.videos.map(item => item.external_url),
+    location: data.value.regions && data.value.cities ? { regions: data.value.regions.map(region => region.id), cities: data.value.cities.map(city => city.id) } : [],
   }
 })
 

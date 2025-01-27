@@ -5,7 +5,25 @@
         {{ title }}
       </h5>
       <NuxtLink :to="changeLink" class="check-card__link link" v-if="changeLink">{{ changeLinkLabel }}</NuxtLink>
+      <UiButton 
+        type="button" 
+        @click="firstBtn" 
+        variant="default" 
+        class="check-card__link link"
+        v-if="firstBtn"
+      >
+        {{ changeLinkLabel }}
+      </UiButton>
       <NuxtLink :to="secondLink" class="check-card__link link" v-if="secondLink">{{ secondLinkLabel }}</NuxtLink>
+      <UiButton 
+        type="button" 
+        @click="secondBtn" 
+        variant="default" 
+        class="check-card__link link"
+        v-if="secondBtn"
+      >
+        {{ secondLinkLabel }}
+      </UiButton>
     </div>
     <p class="check-card__text">
       {{ text }}
@@ -40,7 +58,15 @@ const props = defineProps({
   secondLinkLabel: {
     type: String,
     default: '',
-  } 
+  },
+  firstBtn: {
+    type: [Function, Boolean],
+    default: null,
+  },
+  secondBtn: {
+    type: [Function, Boolean],
+    default: null,
+  },
 });
 
 </script>

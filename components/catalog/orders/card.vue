@@ -10,14 +10,14 @@
           :class="{ 'prop_type_text': prop.name === 'Описание' }">
           <p class="prop__name">{{ prop.name }}:</p>
           <p class="prop__value " :class="{ 'prop_type_hidden': prop.name === 'Описание' }">
-            <i class="flag flag_round" v-if="prop.name === 'Место производства' && prop.value[0]" :class="prop.value[0]
-              ? flagClass
+            <i class="flag flag_round" v-if="prop.name === 'Место производства' && data.countryId" :class="data.countryId
+              ? selectFlag(data.countryId)
               : ''" />
             <span>
               {{ Array.isArray(prop.value) ? (prop.value[0] || 'не указано') : (prop.value || 'не указано') }}
             </span>
-            <ModalsMoreCities :list="prop.value" :title="prop.name" placement="bottom-end"
-              v-if="Array.isArray(prop.value) && prop.value && prop.value.length >= 1" />
+            <ModalsMoreCities :list="prop.value.slice(1)" :title="prop.name" placement="bottom-end"
+              v-if="Array.isArray(prop.value) && prop.value && prop.value.length > 1" />
           </p>
         </div>
       </div>
@@ -53,8 +53,6 @@ const entity = computed(() => {
     return entityStore.service
   } else return entityStore.order
 })
-
-const flagClass = computed(() => selectFlag(entity.value.placeOfProduction[0].countryId))
 
 </script>
 

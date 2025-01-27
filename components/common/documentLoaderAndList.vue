@@ -3,7 +3,6 @@
     <CommonDocumentLoader :text="text" :isList="isList" :dataList="dataList" @addFile="addFile" :extension="extension"/>
     <CommonFileList :dataList="dataList" @removeFile="removeFile" :changed="changed"/>
     <Alerts/>
-    {{ modelValue }}
   </div>
 </template>
 

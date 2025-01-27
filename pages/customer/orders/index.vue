@@ -49,6 +49,7 @@ const cardData = computed(() => {
       cities: [...item.cities],
       regions: [...item.regions]
     },
+    statusType: item.status,
   }})
 })
 

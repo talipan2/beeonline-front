@@ -6,6 +6,7 @@
     </template>
     <template #content>
       <EntityView v-if="!isLoading" :data="serviceProps" role="performer" type="service"/>
+      <CreateEntityFinalModal :text="'Услуга отправлена на модерацию'"/>
     </template>
   </NuxtLayout>
 </template>

@@ -1,7 +1,7 @@
 <template>
   <div class="entity">
     <h1 class="entity__title">Подробное описание</h1>
-    <Form as="form" @submit="handleSubmit">
+    <Form as="form" @submit="handleSubmit" v-slot="{ errors }">
       <div class="entity__data">
         <div class="entity__photo">
           <label class="form-group__title entity__label">
@@ -133,7 +133,7 @@
           - doc, .docx, .xls, .xlsx, .ppt, .pptx, .rtf, .pdf, .jpeg, .png, .jpg, .gif, .psd, .djvu, .fb2, .ps, .zip, .rar"
           :extension="['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'rtf', 'pdf', 'jpeg', 'png', 'jpg', 'gif', 'psd', 'djvu', 'fb2', 'ps', 'zip', 'rar']"
         />
-        
+      <CommonAlerts v-if="errors && errors.selectedLocations" :alert="errors.selectedLocations" />
       </div>
       <div class="entity__data" v-if="role === 'customer'">
         <h2 class="entity__subtitle">Города фактического производства заказа</h2>
@@ -158,13 +158,17 @@
           v-if="role === 'performer'"
           buttonLabel="Выбрать город"
           v-model="data.locations"
-          :type="['selectCities']" 
+          :type="['selectCities']"
+          :is-required="true"
+          errorLabel="Города производства"
         />
         <CommonLocation
           v-if="role === 'customer'"
           buttonLabel="Выбрать город или регион"
           v-model="data.locations"
-          :type="['selectCities', 'selectRegions']" 
+          :type="['selectCities', 'selectRegions']"
+          :is-required="true"
+          errorLabel="Города производства"
         />
       </div>
       <div class="form-group">

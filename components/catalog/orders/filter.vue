@@ -24,7 +24,6 @@
           v-model="searchProps.location"
           buttonLabel="Выбрать регионы"
           class="filter__location"
-          
           :type="['selectCities', 'selectCountry']"
         />
       </div>

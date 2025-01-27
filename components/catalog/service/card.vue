@@ -13,8 +13,15 @@
       <div class="service-card__content">
         <div class="service-card__props">
           <div class="service-card__prop">
-            <p class="service-card__prop-name">{{data.location && data.location[0] ? data.location : 'Не указано'}}</p>
-            <p class="service-card__prop-value"><i class="flag flag_round"></i></p>
+            <p class="service-card__prop-name">
+              {{data.location && data.location[0] ? data.location[0] : 'Не указано'}}
+              <ModalsMoreCities :list="data.location.slice(1)" title="Регионы" placement="bottom-end" v-if="Array.isArray(data.location) && data.location && data.location.length > 1" />
+              </p>
+            <p class="service-card__prop-value">
+              <i class="flag flag_round" v-if="data.countryId" :class="data.countryId
+              ? selectFlag(data.countryId)
+              : ''" />
+            </p>
           </div>
           <div class="service-card__prop">
             <p class="service-card__prop-name">Минимальная партия:</p>
@@ -115,6 +122,7 @@ const props = defineProps({
     justify-content: space-between;
     align-items: center;
     font-size: 1.4rem;
+    column-gap: 1em;
   }
 
   &__prop-value {

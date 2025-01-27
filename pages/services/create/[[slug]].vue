@@ -10,7 +10,6 @@
     </template>
     <template #content>
       <component :is="currentComponent" :title="title" role="performer" :formatData="data" :data="service" :handleSubmit="handleSubmit"/>
-      {{ service }}
     </template>
     <template #right>
       <div class="h4">Предварительный просмотр услуги</div>
@@ -27,10 +26,12 @@ import Step4 from '~/components/createEntity/step4.vue';
 import { useEntityStore } from '~/store/entityStore';
 import { useLocationStore } from '~/store/locationStore';
 import { useOrganizationStore } from '~/store/organizationStore';
+import { useSettingStore } from '~/store/settingStore';
 import { useUserStore } from '~/store/userStore';
 
 const router = useRouter();
 const organizationStore = useOrganizationStore();
+const settingStore = useSettingStore();
 const userStore = useUserStore();
 const entityStore = useEntityStore();
 const locationStore = useLocationStore();
@@ -39,11 +40,11 @@ const service = ref(entityStore.service)
 const title = ref('');
 const validSteps = ['step1', 'step2', 'step3', 'step4'];
 
-onBeforeMount(() => {
-  if (!validSteps.includes(router.currentRoute.value.params.slug)) {
-    router.replace({ name: 'services-create-slug', params: { slug: 'step1' } });
-  }
-})
+// onBeforeMount(() => {
+//   if (!validSteps.includes(router.currentRoute.value.params.slug)) {
+//     router.replace({ name: 'services-create-slug', params: { slug: 'step1' } });
+//   }
+// })
 
 
 const currentComponent = computed(() => {
@@ -73,7 +74,7 @@ const checkList = [
 const servicesData = computed(() => ({
   name: data.value.name,
   logo: service.value.gallery && service.value.gallery.length ? service.value.gallery[0].url : '',
-  locationsData: data.value.locations,
+  countryId: data.value.locations && data.value.locations.length ? data.value.locations[0].countryId : null,
   data: [
     {id: 1, name: 'Категории', value: data.value.categories},
     {id: 2, name: 'Место производства', value: data.value.locations.map(item => item.name)},
@@ -108,7 +109,7 @@ const currentHandleSubmit = computed(() => {
               userId: userStore.userData.id,
               organizationId: userStore.userData.organization_id, 
               name: service.value.name, 
-              categories: service.categories,
+              categories: service.value.categories,
               status: 'filling',
             }
           ).then((res) => {
@@ -138,6 +139,7 @@ const currentHandleSubmit = computed(() => {
             step: 2
           }).then(() => {
             entityStore.updateServiceStep(service.value.id, 2)
+            entityStore.fillingService.currentStep = 2
             router.push('/services/create/step3')
           })
           .catch(error => console.log(error));
@@ -174,7 +176,8 @@ const currentHandleSubmit = computed(() => {
           status: 'active'
         }).then(() => {
           entityStore.fillingService = null
-          router.push('/performer/services')
+          router.push(`/performer/services/show/${service.value.id}`)
+          settingStore.createEntityFinalModal = true
         })
         .catch(error => console.log(error));
         entityStore.resetService()
@@ -187,56 +190,73 @@ const handleSubmit = () => {
   entityStore.isRedirectedToStep = false
 }
 
-onBeforeMount(() => {
-  if(!entityStore.fillingService && !entityStore.fillingService?.id) {
-    entityStore.getOrganizationServices(userStore.userData.organization_id)
-    .then((res) => {
-      if(res && res.data && res.data.services && Array.isArray(res.data.services)) {
-        res.data.services.find(item => {
-          if(item.status === 'filling') {
-            entityStore.fillingService = {
-              id: item.id,
-              name: item.name,
-              categories: item.product_categories.map(item => item.id),
-              gallery: item.gallery || [],
-              logo: item.gallery && item.gallery.length ? item.gallery[0] : {url: null, id: null},
-              description: item.description,
-              rawMaterials: [item.materials_own ? 5 : '', item.materials_tolling ? 6 : ''].filter(Boolean) || [],
-              locations: {
-                cities: item.cities || [],
-                regions: item.regions || []
-              },
-              availabilityStm: item.is_stm,
-              freeTestSamples: item.free_samples,
-              minLot: item.minLot || [],
-              termsOfCooperation: item.conditions,
-              currentStep: item.current_step,
-              tzFiles: item.tz_files || [],
-            }
-            service.value = entityStore.fillingService
-          }
-        })
-      }
-    })
-  } else if(!service.value.length) {
-    service.value = entityStore.fillingService
-  }
-})
+// функция для редиректа на текущий шаг
+const handleRedirect = () => {
+  if (!entityStore.isRedirectedToStep) return;
 
-onMounted(() => {
-  if(!entityStore.isRedirectedToStep) return
-  if(entityStore.fillingService && entityStore.fillingService.currentStep && entityStore.fillingService.currentStep === 1) {
-    router.push('/services/create/step2')
-    entityStore.isRedirectedToStep = false;
+  const currentStep = entityStore.fillingService?.currentStep || 0;
+
+  switch (currentStep) {
+    case 0:
+      router.push('/services/create/step1');
+      break;
+    case 1:
+      router.push('/services/create/step2');
+      break;
+    case 2:
+      router.push('/services/create/step3');
+      break;
+    case 3:
+      router.push('/services/create/step4');
+      break;
   }
-  if(entityStore.fillingService && entityStore.fillingService.currentStep && entityStore.fillingService.currentStep === 2) {
-    router.push('/services/create/step3')
-    entityStore.isRedirectedToStep = false;
+
+  entityStore.isRedirectedToStep = false;
+};
+
+onBeforeMount(async () => {
+  // Если данных о текущей услуге нет, загружаем их
+  if (!entityStore.fillingService && !entityStore.fillingService?.id) {
+    await entityStore.getOrganizationServices(userStore.userData.organization_id).then((res) => {
+      if (res?.data?.services && Array.isArray(res.data.services)) {
+        const serviceInProgress = res.data.services.find((item) => item.status === 'filling');
+        if (serviceInProgress) {
+          entityStore.fillingService = {
+            id: serviceInProgress.id,
+            name: serviceInProgress.name,
+            categories: serviceInProgress.product_categories.map((item) => item.id),
+            gallery: serviceInProgress.gallery || [],
+            logo: serviceInProgress.gallery?.length
+              ? serviceInProgress.gallery[0]
+              : { url: null, id: null },
+            description: serviceInProgress.description,
+            rawMaterials: [
+              serviceInProgress.materials_own ? 1 : '',
+              serviceInProgress.materials_tolling ? 0 : '',
+            ].filter(item => item !== ''),
+            locations: {
+              cities: serviceInProgress.cities && Array.isArray(serviceInProgress.cities) ? serviceInProgress.cities.map(item => item.id) : [],
+              regions: serviceInProgress.regions && Array.isArray(serviceInProgress.regions) ? serviceInProgress.regions.map(item => item.id) : [],
+            },
+            availabilityStm: serviceInProgress.is_stm !== null ? Number(serviceInProgress.is_stm) : null,
+            freeTestSamples: serviceInProgress.free_samples !== null ? Number(serviceInProgress.free_samples) : null,
+            minLot: serviceInProgress.batches && Array.isArray(serviceInProgress.batches) ? serviceInProgress.batches.map(item => item.id) : [],
+            termsOfCooperation: serviceInProgress.conditions,
+            currentStep: serviceInProgress.current_step,
+            tzFiles: serviceInProgress.tz_files || [],
+          };
+          console.log('запись с апи')
+          service.value = entityStore.fillingService;
+        }
+      }
+    });
   }
-  if(entityStore.fillingService && entityStore.fillingService.currentStep && entityStore.fillingService.currentStep === 3) {
-    router.push('/services/create/step4')
-    entityStore.isRedirectedToStep = false;
+
+  if (entityStore.fillingService && entityStore.fillingService.id) {
+    service.value = entityStore.fillingService;
   }
-})
+
+  handleRedirect();
+});
 
 </script>

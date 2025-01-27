@@ -1,6 +1,6 @@
 <template>
   <div class="alerts" :class="alertClass">
-    <ul class="alerts__list" v-if="type === 'error'">
+    <ul class="alerts__list" v-if="alerts && alerts.length">
       <li class="alerts__item" v-for="(alert, index) in alerts" :key="index">
         <span class="alerts__text">{{ `Поле "${alert}" обязательно.` }}</span>
       </li>

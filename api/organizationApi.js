@@ -87,7 +87,7 @@ export default {
   // загрузка документов
   async setVerificationDocuments(id, data) {
     const formatData = data.map((item) => {
-      return {media_id: item, status: 'pending'}
+      return {media_id: item.id, status: 'pending'}
     });
     return axios.post(`organizations/${id}/verification-files`, {files: formatData});
   },

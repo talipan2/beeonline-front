@@ -18,7 +18,6 @@
       Сохранить
     </UiButton>
     <DocumentationErrorModal />
-    {{ dataListId }}
   </div>
 </template>
 
@@ -35,6 +34,7 @@ const dataListId = ref([]);
 const documentsList = ref([]);
 
 const handleSaveFiles = () => {
+  console.log(dataListId.value)
   organizationStore.setVerificationDocuments(userStore.userData.organization_id, dataListId.value)
 }
 
@@ -52,7 +52,7 @@ onMounted(() => {
         documentsList.value = res.map(item => {
           return {
             id: item.media_id,
-            name: 'Не приходит название и url с бека',
+            name: 'Не приходит url с бека',
             url: item.file_url,
             type: 'pdf',
           }

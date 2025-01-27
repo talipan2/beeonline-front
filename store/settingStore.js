@@ -28,6 +28,9 @@ export const useSettingStore = defineStore("setting", {
     replenishmentModalStatus: false,
     balanceDocumentsModalStatus: false,
     infoModal: false,
+    changeDataModal: false,
+    changeUserDataModal: false,
+    createEntityFinalModal: false,
   }),
   actions: {
     setAlert(status, text) {

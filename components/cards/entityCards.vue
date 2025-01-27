@@ -22,7 +22,7 @@
       </div>
       <div class="entity-card__details" v-else>
         <p class="entity-card__details-name">Минимальная партия</p>
-        <p class="entity-card__details-value">{{  'Не указано' }}</p>
+        <p class="entity-card__details-value">{{ data.minLot && data.minLot.length ? data.minLot[0] : 'Не указано'}}</p>
       </div>
       <div class="entity-card__details" v-if="role === 'customer'">
         <p class="entity-card__details-name">Срок выполнения</p>
@@ -49,7 +49,8 @@
     </div>
     <div class="entity-card__footer">
       <UiButton :to="`${role === 'performer' ? `/performer/services/edit/${data.id}` : `/customer/orders/edit/${data.id}`}`" class="entity-card__btn" variant="quinary" size="large">Изменить</UiButton>
-      <UiButton type="button" class="entity-card__btn" variant="quinary" size="large">Опубликовать</UiButton>
+      <UiButton type="button" class="entity-card__btn" variant="quinary" size="large" v-if="data.statusType === 'archived'">Опубликовать</UiButton>
+      <UiButton type="button" class="entity-card__btn" variant="quinary" size="large" v-if="data.statusType === 'active'">Снять с публикации</UiButton>
       <p class="entity-card__status">{{ data.status }}</p>
     </div>
     <NuxtLink class="entity-card__link" :to="`/performer/services/show/${data.id}`" v-if="role === 'performer'"></NuxtLink>

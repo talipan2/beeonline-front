@@ -22,7 +22,6 @@
       </template>
       <CommonAlerts v-if="data.length === 0" type="warning" :alert="emptyAlertText"/>
     </div>
-
   </section>
 </template>
 

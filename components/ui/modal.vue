@@ -82,6 +82,7 @@ computed: {
 methods: {
     customLockScroll(isLock) {
       const screenWidth = window.innerWidth;
+      const headerFixed = document.querySelector('.header');
 
       if (isLock) {
         // Блокируем прокрутку
@@ -89,9 +90,12 @@ methods: {
 
         // Компенсируем padding-right только на десктопах
         if (screenWidth > 768) {
-          const scrollbarWidth =
-            window.innerWidth - document.documentElement.clientWidth;
+          const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
           document.body.style.paddingRight = `${scrollbarWidth}px`;
+          headerFixed.style.paddingRight = `${scrollbarWidth}px`;
+          console.log(scrollbarWidth)
+          
+
         }
       } else {
         // Сбрасываем прокрутку и padding
@@ -100,7 +104,6 @@ methods: {
       }
     },
   },
-
 }
 </script>
 

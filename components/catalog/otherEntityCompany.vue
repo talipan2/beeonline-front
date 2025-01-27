@@ -1,24 +1,40 @@
 <template>
   <div class="other-entity">
-    <h2 class="other-entity__title">Другие {{ type === 'order' ? 'заказы' : 'услуги' }} компании</h2>
+    <h2 class="other-entity__title" v-if="title">{{ title }}</h2>
+    <h2 class="other-entity__title" v-else >Другие {{ type === 'order' ? 'заказы' : 'услуги' }} компании</h2>
     <div class="other-entity__container">
       <div class="other-entity__item">
         <NuxtLink class="other-entity__item-title link">Изготовление школьных вязаных жилетов.</NuxtLink>
-        <p class="other-entity__item-text">
-          Размер партии: до 100
-        </p>
+        <div class="other-entity__item-details">
+          <p class="other-entity__item-text">
+            Размер партии: до 100
+          </p>
+          <p class="other-entity__item-text" v-if="type === 'customer'">
+            Срок выполнения: до 31/12/2024
+          </p>
+        </div> 
       </div>
       <div class="other-entity__item">
         <NuxtLink class="other-entity__item-title link">Изготовление школьных вязаных жилетов.</NuxtLink>
-        <p class="other-entity__item-text">
-          Размер партии: до 100
-        </p>
+        <div class="other-entity__item-details">
+          <p class="other-entity__item-text">
+            Размер партии: до 100
+          </p>
+          <p class="other-entity__item-text" v-if="type === 'customer'">
+            Срок выполнения: до 31/12/2024
+          </p>
+        </div> 
       </div>
       <div class="other-entity__item">
         <NuxtLink class="other-entity__item-title link">Изготовление школьных вязаных жилетов.</NuxtLink>
-        <p class="other-entity__item-text">
-          Размер партии: до 100
-        </p>
+        <div class="other-entity__item-details">
+          <p class="other-entity__item-text">
+            Размер партии: до 100
+          </p>
+          <p class="other-entity__item-text" v-if="type === 'customer'">
+            Срок выполнения: до 31/12/2024
+          </p>
+        </div> 
       </div>
     </div>
   </div>
@@ -28,6 +44,10 @@
 
 const props = defineProps({
   type: {
+    type: String,
+    default: '',
+  },
+  title: {
     type: String,
     default: '',
   }
@@ -46,6 +66,12 @@ const props = defineProps({
   &__title {
     font-size: 2em;
     margin-bottom: 1.5em;
+  }
+
+  &__item-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
   &__item {

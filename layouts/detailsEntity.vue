@@ -61,11 +61,12 @@ const props = defineProps({
   &__container {
     display: flex;
     column-gap: 3rem;
+    justify-content: center;
   }
 
   &__main {
     flex: 1 1 60%;
-    max-width: 70%;
+    max-width: 60%;
   }
 
   &__right-side {

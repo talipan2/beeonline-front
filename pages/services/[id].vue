@@ -36,10 +36,14 @@ const formatData = computed(() => {
       props: [
         {
           name: 'Партии:', 
-          value: data.value.batches && data.value.batches.length && data.value.batches.map(item => item.name), 
-          link: [data.value.batches && data.value.batches.length && data.value.batches.map(item => item.id)]
+          value: data.value.batches && data.value.batches.length && data.value.batches, 
+          link: 'bathes',
         },
-        {name: 'Категории:', value: ["Детская одежда", 'Термобелье', 'Носочно-чулочная продукция',  'Сумки и аксессуары',  'Ткани, фурнитура, материалы'], link: ['1', '2', '3']},
+        {
+          name: 'Категории:', 
+          value: data.value.product_categories && data.value.product_categories.length && data.value.product_categories, 
+          link: 'product_categories',
+        },
         {name: 'Материалы:', value: [data.value.materials_own ? 'Собственное' : '', data.value.materials_tolling ? 'Давальческое' : ''].filter(Boolean), link: ['1', '2']},
         {name: 'Наличие СТМ:', value: entityStore.getEntityLabelById('availabilityStm', data.value.is_stm)},
         {name: 'Бесплатные образцы:', value: entityStore.getEntityLabelById('freeTestSamples', data.value.free_samples)},
@@ -48,8 +52,8 @@ const formatData = computed(() => {
       organizationId: data.value.organization_id,
       description: data.value.description,
       conditions: data.value.conditions,
-      gallery: data.value.gallery,
-      tzFiles: data.value.tz_files,
+      gallery: data.value.gallery && data.value.gallery.length && data.value.gallery.map(item => item.url),
+      tzFiles: data.value.tz_files && data.value.tz_files.length && data.value.tz_files.map(item => item.url),
       name: data.value.name
     }
 })

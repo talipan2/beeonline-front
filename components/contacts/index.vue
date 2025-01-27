@@ -35,7 +35,7 @@
         </div>
       </div>
     </div>
-    <h2 class="contacts-container__title">По вопросам взаимодействия с Фондами и Центрами поддержки предпринимателей</h2>
+    <!-- <h2 class="contacts-container__title">По вопросам взаимодействия с Фондами и Центрами поддержки предпринимателей</h2>
     <div class="contacts-container__managers">
       <div class="contacts-container__manager" v-for="(manager, index) in onIssuesOfInteraction" :key="index">
         <div class="contacts-container__manager-image">
@@ -47,20 +47,16 @@
           <a :href="`mailto:${manager.email}`">{{ manager.email }}</a>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script setup>
 
 const managerList = [
-  {name: 'Виктория', phone: '+7 (916) 134-13-21', email: 'manager@rafi.moscow.ru', img: '/assets/images/managers/viktoria.jpg'},
-  {name: 'Юлия', phone: '+7 (903) 622-18-86', email: 'adv1@profashion.ru', img: '/assets/images/managers/julia.jpg'},
-  {name: 'Татьяна', phone: '+7 (910) 458-62-37', email: 'reklama@profashion.ru', img: '/assets/images/managers/tatiana.jpg'},
-  {name: 'Людмила', phone: '+7 (916) 420-20-13', email: 'sales@profashion.ru', img: '/assets/images/managers/ludmila.jpg'},
-  {name: 'Маргарита', phone: '+7 (909) 650-73-36', email: 'sales2@profashion.ru', img: '/assets/images/managers/margarita.jpg'},
-  {name: 'Ольга Ефимова', phone: '+7 (925) 410-58-00', email: 'Pr@rafi.moscow', img: '/assets/images/managers/olga.jpg'},
-  {name: 'Дарья', phone: '+7 (985) 127-11-31', email: 'adv2@profashion.ru', img: '/assets/images/managers/darya.jpg'},
+  {name: 'Тимур Османов Технический Директор', phone: '+7 (977) 317-84-75', email: 'mail@profashion.ru', img: '/assets/images/managers/managers-1.jpg'},
+  {name: 'Павел Гаранин Техническая поддержка', phone: '+7 (999) 721-40-87', email: 'support@profashion.ru', img: '/assets/images/nophoto_pc.png'},
+  {name: 'Елена Степанова Руководитель проекта', phone: '+7 (925) 226-07-30', email: 'bkp@profashion.ru', img: '/assets/images/managers/managres-2.jpg'},
 ]
 
 const onIssuesOfInteraction = [
@@ -117,13 +113,18 @@ const formatPhone = (phone) => phone.replace(/[\s()-]/g, '');
     box-shadow: var(--box-shadow-primary);
 
     img {
-      border-radius: 100%;
+      position: absolute;
+      inset: 0;
     }
   }
 
   &__manager-image {
     flex: 0 0 25%;
     border-radius: 100%;
+    overflow: hidden;
+    height: 0;
+    padding-bottom: 25%;
+    position: relative;
   }
 
   &__manager-name {

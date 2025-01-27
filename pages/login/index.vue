@@ -30,6 +30,19 @@ watch(() => router.currentRoute.value.query, (newVal) => {
     width: 33%;
     margin-block: 5em 3em;
   }
+
+  @include tablet {
+    .login {
+      width: 50%;
+      margin-inline: auto;
+    }
+  }
+
+  @include mobile {
+    .login {
+      width: 100%;
+    }
+  }
 }
 
 </style>

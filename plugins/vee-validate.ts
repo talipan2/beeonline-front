@@ -26,6 +26,17 @@ export default defineNuxtPlugin({
             }
             return /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/.test(value);
         });
+        defineRule('atLeastOneFilled', (value: { countries: []; regions: []; cities: [] }) => {
+            console.log(value);
+            if (
+              Array.isArray(value.countries) && value.countries.length > 0 ||
+              Array.isArray(value.regions) && value.regions.length > 0 ||
+              Array.isArray(value.cities) && value.cities.length > 0
+            ) {
+              return true;
+            }
+            return false;
+          });
 
         setLocale('ru');
 

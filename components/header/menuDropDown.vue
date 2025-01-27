@@ -17,7 +17,7 @@
     <template #content>
       <div class="header__user-info">
         <div class="header__user-image">
-          <img :src="logo" alt="">
+          <img :src="logo" alt="Логотип пользователя">
         </div>
         <div class="header__user-data">
           <div class="header__user-name">{{ userData.name }}</div>
@@ -218,6 +218,11 @@ const setRole = (role) => {
       border-radius: 100%;
       margin-right: 1.142em;
       overflow: hidden;
+
+      img {
+        height: 100%;
+        object-fit: cover;
+      }
   }
 
   .header__user-name {

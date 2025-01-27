@@ -1,20 +1,22 @@
 <template>
   <div class="orders-details">
     <div class="orders-details__container">
-      <div class="orders-details__item" v-for="(prop, index) in entityData.props" :key="index">
-        <p class="orders-details__title">{{ prop.name }}</p>
-        <p class="orders-details__value" v-if="!prop.link">{{ prop.value }}</p>
-        <div class="orders-details__value" v-else v-for="(item, index) in prop.value" :key="index">
-          <NuxtLink class="link">
-            {{ item }}
-          </NuxtLink>
-          <span class="orders-details__divider" v-if="index < prop.value.length - 1"> / </span>
+      <template v-for="(prop, index) in entityData.props" :key="index">
+        <div class="orders-details__item" >
+          <p class="orders-details__title">{{ prop.name }}</p>
+          <p class="orders-details__value" v-if="!prop.link">{{ prop.value }}</p>
+          <div class="orders-details__value" v-else v-for="(item, index) in prop.value" :key="index">
+            <NuxtLink class="link" :to="{ path: routeLinkForType, query: { [prop.link]: item.id} }">
+              {{ item.name }}
+            </NuxtLink>
+            <span class="orders-details__divider" v-if="index < prop.value.length - 1"> / </span>
+          </div>
         </div>
-      </div>
+      </template>
     </div>
     <div class="orders-details__pub-card">
       <div class="orders-details__pub-card-image image-box">
-        <img :src='defaultImage' alt="">
+        <img :src='pubCard.logo || defaultImage' alt="">
         <NuxtLink to="/" class="orders-details__pub-card-link"></NuxtLink>
       </div>
       <div class="orders-details__pub-card-content">
@@ -57,9 +59,13 @@
       <p class="orders-details__details-title">Условия сотрудничества</p>
       <p class="orders-details__details-text">{{ entityData.conditions }}</p>
     </div>
-    <div class="orders-details__details">
+    <div class="orders-details__details" v-if="formatDocumentsArray && formatDocumentsArray.length">
+      <p class="orders-details__details-title">Технические требования</p>
+      <CommonFileList class="view-entity__files orders-details__files" :data-list="formatDocumentsArray" divider top-divider/>
+    </div>
+    <div class="orders-details__details" v-if="entityData.gallery && entityData.gallery.length">
       <p class="orders-details__details-title">Галерея</p>
-      <CommonGallerySlider />
+      <CommonGallerySlider :images="entityData.gallery"/>
     </div>
   </div>
 </template>
@@ -82,6 +88,15 @@ const props = defineProps({
   },
 })
 
+const routeLinkForType = computed(() => {
+  switch (props.type) {
+    case 'service':
+      return '/services/';
+    case 'order':
+      return '/orders/';
+  }
+})
+
 const role = computed(() => {
   switch (props.type) {
     case 'service':
@@ -89,6 +104,17 @@ const role = computed(() => {
     case 'order':
       return 'customer';
   }
+})
+
+const formatDocumentsArray = computed(() => {
+  if(!props.entityData.tzFiles || props.entityData.tzFiles.length === 0) return [];
+  return props.entityData.tzFiles.map(item => {
+    return {
+      name: item.split('/').pop(),
+      url: item,
+      type: item.split('.').pop()
+    }
+  })
 })
 
 </script>
@@ -184,6 +210,11 @@ const role = computed(() => {
 
   &__details-text {
     font-size: 1em;
+  }
+
+  &__files {
+    font-size: 1rem;
+    max-width: 50%;
   }
 
 }

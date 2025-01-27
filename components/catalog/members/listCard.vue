@@ -1,24 +1,34 @@
 <template>
   <div class="list-card">
     <div class="list-card__col-1">
-      <div class="image-box">
-        <img :src="defaultLogoImage" alt="">
+      <div class="image-box image-box_type_not-border">
+        <img :src="data.logo || defaultLogoImage" alt="">
       </div>
     </div>
     <div class="list-card__col-2">
       <div class="list-card__container">
-        <h5 class="list-card__title">{{ data.name || 'Название компании' }}</h5>
-        <CommonRating :is-count-rating="false"/>
+        <NuxtLink :to="`/members/${data.id}/${data.type}`" class="link">
+          <h5 class="list-card__title">{{ data.name || 'Название компании' }}</h5>
+        </NuxtLink>
+        <CommonRating :rating="data.fillRating" :is-count-rating="false"/>
       </div>
     </div>
     <div class="list-card__col-3">
-      <div class="list-card__location">
-        <i class="flag flag_round flag_russia"></i>
-        <p>{{ 'Россия' }}</p>
-      </div>
+      <CommonLocationsList class="list-card__location" :locations-list="data.location" :is-country="true"/>
     </div>
     <div class="list-card__props list-card__col-4">
-      <p class="list-card__prop">1 услуга</p>
+      <p class="list-card__prop" v-if="data.type === 'performer'">
+        {{ data.entityCount 
+          ? (data.entityCount + ' ' + plural(data.entityCount, { one: 'услуга', few: 'услуги', many: 'услуг' }) ) 
+          : 'Нет услуг' 
+        }}
+      </p>
+      <p class="list-card__prop" v-if="data.type === 'customer'">
+        {{ data.entityCount 
+          ? (data.entityCount + ' ' + plural(data.entityCount, { one: 'заказ', few: 'заказы', many: 'заказов' }) ) 
+          : 'Нет заказов' 
+        }}
+      </p>
     </div>
     <div class="list-card__props list-card__col-5">
       <p class="list-card__prop-name">Сырье:</p>
@@ -112,7 +122,7 @@ const props = defineProps({
   &__location {
     display: flex;
     align-items: center;
-    column-gap: .625em;
+    column-gap: .2em;
     font-size: .88em;
   }
 

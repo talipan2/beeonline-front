@@ -5,32 +5,12 @@
         <div class="brands__cards brands-swiper-container">
             <Swiper class="brands__swiper" :slides-per-view="1.4" :space-between="16" :centered-slides="true" :slides-per-group="1"
                 :pagination="true" :modules="[SwiperPagination]" :loop="false" :breakpoints="breakpoints">
-                <SwiperSlide class="brands__card">
-                    <div class="brands__card-header">
-                        <UiImage src="/assets/images/main/brands/brand-logo.png" class="brands__card-logo" />
-                        <div class="brands__card-description">
-                            <p class="brands__card-brend">
-                                <span>Оптовый пошив Оптовый пошив Оптовый пошив Оптовый пошив</span>
-                            </p>
-                            <p class="brands__card-city">Оптовый пошив</p>
-                        </div>
-                    </div>
-                    <div class="brands__card-image">
-                        <UiImage src="/assets/images/main/brands/brands-1.png" />
-                    </div>
-                    <div class="brands__card-footer">
-                        <p class="brands__card-type">Оптовый пошив </p>
-                        <p class="brands__card-tags">Детская одежда</p>
-                    </div>
-                    <NuxtLink to="https://test.bee-online.ru/services/1469" class="brands__card-link"></NuxtLink>
-                </SwiperSlide>
                 <SwiperSlide class="brands__card" v-for="brand in 10" :key="brand">
                     <div class="brands__card-header">
                         <UiImage src="/assets/images/main/brands/brand-logo.png" class="brands__card-logo" />
                         <div class="brands__card-description">
                             <p class="brands__card-brend">
-                                <span>Дом моды Арист asd asd as as d asd asdas sdas asddasdas dasdasdasda asd
-                                    sdasdasdasdasdasdasdasd</span>
+                                <span>Дом моды Арист</span>
                             </p>
                             <p class="brands__card-city">Тула</p>
                         </div>
@@ -55,6 +35,10 @@
 </template>
 
 <script setup>
+import { useEntityStore } from '~/store/entityStore';
+
+
+const entityStore = useEntityStore();
 
 const breakpoints = { 
     375: { 
@@ -83,6 +67,24 @@ const breakpoints = {
         centeredSlides: false,
     } 
 }
+
+onMounted(() => {
+    entityStore.getOrders()
+        .then(res => {
+            if(res) {
+                ordersList.value = res.map(item => {
+                    return {
+                        name: item.name,
+                        id: item.id,
+                        logo: item.gallery && item.gallery.length ? item.gallery[0].url : '/assets/images/nophoto_pc.png',
+                        location: 'Тула',
+                        descriptions: item.description,
+                        product_categories: item.product_categories && item.product_categories.length ? item.product_categories.map(item => item.name) : '',
+                    }
+                });
+            }
+        })
+})
 
 </script>
 

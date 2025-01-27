@@ -74,6 +74,7 @@
         Зарегистрироваться
         <SvgoBtnArrow class="svg-lx" />
       </UiButton>
+      {{ userData }}
     </Form>
     <template #soc-reg>
       <RegisterSocialRegistr />
@@ -121,9 +122,13 @@ const handleSubmit = () => {
 };
 
 onMounted(() => {
-  if(router.currentRoute.value.query && router.currentRoute.value.query.role && router.currentRoute.value.query.action === 'create-order') {
+  if(router.currentRoute.value.query && router.currentRoute.value.query.role === 'customer' && router.currentRoute.value.query.action === 'create-order') {
     userStore.role = router.currentRoute.value.query.role
-    isCreateOrder.value = true
+    userData.value.role = router.currentRoute.value.query.role
+    settingStore.isCreateOrder = true
+  } else if(router.currentRoute.value.query && router.currentRoute.value.query.role) {
+    userStore.role = router.currentRoute.value.query.role
+    userData.value.role = router.currentRoute.value.query.role
   }
 })
 </script>

@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import commonApi from '~/api/commonApi'
 
 export const useBonusStore = defineStore("bonus", {
   state: () => ({
@@ -594,5 +595,51 @@ export const useBonusStore = defineStore("bonus", {
         total: 49
     }
   }),
-  actions: {},
+  actions: {
+    async getBonuses(organizationId, { type } = {}) {
+      try {
+        const response = await commonApi.getBonuses(organizationId, { type });
+        if(response.data) {
+          console.log(response)
+          return response.data
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
+    async getBonusesData(organizationId) {
+        try {
+            const response = await commonApi.getBonusesData(organizationId);
+            if(response.data) {
+            return response.data
+            }
+        } catch (error) {
+            throw error;
+        }
+    },
+    
+    async getBonusesTransactions(organizationId, { page } = {}) {
+        try {
+            const response = await commonApi.getBonusesTransactions(organizationId, { page });
+            if(response.data) {
+            console.log(response)
+            return response.data
+            }
+        } catch (error) {
+            throw error;
+        }
+    },
+
+    async getAchievements(organizationId, { page, limit, type, bonus } = {}) {
+        try {
+            const response = await commonApi.getAchievements(organizationId, { page, limit, type, bonus });
+            if(response.data) {
+                return response.data
+            }
+        } catch (error) {
+            throw error;
+        }
+    },
+    
+  },
 });

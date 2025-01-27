@@ -22,26 +22,26 @@
             :list="formatData.categories.slice(1)" 
             title="Категории" 
             placement="bottom-end" 
-            v-if="Array.isArray(formatData.categories) && formatData.categories && formatData.categories.length >= 1"
+            v-if="Array.isArray(formatData.categories) && formatData.categories && formatData.categories.length > 1"
           />
           </p>
       </div>
       <div class="form-group-data">
         <p class="form-group__title">Место производства</p>
         <p class="form-group__value">
-          <i class="flag flag_round" v-if="formatData.placeOfProductionId && formatData.placeOfProductionId[0]" 
-            :class="formatData.placeOfProductionId[0]
+          <i class="flag flag_round" v-if="formatData.locations && formatData.locations[0]" 
+            :class="formatData.locations[0]
             ? flagClass
             :''" 
           />
-          {{ (formatData.placeOfProductionId && formatData.placeOfProductionId.length > 0 && formatData.placeOfProductionId[0].name) 
-            ? formatData.placeOfProductionId[0].name : 'не указан' 
+          {{ (formatData.locations && formatData.locations.length > 0 && formatData.locations[0].name) 
+            ? formatData.locations[0].name : 'не указан' 
           }}
           <ModalsMoreCities 
-            :list="formatData.placeOfProductionId.map(item => item.name).slice(1)" 
+            :list="formatData.locations.map(item => item.name).slice(1)" 
             title="Место производства" 
             placement="bottom-end" 
-            v-if="Array.isArray(formatData.placeOfProductionId) && formatData.placeOfProductionId && formatData.placeOfProductionId.length >= 1"
+            v-if="Array.isArray(formatData.locations) && formatData.locations && formatData.locations.length > 1"
           />
         </p>
       </div>
@@ -50,10 +50,10 @@
         <p class="form-group__value">
           {{ (formatData.minLot && formatData.minLot.length > 0) ? formatData.minLot[0] : 'не указан' }}
           <ModalsMoreCities 
-            :list="formatData.minLot" 
+            :list="formatData.minLot.slice(1)" 
             title="Мин. партия" 
             placement="bottom-end" 
-            v-if="Array.isArray(formatData.minLot) && formatData.minLot && formatData.minLot.length >= 1"
+            v-if="Array.isArray(formatData.minLot) && formatData.minLot && formatData.minLot.length > 1"
           />
         </p>
       </div>
@@ -70,10 +70,10 @@
         <p class="form-group__value">
           {{ (formatData.rawMaterials && formatData.rawMaterials.length > 0) ? formatData.rawMaterials[0] : 'не указан' }}
           <ModalsMoreCities 
-            :list="formatData.rawMaterials" 
+            :list="formatData.rawMaterials.slice(1)" 
             title="Сырье" 
             placement="bottom-end" 
-            v-if="Array.isArray(formatData.rawMaterials) && formatData.rawMaterials && formatData.rawMaterials.length >= 1"
+            v-if="Array.isArray(formatData.rawMaterials) && formatData.rawMaterials && formatData.rawMaterials.length > 1"
           />
         </p>
       </div>
@@ -90,10 +90,10 @@
         <p class="form-group__value">
           {{ (formatData.rawMaterials && formatData.rawMaterials.length > 0) ? formatData.rawMaterials : 'не указан' }}
           <ModalsMoreCities 
-            :list="formatData.rawMaterials" 
+            :list="formatData.rawMaterials.slice(1)" 
             title="Сырье" 
             placement="bottom-end" 
-            v-if="Array.isArray(formatData.rawMaterials) && formatData.rawMaterials && formatData.rawMaterials.length >= 1"
+            v-if="Array.isArray(formatData.rawMaterials) && formatData.rawMaterials && formatData.rawMaterials.length > 1"
           />
         </p>
       </div>
@@ -173,7 +173,7 @@ const entity = computed(() => {
   } else return entityStore.order
 });
 
-const flagClass = computed(() => selectFlag(props.formatData.placeOfProductionId[0].countryId));
+const flagClass = computed(() => selectFlag(props.formatData.locations[0].countryId));
 
 </script>
 

@@ -40,13 +40,17 @@ export const useEntityStore = defineStore('entity', {
       id: '',
       name: '',
       categories: [],
-      locations: [],
+      locations: [
+        {
+          cities: [],
+          regions: [],
+        }
+      ],
       minLot: [],
       availabilityStm: '',
       freeTestSamples: '',
       rawMaterials: [],
       description: '',
-      gallery: [],
       termsOfCooperation: '',
       logo: {
         id: null,

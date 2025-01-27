@@ -3,6 +3,7 @@
     :class="buttonClass"
     :to="to"
     v-if="type === 'link'"
+    :target="target"
   >
     <slot />
   </NuxtLink>
@@ -36,6 +37,10 @@ const props = defineProps({
     type: String,
     default: 'link',
     validator: value => ['link', 'button', 'submit'].includes(value),
+  },
+  target: {
+    type: String,
+    default: ''
   }
 });
 

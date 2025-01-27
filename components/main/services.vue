@@ -6,7 +6,7 @@
         <p class="services__description">
           Ускорьте свой путь к успеху с нашим сервисом, находя лучших производителей одежды в легкой промышленности за считанные минуты!
         </p>
-        <UiButton to="https://bee-online.ru/services" variant="quaternary" size="xl" class="services__link">Подробнее</UiButton>
+        <UiButton to="/services" variant="quaternary" size="xl" class="services__link">Подробнее</UiButton>
         <UiImage src="/assets/images/main/services/services-performers.png" class="services__image" />
         <UiImage src="/assets/images/main/services/services-mobile-1.png" class="services__image services__image-mobile"/>
       </div>
@@ -15,7 +15,7 @@
         <p class="services__description">
           Расширьте свой бизнес и увеличьте объем заказов, находя новых клиентов среди ведущих брендов и ритейлеров с нашим удобным и быстрым сервисом!
         </p>
-        <UiButton to="https://bee-online.ru/orders" variant="quaternary" size="xl" class="services__link">Подробнее</UiButton>
+        <UiButton to="/orders" variant="quaternary" size="xl" class="services__link">Подробнее</UiButton>
         <UiImage src="/assets/images/main/services/services-customers.png" class="services__image" />
         <UiImage src="/assets/images/main/services/services-mobile-2.png" class="services__image services__image-mobile"/>
       </div>
@@ -24,19 +24,18 @@
         <p class="services__description">
           Расширьте свои возможности и увеличьте продажи, подключившись к нашему сервису, который связывает вас с ведущими брендами, ритейлерами и производителями одежды в легкой промышленности!
         </p>
-        <UiButton to="https://marketplace.bee-online.ru/" variant="quaternary" size="xl" class="services__link">Подробнее</UiButton>
+        <UiButton to="https://marketplace.bee-online.ru/" variant="quaternary" size="xl" class="services__link" :target="'_blank'">Подробнее</UiButton>
         <UiImage src="/assets/images/main/services/services-suppliers.png" class="services__image" />
         <UiImage src="/assets/images/main/services/services-mobile-3.png" class="services__image services__image-mobile"/>
       </div>
-      <!-- <div class="services__card services__card_type_factories">
-        <h2 class="services__title">Поиск фабрик</h2>
-        <p class="services__description">Проект представляет удобный сервис для поиска партнеров и выхода на прямые
-          переговоры</p>
-        <UiButton to="https://bee-online.ru/services" variant="quaternary" size="xl" class="services__link">Подробнее</UiButton>
+      <div class="services__card services__card_type_factories">
+        <h2 class="services__title">Поиск сотрудников</h2>
+        <p class="services__description">Ускорьте рост вашего бизнеса, находя лучших специалистов легкой промышленности с помощью нашего сервиса поиска сотрудников!</p>
+        <UiButton to="https://beejob.ru/" variant="quaternary" size="xl" class="services__link" :target="'_blank'">Подробнее</UiButton>
         <UiImage src="/assets/images/main/services/services-factories.png" class="services__image" />
         <UiImage src="/assets/images/main/services/services-mobile-4.png" class="services__image services__image-mobile"/>
-      </div> -->
-      <div class="services__card services__card_type_exhibitions">
+      </div>
+      <!-- <div class="services__card services__card_type_exhibitions">
         <h2 class="services__title">Поиск выставок</h2>
         <p class="services__description">
           Посещайте наши выставки, чтобы найти надежных заказчиков, расширить свою сеть и открыть новые возможности для роста в легкой промышленности!
@@ -45,7 +44,7 @@
         <UiImage src="/assets/images/main/services/services-exhibitions.png" class="services__image" />
         <UiImage src="/assets/images/main/services/services-mobile-5.png" class="services__image services__image-mobile"/>
 
-      </div>
+      </div> -->
     </div>
   </section>
 </template>

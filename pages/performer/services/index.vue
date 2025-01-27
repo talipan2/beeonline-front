@@ -7,7 +7,7 @@
     <template #content>
       <Entity
         role="performer"
-        title="Все заказы"
+        title="Все услуги"
         subtitle="Размещайте список своих услуг в каталоге исполнителей и ищите заказчиков в кратчайшие сроки с учетом именно ваших потребностей."
         btnLabel="Создать услугу"
         btnLink="/services/create" 
@@ -53,6 +53,8 @@ const cardData = computed(() => {
     freeSamples: formatFreeSamples(item.free_samples),
     minLot: item.batches && item.batches.length ? item.batches.map(item => item.name) : [],
     status: entityStore.getEntityStatusByValue(item.status),
+    category: item.product_categories && item.product_categories.length ? item.product_categories.map(item => item.id) : [],
+    statusType: item.status,
   }})
 })
 

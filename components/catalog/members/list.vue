@@ -82,8 +82,8 @@
 
     <!-- list -->
     <div class="members__list" v-if="currentViewSetting === 'list'">
-      <div class="members__item" v-for="item in 20" :key="item">
-        <CatalogMembersListCard :data="data[0]" />
+      <div class="members__item" v-for="(item, index) in data" :key="index">
+        <CatalogMembersListCard :data="item" />
       </div>
     </div>
 

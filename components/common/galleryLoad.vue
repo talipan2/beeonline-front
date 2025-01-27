@@ -16,8 +16,6 @@
         <SvgoClose class="svg-l" fill="#6937a5"/>
       </button>
     </div>
-    {{ modelValue }}
-    {{ images }}
   </div>
 </template>
 

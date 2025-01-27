@@ -14,12 +14,15 @@
     <UiButton type="button" class="location__btn" variant="tertiary" size="large"
       @click="openAuthModal">{{ buttonLabel }}</UiButton>
     <RegisterChooseCityModal v-model="selectedCities" :maxSelected="maxSelected" :type="type"/>
+    <Field v-if="isRequired" name="selectedLocations" :rules="{atLeastOneFilled: true}" v-model="selectedCities" hidden :label="errorLabel" >
+    </Field>
   </div>
 </template>
 
 <script setup>
 import { useLocationStore } from '~/store/locationStore';
 import { useSettingStore } from '~/store/settingStore';
+import { useField } from 'vee-validate';
 
 
 const props = defineProps({
@@ -47,6 +50,14 @@ const props = defineProps({
   maxSelected: {
     type: Number,
     default: null,
+  },
+  isRequired: {
+    type: Boolean,
+    default: false
+  },
+  errorLabel: {
+    type: String,
+    default: 'Города производства'
   }
 })
 
@@ -54,7 +65,7 @@ const settingStore = useSettingStore();
 const locationStore = useLocationStore();
 
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue','update:errorMessage']);
 
 const selectedCities = ref({
   countries: [],
@@ -116,6 +127,7 @@ watch(() => props.modelValue, (newVal) => {
 watch((selectedCities), (newVal) => {
   emit('update:modelValue', {...newVal});
 }, {deep: true},)
+
 
 </script> 
 

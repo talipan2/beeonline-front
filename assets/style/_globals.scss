@@ -368,6 +368,20 @@ label:active {
   }
 }
 
+.image-box_type_frame {
+  background-color: #fff;
+
+  img {
+    padding: 8px;
+  }
+}
+
+.image-box_type_not-border {
+  img {
+    border: none;
+  }
+}
+
 
 // sticky
 .sticky {

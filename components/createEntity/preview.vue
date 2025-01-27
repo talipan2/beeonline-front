@@ -9,9 +9,9 @@
       <div class="prop" v-for="prop in data.data" :key="prop.id" :class="{ 'prop_type_text' : prop.name === 'Описание' }">
         <p class="prop__name">{{ prop.name }}:</p>
         <p class="prop__value" :class="{ 'prop_type_hidden' : prop.name === 'Описание' }">
-          <i class="flag flag_round" v-if="prop.name === 'Место производства' && prop.value[0]" 
-            :class="prop.value[0] 
-            ? flagClass
+          <i class="flag flag_round" v-if="prop.name === 'Место производства' && data.countryId" 
+            :class=" data.countryId
+            ? selectFlag(data.countryId)
             :''" 
           />
           <span>
@@ -48,11 +48,11 @@ const logo = computed(() => {
   }
 })
 
-const flagClass = computed(() => {
-  if(props.data.locationsData[0].countryId) {
-    return selectFlag(props.data.locationsData[0].countryId)
-  }
-})
+// const flagClass = computed(() => {
+//   if(props.data.locationsData[0].countryId) {
+//     return selectFlag(props.data.locationsData[0].countryId)
+//   }
+// })
 
 </script>
 
