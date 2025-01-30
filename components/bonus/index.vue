@@ -4,7 +4,7 @@
       <BonusBanner class="bonus__banner_desktop" />
       <BonusRules />
       <BonusAchievements :organizationId="organizationId"/>
-      <BonusTransactions v-if="isTest" />
+      <BonusTransactions :organizationId="organizationId" />
     </div>
 
     <div class="bonus__right-side">
@@ -59,8 +59,11 @@ onMounted(() => {
 				bonuses.value = res.bonuses;
 				levelNumber.value = res.level_number;
 				levelProgress.value = res.level_progress;
+				levelGroups.value = res.allLevels ? Object.values(res.allLevels) : [];
+				level.value = res.current_level;
 				achievementsOrgCount.value = res.achievements_org_count;
 				achievementsAllCount.value = res.achievements_all_count;
+				rating.value = res.rating;
 			}
 		})
 		.finally(() => loading.value = false);

@@ -2,10 +2,26 @@
   <NuxtLayout name="profile" title="Редактирование услуги" className="entity-edit">
     <template #header>
       <UiBreadCrumb
-        :list="[{ label: 'Главная', link: '/' }, { label: 'Кабинет заказчика', link: '/customer/desktop' }, { label: 'Список заказов', link: '/customer/orders' }, { label: 'Редактирование заказа', link: '' }]" />
+        :list="[
+          { label: 'Главная', link: '/' }, 
+          { label: 'Кабинет заказчика', link: '/customer/desktop' }, 
+          { label: 'Список заказов', link: '/customer/orders' }, 
+          { label: 'Редактирование заказа', link: '' }
+        ]" 
+      />
     </template>
     <template #content>
-      <component :is="currentComponent" :title="title" role="customer" :formatData="formatData"  :handleSubmit="handleSubmit" :handleBack="previousStep" :data="orderData"/>
+      <component 
+        :is="currentComponent" 
+        :title="title" role="customer" 
+        :formatData="formatData"  
+        :handleSubmit="handleSubmit" 
+        :handleBack="previousStep" 
+        :data="orderData"
+        type="edit"
+      />
+
+      {{ orderData }}
     </template>
     <template #rightSide>
       <div class="h4">Предварительный просмотр заказа</div>
@@ -147,17 +163,25 @@ const currentComponent = computed(() => {
   switch (currentStep.value) {
     case 1:
       title.value = 'Основные данные услуги';
+      router.push({path: '/customer/orders/edit/' + id, query: {step: 1}});
       return Step1
     case 2:
+      router.push({path: '/customer/orders/edit/' + id, query: {step: 2}});
       return Step2
-    case 3:
-      return Step3
+    // case 3:
+    //   router.push({path: '/customer/orders/edit/' + id, query: {step: 3}});
+    //   return Step3
     case 4:
+      router.push({path: '/customer/orders/edit/' + id, query: {step: 4}});
       return Step4
     default:
       title.value = 'Основные данные услуги';
       return Step1;
   }
+})
+
+watch(() => router.currentRoute.value.query.step, (newVal) => {
+  currentStep.value = Number(newVal)
 })
 
 onMounted(() => {
@@ -182,6 +206,12 @@ onMounted(() => {
       }
     }
   })
+})
+
+onMounted(() => {
+  if(router.currentRoute.value.query.step) {
+    currentStep.value = Number(router.currentRoute.value.query.step);
+  }
 })
 
 </script>

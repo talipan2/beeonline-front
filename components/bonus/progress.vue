@@ -53,7 +53,6 @@
 </template>
 
 <script setup>
-import { set } from '~/node_modules/nuxt/dist/app/compat/capi';
 import { useSettingStore } from '~/store/settingStore';
 
 

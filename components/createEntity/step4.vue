@@ -6,7 +6,7 @@
       change-link-label="Изменить" change-link="/services/create" /> -->
       <div class="form-group">
         <div class="form-group-data form-group-data__btn entity_step-check__link">
-          <NuxtLink to="/orders/create/step1" class="link" variant="quinary" size="large">Изменить</NuxtLink>
+          <NuxtLink :to="backToFirstStep" class="link" variant="quinary" size="large">Изменить</NuxtLink>
         </div>
         <UiButton type="button"  @click="handleSubmit" class="form-group-data form-group-data__btn " variant="quinary" size="large">Подтвердить</UiButton>
     </div>
@@ -123,7 +123,7 @@
       />
     </UiCheckbox>
     <div class="form-group">
-      <UiButton type="button"  @click="router.push('/orders/create/step3')" class="form-group-data form-group-data__btn" variant="tertiary" size="large">Назад</UiButton>
+      <UiButton :to="backLink" class="form-group-data form-group-data__btn" variant="tertiary" size="large">Назад</UiButton>
       <UiButton type="button"  @click="handleSubmit" class="form-group-data form-group-data__btn" variant="quinary" size="large">Подтвердить
       </UiButton>
     </div>
@@ -158,8 +158,56 @@ const props = defineProps({
     type: Object,
     default: () => ({}),
     required: true,
+  },
+  type: {
+    type: String,
+    default: "create",
+    validator: value => ['create', 'edit'].includes(value),
   }
 });
+
+const backToFirstStep = computed(() => {
+  if(props.type === 'create') {
+    if(props.role === 'performer') {
+      return `/${currentEntity.value}/create/step1`
+    } else if(props.role === 'customer') {
+      return `/${currentEntity.value}/create/step1`
+    }
+    return `/${currentEntity.value}/create/step1`
+  } else if (props.type === 'edit') {
+    if(props.role === 'performer') {
+      return `/${props.role}/${currentEntity.value}/edit/${props.data.id}?step=1`
+    } else if(props.role === 'customer') {
+      return `/${props.role}/${currentEntity.value}/edit/${props.data.id}?step=1`
+    }
+  }
+})
+
+const backLink = computed(() => {
+  if(props.type === 'create') {
+    if(props.role === 'performer') {
+      return `/${currentEntity.value}/create/step3`
+    } else if(props.role === 'customer') {
+      return `/${currentEntity.value}/create/step2`
+    }
+    return `/${currentEntity.value}/create/step1`
+  } else if (props.type === 'edit') {
+    if(props.role === 'performer') {
+      return `/${props.role}/${currentEntity.value}/edit/${props.data.id}?step=3`
+    } else if(props.role === 'customer') {
+      return `/${props.role}/${currentEntity.value}/edit/${props.data.id}?step=2`
+    }
+  }
+})
+
+
+const currentEntity = computed(() => {
+  if(props.role === 'performer') {
+    return 'services'
+  }else if(props.role === 'customer') {
+    return 'orders'
+  }
+})
 
 const entityOfRole = computed(() =>{
   if(props.role === 'performer') {

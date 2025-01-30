@@ -36,7 +36,7 @@
         Транзакций нет
       </div>
       <div class="transactions__more" v-if="page < lastPage">
-        <UiButton variant="quinary" class="bonus-more-btn" size="large" @click="loadMore">Загрузить еще</UiButton>
+        <UiButton type="button" variant="quinary" class="bonus-more-btn" size="large" @click="loadMore">Загрузить еще</UiButton>
       </div>
     </div>
   </div>
@@ -45,6 +45,14 @@
 <script setup>
 import { useBonusStore } from '~/store/bonusStore';
 
+const props = defineProps({
+  organizationId: {
+    type: Number,
+    default: null,
+  },
+})
+
+
 
 const bonusStore = useBonusStore();
 const loading = ref(false);
@@ -52,14 +60,28 @@ const transactions = ref([]);
 const page = ref(1);
 const lastPage = ref(1);
 
-onMounted(async () => {
+const loadMore = () => {
+  page.value += 1;
   loading.value = true;
-  setTimeout(() => {
-    loading.value = false;
-    page.value = bonusStore.transactions.current_page;
-    lastPage.value = bonusStore.transactions.last_page;
-    transactions.value = bonusStore.transactions.data;
-  }, 1000);
+  bonusStore.getBonusesTransactions(props.organizationId, {page:page.value}).then(res => {
+    if(res) {
+      transactions.value = [...transactions.value, ...res.data];
+      lastPage.value = res.last_page;
+    }
+  }).finally(() => loading.value = false);
+}
+
+onMounted(() => {
+  if(props.organizationId) {
+    loading.value = true;
+    bonusStore.getBonusesTransactions(props.organizationId).then(res => {
+      if(res) {
+        transactions.value = res.data;
+        page.value = res.current_page;
+        lastPage.value = res.last_page;
+      }
+    }).finally(() => loading.value = false);
+  }
 })
 
 

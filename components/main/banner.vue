@@ -14,7 +14,7 @@
       </div>
     </div>
     <div class="banner__pattern" id="world" ref="world"></div>
-    <img src="~/assets/images/main/banner/banner-pattern-2.svg" class="banner__pattern banner__pattern-mobile" />
+    <img src="~/assets/images/main/banner/banner-pattern-2.svg" class="banner__pattern banner__pattern-mobile" alt="Паттерн"/>
   </section>
 </template>
 

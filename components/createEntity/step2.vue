@@ -173,7 +173,7 @@
       </div>
       <div class="form-group">
         <UiButton
-          :to="`/${currentEntity}/create/step1`"
+          :to="backLink"
           class="form-group-data form-group-data__btn" variant="tertiary" size="large"
         >
           Назад
@@ -203,7 +203,21 @@ const props = defineProps({
     default: () => ({}),
     required: true
   },
+  type: {
+    type: String,
+    default: "create",
+    required: true,
+    validator: (value) => ['create', 'edit'].includes(value),
+  },
 });
+
+const backLink = computed(() => {
+  if(props.type === 'create') {
+    return `/${currentEntity.value}/create/step1`
+  } else if (props.type === 'edit') {
+    return `/${props.role}/${currentEntity.value}/edit/${props.data.id}?step=1`
+  }
+})
 
 const currentEntity = computed(() => {
   if(props.role === 'performer') {

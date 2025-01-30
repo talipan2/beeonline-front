@@ -13,6 +13,7 @@
     "@fancyapps/ui": "^5.0.36",
     "@pinia/nuxt": "^0.5.4",
     "@tiptap/extension-text-style": "^2.6.6",
+    "@tiptap/extension-underline": "^2.11.3",
     "@tiptap/starter-kit": "^2.6.6",
     "@vee-validate/i18n": "^4.13.2",
     "@vee-validate/nuxt": "^4.13.2",

@@ -38,22 +38,22 @@ export default defineNuxtRouteMiddleware(async(to, from) => {
   //     console.error('Ошибка при проверке авторизации:', error)}
   //   );
   // }
-  // if(!userStore.isAuth) {
-  //   try {
-  //     await userStore.checkAuth();
-  //   } catch (error) {
-  //     if(publicPaths.includes(to.path)) return;
-  //     navigateTo('/login');
-  //     console.error('Ошибка при проверке авторизации:', error);
-  //   }
-  // }
-
-  try {
-    await userStore.checkAuth();
-  } catch (error) {
-    if(publicPaths.includes(to.path)) return;
-    console.error('Ошибка при проверке авторизации:', error);
-    return navigateTo('/login');
+  if(!userStore.isAuth) {
+    try {
+      await userStore.checkAuth();
+    } catch (error) {
+      if(publicPaths.includes(to.path)) return;
+      navigateTo('/login');
+      console.error('Ошибка при проверке авторизации:', error);
+    }
   }
+
+  // try {
+  //   await userStore.checkAuth();
+  // } catch (error) {
+  //   if(publicPaths.includes(to.path)) return;
+  //   console.error('Ошибка при проверке авторизации:', error);
+  //   return navigateTo('/login');
+  // }
 
 })

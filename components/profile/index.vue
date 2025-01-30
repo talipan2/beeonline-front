@@ -37,7 +37,7 @@
           <div class="register__check-company-logo">
             <p class="form-group__title">Логотип</p>
             <div class="form-group-data__logo image-box image-box_type_logo">
-              <img :src="pubCardData.logo" alt="">
+              <img :src="pubCardData.logo" :alt="pubCardData.companyName">
             </div>
           </div>
           <div class="register__check-company-details">

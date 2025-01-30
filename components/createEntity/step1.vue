@@ -47,6 +47,7 @@
       <div v-if="role == 'customer'" class="entity__data">
         <h2 class="entity__subtitle">Сроки</h2>
         <p class="entity__description">Укажите дату до которой заказ будет актуален</p>
+        {{ data.completionDate }}
         <CommonCalendar v-model="data.completionDate" class="entity__calendar" />
       </div>
       <div class="entity__btn-container">

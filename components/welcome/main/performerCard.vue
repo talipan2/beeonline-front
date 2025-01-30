@@ -6,7 +6,7 @@
     <div class="welcome-service-card__body">
       <div class="welcome-service-card__content welcome-service-card__content_type_image" >
         <div class="welcome-service-card__image">
-          <img :src="data.logo || defaultImage" alt="Фотография услуги">
+          <img :src="data.logo || defaultImage" :alt="data.name">
         </div>
         <p class="welcome-service-card__company-name">{{ data.companyName || 'не указано' }}</p>
       </div>

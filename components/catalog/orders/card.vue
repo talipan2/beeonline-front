@@ -3,7 +3,7 @@
     <h3 class="order-card__title">{{ data.name }}</h3>
     <div class="order-card__content">
       <div class="image-box">
-        <img :src="logo || defaultImage" alt="">
+        <img :src="logo || defaultImage" :alt="data.name">
       </div>
       <div class="props">
         <div class="prop" v-for="prop in data.data" :key="prop.id"

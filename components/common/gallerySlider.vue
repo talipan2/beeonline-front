@@ -17,13 +17,13 @@
     >
       <SwiperSlide v-for="(video, index) in videos" :key="index">
         <a :href="video" class="gallery-slider__link" data-fancybox="gallery" data-type="iframe">
-          <img :src="getVideoThumbnail(video)" class="gallery-slider__image" alt="Video thumbnail" />
+          <img :src="getVideoThumbnail(video)" class="gallery-slider__image" :alt="video" />
           <SvgoPlay class="svg-l gallery-slider__play"/>
         </a>
       </SwiperSlide>
       <SwiperSlide v-for="(image, index) in images" :key="index">
         <a :href="image" class="gallery-slider__link" data-fancybox="gallery">
-          <img :src="image" class="gallery-slider__image" alt="Image" />
+          <img :src="image" class="gallery-slider__image" :alt="image" />
         </a>
       </SwiperSlide>
 

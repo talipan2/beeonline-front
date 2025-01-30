@@ -5,7 +5,7 @@
     </label>
     <div class="form-group">
       <div class="load-image">
-        <img :src="imagePreview">
+        <img :src="imagePreview" :alt="imagePreview">
         <input type="file" name="logo" accept=".jpeg, .png, .jpg, .gif" @change="onFileChange">
         <span class="load-image__title">{{ label }}</span>
       </div>

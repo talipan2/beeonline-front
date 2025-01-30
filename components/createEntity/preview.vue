@@ -3,7 +3,7 @@
     <h3 class="preview-entity__title">{{ data.name }}</h3>
     <div class="preview-entity__content">
       <div class="image-box">
-        <img :src="logo" alt="">
+        <img :src="logo" :alt="data.name">
       </div>
       <div class="props">
       <div class="prop" v-for="prop in data.data" :key="prop.id" :class="{ 'prop_type_text' : prop.name === 'Описание' }">

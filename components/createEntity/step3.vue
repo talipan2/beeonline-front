@@ -40,8 +40,7 @@
         errorLabel="Города производства"
       />
       <div class="form-group">
-        <UiButton type="button"
-          @click="router.push(`${role === 'performer' ? '/services/create/step2' : '/orders/create/step2'}`)"
+        <UiButton :to="backLink"
           class="form-group-data form-group-data__btn" variant="tertiary" size="large">Назад</UiButton>
         <UiButton type="submit"
           class="form-group-data form-group-data__btn" variant="quinary" size="large">Далее
@@ -71,12 +70,35 @@ const props = defineProps({
     type: Function,
     default: () => ({}),
     required: true,
-  }
+  },
+  type: {
+    type: String,
+    default: 'create',
+    required: true,
+    validator: value => ['create', 'edit'].includes(value),
+  },
 })
 
 const router = useRouter();
 const userStore = useUserStore();
 const entityStore = useEntityStore();
+
+const backLink = computed(() => {
+  if(props.type === 'create') {
+    return `/${currentEntity.value}/create/step2`
+  } else if (props.type === 'edit') {
+    return `/${props.role}/${currentEntity.value}/edit/${props.data.id}?step=2`
+  }
+})
+
+
+const currentEntity = computed(() => {
+  if(props.role === 'performer') {
+    return 'services'
+  }else if(props.role === 'customer') {
+    return 'orders'
+  }
+})
 
 // const role = computed(() => userStore.role);
 const dataLocation = computed(() => {

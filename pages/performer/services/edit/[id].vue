@@ -5,7 +5,7 @@
         :list="[{ label: 'Главная', link: '/' }, { label: 'Кабинет исполнителя', link: '/performer/desktop' }, { label: 'Список услуг', link: '/performer/services' }, { label: 'Редактирование услуги', link: '' }]" />
     </template>
     <template #content>
-      <component :is="currentComponent" :title="title" role="performer" :formatData="formatData"  :handleSubmit="handleSubmit" :handleBack="previousStep" :data="serviceData"/>
+      <component :is="currentComponent" :title="title" role="performer" :formatData="formatData"  :handleSubmit="handleSubmit" :handleBack="previousStep" :data="serviceData" type="edit"/>
     </template> 
     <template #rightSide>
       <div class="h4">Предварительный просмотр услуги</div>
@@ -136,17 +136,25 @@ const currentComponent = computed(() => {
   switch (currentStep.value) {
     case 1:
       title.value = 'Основные данные услуги';
+      router.push({path: '/performer/services/edit/' + id, query: {step: 1}});
       return Step1
     case 2:
+      router.push({path: '/performer/services/edit/' + id, query: {step: 2}});
       return Step2
     case 3:
+      router.push({path: '/performer/services/edit/' + id, query: {step: 3}});
       return Step3
     case 4:
+      router.push({path: '/performer/services/edit/' + id, query: {step: 4}});
       return Step4
     default:
       title.value = 'Основные данные услуги';
       return Step1;
   }
+})
+
+watch(() => router.currentRoute.value.query.step, (newVal) => {
+  currentStep.value = Number(newVal)
 })
 
 onMounted(() => {
@@ -169,6 +177,12 @@ onMounted(() => {
       }
     }
   })
+})
+
+onMounted(() => {
+  if(router.currentRoute.value.query.step) {
+    currentStep.value = Number(router.currentRoute.value.query.step);
+  }
 })
 
 </script>

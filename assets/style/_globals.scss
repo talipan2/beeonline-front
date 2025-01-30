@@ -18,6 +18,10 @@ body {
 
 }
 
+img {
+  border-style: none;
+}
+
 .body {
   display: flex;
   flex-direction: column;
@@ -366,6 +370,13 @@ label:active {
     border: 1px solid #D9D9D9;
     box-sizing: border-box;
   }
+
+  img:invalid {
+    border: none;
+    outline: none;
+    background: none;
+  }
+
 }
 
 .image-box_type_frame {

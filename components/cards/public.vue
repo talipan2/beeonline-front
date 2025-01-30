@@ -3,7 +3,7 @@
     <h5 class="card-pub__title">{{ data.name || 'Название компании' }}</h5>
     <div class="card-pub__content">
       <div class="card-pub__image image-box image-box_type_frame">
-        <img class="" :src="data.logo || defaultCompanyLogo" alt="">
+        <img class="" :src="data.logo || defaultCompanyLogo" :alt="data.name || 'Логотип'">
       </div>
       <div class="card-pub__details">
         <div class="card-pub__details-container">
@@ -106,7 +106,7 @@ const props = defineProps({
 
   &__image {
     flex: 0 0 30%;
-    border: 1px solid #D9D9D9;
+    // border: 1px solid #D9D9D9;
     display: flex;
     align-items: center;
     justify-content: center;

@@ -2,6 +2,7 @@
   <div class="calendar">
     <label class="calendar__label form-group__title">
       Дата выполнения
+      {{ modelValue }}
     </label>
       <div class="calendar__container">
         <div class="input-container">
@@ -52,11 +53,17 @@ watch(() => date.value, (newVal) => {
   emit('update:modelValue', newVal);
 });
 
-watch(() => props.modelValue, (newVal) => {
+// watch(() => props.modelValue, (newVal) => {
+//   if(props.modelValue && picker.value?.fp) {
+//     picker.value.fp.setDate(props.modelValue);
+//   }
+// });
+
+onMounted(() => {
   if(props.modelValue && picker.value?.fp) {
     picker.value.fp.setDate(props.modelValue);
   }
-}, {once: true});
+})
 
 </script>
 

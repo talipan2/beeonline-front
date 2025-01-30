@@ -17,7 +17,7 @@
     <template #content>
       <div class="header__user-info">
         <div class="header__user-image">
-          <img :src="logo" alt="Логотип пользователя">
+          <img :src="logo" :alt="userData.name">
         </div>
         <div class="header__user-data">
           <div class="header__user-name">{{ userData.name }}</div>

@@ -2,7 +2,7 @@
   <div class="list-card">
     <div class="list-card__col-1">
       <div class="image-box image-box_type_not-border">
-        <img :src="data.logo || defaultLogoImage" alt="">
+        <img :src="data.logo || defaultLogoImage" :alt="data.name">
       </div>
     </div>
     <div class="list-card__col-2">

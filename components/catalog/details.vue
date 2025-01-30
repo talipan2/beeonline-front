@@ -16,7 +16,7 @@
     </div>
     <div class="orders-details__pub-card">
       <div class="orders-details__pub-card-image image-box">
-        <img :src='pubCard.logo || defaultImage' alt="">
+        <img :src='pubCard.logo || defaultImage' :alt="pubCard.name">
         <NuxtLink to="/" class="orders-details__pub-card-link"></NuxtLink>
       </div>
       <div class="orders-details__pub-card-content">

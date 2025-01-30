@@ -6,38 +6,39 @@
         :disabled="!editor.can().chain().focus().toggleBold().run()"
         :class="{ 'is-active': editor.isActive('bold') }"
       >
-        <img src="~/assets/images/wysiwyg/bold.svg" alt="">
+        <img src="~/assets/images/wysiwyg/bold.svg" alt="Жирный">
       </button>
       <button type="button"
         @click="editor.chain().focus().toggleItalic().run()"
         :disabled="!editor.can().chain().focus().toggleItalic().run()"
         :class="{ 'is-active': editor.isActive('italic') }"
       >
-      <img src="~/assets/images/wysiwyg/italic.svg" alt="">
+      <img src="~/assets/images/wysiwyg/italic.svg" alt="italic">
 
       </button>
+
       <button type="button"
-        @click="editor.chain().focus().toggleStrike().run()"
-        :disabled="!editor.can().chain().focus().toggleStrike().run()"
-        :class="{ 'is-active': editor.isActive('strike') }"
+        @click="editor.chain().focus().toggleUnderline().run()"
+        :disabled="!editor.can().chain().focus().toggleUnderline().run()"
+        :class="{ 'is-active': editor.isActive('underline') }"
       >
-      <img src="~/assets/images/wysiwyg/underline.svg" alt="">
-
+        <img src="~/assets/images/wysiwyg/underline.svg" alt="Подчеркнутый текст">
       </button>
-      <button @click="editor.chain().focus().unsetAllMarks().run()">
-        <img src="~/assets/images/wysiwyg/eraser.svg" alt="">
+
+      <button type="button" @click="editor.chain().focus().unsetAllMarks().run()">
+        <img src="~/assets/images/wysiwyg/eraser.svg" alt=" Удалить форматирование">
       </button>
       <button type="button"
         @click="editor.chain().focus().toggleBulletList().run()"
         :class="{ 'is-active': editor.isActive('bulletList') }"
       >
-        <img src="~/assets/images/wysiwyg/unorderedlist.svg" alt="">
+        <img src="~/assets/images/wysiwyg/unorderedlist.svg" alt="Неупорядоченный список">
       </button>
       <button type="button"
         @click="editor.chain().focus().toggleOrderedList().run()"
         :class="{ 'is-active': editor.isActive('orderedList') }"
       >
-        <img src="~/assets/images/wysiwyg/orderedlist.svg" alt="">
+        <img src="~/assets/images/wysiwyg/orderedlist.svg" alt="Упорядоченный список">
       </button>
     </div>
     <div class="editor-container">
@@ -54,6 +55,7 @@
 <script setup>
 import StarterKit from '@tiptap/starter-kit';
 import TextStyle from '@tiptap/extension-text-style';
+import Underline from '@tiptap/extension-underline';
 
 const props = defineProps({
   required: {
@@ -71,6 +73,7 @@ const editor = useEditor({
   extensions: [
     StarterKit,
     TextStyle,
+    Underline,
   ],
   onUpdate: ({ editor }) => {
     emit('update:modelValue', editor.getHTML());
@@ -128,10 +131,6 @@ onBeforeUnmount(() => {
   border-radius: 1px;
   border: 1px solid rgba(0, 0, 0, .2);
 
-  li {
-    list-style-type: circle;
-  }
-
   &__btn {
     display: flex;
     column-gap: 1.5rem;
@@ -143,6 +142,33 @@ onBeforeUnmount(() => {
       height: auto;
     }
   }
+
+
+  .tiptap {
+  :first-child {
+    margin-top: 0;
+  }
+
+  ul li {
+    list-style-type: disc;
+  }
+
+  ol li {
+    list-style-type: decimal;
+  }
+
+  /* List styles */
+  ul,
+  ol {
+    padding: 0 1rem;
+    margin: 1.25rem 1rem 1.25rem 0.4rem;
+
+    li p {
+      margin-top: 0.25em;
+      margin-bottom: 0.25em;
+    }
+  }
+}
 
 }
 
