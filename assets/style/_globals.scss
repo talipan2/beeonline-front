@@ -620,7 +620,7 @@ input[type="number"]::-webkit-inner-spin-button {
 
 // статус пополнения
 
-.replenishment, .removal {
+.add, .purchase {
   display: flex;
   align-items: center;
   column-gap: .2em;
@@ -628,7 +628,7 @@ input[type="number"]::-webkit-inner-spin-button {
   line-height: 1em;
 }
 
-.removal {
+.purchase {
   color: #b42318;
 
   path {
@@ -636,7 +636,7 @@ input[type="number"]::-webkit-inner-spin-button {
   }
 }
 
-.replenishment {
+.add {
   color: #027a48;
 
   svg {

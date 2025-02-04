@@ -18,6 +18,7 @@ export default {
       is_foreigner: data.selfEmployed,
       country_id: data.countryId,
       currency_id: data.currencyId,
+      is_foreigner: data.countryId === 1 ? 0 : 1
     })
   },
 

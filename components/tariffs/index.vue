@@ -4,7 +4,7 @@
       <TariffsBalanceCard :userBalance="userBalance" :userBonuses="userBonuses" :currentCurrency="currentCurrency"/>
       <TariffsPlanSummaryCard />
     </div>
-    <div class="tariffs__content">
+    <div class="tariffs__content" v-if="tariffsStore.tariffs && tariffsStore.tariffs.length">
       <div class="tariffs__content-header">
         <h2 class="tariffs__title">Тарифы</h2>
         <CommonTabs class="tariffs__tabs" :tabs="tabsList" v-model="currentTab" v-if="!isInternational"/>
@@ -25,6 +25,12 @@
       </div>
       <TariffsTransactionsTable />
     </div>
+    <!-- <div class="tariffs__content">
+      <div class="tariffs__content-header">
+        <h2 class="tariffs__title">Выставленные счета</h2>
+      </div>
+      <TariffsInvoicesTable />
+    </div> -->
     <TariffsPayModal 
       :data="currentPaymentData" 
       :userBalance="userBalance" 
@@ -38,22 +44,26 @@
 
 <script setup>
 import { useSettingStore } from '~/store/settingStore';
+import { useTariffsStore } from '~/store/tariffsStore';
 import { useUserStore } from '~/store/userStore';
 
-const userStore = useUserStore();
+const tariffsStore = useTariffsStore();
 const settingStore = useSettingStore();
+const userStore = useUserStore();
 
-const userBalance = computed(() => formatMoney(userStore.userBalance, currentCurrency.value));
-const userBonuses = computed(() => userStore.userBonuses);
+const userBalance = computed(() => formatMoney(tariffsStore.userBalance, currentCurrency.value));
+const userBonuses = computed(() => tariffsStore.userBonuses);
 
 // переменная для определения международного тарифа 
-const isInternational = ref(false);
+const isInternational = computed(() => tariffsStore.isForeigner);
+
 
 const currentCurrency = computed(() => {
-  if (isInternational.value) {
-    return 'USD';
-  }
-  return 'RUB';
+	if (tariffsStore.userCurrency) {
+		return tariffsStore.userCurrency;
+	} else {
+		return 'RUB';
+	}
 });
 
 const currentPaymentData = ref({
@@ -77,7 +87,7 @@ function selectTariff(tariff, total, currency) {
 }
 
 function selectServices(services, total, currency) {
-  currentPaymentData.value = {data: services, sum: total, currency: currency};
+  currentPaymentData.value = {data: services, sum: total, currency: currency, isServices: true};
   settingStore.payModalStatus = true;
 }
 
@@ -95,6 +105,13 @@ const childReset = (reset) => {
     handleReset.value = reset
   }
 }
+
+onMounted(() => {
+  if(userStore.userData && userStore.userData.id) {
+    tariffsStore.getBalance(userStore.userData.id);
+    tariffsStore.getTariffs(userStore.userData.id);
+  }
+});
 
 </script>
 

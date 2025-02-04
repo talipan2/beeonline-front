@@ -38,6 +38,7 @@ const props = defineProps({
     display: flex;
     column-gap: 10em;
     margin-bottom: 10em;
+    max-width: 100%;
   }
 
   &__title {
@@ -55,6 +56,7 @@ const props = defineProps({
 
   &__content {
     flex: 1 1 100%;
+    max-width: 100%;
   }
 
 }

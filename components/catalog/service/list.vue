@@ -1,5 +1,10 @@
 <template>
   <div class="services">
+    <CatalogBanner :data="ordersData">
+      <template #item="{ item }">
+        <CatalogServiceCard :data="item" />
+      </template>
+    </CatalogBanner>
     <div class="services__list">
       <div class="services__item" v-for="(data, index) in ordersData" :key="index" v-bind="setFirstCardRef(index)">
         <CatalogServiceCard :data="data" />

@@ -1,49 +1,57 @@
 <template>
-  <TariffsCardLayout class="international-tariffs">
-    <div class="international-tariffs__body">
-      <div class="international-tariffs__header">
-        <h3 class="international-tariffs__title">Международный</h3>
-        <p class="international-tariffs__month">12 месяцев</p>
-        <p class="international-tariffs__price">2 500 $</p>
+  <template v-for="tariff in tariffs" :key="tariff">
+    <TariffsCardLayout class="international-tariffs" v-for="price in tariff.prices" :key="price">
+      <div class="international-tariffs__body">
+        <div class="international-tariffs__header">
+          <h3 class="international-tariffs__title">{{tariff.name}}</h3>
+          <p class="international-tariffs__month">{{ price.quantity }} месяцев</p>
+          <p class="international-tariffs__price">{{ formatMoney(price.amount, price.currency, 0) }}</p>
+        </div>
+        <div class="international-tariffs__possibilities">
+          <ul class="international-tariffs__list">
+            <li class="international-tariffs__item" v-for="item in possibilitiesList[0]" :key="item">
+              <div class="international-tariffs__item-icon">
+                <SvgoChecked class="svg-m"/>
+              </div>
+              <p class="international-tariffs__item-text">{{ item }}</p>
+            </li>
+          </ul>
+          <ul class="international-tariffs__list">
+            <li class="international-tariffs__item" v-for="item in possibilitiesList[1]" :key="item">
+              <div class="international-tariffs__item-icon">
+                <SvgoChecked class="svg-m"/>
+              </div>
+              <p class="international-tariffs__item-text">{{ item }}</p>
+            </li>
+          </ul>
+        </div>
+        <UiButton type="button" class="international-tariffs__btn" variant="quinary" size="large" @click="handleOpenPayModal(tariff, price)">Подключить</UiButton>
       </div>
-      <div class="international-tariffs__possibilities">
-        <ul class="international-tariffs__list">
-          <li class="international-tariffs__item" v-for="item in possibilitiesList[0]" :key="item">
-            <div class="international-tariffs__item-icon">
-              <SvgoChecked class="svg-m"/>
-            </div>
-            <p class="international-tariffs__item-text">{{ item }}</p>
-          </li>
-        </ul>
-        <ul class="international-tariffs__list">
-          <li class="international-tariffs__item" v-for="item in possibilitiesList[1]" :key="item">
-            <div class="international-tariffs__item-icon">
-              <SvgoChecked class="svg-m"/>
-            </div>
-            <p class="international-tariffs__item-text">{{ item }}</p>
-          </li>
-        </ul>
-      </div>
-      <UiButton type="button" class="international-tariffs__btn" variant="quinary" size="large" @click="handleOpenPayModal">Подключить</UiButton>
-    </div>
-  </TariffsCardLayout>
-  <TariffsMobileCards 
-    class="international-card" 
-    :tariff="internationalTariff"  
-    :price="internationalTariff.price" 
-    :feature="possibilitiesListMobile" 
-    currency="USD" 
-    duration="12 месяцев"
-    @handlePay="handleOpenPayModal"
-  />
+    </TariffsCardLayout>
+		<template v-for="price in tariff.prices" :key="price">
+			<TariffsMobileCards
+				class="international-card"
+				:tariff="tariff"
+				:price="price.amount"
+				:feature="possibilitiesListMobile"
+				:currency="price.currency"
+				:duration="`${price.quantity} месяцев`"
+				@handlePay="handleOpenPayModal(tariff.code, price.quantity)"
+			/>
+		</template>
+  </template>
 </template>
 
 <script setup>
 import { useSettingStore } from '~/store/settingStore';
+import { useTariffsStore } from '~/store/tariffsStore';
 
 
 const settingStore = useSettingStore();
+const tariffStore = useTariffsStore();
 const emit = defineEmits(['select']);
+
+const tariffs = computed(() => tariffStore.tariffs);
 
 const internationalTariff = {
   title: 'Международный',
@@ -131,8 +139,8 @@ const possibilitiesListMobile = [
 ]
 
 
-const handleOpenPayModal = () => {
-  emit('select', internationalTariff, internationalTariff.price, 'USD');
+const handleOpenPayModal = (tariff, price) => {
+	emit('select', {...tariff, price: price, currency: price.currency}, price.amount);
   settingStore.payModalStatus = true;
 }
 

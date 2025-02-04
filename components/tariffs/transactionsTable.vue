@@ -1,5 +1,6 @@
 <template>
   <div class="transactions-table">
+    <div class="anchor" ref="anchor"></div>
     <table class="transactions-table__table">
       <colgroup>
         <col class="transactions-table__col-1" />
@@ -15,67 +16,103 @@
       </thead>
       <tbody>
         <tr v-for="(transaction, index) in transactionList" :key="index">
-          <td class="transactions-table__date">{{ formatDate( transaction.date, 'DD.MM.YYYY') }} <span>{{ formatDate( transaction.date, 'mm:HH') }}</span></td>
+          <td class="transactions-table__date">{{ formatDate( transaction.created_at, 'DD.MM.YYYY') }} <span>{{ formatDate( transaction.created_at, 'mm:HH') }}</span></td>
+          <template v-if="transaction.is_bonus">
+						{{ `${transaction.type === "purchase" ? "- " : "+ "} ${transaction.amount}` }}
+					</template>
           <td
+            v-else
             class="transactions-table__sum"
             :class="{
-              'transactions-table__sum_type_withdrawal': transaction.type === 'withdrawal',
-              'transactions-table__sum_type_replenishment': transaction.type === 'replenishment',
+              'transactions-table__sum_type_purchase': transaction.type === 'purchase',
+              'transactions-table__sum_type_add': transaction.type === 'add',
             }"
           >
-            {{ `${transaction.type === 'withdrawal' ? '- ' : '+ '} ${formatMoney(transaction.sum, transaction.currency, 0)} `}}
+            {{ `${transaction.type === 'purchase' ? '- ' : '+ '} ${formatMoney(transaction.amount, transaction.currency?.code || 'bonuses')} `}}
           </td>
-          <td class="transactions-table__status">Пополнение баллов</td>
+          <td class="transactions-table__status">{{ transaction.comment }}</td>
         </tr>
       </tbody>
     </table>
+    <CommonPaginationOtherType 
+      v-if="page.current_page && page.last_page > 1"
+			:current_page="page.current_page"
+			:last_page="page.last_page"
+			:loading="loading"
+			@page-changed="handlePageChange"
+    />
+
   </div>
 </template>
 
 <script setup>
+import { useTariffsStore } from '~/store/tariffsStore';
+import { useUserStore } from '~/store/userStore';
 
-const transactionList = [
-  {
-    date: new Date(),
-    sum: 10,
-    status: 'Пополнение баллов',
-    type: 'replenishment',
-    currency: 'bonuses'
-  },
-  {
-    date: new Date(),
-    sum: 10,
-    status: 'Пополнение баллов',
-    type: 'replenishment',
-    currency: 'USD'
-  },
-  {
-    date: new Date(),
-    sum: 100,
-    status: 'Покупка услуги',
-    type: 'withdrawal',
-    currency: 'RUB'
-  },
-  {
-    date: new Date(),
-    sum: 100,
-    status: 'Покупка услуги',
-    type: 'withdrawal',
-    currency: 'bonuses'
-  },
-  {
-    date: new Date(),
-    sum: 100,
-    status: 'Покупка услуги',
-    type: 'withdrawal',
-  },
-  {
-    date: new Date(),
-    sum: 100,
-    status: 'Покупка услуги',
-    type: 'withdrawal',
-  },
-]
+
+const userStore = useUserStore();
+const tariffStore = useTariffsStore();
+const anchor = ref('anchor');
+
+const transactionList = ref([]);
+const loading = ref(false);
+
+const page = ref({
+  prev_page: 1,
+  current_page: 1,
+  last_page: 0,
+})
+
+function handlePageChange(newPage) {
+    page.value = {
+      current_page: newPage,
+      last_page: page.value.last_page,
+      prev_page: page.value.current_page,
+	  };
+    getTransactions(false);
+}
+
+function getTransactions(dropPage = true, need_scroll = true) {
+  loading.value = true;
+
+  if (dropPage) {
+    page.value = {
+      current_page: 1,
+      last_page: 1,
+      prev_page: 1,
+    };
+  }
+
+  tariffStore.getTransactions(userStore.userData?.id, page.value.current_page)
+	.then((data) => {
+		transactionList.value = data.data;
+		page.value = {
+			current_page: data.current_page,
+			last_page: data.last_page,
+			prev_page: page.value.prev_page,
+		}
+		// document.body.scrollIntoView({ behavior: "smooth" });
+		if (need_scroll && anchor.value) {
+			anchor.value.scrollIntoView({ behavior: "smooth" });
+		}
+	})
+	.catch((err) => {
+    if(err) {
+      page.value = {
+        current_page: page.value.prev_page,
+        last_page: page.value.last_page,
+        prev_page: page.value.prev_page,
+      };
+    }
+	})
+	.finally(() => {
+		loading.value = false;
+	});
+}
+
+onMounted(() => {
+  getTransactions(true, false);
+})
 
 </script>
 
@@ -83,6 +120,10 @@ const transactionList = [
 
 .transactions-table {
   font-size: 1rem;
+
+  &__col-3 {
+    width: 50%;
+  }
 
   th {
     font-size: 1.6em;
@@ -96,7 +137,7 @@ const transactionList = [
   table {
     border-collapse: separate;
     border-spacing: 0 10px;
-    width: 50%;
+    width: 55%;
     border-bottom: 2px solid #6937a5;
   }
 
@@ -121,11 +162,11 @@ const transactionList = [
   }
 
   &__sum {
-    &_type_withdrawal {
+    &_type_purchase {
       color: #6937a5;
     }
 
-    &_type_replenishment {
+    &_type_add {
       color: #6dbf2f;
     }
   }

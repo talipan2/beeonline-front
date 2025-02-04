@@ -15,12 +15,12 @@
           <CardsPublic class="desktop__pub-card" :is-props-visible="true" :is-description="true" :data="pubCard"/>
         </template>
       </DesktopCard>
-      <DesktopCard title="Баланс" :link="{ url: getLinkWithRole('/pubcards/edit/1'), text: 'Пополнить баланс'}">
+      <DesktopCard title="Баланс" :link="{ url: '/tariffs', text: 'Пополнить баланс'}">
         <template #body>
           <div class="desktop__balance balance-card">
             <div class="balance-card__header">
-              <p class="balance-card__balance">{{ '559,03' }} ₽ <span class="balance-card__currency"> руб.</span></p>
-              <p class="balance-card__balance">{{ '190' }} <span class="balance-card__currency"> баллов</span></p>
+              <p class="balance-card__balance">{{ formatMoney(userBalance, userCurrency, 2, false) }}<span class="balance-card__currency"> руб.</span></p>
+              <p class="balance-card__balance">{{ formatMoney(userBonuses, 'bonuses') }} <span class="balance-card__currency"> баллов</span></p>
             </div>
             <div class="balance-card__details-list balance-card__details-list_type_desktop">
               <div class="balance-card__details-header ">
@@ -28,37 +28,41 @@
                 <p class="balance-card__details-sum desktop__selected">Сумма</p>
                 <p class="balance-card__details-type desktop__selected">Операция</p>
               </div>
-              <div class="balance-card__details-item" v-for="item in 5" :key="item">
-                <p class="balance-card__details-date">28.10.2024 <span class="balance-card__details-time desktop__selected">12:00</span></p>
-                <div class="balance-card__details-sum replenishment">
+              <div class="balance-card__details-item" v-for="item in transactionsList" :key="item">
+                <p class="balance-card__details-date">{{ formatDate(item.updated_at, 'DD.MM.YYYY') }} 
+                  <span class="balance-card__details-time desktop__selected">{{ formatDate(item.updated_at, 'mm:HH') }}</span>
+                </p>
+                <div class="balance-card__details-sum" :class="{ 'add': item.type === 'add', 'purchase': item.type === 'purchase'}">
                   <SvgoBalanceArrow class="balance-card__details-status" />
-                  1000
+                  {{ formatMoney(item.amount, item.currency?.code || 'bonuses') }}
                 </div>
-                <p class="balance-card__details-type">Пополнение баллов</p>
+                <p class="balance-card__details-type">{{ item.comment }}</p>
               </div>
             </div>
             <div class="balance-card__details-list balance-card__details-list_type_mobile">
-              <template  v-for="item in 5" :key="item">
+              <template  v-for="item in transactionsList" :key="item">
                 <div class="balance-card__details-item-mobile">
                   <div class="balance-card__details-item-line">
                     <p class="balance-card__details-date desktop__selected">Дата и время</p>
-                    <p class="balance-card__details-date">28.10.2024 <span class="balance-card__details-time desktop__selected">12:00</span></p>
+                    <p class="balance-card__details-date">{{ formatDate(item.updated_at, 'DD.MM.YYYY') }}
+                      <span class="balance-card__details-time desktop__selected">{{ formatDate(item.updated_at, 'mm:HH') }}</span>
+                    </p>
                   </div>
                   <div class="balance-card__details-item-line">
                     <p class="balance-card__details-date desktop__selected">Сумма</p>
                     <div class="balance-card__details-sum replenishment">
-                      <span>+</span>
-                      1000
+                      <span>{{ item.type === 'add' ? '+' : '-' }}</span>
+                      {{ formatMoney(item.amount, item.currency?.code || 'bonuses', 2) }}
                     </div>
                   </div>
                   <div class="balance-card__details-item-line">
                     <p class="balance-card__details-type desktop__selected">Операция</p>
-                    <p class="balance-card__details-type">Пополнение баллов</p>
+                    <p class="balance-card__details-type">{{ item.comment }}</p>
                   </div>
                 </div>
               </template>
             </div>
-            <NuxtLink class="balance-card__link link">Все последние транзакции</NuxtLink>
+            <NuxtLink class="balance-card__link link" to="/tariffs">Все последние транзакции</NuxtLink>
           </div>
         </template>
       </DesktopCard>
@@ -135,6 +139,7 @@
 </template>
 
 <script setup>
+import { useTariffsStore } from '~/store/tariffsStore';
 import { useUserStore } from '~/store/userStore';
 
 const props = defineProps({
@@ -153,8 +158,14 @@ const props = defineProps({
 })
 
 
+const tariffsStore = useTariffsStore();
 
 const userStore = useUserStore();
+
+const transactionsList = ref([]);
+const userBalance = computed(() => tariffsStore.userBalance);
+const userBonuses = computed(() => tariffsStore.userBonuses);
+const userCurrency = computed(() => tariffsStore.userCurrency);
 
 const pubCard = computed(() => userStore.userPubCard);
 const emailVerified = computed(() => userStore.userData.email_verified_at ? true : false);
@@ -162,6 +173,16 @@ const emailVerified = computed(() => userStore.userData.email_verified_at ? true
 function getLinkWithRole(link) {
   return `/${props.role}${link}`
 }
+
+onMounted(() => {
+  if(userStore.userData && userStore.userData.id) {
+    tariffsStore.getBalance(userStore.userData.id);
+    tariffsStore.getTransactions(userStore.userData.id)
+    .then(res => {
+      transactionsList.value = res.data && res.data.length ? res.data.slice(0, 5) : [];
+    });
+  }
+})
 
 </script>
 
@@ -244,6 +265,7 @@ function getLinkWithRole(link) {
 
   &__details-date {
     flex: 0 1 25%;
+    align-content: center;
   }
 
   &__details-sum {
@@ -264,6 +286,7 @@ function getLinkWithRole(link) {
     display: flex;
     justify-content: space-between;
     font-size: 1.1rem;
+    column-gap: 1em;
   }
 
   &__details-list_type_mobile {
@@ -318,6 +341,7 @@ function getLinkWithRole(link) {
 
     &__details-date, &__details-sum, &__details-type {
       flex: 0 1 auto;
+      text-align: right;
     }
   }
 }

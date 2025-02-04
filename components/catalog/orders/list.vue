@@ -1,5 +1,10 @@
 <template>
   <div class="orders">
+    <CatalogBanner :data="orderData">
+      <template #item="{ item }">
+        <CatalogOrdersCard :data="item" />
+      </template>
+    </CatalogBanner>
     <p class="orders__description">Вы можете создать и разместить заказ через бота быстрых заказов.</p>
     <div class="orders__list">
       <div class="orders__item" v-for="(data, index) in orderData" :key="index" v-bind="setFirstCardRef(index)">

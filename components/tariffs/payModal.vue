@@ -6,7 +6,7 @@
           <p class="pay-modal__balance">На счету <span>{{ userBalance }}</span></p>
           <UiButton type="button" class="pay-modal__header-btn" variant="default" @click="handleOpenReplenishmentModal">Пополнить</UiButton>
         </div>
-        <div class="pay-modal__body">
+        <div class="pay-modal__body" v-if="currentCurrency === 'RUB'">
           <p class="pay-modal__text">Можно оплатить баллами не более 50% от услуги</p>
           <p class="pay-modal__balance">Ваш баланс: <span>{{ formatMoney(userBonuses, 'bonuses') }} баллов</span></p>
           <UiCheckbox :is-validated="false" v-model="isPaymentWithBonuses" name="bonuses">Оплата баллами</UiCheckbox>
@@ -29,6 +29,8 @@
 
 <script setup>
 import { useSettingStore } from '~/store/settingStore';
+import { useTariffsStore } from '~/store/tariffsStore';
+import { useUserStore } from '~/store/userStore';
 
 const props = defineProps({
   data: {
@@ -57,9 +59,17 @@ const props = defineProps({
 })
 
 const settingStore = useSettingStore();
+const userStore = useUserStore();
+const tariffsStore = useTariffsStore();
+
 const emit = defineEmits(['reset']);
 
 const isPaymentWithBonuses = ref(false);
+const userId = computed(() => {
+  if(userStore.userData && userStore.userData.id) {
+    return userStore.userData.id
+  }
+})
 
 const finalAmount = computed(() => {
   if (isPaymentWithBonuses.value) {
@@ -68,18 +78,26 @@ const finalAmount = computed(() => {
   return props.data.sum
 })
 
+const finalBonusesAmount = computed(() => {
+  if (isPaymentWithBonuses.value) {
+    return paymentWithBonuses(props.data.sum, props.userBonuses).bonusesToUse;
+  }
+  return 0
+})
+
 const confirm = () => {
   settingStore.payModalStatus = false;
   isPaymentWithBonuses.value = false;
 }
 
 const paymentWithBonuses = (amount, bonuses) => {
-  const maxBonusesToUse = amount * 0.5;
+  const maxBonusesToUse = amount / 2 / 100;
   const bonusesToUse = Math.min(bonuses, maxBonusesToUse);
-  const finalAmount = amount - bonusesToUse;
+  const finalAmount = amount - bonusesToUse * 100;
   return {
     finalAmount,
-    bonusesToUse: formatMoney(bonusesToUse, 'bonuses', 0),
+    bonusesToUse,
+    formatBonusesToUse: formatMoney(bonusesToUse, 'bonuses', 0),
   }
 }
 
@@ -88,9 +106,39 @@ const handleOpenReplenishmentModal = () => {
 }
 
 const handlePayment = () => {
-  settingStore.payModalStatus = false;
-  if(props.reset) props.reset();
-  if(props.deleteResetFunction) props.deleteResetFunction();
+  const data = props.data;
+  console.log(data);
+  let paymentData = {
+    isPaymentWithBonuses: isPaymentWithBonuses.value,
+    finalBonusesAmount: finalBonusesAmount.value,
+    finalAmount: finalAmount.value,
+  };
+  if (data.isServices) {
+    paymentData.services = data.data
+      .filter(service => {
+        return service.selected && service.quantity > 0;
+      })
+      .map(service => {
+        return {
+          id: service.id,
+          quantity: service.quantity,
+        };
+      });
+    tariffsStore.payServices(userId.value, paymentData).then((data) => {
+      settingStore.payModalStatus = false;
+      if (props.reset) props.reset();
+      if (props.deleteResetFunction) props.deleteResetFunction();
+      tariffsStore.getBalance(userId.value);
+    });
+  } else {
+    const tariff = data.data;
+    tariffsStore.payTariff(userId.value,tariff.id, tariff.price.id, paymentData).then((data) => {
+      settingStore.payModalStatus = false;
+      if (props.reset) props.reset();
+      if (props.deleteResetFunction) props.deleteResetFunction();
+      tariffsStore.getBalance(userId.value);
+    });
+  }
 }
 
 </script>

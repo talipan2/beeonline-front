@@ -25,7 +25,7 @@
             <span v-if="service.period">{{ ` / ${service.period}` }}</span>
           </td>
           <td class="services-table__price" v-if="currentCurrency === 'USD'">
-            {{ formatMoney(service.priceUSD, currentCurrency, 0) }}
+            {{ formatMoney(service.price, currentCurrency, 0) }}
             <span v-if="service.period">{{ ` / ${service.period}` }}</span>
           </td>
           <td class="services-table__quantity"><CommonCounter v-model="service.quantity" /></td>
@@ -43,7 +43,7 @@
             <span v-if="services.period">{{ ` / ${services.period}` }}</span>
           </p>
           <p class="services-list__price" v-if="currentCurrency === 'USD'">
-            {{ formatMoney(services.priceUSD, currentCurrency, 0) }}
+            {{ formatMoney(services.price, currentCurrency, 0) }}
             <span v-if="services.period">{{ ` / ${services.period}` }}</span>
           </p>
           <div class="services-list__counter">
@@ -64,6 +64,7 @@
 
 <script setup>
 import { useSettingStore } from '~/store/settingStore';
+import { useTariffsStore } from '~/store/tariffsStore';
 
 const props = defineProps({
   currentCurrency: {
@@ -73,72 +74,32 @@ const props = defineProps({
 })
 
 const settingStore = useSettingStore();
+const tariffsStore = useTariffsStore();
 
 const emit = defineEmits(['select', 'reset']);
 
-const services = ref([
-  {
-    id: 1,
-    name: 'Поднятие карточки исполнителя в топ (не более 1 услуги в день)',
-    price: 400,
-    priceUSD: 4,
-    quantity: 2,
-    selected: false,
-  },
-  {
-    id: 2,
-    name: 'Сервис проверки контрагента',
-    price: 200,
-    priceUSD: 2,
-    quantity: 1,
-    selected: false,
-  },
-  {
-    id: 3,
-    name: 'Рассылка коммерческого сообщения на почту пользователям, с предоставлением отчета',
-    price: 10000,
-    priceUSD: 10,
-    quantity: 0,
-    selected: false,
-  },
-  {
-    id: 4,
-    name: 'Верхний баннер в каталоге',
-    price: 9000,
-    priceUSD: 9,
-    quantity: 0,
-    period: 'неделя',
-    selected: false,
-  },
-  {
-    id: 5,
-    name: 'Боковой верхний баннер в каталоге',
-    price: 4500,
-    priceUSD: 45,
-    period: 'неделя',
-    quantity: 0,
-    selected: false,
-  },
-  {
-    id: 6,
-    name: 'Боковой нижний баннер в каталоге',
-    price: 3000,
-    priceUSD: 30,
-    period: 'неделя',
-    quantity: 0,
-    selected: false,
-  },
-]);
+const userStoreServices = computed(() =>  tariffsStore.services?.filter(service => service.prices?.length));
+
+const services = ref([]);
+
+watch(() => userStoreServices.value, (newVal) => {
+	services.value = newVal.map(service => {
+		return {
+			id: service.id,
+			name: service.name,
+			quantity: 0,
+			selected: false,
+			price: service.prices[0].amount,
+			period: service.numeral_forms ? service.numeral_forms[0] || null : null,
+		};
+	});
+}, {deep: true})
 
 const totalCount = computed(() => {
   let count = 0;
   services.value.forEach(service => {
     if(service.selected) {
-      if (props.currentCurrency === 'USD') {
-        count += service.quantity * service.priceUSD
-      } else {
         count += service.quantity * service.price;
-      }
     }
   });
   return count
