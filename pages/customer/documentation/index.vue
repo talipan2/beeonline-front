@@ -13,6 +13,15 @@
 import { useOrganizationStore } from '~/store/organizationStore';
 import { useUserStore } from '~/store/userStore';
 
+useHead({
+  title: 'Документы организации',
+  meta: [
+    {
+      name: 'description',
+      content: '',
+    },
+  ],
+});
 
 const organizationStore = useOrganizationStore();
 const userStore = useUserStore();

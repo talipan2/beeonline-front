@@ -1,5 +1,5 @@
 <template>
-  <div class="pagination">
+  <div class="pagination" :class="{'loading': loading,}">
     <div class="pagination__container">
       <UiButton
         type="button"
@@ -41,6 +41,7 @@
         variant="tertiary"
         size="around"
         @click="nextPage"
+        :disabled="currentPage === totalPages"
       >
         <SvgoSlideArrow class="svg-l" />
       </UiButton>
@@ -51,27 +52,52 @@
 <script setup>
 import { ref, computed } from "vue";
 
-const data = Array.from({ length: 150 }, (_, i) => ({ id: i + 1 }));
+const props = defineProps({
+  currentPage: {
+    type: Number,
+    default: 1
+  },
+  totalPages: {
+    type: Number,
+    default: 0
+  },
+  loading: {
+    type: Boolean,
+    default: false
+  }
+})
+
+const currentPagePagination = ref(props.currentPage);
+
+// const data = Array.from({ length: 150 }, (_, i) => ({ id: i + 1 }));
 const itemsPerPage = 5;
-const currentPage = ref(1);
+// const currentPage = ref(1);
 const maxVisiblePages = 10;
-const totalPages = computed(() => Math.ceil(data.length / itemsPerPage));
+// const totalPages = computed(() => Math.ceil(data.length / itemsPerPage));
+
+const emit = defineEmits(['changePage']);
 
 const prevPage = () => {
-  if (currentPage.value > 1) currentPage.value--;
+  if (props.currentPage > 1) {
+    emit('changePage', props.currentPage - 1);
+  };
 };
 
 const nextPage = () => {
-  if (currentPage.value < totalPages.value) currentPage.value++;
+  if (props.currentPage < props.totalPages) {
+    props.currentPage++
+    emit('changePage', props.currentPage + 1);
+  };
 };
 
 const goToPage = (page) => {
-  currentPage.value = page;
+  if (page < 1 || page > props.totalPages) return;
+  emit('changePage', page);
 };
 
 const showedPages = computed(() => {
   const pages = [];
-  const total = totalPages.value;
+  const total = props.totalPages;
 
   // Если страниц <= 10, просто выводим их все
   if (total <= maxVisiblePages) {
@@ -80,7 +106,7 @@ const showedPages = computed(() => {
     }
   } else {
     // Если текущая страница ближе к началу (меньше 8)
-    if (currentPage.value < 8) {
+    if (props.currentPage < 8) {
       for (let i = 1; i <= 10; i++) {
         pages.push(i);
       }
@@ -88,7 +114,7 @@ const showedPages = computed(() => {
       pages.push(total - 1, total);
     } 
     // Если текущая страница ближе к концу (за 8 страниц до конца)
-    else if (currentPage.value > total - 8) {
+    else if (props.currentPage > total - 8) {
       pages.push(1, 2);
       pages.push("...");
       for (let i = total - 9; i <= total; i++) {
@@ -102,8 +128,8 @@ const showedPages = computed(() => {
       pages.push("...");
 
       // Добавляем страницы вокруг текущей
-      const startPage = Math.max(currentPage.value - 2, 3); // минимум 3
-      const endPage = Math.min(currentPage.value + 2, total - 2); // максимум за 2 страницы до конца
+      const startPage = Math.max(props.currentPage - 2, 3); // минимум 3
+      const endPage = Math.min(props.currentPage + 2, total - 2); // максимум за 2 страницы до конца
 
       for (let i = startPage; i <= endPage; i++) {
         pages.push(i);
@@ -118,6 +144,7 @@ const showedPages = computed(() => {
 
   return pages;
 });
+
 </script>
 
 <style lang="scss">

@@ -34,6 +34,16 @@ import { useOrganizationStore } from '~/store/organizationStore';
 import { useSettingStore } from '~/store/settingStore';
 import { useUserStore } from '~/store/userStore';
 
+useHead({
+  title: 'Создание заказа',
+  meta: [
+    {
+      name: 'description',
+      content: '',
+    },
+  ],
+});
+
 const router = useRouter();
 const route = useRoute();
 const entityStore = useEntityStore();
@@ -119,13 +129,16 @@ const currentHandleSubmit = computed(() => {
         entityStore.editOrder(order.value.id, {
           isSafeDeal: order.value.isSafeDeal,
           status: 'under_moderation',
-        }).then(res => entityStore.fillingOrder = null);
+        }).then(res => {
+          entityStore.fillingOrder = null
+          entityStore.resetOrder()
+        });
         if(settingStore.isCreateOrder) {
           router.push('/register/step1')
           settingStore.isCreateOrder = false
-          settingStore.createEntityFinalModal = true
         } else {
-          router.push('/customer/orders')
+          router.push(`/customer/orders/show/${order.value.id}`)
+          settingStore.createEntityFinalModal = true
         }
       });
   } 

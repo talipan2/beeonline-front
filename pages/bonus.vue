@@ -12,6 +12,15 @@
 <script setup>
 import { useUserStore } from '~/store/userStore';
 
+useHead({
+  title: 'Премия Bee-online',
+  meta: [
+    {
+      name: 'description',
+      content: '',
+    },
+  ],
+});
 
 const userStore = useUserStore();
 

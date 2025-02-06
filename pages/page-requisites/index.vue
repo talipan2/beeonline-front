@@ -8,3 +8,17 @@
     </template>
   </NuxtLayout>
 </template>
+
+<script setup>
+
+useHead({
+  title: 'Реквизиты',
+  meta: [
+    {
+      name: 'description',
+      content: 'Реквизиты',
+    },
+  ],
+});
+
+</script>

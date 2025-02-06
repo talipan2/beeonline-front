@@ -10,7 +10,6 @@
         <CatalogServiceCard :data="data" />
       </div>
     </div>
-    <!-- <CommonPagination /> -->
   </div>
 </template>
 
@@ -43,12 +42,12 @@ const ordersData = computed(() => {
     return {
       id: item.id,
       name: item.name,
-      logo: '',
+      logo: item.pub_card && item.pub_card.logo ? item.pub_card.logo : '',
       location: formatLocationsList(item.cities),
       countryId: formatLocationsList(item.cities, true),
       minLot: item.batches && item.batches.length ? item.batches[0].name : '',
       views: 0,
-      companyName: 'test1',
+      companyName: item.pub_card && item.pub_card.name ? item.pub_card.name : '',
       data: [
         { 
           id: 1, 

@@ -1,4 +1,10 @@
-export const smoothScroll = (targetOffset, duration = 1000) => {
+export const smoothScroll = (targetOffset, animation = true, duration = 1000) => {
+  if (!animation) {
+    // Если анимация отключена, просто прокручиваем мгновенно
+    window.scrollTo(0, targetOffset);
+    return;
+  }
+  
   const start = window.scrollY;
   const distance = targetOffset - start;
   let startTime = null;

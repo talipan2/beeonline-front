@@ -8,3 +8,17 @@
     </template>
   </NuxtLayout>
 </template>
+
+<script setup>
+
+useHead({
+  title: 'Избранное',
+  meta: [
+    {
+      name: 'description',
+      content: '',
+    },
+  ],
+});
+
+</script>

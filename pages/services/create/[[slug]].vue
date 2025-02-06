@@ -29,6 +29,16 @@ import { useOrganizationStore } from '~/store/organizationStore';
 import { useSettingStore } from '~/store/settingStore';
 import { useUserStore } from '~/store/userStore';
 
+useHead({
+  title: 'Создание услуги',
+  meta: [
+    {
+      name: 'description',
+      content: '',
+    },
+  ],
+});
+
 const router = useRouter();
 const organizationStore = useOrganizationStore();
 const settingStore = useSettingStore();

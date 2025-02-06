@@ -8,3 +8,16 @@
     </template>
   </NuxtLayout>
 </template>
+
+<script setup>
+useHead({
+  title: 'Оферта о заключении Договора об использовании онлайн сервиса «Безопасная Сделка»',
+  meta: [
+    {
+      name: 'description',
+      content: '',
+    },
+  ],
+});
+
+</script>

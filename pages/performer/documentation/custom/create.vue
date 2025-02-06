@@ -11,6 +11,14 @@
 
 <script setup>
 
-
+useHead({
+  title: 'Файлы организации',
+  meta: [
+    {
+      name: 'description',
+      content: '',
+    },
+  ],
+});
 
 </script>

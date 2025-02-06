@@ -124,6 +124,25 @@ const checkListCard = computed(() => {
   }
 })
 
+const userRole = computed(() => {
+  if(userStore.role === 'customer') {
+    return 'заказчика';
+  } else if(userStore.role === 'performer') {
+    return 'исполнителя';
+  }
+})
+
+useHead({
+  title: userRole,
+  titleTemplate: 'Регистрация %s',
+  meta: [
+    {
+      name: 'description',
+      content: '',
+    },
+  ],
+});
+
 </script>
 
 <style lang="scss">

@@ -11,6 +11,16 @@
 
 <script setup>
 
+useHead({
+  title: 'Сообщения',
+  meta: [
+    {
+      name: 'description',
+      content: '',
+    },
+  ],
+})
+
 </script>
 
 

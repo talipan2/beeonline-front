@@ -64,18 +64,26 @@ onMounted(async () => {
     try {
       const ordersResponse = await entityStore.getOrder(router.currentRoute.value.params.id);
       data.value = ordersResponse.data;
-  
-      try {
-        const pubCardResponse = await organizationStore.getPubCard(data.value.organization_id);
-        pubCard.value = pubCardResponse;
-      } catch (err) {
-        console.error(err);
+      if(ordersResponse.data && ordersResponse.data.pub_card) {
+        pubCard.value = ordersResponse.data.pub_card;
       }
     } catch (err) {
       console.error(err);
     }
   }
 );
+
+const pageTitle = computed(() => formatData.value.name || '');
+
+useHead({
+  title: pageTitle,
+  meta: [
+    {
+      name: 'description',
+      content: '',
+    },
+  ],
+});
 
 
 </script>

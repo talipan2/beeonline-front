@@ -9,7 +9,20 @@
   </NuxtLayout>
 </template>
 
-<style lang="scss">
+<script setup>
 
+useHead({
+  title: 'Результаты поиска',
+  meta: [
+    {
+      name: 'description',
+      content: '',
+    },
+  ],
+})
+
+</script>
+
+<style lang="scss">
 
 </style>

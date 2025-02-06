@@ -6,7 +6,11 @@
       </li>
     </ul>
     <p class="alerts__text" v-else>{{ alert }}</p>
+    <div class="alerts__text">
+      <slot></slot>
+    </div>
   </div>
+  {{ alerts }}
 </template>
 
 <script setup>
@@ -45,6 +49,7 @@ const alertClass = computed(() => {
   position: relative;
   font-size: 1rem;
   width: 100%;
+  box-sizing: border-box;
 
   &__text {
     font-size: 1.6em;

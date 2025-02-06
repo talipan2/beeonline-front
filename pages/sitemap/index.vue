@@ -20,6 +20,20 @@
   </NuxtLayout>
 </template>
 
+<script setup>
+
+useHead({
+  title: 'Карта сайта',
+  meta: [
+    {
+      name: 'description',
+      content: 'Карта сайта',
+    },
+  ],
+});
+
+</script>
+
 <style lang="scss">
 
   .sitemap-container {

@@ -74,7 +74,6 @@ const props = defineProps({
   type: {
     type: String,
     default: 'create',
-    required: true,
     validator: value => ['create', 'edit'].includes(value),
   },
 })

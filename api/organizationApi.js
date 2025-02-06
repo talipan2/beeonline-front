@@ -42,15 +42,6 @@ export default {
     })
   },
 
-  // получение публичной карточки пользователя
-  async getSelfPubCard() {
-    return axios.get(`pubcards/${1}`)
-  },
-
-  async getPubCard(id) {
-    return axios.get(`pubcards/${id}`)
-  },
-
   // редактирование публичной карточки пользователя
   async editPubCard(data) {
     return axios.patch(`pubcards/${data.id}`, {
@@ -66,8 +57,12 @@ export default {
     })
   },
 
-  async getPubCards() {
-    return axios.get(`pubcards`)
+  async getPubCards(params = {}) {
+    return axios.get(`pubcards`, {params})
+  },
+
+  async getPubCard(id) {
+    return axios.get(`pubcards/${id}`)
   },
 
   // редактирование галерей публичной карточки пользователя

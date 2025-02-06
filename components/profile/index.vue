@@ -63,9 +63,10 @@
         </div>
         <div class="form-group-data">
           <p class="form-group__title">Сайт</p>
-          <a :href="pubCardData.siteUrl" target="_blank" class="form-group__value link text-wrap">{{ pubCardData.siteUrl || '-' }}</a>
+          <a v-if="pubCardData.siteUrl" :href="pubCardData.siteUrl" target="_blank" class="form-group__value link text-wrap">{{ pubCardData.siteUrl}}</a>
+          <p v-else class="form-group__value text-wrap">-</p>
         </div>
-        <div class="form-group-data" v-if="pubCardsVideo || pubCardGallery">
+        <div class="form-group-data" v-if="pubCardsVideo.length || pubCardGallery.length">
           <p class="form-group__title">Галерея</p>
           <CommonGalleryShow :images="pubCardGallery" :videos="pubCardsVideo"/>
         </div>
@@ -120,7 +121,7 @@
         </div>
         <div class="form-group-data">
           <p class="form-group__title">Валюта</p>
-          <p class="form-group__value">{{ organizationData.currency }}</p>
+          <p class="form-group__value">{{ settingStore.getCurrencyNameById(organizationData.currency) }}</p>
         </div>
       </div>
       <div class="form-group-data">
@@ -166,7 +167,7 @@ const organizationData = computed(() => ({
   ogrn: userStore.userOrganization?.ogrn || '-',
   legalAddress: userStore.userOrganization?.legal_address || '-',
   country: userStore.userOrganization?.country_id || '-',
-  currency: userStore.userOrganization?.currency || '-',
+  currency: userStore.userOrganization?.currency_id || null,
 }));
 
 const pubCardData = computed(() => ({

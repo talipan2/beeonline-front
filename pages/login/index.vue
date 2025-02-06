@@ -8,6 +8,16 @@
 
 <script setup>
 
+useHead({
+  title: 'Авторизация',
+  meta: [
+    {
+      name: 'description',
+      content: '',
+    },
+  ],
+});
+
 const router = useRouter();
 
 const currentAuthPage = ref('')

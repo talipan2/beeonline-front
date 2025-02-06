@@ -2,7 +2,7 @@
   <UiModal 
     class="create-entity-final-modal modal"
     v-model="settingStore.createEntityFinalModal"
-    @confirm="() => confirm()"
+    @confirm="confirm"
     :closeButton="false"
   >
   <template #content>
@@ -23,17 +23,20 @@ const props = defineProps({
 
 const settingStore = useSettingStore();
 
+const modalState = computed(() => settingStore.createEntityFinalModal);
+
 const confirm = () => {
   settingStore.createEntityFinalModal = false;
 }
 
-watch(() => settingStore.createEntityFinalModal, (newVal) => {
+watch(() => modalState.value, (newVal) => {
+  console.log(newVal)
   if(newVal === true) {
     setTimeout(() => {
-      confirm();
+      settingStore.createEntityFinalModal = false;
     }, 4000);
   }
-});
+}, {immediate: true});
 
 </script>
 

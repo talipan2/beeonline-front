@@ -23,7 +23,7 @@
     <ul class="plan-summary__list" v-if="tariffsStore.balanceLoaded">
       <template v-for="item in availableUserFeatures" :key="item.id">
         <li class="plan-summary__text">
-          {{ item.title }}
+          {{ item.title }}:
           <span class="plan-summary__text plan-summary__text_type_selection">{{ item.value }}</span>
         </li>
       </template>

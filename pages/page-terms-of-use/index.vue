@@ -8,3 +8,17 @@
     </template>
   </NuxtLayout>
 </template>
+
+<script setup>
+
+useHead({
+  title: 'Пользовательское соглашение',
+  meta: [
+    {
+      name: 'description',
+      content: '',
+    },
+  ],
+});
+
+</script>

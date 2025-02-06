@@ -13,6 +13,16 @@
 import { useEntityStore } from '~/store/entityStore';
 import { useUserStore } from '~/store/userStore';
 
+useHead({
+  title: 'Рабочий стол',
+  meta: [
+    {
+      name: 'description',
+      content: '',
+    },
+  ],
+});
+
 const entityStore = useEntityStore();
 const userStore = useUserStore();
 

@@ -8,7 +8,7 @@
               <p class="stats__title" :class="{ 'active': currentViewSetting === 'profile'}">Просмотры профиля</p>
               <p class="stats__value">{{ `0 (0)` }}</p>
               <div class="stats__status">
-                <div class="replenishment">
+                <div class="add">
                   <SvgoBalanceArrow class="svg-m " />
                   <p class="stats__status-text">100%</p>
                 </div>
@@ -21,7 +21,7 @@
               <p class="stats__title" :class="{ 'active': currentViewSetting === 'orders'}" v-if="role === 'performer'">Просмотры услуг</p>
               <p class="stats__value">{{ `0 (0)` }}</p>
               <div class="stats__status">
-                <div class="replenishment">
+                <div class="add">
                   <SvgoBalanceArrow class="svg-m" />
                   <p class="stats__status-text">100%</p>
                 </div>
@@ -33,7 +33,7 @@
               <p class="stats__title" :class="{ 'active': currentViewSetting === 'favorites'}" >Добавлен в избранное</p>
               <p class="stats__value">{{ `0 (0)` }}</p>
               <div class="stats__status">
-                <div class="replenishment">
+                <div class="add">
                   <SvgoBalanceArrow class="svg-m" />
                   <p class="stats__status-text">100%</p>
                 </div>

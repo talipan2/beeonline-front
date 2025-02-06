@@ -1,5 +1,6 @@
 <template>
   <div class="member-details">
+    {{ data }}
     <div class="member-details__header">
       <div class="image-box image-box_type_frame">
         <img :src="data.logo || defaultLogoImage" :alt="data.name">

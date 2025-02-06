@@ -1,12 +1,12 @@
 import axios from "axios";
 
 export default {
-  async getOrders() {
-    return axios.get(`orders`, {params: {organization_id: 2}})
+  async getOrders(params={}) {
+    return axios.get(`orders`, {params})
   },
 
   async getOrganizationOrder(id) {
-    return axios.get(`orders`, {params: {organization_id: id}})
+    return axios.get(`orders`)
   },
 
   async getOrder(id) {

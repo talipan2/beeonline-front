@@ -16,6 +16,10 @@
   </NuxtLayout>
 </template>
 
+<script setup>
+
+</script>
+
 <style lang="scss">
 .staff-create-layout {
   .profile__content {

@@ -12,6 +12,16 @@
 <script setup>
 import { useEntityStore } from '~/store/entityStore';
 
+useHead({
+  title: 'Рабочий стол',
+  meta: [
+    {
+      name: 'description',
+      content: '',
+    },
+  ],
+});
+
 const entityStore = useEntityStore();
 
 const selectorButtons = [

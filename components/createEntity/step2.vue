@@ -2,6 +2,7 @@
   <div class="entity">
     <h1 class="entity__title">Подробное описание</h1>
     <Form as="form" @submit="handleSubmit" v-slot="{ errors }">
+      <CommonAlerts v-if="errors && errors.selectedLocations" :alert="errors.selectedLocations" />
       <div class="entity__data">
         <div class="entity__photo">
           <label class="form-group__title entity__label">
@@ -133,7 +134,6 @@
           - doc, .docx, .xls, .xlsx, .ppt, .pptx, .rtf, .pdf, .jpeg, .png, .jpg, .gif, .psd, .djvu, .fb2, .ps, .zip, .rar"
           :extension="['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'rtf', 'pdf', 'jpeg', 'png', 'jpg', 'gif', 'psd', 'djvu', 'fb2', 'ps', 'zip', 'rar']"
         />
-      <CommonAlerts v-if="errors && errors.selectedLocations" :alert="errors.selectedLocations" />
       </div>
       <div class="entity__data" v-if="role === 'customer'">
         <h2 class="entity__subtitle">Города фактического производства заказа</h2>
@@ -206,7 +206,6 @@ const props = defineProps({
   type: {
     type: String,
     default: "create",
-    required: true,
     validator: (value) => ['create', 'edit'].includes(value),
   },
 });

@@ -31,7 +31,18 @@ export const useSettingStore = defineStore("setting", {
     changeDataModal: false,
     changeUserDataModal: false,
     createEntityFinalModal: false,
+    currencyList: [
+      {id: 1, name: 'Российский рубль', value: 'RUB'},
+      {id: 2, name: 'Доллар США', value: 'USD'},
+      {id: 3, name: 'Евро', value: 'EUR'},
+    ]
   }),
+  getters: {
+    getCurrencyNameById: (state) => (id) => {
+      const currency = state.currencyList.find(item => item.id == id);
+      return currency ? currency.name : '';
+    }
+  },
   actions: {
     setAlert(status, text) {
       this.alertModal.isOpen = true;

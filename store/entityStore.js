@@ -137,12 +137,12 @@ export const useEntityStore = defineStore('entity', {
         throw error;
       }
     },
-    async getOrders() {
+    async getOrders(params) {
       try {
-        const response = await orderApi.getOrders();
+        const response = await orderApi.getOrders(params);
         if(response.data) {
           this.ordersList = response.data.data;
-          return response.data.data
+          return response.data
         }
       } catch (error) {
         throw error;
@@ -160,12 +160,12 @@ export const useEntityStore = defineStore('entity', {
       }
     },
 
-    async getServices() {
+    async getServices(params) {
       try {
-        const response = await serviceApi.getServices();
+        const response = await serviceApi.getServices(params);
         if(response.data) {
           this.servicesList = response.data.data;
-          return response.data.data
+          return response.data
         }
       } catch (error) {
         throw error;

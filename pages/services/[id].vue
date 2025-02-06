@@ -63,17 +63,32 @@ onMounted(async() => {
   try {
     const serviceResponse = await entityStore.getService(router.currentRoute.value.params.id);
     data.value = serviceResponse.data;
-    try {
-      const pubCardResponse = await organizationStore.getPubCard(data.value.organization_id);
-      pubCard.value = pubCardResponse;
-    } catch (err) {
-      console.error(err);
+    if(serviceResponse && serviceResponse.data && serviceResponse.data.pub_card) {
+      pubCard.value = serviceResponse.data.pub_card
     }
+    // try {
+    //   const pubCardResponse = await organizationStore.getPubCard(data.value.organization_id);
+    //   pubCard.value = pubCardResponse;
+    // } catch (err) {
+    //   console.error(err);
+    // }
   } catch (err) {
     console.error(err);
   } finally {
     isLoading.value = false;
   }
+});
+
+const pageTitle = computed(() => formatData.value.name || 'Международный цифровой сервис поиска партнеров в сфере легкой промышленности');
+
+useHead({
+  title: pageTitle,
+  meta: [
+    {
+      name: 'description',
+      content: '',
+    },
+  ],
 });
 
 </script>

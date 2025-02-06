@@ -8,17 +8,29 @@
       <CatalogMembersFilter />
     </template>
     <template #content>
-      <CatalogMembersList :data="data" />
+      <div ref="anchor">
+        <CatalogMembersList :data="data" :class="{'loading': loading}" />
+        <CommonPagination v-if="page.lastPage > 1" :current-page="page.currentPage" :total-pages="page.lastPage" @changePage="handleChangePage" :loading="loading"/>
+      </div>
     </template>
   </NuxtLayout>
 </template>
 
 <script setup>
-import { useLocationStore } from '~/store/locationStore';
 import { useOrganizationStore } from '~/store/organizationStore';
+import { useSettingStore } from '~/store/settingStore';
 
 const organizationStore = useOrganizationStore();
-const locationStore = useLocationStore();
+const settingStore = useSettingStore();
+
+const router = useRouter();
+const anchor = ref(null);
+
+const loading = ref(false);
+const page = ref({
+  currentPage: 1,
+  lastPage: 0,
+})
 
 const data = computed(() => {
   return organizationStore.pubCardsList.map(item => {
@@ -37,9 +49,43 @@ const data = computed(() => {
   })
 });
 
+const handleChangePage = (currentPage) => {
+  page.value.currentPage = currentPage
+}
+
+watch(() => page.value.currentPage, () => {
+  loading.value = true
+  entityStore.getPubCardsList({page: page.value.currentPage}).then(res => {
+    if(res && res.meta && res.data) {
+      page.value = {
+        currentPage: res.meta.current_page,
+        lastPage: res.meta.last_page,
+      }
+      const rect = anchor.value.getBoundingClientRect(); 
+      const offset = window.scrollY + rect.top - settingStore.headerHeight;
+      smoothScroll(offset, false);
+      router.replace({ query: { page: res.meta.current_page } });
+    }
+  }).finally(() => {
+    loading.value = false
+  })
+})
 
 onMounted(() => {
-  organizationStore.getPubCardsList()
+  let params = {}
+  if(router.currentRoute.value.query.page) {
+    params = {
+      page: router.currentRoute.value.query.page || 1,
+    }
+  }
+  organizationStore.getPubCardsList(params).then(res => {
+    if(res && res.meta) {
+      page.value = {
+        currentPage: res.meta.current_page,
+        lastPage: res.meta.last_page,
+      }
+    }
+  })
 })
 
 

@@ -11,3 +11,17 @@
       </template>
   </NuxtLayout>
 </template>
+
+<script setup>
+
+useHead({
+  title: 'Уведомления',
+  meta: [
+    {
+      name: 'description',
+      content: '',
+    },
+  ],
+});
+
+</script>

@@ -40,12 +40,19 @@ const modules = [Pagination];
 
 .catalog__banner {
   font-size: 1rem;
-  max-width: 1161px;
+  max-width: 100%;
   box-sizing: border-box;
   margin-bottom: 6em;
   padding: 3em 1.5em;
   background-color: rgba(105, 55, 165, 0.1);
   border-radius: 15px;
+
+  .catalog__banner-content {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 100%;
+  overflow: hidden;
+}
 
   &-title {
     font-size: 3.2em;
@@ -55,6 +62,9 @@ const modules = [Pagination];
 
   &-slider {
     padding: .2em 1.7em 3em;
+    max-width: 100%;
+    width: 100%;
+    overflow: hidden;
   }
 
   .swiper-pagination-bullet {

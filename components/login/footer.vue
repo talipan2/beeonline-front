@@ -36,13 +36,13 @@ const router = useRouter();
 
 const registerCustomer = () => {
   userStore.role = "customer";
-  router.push({ path: "/register" });
+  router.push({ path: "/register", query: { role: "customer" } });
   settingStore.authModalStatus = false;
 };
 
 const registerPerformer = () => {
   userStore.role = "performer";
-  router.push({ path: "/register" });
+  router.push({ path: "/register", query: { role: "performer" } });
   settingStore.authModalStatus = false;
 };
 
