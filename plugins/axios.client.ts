@@ -7,6 +7,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   const config = useRuntimeConfig();
 
   if (import.meta.client) axios.defaults.baseURL = config.public.baseUrl;
+  console.log(import.meta.client);
   axios.defaults.headers.common["Content-Type"] = "application/json; charset=UTF-8";
   axios.defaults.headers.common["ngrok-skip-browser-warning"] = "true";
 

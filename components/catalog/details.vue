@@ -29,18 +29,17 @@
       </div>
     </div>
     <div class="orders-details__btn-container">
-      <UiButton class="orders-details__btn" 
-        v-if="type === 'service'" 
-        variant="quinary" size="large" 
-        :to="{path: '/chat', query: { org_id: entityData.organizationId, org_type: role }}"
+      <UiButton class="orders-details__btn"
+        v-if="type === 'service'"
+        variant="quinary" size="large"
       >
         <SvgoMessage class="svg-m" />
         Написать исполнителю
       </UiButton>
-      <UiButton class="orders-details__btn" 
-        v-if="type === 'order'" 
-        variant="quinary" size="large" 
-        :to="{path: '/chat', query: { org_id: entityData.organizationId, org_type: role }}"
+      <UiButton class="orders-details__btn"
+        v-if="type === 'order'"
+        variant="quinary" size="large"
+        :to="{path: '/chat', query: { order_id: entityData.id }}"
       >
         <SvgoMessage class="svg-m" />
         Написать Заказчику
@@ -129,7 +128,7 @@ const role = computed(() => {
     column-gap: 1.87em;
     margin-bottom: 1.25em;
   }
-  
+
   &__pub-card-image.image-box {
     flex-basis: 13%;
     padding-top: 13%;

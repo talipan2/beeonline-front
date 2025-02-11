@@ -17,6 +17,7 @@
     "@vee-validate/i18n": "^4.13.2",
     "@vee-validate/nuxt": "^4.13.2",
     "@vee-validate/rules": "^4.13.2",
+    "@vueform/multiselect": "^2.6.11",
     "@vueform/slider": "^2.1.10",
     "axios": "^1.7.5",
     "chart.js": "^4.4.6",
@@ -32,11 +33,14 @@
     "vue-chartjs": "^5.3.1",
     "vue-final-modal": "^4.5.4",
     "vue-flatpickr-component": "^11.0.5",
+    "vue-simple-context-menu": "^4.1.0",
     "vue-tippy": "^6.4.4",
     "vue-yandex-maps": "^2.1.4"
   },
   "devDependencies": {
     "@nuxt/devtools": "^1.6.0",
+    "laravel-echo": "^1.19.0",
+    "pusher-js": "^8.4.0-rc2",
     "sass": "^1.77.8"
   }
 }

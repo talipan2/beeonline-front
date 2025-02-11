@@ -47,7 +47,7 @@
         <label class="form-group-data form-group__title">
           Ваш телефон *
           <UiInput
-            :rules="{ required: true, min: 16, max: 16 }"
+            :rules="{ required: true, min: 11, max: 16 }"
             name="phone"
             label="Телефон"
             class="form-group__value"
