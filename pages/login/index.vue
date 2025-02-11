@@ -8,6 +8,16 @@
 
 <script setup>
 
+useHead({
+  title: 'Авторизация',
+  meta: [
+    {
+      name: 'description',
+      content: '',
+    },
+  ],
+});
+
 const router = useRouter();
 
 const currentAuthPage = ref('')
@@ -29,6 +39,19 @@ watch(() => router.currentRoute.value.query, (newVal) => {
   .login {
     width: 33%;
     margin-block: 5em 3em;
+  }
+
+  @include tablet {
+    .login {
+      width: 50%;
+      margin-inline: auto;
+    }
+  }
+
+  @include mobile {
+    .login {
+      width: 100%;
+    }
   }
 }
 

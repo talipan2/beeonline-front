@@ -15,15 +15,21 @@
       class="gallery-slider__container"
       :modules="modules"
     >
+      <SwiperSlide v-for="(video, index) in videos" :key="index">
+        <a :href="video" class="gallery-slider__link" data-fancybox="gallery" data-type="iframe">
+          <img :src="getVideoThumbnail(video)" class="gallery-slider__image" :alt="video" />
+          <SvgoPlay class="svg-l gallery-slider__play"/>
+        </a>
+      </SwiperSlide>
       <SwiperSlide v-for="(image, index) in images" :key="index">
         <a :href="image" class="gallery-slider__link" data-fancybox="gallery">
-          <img :src="image" class="gallery-slider__image" alt="Image" />
+          <img :src="image" class="gallery-slider__image" :alt="image" />
         </a>
       </SwiperSlide>
 
     <div class="gallery-slider__btn-container">
       <UiButton @click="showGallerySlider" type="button" class="gallery-slider__btn form-group-data__btn" variant="quinary" size="large">Смотреть все фото и видео</UiButton>
-      <div class="gallery-slider__pagination">
+      <div class="gallery-slider__pagination"  v-if="images.length > 8">
         <button class="gallery-slider__pagination-button gallery-slider__pagination-button_type_prev">
           <SvgoSlideArrow class="svg-lx" />
         </button>
@@ -40,46 +46,50 @@
 
 import { Fancybox } from '@fancyapps/ui';
 import {Grid, Pagination, Navigation} from 'swiper/modules';
+
+const props = defineProps({
+  images: {
+    type: Array,
+    default: [],
+  },
+  videos: {
+    type: Array,
+    default: [],
+  }
+})
+
 const modules = [Grid, Pagination, Navigation];
 
 const showGallerySlider = () => {
   Fancybox.show(
-    images.map((image) => ({
-      src: image,
-      type: 'image',
-    })),
-    {
-      Thumbs: false
-    }
-  )
-}
+    [
+      ...props.videos.map((video) => ({
+        src: video,
+        type: 'iframe',
+      })),
+      
+      ...props.images.map((image) => ({
+        src: image,
+        type: 'image',
+      })),
 
-const images = [
-  'https://i.pinimg.com/564x/ee/30/f5/ee30f54fcd2777b83a171c01580465b4.jpg',
-  'https://i.pinimg.com/564x/ee/30/f5/ee30f54fcd2777b83a171c01580465b4.jpg',
-  'https://i.pinimg.com/564x/ee/30/f5/ee30f54fcd2777b83a171c01580465b4.jpg',
-  'https://i.pinimg.com/564x/ee/30/f5/ee30f54fcd2777b83a171c01580465b4.jpg',
-  'https://i.pinimg.com/564x/ee/30/f5/ee30f54fcd2777b83a171c01580465b4.jpg',
-  'https://i.pinimg.com/564x/ee/30/f5/ee30f54fcd2777b83a171c01580465b4.jpg',
-  'https://i.pinimg.com/564x/ee/30/f5/ee30f54fcd2777b83a171c01580465b4.jpg',
-  'https://i.pinimg.com/564x/ee/30/f5/ee30f54fcd2777b83a171c01580465b4.jpg',
-  'https://i.pinimg.com/564x/ee/30/f5/ee30f54fcd2777b83a171c01580465b4.jpg',
-  'https://i.pinimg.com/564x/ee/30/f5/ee30f54fcd2777b83a171c01580465b4.jpg',
-  'https://i.pinimg.com/564x/ee/30/f5/ee30f54fcd2777b83a171c01580465b4.jpg',
-  'https://i.pinimg.com/564x/ee/30/f5/ee30f54fcd2777b83a171c01580465b4.jpg',
-  'https://i.pinimg.com/564x/ee/30/f5/ee30f54fcd2777b83a171c01580465b4.jpg',
-  'https://i.pinimg.com/564x/ee/30/f5/ee30f54fcd2777b83a171c01580465b4.jpg',
-  'https://i.pinimg.com/564x/ee/30/f5/ee30f54fcd2777b83a171c01580465b4.jpg',
-  'https://i.pinimg.com/564x/ee/30/f5/ee30f54fcd2777b83a171c01580465b4.jpg',
-  'https://i.pinimg.com/564x/ee/30/f5/ee30f54fcd2777b83a171c01580465b4.jpg',
-  'https://i.pinimg.com/564x/ee/30/f5/ee30f54fcd2777b83a171c01580465b4.jpg',
-  'https://i.pinimg.com/564x/ee/30/f5/ee30f54fcd2777b83a171c01580465b4.jpg',
-  'https://i.pinimg.com/564x/ee/30/f5/ee30f54fcd2777b83a171c01580465b4.jpg',
-  'https://i.pinimg.com/564x/ee/30/f5/ee30f54fcd2777b83a171c01580465b4.jpg',
-  'https://i.pinimg.com/564x/ee/30/f5/ee30f54fcd2777b83a171c01580465b4.jpg',
-  'https://i.pinimg.com/564x/ee/30/f5/ee30f54fcd2777b83a171c01580465b4.jpg',
-  'https://i.pinimg.com/564x/ee/30/f5/ee30f54fcd2777b83a171c01580465b4.jpg',
-];
+    ],
+    {
+      Thumbs: false,
+    }
+  );
+};
+
+const getVideoThumbnail = (videoUrl) => {
+  const videoId = extractYouTubeId(videoUrl);
+  return videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : null;
+};
+
+const extractYouTubeId = (url) => {
+  if (!url) return null;
+  const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:.*v=|.*v\/|vi\/|u\/\w\/|embed\/|shorts\/|watch\?v=|&v=))([^#&?]*).*/);
+  return match ? match[1] : null;
+};
 
 </script>
 
@@ -113,6 +123,16 @@ const images = [
   height: 100%;
   object-fit: cover;
   transform: translate(-50%, -50%);
+}
+
+.gallery-slider__play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  width: 3.8em;
+  height: 3.8em;
 }
 
 .gallery-slider__btn-container {

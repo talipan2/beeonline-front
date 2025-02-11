@@ -7,10 +7,10 @@
             <a href="#" class="header__link">О компании</a>
           </li> -->
           <li class="header__item">
-            <NuxtLink to="https://test.bee-online.ru/help" class="header__link">Помощь</NuxtLink>
+            <NuxtLink to="/help" class="header__link">Помощь</NuxtLink>
           </li>
           <li class="header__item">
-            <NuxtLink to="https://test.bee-online.ru/contacts" class="header__link">Контакты</NuxtLink>
+            <NuxtLink to="/contacts" class="header__link">Контакты</NuxtLink>
           </li>
         </ul>
         <ul class="header__list">
@@ -120,7 +120,7 @@ const role = computed(() => {
 
 const handleCreateOrder = () => {
   if (!isAuth.value) {
-    router.push('/register');
+    router.push({path: '/register',  query: { role: 'customer', action: 'create-order' } });
     userStore.role = 'customer'
     localStorage.setItem('role', 'customer');
     settingStore.isCreateOrder = true
@@ -161,11 +161,33 @@ const onScrollPage = () => {
   }
 }
 
+// функция для добавления отступа header при открытии модалки
+const adjustHeaderPadding = () => {
+  const bodyPaddingRight = parseInt(window.getComputedStyle(document.body).paddingRight, 10) || 0;
+  if (headerMain.value && header.value.classList.contains('header_fixed')) {
+    headerMain.value.style.paddingRight = `${bodyPaddingRight}px`;
+  }
+};
+
 onMounted(() => {
   updateHeaderHeight();
   onScrollPage();
   window.addEventListener('resize', updateHeaderHeight);
   window.addEventListener("scroll", onScrollPage)
+
+  // следим за изменением стиля body для добавления отступа header при открытии модалки
+  const observer = new MutationObserver(() => {
+    adjustHeaderPadding();
+  })
+
+  observer.observe(document.body, {
+    attributes: true, // Следим за изменениями атрибутов
+    attributeFilter: ['style'], // Конкретно за изменением стиля
+  });
+
+  adjustHeaderPadding();
+
+
   userStore.role = localStorage.getItem('role');
   // userStore.checkAuth();
   if(entityStore.entityData.categories.length < 1) {
@@ -190,6 +212,10 @@ onUnmounted(() => {
 
 .header_fixed .header__filler {
   // height: var(--header-height)
+}
+
+body.vfm--scrollbar-hidden .fixed-header {
+  padding-right: calc(var(--vfm-scrollbar-width) + 1rem);
 }
 
 .header_fixed .header__main {

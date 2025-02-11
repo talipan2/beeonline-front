@@ -1,5 +1,5 @@
 <template>
-  <CommonFilter @updateTutorialRefSubmit="updateTutorialRefSubmit">
+  <CommonFilter @updateTutorialRefSubmit="updateTutorialRefSubmit" :submit-function="handleSubmit" :reset-function="resetFilter">
     <template #body>
       <div class="filter__item" ref="tutorialRef1">
         <h3 class="filter__title">Категории продукции:</h3>
@@ -10,6 +10,8 @@
           :typeButton="{ variant: 'default', size: 'large' }"
           :priority-showed="[2, 4, 6, 10]"
           :isValidated="false"
+          v-model="searchProps.category"
+          name="category"
         >
           <template #btn-image>
             <SvgoDropDownNew class="svg-m" />
@@ -24,21 +26,21 @@
           v-model="searchProps.location"
           buttonLabel="Выбрать регионы"
           class="filter__location"
-          
           :type="['selectCities', 'selectCountry']"
+          name="location"
         />
       </div>
       <div class="filter__item" ref="tutorialRef3">
         <h3 class="filter__title">Объем партии:</h3>
-        <UiRangeInput v-model="searchProps.price"/>
+        <UiRangeInput :min="0" :max="10000" v-model="searchProps.batch" />
       </div>
       <div class="filter__item" ref="tutorialRef4">
         <h3 class="filter__title">Срочность:</h3>
-        <UiCheckbox :is-validated="false">Только срочные</UiCheckbox>
+        <UiCheckbox :is-validated="false" v-model="searchProps.is_rush">Только срочные</UiCheckbox>
       </div>
       <div class="filter__item">
         <h3 class="filter__title">Безопасная сделка:</h3>
-        <UiCheckbox :is-validated="false">С безопасной сделкой</UiCheckbox>
+        <UiCheckbox :is-validated="false" v-model="searchProps.use_deals">С безопасной сделкой</UiCheckbox>
       </div>
     </template>
   </CommonFilter>
@@ -52,18 +54,43 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+  filter: {
+    type: Object,
+    default: () => {},
+  }
 })
+
+const emit = defineEmits(['update:modelValue', 'updateFilter']);
+
 
 const entityStore = useEntityStore();
 
-const searchProps = {
+const searchProps = ref({
+  category: [],
   location: [],
-  price: [0, 10000],
-};
+  batch: [0, 10000],
+  is_rush: false,
+  use_deals: false,
+});
+
+const handleSubmit = () => {
+  emit('updateFilter', {...searchProps.value});
+}
+
+const resetFilter = () => {
+  searchProps.value = {
+    category: [],
+    location: [],
+    batch: [0, 10000],
+    is_rush: false,
+    use_deals: false,
+  };
+  emit('updateFilter', []);
+}
+
 
 const category = computed(() => entityStore.entityData.categories);
 
-const emit = defineEmits(['update:modelValue']);
 
 const tutorialRefs = computed(() => {
   return [
@@ -89,4 +116,14 @@ const updateTutorialRefSubmit = (value) => {
 watch(() => tutorialRefs.value, (newVal) => {
   emit('update:modelValue', newVal);
 }, {deep: true})
+
+watch(() => props.filter, (newVal) => {
+  searchProps.value = {
+    category: newVal.categories || [],
+    location: newVal.location || [],
+    batch: newVal.batch || [0, 10000],
+    is_rush: newVal.is_rush || false,
+  };
+}, {deep: true, once: true})
+
 </script>

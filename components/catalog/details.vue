@@ -1,30 +1,40 @@
 <template>
   <div class="orders-details">
     <div class="orders-details__container">
-      <div class="orders-details__item" v-for="(prop, index) in entityData.props" :key="index">
-        <p class="orders-details__title">{{ prop.name }}</p>
-        <p class="orders-details__value" v-if="!prop.link">{{ prop.value }}</p>
-        <div class="orders-details__value" v-else v-for="(item, index) in prop.value" :key="index">
-          <NuxtLink class="link">
-            {{ item }}
-          </NuxtLink>
-          <span class="orders-details__divider" v-if="index < prop.value.length - 1"> / </span>
+      <template v-for="(prop, index) in entityData.props" :key="index">
+        <div class="orders-details__item" v-if="!isEmpty(prop.value)">
+          <p class="orders-details__title">{{ prop.name }}</p>
+          <p class="orders-details__value" v-if="!prop.link">{{ prop.value }}</p>
+          <div class="orders-details__value" v-else v-for="(item, index) in prop.value" :key="index">
+            <template v-if="prop.link === 'material'">
+              <NuxtLink class="link" :to="{ path: routeLinkForType, query: item.id === 0 ? { materials_own: 1 } : { materials_tolling : 1} }">
+                {{ item.name }}
+              </NuxtLink>
+              <span class="orders-details__divider" v-if="index < prop.value.length - 1"> / </span>
+            </template>
+            <template v-else >
+              <NuxtLink class="link" :to="{ path: routeLinkForType, query: { [prop.link]: item.id} }">
+                {{ item.name }}
+              </NuxtLink>
+              <span class="orders-details__divider" v-if="index < prop.value.length - 1"> / </span>
+            </template>
+          </div>
         </div>
-      </div>
+      </template>
     </div>
     <div class="orders-details__pub-card">
       <div class="orders-details__pub-card-image image-box">
-        <img :src='defaultImage' alt="">
-        <NuxtLink to="/" class="orders-details__pub-card-link"></NuxtLink>
+        <img :src='pubCard.logo || defaultImage' :alt="pubCard.name">
+        <NuxtLink v-if="pubCard.id" :to="`/members/${pubCard.id}/${pubCard.type}`" class="orders-details__pub-card-link"></NuxtLink>
       </div>
       <div class="orders-details__pub-card-content">
-        <NuxtLink v-if="pubCard.id && role" :to="`/members/${pubCard.id}/${role}`" class="orders-details__pub-card-title link">{{ pubCard.name || '' }}</NuxtLink>
+        <NuxtLink v-if="pubCard.id && role" :to="`/members/${pubCard.id}/${pubCard.type}`" class="orders-details__pub-card-title link">{{ pubCard.name || '' }}</NuxtLink>
         <div class="orders-details__pub-card-rating">
           <CommonRating />
         </div>
         <div class="orders-details__pub-card-location">
-          <i class="flag flag_round" />
-          Россия
+          <i class="flag flag_round" :class="pubCard.country_id ? selectFlag(pubCard.country_id) : ''"/>
+          {{ locationStore.getCountryById(pubCard.country_id) }}
         </div>
       </div>
     </div>
@@ -56,15 +66,20 @@
       <p class="orders-details__details-title">Условия сотрудничества</p>
       <p class="orders-details__details-text">{{ entityData.conditions }}</p>
     </div>
-    <div class="orders-details__details">
+    <div class="orders-details__details" v-if="formatDocumentsArray && formatDocumentsArray.length">
+      <p class="orders-details__details-title">Технические требования</p>
+      <CommonFileList class="view-entity__files orders-details__files" :data-list="formatDocumentsArray" divider top-divider/>
+    </div>
+    <div class="orders-details__details" v-if="entityData.gallery && entityData.gallery.length">
       <p class="orders-details__details-title">Галерея</p>
-      <CommonGallerySlider />
+      <CommonGallerySlider :images="entityData.gallery"/>
     </div>
   </div>
 </template>
 
 <script setup>
 import defaultImage from '~/assets/images/nophoto_pc.png';
+import { useLocationStore } from '~/store/locationStore';
 
 const props = defineProps({
   type: {
@@ -81,6 +96,17 @@ const props = defineProps({
   },
 })
 
+const locationStore = useLocationStore();
+
+const routeLinkForType = computed(() => {
+  switch (props.type) {
+    case 'service':
+      return '/services/';
+    case 'order':
+      return '/orders/';
+  }
+})
+
 const role = computed(() => {
   switch (props.type) {
     case 'service':
@@ -88,6 +114,17 @@ const role = computed(() => {
     case 'order':
       return 'customer';
   }
+})
+
+const formatDocumentsArray = computed(() => {
+  if(!props.entityData.tzFiles || props.entityData.tzFiles.length === 0) return [];
+  return props.entityData.tzFiles.map(item => {
+    return {
+      name: item.split('/').pop(),
+      url: item,
+      type: item.split('.').pop()
+    }
+  })
 })
 
 </script>
@@ -133,6 +170,7 @@ const role = computed(() => {
     flex-basis: 13%;
     padding-top: 13%;
     background-color: #fff;
+    margin-right: 0;
   }
 
   &__pub-card-link {
@@ -183,6 +221,11 @@ const role = computed(() => {
 
   &__details-text {
     font-size: 1em;
+  }
+
+  &__files {
+    font-size: 1rem;
+    max-width: 50%;
   }
 
 }

@@ -16,6 +16,20 @@
   </NuxtLayout>
 </template>
 
+<script setup>
+
+useHead({
+  title: 'Создание нового сотрудника',
+  meta: [
+    {
+      name: 'description',
+      content: '',
+    },
+  ],
+});
+
+</script>
+
 <style lang="scss">
 .staff-create-layout {
   .profile__content {

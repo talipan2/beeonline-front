@@ -6,7 +6,7 @@
     :name="name"
     :label="label"
   >
-    <div class="checkbox-group" :class="$attrs.class">
+    <div class="checkbox-group" :class="$attrs.class" :name="name">
       <UiCheckbox
         v-for="option in visibilityElement"
         :key="option.id"

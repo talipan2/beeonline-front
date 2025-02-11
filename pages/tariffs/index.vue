@@ -8,3 +8,17 @@
     </template>
   </NuxtLayout>
 </template>
+
+<script setup>
+
+useHead({
+  title: 'Баланс и платные услуги',
+  meta: [
+    {
+      name: 'description',
+      content: '',
+    },
+  ],
+});
+
+</script>

@@ -5,23 +5,170 @@
         :list="[{ label: 'Главная', link: '/' }, { label: 'Каталог заказов', link: '' }]" />
     </template>
     <template #leftSide>
-      <CatalogMembersFilter />
+      <CatalogMembersFilter :filter="filter" @updateFilter="handleUpdateFilter" />
     </template>
     <template #content>
-      <CatalogMembersList :data="data" />
+      <div ref="anchor">
+        <CatalogMembersList :data="data" :class="{'loading': loading}" :page="page"/>
+        <CommonPagination v-if="page.lastPage > 1" :current-page="page.currentPage" :total-pages="page.lastPage" @changePage="handleChangePage" :loading="loading"/>
+      </div>
     </template>
   </NuxtLayout>
 </template>
 
 <script setup>
 import { useOrganizationStore } from '~/store/organizationStore';
+import { useSettingStore } from '~/store/settingStore';
 
 const organizationStore = useOrganizationStore();
+const settingStore = useSettingStore();
 
-const data = computed(() => organizationStore.pubCardsList);
+const router = useRouter();
+const anchor = ref(null);
+
+const loading = ref(false);
+const page = ref({
+  currentPage: 1,
+  lastPage: 0,
+  total: 0,
+  itemsToPage: 0,
+})
+
+const data = computed(() => {
+  return organizationStore.pubCardsList.map(item => {
+    return {
+      id: item.id,
+      name: item.name,
+      logo: item.logo,
+      description: item.description,
+      fillRating: item.fill_rating,
+      entityCount: item.type === 'performer' ? item.services_count : item.orders_count,
+      category: item.categories && item.categories.length ? item.categories.map(item => item.name) : [],
+      rawMaterials: [item.materials_own ? 'Собственное' : '', item.materials_tolling ? 'Давальческое' : ''].filter(Boolean),
+      type: item.type,
+      countryId: {countries: [item.country_id]},
+    }
+  })
+});
+
+const filter = ref({});
+
+// Фильтр
+const handleUpdateFilter = (data) => {
+
+  // Если фильтры не выбраны 
+  if(!data || data.length === 0) {
+    router.replace({ query: {} });
+    organizationStore.getPubCardsList({type: 'performer'});
+    return
+  }
+
+  // добавление квери параметров для роутинга
+  const newQuery = {
+    type: data.type ? data.type : undefined,
+    categories: data.category ? data.category.join(',') : undefined,
+    countries: data.location ? data.location.join(',') : undefined,
+    materials_own: data.material && data.material.length && data.material.includes(0) ? 1 : undefined,
+    materials_tolling: data.material && data.material.length && data.material.includes(1) ? 1 : undefined,
+  }
+  console.log(newQuery)
+
+  // добавление квери параметров для запроса
+  filter.value = {
+    type: data.type ? data.type : undefined,
+    categories: data.category && data.category.length ? data.category : undefined,
+    countries: data.location && data.location.length ? data.location : undefined,
+    materials_own: data.material && data.material.length && data.material.includes(0) ? 1 : undefined,
+    materials_tolling: data.material && data.material.length && data.material.includes(1) ? 1 : undefined,
+  }
+
+  // удаление пустых параметров 
+  Object.keys(newQuery).forEach((key) => {
+    if (!newQuery[key]) delete newQuery[key];
+  });
+
+  // обновление роутинга 
+  router.replace({ query: { ...newQuery } });
+
+  // запрос на получение данных с фильтром
+  organizationStore.getPubCardsList({...filter.value}).then(res => {
+    if(res) {
+      page.value = {
+        currentPage: res.meta.current_page,
+        lastPage: res.meta.last_page,
+        total: res.meta.total,
+        itemsToPage: res.meta.per_page
+      }
+
+      // скрол на начало списка
+      const rect = anchor.value.getBoundingClientRect(); 
+      const offset = window.scrollY + rect.top - settingStore.headerHeight;
+      smoothScroll(offset, false);
+    }
+  })
+}
+
+const handleChangePage = (currentPage) => {
+  page.value.currentPage = currentPage
+}
+
+// отслеживание текущей страницы для пагинации
+watch(() => page.value.currentPage, () => {
+  loading.value = true
+  organizationStore.getPubCardsList({page: page.value.currentPage}).then(res => {
+    if(res && res.meta && res.data) {
+      page.value = {
+        currentPage: res.meta.current_page,
+        lastPage: res.meta.last_page,
+      }
+      const rect = anchor.value.getBoundingClientRect(); 
+      const offset = window.scrollY + rect.top - settingStore.headerHeight;
+      smoothScroll(offset, false);
+      router.replace({ query: { page: res.meta.current_page } });
+    }
+  }).finally(() => {
+    loading.value = false
+  })
+})
 
 onMounted(() => {
-  organizationStore.getPubCardsList()
+  let params = {
+    type: 'performer'
+  }
+
+  if(Object.keys(router.currentRoute.value.query).length > 0) {
+    const query = router.currentRoute.value.query
+
+    params = {
+      page: query.page ? Number(query.page) : undefined,
+      type: query.type ? query.type : 'performer',
+      categories: query.categories ? query.categories.split(',').map(item => Number(item)) : undefined,
+      countries: query.countries ? query.countries.split(',').map(item => Number(item)) : undefined,
+      materials_own: query.materials_own ? Number(query.materials_own) : undefined,
+      materials_tolling: query.materials_tolling ? Number(query.materials_tolling) : undefined,
+    }
+
+    filter.value = {
+      type: query.type ? query.type : 'performer',
+      categories: query.categories ? query.categories.split(',').map(item => Number(item)) : [],
+      countries: query.countries ? query.countries.split(',').map(item => Number(item)) : [],
+      materials_own: query.materials_own ? Number(query.materials_own) : undefined,
+      materials_tolling: query.materials_tolling ? Number(query.materials_tolling) : undefined,
+    }
+  }
+
+  organizationStore.getPubCardsList(params).then(res => {
+    if(res && res.meta) {
+      page.value = {
+        currentPage: res.meta.current_page,
+        lastPage: res.meta.last_page,
+        total: res.meta.total,
+        itemsToPage: res.meta.to - res.meta.from
+      }
+    }
+  })
 })
+
+
 
 </script>

@@ -10,7 +10,7 @@
       <template v-if="isAuth"> 
         <button class="header-menu__user-data" @click="() => isOpenDropDown = !isOpenDropDown">
           <div class="header-menu__user-image">
-            <img src="~/assets/images/header/profile-image.jpg" alt="">
+            <img src="~/assets/images/header/profile-image.jpg" :alt="userName">
           </div>
           <div class="header-menu__user-info">
             <div class="header-menu__user-name">{{ userName }}</div>

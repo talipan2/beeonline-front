@@ -37,8 +37,10 @@
 
 <script setup>
 import { useSettingStore } from '~/store/settingStore';
+import { useUserStore } from '~/store/userStore';
 
 const settingStore = useSettingStore();
+const userStore = useUserStore();
 
 const rightSide = ref(null);
 const leftSide = ref(null);
@@ -67,6 +69,25 @@ onMounted(() => {
 
 onUnmounted(() => {
   window.removeEventListener("scroll", onScrollPage)
+});
+
+const userRole = computed(() => {
+  if(userStore.role === 'customer') {
+    return 'заказчика';
+  } else if(userStore.role === 'performer') {
+    return 'исполнителя';
+  }
+})
+
+useHead({
+  title: userRole,
+  titleTemplate: 'Регистрация %s',
+  meta: [
+    {
+      name: 'description',
+      content: '',
+    },
+  ],
 });
 
 </script>

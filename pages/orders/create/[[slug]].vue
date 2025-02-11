@@ -34,6 +34,16 @@ import { useOrganizationStore } from '~/store/organizationStore';
 import { useSettingStore } from '~/store/settingStore';
 import { useUserStore } from '~/store/userStore';
 
+useHead({
+  title: 'Создание заказа',
+  meta: [
+    {
+      name: 'description',
+      content: '',
+    },
+  ],
+});
+
 const router = useRouter();
 const route = useRoute();
 const entityStore = useEntityStore();
@@ -48,11 +58,11 @@ const fillingOrder = ref(null);
 
 const validSteps = ['step1', 'step2', 'step4'];
 
-onBeforeMount(() => {
-  if (!validSteps.includes(router.currentRoute.value.params.slug)) {
-    router.replace({ name: 'orders-create-slug', params: { slug: 'step1' } });
-  }
-})
+// onBeforeMount(() => {
+//   if (!validSteps.includes(router.currentRoute.value.params.slug)) {
+//     router.replace({ name: 'orders-create-slug', params: { slug: 'step1' } });
+//   }
+// })
 
 const currentHandleSubmit = computed(() => {
   switch (router.currentRoute.value.params.slug) {
@@ -111,7 +121,7 @@ const currentHandleSubmit = computed(() => {
           // }
           
           if(order.value.tzFiles && order.value.tzFiles.length) {
-            entityStore.uploadTzFiles(order.value.id, order.value.tzFiles)
+            entityStore.uploadTzFiles(order.value.id, order.value.tzFiles.map(item => item.id))
           }
         });
     case 'step4':
@@ -119,12 +129,16 @@ const currentHandleSubmit = computed(() => {
         entityStore.editOrder(order.value.id, {
           isSafeDeal: order.value.isSafeDeal,
           status: 'under_moderation',
-        }).then(res => entityStore.fillingOrder = null);
+        }).then(res => {
+          entityStore.fillingOrder = null
+          entityStore.resetOrder()
+        });
         if(settingStore.isCreateOrder) {
           router.push('/register/step1')
           settingStore.isCreateOrder = false
         } else {
-          router.push('/customer/orders')
+          router.push(`/customer/orders/show/${order.value.id}`)
+          settingStore.createEntityFinalModal = true
         }
       });
   } 
@@ -145,9 +159,9 @@ const currentComponent = computed(() => {
       return Step3
     case 'step4':
       return Step4
-    // default:
-    //   title.value = 'Создание заказа';
-    //   return Step1;
+    default:
+      title.value = 'Создание заказа';
+      return Step1;
   }
 })
 
@@ -163,9 +177,10 @@ const order = ref(entityStore.order);
 const ordersData = computed(() => ({
   name: order.value.name,
   logo: order.value.gallery && order.value.gallery.length ? order.value.gallery[0].url : '',
+  countryId: data.value.locations && data.value.locations.length ? data.value.locations[0].countryId : null,
   data: [
     { id: 1, name: 'Категории', value: data.value.categories },
-    { id: 2, name: 'Место производства', value: data.value.placeOfProductionId },
+    { id: 2, name: 'Место производства', value: data.value.locations.map(item => item.name) },
     { id: 3, name: 'Партия', value: data.value.batch },
     { id: 4, name: 'Лекала', value: data.value.patterns },
     { id: 5, name: 'Сырье', value: data.value.rawMaterials },
@@ -177,65 +192,90 @@ const ordersData = computed(() => ({
 const data = computed(() => ({
   name: order.value.name,
   logo: order.value.gallery && order.value.gallery.length ? order.value.gallery[0].url : '',
-  categories: computed(() => entityStore.getEntityLabelById('categories', order.value.categories)).value,
-  placeOfProductionId: computed(() => locationStore.getLocationsByIds(order.value.placeOfProductionId)).value,
+  categories: entityStore.getEntityLabelById('categories', order.value.categories),
+  locations: locationStore.getLocationsByIds([], order.value.locations?.regions, order.value.locations?.cities),
   batch: order.value.batch,
-  patterns: computed(() => entityStore.getEntityLabelById('patterns', order.value.patterns)).value,
-  rawMaterials: computed(() => entityStore.getEntityLabelById('rawMaterials', order.value.rawMaterials)).value,
+  patterns: entityStore.getEntityLabelById('patterns', order.value.patterns),
+  rawMaterials: entityStore.getEntityLabelById('rawMaterials', order.value.rawMaterials),
   completionDate: order.value.completionDate ? formatDate(order.value.completionDate) : '',
   description: order.value.description,
   termsOfCooperation: order.value.termsOfCooperation
 }))
 
   
-onBeforeMount(() => {
-  if(!entityStore.fillingOrder && !entityStore.fillingOrder?.id) {
-    entityStore.getOrganizationOrders(userStore.userData.organization_id)
-    .then((res) => {
-      if(res && res.data && res.data.orders && Array.isArray(res.data.orders)) {
-        res.data.orders.find(item => {
-          if(item.status === 'filling') {
-            entityStore.fillingOrder = {
-              id: item.id,
-              name: item.name,
-              description: item.description,
-              gallery: item.gallery || [],
-              termsOfCooperation: item.conditions,
-              batch: item.batch ? Number(item.batch) : '',
-              categories: item.category || [],
-              rawMaterials: item.material === null ? item.material : (!item.material ? 0 : 1),
-              patterns: item.pattern === null ? item.pattern : (!item.pattern ? 0 : 1),
-              price: item.price ? Number(item.price) : '',
-              completionDate: item.deadline_at,
-              locations: {
-                cities: item.cities || [],
-                regions: item.regions || [],
-              },
-              currentStep: item.current_step,
-              isSafeDeal: item.is_safedeal,
-              logo: item.gallery && item.gallery.length ? item.gallery[0] : {url: null, id: null},
-            }
-            order.value = entityStore.fillingOrder
-          }
-        })
+onBeforeMount(async () => {
+  // Если данных о текущем заказе нет, загружаем их
+  if (!entityStore.fillingOrder?.id) {
+    await entityStore.getOrganizationOrders(userStore.userData.organization_id).then((res) => {
+      if (res?.data?.orders && Array.isArray(res.data.orders)) {
+        const orderInProgress = res.data.orders.find((item) => item.status === 'filling');
+        if (orderInProgress) {
+          entityStore.fillingOrder = {
+            id: orderInProgress.id,
+            name: orderInProgress.name,
+            description: orderInProgress.description,
+            gallery: orderInProgress.gallery || [],
+            termsOfCooperation: orderInProgress.conditions,
+            batch: orderInProgress.batch ? Number(orderInProgress.batch) : '',
+            categories: orderInProgress.product_categories.map(item => item.id) || [],
+            rawMaterials:
+              orderInProgress.material === null
+                ? orderInProgress.material
+                : !orderInProgress.material
+                ? 0
+                : 1,
+            patterns:
+              orderInProgress.pattern === null
+                ? orderInProgress.pattern
+                : !orderInProgress.pattern
+                ? 0
+                : 1,
+            price: orderInProgress.price ? Number(orderInProgress.price) : '',
+            completionDate: orderInProgress.deadline_at,
+            locations: {
+              cities: orderInProgress.cities && Array.isArray(orderInProgress.cities) ? orderInProgress.cities.map(item => item.id) : [],
+              regions: orderInProgress.regions && Array.isArray(orderInProgress.regions) ? orderInProgress.regions.map(item => item.id) : [],
+            },
+            currentStep: orderInProgress.current_step,
+            isSafeDeal: orderInProgress.is_safedeal,
+            logo:
+              orderInProgress.gallery?.length > 0
+                ? orderInProgress.gallery[0]
+                : { url: null, id: null },
+          };
+          order.value = entityStore.fillingOrder;
+        }
       }
-    })
-  } else {
-    order.value = entityStore.fillingOrder
+    });
   }
-})
 
-onMounted(() => {
-  if(!entityStore.isRedirectedToStep) return
-  if(entityStore.fillingOrder && entityStore.fillingOrder.currentStep && entityStore.fillingOrder.currentStep === 1) {
-    router.push('/orders/create/step2')
-    entityStore.isRedirectedToStep = false;
+  if (entityStore.fillingOrder && entityStore.fillingOrder?.id) {
+    order.value = entityStore.fillingOrder;
   }
-  if(entityStore.fillingOrder && entityStore.fillingOrder.currentStep && entityStore.fillingOrder.currentStep === 2) {
-    router.push('/orders/create/step4')
-    entityStore.isRedirectedToStep = false;
+
+  // Выполняем редирект после загрузки данных
+  handleRedirect();
+});
+
+const handleRedirect = () => {
+  if (!entityStore.isRedirectedToStep) return;
+
+  const currentStep = entityStore.fillingOrder?.currentStep || 0;
+
+  switch (currentStep) {
+    case 0:
+      router.push('/orders/create/step1');
+      break;
+    case 1:
+      router.push('/orders/create/step2');
+      break;
+    case 2:
+      router.push('/orders/create/step4');
+      break;
   }
-})
+
+  entityStore.isRedirectedToStep = false;
+};
 
 
 

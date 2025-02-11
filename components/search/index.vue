@@ -1,49 +1,84 @@
 <template>
-  <div class="search__container">
+  <div class="search__container" :class="{'loading' : loading}">
     <h1 class="search__title">Результаты поиска</h1>
-    <UiInput class="search__input">
-      <UiButton class="search__btn" variant="default" size="around">
+    <UiInput class="search__input" v-model="searchQuery" type="text" name="search" placeholder="Поиск">
+      <UiButton type="button" class="search__btn" variant="default" size="around" @click="handleSearch(searchQuery)">
         <SvgoSearchIcon class="search__btn-icon svg-m"/>
       </UiButton>
     </UiInput>
-    <CommonSelectorListButtons :buttons-list="selectorButtons" @update-active-button="handleListChange"/>
-    <div class="search__list">
-      <CatalogOrdersList v-if="currentEntityType === 'orders'" :data="searchResultOrderList" :isPagination="false"/>
-      <CatalogServiceList v-if="currentEntityType === 'services'" :data="searchResultServiceList" :isPagination="false" />
-      <CatalogMembersListDefault v-if="currentEntityType === 'members'" :data="searchResultMemberList" />
+    <CommonSelectorListButtons v-if="isSearch" :buttons-list="selectorButtons" @update-active-button="handleListChange"/>
+    <div class="search__list" v-if="isSearch">
+      <template v-if="currentEntityType === 'orders'">
+        <template v-if="searchResultOrderList.length">
+          <CatalogOrdersList  :data="searchResultOrderList" :isPagination="false"/>
+        </template>
+        <template v-else>
+          <CommonAlerts type="warning" alert="Подходящих заказов не найдено"/>
+        </template>
+      </template>
+      <template v-if="currentEntityType === 'services'">
+        <template v-if="searchResultServiceList.length">
+          <CatalogServiceList  :data="searchResultServiceList" :isPagination="false" />
+        </template>
+        <template v-else>
+          <CommonAlerts type="warning" alert="Подходящих услуг не найдено"/>
+        </template>
+      </template>
+      <template v-if="currentEntityType === 'members'">
+        <template v-if="searchResultMemberList.length">
+          <CatalogMembersListDefault  :data="searchResultMemberList" />
+        </template>
+        <template v-else>
+          <CommonAlerts type="warning" alert="Подходящих участников не найдено"/>
+        </template>
+      </template>
     </div>
   </div>
 </template>
 
 <script setup>
 import { useEntityStore } from '~/store/entityStore';
-import { useOrganizationStore } from '~/store/organizationStore';
-
 
 const currentEntityType = ref('orders');
 
 const entityStore = useEntityStore();
-const organizationStore = useOrganizationStore();
+
+const searchQuery = ref('');
+const isSearch = ref(false);
+const loading = ref(false);
 
 const selectorButtons = [
-  { id: 1, label: 'Заказы', value: 'orders', count: computed(() => entityStore.ordersList.length) },
-  { id: 2, label: 'Услуги', value: 'services', count: computed(() => entityStore.servicesList.length) },
-  { id: 3, label: 'Участники портала', value: 'members', count: computed(() => organizationStore.pubCardsList.length) },
+  { id: 1, label: 'Заказы', value: 'orders', count: computed(() => searchResultOrderList.value.length) },
+  { id: 2, label: 'Услуги', value: 'services', count: computed(() => searchResultServiceList.value.length) },
+  { id: 3, label: 'Участники портала', value: 'members', count: computed(() => searchResultMemberList.value.length) },
 ];
 
 function handleListChange(value) {
   currentEntityType.value = value;
 }
 
-const searchResultOrderList = computed(() => entityStore.ordersList);
-const searchResultServiceList = computed(() => entityStore.servicesList);
-const searchResultMemberList = ref(computed(() => organizationStore.pubCardsList));
+const searchResultOrderList = ref([]);
+const searchResultServiceList = ref([]);
+const searchResultMemberList = ref([]);
 
-onMounted(() => {
-  entityStore.getServices();
-  entityStore.getOrders();
-  organizationStore.getPubCardsList();
-});
+const handleSearch = (searchQuery) => {
+  loading.value = true;
+  entityStore.search({query: searchQuery}).then(res => {
+    if(res && res.orders && res.orders.data) {
+      searchResultOrderList.value = res.orders.data;
+    }
+    if(res && res.services && res.services.data) {
+      searchResultServiceList.value = res.services.data;
+    }
+    if(res && res.pub_cards && res.pub_cards.data) {
+      searchResultMemberList.value = res.pub_cards.data;
+    }
+
+    isSearch.value = true;
+  }).finally(() => {
+    loading.value = false;
+  })
+}
 
 </script>
 
@@ -53,6 +88,7 @@ onMounted(() => {
   &__container {
     max-width: 70%;
     margin-inline: auto;
+    margin-bottom: 10rem;
   }
 
   &__title {

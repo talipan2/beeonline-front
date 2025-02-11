@@ -8,3 +8,15 @@
     </template>
   </NuxtLayout>
 </template>
+
+<script setup>
+useHead({
+  title: 'Контакты',
+  meta: [
+    {
+      name: 'description',
+      content: 'Контакты',
+    },
+  ],
+});
+</script>

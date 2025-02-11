@@ -17,6 +17,15 @@
 </template>
 
 <script setup>
+useHead({
+  title: 'Профиль',
+  meta: [
+    {
+      name: 'description',
+      content: '',
+    },
+  ],
+});
 </script>
 
 <style lang="scss">

@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import uploadFilesApi from "~/api/uploadFilesApi";
+import commonApi from "~/api/commonApi";
 
 export const useSettingStore = defineStore("setting", {
   state: () => ({
@@ -28,7 +29,21 @@ export const useSettingStore = defineStore("setting", {
     replenishmentModalStatus: false,
     balanceDocumentsModalStatus: false,
     infoModal: false,
+    changeDataModal: false,
+    changeUserDataModal: false,
+    createEntityFinalModal: false,
+    currencyList: [
+      {id: 1, name: 'Российский рубль', value: 'RUB'},
+      {id: 2, name: 'Доллар США', value: 'USD'},
+      {id: 3, name: 'Евро', value: 'EUR'},
+    ]
   }),
+  getters: {
+    getCurrencyNameById: (state) => (id) => {
+      const currency = state.currencyList.find(item => item.id == id);
+      return currency ? currency.name : '';
+    }
+  },
   actions: {
     setAlert(status, text) {
       this.alertModal.isOpen = true;
@@ -45,7 +60,20 @@ export const useSettingStore = defineStore("setting", {
       } catch (error) {
         console.error(error);
       }
-    }
-  }
+    },
+    
+    async getHelps() {
+      try {
+        const response = await commonApi.getFaqs();
+        if (response.data) {
+          return response.data
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
+  },
+
 
 })

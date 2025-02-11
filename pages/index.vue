@@ -6,7 +6,7 @@
     <MainAdvantages />
     <MainPartners />
     <MainSearchOptions />
-    <MainSafeTransaction />
+    <!-- <MainSafeTransaction /> -->
   </div>
 </template>
 

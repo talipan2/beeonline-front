@@ -1,8 +1,8 @@
 import axios from "axios";
 
 export default {
-  async getServices(page, limit=1) {
-    return axios.get(`services?limit=${limit}`)
+  async getServices(params = {}) {
+    return axios.get(`services`, {params})
   },
 
   async getService(id) {
@@ -34,7 +34,7 @@ export default {
     if(termsOfCooperation !== '') params.conditions = termsOfCooperation
     if(rawMaterials && rawMaterials.length > 0) params.materials_own = rawMaterials.includes(1)
     if(rawMaterials && rawMaterials.length > 0) params.materials_tolling = rawMaterials.includes(0)
-    if(availabilityStm !== '' && availabilityStm) params.is_stm = Boolean(availabilityStm)
+    if(availabilityStm !== '' && availabilityStm) params.is_stm = String(availabilityStm)
     if(freeTestSamples !== '' && freeTestSamples) params.free_samples = String(freeTestSamples)
     if(step !== '' || null) params.current_step = step
     if(cities && cities.length > 0 ) params.cities = cities

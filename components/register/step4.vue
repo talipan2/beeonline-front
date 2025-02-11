@@ -25,7 +25,7 @@
           <div class="register__check-company-logo">
             <p class="form-group__title">Логотип</p>
             <div class="image-box image-box_type_logo">
-              <img :src="registerData.companyLogo && registerData.companyLogo.url  || defaultCompanyLogo" alt="">
+              <img :src="registerData.companyLogo && registerData.companyLogo.url  || defaultCompanyLogo" :alt="registerData.companyName">
             </div>
           </div>
           <div class="register__check-company-details">

@@ -53,15 +53,30 @@ const props = defineProps({
 const userStore = useUserStore();
 const router = useRouter();
 
-function handleChangeRole(role) {
-  if(role === 'customer') {
-    userStore.role = 'customer';
-    router.push({ path: '/customer/desktop' })
-  } else if(role === 'performer') {
-    userStore.role = 'performer';
-    router.push({ path: '/performer/desktop' })
+// function handleChangeRole(role) {
+//   if(role === 'customer') {
+//     userStore.role = 'customer';
+//     router.push({ path: '/customer/desktop' })
+//   } else if(role === 'performer') {
+//     userStore.role = 'performer';
+//     router.push({ path: '/performer/desktop' })
+//   }
+// }
+
+const handleChangeRole = async () => {
+  const isCustomer = userStore.role === 'customer';
+  const newRole = isCustomer ? 'performer' : 'customer';
+  const redirectPath = isCustomer ? '/performer/desktop' : '/customer/desktop';
+
+  try {
+    await userStore.setUserData({ role: newRole }, userStore.userData.id);
+    userStore.role = newRole;
+    localStorage.setItem('role', newRole);
+    router.push({ path: redirectPath });
+  } catch (error) {
+    console.error(error);
   }
-}
+};
 
 function handleLogout() {
   userStore.logOut()

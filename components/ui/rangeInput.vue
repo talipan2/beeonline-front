@@ -8,7 +8,6 @@
         <UiInput v-model="sliderData[1]" class="form-group__value input_type_max" name="max" />
       </div>
     </div>
-
     <Slider v-model="sliderData" :min="min" :max="max" :tooltips="false"  :lazy="false"/>
   </div>
 </template>
@@ -36,6 +35,10 @@ const emit = defineEmits(['update:modelValue']);
 watch(() => sliderData.value, (newVal) => {
   emit('update:modelValue', newVal);
 });
+
+watch(() => props.modelValue, (newVal) => {
+  sliderData.value = newVal;
+}, {deep: true, once: true});
 
 
 </script>

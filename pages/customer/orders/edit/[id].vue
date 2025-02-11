@@ -2,11 +2,30 @@
   <NuxtLayout name="profile" title="Редактирование услуги" className="entity-edit">
     <template #header>
       <UiBreadCrumb
-        :list="[{ label: 'Главная', link: '/' }, { label: 'Кабинет заказчика', link: '/customer/desktop' }, { label: 'Список заказов', link: '/customer/orders' }, { label: 'Редактирование заказа', link: '' }]" />
+        :list="[
+          { label: 'Главная', link: '/' }, 
+          { label: 'Кабинет заказчика', link: '/customer/desktop' }, 
+          { label: 'Список заказов', link: '/customer/orders' }, 
+          { label: 'Редактирование заказа', link: '' }
+        ]" 
+      />
     </template>
     <template #content>
-      <component :is="currentComponent" :title="title" role="customer" :formatData="formatData"  :handleSubmit="handleSubmit" :handleBack="previousStep" :data="orderData"/>
+      <component 
+        :is="currentComponent" 
+        :title="title" role="customer" 
+        :formatData="formatData"  
+        :handleSubmit="handleSubmit" 
+        :handleBack="previousStep" 
+        :data="orderData"
+        type="edit"
+      />
+
       {{ orderData }}
+    </template>
+    <template #rightSide>
+      <div class="h4">Предварительный просмотр заказа</div>
+      <CreateEntityPreview :data="previewCardData"/>
     </template>    
   </NuxtLayout>
 </template>
@@ -45,12 +64,27 @@ const orderData = ref({
   isSafeDeal: false,
 })
 
+const previewCardData = computed(() => ({
+  name: orderData.value.name,
+  logo: orderData.value.gallery && orderData.value.gallery.length ? orderData.value.gallery[0].url : '',
+  countryId: formatData.value.locations && formatData.value.locations.length ? formatData.value.locations[0].countryId : null,
+  data: [
+    { id: 1, name: 'Категории', value: formatData.value.categories },
+    { id: 2, name: 'Место производства', value: formatData.value.locations.map(item => item.name) },
+    { id: 3, name: 'Партия', value: formatData.value.batch },
+    { id: 4, name: 'Лекала', value: formatData.value.patterns },
+    { id: 5, name: 'Сырье', value: formatData.value.rawMaterials },
+    { id: 6, name: 'Срок выполнения', value: formatData.value.completionDate },
+    { id: 7, name: 'Описание', value: formatData.value.description },
+  ],
+}))
+
 const formatData = computed(() => {
   return {
     name: orderData.value.name,
     logo: orderData.value.logo,
     categories: entityStore.getEntityLabelById('categories', orderData.value.categories),
-    placeOfProductionId: orderData.value.locations && orderData.value.locations.cities && orderData.value.locations.regions 
+    locations: orderData.value.locations && orderData.value.locations.cities && orderData.value.locations.regions 
       ? locationStore.getLocationsByIds([], orderData.value.locations.regions, orderData.value.locations.cities)
       : [],
     batch: orderData.value.batch,
@@ -129,17 +163,25 @@ const currentComponent = computed(() => {
   switch (currentStep.value) {
     case 1:
       title.value = 'Основные данные услуги';
+      router.push({path: '/customer/orders/edit/' + id, query: {step: 1}});
       return Step1
     case 2:
+      router.push({path: '/customer/orders/edit/' + id, query: {step: 2}});
       return Step2
-    case 3:
-      return Step3
+    // case 3:
+    //   router.push({path: '/customer/orders/edit/' + id, query: {step: 3}});
+    //   return Step3
     case 4:
+      router.push({path: '/customer/orders/edit/' + id, query: {step: 4}});
       return Step4
     default:
       title.value = 'Основные данные услуги';
       return Step1;
   }
+})
+
+watch(() => router.currentRoute.value.query.step, (newVal) => {
+  currentStep.value = Number(newVal)
 })
 
 onMounted(() => {
@@ -162,9 +204,14 @@ onMounted(() => {
         locations: res.data.cities && res.data.regions && {cities: res.data.cities.map(item => item.id), regions: res.data.regions.map(item => item.id)},
         isSafeDeal: Boolean(res.data.is_safedeal)
       }
-      console.log(orderData.value)
     }
   })
+})
+
+onMounted(() => {
+  if(router.currentRoute.value.query.step) {
+    currentStep.value = Number(router.currentRoute.value.query.step);
+  }
 })
 
 </script>

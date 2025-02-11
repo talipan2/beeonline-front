@@ -13,7 +13,7 @@
       <CatalogMembersDetails :data="pubCard"/>
     </template>
     <template #rightSide>
-      <CatalogOtherEntityCompany :type="pubCard.type"/>
+      <CatalogOtherEntityCompany :type="pubCard.type" :data="activeEntity" title="Актуальные услуги компании"/>
       <div class="views">
         <p>Просмотры: {{ pubCard.viewCount }}</p>
       </div>
@@ -42,13 +42,30 @@ const pubCard = computed(() => {
     viewCount: data.value.view_count,
     fillRating: data.value.fill_rating,
     statusComment: data.value.status_comment,
-    updatedAt: formatDate(data.value.updated_at),
-    entityCount: 1,
+    updatedAt: formatDate(data.value.updated_at, 'DD.MM.YYYY, mm:HH'),
+    entityCount: data.value.type === 'performer' ? data.value.services_count : data.value.orders_count,
+    gallery: data.value.gallery && data.value.gallery.length && data.value.gallery.map(item => item.url),
+    videos: data.value.videos && data.value.videos.length && data.value.videos.map(item => item.external_url),
+    location: { countries: [data.value.country_id]},
   }
 })
+
+const activeEntity = computed(() => data.value.services || [])
 
 onMounted(async() => {
   data.value = await organizationStore.getPubCard(router.currentRoute.value.params.id)
 })
+
+const pageTitle = computed(() => pubCard.value.name || 'Международный цифровой сервис поиска партнеров в сфере легкой промышленности');
+
+useHead({
+  title: pageTitle,
+  meta: [
+    {
+      name: 'description',
+      content: '',
+    },
+  ],
+});
 
 </script>

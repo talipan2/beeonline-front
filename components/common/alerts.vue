@@ -1,11 +1,15 @@
 <template>
   <div class="alerts" :class="alertClass">
-    <ul class="alerts__list" v-if="type === 'error'">
+    <ul class="alerts__list" v-if="alerts && alerts.length">
       <li class="alerts__item" v-for="(alert, index) in alerts" :key="index">
-        <span class="alerts__text">{{ `Поле "${alert}" обязательно.` }}</span>
+        <span class="alerts__text" v-if="alertType === 'validation'">{{ alert }}</span>
+        <span class="alerts__text" v-else>{{ `Поле "${alert}" обязательно.` }}</span>
       </li>
     </ul>
     <p class="alerts__text" v-else>{{ alert }}</p>
+    <div class="alerts__text">
+      <slot></slot>
+    </div>
   </div>
 </template>
 
@@ -19,6 +23,11 @@ const props = defineProps({
   alert: {
     type: String,
     default: '',
+  },
+  alertType: {
+    type: String,
+    default: 'default',
+    validator: value => ['default', 'validation' ].includes(value),
   },
   type: {
     type: String,
@@ -45,6 +54,7 @@ const alertClass = computed(() => {
   position: relative;
   font-size: 1rem;
   width: 100%;
+  box-sizing: border-box;
 
   &__text {
     font-size: 1.6em;

@@ -5,7 +5,7 @@
         <h1 class="banner__title">bee-online, экосистема для поиска партнеров в легкой промышленности</h1>
         <p class="banner__description">Проект представляет удобный сервис для поиска партнеров и выхода на прямые
           переговоры</p>
-        <NuxtLink class="banner__link" to="https://bee-online.ru/orders/create">
+        <NuxtLink type="button" class="banner__link" @click="handleCreateOrder">
           Разместить заказ
           <div>
             <SvgoLinkArrow class="svg-m" alt="Стрелка"/>
@@ -14,11 +14,29 @@
       </div>
     </div>
     <div class="banner__pattern" id="world" ref="world"></div>
-    <img src="~/assets/images/main/banner/banner-pattern-2.svg" class="banner__pattern banner__pattern-mobile" />
+    <img src="~/assets/images/main/banner/banner-pattern-2.svg" class="banner__pattern banner__pattern-mobile" alt="Паттерн"/>
   </section>
 </template>
 
 <script setup>
+import { useUserStore } from '~/store/userStore';
+
+
+const userStore = useUserStore();
+const router = useRouter();
+const isAuth = computed(() => userStore.isAuth);
+
+const handleCreateOrder = () => {
+  if (!isAuth.value) {
+    router.push({path: '/register',  query: { role: 'customer', action: 'create-order' } });
+    userStore.role = 'customer'
+    localStorage.setItem('role', 'customer');
+    settingStore.isCreateOrder = true
+  } else {
+    router.push('/orders/create/step1');
+  }
+}
+
 const world = ref(null);
 let tID = 0;
 let mID = 0;
@@ -54,7 +72,7 @@ const dots = [
 ];
 
 let lastFrameTime = 0;
-const desiredFPS = 40;
+const desiredFPS = 60;
 
 function animationLoop(timestamp) {
   if (timestamp - lastFrameTime > 1000 / desiredFPS) {
@@ -231,24 +249,52 @@ function onMouseMove(e) {
       const rect = canvas.getBoundingClientRect();
       mouseX = e.clientX - rect.left;
       mouseY = e.clientY - rect.top;
-      isMouseMoving = false;
     });
-    isMouseMoving = true;
   }
 }
+
+function manualMouseMove(t) {
+  mID = requestAnimationFrame(manualMouseMove);
+
+  t *= 0.001;
+
+  mouseX = width * 0.5 + Math.cos(t * 2.1) * Math.cos(t * 0.8) * width * 0.5;
+  mouseY = height * 0.5 + Math.sin(t * 3.1) * Math.tan(Math.sin(t * 0.8)) * height * 0.5;
+}
+
+function cancelManualMove() {
+  cancelAnimationFrame(mID);
+  mID = 0;
+}
+
+canvas.addEventListener("mousemove",(e) => {
+    mID && cancelManualMove();
+
+    onMouseMove(e);
+
+    smoothMouseX = mouseX;
+    smoothMouseY = mouseY;
+
+    mID && cancelAnimationFrame(mID);
+
+    canvas.addEventListener("mousemove", onMouseMove);
+  },
+  { once: true }
+);
 
 onMounted(() => {
   world.value.append(canvas);
   window.addEventListener("resize", handleResize);
-  canvas.addEventListener("mousemove", onMouseMove);
   onResize();
   animationFrameId = requestAnimationFrame(animationLoop);
+  requestAnimationFrame(manualMouseMove);
 });
 
 onUnmounted(() => {
   window.removeEventListener("resize", handleResize);
   cancelAnimationFrame(animationFrameId);
   canvas.removeEventListener("mousemove", onMouseMove);
+  cancelAnimationFrame(manualMouseMove);
 
   // Очистка ресурсов
   mouseX = -1;

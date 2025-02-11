@@ -18,6 +18,7 @@ export default {
       is_foreigner: data.selfEmployed,
       country_id: data.countryId,
       currency_id: data.currencyId,
+      is_foreigner: data.countryId === 1 ? 0 : 1
     })
   },
 
@@ -41,15 +42,6 @@ export default {
     })
   },
 
-  // получение публичной карточки пользователя
-  async getSelfPubCard() {
-    return axios.get(`pubcards/${1}`)
-  },
-
-  async getPubCard(id) {
-    return axios.get(`pubcards/${id}`)
-  },
-
   // редактирование публичной карточки пользователя
   async editPubCard(data) {
     return axios.patch(`pubcards/${data.id}`, {
@@ -65,8 +57,12 @@ export default {
     })
   },
 
-  async getPubCards() {
-    return axios.get(`pubcards`)
+  async getPubCards(params = {}) {
+    return axios.get(`pubcards`, {params})
+  },
+
+  async getPubCard(id) {
+    return axios.get(`pubcards/${id}`)
   },
 
   // редактирование галерей публичной карточки пользователя
@@ -87,7 +83,7 @@ export default {
   // загрузка документов
   async setVerificationDocuments(id, data) {
     const formatData = data.map((item) => {
-      return {media_id: item, status: 'pending'}
+      return {media_id: item.id, status: 'pending'}
     });
     return axios.post(`organizations/${id}/verification-files`, {files: formatData});
   },

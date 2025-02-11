@@ -18,11 +18,10 @@
     </div>
     <div class="entitys__cards" v-if="!isLoading">
       <template v-if="data.length > 0">
-        <CardsEntityCards v-for="(service, index) in data" :key="index" :data="service" :role="role"/>
+        <CardsEntityCards v-for="(service, index) in data" :key="index" :data="service" :role="role" @selectInfoModal="$emit('selectInfoModal', $event)"/>
       </template>
       <CommonAlerts v-if="data.length === 0" type="warning" :alert="emptyAlertText"/>
     </div>
-
   </section>
 </template>
 

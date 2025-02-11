@@ -1,13 +1,13 @@
 <template>
   <div class="gallery__container">
     <div class="gallery-link">
-      <img src="~/assets/images/nophoto_img.png" alt="">
+      <img src="~/assets/images/nophoto_img.png" alt="Загрузка изображения">
       <div class="gallery-link__title">Загрузить ещё</div>
       <input type="file" accept=".jpeg, .png, .jpg, .gif" @change="onFileChange">
     </div>
     <div class="gallery-link" v-for="(image, index) in images" :key="index">
       <a :href="image.src">
-        <img :src="image.src">
+        <img :src="image.src" :alt="image.src">
       </a>
       <div class="gallery-link__load progress" v-if="image.loading">
         <div class="gallery-link__progress">Сохранение...</div>
@@ -16,8 +16,6 @@
         <SvgoClose class="svg-l" fill="#6937a5"/>
       </button>
     </div>
-    {{ modelValue }}
-    {{ images }}
   </div>
 </template>
 

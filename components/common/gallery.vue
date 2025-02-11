@@ -24,7 +24,7 @@
       </label>
       <slot></slot>
     </Form>
-    {{ modelValue }}
+    {{ videoLinks }}
   </div>
 </template>
 
@@ -72,7 +72,9 @@ const removeLink = (index) => {
 };
 
 const handleSubmit = () => {
-  data.value.videos = [...videoLinks.value];
+  if(videoLinks.value && videoLinks.value.length) {
+    data.value.videos = videoLinks.value.filter(item => item.external_url.trim() !== '');
+  }
   console.log(data.value.videos);
   if(props.submitFunc) {
     props.submitFunc();
@@ -85,6 +87,9 @@ onMounted(() => {
   }
 })
 
+watch(() => videoLinks.value, (newVal) => {
+  console.log(newVal.filter(item => item.external_url.trim() !== ''));
+}, {deep: true})
 
 </script>
 

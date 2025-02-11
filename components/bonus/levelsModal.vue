@@ -49,7 +49,6 @@
             </template>
           </div>
         </div>
-
         <div class="card__content card__content_scroll" 
           v-if="levelGroups && levelGroups.length" 
           ref="levelGroupsContent" 

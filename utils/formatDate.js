@@ -21,6 +21,8 @@ export function formatDate(date, format = 'DD/MM/YYYY') {
       return `${month}-${day}-${year}`;
     case 'DD.MM.YYYY mm:HH':
       return `${day}.${month}.${year} ${hours}:${minutes}`;
+    case 'DD.MM.YYYY, mm:HH':
+      return `${day}.${month}.${year}, ${hours}:${minutes}`;
     case 'DD.MM.YYYY':
         return `${day}.${month}.${year}`;
     case 'mm:HH':

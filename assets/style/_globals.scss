@@ -18,6 +18,10 @@ body {
 
 }
 
+img {
+  border-style: none;
+}
+
 .body {
   display: flex;
   flex-direction: column;
@@ -306,6 +310,10 @@ label:active {
     }
   }
 
+  .prop__more {
+    padding-inline: .4em;
+  }
+
   .prop_type_text {
     display: flex;
     flex-direction: column;
@@ -365,6 +373,27 @@ label:active {
     object-fit: contain;
     border: 1px solid #D9D9D9;
     box-sizing: border-box;
+  }
+
+  img:invalid {
+    border: none;
+    outline: none;
+    background: none;
+  }
+
+}
+
+.image-box_type_frame {
+  background-color: #fff;
+
+  img {
+    padding: 8px;
+  }
+}
+
+.image-box_type_not-border {
+  img {
+    border: none;
   }
 }
 
@@ -595,7 +624,7 @@ input[type="number"]::-webkit-inner-spin-button {
 
 // статус пополнения
 
-.replenishment, .removal {
+.add, .purchase {
   display: flex;
   align-items: center;
   column-gap: .2em;
@@ -603,7 +632,7 @@ input[type="number"]::-webkit-inner-spin-button {
   line-height: 1em;
 }
 
-.removal {
+.purchase {
   color: #b42318;
 
   path {
@@ -611,7 +640,7 @@ input[type="number"]::-webkit-inner-spin-button {
   }
 }
 
-.replenishment {
+.add {
   color: #027a48;
 
   svg {

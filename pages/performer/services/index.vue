@@ -7,14 +7,21 @@
     <template #content>
       <Entity
         role="performer"
-        title="Все заказы"
+        title="Все услуги"
         subtitle="Размещайте список своих услуг в каталоге исполнителей и ищите заказчиков в кратчайшие сроки с учетом именно ваших потребностей."
         btnLabel="Создать услугу"
         btnLink="/services/create" 
         :data="cardData"
         :isLoading="isLoading"
         emptyAlertText="Услуг нет"
+        @selectInfoModal="selectInfoModalData"
       />
+      <InfoModal :text="infoModal.text" :title="infoModal.title">
+        <template #content>
+            <UiButton type="button" @click="infoModal.action" class="info-modal__btn" variant="quinary" size="around">Подтвердить</UiButton>
+            <UiButton type="button" class="info-modal__btn" variant="tertiary" @click="settingStore.infoModal = false" size="around">Закрыть</UiButton>
+        </template>
+      </InfoModal>
     </template>
   </NuxtLayout>
 </template>
@@ -22,12 +29,55 @@
 <script setup>
 import { useEntityStore } from '~/store/entityStore';
 import { useLocationStore } from '~/store/locationStore';
+import { useSettingStore } from '~/store/settingStore';
 import { useUserStore } from '~/store/userStore';
 
 const entityStore = useEntityStore();
 const userStore = useUserStore();
 const locationStore = useLocationStore();
+const settingStore = useSettingStore();
 const isLoading = ref(false);
+
+const infoModal = ref({
+  title: '',
+  text: '',
+  action: () => {}
+})
+
+const selectInfoModalData = ({type, id}) => {
+  console.log(type)
+  settingStore.infoModal = true;
+  switch (type) {
+    case 'published':
+      infoModal.value = {
+        title: 'Публикация',
+        text: 'Вы уверены, что хотите опубликовать эту услугу?',
+        action: () => {
+          entityStore.editService(id, {status: 'active'})
+          .then(() => {
+            entityStore.getOrganizationServices(userStore.userData.organization_id)
+            settingStore.infoModal = false
+          })
+          .catch(() => console.log('error'));
+        }
+      }
+      break
+    case 'unpublished':
+      infoModal.value = {
+        title: 'Снятие с публикации',
+        text: 'Вы уверены, что хотите снять с публикации эту услугу?',
+        action: () => {
+          entityStore.editService(id, {status: 'archived'})
+          .then(() => {
+            entityStore.getOrganizationServices(userStore.userData.organization_id)
+            settingStore.infoModal = false
+          })
+          .catch(() => console.log('error'));
+        }
+      }
+      break
+  }
+}
 
 const formatFreeSamples = (freeSamples) => {
     switch (Number(freeSamples)) {
@@ -53,9 +103,10 @@ const cardData = computed(() => {
     freeSamples: formatFreeSamples(item.free_samples),
     minLot: item.batches && item.batches.length ? item.batches.map(item => item.name) : [],
     status: entityStore.getEntityStatusByValue(item.status),
+    category: item.product_categories && item.product_categories.length ? item.product_categories.map(item => item.id) : [],
+    statusType: item.status,
   }})
 })
-
 
 onMounted(() => {
   isLoading.value = true

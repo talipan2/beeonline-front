@@ -6,7 +6,7 @@
     title="Контактные данные"
     description="Указанные данные не разглашаются третьим лицам и необходимы для успешной работы на портале."
   >
-    <Form as="form" @submit="handleSubmit">
+    <Form as="form" @submit="handleSubmit" v-slot="{validate}">
       <div class="form-group">
         <label class="form-group-data form-group__title">
           Ваше имя *
@@ -47,7 +47,7 @@
         <label class="form-group-data form-group__title">
           Ваш телефон *
           <UiInput
-            :rules="{ required: true, min: 11, max: 16 }"
+            :rules="{ required: true, max: 16 }"
             name="phone"
             label="Телефон"
             class="form-group__value"
@@ -70,6 +70,7 @@
         class="register__btn register__btn_type_secondary"
         variant="quinary"
         size="large"
+        @click="getErrorsList(validate)"
       >
         Зарегистрироваться
         <SvgoBtnArrow class="svg-lx" />
@@ -94,7 +95,7 @@ const userData = ref({
   jobTitle: "",
   email: "",
   phone: "",
-  privacyPolicy: false,
+  privacyPolicy: true,
   role: role.value
 });
 const isCreateOrder = computed(() => settingStore.isCreateOrder);
@@ -121,9 +122,13 @@ const handleSubmit = () => {
 };
 
 onMounted(() => {
-  if(router.currentRoute.value.query && router.currentRoute.value.query.role && router.currentRoute.value.query.action === 'create-order') {
+  if(router.currentRoute.value.query && router.currentRoute.value.query.role === 'customer' && router.currentRoute.value.query.action === 'create-order') {
     userStore.role = router.currentRoute.value.query.role
-    isCreateOrder.value = true
+    userData.value.role = router.currentRoute.value.query.role
+    settingStore.isCreateOrder = true
+  } else if(router.currentRoute.value.query && router.currentRoute.value.query.role) {
+    userStore.role = router.currentRoute.value.query.role
+    userData.value.role = router.currentRoute.value.query.role
   }
 })
 </script>

@@ -153,8 +153,9 @@ export const useUserStore = defineStore('user', {
     async setUserData(data, id) {
       try {
         const response = await Api.setUserData(data, id);
-        if(response.data.user) {
-          this.userData = response.data.user;
+        if(response.data) {
+          this.userData = response.data.data;
+          return response.data.data;
         }
       } catch (error) {
         throw error;

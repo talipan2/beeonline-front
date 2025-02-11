@@ -13,7 +13,7 @@
       <CatalogDetails type="service" :pubCard="pubCard" :entityData="formatData"/>
     </template>
     <template #rightSide>
-      <CatalogOtherEntityCompany type="service"/>
+      <CatalogOtherEntityCompany v-if="otherActiveEntity.length" :data="otherActiveEntity" type="performer"/>
     </template>
   </NuxtLayout>
 </template>
@@ -21,11 +21,13 @@
 <script setup>
 
 import { useEntityStore } from '~/store/entityStore';
+import { useLocationStore } from '~/store/locationStore';
 import { useOrganizationStore } from '~/store/organizationStore';
 
 const router = useRouter();
 const entityStore = useEntityStore();
 const organizationStore = useOrganizationStore();
+const locationStore = useLocationStore();
 const data = ref({});
 const pubCard = ref({});
 const isLoading = ref(false);
@@ -36,40 +38,65 @@ const formatData = computed(() => {
       props: [
         {
           name: 'Партии:', 
-          value: data.value.batches && data.value.batches.length && data.value.batches.map(item => item.name), 
-          link: [data.value.batches && data.value.batches.length && data.value.batches.map(item => item.id)]
+          value: data.value.batches && data.value.batches.length ? data.value.batches.map(item => item.name).join(' / ') : [],
         },
-        {name: 'Категории:', value: ["Детская одежда", 'Термобелье', 'Носочно-чулочная продукция',  'Сумки и аксессуары',  'Ткани, фурнитура, материалы'], link: ['1', '2', '3']},
-        {name: 'Материалы:', value: [data.value.materials_own ? 'Собственное' : '', data.value.materials_tolling ? 'Давальческое' : ''].filter(Boolean), link: ['1', '2']},
+        {
+          name: 'Категории:', 
+          value: data.value.product_categories && data.value.product_categories.length ? data.value.product_categories : [], 
+          link: 'categories',
+        },
+        {name: 'Материалы:', value: [data.value.material ? {name:'Давальческое', id: 1} : {name: 'Собственное', id: 0}], link: 'material'},
         {name: 'Наличие СТМ:', value: entityStore.getEntityLabelById('availabilityStm', data.value.is_stm)},
         {name: 'Бесплатные образцы:', value: entityStore.getEntityLabelById('freeTestSamples', data.value.free_samples)},
-        {name: 'Регион производства:', value: 'Адыгейск, Адыгея Респ, Россия'},
+        {name: 'Регион производства:', value: formatLocationsList(data.value.cities)},
       ],
       organizationId: data.value.organization_id,
       description: data.value.description,
       conditions: data.value.conditions,
-      gallery: data.value.gallery,
-      tzFiles: data.value.tz_files,
+      gallery: data.value.gallery && data.value.gallery.length && data.value.gallery.map(item => item.url),
+      tzFiles: data.value.tz_files && data.value.tz_files.length && data.value.tz_files.map(item => item.url),
       name: data.value.name
     }
 })
+
+const otherActiveEntity = computed(() => {
+  if(pubCard.value && pubCard.value.services ) {
+    return pubCard.value.services.filter(item => item.id !== data.value.id);
+  } else return [];
+});
+
+const formatLocationsList = (cities=[]) => {
+  if(!cities.length) return [];
+  const citiesIds = cities.map(item => item.id);
+  const locations = locationStore.getLocationsByIds([], [], citiesIds);
+  return locations.map(item => item.name).join(' / ');
+}
 
 onMounted(async() => {
   isLoading.value = true;
   try {
     const serviceResponse = await entityStore.getService(router.currentRoute.value.params.id);
     data.value = serviceResponse.data;
-    try {
-      const pubCardResponse = await organizationStore.getPubCard(data.value.organization_id);
-      pubCard.value = pubCardResponse;
-    } catch (err) {
-      console.error(err);
+    if(serviceResponse && serviceResponse.data && serviceResponse.data.pub_card) {
+      pubCard.value = serviceResponse.data.pub_card
     }
   } catch (err) {
     console.error(err);
   } finally {
     isLoading.value = false;
   }
+});
+
+const pageTitle = computed(() => formatData.value.name || 'Международный цифровой сервис поиска партнеров в сфере легкой промышленности');
+
+useHead({
+  title: pageTitle,
+  meta: [
+    {
+      name: 'description',
+      content: '',
+    },
+  ],
 });
 
 </script>

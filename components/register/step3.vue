@@ -2,6 +2,8 @@
   <div>
   <RegisterLayout :title="title" :block-title="blockTitle">
     <div class="register__step-three">
+      <Form @submit="handleSubmit" v-slot="{ errors }" ref="form">
+        <CommonAlerts v-if="errors && errors.selectedLocations" :alert="errors.selectedLocations" />
       <div class="register__text-container">
         <p class="register__text" v-if="userStore.role === 'performer'">
           Укажите город вашего производства. Если производств несколько - выберите несколько городов, но не более пяти.
@@ -16,14 +18,16 @@
           Указанные города и регионы используются для автоматического добавления в новые заказы и позволят потенциальным исполнителям находить их в поиске.
         </p>
       </div>
-      <Form @submit="handleSubmit">
         <CommonLocation 
           v-if="userStore.role === 'performer'" 
           class="register__location"
           buttonLabel="Выбрать город" 
           v-model="data.locations"
           :type="['selectCities']"
-          :max-selected="5" 
+          :max-selected="5"
+          :is-required="true" 
+          errorLabel="Города производства"
+          @update:errorMessage="takeErrorMessage"
         />
         <CommonLocation 
           v-if="userStore.role === 'customer'"
@@ -31,10 +35,13 @@
           buttonLabel="Выбрать город или регион" 
           v-model="data.locations"
           :type="['selectCities', 'selectRegions']" 
+          :is-required="true"
+          errorLabel="Города производства"
+          @update:errorMessage="takeErrorMessage"
         />
         <div class="register__btn-container" v-if="router.currentRoute.value.path.includes('/register')">
           <UiButton type="button" class="register__btn" variant="senary" size="large" @click="router.back">Назад</UiButton>
-          <UiButton type="button" class="register__btn" variant="quinary" size="large" @click="router.push({path: '/register/step4'})">Далее
+          <UiButton type="submit" class="register__btn" variant="quinary" size="large">Далее
             <SvgoBtnArrow class="svg-lx" />
           </UiButton>
         </div>
@@ -49,6 +56,9 @@
 
 import { useOrganizationStore } from '~/store/organizationStore';
 import { useUserStore } from '~/store/userStore';
+import { useForm } from 'vee-validate';
+
+const {meta} = useForm()
 
 const props = defineProps({
   blockTitle: {
@@ -68,6 +78,14 @@ const props = defineProps({
     default: null,
   }
 })
+
+const errorMessages = ref([]);
+
+const takeErrorMessage = (error) => {
+  if (error) {
+    errorMessages.value = error;
+  }
+}
 
 const data = computed({
   get() {

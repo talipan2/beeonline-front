@@ -11,4 +11,14 @@
 
 <script setup>
 
+useHead({
+  title: 'Мои отзывы',
+  meta: [
+    {
+      name: 'description',
+      content: '',
+    },
+  ],
+});
+
 </script>

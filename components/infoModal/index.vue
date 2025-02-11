@@ -1,9 +1,12 @@
 <template>
   <UiModal class="info-modal modal" v-model="settingStore.infoModal" title="" @confirm="() => confirm()" :closeButton="false">
     <template #content>
-      <h3 class="info-modal__title">{{ title }}</h3>
-      <p class="info-modal__text">{{ text }}</p>
-      <UiButton type="button" class="info-modal__btn" variant="tertiary" @click="confirm" size="around">Закрыть</UiButton>
+      <h3 class="info-modal__title" v-if="title">{{ title }}</h3>
+      <p class="info-modal__text" v-if="text">{{ text }}</p>
+      <div class="info-modal__btn-container" v-if="$slots.content">
+        <UiButton type="button" class="info-modal__btn" variant="tertiary" @click="confirm" size="around" v-if="!$slots.content">Закрыть</UiButton>
+        <slot name="content"></slot>
+      </div>
     </template>
   </UiModal>
 </template>
@@ -60,7 +63,12 @@ function confirm() {
     line-height: 1em;
     font-weight: 400;
     text-transform: uppercase;
-    margin-left: auto;
+  }
+
+  &__btn-container {
+    display: flex;
+    column-gap: 1em;
+    justify-content: end;
   }
 }
 

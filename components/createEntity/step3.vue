@@ -1,11 +1,12 @@
 <template>
   <div class="entity">
     <h1 class="entity__title">География и Сроки</h1>
-    <Form @submit="handleSubmit">
+    <Form @submit="handleSubmit" v-slot="{ errors }">
       <!-- <div v-if="role == 'customer'">
         <p class="entity__text">Укажите дату до которой заказ будет актуален</p>
         <CommonCalendar v-model="data.completionDate" class="entity__calendar" />
       </div> -->
+      <CommonAlerts v-if="errors && errors.selectedLocations" :alert="errors.selectedLocations" />
       <h2 class="entity__subtitle">Города фактического производства заказа</h2>
       <div class="entity__text-container">
         <p class="entity__text" v-if="role === 'performer'">
@@ -27,13 +28,19 @@
         buttonLabel="Выбрать город"
         v-model="data.locations" :type="['selectCities']"
         :maxSelected="5"
+        :is-required="true"
+        errorLabel="Города производства"
       />
-      <CommonLocation v-if="role === 'customer'" buttonLabel="Выбрать город или регион"
-        v-model="data.locations" :type="['selectCities', 'selectRegions']"
+      <CommonLocation 
+        v-if="role === 'customer'" 
+        buttonLabel="Выбрать город или регион"
+        v-model="data.locations" 
+        :type="['selectCities', 'selectRegions']"
+        :is-required="true"
+        errorLabel="Города производства"
       />
       <div class="form-group">
-        <UiButton type="button"
-          @click="router.push(`${role === 'performer' ? '/services/create/step2' : '/orders/create/step2'}`)"
+        <UiButton :to="backLink"
           class="form-group-data form-group-data__btn" variant="tertiary" size="large">Назад</UiButton>
         <UiButton type="submit"
           class="form-group-data form-group-data__btn" variant="quinary" size="large">Далее
@@ -63,12 +70,34 @@ const props = defineProps({
     type: Function,
     default: () => ({}),
     required: true,
-  }
+  },
+  type: {
+    type: String,
+    default: 'create',
+    validator: value => ['create', 'edit'].includes(value),
+  },
 })
 
 const router = useRouter();
 const userStore = useUserStore();
 const entityStore = useEntityStore();
+
+const backLink = computed(() => {
+  if(props.type === 'create') {
+    return `/${currentEntity.value}/create/step2`
+  } else if (props.type === 'edit') {
+    return `/${props.role}/${currentEntity.value}/edit/${props.data.id}?step=2`
+  }
+})
+
+
+const currentEntity = computed(() => {
+  if(props.role === 'performer') {
+    return 'services'
+  }else if(props.role === 'customer') {
+    return 'orders'
+  }
+})
 
 // const role = computed(() => userStore.role);
 const dataLocation = computed(() => {

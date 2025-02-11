@@ -10,7 +10,7 @@
         <slot name="content"/> 
       </div>
       <div class="profile__right" v-if="$slots.rightSide">
-        <div ref="rightSide" class="sticky">
+        <div ref="rightSide" :class="{ 'sticky': rightSideSticky }">
           <slot name="rightSide"  />
         </div>
       </div>
@@ -30,6 +30,10 @@ const props = defineProps({
   className: {
     type: String,
     default: '',
+  },
+  rightSideSticky: {
+    type: Boolean,
+    default: true,
   }
 });
 

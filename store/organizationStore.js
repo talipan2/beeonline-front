@@ -88,28 +88,6 @@ export const useOrganizationStore = defineStore('organization', {
       }
     },
 
-    async getSelfOrganization(id) {
-      try {
-        const response = await Api.getOrganization(id);
-        if(response.data) {
-          this.organization = response.data.data;
-        }
-      } catch (error) {
-        throw error;
-      }
-    },
-
-    async getSelfPubCard(id) {
-      try {
-        const response = await Api.getSelfPubCard();
-        if(response.data) {
-          this.pubCards = response.data.data;
-        }
-      } catch (error) {
-        throw error;
-      }
-    },
-
     async editPubCards(data) {
       try {
         const response = await Api.editPubCard(data);
@@ -122,12 +100,12 @@ export const useOrganizationStore = defineStore('organization', {
       }
     },
 
-    async getPubCardsList() {
+    async getPubCardsList(params) {
       try {
-        const response = await Api.getPubCards();
+        const response = await Api.getPubCards(params);
         if(response.data) {
           this.pubCardsList = response.data.data;
-          return response.data.data;
+          return response.data;
         }
       } catch (error) {
         throw error;

@@ -8,3 +8,22 @@
     </template>
   </NuxtLayout>
 </template>
+
+<script setup>
+
+const router = useRouter();
+
+const currentIdTicket = ref(router.currentRoute.value.params.id);
+
+useHead({
+  title: currentIdTicket,
+  titleTemplate: 'Запрос #%s',
+  meta: [
+    {
+      name: 'description',
+      content: '',
+    },
+  ],
+});
+
+</script>

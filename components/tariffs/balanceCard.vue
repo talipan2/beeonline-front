@@ -1,11 +1,19 @@
 <template>
   <TariffsCardLayout class="balance">
     <div class="balance__body">
-      <h3 class="balance__text">Ваш баланс: {{ userBalance }}</h3>
-      <h3 class="balance__text">
+      <div class="balance__text">
+        Ваш баланс: 
+        <template v-if="tariffsStore.balanceLoaded">{{ userBalance }}</template>
+        <CommonSpinner v-else/>
+      </div>
+     
+      <div class="balance__text">
         Баллы:
-        <span class="balance__text_type_selection">{{ formatMoney(userBonuses, 'bonuses') }}</span>
-      </h3>
+        <span class="balance__text_type_selection">
+          <template v-if="tariffsStore.balanceLoaded">{{ formatMoney(userBonuses, 'bonuses') }}</template>
+          <CommonSpinner v-else/>
+        </span>
+      </div>
     </div>
     <div class="balance__btn-container">
       <UiButton type="button" class="balance__btn" variant="quinary" size="large" @click="handleOpenReplenishmentModal">Пополнить</UiButton>
@@ -19,7 +27,7 @@
 
 <script setup>
 import { useSettingStore } from '~/store/settingStore';
-
+import { useTariffsStore } from '~/store/tariffsStore';
 
 const props = defineProps({
   userBalance: {
@@ -37,6 +45,7 @@ const props = defineProps({
 })
 
 const settingStore = useSettingStore();
+const tariffsStore = useTariffsStore();
 
 const handleOpenReplenishmentModal = () => {
   settingStore.replenishmentModalStatus = true;
@@ -52,13 +61,15 @@ const handleOpenDocumentsModal = () => {
 
 .balance {
   font-size: 1rem;
+  justify-content: space-between;
 
   &__body {
     margin-bottom: 4em;
   }
 
   &__text {
-    font-size: 1.8em;
+    font-family: 'fira-sans', sans-serif;
+    font-size: 2.4em;
     font-weight: 400;
     line-height: 1.2em;
     margin-bottom: .83em;

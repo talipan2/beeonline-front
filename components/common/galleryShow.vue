@@ -3,7 +3,7 @@
     <template v-for="(video, index) in videoList" :key="'video-' + index">
       <div class="image-box gallery-show__item">
         <a :href="video" data-fancybox="gallery" data-type="iframe">
-          <img :src="getVideoThumbnail(video)" alt="Video thumbnail">
+          <img :src="getVideoThumbnail(video)" :alt="video">
           <SvgoPlay class="svg-l gallery-show__play"/>
         </a>
       </div>
@@ -11,7 +11,7 @@
     <template v-for="(image, index) in images" :key="'image-' + index">
       <div class="gallery-show__item image-box">
         <a :href="image.url" data-fancybox="gallery">
-          <img :src="image.url" alt="Gallery image">
+          <img :src="image.url" :alt="image.url">
         </a>
       </div>
     </template>

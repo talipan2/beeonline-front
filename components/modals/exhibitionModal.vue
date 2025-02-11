@@ -5,7 +5,7 @@
       <form @submit="handleSubmit">
         <div class="form-group">
           <div class="image-box">
-            <img :src="data.logoUrl || defaultImage" alt="">
+            <img :src="data.logoUrl || defaultImage" alt="Логотип выставки">
           </div>
           <UiSelect class="form-group__value" v-model="selectedExhibition" :options="options" />
         </div>

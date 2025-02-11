@@ -10,24 +10,24 @@
       </div>
 
       <div class="tabs tabs_slim">
-        <template v-for="(title, type) in filterTypes" :key="type">
-          <div class="tabs__tab" :class="{
-            active: filter.type === type,
-          }" @click="changeFilter('type', type)">
-            <span>{{ title }}</span>
+        <template v-for="(item, index) in filterTypes" :key="index">
+          <div class="tabs__tab" 
+            :class="{active: filter.type === item.type,}" 
+            @click="changeFilter('type', item.type)">
+            <span>{{ item.title }}</span>
           </div>
         </template>
       </div>
     </div>
-
     <div class="card__content" v-if="bonuses.length">
       <div class="bonus-achievement-types">
         <template v-for="(bonus, index) in bonuses" :key="index">
           <UiButton 
+            type="button"
             class="bonus-btn" 
             variant="secondary" 
             size="small" 
-            @click="changeFilter('bonus', null)"
+            @click="changeFilter('bonus', bonus.id)"
             :class="{active: filter.bonus === bonus.id}"
           >
             {{ bonus.name }}
@@ -44,7 +44,7 @@
         <div class="achievements__alert alert alert-primary" v-if="!loading && !achievements.length">Достижений нет
         </div>
         <div class="achievements__more" v-if="filter.page < lastPage">
-          <UiButton variant="quinary" class="bonus-more-btn" size="large" @click="loadMore">Загрузить еще</UiButton>
+          <UiButton type="button" variant="quinary" class="bonus-more-btn" size="large" @click="loadMore">Загрузить еще</UiButton>
         </div>
       </div>
     </div>
@@ -54,9 +54,14 @@
 <script setup>
 import { useBonusStore } from '~/store/bonusStore';
 
+const props = defineProps({
+  organizationId: {
+    type: Number,
+    default: null,
+  },
+})
 
 const bonusStore = useBonusStore();
-const bonusesController = new AbortController();
 const loading = ref(false);
 const filter = ref({
   type: 'all',
@@ -64,24 +69,73 @@ const filter = ref({
   page: 1,
 })
 
-const filterTypes = {
-  all: 'Все',
-  completed: 'Полученные',
-}
-
 const achievements = ref([]);
 const bonuses = ref([]);
 const lastPage = ref(1);
 
-onMounted(async () => {
+const filterTypes = [
+  {id: 1, title: 'Все', type: 'all'},
+  {id: 2, title: 'Полученные', type: 'completed'},
+]
+
+const changeFilter = (type, value) => {
+  filter.value[type] = value;
+  if(type === 'type') {
+    filter.value.bonus = null;
+  }
+}
+
+// получение списка бонусов
+const getBonuses = (organizationId, filterType) => {
   loading.value = true;
-  setTimeout(() => {
-    filter.value.page = bonusStore.achievements.current_page;
-    lastPage.value = bonusStore.achievements.last_page;
-    achievements.value = bonusStore.achievements.data;
-    bonuses.value = bonusStore.bonuses;
-    loading.value = false;
-  }, 100);
+  bonusStore.getBonuses(organizationId, filterType)
+    .then(res => {
+      if(res) {
+        bonuses.value = res;
+      }
+    })
+    .finally(() => loading.value = false);
+}
+
+// Получение ачивок 
+const getAchievements = (organizationId, filterList) => {
+  loading.value = true;
+  bonusStore.getAchievements(organizationId, filterList)
+    .then(res => {
+      if(res && res.current_page === 1) {
+        achievements.value = res.data;
+        lastPage.value = res.last_page;
+        filter.value.page = res.current_page
+      } else if (res && res.current_page > 1) {
+        achievements.value = [...achievements.value, ...res.data];
+        lastPage.value = res.last_page;
+        filter.value.page = res.current_page
+      }
+    })
+    .finally(() => loading.value = false);
+}
+
+function loadMore() {
+  filter.value.page += 1;
+  getAchievements(props.organizationId, filter.value);
+}
+
+// получение бонусов по типу
+watch(() => filter.value.type, (newVal) => {
+  getBonuses(props.organizationId, { type: newVal });
+}, {deep: true})
+
+// получение ачивок по фильтрам типа ачивок и типа бонусов
+watch(() => [filter.value.bonus, filter.value.type], (newVal) => {
+  getAchievements(props.organizationId, { bonus: filter.value.bonus, type: filter.value.type });
+}, {deep: true})
+
+onMounted(() => {
+  loading.value = true;
+  if(props.organizationId) {
+    getBonuses(props.organizationId);
+    getAchievements(props.organizationId, filter.value);
+  }
 })
 
 
@@ -92,6 +146,12 @@ onMounted(async () => {
   display: flex;
   flex-wrap: wrap;
   gap: 0.8rem;
+}
+
+.bonus-btn.active {
+  background-color: #cdd4ea;
+  border-color: #cdd4ea;
+  color: #212529;
 }
 
 .achievements {

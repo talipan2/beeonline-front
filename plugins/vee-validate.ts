@@ -14,9 +14,9 @@ export default defineNuxtPlugin({
         defineRule('integer', integer);
         defineRule('email', email);
         defineRule('confirmed', confirmed);
-        defineRule('minSelected', (value: Array<any>, [ min ]: [min: number] ) => {
+        defineRule('minSelected', (value: Array<any>, [ min ]: [min: number], context ) => {
             if(value.length < min) {
-                return 'Необходимо выбрать хотя бы ' + min + ' элемент';
+                return 'В поле "' + context.field + '" необходимо выбрать хотя бы ' + min + ' элемент';
             }
             return true
         });
@@ -26,6 +26,16 @@ export default defineNuxtPlugin({
             }
             return /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/.test(value);
         });
+        defineRule('atLeastOneFilled', (value: { countries: []; regions: []; cities: [] }) => {
+            if (
+              Array.isArray(value.countries) && value.countries.length > 0 ||
+              Array.isArray(value.regions) && value.regions.length > 0 ||
+              Array.isArray(value.cities) && value.cities.length > 0
+            ) {
+              return true;
+            }
+            return false;
+          });
 
         setLocale('ru');
 

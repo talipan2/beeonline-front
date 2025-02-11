@@ -1,7 +1,7 @@
 <template>
   <div class="entity">
     <h1 class="entity__title">Подробное описание</h1>
-    <Form as="form" @submit="handleSubmit">
+    <Form as="form" @submit="handleSubmit" v-slot="{ errors, validate }">
       <div class="entity__data">
         <div class="entity__photo">
           <label class="form-group__title entity__label">
@@ -20,7 +20,7 @@
         </label>
         <UiTextArea 
           :rules="{ required: true, min: 10 }" 
-          name="description" 
+          name="description-text" 
           label="Описание" 
           v-model="data.description"
           class="form-group__value"
@@ -133,8 +133,8 @@
           - doc, .docx, .xls, .xlsx, .ppt, .pptx, .rtf, .pdf, .jpeg, .png, .jpg, .gif, .psd, .djvu, .fb2, .ps, .zip, .rar"
           :extension="['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'rtf', 'pdf', 'jpeg', 'png', 'jpg', 'gif', 'psd', 'djvu', 'fb2', 'ps', 'zip', 'rar']"
         />
-        
       </div>
+      <CommonAlerts v-if="errors && errors.selectedLocations" :alert="errors.selectedLocations" alertType="validation" />
       <div class="entity__data" v-if="role === 'customer'">
         <h2 class="entity__subtitle">Города фактического производства заказа</h2>
         <div class="entity__text-container">
@@ -158,23 +158,29 @@
           v-if="role === 'performer'"
           buttonLabel="Выбрать город"
           v-model="data.locations"
-          :type="['selectCities']" 
+          :type="['selectCities']"
+          :is-required="true"
+          errorLabel="Города производства"
+          name="selectedLocations"
         />
         <CommonLocation
           v-if="role === 'customer'"
           buttonLabel="Выбрать город или регион"
           v-model="data.locations"
-          :type="['selectCities', 'selectRegions']" 
+          :type="['selectCities', 'selectRegions']"
+          :is-required="true"
+          errorLabel="Города производства"
+          name="selectedLocations"
         />
       </div>
       <div class="form-group">
         <UiButton
-          :to="`/${currentEntity}/create/step1`"
+          :to="backLink"
           class="form-group-data form-group-data__btn" variant="tertiary" size="large"
         >
           Назад
         </UiButton>
-        <UiButton type="submit" class="form-group-data form-group-data__btn" variant="quinary" size="large">Далее
+        <UiButton type="submit" class="form-group-data form-group-data__btn" @click="getErrorsList(validate, errorsList)" variant="quinary" size="large">Далее
           <SvgoBtnArrow class="svg-lx" />
         </UiButton>
       </div>
@@ -183,6 +189,8 @@
 </template>
 
 <script setup>
+import { getErrorsList } from '~/utils/getValidationErrors';
+
 const props = defineProps({
   role: {
     type: String,
@@ -199,7 +207,20 @@ const props = defineProps({
     default: () => ({}),
     required: true
   },
+  type: {
+    type: String,
+    default: "create",
+    validator: (value) => ['create', 'edit'].includes(value),
+  },
 });
+
+const backLink = computed(() => {
+  if(props.type === 'create') {
+    return `/${currentEntity.value}/create/step1`
+  } else if (props.type === 'edit') {
+    return `/${props.role}/${currentEntity.value}/edit/${props.data.id}?step=1`
+  }
+})
 
 const currentEntity = computed(() => {
   if(props.role === 'performer') {

@@ -2,7 +2,7 @@
   <div class="default-card">
     <div class="default-card__content">
       <div class="default-card__image">
-        <img :src="card.logoUrl ? card.logoUrl : defaultImage" data-trademark-logo="">
+        <img :src="card.logoUrl ? card.logoUrl : defaultImage" data-trademark-logo="" :alt="card.title">
       </div>
       <div class="default-card__info">
         <p class="default-card__title">{{ card.title }}</p>

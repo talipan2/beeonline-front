@@ -6,7 +6,7 @@
       change-link-label="Изменить" change-link="/services/create" /> -->
       <div class="form-group">
         <div class="form-group-data form-group-data__btn entity_step-check__link">
-          <NuxtLink to="/orders/create/step1" class="link" variant="quinary" size="large">Изменить</NuxtLink>
+          <NuxtLink :to="backToFirstStep" class="link" variant="quinary" size="large">Изменить</NuxtLink>
         </div>
         <UiButton type="button"  @click="handleSubmit" class="form-group-data form-group-data__btn " variant="quinary" size="large">Подтвердить</UiButton>
     </div>
@@ -22,26 +22,26 @@
             :list="formatData.categories.slice(1)" 
             title="Категории" 
             placement="bottom-end" 
-            v-if="Array.isArray(formatData.categories) && formatData.categories && formatData.categories.length >= 1"
+            v-if="Array.isArray(formatData.categories) && formatData.categories && formatData.categories.length > 1"
           />
           </p>
       </div>
       <div class="form-group-data">
         <p class="form-group__title">Место производства</p>
         <p class="form-group__value">
-          <i class="flag flag_round" v-if="formatData.placeOfProductionId && formatData.placeOfProductionId[0]" 
-            :class="formatData.placeOfProductionId[0]
+          <i class="flag flag_round" v-if="formatData.locations && formatData.locations[0]" 
+            :class="formatData.locations[0]
             ? flagClass
             :''" 
           />
-          {{ (formatData.placeOfProductionId && formatData.placeOfProductionId.length > 0 && formatData.placeOfProductionId[0].name) 
-            ? formatData.placeOfProductionId[0].name : 'не указан' 
+          {{ (formatData.locations && formatData.locations.length > 0 && formatData.locations[0].name) 
+            ? formatData.locations[0].name : 'не указан' 
           }}
           <ModalsMoreCities 
-            :list="formatData.placeOfProductionId.map(item => item.name).slice(1)" 
+            :list="formatData.locations.map(item => item.name).slice(1)" 
             title="Место производства" 
             placement="bottom-end" 
-            v-if="Array.isArray(formatData.placeOfProductionId) && formatData.placeOfProductionId && formatData.placeOfProductionId.length >= 1"
+            v-if="Array.isArray(formatData.locations) && formatData.locations && formatData.locations.length > 1"
           />
         </p>
       </div>
@@ -50,10 +50,10 @@
         <p class="form-group__value">
           {{ (formatData.minLot && formatData.minLot.length > 0) ? formatData.minLot[0] : 'не указан' }}
           <ModalsMoreCities 
-            :list="formatData.minLot" 
+            :list="formatData.minLot.slice(1)" 
             title="Мин. партия" 
             placement="bottom-end" 
-            v-if="Array.isArray(formatData.minLot) && formatData.minLot && formatData.minLot.length >= 1"
+            v-if="Array.isArray(formatData.minLot) && formatData.minLot && formatData.minLot.length > 1"
           />
         </p>
       </div>
@@ -70,10 +70,10 @@
         <p class="form-group__value">
           {{ (formatData.rawMaterials && formatData.rawMaterials.length > 0) ? formatData.rawMaterials[0] : 'не указан' }}
           <ModalsMoreCities 
-            :list="formatData.rawMaterials" 
+            :list="formatData.rawMaterials.slice(1)" 
             title="Сырье" 
             placement="bottom-end" 
-            v-if="Array.isArray(formatData.rawMaterials) && formatData.rawMaterials && formatData.rawMaterials.length >= 1"
+            v-if="Array.isArray(formatData.rawMaterials) && formatData.rawMaterials && formatData.rawMaterials.length > 1"
           />
         </p>
       </div>
@@ -90,10 +90,10 @@
         <p class="form-group__value">
           {{ (formatData.rawMaterials && formatData.rawMaterials.length > 0) ? formatData.rawMaterials : 'не указан' }}
           <ModalsMoreCities 
-            :list="formatData.rawMaterials" 
+            :list="formatData.rawMaterials.slice(1)" 
             title="Сырье" 
             placement="bottom-end" 
-            v-if="Array.isArray(formatData.rawMaterials) && formatData.rawMaterials && formatData.rawMaterials.length >= 1"
+            v-if="Array.isArray(formatData.rawMaterials) && formatData.rawMaterials && formatData.rawMaterials.length > 1"
           />
         </p>
       </div>
@@ -123,7 +123,7 @@
       />
     </UiCheckbox>
     <div class="form-group">
-      <UiButton type="button"  @click="router.push('/orders/create/step3')" class="form-group-data form-group-data__btn" variant="tertiary" size="large">Назад</UiButton>
+      <UiButton :to="backLink" class="form-group-data form-group-data__btn" variant="tertiary" size="large">Назад</UiButton>
       <UiButton type="button"  @click="handleSubmit" class="form-group-data form-group-data__btn" variant="quinary" size="large">Подтвердить
       </UiButton>
     </div>
@@ -158,8 +158,56 @@ const props = defineProps({
     type: Object,
     default: () => ({}),
     required: true,
+  },
+  type: {
+    type: String,
+    default: "create",
+    validator: value => ['create', 'edit'].includes(value),
   }
 });
+
+const backToFirstStep = computed(() => {
+  if(props.type === 'create') {
+    if(props.role === 'performer') {
+      return `/${currentEntity.value}/create/step1`
+    } else if(props.role === 'customer') {
+      return `/${currentEntity.value}/create/step1`
+    }
+    return `/${currentEntity.value}/create/step1`
+  } else if (props.type === 'edit') {
+    if(props.role === 'performer') {
+      return `/${props.role}/${currentEntity.value}/edit/${props.data.id}?step=1`
+    } else if(props.role === 'customer') {
+      return `/${props.role}/${currentEntity.value}/edit/${props.data.id}?step=1`
+    }
+  }
+})
+
+const backLink = computed(() => {
+  if(props.type === 'create') {
+    if(props.role === 'performer') {
+      return `/${currentEntity.value}/create/step3`
+    } else if(props.role === 'customer') {
+      return `/${currentEntity.value}/create/step2`
+    }
+    return `/${currentEntity.value}/create/step1`
+  } else if (props.type === 'edit') {
+    if(props.role === 'performer') {
+      return `/${props.role}/${currentEntity.value}/edit/${props.data.id}?step=3`
+    } else if(props.role === 'customer') {
+      return `/${props.role}/${currentEntity.value}/edit/${props.data.id}?step=2`
+    }
+  }
+})
+
+
+const currentEntity = computed(() => {
+  if(props.role === 'performer') {
+    return 'services'
+  }else if(props.role === 'customer') {
+    return 'orders'
+  }
+})
 
 const entityOfRole = computed(() =>{
   if(props.role === 'performer') {
@@ -173,7 +221,7 @@ const entity = computed(() => {
   } else return entityStore.order
 });
 
-const flagClass = computed(() => selectFlag(props.formatData.placeOfProductionId[0].countryId));
+const flagClass = computed(() => selectFlag(props.formatData.locations[0].countryId));
 
 </script>
 

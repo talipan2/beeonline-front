@@ -235,6 +235,7 @@ function handleSubmit () {
 
 // обновление выбранных городов
 function updateCitySelection() {
+  if(locations.value && !locations.value.country) return // из за ошибки добавил проверку, надо будет проверить везде
   locations.value.country.forEach(country => {
     if(locationTypes.value.selectCountry) {
       country.selected = selectedCountryIds.value.some(selectedCountryId => selectedCountryId == country.id);
@@ -430,16 +431,18 @@ watch(() => props.modelValue, (newVal, oldVal) => {
   } 
 }, {deep: true})
 
-watch(() => settingStore.chooseLocationModal, (newVal) => {
-  if(newVal === true) {
-    if(locationStore.selectedCountry){
-      selectCountry(locationStore.selectedCountry, false);
-      if(locationStore.selectedRegion) {
-        selectRegion(locationStore.selectedRegion);
-      }
-    }
-  }
-});
+// выставление значений из стора 
+
+// watch(() => settingStore.chooseLocationModal, (newVal) => {
+//   if(newVal === true) {
+//     if(locationStore.selectedCountry){
+//       selectCountry(locationStore.selectedCountry, false);
+//       if(locationStore.selectedRegion) {
+//         selectRegion(locationStore.selectedRegion);
+//       }
+//     }
+//   }
+// });
 
 watch(() => props.modelValue, (newValue) => {
   if (!newValue) return;

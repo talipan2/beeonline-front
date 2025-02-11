@@ -1,6 +1,5 @@
 <template>
   <div class="file">
-    {{ dataList }}
     <div class="file__list">
       <div class="divider" v-if="changed && dataList.length && divider || topDivider"></div>
       <div class="file__item" :class="{'add-divider': divider}" v-for="item in dataList" :key="item.id">

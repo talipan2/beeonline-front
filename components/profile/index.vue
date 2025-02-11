@@ -1,7 +1,7 @@
 <template>
   <div class="profile__checklist">
     <CommonProfileCheckCard title="Представитель компании"
-      text="Указанные данные не разглашаются третьим лицам, и необходимы для успешной работы на портале" changeLink="/"
+      text="Указанные данные не разглашаются третьим лицам, и необходимы для успешной работы на портале" :first-btn="handleOpenChangeUserDataModal"
       changeLinkLabel="Изменить данные" :secondLink="`/${role}/profile/update_pwd`" secondLinkLabel="Изменить пароль">
       <div class="form-group profile__representative">
         <div class="form-group-data">
@@ -37,7 +37,7 @@
           <div class="register__check-company-logo">
             <p class="form-group__title">Логотип</p>
             <div class="form-group-data__logo image-box image-box_type_logo">
-              <img :src="pubCardData.logo" alt="">
+              <img :src="pubCardData.logo" :alt="pubCardData.companyName">
             </div>
           </div>
           <div class="register__check-company-details">
@@ -63,11 +63,12 @@
         </div>
         <div class="form-group-data">
           <p class="form-group__title">Сайт</p>
-          <a :href="pubCardData.siteUrl" target="_blank" class="form-group__value link text-wrap">{{ pubCardData.siteUrl || '-' }}</a>
+          <a v-if="pubCardData.siteUrl" :href="pubCardData.siteUrl" target="_blank" class="form-group__value link text-wrap">{{ pubCardData.siteUrl}}</a>
+          <p v-else class="form-group__value text-wrap">-</p>
         </div>
-        <div class="form-group-data" v-if="pubCardsVideo">
+        <div class="form-group-data" v-if="pubCardsVideo.length || pubCardGallery.length">
           <p class="form-group__title">Галерея</p>
-          <CommonGalleryShow :videos="pubCardsVideo"/>
+          <CommonGalleryShow :images="pubCardGallery" :videos="pubCardsVideo"/>
         </div>
         <div class="form-group-data"  v-if="pubCardData.url_tg || pubCardData.url_yt || pubCardData.url_vk">
           <p class="form-group__title">Социальные сети</p>
@@ -87,7 +88,7 @@
     </CommonProfileCheckCard>
     <CommonProfileCheckCard title="Данные организации"
       text="Указанные данные не разглашаются третьим лицам, и необходимы для успешной работы на портале"
-      changeLink="/register/step1" changeLinkLabel="Изменить" secondLink="/" secondLinkLabel="Просмотр документов">
+      :first-btn="handleOpenChangeDataModal" changeLinkLabel="Изменить" secondLink="/" secondLinkLabel="Просмотр документов">
       <div class="register__organization-data">
         <div class="form-group-data">
           <p class="form-group__title">Юридическое названии организации</p>
@@ -120,7 +121,7 @@
         </div>
         <div class="form-group-data">
           <p class="form-group__title">Валюта</p>
-          <p class="form-group__value">{{ organizationData.currency }}</p>
+          <p class="form-group__value">{{ settingStore.getCurrencyNameById(organizationData.currency) }}</p>
         </div>
       </div>
       <div class="form-group-data">
@@ -128,6 +129,8 @@
         <p class="form-group__value">{{ organizationData.legalAddress }}</p>
       </div>
     </CommonProfileCheckCard>
+    <ProfileChageUserDataModal />
+    <ProfileChangeDataModal />
   </div>
 </template>
 
@@ -136,11 +139,13 @@ import { useOrganizationStore } from '~/store/organizationStore';
 import { useUserStore } from '~/store/userStore';
 import defaultCompanyLogo from '~/assets/images/nophoto_pc.png';
 import { useLocationStore } from '~/store/locationStore';
+import { useSettingStore } from '~/store/settingStore';
 
 
 const userStore = useUserStore();
 const organizationStore = useOrganizationStore();
 const locationStore = useLocationStore();
+const settingStore = useSettingStore();
 
 const role = computed(() => userStore.role);
 
@@ -162,7 +167,7 @@ const organizationData = computed(() => ({
   ogrn: userStore.userOrganization?.ogrn || '-',
   legalAddress: userStore.userOrganization?.legal_address || '-',
   country: userStore.userOrganization?.country_id || '-',
-  currency: userStore.userOrganization?.currency || '-',
+  currency: userStore.userOrganization?.currency_id || null,
 }));
 
 const pubCardData = computed(() => ({
@@ -188,6 +193,22 @@ const pubCardsVideo = computed(() => {
     return []
   }
 })
+
+const pubCardGallery = computed(() => {
+  if (userStore.userPubCard.gallery && userStore.userPubCard.gallery.length) {
+    return userStore.userPubCard.gallery.map(gallery => ({url: gallery.url}))
+  } else {
+    return []
+  }
+});
+
+const handleOpenChangeDataModal = () => {
+  settingStore.changeDataModal = true;
+}
+
+const handleOpenChangeUserDataModal = () => {
+  settingStore.changeUserDataModal = true;
+}
 
 onMounted(() => {
   isLoading.value = true;

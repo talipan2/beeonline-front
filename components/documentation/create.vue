@@ -18,7 +18,6 @@
       Сохранить
     </UiButton>
     <DocumentationErrorModal />
-    {{ dataListId }}
   </div>
 </template>
 
@@ -29,13 +28,16 @@ import { useUserStore } from '~/store/userStore';
 
 const organizationStore = useOrganizationStore();
 const userStore = useUserStore();
+const router = useRouter()
 
 const dataListId = ref([]);
 
 const documentsList = ref([]);
 
 const handleSaveFiles = () => {
+  console.log(dataListId.value)
   organizationStore.setVerificationDocuments(userStore.userData.organization_id, dataListId.value)
+  router.push({path: `/${userStore.role}/documentation`})
 }
 
 onMounted(() => {
@@ -45,14 +47,14 @@ onMounted(() => {
       if(res) {
         dataListId.value = res.map(item => {
           return {
-            media_id: item.media_id,
+            id: item.media_id,
             status: item.status
           }
           });
         documentsList.value = res.map(item => {
           return {
             id: item.media_id,
-            name: 'Не приходит название и url с бека',
+            name: 'Не приходит url с бека',
             url: item.file_url,
             type: 'pdf',
           }

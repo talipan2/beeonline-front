@@ -1,13 +1,14 @@
 <template>
   <div class="location-container">
     <i class="flag flag_round" :class="selectFlag(firstLocation && firstLocation.countryId || '')"></i>
-    <p>{{ firstLocation && firstLocation.name || '-' }} </p>
+    <p v-if="!isCountry">{{ firstLocation && firstLocation.name || '-' }} </p>
+    <p v-else>{{ countryName || '-' }} </p>
     <ModalsMoreCities 
       class="location-container__more-cities"
       :list="otherLocations" 
       :title="title" 
       placement="bottom-end" 
-      v-if="otherLocations"
+      v-if="otherLocations && !isCountry"
     />
   </div>
 </template>
@@ -24,7 +25,12 @@ const props = defineProps({
   title: {
     type: String,
     default: 'География фактического производства',
+  },
+  isCountry: {
+    type: Boolean,
+    default: false
   }
+
 })
 
 const locationStore = useLocationStore();
@@ -45,8 +51,13 @@ const firstLocation = computed(() => {
 })
 
 const otherLocations = computed(() => {
-  if(!data.value.length) return null;
+  if(!data.value.length && props.isCountry) return null;
   return data.value.slice(1).map(item => item.name);
+})
+
+const countryName = computed(() => {
+  if(!firstLocation.value || !props.isCountry) return null;
+  return firstLocation.value.countryId ? locationStore.getCountryById(firstLocation.value.countryId) : null;
 })
 
 </script>

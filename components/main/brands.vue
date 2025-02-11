@@ -5,47 +5,24 @@
         <div class="brands__cards brands-swiper-container">
             <Swiper class="brands__swiper" :slides-per-view="1.4" :space-between="16" :centered-slides="true" :slides-per-group="1"
                 :pagination="true" :modules="[SwiperPagination]" :loop="false" :breakpoints="breakpoints">
-                <SwiperSlide class="brands__card">
+                <SwiperSlide class="brands__card" v-for="(brand, index) in ordersList" :key="index">
                     <div class="brands__card-header">
-                        <UiImage src="/assets/images/main/brands/brand-logo.png" class="brands__card-logo" />
+                        <img class="brands__card-logo" :src="brand.pubCard.logo || defaultImage" :alt="brand.pubCard.name">
                         <div class="brands__card-description">
                             <p class="brands__card-brend">
-                                <span>Оптовый пошив Оптовый пошив Оптовый пошив Оптовый пошив</span>
+                                <span>{{ brand.pubCard.name }}</span>
                             </p>
-                            <p class="brands__card-city">Оптовый пошив</p>
+                            <p class="brands__card-city">{{ locationStore.getCountryById(brand.pubCard.countryId) }}</p>
                         </div>
                     </div>
                     <div class="brands__card-image">
-                        <UiImage src="/assets/images/main/brands/brands-1.png" />
+                        <img :src="brand.gallery || defaultImage" :alt="brand.name">
                     </div>
                     <div class="brands__card-footer">
-                        <p class="brands__card-type">Оптовый пошив </p>
-                        <p class="brands__card-tags">Детская одежда</p>
+                        <p class="brands__card-type">{{ brand.name }}</p>
+                        <p class="brands__card-tags">{{ brand.product_categories }}</p>
                     </div>
-                    <NuxtLink to="https://test.bee-online.ru/services/1469" class="brands__card-link"></NuxtLink>
-                </SwiperSlide>
-                <SwiperSlide class="brands__card" v-for="brand in 10" :key="brand">
-                    <div class="brands__card-header">
-                        <UiImage src="/assets/images/main/brands/brand-logo.png" class="brands__card-logo" />
-                        <div class="brands__card-description">
-                            <p class="brands__card-brend">
-                                <span>Дом моды Арист asd asd as as d asd asdas sdas asddasdas dasdasdasda asd
-                                    sdasdasdasdasdasdasdasd</span>
-                            </p>
-                            <p class="brands__card-city">Тула</p>
-                        </div>
-                    </div>
-                    <div class="brands__card-image">
-                        <UiImage src="/assets/images/main/brands/brands-1.png" />
-                    </div>
-                    <div class="brands__card-footer">
-                        <p class="brands__card-type">Оптовый пошив изделий из легких и средних тканей</p>
-                        <p class="brands__card-tags">Детская одежда, Женская одежда, Мужская одежда, Кроеный трикотаж,
-                            Термобелье,
-                            Верхний трикотаж, Домашняя одежда и текстиль, Спортивная одежда, Школьная форма, Разработка
-                            лекал</p>
-                    </div>
-                    <NuxtLink to="https://test.bee-online.ru/services/1469" class="brands__card-link"></NuxtLink>
+                    <NuxtLink :to="`/services/${brand.id}`" class="brands__card-link"></NuxtLink>
                 </SwiperSlide>
             </Swiper>
             <UiImage class="brands__gift-img" src="/assets/images/main/brands/brands-gift.webp" alt="" />
@@ -55,6 +32,13 @@
 </template>
 
 <script setup>
+import { useEntityStore } from '~/store/entityStore';
+import { useLocationStore } from '~/store/locationStore';
+
+import defaultImage from '~/assets/images/nophoto_pc.png'
+
+const entityStore = useEntityStore();
+const locationStore = useLocationStore();
 
 const breakpoints = { 
     375: { 
@@ -83,6 +67,29 @@ const breakpoints = {
         centeredSlides: false,
     } 
 }
+
+const ordersList = ref([]);
+
+onMounted(() => {
+    entityStore.getServices()
+        .then(res => {
+            if(res && res.data) {
+                ordersList.value = res.data.map(item => {
+                    return {
+                        id: item.id,
+                        pubCard: {
+                            logo: item.pub_card && item.pub_card.logo ? item.pub_card.logo : '',
+                            name: item.pub_card && item.pub_card.name ? item.pub_card.name : '',
+                            countryId: item.pub_card && item.pub_card.country_id ? item.pub_card.country_id : '',
+                        },
+                        name: item.name,
+                        gallery: item.gallery && item.gallery.length ? item.gallery[0].url : undefined,
+                        product_categories: item.product_categories && item.product_categories.length ? item.product_categories.map(item => item.name).join(' , ') : '',
+                    }
+                });
+            }
+        })
+})
 
 </script>
 
@@ -153,6 +160,7 @@ const breakpoints = {
     -o-object-fit: cover;
     object-fit: cover;
     width: 4em;
+    border-radius: 100%;
 }
 
 .brands__card-description {

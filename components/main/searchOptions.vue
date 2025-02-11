@@ -5,14 +5,14 @@
         <h3 class="search-options__title">Поиск заказчиков</h3>
         <p class="search-options__description">Присоединяйтесь к нашему сервису для легкой и надежной связи с
           заказчиками, чтобы гарантированно получать выгодные контракты и расти вместе с нами!</p>
-        <UiButton to="https://test.bee-online.ru/orders" class="search-options__link" variant="primary" size="xl" >Каталог заказчиков</UiButton>
+        <UiButton to="/orders" class="search-options__link" variant="primary" size="xl" >Каталог заказчиков</UiButton>
         <UiImage class="search-options__image" src="/assets/images/main/search-options/search-options-1.png"/>
       </div>
       <div class="search-options__card">
         <h3 class="search-options__title">Поиск исполнителей</h3>
         <p class="search-options__description">Обеспечьте своему бренду надежность, скорость и качество — найдите лучших
           исполнителей в легкой промышленности с нашим сервисом!</p>
-        <UiButton to="https://test.bee-online.ru/orders" class="search-options__link" variant="primary" size="xl" >Каталог исполнителей</UiButton>
+        <UiButton to="/services" class="search-options__link" variant="primary" size="xl" >Каталог исполнителей</UiButton>
         <UiImage class="search-options__image" src="/assets/images/main/search-options/search-options-2.png"/>
       </div>
     </div>

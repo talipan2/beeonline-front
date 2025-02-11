@@ -9,6 +9,20 @@
   </NuxtLayout>
 </template>
 
+<script setup>
+
+useHead({
+  title: 'Техническая поддержка',
+  meta: [
+    {
+      name: 'description',
+      content: '',
+    },
+  ],
+});
+
+</script>
+
 <style lang="scss">
 
 .support-layout {

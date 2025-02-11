@@ -71,6 +71,8 @@ function decrement() {
     }
 
     &:active {
+      box-shadow: 0 0 0 .2rem rgba(105, 55, 165, .25);
+
       svg {
         path {
           stroke: #6937a5;

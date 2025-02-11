@@ -3,8 +3,8 @@
     <div class="bonus__left-side">
       <BonusBanner class="bonus__banner_desktop" />
       <BonusRules />
-      <BonusAchievements />
-      <BonusTransactions v-if="isTest" />
+      <BonusAchievements :organizationId="organizationId"/>
+      <BonusTransactions :organizationId="organizationId" />
     </div>
 
     <div class="bonus__right-side">
@@ -26,10 +26,14 @@
 
 <script setup>
 import { useBonusStore } from '~/store/bonusStore';
+import { useUserStore } from '~/store/userStore';
 
 const props = defineProps({});
 
+const userStore = useUserStore();
 const bonusStore = useBonusStore();
+
+const organizationId = computed(() => userStore.userData?.organization_id);
 
 const loading = ref(false);
 const bonuses = ref(0);
@@ -47,18 +51,25 @@ const data = computed(() => bonusStore.data)
 
 onMounted(() => {
   loading.value = true;
-  setTimeout(() => {
-    loading.value = false;
-    bonuses.value = data.value.bonuses;
-    level.value = data.value.level;
-    levels.value = data.value.levels;
-    levelGroups.value = data.value.level_groups;
-    levelNumber.value = data.value.level_number;
-    levelProgress.value = data.value.level_progress;
-    achievementsOrgCount.value = data.value.achievements_org_count;
-    achievementsAllCount.value = data.value.achievements_all_count;
-    rating.value = data.value.rating;
-  }, 1000);
+	if(organizationId.value) {
+		bonusStore.getBonusesData(organizationId.value)
+		.then(res => {
+			if(res) {
+				console.log(res)
+				bonuses.value = res.bonuses;
+				levelNumber.value = res.level_number;
+				levelProgress.value = res.level_progress;
+				levelGroups.value = res.allLevels ? Object.values(res.allLevels) : [];
+				level.value = res.current_level;
+				achievementsOrgCount.value = res.achievements_org_count;
+				achievementsAllCount.value = res.achievements_all_count;
+				rating.value = res.rating;
+			}
+		})
+		.finally(() => loading.value = false);
+
+		bonusStore.getAchievements(organizationId.value)
+	}
 })
 
 </script>

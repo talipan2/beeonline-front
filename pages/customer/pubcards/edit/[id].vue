@@ -9,3 +9,17 @@
   </NuxtLayout>
 </template>
 
+<script setup>
+
+useHead({
+  title: 'Обновление публичной карточки компании',
+  meta: [
+    {
+      name: 'description',
+      content: '',
+    },
+  ],
+});
+
+</script>
+

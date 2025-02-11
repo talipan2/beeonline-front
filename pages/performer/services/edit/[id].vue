@@ -5,9 +5,12 @@
         :list="[{ label: 'Главная', link: '/' }, { label: 'Кабинет исполнителя', link: '/performer/desktop' }, { label: 'Список услуг', link: '/performer/services' }, { label: 'Редактирование услуги', link: '' }]" />
     </template>
     <template #content>
-      <component :is="currentComponent" :title="title" role="performer" :formatData="formatData"  :handleSubmit="handleSubmit" :handleBack="previousStep" :data="serviceData"/>
-      {{ serviceData }}
-    </template>    
+      <component :is="currentComponent" :title="title" role="performer" :formatData="formatData"  :handleSubmit="handleSubmit" :handleBack="previousStep" :data="serviceData" type="edit"/>
+    </template> 
+    <template #rightSide>
+      <div class="h4">Предварительный просмотр услуги</div>
+      <CreateEntityPreview :data="previewCardData"/>
+    </template>
   </NuxtLayout>
 </template>
 
@@ -27,21 +30,6 @@ const currentStep = ref(1);
 const title = ref('');
 const alertsList = ref([]);
 const id = router.currentRoute.value.params.id;
-// const formatData = ref({});
-
-const service = ref({})
-// const serviceData = computed(() => ({
-//   name: service.value.name,
-//   logo: service.value.gallery,
-//   categories: service.value.categories || [],
-//   placeOfProductionId: service.value.placeOfProductionId || [],
-//   availabilityStm: Number(service.value.is_stm),
-//   freeTestSamples: Number(service.value.free_samples),
-//   minLot: service.value.min_lot || [],
-//   rawMaterials: [service.value.materials_own ? 5 : '', service.value.materials_tolling ? 6 : ''].filter(Boolean) || [],
-//   description: service.value.description,
-//   termsOfCooperation: service.value.conditions
-// }))
 
 const serviceData = ref({
   name: '',
@@ -60,11 +48,26 @@ const serviceData = ref({
   tzFiles: [],
 })
 
+const previewCardData = computed(() => ({
+  name: serviceData.value.name,
+  logo: serviceData.value.gallery && serviceData.value.gallery.length ? serviceData.value.gallery[0].url : '',
+  countryId: formatData.value.locations && formatData.value.locations.length ? formatData.value.locations[0].countryId : null,
+  data: [
+    {id: 1, name: 'Категории', value: formatData.value.categories},
+    {id: 2, name: 'Место производства', value: formatData.value.locations.map(item => item.name)},
+    {id: 3, name: 'Мин. партия', value: formatData.value.minLot},
+    {id: 4, name: 'Наличие СТМ', value: formatData.value.availabilityStm},
+    {id: 5, name: 'Бесплатные тестовые образцы', value: formatData.value.freeTestSamples},
+    {id: 6, name: 'Сырье', value: formatData.value.rawMaterials},
+    {id: 7, name: 'Описание', value: formatData.value.description},
+  ],
+}))
+
 const formatData = computed(() => {
   return {
     name: serviceData.value.name,
     categories: entityStore.getEntityLabelById('categories', serviceData.value.categories),
-    placeOfProductionId: locationStore.getLocationsByIds([], [], serviceData.value.locations.cities),
+    locations: locationStore.getLocationsByIds([], [], serviceData.value.locations.cities),
     availabilityStm: entityStore.getEntityLabelById('availabilityStm', serviceData.value.availabilityStm),
     freeTestSamples: entityStore.getEntityLabelById('freeTestSamples', serviceData.value.freeTestSamples),
     minLot: entityStore.getEntityLabelById('minLot', serviceData.value.minLot),
@@ -133,17 +136,25 @@ const currentComponent = computed(() => {
   switch (currentStep.value) {
     case 1:
       title.value = 'Основные данные услуги';
+      router.push({path: '/performer/services/edit/' + id, query: {step: 1}});
       return Step1
     case 2:
+      router.push({path: '/performer/services/edit/' + id, query: {step: 2}});
       return Step2
     case 3:
+      router.push({path: '/performer/services/edit/' + id, query: {step: 3}});
       return Step3
     case 4:
+      router.push({path: '/performer/services/edit/' + id, query: {step: 4}});
       return Step4
     default:
       title.value = 'Основные данные услуги';
       return Step1;
   }
+})
+
+watch(() => router.currentRoute.value.query.step, (newVal) => {
+  currentStep.value = Number(newVal)
 })
 
 onMounted(() => {
@@ -166,6 +177,12 @@ onMounted(() => {
       }
     }
   })
+})
+
+onMounted(() => {
+  if(router.currentRoute.value.query.step) {
+    currentStep.value = Number(router.currentRoute.value.query.step);
+  }
 })
 
 </script>
