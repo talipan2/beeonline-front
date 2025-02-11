@@ -4,7 +4,7 @@
     :description="description"
     :block-title="blockTitle"
   >
-    <Form @submit="handleSubmit">
+    <Form @submit="handleSubmit" v-slot="{validate}">
       <label class="form-group__title" for="name"
         >Название компании *
         <UiInput
@@ -42,7 +42,7 @@
           <label class="form-group__title">Описание * </label>
           <UiTextArea
             :rules="{ required: true, min: 5 }"
-            name="description"
+            name="description-text"
             label="Описание"
             v-model="data.description" 
             :rows="5"
@@ -66,6 +66,7 @@
           class="register__btn"
           variant="quinary"
           size="large"
+          @click="getErrorsList(validate)"
           >Далее
           <SvgoBtnArrow class="svg-lx" />
         </UiButton>

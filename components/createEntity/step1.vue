@@ -1,7 +1,7 @@
 <template>
   <div class="entity">
     <h1 class="entity__title">{{ title }}</h1>
-    <Form @submit="handleSubmit" as="form">
+    <Form @submit="handleSubmit" as="form" v-slot="{validate}">
       <div
         class="form-group"
         v-if="router.currentRoute.value.name.includes('create')"
@@ -56,6 +56,7 @@
           class="form-group-data__btn entity__btn"
           variant="quinary"
           size="large"
+          @click="getErrorsList(validate)"
           >Далее
           <SvgoBtnArrow class="svg-lx" />
         </UiButton>
@@ -66,7 +67,7 @@
 
 <script setup>
 import { useEntityStore } from '~/store/entityStore';
-
+import { getErrorsList } from '~/utils/getValidationErrors';
 
 const props = defineProps({
   title: {

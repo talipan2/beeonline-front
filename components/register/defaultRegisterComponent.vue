@@ -6,7 +6,7 @@
     title="Контактные данные"
     description="Указанные данные не разглашаются третьим лицам и необходимы для успешной работы на портале."
   >
-    <Form as="form" @submit="handleSubmit">
+    <Form as="form" @submit="handleSubmit" v-slot="{validate}">
       <div class="form-group">
         <label class="form-group-data form-group__title">
           Ваше имя *
@@ -47,7 +47,7 @@
         <label class="form-group-data form-group__title">
           Ваш телефон *
           <UiInput
-            :rules="{ required: true, min: 16, max: 16 }"
+            :rules="{ required: true, max: 16 }"
             name="phone"
             label="Телефон"
             class="form-group__value"
@@ -70,11 +70,11 @@
         class="register__btn register__btn_type_secondary"
         variant="quinary"
         size="large"
+        @click="getErrorsList(validate)"
       >
         Зарегистрироваться
         <SvgoBtnArrow class="svg-lx" />
       </UiButton>
-      {{ userData }}
     </Form>
     <template #soc-reg>
       <RegisterSocialRegistr />
@@ -95,7 +95,7 @@ const userData = ref({
   jobTitle: "",
   email: "",
   phone: "",
-  privacyPolicy: false,
+  privacyPolicy: true,
   role: role.value
 });
 const isCreateOrder = computed(() => settingStore.isCreateOrder);

@@ -47,18 +47,32 @@ const organizationStore = useOrganizationStore();
 const userStore = useUserStore();
 
 const pubCard = computed(() => userStore.userPubCard);
-const organization = computed(() => organizationStore.organization);
+const organization = computed(() => userStore.userOrganization);
 const userData = computed(() => userStore.userData);
 
-const checkListArray = [
-  { label: 'Данные организации', value: 'chapter'},
-  { label: 'Карточка компании', value: 'chapter-current'},
-  { label: 'Название', value: pubCard.value.name || ''},
-  { label: 'Логотип', value: pubCard.value.logo || ''},
-  { label: 'Описание', value: pubCard.value.description  || ''},
-  { label: 'География фактического производства', value: pubCard.value.cities || ''},
-  { label: 'Активность', value: ''},
-]
+const checkListArray = computed(() => [
+  { 
+    label: 'Данные организации', 
+    value: 'chapter-current',
+    checkList: [
+      { label: 'Название', value: organization.value.name},
+      { label: 'ИНН', value: organization.value.inn},
+      { label: 'Страна', value: organization.value.country_id},
+      { label: 'Активность', value: organization.value.is_active},
+    ]
+  },
+  { 
+    label: 'Карточка компании', 
+    value: 'chapter-current',
+    checkList: [
+      { label: 'Название', value: pubCard.value.name},
+      { label: 'Логотип', value: pubCard.value.logo},
+      { label: 'Описание', value: pubCard.value.description},
+      { label: 'География фактического производства', value: pubCard.value.regions || pubCard.value.cities},
+      { label: 'Активность', value: pubCard.value.is_active},
+    ]
+  },
+])
 
 function handleCreateRole(role) {
   userStore.setUserData({ role: role }, userData.value.id)

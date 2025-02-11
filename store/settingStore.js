@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import uploadFilesApi from "~/api/uploadFilesApi";
+import commonApi from "~/api/commonApi";
 
 export const useSettingStore = defineStore("setting", {
   state: () => ({
@@ -59,7 +60,20 @@ export const useSettingStore = defineStore("setting", {
       } catch (error) {
         console.error(error);
       }
-    }
-  }
+    },
+    
+    async getHelps() {
+      try {
+        const response = await commonApi.getFaqs();
+        if (response.data) {
+          return response.data
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
+  },
+
 
 })

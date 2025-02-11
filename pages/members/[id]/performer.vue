@@ -13,7 +13,7 @@
       <CatalogMembersDetails :data="pubCard"/>
     </template>
     <template #rightSide>
-      <CatalogOtherEntityCompany :type="pubCard.type" title="Актуальные услуги компании"/>
+      <CatalogOtherEntityCompany :type="pubCard.type" :data="activeEntity" title="Актуальные услуги компании"/>
       <div class="views">
         <p>Просмотры: {{ pubCard.viewCount }}</p>
       </div>
@@ -43,12 +43,14 @@ const pubCard = computed(() => {
     fillRating: data.value.fill_rating,
     statusComment: data.value.status_comment,
     updatedAt: formatDate(data.value.updated_at, 'DD.MM.YYYY, mm:HH'),
-    entityCount: 1,
+    entityCount: data.value.type === 'performer' ? data.value.services_count : data.value.orders_count,
     gallery: data.value.gallery && data.value.gallery.length && data.value.gallery.map(item => item.url),
     videos: data.value.videos && data.value.videos.length && data.value.videos.map(item => item.external_url),
-    location: data.value.regions && data.value.cities ? { regions: data.value.regions.map(region => region.id), cities: data.value.cities.map(city => city.id) } : [],
+    location: { countries: [data.value.country_id]},
   }
 })
+
+const activeEntity = computed(() => data.value.services || [])
 
 onMounted(async() => {
   data.value = await organizationStore.getPubCard(router.currentRoute.value.params.id)

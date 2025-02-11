@@ -3,39 +3,29 @@
     <h2 class="other-entity__title" v-if="title">{{ title }}</h2>
     <h2 class="other-entity__title" v-else >Другие {{ type === 'order' ? 'заказы' : 'услуги' }} компании</h2>
     <div class="other-entity__container">
-      <div class="other-entity__item">
-        <NuxtLink class="other-entity__item-title link">Изготовление школьных вязаных жилетов.</NuxtLink>
-        <div class="other-entity__item-details">
-          <p class="other-entity__item-text">
-            Размер партии: до 100
-          </p>
-          <p class="other-entity__item-text" v-if="type === 'customer'">
-            Срок выполнения: до 31/12/2024
-          </p>
-        </div> 
-      </div>
-      <div class="other-entity__item">
-        <NuxtLink class="other-entity__item-title link">Изготовление школьных вязаных жилетов.</NuxtLink>
-        <div class="other-entity__item-details">
-          <p class="other-entity__item-text">
-            Размер партии: до 100
-          </p>
-          <p class="other-entity__item-text" v-if="type === 'customer'">
-            Срок выполнения: до 31/12/2024
-          </p>
-        </div> 
-      </div>
-      <div class="other-entity__item">
-        <NuxtLink class="other-entity__item-title link">Изготовление школьных вязаных жилетов.</NuxtLink>
-        <div class="other-entity__item-details">
-          <p class="other-entity__item-text">
-            Размер партии: до 100
-          </p>
-          <p class="other-entity__item-text" v-if="type === 'customer'">
-            Срок выполнения: до 31/12/2024
-          </p>
-        </div> 
-      </div>
+      <template v-if="type === 'customer'">
+        <div class="other-entity__item" v-for="(order, index) in data" :key="index">
+          <NuxtLink :to="`/orders/${order.id}`" class="other-entity__item-title link">{{ order.name }}</NuxtLink>
+          <div class="other-entity__item-details">
+            <p class="other-entity__item-text">
+              Размер партии: {{ order.batch ? Number(order.batch) : '' }}
+            </p>
+            <p class="other-entity__item-text" v-if="type === 'customer'">
+              Срок выполнения: до {{ order.deadline_at ? formatDate(order.deadline_at, 'DD/MM/YYYY') : '' }}
+            </p>
+          </div> 
+        </div>
+      </template>
+      <template v-if="type === 'performer'">
+        <div class="other-entity__item" v-for="(service, index) in data" :key="index">
+          <NuxtLink :to="`/services/${service.id}`" class="other-entity__item-title link">{{ service.name }}</NuxtLink>
+          <div class="other-entity__item-details">
+            <p class="other-entity__item-text">
+              Минимальная партия: {{ service.batches && service.batches.length ? service.batches[0].name : '' }}
+            </p>
+          </div> 
+        </div>
+      </template>
     </div>
   </div>
 </template>
@@ -50,6 +40,10 @@ const props = defineProps({
   title: {
     type: String,
     default: '',
+  },
+  data: {
+    type: Array,
+    default: [],
   }
 })
 

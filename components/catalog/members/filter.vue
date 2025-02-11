@@ -1,9 +1,9 @@
 <template>
-  <CommonFilter>
+  <CommonFilter :submit-function="handleSubmit" :reset-function="resetFilter">
     <template #body>
       <div class="filter__item">
         <h3 class="filter__title">Тип участника:</h3>
-        <UiRadioButtonGroup class="filter__radio" :options="[{ label: 'Исполнитель', id: 0 }, { label: 'Заказчик', id: 1 }]" name="type"/>
+        <UiRadioButtonGroup class="filter__radio" v-model="searchProps.type" :options="[{ label: 'Исполнитель', id: 0, value: 'performer' }, { label: 'Заказчик', id: 1, value: 'customer' }]" name="type"/>
       </div>
       <div class="filter__item">
         <h3 class="filter__title">Категории продукции:</h3>
@@ -14,13 +14,15 @@
           :typeButton="{ variant: 'default', size: 'large' }"
           :isValidated="false"
           :priorityShowed="[2, 4, 6, 10]"
+          v-model="searchProps.category"
+          name="category"
         >
           <template #btn-image>
             <SvgoDropDownNew class="svg-m" />
           </template>
         </UiCheckboxGroup>
       </div>
-      <div class="filter__item">
+      <!-- <div class="filter__item">
         <h3 class="filter__title">Страна:</h3>
         <UiCheckboxGroup
           :options="countryList"
@@ -28,12 +30,14 @@
           :countShowed="10"
           :typeButton="{ variant: 'default', size: 'large' }"
           :isValidated="false"
+          v-model="searchProps.location"
+          name="location"
         >
           <template #btn-image>
             <SvgoDropDownNew class="svg-m" />
           </template>
         </UiCheckboxGroup>
-      </div>
+      </div> -->
       <div class="filter__item">
         <h3 class="filter__title">Сырье:</h3>
         <UiCheckboxGroup
@@ -42,6 +46,8 @@
             { id: 1, label: 'Давальческое' },
           ]"
           :isValidated="false"
+          v-model="searchProps.material"
+          name="material"
         />
       </div>
     </template>
@@ -51,11 +57,38 @@
 <script setup>
 import { useEntityStore } from "~/store/entityStore";
 
-const entityStore = useEntityStore();
+const props = defineProps({
+  filter: {
+    type: Object,
+    default: () => {},
+  }
+});
 
-const searchProps = {
+
+const entityStore = useEntityStore();
+const emit = defineEmits(['updateFilter']);
+
+const searchProps = ref({
+  type: 'performer',
+  category: [],
   location: [],
-};
+  material: [],
+});
+
+const handleSubmit = () => {
+  emit('updateFilter', {...searchProps.value});
+}
+
+const resetFilter = () => {
+  searchProps.value = {
+    type: 'performer',
+    category: [],
+    location: [],
+    material: [],
+  };
+  emit('updateFilter', []);
+}
+
 
 const category = computed(() => entityStore.entityData.categories);
 
@@ -75,6 +108,16 @@ const countryList = computed(() => {
     { id: 12, label: 'Албания' },
   ]
 })
+
+
+watch(() => props.filter, (newVal) => {
+  searchProps.value = {
+    type: newVal.type || 'performer',
+    category: newVal.categories || [],
+    location: newVal.countries || [],
+    material: [newVal.materials_own ? 0 : undefined, newVal.materials_tolling ? 1 : undefined].filter(item => item !== undefined),
+  };
+}, {deep: true, once: true})
 </script>
 
 <style lang="scss">

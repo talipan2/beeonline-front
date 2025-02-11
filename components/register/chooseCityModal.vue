@@ -235,6 +235,7 @@ function handleSubmit () {
 
 // обновление выбранных городов
 function updateCitySelection() {
+  if(locations.value && !locations.value.country) return // из за ошибки добавил проверку, надо будет проверить везде
   locations.value.country.forEach(country => {
     if(locationTypes.value.selectCountry) {
       country.selected = selectedCountryIds.value.some(selectedCountryId => selectedCountryId == country.id);

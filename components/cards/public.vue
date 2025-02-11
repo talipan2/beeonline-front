@@ -9,7 +9,7 @@
         <div class="card-pub__details-container">
           <CommonRating :isCountRating="false" />
         </div>
-        <CommonLocationsList :locationsList="data.location" :is-country="true"/>
+        <CommonLocationsList :locationsList="data.countryId"/>
         <div class="card-pub__details-container">
           <SvgoCase class="svg-m" fill="#C4C4C4" />
           <p v-if="data.type === 'performer'">
@@ -28,11 +28,17 @@
         <div class="props" v-if="isPropsVisible">
           <div class="prop">
             <p class="prop__name">Сырье:</p>
-            <p class="prop__value">Не указано</p>
+            <p class="prop__value">{{ data.rawMaterials && data.rawMaterials.length > 0 ? data.rawMaterials.join(', ') : 'Не указано' }}</p>
           </div>
           <div class="prop">
             <p class="prop__name">Категории:</p>
-            <p class="prop__value">Не указано</p>
+            <p class="prop__value">{{ data.category && data.category.length > 0 ? data.category[0] : 'Не указано' }}</p>
+            <ModalsMoreCities
+              class="prop__more"
+              :list="data.category.slice(1)" 
+              v-if="data.category && data.category.length > 1"
+              title="Категории"
+            />
           </div>
         </div>
       </div>

@@ -35,7 +35,7 @@
         </UiNewDropdown>
       </div>
       <div class="members__count">
-        <p class="members__count-text">{{ currentListLength + ' ' + plural(currentListLength, { one: 'компания', few: 'компании', many: 'компаний'}) }} из {{ 546 }}</p>
+        <p class="members__count-text">{{ currentListLength + ' ' + plural(currentListLength, { one: 'компания', few: 'компании', many: 'компаний'}) }} из {{ page.total }}</p>
       </div>
       <div class="members__view-setting">
         <UiButton
@@ -76,7 +76,6 @@
         </UiButton>
       </div>
     </div>
-
     <!-- grid -->
     <CatalogMembersListDefault v-if="currentViewSetting === 'grid'" :data="data"/>
 
@@ -96,7 +95,7 @@
       </div>
     </div>
 
-    <CommonPagination v-if="isPagination"/>
+    <CommonAlerts alert="Участников нет" :type="'warning'" v-if="!data.length" />
   </div>
 
 
@@ -114,6 +113,10 @@ const props = defineProps({
   isPagination: {
     type: Boolean,
     default: false
+  },
+  page: {
+    type: Object,
+    default: () => {}
   }
 });
 
@@ -122,7 +125,7 @@ const router = useRouter();
 const sortDropdown = ref(null);
 const currentViewSetting = ref(null);
 const currentPubCard = ref(null);
-const currentListLength = computed(() => [props.data].length);
+const currentListLength = computed(() => props.data.length);
 const membersCard = ref(null);
 
 const currentSortList = ref({

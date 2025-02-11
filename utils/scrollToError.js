@@ -1,7 +1,5 @@
 export function scrollToError(errors) {
-  console.log(errors)
   const firstErrorField = Object.keys(errors)[0]; 
-
   if (firstErrorField) {
     const errorElement = document.querySelector(`[name="${firstErrorField}"]`);
     if (errorElement) {

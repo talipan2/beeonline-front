@@ -18,30 +18,30 @@
     <CommonAdvice class="checklist__advice">
       <p class="advice__text">{{ adviceTitle }}</p>
     </CommonAdvice>
-    <div class="checklist__collapse">
-      <ul class="checklist__steps" v-if="!valueCheck">
-        <li  v-for="step in steps" :key="step.path" :class="[
-          'checklist__step',
-          {
-            'checklist__step_current': currentStep === step.value,
-            'checklist__step_passed': isStepPassed(step.value)
-          }
-        ]">
-          {{ step.label }}
-        </li>
-      </ul>
-      <ul class="checklist__steps" v-if="valueCheck">
+    <div class="checklist__collapse" v-if="valueCheck">
+      <ul class="checklist__steps">
         <div class="divider"></div>
         <li  v-for="(step, index) in checkList" :key="index" :class="[
           'checklist__step',
+          'checklist__chapter',
           {
             'checklist__step_current': step.value == 'chapter-current',
             'checklist__step_passed': step.value !== null || step.value !== '',
-            'checklist__step_crossed': step.value == null || step.value == '',
-            'checklist__chapter': step.value == 'chapter'
           }
         ]">
-          {{ step.label }} 
+          {{ step.label }}
+          <ul class="checklist__substeps" >
+            <li v-for="(subStep, index) in step.checkList" :key="index" :class="[
+              'checklist__step',
+              'checklist__substep',
+              {
+                'checklist__step_passed': subStep.value !== null || subStep.value !== '',
+                'checklist__step_crossed': subStep.value == null || subStep.value == '',
+              }]"
+            >
+              {{ subStep.label }}
+            </li>
+          </ul> 
         </li>
       </ul>
     </div>
@@ -238,17 +238,26 @@ const nullPercentage = computed(() => {
 }
 
 .checklist__steps {
+    font-size: 1.6em;
     list-style: none;
     padding: 0 0 1px;
     margin: 0;
-    margin-top: 3em;
+    margin-top: 1.875em;
     font-weight: 400;
 }
 
+.checklist__substeps {
+  margin-left: -1.875em;
+  color: var(--text-color-primary);
+
+  &:first-child {
+    margin-top: .75em;
+  }
+}
+
 .checklist__step {
-    position: relative;
-    font-size: 1.6em;
     padding-left: 1.875em;
+    position: relative;
     margin-bottom: .75em;
     line-height: 1em;
 }
@@ -281,7 +290,11 @@ const nullPercentage = computed(() => {
 
 .checklist__chapter {
   padding-bottom: 1rem;
-  border-bottom: 1px solid #D9D9D9;
+  color: var(--primary-color);
+
+  &:not(:last-child) {
+    border-bottom: 1px solid #D9D9D9;
+  }
 }
 
 @media (min-width: 768px) {

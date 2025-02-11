@@ -385,6 +385,16 @@ export const useEntityStore = defineStore('entity', {
         throw error;
       }
     },
-    
+
+    async search(params) {
+      try {
+        const response = await commonApi.search(params);
+        if(response.data) {
+          return response.data
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
   }
 });

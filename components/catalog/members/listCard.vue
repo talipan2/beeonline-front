@@ -14,7 +14,7 @@
       </div>
     </div>
     <div class="list-card__col-3">
-      <CommonLocationsList class="list-card__location" :locations-list="data.location" :is-country="true"/>
+      <CommonLocationsList class="list-card__location" :locations-list="data.countryId" :is-country="true"/>
     </div>
     <div class="list-card__props list-card__col-4">
       <p class="list-card__prop" v-if="data.type === 'performer'">
@@ -33,31 +33,51 @@
     <div class="list-card__props list-card__col-5">
       <p class="list-card__prop-name">Сырье:</p>
       <div class="list-card__prop-container list-card__prop-container_type_desktop">
-        <p class="list-card__prop-value">Собственное</p>
-        <p class="list-card__prop-value">Давальческое</p>
+        <template v-if="data.rawMaterials && data.rawMaterials.length > 0">
+          <template v-for="(rawMaterial, index) in data.rawMaterials" :key="index">
+            <p class="list-card__prop-value">{{rawMaterial}}</p>
+          </template>
+        </template>
+        <template v-else>
+          <p class="list-card__prop-value">Не указано</p>
+        </template>
       </div>
       <div class="list-card__prop-container list-card__prop-container_type_mobile">
-        <span class="list-card__prop-value">Собственное</span>
-        <span class="list-card__prop-value_type_divider">/</span>
-        <span class="list-card__prop-value">Давальческое</span>
+        <template v-for="(rawMaterial, index) in data.rawMaterials" :key="index">
+          <span class="list-card__prop-value">{{rawMaterial}}</span>
+          <span class="list-card__prop-value_type_divider" v-if="index < data.rawMaterials.length - 1">/</span>
+        </template>
       </div>
     </div>
     <div class="list-card__props list-card__col-6">
       <p class="list-card__prop-name">Категории:</p>
       <div class="list-card__prop-container list-card__prop-container_type_desktop">
-        <p class="list-card__prop-value">Вязаный трикотаж</p>
-        <p class="list-card__prop-value">Верхняя одежда</p>
-        <p class="list-card__prop-value">Головные уборы</p>
-        <p class="list-card__prop-value">Головные уборы</p>
+        <template v-if="data.category && data.category.length > 0">
+          <template v-for="(category, index) in data.category.slice(0, 3)" :key="index">
+            <p class="list-card__prop-value">{{ category }}</p>
+          </template>
+          <ModalsMoreCities
+            class="list-card__more-props"
+            :list="data.category.slice(3)"
+            v-if="data.category && data.category.length > 3"
+            title="Категории"
+          />
+        </template>
+        <template v-else>
+          <p class="list-card__prop-value">Не указано</p>
+        </template>
       </div>
       <div class="list-card__prop-container list-card__prop-container_type_mobile">
-        <span class="list-card__prop-value">Вязаный трикотаж</span>
-        <span class="list-card__prop-value_type_divider">/</span>
-        <span class="list-card__prop-value">Верхняя одежда</span>
-        <span class="list-card__prop-value_type_divider">/</span>
-        <span class="list-card__prop-value">Головные уборы</span>
-        <span class="list-card__prop-value_type_divider">/</span>
-        <span class="list-card__prop-value">Головные уборы</span>
+        <template v-for="(category, index) in data.category.slice(0, 3)" :key="index">
+          <span class="list-card__prop-value">{{ category }}</span>
+          <span class="list-card__prop-value_type_divider" v-if="index < data.category.slice(0, 3).length - 1">/</span>
+        </template>
+        <ModalsMoreCities
+          class="list-card__more-props"
+          :list="data.category.slice(3)"
+          v-if="data.category && data.category.length > 3"
+          title="Категории"
+        />
       </div>
     </div>
   </div>
@@ -146,6 +166,7 @@ const props = defineProps({
     flex-wrap: wrap;
     column-gap: .29em;
     row-gap: .29em;
+    align-items: center;
 
     &_type_mobile {
       display: none;
@@ -158,6 +179,10 @@ const props = defineProps({
     padding: .13rem .38rem;
     font-weight: 400;
   }
+
+  &__more-props {
+    font-size: 1.5rem;
+  }
 }
 
 @include mobile {
@@ -168,13 +193,15 @@ const props = defineProps({
     box-shadow: -2px -2px 0 #6937a5, 0 1px 1px rgba(0, 0, 0, 0.15);
     border: none;
     margin-bottom: 1em;
+    box-sizing: border-box;
 
     &__col-1 {
       flex: 0 0 14%;
     }
 
     &__col-2 {
-      flex: 0 1 35%;
+      flex: 1 1 35%;
+      max-width: calc(100% - 14%);
     }
 
     &__col-3 {
@@ -231,6 +258,11 @@ const props = defineProps({
     }
 
     &__prop-value_type_divider {
+      padding-inline: .5em;
+    }
+
+    &__more-props {
+      font-size: 1.2rem;
       padding-inline: .5em;
     }
   }

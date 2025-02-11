@@ -1,8 +1,7 @@
 <template>
   <div class="entity">
     <h1 class="entity__title">Подробное описание</h1>
-    <Form as="form" @submit="handleSubmit" v-slot="{ errors }">
-      <CommonAlerts v-if="errors && errors.selectedLocations" :alert="errors.selectedLocations" />
+    <Form as="form" @submit="handleSubmit" v-slot="{ errors, validate }">
       <div class="entity__data">
         <div class="entity__photo">
           <label class="form-group__title entity__label">
@@ -21,7 +20,7 @@
         </label>
         <UiTextArea 
           :rules="{ required: true, min: 10 }" 
-          name="description" 
+          name="description-text" 
           label="Описание" 
           v-model="data.description"
           class="form-group__value"
@@ -135,6 +134,7 @@
           :extension="['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'rtf', 'pdf', 'jpeg', 'png', 'jpg', 'gif', 'psd', 'djvu', 'fb2', 'ps', 'zip', 'rar']"
         />
       </div>
+      <CommonAlerts v-if="errors && errors.selectedLocations" :alert="errors.selectedLocations" alertType="validation" />
       <div class="entity__data" v-if="role === 'customer'">
         <h2 class="entity__subtitle">Города фактического производства заказа</h2>
         <div class="entity__text-container">
@@ -161,6 +161,7 @@
           :type="['selectCities']"
           :is-required="true"
           errorLabel="Города производства"
+          name="selectedLocations"
         />
         <CommonLocation
           v-if="role === 'customer'"
@@ -169,6 +170,7 @@
           :type="['selectCities', 'selectRegions']"
           :is-required="true"
           errorLabel="Города производства"
+          name="selectedLocations"
         />
       </div>
       <div class="form-group">
@@ -178,7 +180,7 @@
         >
           Назад
         </UiButton>
-        <UiButton type="submit" class="form-group-data form-group-data__btn" variant="quinary" size="large">Далее
+        <UiButton type="submit" class="form-group-data form-group-data__btn" @click="getErrorsList(validate, errorsList)" variant="quinary" size="large">Далее
           <SvgoBtnArrow class="svg-lx" />
         </UiButton>
       </div>
@@ -187,6 +189,8 @@
 </template>
 
 <script setup>
+import { getErrorsList } from '~/utils/getValidationErrors';
+
 const props = defineProps({
   role: {
     type: String,

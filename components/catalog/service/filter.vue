@@ -1,5 +1,5 @@
 <template>
-  <CommonFilter @updateTutorialRefSubmit="updateTutorialRefSubmit">
+  <CommonFilter @updateTutorialRefSubmit="updateTutorialRefSubmit" :submit-function="handleSubmit" :reset-function="resetFilter">
     <template #body>
       <!-- <CommonTutorial :data="tutorialRefs"/> -->
       <div class="filter__item" id="filter__item" ref="tutorialRef1">
@@ -11,6 +11,8 @@
           :typeButton="{ variant: 'default', size: 'large' }"
           :isValidated="false"
           :priority-showed="[2, 4, 6, 10]"
+          v-model="searchProps.category"
+          name="category"
         >
           <template #btn-image>
             <SvgoDropDownNew class="svg-m" />
@@ -24,6 +26,7 @@
           buttonLabel="Выбрать регионы"
           class="filter__location"
           type="selectCountry"
+          name="location"
         />
       </div>
       <div class="filter__item" ref="tutorialRef3">
@@ -34,6 +37,8 @@
             { id: 1, label: 'Да' },
           ]"
           :isValidated="false"
+          v-model="searchProps.has_stm"
+          name="isStm"
         />
       </div>
       <div class="filter__item" ref="tutorialRef4">
@@ -45,6 +50,8 @@
             { id: 2, label: 'Нет' },
           ]"
           :isValidated="false"
+          v-model="searchProps.free_test"
+          name="isFreeSample"
         />
       </div>
       <div class="filter__item" ref="tutorialRef5">
@@ -55,6 +62,8 @@
             { id: 1, label: 'Давальческое' },
           ]"
           :isValidated="false"
+          v-model="searchProps.material"
+          name="rawMaterials"
         />
       </div>
     </template>
@@ -68,10 +77,14 @@ const props = defineProps({
   modelValue: {
     type: Array,
     default: () => [],
+  },
+  filter: {
+    type: Object,
+    default: () => {},
   }
 })
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue', 'updateFilter']);
 
 const tutorialRefs = computed(() => {
   return [
@@ -97,14 +110,45 @@ const updateTutorialRefSubmit = (value) => {
 
 const entityStore = useEntityStore();
 
-const searchProps = {
+const searchProps = ref({
+  category: [],
   location: [],
-};
+  has_stm: [],
+  free_test: [],
+  material: [],
+});
+
+const handleSubmit = () => {
+  emit('updateFilter', {...searchProps.value});
+}
+
+const resetFilter = () => {
+  searchProps.value = {
+    category: [],
+    location: [],
+    has_stm: [],
+    free_test: [],
+    material: [],
+  };
+  emit('updateFilter', []);
+}
 
 const category = computed(() => entityStore.entityData.categories);
+
+
 
 watch(() => tutorialRefs.value, (newVal) => {
   emit('update:modelValue', newVal);
 }, {deep: true})
+
+watch(() => props.filter, (newVal) => {
+  searchProps.value = {
+    category: newVal.categories || [],
+    location: {...newVal.location, cities: []} || [],
+    has_stm: newVal.is_stm || [],
+    free_test: newVal.free_samples || [],
+    material: [newVal.materials_own ? 0 : undefined, newVal.materials_tolling ? 1 : undefined].filter(item => item !== undefined),
+  };
+}, {deep: true, once: true})
 
 </script>

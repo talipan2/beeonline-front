@@ -1,6 +1,6 @@
 <template>
   <div class="services">
-    <CatalogBanner :data="ordersData">
+    <CatalogBanner :data="ordersData" v-if="banner">
       <template #item="{ item }">
         <CatalogServiceCard :data="item" />
       </template>
@@ -21,6 +21,10 @@ const props = defineProps({
   data: {
     type: Array,
     default: () => ([]),
+  },
+  banner: {
+    type: Boolean,
+    default: false,
   }
 })
 

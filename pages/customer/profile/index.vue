@@ -49,23 +49,33 @@ useHead({
 const organizationStore = useOrganizationStore();
 
 const pubCard = computed(() => userStore.userPubCard);
-const organization = computed(() => organizationStore.organization);
+const organization = computed(() => userStore.userOrganization);
 const userStore = useUserStore();
 const userData = computed(() => userStore.userData);
 
-const checkListArray = [
-  { label: 'Данные организации', value: 'chapter'},
-  { label: 'Название', value: ''},
-  { label: 'ИНН', value: ''},
-  { label: 'Страна', value: ''},
-  { label: 'Активность', value: ''},
-  { label: 'Карточка компании', value: 'chapter-current'},
-  { label: 'Название', value: pubCard.value.name},
-  { label: 'Логотип', value: pubCard.value.logo},
-  { label: 'Описание', value: pubCard.value.description},
-  { label: 'География фактического производства', value: organization.value.country_id},
-  { label: 'Активность', value: ''},
-]
+const checkListArray = computed(() => [
+  { 
+    label: 'Данные организации', 
+    value: 'chapter-current',
+    checkList: [
+      { label: 'Название', value: organization.value.name},
+      { label: 'ИНН', value: organization.value.inn},
+      { label: 'Страна', value: organization.value.country_id},
+      { label: 'Активность', value: organization.value.is_active},
+    ]
+  },
+  { 
+    label: 'Карточка компании', 
+    value: 'chapter-current',
+    checkList: [
+      { label: 'Название', value: pubCard.value.name},
+      { label: 'Логотип', value: pubCard.value.logo},
+      { label: 'Описание', value: pubCard.value.description},
+      { label: 'География фактического производства', value: pubCard.value.regions || pubCard.value.cities},
+      { label: 'Активность', value: pubCard.value.is_active},
+    ]
+  },
+])
 
 const cardsData = computed(() => {
   return {

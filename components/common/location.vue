@@ -122,7 +122,13 @@ watch(() => props.modelValue, (newVal) => {
       selectedCities.value = {...selectedCities.value, countries: [...newVal.countries || []] };
     }
   }
-}, {immediate: true, once:true, deep: true})
+}, {once:true, deep: true})
+
+watch(() => props.modelValue, (newVal) => {
+  if(newVal && newVal.length === 0) {
+    selectedCities.value = {countries: [], regions: [], cities: []};
+  }
+}, {deep: true})
 
 watch((selectedCities), (newVal) => {
   emit('update:modelValue', {...newVal});

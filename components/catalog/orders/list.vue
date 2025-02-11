@@ -1,6 +1,5 @@
 <template>
   <div class="orders">
-    <p class="orders__description">Вы можете создать и разместить заказ через бота быстрых заказов.</p>
     <div class="orders__list">
       <div class="orders__item" v-for="(data, index) in orderData" :key="index" v-bind="setFirstCardRef(index)">
         <CatalogOrdersCard  :data="data" />
@@ -72,11 +71,6 @@ watch(() => firstCardRef.value, (newVal) => {
 
 .orders {
   font-size: 1rem;
-
-  &__description {
-    font-size: 1.6em;
-    margin-bottom: 1.5em;
-  }
 
   &__list {
     display: flex;

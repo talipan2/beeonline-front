@@ -1,6 +1,5 @@
 <template>
   <div class="member-details">
-    {{ data }}
     <div class="member-details__header">
       <div class="image-box image-box_type_frame">
         <img :src="data.logo || defaultLogoImage" :alt="data.name">
@@ -15,10 +14,16 @@
         </div>
         <div class="member-details__props">
           <SvgoCase class="svg-m" fill="#a9abac" />
-          <p> 
+          <p v-if="data.type === 'performer'"> 
             {{ data.entityCount 
               ? (data.entityCount + ' ' + plural(data.entityCount, { one: 'услуга', few: 'услуги', many: 'услуг' }) ) 
               : 'Нет услуг' 
+            }}
+          </p>
+          <p v-if="data.type === 'customer'">
+            {{ data.entityCount 
+              ? (data.entityCount + ' ' + plural(data.entityCount, { one: 'заказ', few: 'заказа', many: 'заказов' }) ) 
+              : 'Нет заказов' 
             }}
           </p>
         </div>
@@ -46,7 +51,7 @@
     </div>
     <div class="member-details__content-container">
       <h3 class="member-details__content-title">Описание</h3>
-      <p>{{ data.description || ' Компания «Интай-Текстиль» на протяжении 17 лет обеспечивает потребности в тканях производителей спецодежды, одежды для туристов, охотников и рыболовов, спортивной одежды. Компания отвечает запросам заказчиков по качеству ткани, своевременно обновляет ассортимент в соответствии с мировыми тенденциями рынка. Хорошо отлаженная логистика позволяет курировать доставку ткани от фабрики до производителя строго в согласованные сроки.  В «Интай-Текстиль» разработана гибкая система скидок. Сотрудничество с компанией – это гарантия качества, экономия времени и ресурсов заказчика, это выгодно всем! ' }}</p>
+      <p>{{ data.description || '' }}</p>
     </div>
     <div class="member-details__content-container" v-if="data.gallery">
       <h3 class="member-details__content-title">Галерея</h3>

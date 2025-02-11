@@ -43,7 +43,6 @@ const data = ref([])
 
 watch(() => [cities.value, regions.value, countries.value], () => {
   data.value = locationStore.getLocationsByIds([...countries.value], [...regions.value], [...cities.value])
-  console.log(data.value)
 }, {deep: true, immediate: true})
 
 const firstLocation = computed(() => {

@@ -310,6 +310,10 @@ label:active {
     }
   }
 
+  .prop__more {
+    padding-inline: .4em;
+  }
+
   .prop_type_text {
     display: flex;
     flex-direction: column;

@@ -13,7 +13,7 @@
       <CatalogDetails type="order" :pubCard="pubCard" :entityData="formatData"/>
     </template>
     <template #rightSide>
-      <CatalogOtherEntityCompany type="order"/>
+      <CatalogOtherEntityCompany v-if="otherActiveEntity.length" :data="otherActiveEntity" type="customer"/>
     </template>
   </NuxtLayout>
 </template>
@@ -35,11 +35,11 @@ const formatData = computed(() => {
       props: [
         {
           name: 'Категории:', 
-          value: data.value.product_categories && data.value.product_categories.length && data.value.product_categories,
-          link: 'product_categories',
+          value: data.value.product_categories && data.value.product_categories.length ? data.value.product_categories : [],
+          link: 'categories',
         },
         {name: 'Лекала:', value: entityStore.getEntityLabelById('patterns', data.value.pattern)},
-        {name: 'Сырье:', value: [data.value.material ? {name:'Давальческое', id: 1} : {name: 'Собственное', id: 0}], link: 'material'},
+        {name: 'Сырье:', value: data.value.material === 1 ? 'Давальческое' : data.value.material === 0 ? 'Собственное' : ''},
         {name: 'Размер партии:', value: parseInt(data.value.batch)},
         {name: 'Сроки выполнения:', value: formatDate(data.value.deadline_at)},
         {name: 'Предпочтительные регионы производства:', value: formatLocationsList(data.value.regions, data.value.cities)},
@@ -51,6 +51,12 @@ const formatData = computed(() => {
       tzFiles: data.value.tz_files && data.value.tz_files.length && data.value.tz_files.map(item => item.url),
     }
 })
+
+const otherActiveEntity = computed(() => {
+  if(pubCard.value && pubCard.value.orders ) {
+    return pubCard.value.orders.filter(item => item.id !== data.value.id);
+  } else return [];
+});
 
 const formatLocationsList = (regions=[], cities=[]) => {
   if(!regions.length && !cities.length) return [];

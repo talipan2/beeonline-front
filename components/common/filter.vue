@@ -12,9 +12,11 @@
           <div class="form-group">
             <div class="filter__submit" ref="submitRef">
               <UiButton
+               type="button"
                 variant="quinary"
                 size="large"
                 class="form-group-data__btn"
+                @click="submitFunction"
               >
                 Применить фильтр
               </UiButton>
@@ -24,6 +26,7 @@
               variant="default"
               size="large"
               class="form-group-data__btn"
+              @click="resetFunction"
             >
               Сбросить фильтры
             </UiButton>
@@ -54,6 +57,14 @@ import { useSettingStore } from '~/store/settingStore';
 const props = defineProps({
   isTutorial: {
     type: Boolean,
+  }, 
+  submitFunction: {
+    type: Function,
+    default: () => {}
+  },
+  resetFunction: {
+    type: Function,
+    default: () => {}
   }
 });
 

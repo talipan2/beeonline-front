@@ -1,5 +1,12 @@
 <template>
   <div class="documentation">
+    <CommonNotify v-if="!organizationVerified"
+      title="Организация не прошла верификацию." 
+      text="Пожалуйста, загрузите документы для прохождения верификации." 
+      type="danger"
+      :btnFunction="notifyAction"
+      btnText="Добавить документы для верификации"
+    />
     <div class="documentation__content">
       <h2 class="documentation__title">Файлы организации</h2>
       <div class="documentation__list" v-if="dataList.length">
@@ -13,6 +20,8 @@
 </template>
 
 <script setup>
+import { useUserStore } from '~/store/userStore';
+
 
 const props = defineProps({
   dataList: {
@@ -20,6 +29,15 @@ const props = defineProps({
     default: [],
   }
 })
+
+const userStore = useUserStore();
+const organizationVerified = computed(() => userStore.userOrganization.verified_at)
+
+const router = useRouter();
+
+const notifyAction = () => {
+  router.push(`/${userStore.role}/documentation/custom/create`)
+}
 
 </script>
 

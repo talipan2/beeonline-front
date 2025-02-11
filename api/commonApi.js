@@ -37,5 +37,13 @@ export default {
     };
 
     return axios.get(`achievements/${organizationId}`, { params })
+  },
+
+  async search (params = {}) {
+    return axios.get(`search`, { params })
+  },
+
+  async getFaqs() {
+    return axios.get(`faqs`)
   }
 }

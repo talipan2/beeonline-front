@@ -4,7 +4,7 @@
     title="Данные организации"
     description="Указанные данные не разглашаются третьим лицам и необходимы для успешной работы на сервисе."
   >
-    <Form @submit="handleSubmit" v-slot="{ }">
+    <Form @submit="handleSubmit" v-slot="{validate}">
       <div :class="{'animation-loading': isSearchInn}">
         <div class="form-group__data register__label_type_location">
           <label class="form-group__title">
@@ -258,7 +258,7 @@
           class="register__btn"
           variant="quinary"
           size="large"
-          @click="skipInn = true"
+          @click="handleClick(true, validate)"
           >Пропустить ввод инн</UiButton
         >
         <UiButton
@@ -266,7 +266,7 @@
           class="register__btn"
           variant="quinary"
           size="large"
-          @click="skipInn = false"
+          @click="handleClick(false, validate)"
           >Далее
           <SvgoBtnArrow class="svg-lx" />
         </UiButton>
@@ -298,6 +298,11 @@ const organizationStore = useOrganizationStore();
 const settingStore = useSettingStore();
 const userStore = useUserStore();
 const emit = defineEmits(['update:modelValue']);
+
+const handleClick = (innSkip, validate) => {
+  skipInn.value = innSkip;
+  getErrorsList(validate)
+}
 
 const data = computed({
   get() {
