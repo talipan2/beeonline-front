@@ -32,6 +32,7 @@ const pubCard = ref({});
 const formatData = computed(() => {
   if(!data.value) return []
   return {
+      id: data.value.id,
       props: [
         {
           name: 'Категории:',

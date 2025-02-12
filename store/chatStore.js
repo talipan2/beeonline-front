@@ -90,7 +90,7 @@ export const useChatStore = defineStore("chatStore", {
             }
         },
         getOrgType(org) {
-            switch (org.pivot?.org_type) {
+            switch (org.pivot?.role) {
                 case "customer":
                     return "Заказчик";
                 case "performer":

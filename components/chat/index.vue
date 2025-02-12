@@ -35,7 +35,7 @@
                                 </div>
                                 <div class="dialog-head__info">
                                     <a
-                                        :href="`/members/${org.id}/${org.pivot.org_type}`"
+                                        :href="`/members/${org.id}/${org.pivot.role}`"
                                         target="_blank"
                                         class="dialog-head__info-title"
                                     >
@@ -47,7 +47,7 @@
                                 </div>
                                 <div class="dialog-head__buttons">
                                     <a
-                                        v-if="org.pivot.org_type === 'performer' && chat.order && !chat.deal && !chat.order.selected_performer_id"
+                                        v-if="org.pivot.role === 'performer' && chat.order && !chat.deal && !chat.order.selected_performer_id"
                                         data-chat-btn-deal=""
                                         data-modal-ajax=""
                                         :data-href="createDealUrl(org)"
@@ -101,7 +101,7 @@
                                         >
                                             <div class="dropdown-items mb-0">
                                                 <a
-                                                    v-if="(org.pivot.org_type === 'performer') && chat.order && !chat.deal && !chat.order.selected_performer_id"
+                                                    v-if="(org.pivot.role === 'performer') && chat.order && !chat.deal && !chat.order.selected_performer_id"
                                                     data-chat-btn-deal=""
                                                     data-modal-ajax=""
                                                     :data-href="createDealUrl(org)"
@@ -144,7 +144,7 @@
                                                 <a
                                                     class="dropdown-item"
                                                     target="_blank"
-                                                    :href="`/members/${org.id}/${org.pivot.org_type}`"
+                                                    :href="`/members/${org.id}/${org.pivot.role}`"
                                                     >Перейти в профиль</a
                                                 >
                                                 <a
@@ -343,7 +343,7 @@ export default {
 		createDealUrl(org) {
 			let data = {
 				foreign_org_id: org.id,
-				foreign_role: org.pivot.org_type,
+				foreign_role: org.pivot.role,
 			};
 			if (this.chat.order) {
 				data.order_id = this.chat.order.id;

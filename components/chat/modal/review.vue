@@ -78,7 +78,7 @@ export default {
         negative: "",
 		chat_id: null,
 		org_id: null,
-		org_type: null,
+		role: null,
     }),
 
     mounted() {},
@@ -103,7 +103,7 @@ export default {
 			}
 			if (org) {
 				this.org_id = org.id;
-				this.org_type = org.pivot?.org_type;
+				this.role = org.pivot?.role;
 			}
             this.opened = true;
         },
@@ -133,7 +133,7 @@ export default {
 					negative: this.negative,
 					files: this.files,
 					org_id: this.org_id,
-					org_type: this.org_type,
+					role: this.role,
 				})
 				.then((response) => {
 					if (response) {
