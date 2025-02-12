@@ -7,13 +7,17 @@
         <CommonFilterSelectList :filters="filterList" @setFilters="setFilters" :activeFilters="activeFilter"/>
         <div class="desktop-entity__list" >
           <!-- <CommonAlerts type="warning" alert="Нет заказов с данными параметрами"/> -->
-            <DesktopEntityCard v-for="(item, index) in currentEntityList" :key="index" />
+          <template v-for="(item, index) in currentEntityList" :key="index">
+            <DesktopEntityCard :data="item" />
+          </template>
         </div>
       </div>
   </div>
 </template>
 
 <script setup>
+import { useEntityStore } from '~/store/entityStore';
+
 
 const props = defineProps({
   role: {
@@ -33,6 +37,7 @@ const props = defineProps({
 const isLoading = ref(true);  // Состояние загрузки
 const activeFilter = ref({}) // Активные фильтры
 const currentEntityList = ref([]); // Текущий список сущностей
+const entityStore = useEntityStore();
 
 const selectorButtons = [
   { id: 1, label: 'Активные', value: 'active', count: computed(() => currentEntityList.value.length), },
@@ -52,6 +57,17 @@ const fetchData = async (type, filter) => {
   isLoading.value = true;
   try {
     currentEntityList.value = await props.getEntity(type, filter);
+    currentEntityList.value = currentEntityList.value.map((item) => {
+      return {
+        id: item.id,
+        name: item.name,
+        logo: item.logo ? item.logo : '',
+        views: 0,
+        categories: item.product_categories && item.product_categories.length ? item.product_categories.map(item => item.name) : [],
+        status: entityStore.getEntityStatusByValue(item.status),
+        type: props.role,
+      }
+    })
   } catch (error) {
     console.error("Ошибка при загрузке данных:", error);
   } finally {
@@ -60,7 +76,8 @@ const fetchData = async (type, filter) => {
 };
 
 const setFilters = (filters) => {
-  activeFilter.value = filters
+  activeFilter.value = {...filters}
+  fetchData(currentButton.value, {...filters})
 }
 
 // сброс фильтров при изменении списка сущности

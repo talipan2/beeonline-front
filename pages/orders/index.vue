@@ -8,12 +8,17 @@
       <CommonTutorial :data="tutorialRefs"/>
     </template>
     <template #leftSide>
-      <CatalogOrdersFilter v-model="tutorialRefs" :filter="filter" @updateFilter="handleUpdateFilter"/>
+      <CatalogOrdersFilter v-model="tutorialRefs" :filter="filter" @updateFilter="handleUpdateFilter" :class="{'loading': loading}"/>
     </template>
     <template #content>
       <div ref="anchor">
         <p class="orders-description">Вы можете создать и разместить заказ через бота быстрых заказов.</p>
-        <CatalogOrdersList :data="ordersList" @updateOrderCardRef="updateServiceCardRef" :class="{'loading': loading}"/>
+        <CatalogOrdersList 
+        :data="ordersList" 
+        @updateOrderCardRef="updateServiceCardRef" 
+        :class="{'loading': loading}"
+        :isLoaded="isLoaded"
+        />
         <CommonPagination v-if="page.lastPage > 1" :current-page="page.currentPage" :total-pages="page.lastPage" @changePage="handleChangePage" :loading="loading"/>
       </div>
     </template>
@@ -46,6 +51,7 @@ const router = useRouter();
 const anchor = ref('anchor');
 
 const loading = ref(false);
+const isLoaded = ref(false);
 const page = ref({
   currentPage: 1,
   lastPage: 0,
@@ -104,7 +110,10 @@ const handleUpdateFilter = (data) => {
 
       router.replace({ query: { ...newQuery } });
     }
-  }).finally(() => loading.value = false)
+  }).finally(() => {
+    loading.value = false
+    isLoaded.value = true
+  })
 }
 
 const updateServiceCardRef = (newVal) => {
@@ -138,6 +147,7 @@ watch(() => page.value.currentPage, () => {
 
 onMounted(() => {
   let params = {}
+  loading.value = true
   console.log(router.currentRoute.value.query)
   if(Object.keys(router.currentRoute.value.query).length > 0) {
     const query = router.currentRoute.value.query
@@ -172,6 +182,9 @@ onMounted(() => {
         lastPage: res.meta.last_page,
       }
     }
+  }).finally(() => {
+    loading.value = false
+    isLoaded.value = true
   })
 })
 

@@ -76,15 +76,21 @@
         </UiButton>
       </div>
     </div>
-    <!-- grid -->
-    <CatalogMembersListDefault v-if="currentViewSetting === 'grid'" :data="data"/>
+    <template v-if="data.length > 0">
+      <!-- grid -->
+      <CatalogMembersListDefault v-if="currentViewSetting === 'grid'" :data="data"/>
 
-    <!-- list -->
-    <div class="members__list" v-if="currentViewSetting === 'list'">
-      <div class="members__item" v-for="(item, index) in data" :key="index">
-        <CatalogMembersListCard :data="item" />
+      <!-- list -->
+      <div class="members__list" v-if="currentViewSetting === 'list'">
+        <div class="members__item" v-for="(item, index) in data" :key="index">
+          <CatalogMembersListCard :data="item" />
+        </div>
       </div>
-    </div>
+    </template>
+    <template v-else-if="isLoaded && data.length === 0 && currentViewSetting !== 'map'" >
+      <CommonAlerts alert="Участников нет" :type="'warning'" v-if="!data.length" />
+
+    </template>
 
     <!-- map -->
     <div class="members__list" v-if="currentViewSetting === 'map'">
@@ -94,8 +100,6 @@
         <p class="members__card-title" v-else>Выберите точку на карте</p>
       </div>
     </div>
-
-    <CommonAlerts alert="Участников нет" :type="'warning'" v-if="!data.length" />
   </div>
 
 
@@ -117,6 +121,10 @@ const props = defineProps({
   page: {
     type: Object,
     default: () => {}
+  },
+  isLoaded: {
+    type: Boolean,
+    default: false
   }
 });
 

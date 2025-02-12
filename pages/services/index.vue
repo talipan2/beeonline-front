@@ -8,11 +8,17 @@
       <CommonTutorial :data="tutorialRefs"/>
     </template>
     <template #leftSide>
-      <CatalogServiceFilter v-model="tutorialRefs" :filter="filter" @updateFilter="handleUpdateFilter"/>
+      <CatalogServiceFilter v-model="tutorialRefs" :filter="filter" @updateFilter="handleUpdateFilter" :class="{'loading': loading}"/>
     </template>
     <template #content>
       <div ref="anchor">
-        <CatalogServiceList :data="servicesList" @updateServiceCardRef="updateServiceCardRef" :class="{'loading': loading}" :banner="true"/>
+        <CatalogServiceList 
+          :data="servicesList" 
+          @updateServiceCardRef="updateServiceCardRef" 
+          :class="{'loading': loading}" 
+          :banner="true" 
+          :isLoaded="isLoaded"
+        />
         <CommonPagination v-if="page.lastPage > 1" :current-page="page.currentPage" :total-pages="page.lastPage" @changePage="handleChangePage" :loading="loading"/>
       </div>
     </template>
@@ -45,12 +51,20 @@ const serviceCardRef = ref([]);
 const anchor = ref('anchor');
 
 const loading = ref(false);
+const isLoaded = ref(false);
 const page = ref({
   currentPage: 1,
   lastPage: 0,
 })
 
-const filter = ref({});
+const filter = ref({
+  categories: null,
+  location: null,
+  is_stm: null,
+  free_samples: null,
+  materials_own: null,
+  materials_tolling: null,
+});
 
 // Фильтр
 const handleUpdateFilter = (data) => {
@@ -88,7 +102,7 @@ const handleUpdateFilter = (data) => {
   });
 
   loading.value = true
-
+  isLoaded.value = false
   // обновление услуг с новыми параметрами
   entityStore.getServices({...filter.value}).then(res => {
     if(res) {
@@ -104,7 +118,10 @@ const handleUpdateFilter = (data) => {
 
       router.replace({ query: { ...newQuery } });
     }
-  }).finally(() => loading.value = false)
+  }).finally(() => {
+    loading.value = false
+    isLoaded.value = true
+  })
 
 }
 
@@ -140,19 +157,20 @@ watch(() => page.value.currentPage, () => {
 
 onMounted(() => {
   let params = {}
-
+  loading.value = true
 
   if(Object.keys(router.currentRoute.value.query).length > 0) {
     const query = router.currentRoute.value.query
     params = {
       page: query.page ? Number(query.page) : undefined,
       categories: query.categories ? query.categories.split(',').map(item => Number(item)) : undefined,
-      regions: [query.countries && query.countries.split(',').map(item => Number(item)), query.regions && query.regions.split(',').map(item => Number(item))],
+      regions: [query.countries && query.countries.split(',').map(item => Number(item)), query.regions && query.regions.split(',').map(item => Number(item))].flat(),
       is_stm: query.is_stm ? query.is_stm.split(',').map(item => Number(item)) : undefined,
       free_samples: query.free_samples ? query.free_samples.split(',').map(item => Number(item)) : undefined,
       materials_own: query.materials_own ? Number(query.materials_own) : undefined,
       materials_tolling: query.materials_tolling ? Number(query.materials_tolling) : undefined,
     }
+    console.log(params)
     
     filter.value = {
       categories: query.categories ? query.categories.split(',').map(item => Number(item)) : [],
@@ -171,6 +189,9 @@ onMounted(() => {
         lastPage: res.meta.last_page,
       }
     }
+  }).finally(() => {
+    loading.value = false
+    isLoaded.value = true
   })
 })
 

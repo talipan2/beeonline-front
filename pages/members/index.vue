@@ -5,11 +5,11 @@
         :list="[{ label: 'Главная', link: '/' }, { label: 'Каталог заказов', link: '' }]" />
     </template>
     <template #leftSide>
-      <CatalogMembersFilter :filter="filter" @updateFilter="handleUpdateFilter" />
+      <CatalogMembersFilter :filter="filter" @updateFilter="handleUpdateFilter" :class="{'loading': loading}"/>
     </template>
     <template #content>
-      <div ref="anchor">
-        <CatalogMembersList :data="data" :class="{'loading': loading}" :page="page"/>
+      <div ref="anchor" :class="{'loading': loading}">
+        <CatalogMembersList :data="data" :page="page" :isLoaded="isLoaded"/>
         <CommonPagination v-if="page.lastPage > 1" :current-page="page.currentPage" :total-pages="page.lastPage" @changePage="handleChangePage" :loading="loading"/>
       </div>
     </template>
@@ -27,6 +27,7 @@ const router = useRouter();
 const anchor = ref(null);
 
 const loading = ref(false);
+const isLoaded = ref(false);
 const page = ref({
   currentPage: 1,
   lastPage: 0,
@@ -90,6 +91,9 @@ const handleUpdateFilter = (data) => {
   // обновление роутинга 
   router.replace({ query: { ...newQuery } });
 
+  loading.value = true
+  isLoaded.value = false
+
   // запрос на получение данных с фильтром
   organizationStore.getPubCardsList({...filter.value}).then(res => {
     if(res) {
@@ -105,6 +109,9 @@ const handleUpdateFilter = (data) => {
       const offset = window.scrollY + rect.top - settingStore.headerHeight;
       smoothScroll(offset, false);
     }
+  }).finally(() => {
+    loading.value = false
+    isLoaded.value = true
   })
 }
 
@@ -115,6 +122,7 @@ const handleChangePage = (currentPage) => {
 // отслеживание текущей страницы для пагинации
 watch(() => page.value.currentPage, () => {
   loading.value = true
+  isLoaded.value = false
   organizationStore.getPubCardsList({page: page.value.currentPage}).then(res => {
     if(res && res.meta && res.data) {
       page.value = {
@@ -128,6 +136,7 @@ watch(() => page.value.currentPage, () => {
     }
   }).finally(() => {
     loading.value = false
+    isLoaded.value = true
   })
 })
 
@@ -135,6 +144,9 @@ onMounted(() => {
   let params = {
     type: 'performer'
   }
+
+  loading.value = true
+  isLoaded.value = false
 
   if(Object.keys(router.currentRoute.value.query).length > 0) {
     const query = router.currentRoute.value.query
@@ -166,6 +178,9 @@ onMounted(() => {
         itemsToPage: res.meta.to - res.meta.from
       }
     }
+  }).finally(() => {
+    loading.value = false
+    isLoaded.value = true
   })
 })
 

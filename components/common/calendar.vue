@@ -53,17 +53,27 @@ watch(() => date.value, (newVal) => {
   emit('update:modelValue', newVal);
 });
 
+let stopWatcher = false;
+
+watchEffect(() => {
+  if(props.modelValue && picker.value?.fp && !stopWatcher) {
+    picker.value.fp.setDate(props.modelValue);
+    stopWatcher = true
+  }
+})
+
 // watch(() => props.modelValue, (newVal) => {
 //   if(props.modelValue && picker.value?.fp) {
 //     picker.value.fp.setDate(props.modelValue);
 //   }
 // });
 
-onMounted(() => {
-  if(props.modelValue && picker.value?.fp) {
-    picker.value.fp.setDate(props.modelValue);
-  }
-})
+// onMounted(() => {
+//   console.log(props.modelValue)
+//   if(props.modelValue && picker.value?.fp) {
+//     picker.value.fp.setDate(props.modelValue);
+//   }
+// })
 
 </script>
 

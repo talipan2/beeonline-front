@@ -28,7 +28,7 @@ const userStore = useUserStore();
 
 const filterList = ['category', 'minLot', 'date']; // Список фильтров
 
-async function getEntity(type) {
+async function getEntity(type, filter) {
   try {
     const res = await entityStore.getOrganizationOrders(userStore.userData.organization_id);
     if (res) {

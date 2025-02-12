@@ -20,7 +20,7 @@
           </p>
           <p v-if="data.type === 'customer'">
             {{ data.entityCount 
-              ? (data.entityCount + ' ' + plural(data.entityCount, { one: 'заказ', few: 'заказы', many: 'заказов' }) ) 
+              ? (data.entityCount + ' ' + plural(data.entityCount, { one: 'заказ', few: 'заказа', many: 'заказов' }) ) 
               : 'Нет заказов' 
             }}
           </p>

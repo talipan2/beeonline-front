@@ -22,13 +22,13 @@
       </div>
       <div class="work__cards-container">
         <div class="work__cards-line work__cards-line_first">
-          <template v-for="(card, index) in 10" :key="index">
-            <WelcomeMainPerformerCard class="work__card" :data="cardData[0]"/>
+          <template v-for="(card, index) in cardData.slice(0, 10)" :key="index">
+            <WelcomeMainPerformerCard class="work__card" :data="card"/>
           </template>
         </div>
         <div class="work__cards-line work__cards-line_second">
-          <template v-for="(card, index) in 10" :key="index">
-            <WelcomeMainPerformerCard class="work__card" :data="cardData[0]"/>
+          <template v-for="(card, index) in cardData.slice(10)" :key="index">
+            <WelcomeMainPerformerCard class="work__card" :data="card"/>
           </template>
         </div>
       </div>
@@ -47,10 +47,16 @@
 </template>
 
 <script setup>
+import { useEntityStore } from '~/store/entityStore';
+import { useLocationStore } from '~/store/locationStore';
+
 
 const workSection = ref(null); 
 const workSectionMobile = ref(null);
 const scrollX = ref(0);
+
+const entityStore = useEntityStore();
+const locationsStore = useLocationStore()
 
 const handleScroll = () => {
   if (!workSection.value || !workSectionMobile.value) return;
@@ -82,46 +88,39 @@ onUnmounted(() => {
   window.removeEventListener("scroll", handleScroll);
 });
 
-const cardsData = [{
-  id: 11,
-  organization_id: 13,
-  current_step: 2,
-  user_id: 25,
-  name: "Индивидуальный пошив партии для маркетплейсов: преимущества от Fusion ",
-  description: "testqweqwewqeqwe",
-  conditions: "qweqweqweqweqweqwe",
-  materials_own: 1,
-  materials_tolling: 1,
-  is_stm: 0,
-  free_samples: "1",
-  status: "filling",
-  reject_reason: null,
-  tz_files: [],
-  gallery: [],
-  created_at: "2025-01-10T10:22:18.000000Z",
-  updated_at: "2025-01-10T10:23:03.000000Z",
-  cities: [],
-  product_categories: [],
-  location: ['Россия, Пензенская область'],
-}] 
+const cardsData = ref([])
 
 const cardData = computed(() => {
-  return cardsData.map(item => {
+  return cardsData.value.map(item => {
     return {
       id: item.id,
       name: item.name,
-      logo: 'https://user63758.clients-cdnnow.ru/storage/48826/80989/8f166db3e5bfb838c8a619271fa943b4f8032b3b.png',
-      minLot: [500],
-      views: 0,
-      companyName: 'LUX Persona',
-      location: ['Россия, Пензенская область'],
-      category: ['Головные уборы','Женская одежда', 'Вязанный трикотаж','Головные уборы','Женская одежда', 'Вязанный трикотаж','Вязанный трикотаж','Вязанный трикотаж'],
+      logo: item.logo,
+      minLot: item.batches,
+      companyName: item.pub_card?.name,
+      location: getLocations(item.cities) ,
       data: [
         { id: 1, name: 'Сырье', value: [item.materials_own ? 'Собственное' : '', item.materials_tolling ? 'Давальческое' : ''].filter(Boolean).join(' / ') },
-        { id: 2, name: 'Категории', value: ['Головные уборы','Женская одежда', 'Вязанный трикотаж','Головные уборы','Женская одежда', 'Вязанный трикотаж'].join(' / ') },
+        { id: 2, name: 'Категории', value: item.product_categories ? item.product_categories.map(item => item.name).join(' / ') : [] },
         { id: 3, name: 'Наличие СТМ', value: item.is_stm ? 'Да' : 'Нет' },
       ],
   }})
+})
+
+const getLocations = (cities) => {
+  if(cities.length === 0 ) return
+  const citiesIds = cities.map(item => item.id)
+  const locationsName = locationsStore.getLocationsByIds([], [], citiesIds)
+  return locationsName.length ? locationsName : []
+}
+
+onMounted(() => {
+  locationsStore.getLocations()
+  entityStore.getServices({per_page: 20}).then(res => {
+    if(res) {
+      cardsData.value = res.data
+    }
+  })
 })
 
 </script>
@@ -200,6 +199,7 @@ const cardData = computed(() => {
     display: flex;
     flex-direction: column;
     row-gap: 3em;
+    flex: 1 1 50%;
     animation: scrollDown 30s linear infinite;
 
     &_first {

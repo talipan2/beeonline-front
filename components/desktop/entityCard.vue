@@ -1,21 +1,29 @@
 <template>
   <div class="desktop-entity-card">
     <div class="image-box desktop-entity-card__image">
-      <img src="https://i.pinimg.com/564x/d1/67/07/d16707efcfe492a4f12b6d13a5fbc3cb.jpg" alt="">
+      <img :src="data.logo || defaultImage" :alt="data.name">
     </div>
     <div class="desktop-entity-card__body">
       <div class="desktop-entity-card__header">
         <div class="desktop-entity-card__category">
-          <p class="desktop-entity-card__category-name form-group__inline">Униформа и спецодежда</p>
-          <ModalsMoreCities class="desktop-entity-card__category-list form-group__inline" placement="bottom-end" title="" :list="['Униформа и спецодежда', 'Униформа и спецодежда', 'Униформа и спецодежда']"/>
+          <p class="desktop-entity-card__category-name form-group__inline">
+            {{ data.categories && data.categories.length ? data.categories[0] : 'не указано' }}
+          </p>
+          <ModalsMoreCities 
+            class="desktop-entity-card__category-list form-group__inline" 
+            v-if="data.categories && data.categories.length > 1"
+            placement="bottom-end" 
+            title="Категории" 
+            :list="data.categories.slice(1)"
+          />
         </div>
-        <h3 class="desktop-entity-card__title">Пошив партии головных уборов по России</h3>
+        <h3 class="desktop-entity-card__title">{{ data.name }}</h3>
       </div>
       <div class="desktop-entity-card__footer">
         <div class="desktop-entity-card__activity">
           <div class="desktop-entity-card__activity-item">
             <SvgoNviews class="svg-m desktop-entity-card__activity-icon"/>
-            <span class="desktop-entity-card__activity-value">33</span>
+            <span class="desktop-entity-card__activity-value">{{ data.views }}</span>
           </div>
           <div class="desktop-entity-card__activity-item">
             <SvgoUser class="svg-m desktop-entity-card__activity-icon"/>
@@ -26,14 +34,24 @@
             <span class="desktop-entity-card__activity-value">33</span>
           </div>
         </div>
-        <p class="desktop-entity-card__status">Черновик</p>
+        <p class="desktop-entity-card__status">{{ data.status }}</p>
       </div>
     </div>
-    <NuxtLink class="desktop-entity-card__link"></NuxtLink>
+    <NuxtLink class="desktop-entity-card__link" :to="`/${data.type}/${data.type === 'performer' ? 'services' : 'orders'}/show/${data.id}`"></NuxtLink>
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import defaultImage from '~/assets/images/nophoto_pc.png'
+
+const props = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  }
+})
+
+</script>
 
 
 <style lang="scss">

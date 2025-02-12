@@ -17,7 +17,7 @@
           </CommonAlerts>
         <template v-if="cardsData.name">
           <h3 class="right-side__title">Так вашу компанию будут видеть другие участники портала:</h3>
-          <CardsPublic :data="cardsData" isDescription/>
+          <CardsPublic :data="cardsData" isDescription isPropsVisible/>
         </template>
         <template v-if="userData && userData.roles && !userData.roles.includes('performer')">
           <div class="add-roles">
@@ -82,6 +82,11 @@ const cardsData = computed(() => {
     name: pubCard.value.name,
     logo: pubCard.value.logo,
     description: pubCard.value.description,
+    countryId: {countries: [pubCard.value.country_id]},
+    entityCount: pubCard.value.orders_count,
+    type: pubCard.value.type,
+    rawMaterials: [pubCard.value.materials_own ? 'Собственное' : '', pubCard.value.materials_tolling ? 'Давальческое' : ''].filter(Boolean),
+    category: pubCard.value.categories.map(item => item.name),
   }
 })
 

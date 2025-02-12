@@ -13,12 +13,12 @@
       <div class="welcome-service-card__content">
         <div class="welcome-service-card__props">
           <div class="welcome-service-card__prop">
-            <p class="welcome-service-card__prop-name">{{data.location && data.location[0] ? data.location[0] : 'Не указано'}}</p>
-            <p class="welcome-service-card__prop-value"><i class="flag flag_round flag_russia"></i></p>
+            <p class="welcome-service-card__prop-name">{{data.location && data.location[0] ? data.location[0].name : 'Не указано'}}</p>
+            <p class="welcome-service-card__prop-value"><i class="flag flag_round" :class="data.location && data.location.length ? selectFlag(data.location[0].countryId) : ''"></i></p>
           </div>
           <div class="welcome-service-card__prop">
             <p class="welcome-service-card__prop-name">Размер партии:</p>
-            <p class="welcome-service-card__prop-value">{{ data.minLot && data.minLot[0] ? data.minLot[0] : 'Не указано' }}</p>
+            <p class="welcome-service-card__prop-value">{{ data.minLot && data.minLot[0] ? data.minLot[0].name : 'Не указано' }}</p>
           </div>
         </div>
       </div>
@@ -42,6 +42,7 @@
 </template>
 
 <script setup>
+import defaultImage from '~/assets/images/nophoto_pc.png'
 
 const props = defineProps({
   data: {
@@ -55,7 +56,7 @@ const props = defineProps({
 <style lang="scss">
 
 .welcome-service-card {
-  flex: 1;
+  // flex: 1;
   padding: 2rem;
   box-shadow: var(--box-shadow-primary);
   background-color: #fff;

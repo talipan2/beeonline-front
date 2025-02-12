@@ -1,15 +1,16 @@
 <template>
   <div class="services">
-    <CatalogBanner :data="ordersData" v-if="banner">
+    <!-- <CatalogBanner :data="ordersData" v-if="banner">
       <template #item="{ item }">
         <CatalogServiceCard :data="item" />
       </template>
-    </CatalogBanner>
-    <div class="services__list">
-      <div class="services__item" v-for="(data, index) in ordersData" :key="index" v-bind="setFirstCardRef(index)">
-        <CatalogServiceCard :data="data" />
+    </CatalogBanner> -->
+      <div class="services__list" v-if="ordersData.length > 0">
+          <div class="services__item" v-for="(data, index) in ordersData" :key="index" v-bind="setFirstCardRef(index)">
+            <CatalogServiceCard :data="data" />
+          </div>
       </div>
-    </div>
+    <CommonAlerts alert="Услуг нет" :type="'warning'" v-if="!ordersData.length && isLoaded" />
   </div>
 </template>
 
@@ -25,6 +26,10 @@ const props = defineProps({
   banner: {
     type: Boolean,
     default: false,
+  },
+  isLoaded: {
+    type: Boolean,
+    default: false
   }
 })
 

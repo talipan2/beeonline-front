@@ -2,7 +2,7 @@
   <div class="selectable-entity-card">
     <div class="selectable-entity-card__item-header">
       <div class="selectable-entity-card__item-image">
-        <img src="https://i.pinimg.com/564x/d1/67/07/d16707efcfe492a4f12b6d13a5fbc3cb.jpg" alt="">
+        <img :src="defaultImage" alt="">
       </div>
       <div class="selectable-entity-card__item-title">
         <h2>Исполнитель 11</h2>
@@ -23,6 +23,7 @@
 </template>
 
 <script setup>
+import defaultImage from '~/assets/images/nophoto_pc.png'
 
 const props = defineProps({
   btnLabel: {
