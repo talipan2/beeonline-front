@@ -10,7 +10,7 @@
       />
     </template>
     <template #content>
-      <CatalogDetails type="order" :pubCard="pubCard" :entityData="formatData"/>
+      <CatalogDetails type="order" :pubCard="pubCard" :entityData="formatData" v-if="!loading"/>
     </template>
     <template #rightSide>
       <CatalogOtherEntityCompany v-if="otherActiveEntity.length" :data="otherActiveEntity" type="customer"/>
@@ -29,6 +29,7 @@ const organizationStore = useOrganizationStore();
 const locationStore = useLocationStore();
 const data = ref({});
 const pubCard = ref({});
+const loading = ref(false);
 const formatData = computed(() => {
   if(!data.value) return []
   return {
@@ -67,6 +68,8 @@ const formatLocationsList = (regions=[], cities=[]) => {
 }
 
 onMounted(async () => {
+    loading.value = true;
+
     try {
       const ordersResponse = await entityStore.getOrder(router.currentRoute.value.params.id);
       data.value = ordersResponse.data;
@@ -75,6 +78,8 @@ onMounted(async () => {
       }
     } catch (err) {
       console.error(err);
+    } finally {
+      loading.value = false;
     }
   }
 );

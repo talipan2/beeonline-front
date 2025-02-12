@@ -106,34 +106,68 @@ function deleteLocation(id, type) {
   }
 }
 
+
+
 function openAuthModal () {
   settingStore.chooseLocationModal = true;
 }
 
-watch(() => props.modelValue, (newVal) => {
-  if(newVal) {
-    if(newVal.cities) {
-      selectedCities.value = {...selectedCities.value, cities: [...(newVal.cities || [])] };
-    }
-    if(newVal.regions) {
-      selectedCities.value = {...selectedCities.value, regions: [...(newVal.regions || [])] };
-    }
-    if(newVal.countries) {
-      selectedCities.value = {...selectedCities.value, countries: [...newVal.countries || []] };
-    }
-  }
-}, {once:true, deep: true})
+// watch(() => props.modelValue, (newVal) => {
+//   if(newVal) {
+//     if(newVal.cities) {
+//       selectedCities.value = {...selectedCities.value, cities: [...(newVal.cities || [])] };
+//     }
+//     if(newVal.regions) {
+//       selectedCities.value = {...selectedCities.value, regions: [...(newVal.regions || [])] };
+//     }
+//     if(newVal.countries) {
+//       selectedCities.value = {...selectedCities.value, countries: [...newVal.countries || []] };
+//     }
+//   }
+// }, {once: true, deep: true})
 
-watch(() => props.modelValue, (newVal) => {
-  if(newVal && newVal.length === 0) {
-    selectedCities.value = {countries: [], regions: [], cities: []};
-  }
-}, {deep: true})
+// watch(() => props.modelValue, (newVal) => {
+//   if(newVal && newVal.length === 0) {
+//     selectedCities.value = {countries: [], regions: [], cities: []};
+//   }
+// }, {deep: true})
 
 watch((selectedCities), (newVal) => {
   emit('update:modelValue', {...newVal});
 }, {deep: true},)
 
+// onMounted(() => {
+//   console.log(props.modelValue)
+//   if(props.modelValue) {
+//     if(props.modelValue.cities) {
+//       selectedCities.value = {...selectedCities.value, cities: [...(props.modelValue.cities || [])] };
+//     }
+//     if(props.modelValue.regions) {
+//       selectedCities.value = {...selectedCities.value, regions: [...(props.modelValue.regions || [])] };
+//     }
+//     if(props.modelValue.countries) {
+//       selectedCities.value = {...selectedCities.value, countries: [...props.modelValue.countries || []] };
+//     }
+//   }
+// })
+
+let stopWatcher = false;
+
+watchEffect(() => {
+  if(props.modelValue && (props.modelValue.cities || props.modelValue.regions || props.modelValue.countries) && !stopWatcher) {
+    if(props.modelValue.cities) {
+      selectedCities.value = {...selectedCities.value, cities: [...(props.modelValue.cities || [])] };
+    }
+    if(props.modelValue.regions) {
+      selectedCities.value = {...selectedCities.value, regions: [...(props.modelValue.regions || [])] };
+    }
+    if(props.modelValue.countries) {
+      selectedCities.value = {...selectedCities.value, countries: [...props.modelValue.countries || []] };
+    }
+
+    stopWatcher = true;
+  }
+})
 
 </script> 
 

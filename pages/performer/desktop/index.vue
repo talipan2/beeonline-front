@@ -11,6 +11,7 @@
 
 <script setup>
 import { useEntityStore } from '~/store/entityStore';
+import { useUserStore } from '~/store/userStore';
 
 useHead({
   title: 'Рабочий стол',
@@ -23,6 +24,7 @@ useHead({
 });
 
 const entityStore = useEntityStore();
+const userStore = useUserStore();
 
 const selectorButtons = [
   { id: 1, label: 'Активные', value: 'active', count: 3, },
@@ -32,8 +34,16 @@ const selectorButtons = [
 
 const filterList = ['category']; // Список фильтров
 
-function getEntity(type, filter) {
-  return entityStore.getOrders(type, filter)
+async function getEntity(type, filter) {
+  try {
+    const res = await entityStore.getOrganizationServices(userStore.userData.organization_id);
+    if (res) {
+      return entityStore.organizationServices;
+    }
+    return [];
+  } catch (error) {
+    console.error('Error fetching organization orders:', error);
+  }
 }
 
 </script>

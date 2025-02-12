@@ -167,7 +167,19 @@ const userBalance = computed(() => tariffsStore.userBalance);
 const userBonuses = computed(() => tariffsStore.userBonuses);
 const userCurrency = computed(() => tariffsStore.userCurrency);
 
-const pubCard = computed(() => userStore.userPubCard);
+const pubCard = computed(() => {
+  if (!userStore.userPubCard) return {}
+  return {
+    id: userStore.userPubCard.id,
+    name: userStore.userPubCard.name,
+    type: userStore.userPubCard.type,
+    description: userStore.userPubCard.description,
+    countryId: {countries: [userStore.userPubCard.country_id]},
+    entityCount: userStore.userPubCard.orders_count || userStore.userPubCard.services_count,
+    rawMaterials: [userStore.userPubCard.materials_own ? 'Собственное': '', userStore.userPubCard.materials_tolling ? 'Давальческое' : ''],
+    category: userStore.userPubCard.categories && userStore.userPubCard.categories.length ? userStore.userPubCard.categories.map(item => item.name) : []
+  }
+});
 const emailVerified = computed(() => userStore.userData.email_verified_at ? true : false);
 
 function getLinkWithRole(link) {
@@ -229,6 +241,8 @@ onMounted(() => {
   flex: 1;
   font-family: 'fira-sans', sans-serif;
   font-size: 1rem;
+  display: flex;
+  flex-direction: column;
 
   &__header {
     display: flex;
@@ -307,6 +321,7 @@ onMounted(() => {
   }
 
   &__link {
+    margin-top: auto;
     font-size: 1.2em;
     text-transform: uppercase;
   }

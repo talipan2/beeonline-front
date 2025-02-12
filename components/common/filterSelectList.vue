@@ -7,6 +7,7 @@
       :options="getOptions(filter)"
       v-model="selectedFilters[filter]"
       :return-value="true"
+      :error-show="false"
     />
   </div>
 </template>
@@ -34,10 +35,6 @@ const entityStore = useEntityStore();
 const selectedFilters = ref({});
 const emit = defineEmits(['setFilters']);
 
-// Инициализируем значения фильтров
-props.filters.forEach((filter) => {
-  selectedFilters.value[filter] = 'all'; // значение по умолчанию
-});
 
 // Функция для возвращения нужных опций в зависимости от типа фильтра
 const getOptions = (type) => {
@@ -59,7 +56,7 @@ const getOptions = (type) => {
 const categoryOptions = computed(() => [
   { id: 0, label: 'Все категории', value: 'all' },
   ...entityStore.entityData.categories.map((category) => {
-    return { id: category.id, label: category.label, value: category.id };
+    return { id: category.id, label: category.name, value: category.id };
   })
 ]);
 
@@ -98,21 +95,29 @@ const resetFilters = () => {
 }
 
 // ОТправка родителю выбранных фильтров
-watch(() => selectedFilters.value, (newVal) => {
+watch(() => selectedFilters.value, (newVal, oldVal) => {
   emit('setFilters', newVal);
 }, { deep: true });
 
 
 // установки активных фильтров при обновлении страницы
 watch(() => props.activeFilters, (newVal, oldVal) => {
-  if (Object.keys(newVal).length !== 0 &&JSON.stringify(newVal) !== JSON.stringify(oldVal)) {
-    selectedFilters.value = { ...newVal }; // Обновляем выбранные фильтры
-  }
+  // if (Object.keys(newVal).length !== 0 && (JSON.stringify(newVal) !== JSON.stringify(oldVal))) {
+  //   selectedFilters.value = { ...newVal }; // Обновляем выбранные фильтры
+  // }
 
   if (Object.keys(newVal).length === 0) {
     resetFilters();
   }
 }, { deep: true, immediate: true });
+
+// Инициализируем значения фильтров
+onMounted(() => {
+  props.filters.forEach((filter) => {
+    selectedFilters.value[filter] = 'all'; // значение по умолчанию
+  });
+})
+
 
 </script>
 
@@ -126,7 +131,8 @@ watch(() => props.activeFilters, (newVal, oldVal) => {
   column-gap: 2em;
 
   &__select {
-    flex: 0 1 33%;
+    flex: 1 1 30%;
+    max-width: 33%;
   }
 
   .select__select {
