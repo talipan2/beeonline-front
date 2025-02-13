@@ -224,6 +224,15 @@ const handleClick = () => {
   }
 }
 
+.btn-medium {
+    justify-content: center;
+    text-transform: uppercase;
+    font-size: 1.2em;
+    font-weight: 400;
+    padding: 1em;
+    border-radius: 100px;
+}
+
 .btn-large {
   padding: 1.2rem 2rem;
   border-radius: 100px;
