@@ -1,12 +1,13 @@
 export default defineNuxtConfig({
     modules: [
-        "nuxt-svgo",
-        "nuxt-swiper",
-        "@pinia/nuxt",
-        "nuxt-tiptap-editor",
-        "@vee-validate/nuxt",
-        "vue-yandex-maps/nuxt",
-        "@nuxt/devtools",
+      "nuxt-svgo",
+      "nuxt-swiper",
+      "@pinia/nuxt",
+      "nuxt-tiptap-editor",
+      "@vee-validate/nuxt",
+      "vue-yandex-maps/nuxt",
+      "@nuxt/devtools",
+      "@primevue/nuxt-module",
     ],
     ssr: false,
     runtimeConfig: {
@@ -63,6 +64,24 @@ export default defineNuxtConfig({
 
         timeline: {
             enabled: true,
+        },
+    },
+    primevue: {
+        usePrimeVue: true,
+        autoImport: false,
+        components: {
+            include: ['ContextMenu']
+            // prefix: 'prime'
+        },
+        options: {
+            unstyled: true,
+            pt: {
+                contextmenu: {
+                    root: 'contextmenu',
+                    rootList: 'dropdown-menu show',
+                    itemLink: 'dropdown-item',
+                },
+            },
         },
     },
 });

@@ -1,5 +1,5 @@
 <template>
-    <UiModal v-model="opened" title="Оставить отзыв" @confirm="() => confirm()" class="modal">
+    <Modal v-model="opened" title="Оставить отзыв" @beforeClose="close">
         <template #content>
             <form class="" @submit="submit" novalidate ref="form">
                 <div class="form-group mb-15">
@@ -48,7 +48,7 @@
                 </div>
             </form>
         </template>
-    </UiModal>
+    </Modal>
 </template>
 
 <script>

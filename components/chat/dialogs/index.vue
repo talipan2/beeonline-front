@@ -64,6 +64,7 @@
 				</div>
 			</div>
 		</div>
+
 		<div class="dialogs__list" @scroll="onScroll" ref="dialogs">
 			<template v-if="dialogs.length">
 				<template v-for="dialog in dialogs" :key="dialog">
@@ -104,7 +105,7 @@
 				</div>
 			</template>
 		</div>
-		<a href="javascript:;" class="btn btn-primary dialogs__lifecycle" @click="loadNewResponses" v-if="newResponses">
+		<a href="javascript:;" class="btn btn-primary dialogs__lifecycle" @click="loadNewResponses" v-if="order?.lifecycle_status === 'yellow'">
 			Получить новые отклики
 		</a>
 	</div>
@@ -113,8 +114,9 @@
 <style src="@vueform/multiselect/themes/default.css"></style>
 
 <script>
+import { useChatStore } from "~/store/chatStore";
 import { useChannelsStore } from "~/store/channelsStore";
-import { useChatStore } from '~/store/chatStore';
+import { useUserStore } from "~/store/userStore";
 import ChatDialogsItem from "./item.vue";
 import Multiselect from "@vueform/multiselect";
 
@@ -201,6 +203,7 @@ export default {
 			this.loading = true;
 			useChatStore().loadNewResponses(this.order.id).then(() => {
 				this.newResponses = 0;
+				this.order.lifecycle_status = 'green';
 				this.loading = false;
 				this.runSearch();
 			}).finally(() => {
@@ -259,7 +262,7 @@ export default {
 			}
         },
 
-        loadChats() {
+        loadChats(clear = false) {
             if (this.loading || this.noMoreChats) return;
 
 			if (!this.search.length) {
@@ -267,19 +270,23 @@ export default {
 			}
 
             this.loading = true;
-            const lastUpdatedAt = this.dialogs.length
-                ? this.dialogs[this.dialogs.length - 1].updated_at
+            const lastMessageAt = this.dialogs.length
+                ? this.dialogs[this.dialogs.length - 1].last_message_at
                 : null;
 
+				console.log(lastMessageAt);
 			if (this.searchType === 'dialogs') {
 				const response = useChatStore()
 				.getChats({
-					last_updated_at: lastUpdatedAt,
+					last_message_at: lastMessageAt,
 					search: this.search?.length >= this.searchMinLength ? this.search : '',
 					order_id: this.order?.id,
 					lifecycle_status: this.lifecycle_status,
 				})
 				.then((data) => {
+					if (clear) {
+						this.dialogs = [];
+					}
 					if (data.length < 20) {
 						this.noMoreChats = true;
 					}
@@ -296,7 +303,7 @@ export default {
 			} else {
 				const response = useChatStore()
 				.searchMessages({
-					last_created_at: lastUpdatedAt,
+					last_created_at: lastMessageAt,
 					search: this.search?.length >= this.searchMinLength ? this.search : '',
 					order_id: this.order?.id,
 					lifecycle_status: this.lifecycle_status,
@@ -310,7 +317,7 @@ export default {
 							let chat = JSON.parse(JSON.stringify(message.chat));
 							delete message.chat;
 							chat.messages = [message];
-							chat.updated_at = message.created_at;
+							chat.last_message_at = message.created_at;
 							chat.is_message_search = true;
 							this.addDialog(chat);
 						});
@@ -344,7 +351,7 @@ export default {
 		runSearch() {
 			this.noMoreChats = false;
 			this.dialogs = [];
-			this.loadChats();
+			this.loadChats(true);
 		},
 		onSearch() {
 			clearTimeout(this.searchTimeout);
@@ -374,9 +381,10 @@ export default {
 				};
 			});
 			if (!orders?.length) return [];
+			this.order = orders[0].value;
 			orders.unshift({
 				label: 'Не выбран заказ',
-				value: null
+				value: null,
 			});
 			return orders;
 		},
@@ -388,6 +396,9 @@ export default {
 		},
 		order() {
 			this.lifecycle_status = 'green';
+			this.loading = false;
+			this.noMoreChats = false;
+			this.dialogs = [];
 			this.runSearch();
 			this.loadNewResponsesCount();
 		},
@@ -400,6 +411,10 @@ export default {
 	--ms-option-bg-selected: #6937a5;
 	--ms-option-bg-selected-pointed: #6937a5;
 	--ms-ring-color: #6937a530;
+	--ms-font-size: 1.4rem;
+	--ms-option-font-size: 1.4rem;
+	--ms-max-height: 30rem;
+
     --color-white: #fff;
     --color-black: #000000;
     --color-border-gray: #c4c4c4;

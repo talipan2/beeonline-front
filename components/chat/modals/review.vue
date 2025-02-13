@@ -8,19 +8,19 @@
         <div class="review-modal__content">
           <Form class="review-modal__form" @submit="handleSubmit">
             <div class="form-group">
-              <label class="form-group-data form-group__title"> 
-                Выберите оценку 
+              <label class="form-group-data form-group__title">
+                Выберите оценку
                 <CommonRating class="review-modal__rating"
-                  :isSelected="true" 
-                  :isCountRating="false" 
-                  :isReviewText="false" 
+                  :isSelected="true"
+                  :isCountRating="false"
+                  :isReviewText="false"
                   :isCountReviews="false"
                   v-model="reviewData.rating"
                 />
               </label>
             </div>
             <div class="form-group">
-              <label class="form-group-data form-group__title"> 
+              <label class="form-group-data form-group__title">
                 Плюсы сотрудничества:
                 <UiTextArea
                   class="form-group__value review-modal__textarea"
@@ -33,7 +33,7 @@
               </label>
             </div>
             <div class="form-group">
-              <label class="form-group-data form-group__title"> 
+              <label class="form-group-data form-group__title">
                 Минусы сотрудничества:
                 <UiTextArea
                   class="form-group__value review-modal__textarea"
@@ -46,20 +46,20 @@
               </label>
             </div>
             <div class="review-modal__file-load" ref="fileLoad">
-              <UiDragAndDropFile 
-                :visible="true" 
-                :maxSize="maxFilesSize" 
-                :accept="acceptFile" 
+              <UiDragAndDropFile
+                :visible="true"
+                :maxSize="maxFilesSize"
+                :accept="acceptFile"
                 @addFile="addFile"
                 :draggable-component="fileLoad || {}"
               />
             </div>
             <CommonFileList
               @removeFile="removeFile"
-              :dataList="uploadedFiles" 
-              :changed="true" 
-              :divider="false" 
-              :download-text="true" 
+              :dataList="uploadedFiles"
+              :changed="true"
+              :divider="false"
+              :download-text="true"
               variant="dark"
             />
             <UiButton class="review-modal__btn" type="submit" variant="quinary" size="large">Отправить</UiButton>
@@ -105,12 +105,12 @@ watch(uploadedFiles, (newFiles) => {
     newFormData.append('file[]', item.file);
   });
   formData.value = newFormData;
-  reviewData.value.files = formData.value; 
+  reviewData.value.files = formData.value;
 }, { deep: true });
 
 const settingStore = useSettingStore();
 function confirm() {
-  settingStore.addReviewModal = false;  
+  settingStore.addReviewModal = false;
 }
 
 const handleSubmit = () => {
@@ -123,7 +123,7 @@ const handleSubmit = () => {
 
 .review-modal {
   font-size: 1rem;
-  
+
   .modal-content {
     width: 28vw;
   }

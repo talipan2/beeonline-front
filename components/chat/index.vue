@@ -11,25 +11,34 @@
         :link="`/api/chat/file`"
     >
         <template #content>
-            <div class="dialog__top" v-if="!onlyBody">
+            <div
+                class="dialog__top"
+                v-if="!onlyBody"
+            >
                 <div class="dialog__close">
-                    <a href="javascript:;" @click="$emit('close')">
+                    <a
+                        href="javascript:;"
+                        @click="$emit('close')"
+                    >
                         <i class="icon-arrow"></i>
                     </a>
                 </div>
                 <div class="dialog__orgs">
                     <template v-if="chat">
                         <template v-for="org in chat.organizations">
-                            <div class="dialog-head" v-if="org.id != org_id">
+                            <div
+                                class="dialog-head"
+                                v-if="org.id != org_id"
+                            >
                                 <div class="dialog-head__img">
-                                    <img
-                                        v-if="org.pubcard.logo"
+                                    <UiImage
+                                        v-if="org.pubcard.logo?.length"
                                         :src="org.pubcard.logo"
                                         :alt="org.pubcard.name"
                                     />
-                                    <img
+                                    <UiImage
                                         v-else
-                                        src="../../assets/img/default.svg"
+                                        src="/assets/svg/default.svg"
                                         :alt="org.pubcard.name"
                                     />
                                 </div>
@@ -46,127 +55,122 @@
                                     </div>
                                 </div>
                                 <div class="dialog-head__buttons">
-                                    <a
-                                        v-if="org.pivot.role === 'performer' && chat.order && !chat.deal && !chat.order.selected_performer_id"
-                                        data-chat-btn-deal=""
-                                        data-modal-ajax=""
-                                        :data-href="createDealUrl(org)"
-                                        href="javascript:;"
-                                        class="btn btn-outline-primary"
-                                    >
-                                        Начать работу
-                                    </a>
-                                    <a
+                                    <UiButton
                                         v-if="chat.deal"
                                         :href="`/deals/${chat.deal.id}`"
-                                        class="btn btn-primary"
+                                        class="dialog-head__btn dialog-head__btn_type_colored"
+                                        variant="tertiary"
+                                        size="around"
                                         target="_blank"
                                     >
                                         Открыть сделку
-                                    </a>
-
-                                    <a
-                                        href="javascript:;"
-                                        class="btn btn-outline-primary"
+                                    </UiButton>
+                                    <UiButton
+                                        class="dialog-head__btn dialog-head__btn_type_colored"
+                                        type="button"
                                         @click="openReviewModal(org)"
-                                        ><i class="icon-deal pr-10"></i>Оставить отзыв</a
+                                        variant="tertiary"
+                                        size="around"
+                                        target="_blank"
                                     >
-                                    <a
-                                        href="javascript:;"
-                                        class="btn p-0"
-										:class="{
-											'btn-outline-primary': !chat.is_pinned,
-											'btn-primary': chat.is_pinned
-										}"
+                                        <SvgoDealIcon
+                                            class="svg-m"
+                                            fill="#6937a5"
+                                        />
+                                        Оставить отзыв
+                                    </UiButton>
+                                    <UiButton
+                                        class="dialog-head__btn"
+                                        type="button"
                                         @click="setPinned"
-                                        >
-										<i class="">
-											<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="m640-480 80 80v80H520v240l-40 40-40-40v-240H240v-80l80-80v-280h-40v-80h400v80h-40v280Zm-286 80h252l-46-46v-314H400v314l-46 46Zm126 0Z"/></svg>
-										</i>
-										</a
+                                        :variant="chat.is_pinned ? `primary` : `tertiary`"
+                                        size="around"
+                                        target="_blank"
+                                        :without-padding="true"
                                     >
+                                        <SvgoPin
+                                            class="svg-l"
+                                            fill="currentColor"
+                                        />
+                                    </UiButton>
                                 </div>
-								<div class="dropdown">
-                                        <a
-                                            href="javascript:;"
-                                            class="btn btn-outline-primary btn-block"
-                                            data-toggle="dropdown"
-                                            aria-expanded="false"
-                                        >
-                                            <i class="icon-dots"></i>
-                                        </a>
-                                        <div
-                                            class="dropdown-menu dropdown-menu-right mt-10"
-                                            style=""
-                                        >
-                                            <div class="dropdown-items mb-0">
-                                                <a
-                                                    v-if="(org.pivot.role === 'performer') && chat.order && !chat.deal && !chat.order.selected_performer_id"
-                                                    data-chat-btn-deal=""
-                                                    data-modal-ajax=""
-                                                    :data-href="createDealUrl(org)"
-                                                    href="javascript:;"
-                                                    class="dropdown-item"
-                                                >
-                                                    Начать работу
-                                                </a>
-                                                <a
-                                                    v-if="chat.deal"
-                                                    :href="`/deals/${chat.deal.id}`"
-                                                    class="dropdown-item"
-                                                    target="_blank"
-                                                >
-                                                    Открыть сделку
-                                                </a>
-												<a
-                                                    v-if="chat.order?.selected_performer_id == org.id"
-													href="javascript:;"
-                                                    @click="unselectPerformer(org)"
-                                                    class="dropdown-item"
-                                                >
-                                                    Отменить выбор исполнителя
-                                                </a>
-
-												<a
-													href="javascript:;"
-													class="dropdown-item"
-													@click="openReviewModal(org)"
-													>Оставить отзыв</a
-												>
-
-                                                <a
-                                                    class="dropdown-item"
-                                                    href="javascript:;"
-                                                    data-modal-ajax=""
-                                                    :data-href="`/org_check/${org.id}`"
-                                                    >Проверить контрагента</a
-                                                >
-                                                <a
-                                                    class="dropdown-item"
-                                                    target="_blank"
-                                                    :href="`/members/${org.id}/${org.pivot.role}`"
-                                                    >Перейти в профиль</a
-                                                >
-                                                <a
-                                                    class="dropdown-item"
-                                                    target="_blank"
-                                                    href="/orders/5411"
-                                                    >Перейти к заказу</a
-                                                >
-												<a class="dropdown-item" href="javascript:;" @click="toggleTranslate">
-													<i class="icon-translate mr-5"></i>
-													<template v-if="translate">
-														Отключить перевод
-													</template>
-													<template v-else>
-														Включить перевод
-													</template>
-												</a>
-												<a class="dropdown-item" :href="`https://calendar.google.com/calendar/u/0/r/eventedit?text=Встреча с ${org.pubcard?.name}`" target="_blank" data-chat-btn-event data-guide-chat-event><i class="icon-calendar mr-5"></i>Запланировать событие</a>
-                                                <a class="dropdown-item" href="https://meet.google.com/new" target="_blank" data-chat-btn-video data-guide-chat-video><i class="icon-video mr-5"></i>Видео-конференция</a>
-                                            </div>
+                                <UiNewDropdown
+                                    placement="bottom-end"
+                                    :arrow="false"
+                                >
+                                    <UiButton
+                                        class="dialog-head__btn"
+                                        variant="tertiary"
+                                        size="around"
+                                        :without-padding="true"
+                                    >
+                                        <SvgoDots
+                                            class="svg-m"
+                                            fill="#6937a5"
+                                        />
+                                    </UiButton>
+                                    <template #content>
+                                        <div class="dialog-head__dropdown-menu">
+                                            <UiButton
+                                                class="dropdown-menu__btn"
+                                                variant="default"
+                                                v-if="chat.deal"
+                                                :to="`/deals/${chat.deal.id}`"
+                                                >Открыть сделку</UiButton
+                                            >
+                                            <UiButton
+                                                class="dropdown-menu__btn"
+                                                variant="default"
+                                                @click="openReviewModal(org)"
+                                                type="button"
+                                                >Оставить отзыв</UiButton
+                                            >
+                                            <UiButton
+                                                class="dropdown-menu__btn"
+                                                variant="default"
+                                                >Проверить контрагента</UiButton
+                                            >
+                                            <UiButton
+                                                class="dropdown-menu__btn"
+                                                variant="default"
+                                                :to="`/members/${org.id}/${org.pivot.role}`"
+                                                >Перейти в профиль</UiButton
+                                            >
+                                            <UiButton
+                                                v-if="chat.order"
+                                                class="dropdown-menu__btn"
+                                                variant="default"
+                                                :to="`/orders/${chat.order.id}`"
+                                                >Перейти к заказу</UiButton
+                                            >
+                                            <UiButton
+                                                class="dropdown-menu__btn"
+                                                variant="default"
+                                                type="button"
+                                                @click="toggleTranslate"
+                                            >
+                                                <template v-if="translate">
+                                                    Отключить перевод
+                                                </template>
+                                                <template v-else>
+                                                    Включить перевод
+                                                </template>
+                                            </UiButton>
+                                            <UiButton
+                                                class="dropdown-menu__btn"
+                                                variant="default"
+                                                :to="`https://calendar.google.com/calendar/u/0/r/eventedit?text=Встреча с ${org.pubcard?.name}`"
+                                                >Запланировать событие</UiButton
+                                            >
+                                            <UiButton
+                                                class="dropdown-menu__btn"
+                                                variant="default"
+                                                :to="`https://meet.google.com/new`"
+                                                >Видео-конференция</UiButton
+                                            >
                                         </div>
-                                    </div>
+                                    </template>
+                                </UiNewDropdown>
                             </div>
                         </template>
                     </template>
@@ -196,29 +200,42 @@
                                     :message="message"
                                     :prev="group.messages[key - 1]"
                                     :next="group.messages[key + 1]"
-									:translate="translate"
+                                    :translate="translate"
                                 />
                             </template>
                         </div>
                     </template>
                 </template>
-                <div class="dialog__body-message" v-else>
+                <div
+                    class="dialog__body-message"
+                    v-else
+                >
                     <template v-if="chat && !chat.id"
                         >Чтобы начать чат отправьте первое сообщение</template
                     >
                     <template v-else>Выберите чат</template>
                 </div>
             </div>
-            <div class="dialog__bottom" v-if="!onlyBody">
-                <form @submit="submitMessage" class="dialog__form">
+            <div
+                class="dialog__bottom"
+                v-if="!onlyBody"
+            >
+                <form
+                    @submit="submitMessage"
+                    class="dialog__form"
+                >
                     <a
                         href="javascript:;"
                         class="dialog__form-btn"
                         @click="$refs.fileDrop.$refs.input.click"
                         data-toggle="tooltip"
                         data-placement="top"
-						data-html="true"
-                        :title="$refs.fileDrop.maxSizeMessage + '<br>' + $refs.fileDrop.allowedExtensionsMessage"
+                        data-html="true"
+                        :title="
+                            $refs.fileDrop.maxSizeMessage +
+                            '<br>' +
+                            $refs.fileDrop.allowedExtensionsMessage
+                        "
                         @mouseenter="showFileTooltip"
                         @mouseleave="hideFileTooltip"
                     >
@@ -234,7 +251,10 @@
                         required="required"
                     />
 
-                    <button type="submit" class="dialog__form-submit">
+                    <button
+                        type="submit"
+                        class="dialog__form-submit"
+                    >
                         Отправить
                     </button>
                 </form>
@@ -267,6 +287,7 @@ import ChatModalReview from "./modal/review.vue";
 import FileDrop from "~/components/file/drop.vue";
 import { useChatStore } from "~/store/chatStore";
 import { useChannelsStore } from "~/store/channelsStore";
+import { useUserStore } from "~/store/userStore";
 
 export default {
     components: {
@@ -296,12 +317,12 @@ export default {
     emits: ["change:chat", "change:deal-stage", "change:pinned"],
     data: () => ({
         loading: false,
-		sending: false,
+        sending: false,
         chat: null,
         init_org: null,
         messages: [],
         channel: null,
-		translate: false,
+        translate: false,
 
         user_id: null,
         org_id: null,
@@ -317,8 +338,9 @@ export default {
     }),
 
     mounted() {
-        this.user_id = useChatStore().user_id;
-        this.org_id = useChatStore().org_id;
+        console.log(useUserStore().userData);
+        this.user_id = useUserStore().userData?.id;
+        this.org_id = useUserStore().userData?.organization_id;
 
         if (this.init_chat_id) {
             this.changeInitChatId(this.init_chat_id);
@@ -330,43 +352,43 @@ export default {
     },
 
     methods: {
-		toggleTranslate() {
-			this.translate = !this.translate;
+        toggleTranslate() {
+            console.log('toggleTranslate');
+            this.translate = !this.translate;
 
-			Cookies.set('translate_chat_' + this.chat.id, this.translate);
-			Cookies.set('translate_chat_' + this.chat.id, this.translate, {
-				domain: "." + document.domain,
-			});
+            localStorage.setItem("translate_chat_" + this.chat.id, this.translate);
 
-			this.changeInitChatId(this.chat.id);
-		},
-		createDealUrl(org) {
-			let data = {
-				foreign_org_id: org.id,
-				foreign_role: org.pivot.role,
-			};
-			if (this.chat.order) {
-				data.order_id = this.chat.order.id;
-			}
-			const searchParams = new URLSearchParams(data);
-			return `/deals/create?${searchParams.toString()}`;
-		},
+            this.changeInitChatId(this.chat.id);
+        },
+        createDealUrl(org) {
+            let data = {
+                foreign_org_id: org.id,
+                foreign_role: org.pivot.role,
+            };
+            if (this.chat.order) {
+                data.order_id = this.chat.order.id;
+            }
+            const searchParams = new URLSearchParams(data);
+            return `/deals/create?${searchParams.toString()}`;
+        },
 
-		unselectPerformer(org) {
-			useChatStore().unselectPerformer(this.chat.id, org.id).then(() => {
-				this.changeInitChatId(this.chat.id);
-			});
-		},
-		setAsReaded(messageId = null) {
-			if (!messageId) return;
-			if (!this.chat?.id) return;
-			if (this.chat.read_message_id < messageId) {
-				this.chat.read_message_id = messageId;
-				useChatStore().setAsReaded(this.chat.id, {
-					messageId: this.lastMessageId,
-				});
-			}
-		},
+        unselectPerformer(org) {
+            useChatStore()
+                .unselectPerformer(this.chat.id, org.id)
+                .then(() => {
+                    this.changeInitChatId(this.chat.id);
+                });
+        },
+        setAsReaded(messageId = null) {
+            if (!messageId) return;
+            if (!this.chat?.id) return;
+            if (this.chat.read_message_id < messageId) {
+                this.chat.read_message_id = messageId;
+                useChatStore().setAsReaded(this.chat.id, {
+                    messageId: this.lastMessageId,
+                });
+            }
+        },
         async loadMessages(direction = "up", messageId = null) {
             if (this.loading) return;
 
@@ -390,7 +412,7 @@ export default {
             } else if (direction === "down") {
                 if (this.lastLoaded) {
                     this.loading = false;
-					this.setAsReaded(messageId);
+                    this.setAsReaded(messageId);
                     return;
                 }
             } else if (direction === "center") {
@@ -450,10 +472,10 @@ export default {
                         this.clearMessages(direction);
                     }
 
-					let lastMessage = this.messages[this.messages.length - 1];
-					if (lastMessage?.id > this.chat.read_message_id) {
-						this.chat.read_message_id = lastMessage.id;
-					}
+                    let lastMessage = this.messages[this.messages.length - 1];
+                    if (lastMessage?.id > this.chat.read_message_id) {
+                        this.chat.read_message_id = lastMessage.id;
+                    }
 
                     // Проверка на необходимость подгрузки дополнительных сообщений
                     if (direction === "down") {
@@ -501,7 +523,7 @@ export default {
             if (scrollTop === 0 && !this.loading) {
                 this.loadMessages("up", this.messages[0]?.id);
             } else if (
-                scrollTop + offsetHeight >= (scrollHeight - 10) &&
+                scrollTop + offsetHeight >= scrollHeight - 10 &&
                 !this.loading
             ) {
                 this.loadMessages(
@@ -540,9 +562,9 @@ export default {
                     this.messages.push(message);
                 }
 
-				if (!this.lastMessageId || message.id > this.lastMessageId) {
-					this.lastMessageId = message.id;
-				}
+                if (!this.lastMessageId || message.id > this.lastMessageId) {
+                    this.lastMessageId = message.id;
+                }
 
                 const container = this.$refs.chatContainer;
                 if (needScroll) {
@@ -556,7 +578,7 @@ export default {
         },
 
         sendMessageWithFiles(message) {
-			if (this.sending) return false;
+            if (this.sending) return false;
             let new_message = this.addMessage({
                 text: message,
                 created_at: new Date(),
@@ -586,7 +608,7 @@ export default {
                             new_message
                         );
                         sended = true;
-						this.files = [];
+                        this.files = [];
                     }
                 });
                 if (sended) return;
@@ -597,6 +619,7 @@ export default {
 
             message.date = date;
             message.own = message.user_id == this.user_id;
+            console.log(this.user_id, this.org_id);
 
             if (message.organization_id == this.org_id) {
                 message.side = "right";
@@ -642,9 +665,9 @@ export default {
 
                     this.loading = false;
 
-					if (!message_id) {
-						message_id = this.chat.read_message_id;
-					}
+                    if (!message_id) {
+                        message_id = this.chat.read_message_id;
+                    }
                     this.loadMessages("center", message_id);
 
                     this.channel = useChannelsStore().private(
@@ -652,22 +675,26 @@ export default {
                     );
                     const container = this.$refs.chatContainer;
 
-					this.translate = Cookies.get('translate_chat_' + response.id) == "true";
-					if (this.translate) {
-						this.translate = window.TranslateGetCode(window.googleTranslateConfig);
-					}
+                    this.translate =
+                        localStorage.getItem("translate_chat_" + response.id) == "true";
+                    if (this.translate) {
+                        this.translate = window.TranslateGetCode(
+                            window.googleTranslateConfig
+                        );
+                    }
 
                     this.channel.listen("NewChatMessage", (event) => {
                         const scrollEnd =
                             container.scrollHeight - container.scrollTop ===
                             container.clientHeight;
 
-						let organization = this.chat.organizations.find(
+                        let organization = this.chat.organizations.find(
                             (org) => org.id == event.message.org_id
                         );
-						if (organization) {
-							organization.last_active_at = event.message.created_at;
-						}
+                        if (organization) {
+                            organization.last_active_at =
+                                event.message.created_at;
+                        }
 
                         this.lastLoaded = false;
                         this.addMessage(event.message, scrollEnd, true);
@@ -699,7 +726,7 @@ export default {
                     } else if (response.chat) {
                         this.init_org = response.chat.organizations[0];
                         this.chat = response.chat;
-						this.$emit("change:chat", null);
+                        this.$emit("change:chat", null);
                         this.changeDealStage();
                     }
                 })
@@ -710,7 +737,7 @@ export default {
 
         submitMessage(e) {
             e.preventDefault();
-			if (this.sending) return false;
+            if (this.sending) return false;
             this.sendMessage({
                 message: this.message,
                 files: null,
@@ -733,7 +760,7 @@ export default {
                 });
             }
 
-			this.sending = true;
+            this.sending = true;
             if (this.chat.id) {
                 useChatStore()
                     .sendMessage(this.chat.id, {
@@ -749,10 +776,10 @@ export default {
                             this.loadMessages("center", response.id);
                         }
                     })
-					.finally(() => {
-						this.message = "";
-						this.sending = false;
-					});
+                    .finally(() => {
+                        this.message = "";
+                        this.sending = false;
+                    });
             } else {
                 useChatStore()
                     .sendFirstMessage({
@@ -764,10 +791,10 @@ export default {
                     .then((response) => {
                         this.$emit("change:chat", response);
                     })
-					.finally(() => {
-						this.message = "";
-						this.sending = false;
-					});
+                    .finally(() => {
+                        this.message = "";
+                        this.sending = false;
+                    });
             }
         },
 
@@ -790,26 +817,28 @@ export default {
             $(e.target).tooltip("hide");
         },
 
-		openReviewModal(org) {
-			this.$refs.modalReview.open(this.chat, org);
-		},
+        openReviewModal(org) {
+            this.$refs.modalReview.open(this.chat, org);
+        },
 
-		orgOnline(org) {
-			let last_active_at = new Date(org.last_active_at);
+        orgOnline(org) {
+            let last_active_at = new Date(org.last_active_at);
 
-			if (new Date() - last_active_at < 5 * 60 * 1000) {
-				return "Онлайн";
-			}
-			return "Офлайн";
-		},
+            if (new Date() - last_active_at < 5 * 60 * 1000) {
+                return "Онлайн";
+            }
+            return "Офлайн";
+        },
 
-		setPinned() {
-			let pinned = !this.chat.is_pinned;
-			useChatStore().setPinned(this.chat.id, pinned).then(() => {
-				this.chat.is_pinned = pinned;
-				this.$emit("change:pinned", this.chat);
-			});
-		}
+        setPinned() {
+            let pinned = !this.chat.is_pinned;
+            useChatStore()
+                .setPinned(this.chat.id, pinned)
+                .then(() => {
+                    this.chat.is_pinned = pinned;
+                    this.$emit("change:pinned", this.chat);
+                });
+        },
     },
 
     watch: {
@@ -822,7 +851,10 @@ export default {
 
     computed: {
         filesModalOpen() {
-            if (this.files.length && this.files.every((file) => !file.loading)) {
+            if (
+                this.files.length &&
+                this.files.every((file) => !file.loading)
+            ) {
                 return true;
             }
             return false;
@@ -958,7 +990,7 @@ export default {
         display: flex;
         align-items: center;
         padding: 2em;
-		gap: 1rem;
+        gap: 1rem;
 
         &__img {
             position: relative;
@@ -997,12 +1029,42 @@ export default {
 
         &__buttons {
             flex: 0 1 auto;
-			display: flex;
-			gap: 1rem;
+            display: flex;
+            gap: 1rem;
 
-			@media screen and (max-width: 1379px) {
-				display: none;
-			}
+            @media screen and (max-width: 1379px) {
+                display: none;
+            }
+        }
+
+        &__btn {
+            text-transform: uppercase;
+            column-gap: 1em;
+            font-size: 1.2em;
+            font-weight: 400;
+
+            &_type_colored {
+                color: var(--text-color-primary);
+            }
+        }
+
+        &__dropdown-menu {
+            display: flex;
+            flex-direction: column;
+            padding: 2em;
+            font-size: 1.4rem;
+            .btn {
+                display: block;
+                font-size: 1em;
+                padding: 0.3em;
+                justify-content: flex-start;
+                color: var(--text-color-primary);
+                text-align: left;
+
+                &:hover {
+                    background-color: var(--button-background-secondary-hover);
+                }
+            }
         }
     }
 

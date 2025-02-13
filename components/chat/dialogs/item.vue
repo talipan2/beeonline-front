@@ -4,13 +4,16 @@
 		class="dialogs-item"
 		:class="{
 			active: dialog.id == chat_id,
-			unreaded: dialog.read_message_id < dialog.last_message?.id,
-			highlight: hasHighlightOrg,
-			is_pinned: dialog.is_pinned,
+			unreaded: hasUnreadMessages,
+			// highlight: hasHighlightOrg,
+			// is_pinned: dialog.is_pinned,
 		}"
 		@click="handleClick(dialog)"
 		@contextmenu.prevent.stop="handleContext($event, item)"
 	>
+		<div class="dialogs-item__unreaded" v-if="hasUnreadMessages"></div>
+		<div class="dialogs-item__pinned" v-if="dialog.is_pinned"></div>
+		<div class="dialogs-item__highlight" v-if="hasHighlightOrg"></div>
 		<div class="dialogs-item__wrap">
 			<div class="dialogs-item__image"
 				:class="{
@@ -21,14 +24,14 @@
 						class="dialogs-item__image-product"
 						v-if="dialog.product"
 					>
-						<img
-							v-if="dialog.product.first_image"
+						<UiImage
+							v-if="dialog.product?.first_image?.length"
 							:src="dialog.product.first_image"
 							:alt="dialog.product.name"
 						/>
-						<img
+						<UiImage
 							v-else
-							src="~/assets/images/default.svg"
+							src="/assets/svg/default.svg"
 							:alt="dialog.product.name"
 						/>
 					</div>
@@ -38,16 +41,16 @@
 					>
 						<template v-for="organization in dialog.organizations">
 							<div v-if="organization.id != org_id">
-								<img
-									v-if="organization.pubcard.logo"
+								<UiImage
+									v-if="organization.pubcard.logo?.length"
 									:src="organization.pubcard.logo"
 									:alt="organization.pubcard.name"
 								/>
-								<img
-									v-else
-									src="~/assets/images/default.svg"
-									:alt="organization.pubcard.name"
-								/>
+                                <UiImage
+                                    v-else
+                                    src="/assets/svg/default.svg"
+                                    :alt="organization.pubcard.name"
+                                />
 							</div>
 						</template>
 					</div>
@@ -90,7 +93,7 @@
 					<div
 						class="dialogs-item__status"
 						:class="{
-							unreaded: dialog.read_message_id < dialog.last_message?.id
+							// unreaded: dialog.read_message_id < dialog.last_message?.id
 						}"
 						v-if="dialog.last_message.date"
 					>
@@ -109,7 +112,8 @@
 
 <script>
 import { useChatStore } from "~/store/chatStore";
-import 'vue-simple-context-menu/dist/vue-simple-context-menu.css';
+// import VueSimpleContextMenu from "vue-simple-context-menu";
+// import 'vue-simple-context-menu/dist/vue-simple-context-menu.css';
 
 export default {
     props: {
@@ -132,6 +136,9 @@ export default {
     },
 
 	computed: {
+		hasUnreadMessages() {
+			return this.dialog.read_message_id < this.dialog.last_message_id;
+		},
 		hasHighlightOrg() {
 			let flag = false;
 			this.dialog.organizations.forEach(organization => {
@@ -250,6 +257,7 @@ export default {
 
     &-item {
 		position: relative;
+		z-index: 1;
         display: block;
         padding: 1.2em 2.4em;
         background-color: var(--color-white);
@@ -257,29 +265,29 @@ export default {
 
 		&.unreaded {
 			background-color: var(--color-gray-300);
-			&::before {
-				content: "";
-				position: absolute;
-				top: 1em;
-				right: 1em;
-				width: .5em;
-				height: .5em;
-				background-color: var(--color-purple);
-				border-radius: 1em;
-			}
 		}
 
-		&.is_pinned {
-			&::after {
-				content: "";
-				position: absolute;
-				right: 1em;
-				top: 1em;
-				width: 2em;
-				height: 2em;
+		&__unreaded {
+			position: absolute;
+			z-index: 2;
+			top: .8em;
+			right: .8em;
+			width: 1.2em;
+			height: 1.2em;
+			background-color: var(--color-purple);
+			border-radius: 1em;
+			border: 1px solid var(--color-gray-300);
+		}
 
-				background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='24px' viewBox='0 -960 960 960' width='24px' fill='undefined'%3E%3Cpath d='m640-480 80 80v80H520v240l-40 40-40-40v-240H240v-80l80-80v-280h-40v-80h400v80h-40v280Zm-286 80h252l-46-46v-314H400v314l-46 46Zm126 0Z'/%3E%3C/svg%3E");
-			}
+		&__pinned {
+			position: absolute;
+			z-index: 1;
+			right: 1em;
+			top: 1em;
+			width: 2em;
+			height: 2em;
+
+			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='24px' viewBox='0 -960 960 960' width='24px' fill='%236937a5'%3E%3Cpath d='m640-480 80 80v80H520v240l-40 40-40-40v-240H240v-80l80-80v-280h-40v-80h400v80h-40v280Zm-286 80h252l-46-46v-314H400v314l-46 46Zm126 0Z'/%3E%3C/svg%3E");
 		}
 
         &:hover {
@@ -288,18 +296,17 @@ export default {
 
 		&.active {
 			box-shadow: inset 4px 0px 0 0 var(--color-purple);
-			background-color: var(--color-gray-300);
+			background-color: var(--color-gray-200);
 		}
-		&.highlight {
-			&::before {
-				content: "";
-				position: absolute;
-				inset: 0;
-				width: 100%;
-				height: 100%;
-				background: rgba(105,55,165, 0.2);
-				background: linear-gradient(125deg, rgba(105,55,165,0.5) 0%,rgba(105,55,165,0.3) 20%, rgba(105,55,165,0.1) 100%);
-			}
+
+		&__highlight {
+			position: absolute;
+			z-index: -1;
+			inset: 0;
+			width: 100%;
+			height: 100%;
+			background: rgba(105,55,165, 0.2);
+			// background: linear-gradient(125deg, rgba(105,55,165,0.5) 0%,rgba(105,55,165,0.3) 20%, rgba(105,55,165,0.1) 100%);
 		}
 
         &__wrap {
@@ -484,14 +491,14 @@ export default {
                 width: 0.4em;
                 height: 0.4em;
                 border-radius: 0.4em;
-                background-color: var(--color-gray-400);
+                background-color: var(--color-gray-500);
             }
 
-			&.unreaded {
-				&::before {
-					background-color: var(--color-purple);
-				}
-			}
+			// &.unreaded {
+			// 	&::before {
+			// 		background-color: var(--color-purple);
+			// 	}
+			// }
 		}
     }
 }
