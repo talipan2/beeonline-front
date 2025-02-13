@@ -2,7 +2,7 @@ ARG NODE_VERSION=20.11
 
 FROM dockerhub.timeweb.cloud/library/node:20.11-slim as base
 
-ARG PORT=3000
+ARG PORT=3004
 
 ENV NODE_ENV=production
 
