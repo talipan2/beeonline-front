@@ -1,188 +1,212 @@
-import { defineStore } from 'pinia';
-import Api from '@/api/userApi';
-import { useSettingStore } from './settingStore';
+import { defineStore } from "pinia";
+import Api from "@/api/userApi";
+import { useSettingStore } from "./settingStore";
 
-export const useUserStore = defineStore('user', {
-  state: () => ({
-    userData: {},
-    userOrganization: {},
-    userPubCard: {
-      id: null,
-      name: null,
-      description: null,
-      logo: null,
-      gallery: null,
-      urlSite: null,
-      urlTg: null,
-      urlVk: null,
-      urlYt: null,
-      cities: null,
-      regions: null,
-      videos: null,
-      view_count: 0,
-      type: null
-    },
-    userToken: null,
-    isAuth: false,
-    location: null,
-    role: '',
-    userRoles: [],
-    settingUser: {
-      location: 1,
-      inn: null,
-      KPP: null,
-      organizationForm: null,
-      ogrn: null,
-      legalAddress: null,
-      companyName: null,
-      companyLogo: null,
-      companyDescription: null,
-      productionCountry: null,
-      selfEmployed: false,
-      registerAddress: null,
-    },
-    token: null,
-    userBalance: 1000.20,
-    userBonuses: 100000,
-    userInvoicing: null, 
-  }),
-  actions: {
-    loadFromLocalStorage() {
-      if(localStorage.getItem('role')) {
-        this.role = localStorage.getItem('role');
-      }
-    },
-    async authUser(email, password, isRemember = false) {
-      try {
-        const response = await Api.authUser(email, password);
-        if(response.data) {
-          this.isAuth = true;
-          this.userToken = response.data.access_token;
-          this.userData = response.data.user;
-          this.userRoles = response.data.user.roles;
-          this.role = response.data.user.role;
-          if(isRemember) {
-            localStorage.setItem('token', this.userToken);
-          } else {
-            sessionStorage.setItem('token', this.userToken);
-          }
-        }
-      } catch (error) {
-        throw error;
-      }
-    },
-
-    async registerUser(name, email, post, phone, role) {
-      try {
-        const response = await Api.registerUser(name, email, post, phone, role);
-        if(response.data) {
-          this.isAuth = true;
-          this.userToken = response.data.access_token;
-          localStorage.setItem('token', this.userToken);
-          this.userData = response.data.user;
-          this.userRoles = response.data.user.roles;
-          this.role = response.data.user.role;
-          this.userOrganizationId = response.data.user.organization_id;
-        }
-      } catch (error) {
-        if(error.response && error.response.data && error.response.data.message) {
-          useSettingStore().setAlert('error', error.response.data.message);
-        }
-        throw error;
-      }
-    },
-
-    async checkAuth() {
-      try {
-        const response = await Api.checkAuth();
-        if(response.data) {
-          this.isAuth = true;
-          this.userData = response.data.user;
-          // useCookie('role').value = 'customer';
-          this.userRoles = response.data.user.roles;
-          this.role = response.data.user.role;
-          this.userOrganizationId = response.data.user.organization_id;
-          if(response.data.user && response.data.user.organization) {
-            this.userOrganization = response.data.user.organization;
-          }
-          if(response.data.user && response.data.user.public_cards && response.data.user.public_cards.length > 0) {
-            
-            if(this.role === 'customer' ) {
-              const customerCard = response.data.user.public_cards.find(card => card.type === "customer");
-              console.log(customerCard)
-              this.userPubCard = customerCard;
-            } else if (this.role === 'performer') {
-              const performerCard = response.data.user.public_cards.find(card => card.type === "performer");
-              console.log(performerCard)
-              this.userPubCard = performerCard;
+export const useUserStore = defineStore("user", {
+    state: () => ({
+        userData: {},
+        userOrganization: {},
+        userPubCard: {
+            id: null,
+            name: null,
+            description: null,
+            logo: null,
+            gallery: null,
+            urlSite: null,
+            urlTg: null,
+            urlVk: null,
+            urlYt: null,
+            cities: null,
+            regions: null,
+            videos: null,
+            view_count: 0,
+            type: null,
+        },
+        userToken: null,
+        isAuth: false,
+        location: null,
+        role: "",
+        userRoles: [],
+        settingUser: {
+            location: 1,
+            inn: null,
+            KPP: null,
+            organizationForm: null,
+            ogrn: null,
+            legalAddress: null,
+            companyName: null,
+            companyLogo: null,
+            companyDescription: null,
+            productionCountry: null,
+            selfEmployed: false,
+            registerAddress: null,
+        },
+        token: null,
+        userBalance: 1000.2,
+        userBonuses: 100000,
+        userInvoicing: null,
+    }),
+    actions: {
+        loadFromLocalStorage() {
+            if (localStorage.getItem("role")) {
+                this.role = localStorage.getItem("role");
             }
-          }
-        }
-        return response.data;
-      } catch (error) {
-        this.userToken = null;
-        this.isAuth = false;
-        throw error;
-      }
-    },
-
-    async logOut() {
-      try {
-        const response = await Api.logOut();
-        if(response && response.data) {
-          this.userToken = null;
-          localStorage.removeItem('token');
-          this.isAuth = false;
-          this.userData = {};
-        }
-      } catch (error) {
-        throw error;
-      }
-    },
-    async resetPassword(data) {
-      try {
-        const response = await Api.resetPassword(data);
-        if(response.data) {
-          return response.data;
-        }
-      } catch (error) {
-        throw error;
-      }
-    },
-
-    async setUserData(data, id) {
-      try {
-        const response = await Api.setUserData(data, id);
-        if(response.data) {
-          this.userData = response.data.data;
-          return response.data.data;
-        }
-      } catch (error) {
-        throw error;
-      }
-    },
-
-    async getUserData(id) {
-      try {
-        const response = await Api.getUser(id);
-        if(response.data && response.data.data) {
-          if(response.data.data.organization) {
-            this.userOrganization = response.data.data.organization;
-          }
-          if(response.data.data.public_cards) {
-            if(this.role === 'customer') {
-              const customerCard = response.data.data.public_cards.find(card => card.type === "customer");
-              this.userPubCard = customerCard;
-            } else if (this.role === 'performer') {
-              const performerCard = response.data.data.public_cards.find(card => card.type === "performer");
-              this.userPubCard = performerCard;
+        },
+        async authUser(values, form) {
+            const data = await Api.authUser(values, form);
+            this.isAuth = true;
+            this.userToken = data.access_token;
+            this.userData = data.user;
+            this.userRoles = data.user.roles;
+            this.role = data.user.role;
+            if (values.is_remember) {
+                localStorage.setItem("token", this.userToken);
+            } else {
+                sessionStorage.setItem("token", this.userToken);
             }
-          }
-          return response.data;
-        }
-      } catch (error) {
-        throw error;
-      }
-    }
-  }
+        },
+
+        async registerUser(name, email, post, phone, role) {
+            try {
+                const response = await Api.registerUser(
+                    name,
+                    email,
+                    post,
+                    phone,
+                    role
+                );
+                if (response.data) {
+                    this.isAuth = true;
+                    this.userToken = response.data.access_token;
+                    localStorage.setItem("token", this.userToken);
+                    this.userData = response.data.user;
+                    this.userRoles = response.data.user.roles;
+                    this.role = response.data.user.role;
+                    this.userOrganizationId =
+                        response.data.user.organization_id;
+                }
+            } catch (error) {
+                if (
+                    error.response &&
+                    error.response.data &&
+                    error.response.data.message
+                ) {
+                    useSettingStore().setAlert(
+                        "error",
+                        error.response.data.message
+                    );
+                }
+                throw error;
+            }
+        },
+
+        async checkAuth() {
+            try {
+                const response = await Api.checkAuth();
+                if (response.data) {
+                    this.isAuth = true;
+                    this.userData = response.data.user;
+                    // useCookie('role').value = 'customer';
+                    this.userRoles = response.data.user.roles;
+                    this.role = response.data.user.role;
+                    this.userOrganizationId =
+                        response.data.user.organization_id;
+                    if (response.data.user && response.data.user.organization) {
+                        this.userOrganization = response.data.user.organization;
+                    }
+                    if (
+                        response.data.user &&
+                        response.data.user.public_cards &&
+                        response.data.user.public_cards.length > 0
+                    ) {
+                        if (this.role === "customer") {
+                            const customerCard =
+                                response.data.user.public_cards.find(
+                                    (card) => card.type === "customer"
+                                );
+                            console.log(customerCard);
+                            this.userPubCard = customerCard;
+                        } else if (this.role === "performer") {
+                            const performerCard =
+                                response.data.user.public_cards.find(
+                                    (card) => card.type === "performer"
+                                );
+                            console.log(performerCard);
+                            this.userPubCard = performerCard;
+                        }
+                    }
+                }
+                return response.data;
+            } catch (error) {
+                this.userToken = null;
+                this.isAuth = false;
+                throw error;
+            }
+        },
+
+        async logOut() {
+            try {
+                const response = await Api.logOut();
+                if (response && response.data) {
+                    this.userToken = null;
+                    localStorage.removeItem("token");
+                    this.isAuth = false;
+                    this.userData = {};
+                }
+            } catch (error) {
+                throw error;
+            }
+        },
+        async resetPassword(data) {
+            try {
+                const response = await Api.resetPassword(data);
+                if (response.data) {
+                    return response.data;
+                }
+            } catch (error) {
+                throw error;
+            }
+        },
+
+        async setUserData(data, id) {
+            try {
+                const response = await Api.setUserData(data, id);
+                if (response.data) {
+                    this.userData = response.data.data;
+                    return response.data.data;
+                }
+            } catch (error) {
+                throw error;
+            }
+        },
+
+        async getUserData(id) {
+            try {
+                const response = await Api.getUser(id);
+                if (response.data && response.data.data) {
+                    if (response.data.data.organization) {
+                        this.userOrganization = response.data.data.organization;
+                    }
+                    if (response.data.data.public_cards) {
+                        if (this.role === "customer") {
+                            const customerCard =
+                                response.data.data.public_cards.find(
+                                    (card) => card.type === "customer"
+                                );
+                            this.userPubCard = customerCard;
+                        } else if (this.role === "performer") {
+                            const performerCard =
+                                response.data.data.public_cards.find(
+                                    (card) => card.type === "performer"
+                                );
+                            this.userPubCard = performerCard;
+                        }
+                    }
+                    return response.data;
+                }
+            } catch (error) {
+                throw error;
+            }
+        },
+    },
 });
