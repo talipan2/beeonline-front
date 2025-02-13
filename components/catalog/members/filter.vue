@@ -22,7 +22,7 @@
           </template>
         </UiCheckboxGroup>
       </div>
-      <!-- <div class="filter__item">
+      <div class="filter__item">
         <h3 class="filter__title">Страна:</h3>
         <UiCheckboxGroup
           :options="countryList"
@@ -37,7 +37,7 @@
             <SvgoDropDownNew class="svg-m" />
           </template>
         </UiCheckboxGroup>
-      </div> -->
+      </div>
       <div class="filter__item">
         <h3 class="filter__title">Сырье:</h3>
         <UiCheckboxGroup

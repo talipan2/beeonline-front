@@ -163,6 +163,7 @@ export const useUserStore = defineStore('user', {
     },
 
     async getUserData(id) {
+      if(!id) return;
       try {
         const response = await Api.getUser(id);
         if(response.data && response.data.data) {

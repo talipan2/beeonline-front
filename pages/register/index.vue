@@ -7,6 +7,8 @@
         ref="leftSide" title="Заполнение профиля" 
         :checkList="checkList" 
         adviceTitle="Полностью заполненный профиль выше в списке поиска"
+        value-check
+        type="checkStage"
       />
       <div class="register__main">
         <RegisterDefaultRegisterComponent />

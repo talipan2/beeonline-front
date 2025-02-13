@@ -1,6 +1,6 @@
 <template>
   <div class="notifications">
-    <UiSelect class="notifications__filter" :options="filterOptions" v-model="selectedFilter" />
+    <UiSelect class="notifications__filter" :options="filterOptions" v-model="selectedFilter" name="filter" return-value/>
     <div class="notifications__list">
       <NotificationCard v-for="index in 3" :key="index" />
     </div>

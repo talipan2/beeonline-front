@@ -35,8 +35,6 @@ function goBack() {
   }
 }
 
-
-
 </script>
 
 <style lang="scss">

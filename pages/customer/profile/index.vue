@@ -86,7 +86,7 @@ const cardsData = computed(() => {
     entityCount: pubCard.value.orders_count,
     type: pubCard.value.type,
     rawMaterials: [pubCard.value.materials_own ? 'Собственное' : '', pubCard.value.materials_tolling ? 'Давальческое' : ''].filter(Boolean),
-    category: pubCard.value.categories.map(item => item.name),
+    category: pubCard.value.categories?.map(item => item.name),
   }
 })
 

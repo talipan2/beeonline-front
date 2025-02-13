@@ -22,25 +22,27 @@ export const useTariffsStore = defineStore("tariffs", {
 
   actions: {
     async getBalance(userId) {
-    try {
-      const response = await Api.getBalance(userId);
+      if(!userId) return;
+      try {
+        const response = await Api.getBalance(userId);
 
-      if(response && response.data) {
-        this.userBalance = response.data.balance;
-        this.userBonuses = response.data.bonuses;
-        this.userCurrency = response.data.currency;
-        this.isForeigner = response.data.is_foreigner;
-        this.tariffName = response.data.tariff_name;
-        this.tariffExpiredAt = response.data.tariff_expired_at;
-        this.availableUserFeatures = response.data.services;
-        this.balanceLoaded = true;
+        if(response && response.data) {
+          this.userBalance = response.data.balance;
+          this.userBonuses = response.data.bonuses;
+          this.userCurrency = response.data.currency;
+          this.isForeigner = response.data.is_foreigner;
+          this.tariffName = response.data.tariff_name;
+          this.tariffExpiredAt = response.data.tariff_expired_at;
+          this.availableUserFeatures = response.data.services;
+          this.balanceLoaded = true;
+        }
+      } catch (error) {
+        throw error;
       }
-    } catch (error) {
-      throw error;
-    }
     },
 
     async getTariffs(userId) {
+      if(!userId) return;
       try {
         const response = await Api.getTariffs(userId);
 
@@ -78,6 +80,7 @@ export const useTariffsStore = defineStore("tariffs", {
 
 
     async getTransactions(userId, page=1) {
+      if(!userId) return;
       try {
         const response = await Api.getTransactions(userId, page);
         if(response && response.data) {
@@ -89,6 +92,7 @@ export const useTariffsStore = defineStore("tariffs", {
     },
 
     async getInvoicing(userId, page = 1) {
+      if(!userId) return;
       try {
         const response = await Api.getInvoicing(userId, page);
         if(response) {

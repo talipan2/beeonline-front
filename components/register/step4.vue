@@ -74,7 +74,7 @@
       </div>
       <div class="form-group-data">
         <p class="form-group__title">Страна</p>
-        <p class="form-group__value">{{ registerData.location || '-' }}</p>
+        <p class="form-group__value">{{ registerData.countryId ? locationStore.getCountryById(registerData.countryId) : '' }}</p>
       </div>
       <div class="form-group-data">
         <p class="form-group__title">Юридический адрес</p>

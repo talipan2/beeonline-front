@@ -3,7 +3,7 @@ import axios from "axios";
 
 export default defineNuxtPlugin((nuxtApp) => {
   // if (process.server) return;
-
+  const router = useRouter();
   const config = useRuntimeConfig();
 
   if (import.meta.client) axios.defaults.baseURL = config.public.baseUrl;
@@ -27,16 +27,14 @@ export default defineNuxtPlugin((nuxtApp) => {
   axios.interceptors.response.use(
     (response) => response,
     (error) => {
+      console.log(error)
       if (error.response && error.response.status === 404) {
-        throw createError({
+        throw showError({
           statusCode: 404,
-          statusMessage: 'Page Not Found',
-          data: {
-            myCustomField: true
-          }
-        })
+          fatal: true,
+          message: error.response.data.msg
+       })
       }
-
       return Promise.reject(error);
     }
   );

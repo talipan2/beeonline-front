@@ -597,6 +597,7 @@ export const useBonusStore = defineStore("bonus", {
   }),
   actions: {
     async getBonuses(organizationId, { type } = {}) {
+        if(!organizationId) return
       try {
         const response = await commonApi.getBonuses(organizationId, { type });
         if(response.data) {
@@ -608,6 +609,7 @@ export const useBonusStore = defineStore("bonus", {
       }
     },
     async getBonusesData(organizationId) {
+        if(!organizationId) return
         try {
             const response = await commonApi.getBonusesData(organizationId);
             if(response.data) {
@@ -619,6 +621,7 @@ export const useBonusStore = defineStore("bonus", {
     },
     
     async getBonusesTransactions(organizationId, { page } = {}) {
+        if(!organizationId) return
         try {
             const response = await commonApi.getBonusesTransactions(organizationId, { page });
             if(response.data) {
@@ -631,6 +634,7 @@ export const useBonusStore = defineStore("bonus", {
     },
 
     async getAchievements(organizationId, { page, limit, type, bonus } = {}) {
+        if(!organizationId) return
         try {
             const response = await commonApi.getAchievements(organizationId, { page, limit, type, bonus });
             if(response.data) {

@@ -26,8 +26,9 @@
           v-model="searchProps.location"
           buttonLabel="Выбрать регионы"
           class="filter__location"
-          type="selectCountry"
+          :type="['selectCountry', 'selectRegions']"
           name="location"
+          modalTitle="Выберите регион"
         />
       </div>
       <div class="filter__item" ref="tutorialRef3">

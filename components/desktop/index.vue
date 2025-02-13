@@ -176,7 +176,7 @@ const pubCard = computed(() => {
     description: userStore.userPubCard.description,
     countryId: {countries: [userStore.userPubCard.country_id]},
     entityCount: userStore.userPubCard.orders_count || userStore.userPubCard.services_count,
-    rawMaterials: [userStore.userPubCard.materials_own ? 'Собственное': '', userStore.userPubCard.materials_tolling ? 'Давальческое' : ''],
+    rawMaterials: [userStore.userPubCard.materials_own ? 'Собственное': '', userStore.userPubCard.materials_tolling ? 'Давальческое' : ''].filter(Boolean),
     category: userStore.userPubCard.categories && userStore.userPubCard.categories.length ? userStore.userPubCard.categories.map(item => item.name) : []
   }
 });

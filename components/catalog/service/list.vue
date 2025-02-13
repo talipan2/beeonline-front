@@ -15,6 +15,7 @@
 </template>
 
 <script setup>
+import { useEntityStore } from '~/store/entityStore';
 import { useLocationStore } from '~/store/locationStore';
 
 
@@ -34,6 +35,7 @@ const props = defineProps({
 })
 
 const locationStore = useLocationStore();
+const entityStore = useEntityStore();
 const firstCardRef = ref(null);
 
 const emit = defineEmits(['updateServiceCardRef']);
@@ -69,7 +71,7 @@ const ordersData = computed(() => {
           value: item.product_categories && item.product_categories.length ? item.product_categories.map(item => item.name).join(' / ') : '' 
         },
         { id: 3, name: 'Наличие СТМ', value: item.is_stm ? 'Да' : 'Нет' },
-        { id: 4, name: 'Бесплатные образцы', value: item.free_samples ? 'Да' : 'Нет' },
+        { id: 4, name: 'Бесплатные образцы', value: entityStore.getEntityLabelById('freeTestSamples', item.free_samples) },
       ],
     }
   })

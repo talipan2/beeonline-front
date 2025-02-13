@@ -1,5 +1,5 @@
 <template>
-  <UiModal v-model="settingStore.chooseLocationModal" title="Выберите город" @confirm="() => confirm()"
+  <UiModal v-model="settingStore.chooseLocationModal" :title="modalTitle" @confirm="() => confirm()"
     class="choose-city-modal choose-city-modal-register modal">
     <template #header>
       <CommonLocationSearch 
@@ -140,6 +140,10 @@ const props = defineProps({
   maxSelected: {
     type: Number,
     default: null,
+  },
+  modalTitle: {
+    type: String,
+    default: 'Выберите город',
   }
 });
 
@@ -171,17 +175,12 @@ const selectedRegionIds = ref([]);
 const selectedCountryIds = ref([]);
 
 const AddCityForSearchList = (city) => {
-  if (selectedCities.value.find(selectedCity => selectedCity.id === city.id)) {
-    selectedCities.value = selectedCities.value.filter(selectedCity => selectedCity.id !== city.id);
+  if (selectedCities.value.find(selectedCity => selectedCity === city.id)) {
+    selectedCities.value = selectedCities.value.filter(selectedCity => selectedCity !== city.id);
   } else if(!selectedCities.value.includes(city.id) && selectedCities.value.length < props.maxSelected && props.maxSelected) {
-    selectedCities.value = [...selectedCities.value, { 
-      id: city.id, 
-      region: city.region, 
-      country: city.country,
-      countryId: city.countryId,
-      city: city.city,
-      selected: false,
-    }];
+    selectedCities.value.push(city.id)
+  } else if (!selectedCities.value.includes(city.id) && !props.maxSelected) {
+    selectedCities.value.push(city.id)
   }
   updateCitySelection();
 }
@@ -213,9 +212,10 @@ function toggleCitySelection(city) {
     selectedRegionIds.value = selectedRegionIds.value.filter(selectedRegionId => selectedRegionId !== selectedRegion.value.id);
   }
 
+  console.log(locationTypes.value)
   // добавление региона
   if(selectedRegion.value.cities.every(city => city.selected) && locationTypes.value.selectRegions) {
-    
+    console.log(1)
     selectedRegionIds.value.push(selectedRegion.value.id);
     selectedCities.value = selectedCities.value.filter(selectedCity => {
       return !selectedRegion.value.cities.some(city => city.id === selectedCity)
@@ -335,7 +335,6 @@ function selectAllCities(region) {
       // Удаляем страну из selectedCities, так как один регион убран
       selectedCountryIds.value = selectedCountryIds.value.filter(selectedCountryId => selectedCountryId !== selectedCountry.value.id);
     }
-
     // 3. Если регион выбран, добавляем его и все города
     if (region.selected) {
       selectedRegionIds.value.push(region.id);
@@ -344,6 +343,7 @@ function selectAllCities(region) {
       region.cities.forEach(city => {
         city.selected = true;
       });
+      selectedCities.value = selectedCities.value.filter(selectedCity => !region.cities.some(regionCity => regionCity.id === selectedCity));
     } else {
       // 4. Если регион убирается, удаляем его и все города
       selectedRegionIds.value = selectedRegionIds.value.filter(selectedRegionId => selectedRegionId !== region.id);
@@ -402,7 +402,6 @@ function updateRegionIndeterminate(region) {
   const checkedCities = region.cities.filter(city => city.selected);
 
   if (checkedCities.length > 0 && checkedCities.length < region.cities.length) {
-    region.selected = false;
     return true;
   } 
 
@@ -412,9 +411,18 @@ function updateRegionIndeterminate(region) {
 // добавление неопределенного состояния чекбоксу Стране
 function updateCountryIndeterminate(country) {
   const checkedRegions = country.regions.filter(region => region.selected);
+  const regionIndeterminate = country.regions.filter(region =>{
+    if(!region.selected) {
+     return region.cities.some(city => city.selected)
+    }
+  });
 
   if (checkedRegions.length > 0 && checkedRegions.length < country.regions.length) {
     return true;
+  }
+
+  if(regionIndeterminate.length > 0 ) {
+    return true
   }
 
   return false;

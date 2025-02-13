@@ -1,15 +1,16 @@
 <template>
   <div class="location-search">
     <UiNewDropdown placement="bottom-start" trigger="manual" class="location-search__q" ref="locationSearch" :arrow="false"  :offset="[0, 0]">
-      <UiInput class="location-search__input" name="Поиск города" :placeholder="'Поиск города'" v-model="searchValue">
-        <SvgoSearchIcon class="svg-m" />
+      <UiInput class="location-search__input" name="Поиск города" :placeholder="'Поиск города'" v-model="searchValue" @focus="handleFocus">
+        <CommonSpinner type="grow" v-if="loading"/>
+        <SvgoSearchIcon class="svg-m location-search__icon" v-if="!loading" />
       </UiInput>
       <template #content>
         <div class="location-search__content">
           <div class="location-search__result">
             <template v-for="result in searchResult" :key="result">
               <UiCheckbox
-                v-if="locationTypes.selectCity"
+                v-if="locationTypes.selectCities"
                 v-model="result.selected" 
                 :isValidated="false" 
                 class="location-search__checkbox" 
@@ -63,6 +64,7 @@ const locationSearch = ref(null);
 const locationList = locationStore.locations;
 const searchResult = ref([]);
 const searchValue = ref('');
+const loading = ref(false);
 
 function handleSearch(value) {
   const citiesList = [];
@@ -90,15 +92,26 @@ function handleSearch(value) {
     })
   })
 
-  searchResult.value = citiesList;
+  searchResult.value = citiesList.slice(0, 5);
 
   if(searchResult.value.length > 0) {
     locationSearch.value.tippy.show();
   }
 }
 
+const handleFocus = () => {
+  if(searchResult.value.length < 1) return
+  locationSearch.value.tippy.show();
+}
+
 watch(searchValue, () => {
   handleSearch(searchValue.value);
+  clearTimeout(loading.value);
+  loading.value = true;
+
+  setTimeout(() => {
+    loading.value = false;
+  }, 300)
 })
 
 </script>
@@ -119,6 +132,10 @@ watch(searchValue, () => {
     box-sizing: border-box;
   }
 
+  &__input {
+    color: #a9abac;
+  }
+
   &__dropdown {
     width: 100%;
   }
@@ -136,17 +153,38 @@ watch(searchValue, () => {
   &__result {
     display: flex;
     flex-direction: column;
-    gap: 1em;
+    // gap: 1em;
   }
 
   &__checkbox {
+
+    .checkbox__label {
+      width: 100%;
+      padding: 1em;
+    }
     span {
       font-size: 1.6rem;
+      transition: color .2s ease;
+    }
+
+    &:hover {
+      span {
+        color: var(--text-color-hover-primary);
+      }
+
+      background-color: rgba(0, 0, 0, 0.02);
+    }
+  }
+
+  &__icon {
+    path {
+      fill: #a9abac;
     }
   }
 
   &__button {
     width: fit-content;
+    padding: 1em;
   }
 }
 

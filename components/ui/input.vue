@@ -12,6 +12,8 @@
           :id="id"
           @keypress="onKeyDown"
           :maxlength="maxLength"
+          @focus="$emit('focus', $event)"
+          @blur="$emit('blur', $event)" 
         />
         <slot />
       </div>
@@ -69,7 +71,7 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue', 'focus', 'blur']);
 
 function onKeyDown(event) {
   if (props.type === 'number' && ['e', 'E', '+', '-'].includes(event.key) ) {

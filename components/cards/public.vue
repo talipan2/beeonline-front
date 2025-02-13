@@ -27,11 +27,11 @@
         </div>
         <div class="props" v-if="isPropsVisible">
           <div class="prop">
-            <p class="prop__name">Сырье:</p>
+            <p class="prop__name prop__name_type_grey">Сырье:</p>
             <p class="prop__value">{{ data.rawMaterials && data.rawMaterials.length > 0 ? data.rawMaterials.join(', ') : 'Не указано' }}</p>
           </div>
           <div class="prop">
-            <p class="prop__name">Категории:</p>
+            <p class="prop__name prop__name_type_grey">Категории:</p>
             <p class="prop__value">{{ data.category && data.category.length > 0 ? data.category[0] : 'Не указано' }}</p>
             <ModalsMoreCities
               class="prop__more"

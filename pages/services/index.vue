@@ -206,7 +206,15 @@ onMounted(() => {
     .catalog__content {
       max-width: calc(100% - 17% - 3.5rem);
     }
+
+    @include tablet {
+    .catalog__content {
+      max-width: none;
+    }
   }
+  }
+
+
 }
 
 </style>

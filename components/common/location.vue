@@ -13,7 +13,7 @@
     </div>
     <UiButton type="button" class="location__btn" variant="tertiary" size="large"
       @click="openAuthModal">{{ buttonLabel }}</UiButton>
-    <RegisterChooseCityModal v-model="selectedCities" :maxSelected="maxSelected" :type="type"/>
+    <RegisterChooseCityModal v-model="selectedCities" :maxSelected="maxSelected" :type="type" :modalTitle="modalTitle"/>
     <Field v-if="isRequired" name="selectedLocations" :rules="{atLeastOneFilled: true}" v-model="selectedCities" hidden :label="errorLabel" >
     </Field>
   </div>
@@ -58,6 +58,10 @@ const props = defineProps({
   errorLabel: {
     type: String,
     default: 'Города производства'
+  },
+  modalTitle: {
+    type: String,
+    default: 'Выберите город'
   }
 })
 

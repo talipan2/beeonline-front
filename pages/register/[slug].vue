@@ -6,7 +6,9 @@
         ref="leftSide"
         title="Заполнение профиля" 
         :checkList="checkList" 
-        adviceTitle="Полностью заполненный профиль выше в списке поиска" 
+        adviceTitle="Полностью заполненный профиль выше в списке поиска"
+        value-check
+        type="checkStage"
       />
       <div class="register__main">
         <component :is="currentComponent" v-model="data" :blockTitle="blockTitle"/>
@@ -120,7 +122,9 @@ const checkListCard = computed(() => {
     name: organizationStore.registerOrg.companyName,
     description: organizationStore.registerOrg.description,
     logo: organizationStore.registerOrg.companyLogo?.url,
-    location: organizationStore.registerOrg.locations,
+    countryId: { countries: [organizationStore.registerOrg.countryId]},
+    entityCount: 0,
+    type: userStore.role
   }
 })
 

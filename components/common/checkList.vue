@@ -20,29 +20,44 @@
     </CommonAdvice>
     <div class="checklist__collapse" v-if="valueCheck">
       <ul class="checklist__steps">
-        <div class="divider"></div>
-        <li  v-for="(step, index) in checkList" :key="index" :class="[
-          'checklist__step',
-          'checklist__chapter',
-          {
-            'checklist__step_current': step.value == 'chapter-current',
-            'checklist__step_passed': step.value !== null || step.value !== '',
-          }
-        ]">
-          {{ step.label }}
-          <ul class="checklist__substeps" >
-            <li v-for="(subStep, index) in step.checkList" :key="index" :class="[
-              'checklist__step',
-              'checklist__substep',
-              {
-                'checklist__step_passed': subStep.value !== null || subStep.value !== '',
-                'checklist__step_crossed': subStep.value == null || subStep.value == '',
-              }]"
-            >
-              {{ subStep.label }}
-            </li>
-          </ul> 
-        </li>
+        <div class="divider" v-if="type === 'checkValue'"></div>
+        <!-- checkValue -->
+        <template v-if="type === 'checkValue'">
+          <li  v-for="(step, index) in checkList" :key="index" :class="[
+            'checklist__step',
+            'checklist__chapter',
+            {
+              'checklist__step_current': step.value == 'chapter-current',
+              'checklist__step_passed': step.value !== null || step.value !== '',
+            }
+          ]">
+            {{ step.label }}
+            <ul class="checklist__substeps" >
+              <li v-for="(subStep, index) in step.checkList" :key="index" :class="[
+                'checklist__step',
+                'checklist__substep',
+                {
+                  'checklist__step_passed': subStep.value !== null || subStep.value !== '',
+                  'checklist__step_crossed': subStep.value == null || subStep.value == '',
+                }]"
+              >
+                {{ subStep.label }}
+              </li>
+            </ul> 
+          </li>
+        </template>
+        <!-- checkStage -->
+        <template v-if="type === 'checkStage'">
+          <li  v-for="(step, index) in checkList" :key="index" :class="[
+            'checklist__step',
+            {
+              'checklist__step_current': step.value.includes(currentStep),
+              'checklist__step_passed': isStepPassed(step.value),
+            }
+          ]">
+            {{ step.label }}
+          </li>
+        </template>
       </ul>
     </div>
   </div>
@@ -69,7 +84,12 @@ const props = defineProps({
   valueCheck: {
     type: Boolean,
     default: false,
-  }
+  },
+  type: {
+    type: String,
+    default: 'checkValue',
+    validator: value => ['checkValue', 'checkStage'].includes(value),
+  },
 })
 
 const route = useRoute();
@@ -102,7 +122,7 @@ const currentStep = ref(null);
 
 onMounted(() => {
   if(process.client) {
-    currentStep.value = router.currentRoute.value.fullPath;
+    currentStep.value = router.currentRoute.value.path;
   }
 })
 

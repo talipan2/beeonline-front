@@ -113,6 +113,7 @@ export const useOrganizationStore = defineStore('organization', {
     },
 
     async getPubCard(id) {
+      if(!id) return;
       try {
         const response = await Api.getPubCard(id);
         if(response.data) {
@@ -165,6 +166,7 @@ export const useOrganizationStore = defineStore('organization', {
     },
 
     async getVerificationDocuments(id) {
+      if(!id) return;
       try {
         const response = await Api.getVerificationDocuments(id);
         if(response.data) {

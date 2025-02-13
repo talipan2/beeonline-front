@@ -295,6 +295,10 @@ label:active {
     margin-right: .416em;
     // white-space: nowrap;
     width: fit-content;
+
+    &_type_grey {
+      background-color: #dadada;
+    }
   }
 
   .prop__value {
@@ -387,7 +391,7 @@ label:active {
   background-color: #fff;
 
   img {
-    padding: 8px;
+    padding: .5em;
   }
 }
 

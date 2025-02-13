@@ -150,6 +150,7 @@ export const useEntityStore = defineStore('entity', {
     },
 
     async getOrder(id) {
+      if(!id) return
       try {
         const response = await orderApi.getOrder(id);
         if(response.data) {
@@ -173,6 +174,7 @@ export const useEntityStore = defineStore('entity', {
     },
 
     async getService(id) {
+      if(!id) return
       try {
         const response = await serviceApi.getService(id);
         if(response.data) {
@@ -184,6 +186,7 @@ export const useEntityStore = defineStore('entity', {
     },
 
     async getOrganizationServices(id) {
+      if(!id) return
       try {
         const response = await organizationApi.getOrganization(id);
         if(response.data && response.data.data && response.data.data.services) {
@@ -196,6 +199,7 @@ export const useEntityStore = defineStore('entity', {
     },
 
     async getOrganizationOrders(id) {
+      if(!id) return
       try {
         const response = await organizationApi.getOrganization(id);
         if(response.data && response.data.data && response.data.data.orders) {

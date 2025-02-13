@@ -5,12 +5,12 @@
     <div :class="{ loading: isLoading }">
       <CommonSelectorListButtons :buttonsList="selectorButtons" @updateActiveButton="currentEntityType" />
         <CommonFilterSelectList :filters="filterList" @setFilters="setFilters" :activeFilters="activeFilter"/>
-        <div class="desktop-entity__list" >
-          <!-- <CommonAlerts type="warning" alert="Нет заказов с данными параметрами"/> -->
+        <div class="desktop-entity__list" v-if="currentEntityList.length">
           <template v-for="(item, index) in currentEntityList" :key="index">
             <DesktopEntityCard :data="item" />
           </template>
         </div>
+        <CommonAlerts v-else type="warning" :alert="currentEmptyList"/>
       </div>
   </div>
 </template>
@@ -46,6 +46,15 @@ const selectorButtons = [
 ];
 
 const currentButton = ref(selectorButtons[0].value); // Текущая кнопка
+
+const currentEmptyList = computed(() => {
+  switch (props.role) {
+    case('customer'):
+      return 'Нет заказов с данными параметрами'
+    case('performer'):
+      return 'Нет услуг с данными параметрами'
+  }
+}) 
 
 // функция обновления активной кнопки
 const currentEntityType = (type) => {

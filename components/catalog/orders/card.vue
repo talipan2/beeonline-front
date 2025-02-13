@@ -8,7 +8,7 @@
       <div class="props">
         <div class="prop" v-for="prop in data.data" :key="prop.id"
           :class="{ 'prop_type_text': prop.name === 'Описание' }">
-          <p class="prop__name">{{ prop.name }}:</p>
+          <p class="prop__name prop__name_type_grey">{{ prop.name }}:</p>
           <p class="prop__value " :class="{ 'prop_type_hidden': prop.name === 'Описание' }">
             <i class="flag flag_round" v-if="prop.name === 'Место производства' && data.countryId" :class="data.countryId
               ? selectFlag(data.countryId)

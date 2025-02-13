@@ -2,7 +2,7 @@
   <NuxtLayout name="catalog" title="Участники портала" :className="'members'">
     <template #header>
       <UiBreadCrumb
-        :list="[{ label: 'Главная', link: '/' }, { label: 'Каталог заказов', link: '' }]" />
+        :list="[{ label: 'Главная', link: '/' }, { label: 'Участники портала', link: '' }]" />
     </template>
     <template #leftSide>
       <CatalogMembersFilter :filter="filter" @updateFilter="handleUpdateFilter" :class="{'loading': loading}"/>

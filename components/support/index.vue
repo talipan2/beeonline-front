@@ -8,7 +8,7 @@
       <UiButton to="/support/create" class="support__button" variant="quinary" size="large">Создать запрос</UiButton>
     </div>
     <h2 class="support__title">Ваши обращения</h2>
-    <UiSelect class="support__select" :options="supportList" v-model="selectedSupport" />
+    <UiSelect class="support__select" :options="supportList" v-model="selectedSupport" :error-show="false" name="support" returnValue/>
     <div class="support__list">
       <div class="support__list-header">
         <p class="support__list-col-1">Запрос</p>
