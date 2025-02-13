@@ -70,8 +70,8 @@ export default defineNuxtConfig({
         usePrimeVue: true,
         autoImport: false,
         components: {
-            include: ['ContextMenu']
-            // prefix: 'prime'
+            include: ['ContextMenu'],
+            prefix: 'Prime',
         },
         options: {
             unstyled: true,

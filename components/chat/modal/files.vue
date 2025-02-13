@@ -1,10 +1,10 @@
 <template>
-    <Modal
+    <UiModal
+        class="modal"
         v-model="open"
         title="Отправить файл"
         :click-to-close="false"
         @beforeOpen="beforeOpen"
-        @beforeClose="beforeClose"
     >
         <template #content>
             <file-drop
@@ -21,41 +21,33 @@
 
                     <div class="my-15"></div>
                     <div class="form-group">
-                        <label>Подпись</label>
-                        <input
-							placeholder="Подпись"
-                            type="text"
-                            class="form-control"
-                            name="message"
-							v-model="message"
-                        />
+                        <label class="form-group-data form-group__title">
+                            Подпись
+                            <UiInput
+                                name="message"
+                                label="Подпись"
+                                class="form-group__value"
+                                type="text"
+                                placeholder="Подпись"
+                                v-model="message"
+                            />
+                        </label>
                     </div>
                 </template>
             </file-drop>
         </template>
         <template #footer>
-            <div class="d-flex">
-                <a
-                    href="javascript:;"
-                    @click="$refs.fileDrop.addFile"
-                    class="btn btn-primary mr-auto"
-                    >Добавить
-                </a>
-                <a
-                    href="javascript:;"
-                    @click="files = []"
-                    class="btn btn-outline-primary ml-auto"
-                    >Отмена
-                </a>
-                <a
-                    href="javascript:;"
-                    @click="$emit('submit', message)"
-                    class="btn btn-primary ml-15"
-                    >Отправить
-                </a>
+            <div class="chat-modal-files-buttons">
+                <div class="chat-modal-files-buttons-col">
+                    <UiButton type="button" @click="addFile" variant="primary">Добавить</UiButton>
+                </div>
+                <div class="chat-modal-files-buttons-col">
+                    <UiButton type="button" @click="files = []" variant="tertiary">Отмена</UiButton>
+                    <UiButton type="button" @click="$emit('submit', message)" variant="primary">Отправить</UiButton>
+                </div>
             </div>
         </template>
-    </Modal>
+    </UiModal>
 </template>
 
 <script>
@@ -86,6 +78,9 @@ export default {
     },
 
     methods: {
+        addFile() {
+            return this.$refs.fileDrop.addFile;
+        },
         beforeOpen(e) {
             this.message = this.messageValue;
             this.$emit("modal:open");
@@ -105,6 +100,9 @@ export default {
             },
             set: function (newValue) {
                 this.$emit("update:openValue", newValue);
+                if (!newValue) {
+                    this.beforeClose();
+                }
             },
         },
         files: {
@@ -119,4 +117,15 @@ export default {
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.chat-modal-files-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: space-between;
+}
+
+.chat-modal-files-buttons-col {
+    display: flex;
+    gap: 15px;
+}
+</style>

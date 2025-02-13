@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import axios from "axios";
+import { useApi } from "~/composables/useApi";
 
 export const useChatStore = defineStore("chatStore", {
     state: () => ({
@@ -9,17 +10,17 @@ export const useChatStore = defineStore("chatStore", {
     getters: {},
     actions: {
 		async loadNewResponsesCount(order_id) {
-			return await this.makeRequest(`/chat/load_new_responses_count`, {
+			return await useApi().post(`/chat/load_new_responses_count`, {
 				order_id: order_id
 			});
 		},
 		async loadNewResponses(order_id) {
-			return await this.makeRequest(`/chat/load_new_responses`, {
+			return await useApi().post(`/chat/load_new_responses`, {
 				order_id: order_id
 			});
 		},
 		async unselectPerformer(chat_id, performer_id) {
-			return await this.makeRequest(`/chat/${chat_id}/unselect_performer`, {
+			return await useApi().post(`/chat/${chat_id}/unselect_performer`, {
 				performer_id: performer_id
 			});
 		},
@@ -33,31 +34,31 @@ export const useChatStore = defineStore("chatStore", {
             this.role = role;
         },
         async getChat(chat_id, is_short = false, message_id = null) {
-            return await this.makeRequest(`/chat/${chat_id}`, {
+            return await useApi().post(`/chat/${chat_id}`, {
                 is_short: is_short,
                 message_id: message_id,
             });
         },
         async getChats(data) {
-            return await this.makeRequest("/chat/chats", data);
+            return await useApi().post("/chat/chats", data);
         },
         async searchMessages(data) {
-            return await this.makeRequest("/chat/search_messages", data);
+            return await useApi().post("/chat/search_messages", data);
         },
         async getInitChat(data) {
-            return await this.makeRequest("/chat/init", data);
+            return await useApi().post("/chat/init", data);
         },
         async setAsReaded(chat_id, data) {
-            return await this.makeRequest(`/chat/${chat_id}/read`, data);
+            return await useApi().post(`/chat/${chat_id}/read`, data);
         },
         async sendMessage(chat_id, data) {
-            return await this.makeRequest(`/chat/${chat_id}/send`, data);
+            return await useApi().post(`/chat/${chat_id}/send`, data);
         },
         async sendFirstMessage(data) {
-            return await this.makeRequest(`/chat/create`, data);
+            return await useApi().post(`/chat/create`, data);
         },
         async getMessages(chat_id, message_id = null, direction = "up") {
-            return await this.makeRequest(`/chat/${chat_id}/messages`, {
+            return await useApi().post(`/chat/${chat_id}/messages`, {
                 message_id: message_id,
                 direction: direction,
             });
@@ -65,7 +66,7 @@ export const useChatStore = defineStore("chatStore", {
 		async getOrders() {
 			if (this.role != "customer") return null;
 			if (!this.orders) {
-				this.orders = await this.makeRequest("/chat/orders");
+				this.orders = await useApi().post("/chat/orders");
 			}
 			return this.orders;
 		},
@@ -100,10 +101,10 @@ export const useChatStore = defineStore("chatStore", {
             }
         },
         async sendReview(chat_id, data) {
-            return await this.makeRequest(`/chat/${chat_id}/review`, data);
+            return await useApi().post(`/chat/${chat_id}/review`, data);
         },
         async setPinned(chat_id, pinned = true) {
-            return await this.makeRequest(`/chat/${chat_id}/set_pinned`, {
+            return await useApi().post(`/chat/${chat_id}/set_pinned`, {
 				pinned: pinned,
 			});
         },

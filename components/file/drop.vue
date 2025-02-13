@@ -50,6 +50,8 @@
 </template>
 
 <script>
+import { useSettingStore } from "~/store/settingStore";
+import { useUserStore } from "~/store/userStore";
 export default {
     props: {
         preload: {
@@ -228,33 +230,15 @@ export default {
             this.loading = false;
         },
 
-		makeRequest(data) {
-			let params = {
-				method: 'POST',
-				url: this.link,
-				data: data,
-			};
-
-			return axios(params)
-			.then((response) => {
-				return response.data;
-			})
-			.catch(function (error) {
-				console.log(error);
-				axios.post('/ajax_req/js_error', {
-					error: error,
-				});
-				showMessage('Ошибка', error.message);
-			});
-		},
-
         sendFile(new_file, callback = null) {
             let formData = new FormData();
             formData.append("file", new_file.file);
 
             let uniqueId = new_file.uid;
 
-            let request = this.makeRequest(formData)
+
+            // let request = this.makeRequest(formData)
+            let request = useSettingStore().uploadFiles(useUserStore().userData.id, formData)
 			.then((result) => {
 				console.log(uniqueId, this.files);
                 let fileIndex = this.files.findIndex((f) => f.uid === uniqueId);

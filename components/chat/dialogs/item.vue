@@ -104,7 +104,7 @@
 		</div>
 	</div>
 
-	<ContextMenu
+	<PrimeContextMenu
 		:model="contextOptions"
 		ref="contextMenu"
 	/>

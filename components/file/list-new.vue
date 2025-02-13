@@ -237,6 +237,7 @@ export default {
         position: relative;
         width: 2em;
         height: 2em;
+        font-size: 20px;
 
         &::before,
         &::after {
@@ -247,6 +248,7 @@ export default {
             height: 2px;
             background: currentColor;
             transform: rotate(45deg);
+            margin: auto;
         }
 
         &::before {
