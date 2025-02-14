@@ -1,726 +1,159 @@
-import { defineStore } from 'pinia';
+import { defineStore } from "pinia";
+import axios from "axios";
+import { useApi } from "~/composables/useApi";
 
-export const useChatStore = defineStore("chat", {
-  state: () => ({
-    chat_id: null,
-    org_id: null,
-    is_manager: null,
-    chats: [
-      {
-        id: 3572,
-        user_id: 2,
-        organization_id: 1,
-        deal_id: null,
-        deal: null,
-        product_id: null,
-        product: null,
-        status: null,
-        updated_at: "2024-10-15T06:04:35.000000Z",
-        messages: [
-          {
-            id: 9868,
-            chat_id: 3572,
-            user_id: 2,
-            user: null,
-            organization_id: 1,
-            recipient_id: null,
-            recipient_type: null,
-            sent: 1,
-            options: null,
-            text: "123123",
-            type: null,
-            files: [],
-            created_at: "2024-10-15T06:04:35.000000Z",
-            chat: null,
-          },
-        ],
-        organizations: [
-          {
-            id: 2322,
-            name: "dgg",
-            last_active_at: "2024-04-26T08:28:13.000000Z",
-            pubcard: {
-              id: 1700,
-              active: 1,
-              type: "performer",
-              name: "dgg",
-              logo: null,
-              org_id: 2322,
-            },
-            pivot: {
-              chat_id: 3572,
-              org_id: 2322,
-              org_type: "performer",
-              read_message_id: 0,
-            },
-          },
-        ],
-        read_message_id: 9868,
-      },
-      {
-        id: 3552,
-        user_id: 2,
-        organization_id: 1,
-        deal_id: null,
-        deal: {
-          id: 1,
-          chat_id: 3552,
-          stage: "creation",
-          status:
-            "\u043f\u0440\u0435\u0434\u043b\u043e\u0436\u0435\u043d\u0430 \u0441\u0434\u0435\u043b\u043a\u0430",
-          ended: false,
+export const useChatStore = defineStore("chatStore", {
+    state: () => ({
+        is_manager: null,
+		orders: null,
+    }),
+    getters: {},
+    actions: {
+		async loadNewResponsesCount(order_id) {
+			return await useApi().post(`/chat/load_new_responses_count`, {
+				order_id: order_id
+			});
+		},
+		async loadNewResponses(order_id) {
+			return await useApi().post(`/chat/load_new_responses`, {
+				order_id: order_id
+			});
+		},
+		async unselectPerformer(chat_id, performer_id) {
+			return await useApi().post(`/chat/${chat_id}/unselect_performer`, {
+				performer_id: performer_id
+			});
+		},
+        setIsManager(is_manager) {
+            this.is_manager = is_manager;
         },
-        product_id: 1,
-        product: {
-          id: 1,
-          org_id: 1,
-          type: "order",
-          name: "\u041f\u043e\u0448\u0438\u0432 \u0431\u043e\u043b\u044c\u0448\u043e\u0439 \u043f\u0430\u0440\u0442\u0438\u0438 \u043c\u0443\u0436\u0441\u043a\u0438\u0445 \u043a\u043e\u0441\u0442\u044e\u043c\u043e\u0432 ",
-          first_image: null,
+        setUserId(user_id) {
+            this.user_id = user_id;
         },
-        status: null,
-        updated_at: "2024-10-14T10:07:06.000000Z",
-        messages: [
-          {
-            id: 9864,
-            chat_id: 3552,
-            user_id: 2,
-            user: null,
-            organization_id: 1,
-            recipient_id: null,
-            recipient_type: null,
-            sent: 1,
-            options: null,
-            text: "123",
-            type: null,
-            files: [],
-            created_at: "2024-10-14T10:07:06.000000Z",
-            chat: null,
-          },
-        ],
-        organizations: [
-          {
-            id: 6,
-            name: "\u041e\u0440\u0433\u0430\u043d\u0438\u0437\u0430\u0446\u0438\u044f \u0418\u0441\u043f\u043e\u043b\u043d\u0438\u0442\u0435\u043b\u044c 101",
-            last_active_at: "2024-10-23T11:57:35.000000Z",
-            pubcard: {
-              id: 6,
-              active: 0,
-              type: "performer",
-              name: "\u041f\u041a \u041e\u0440\u0433\u0430\u043d\u0438\u0437\u0430\u0446\u0438\u044f \u0418\u0441\u043f\u043e\u043b\u043d\u0438\u0442\u0435\u043b\u044c 1",
-              logo: "uploads/6/pc/logo/00ce82d8f82913dec97f553389578efffc00e98e.png",
-              org_id: 6,
-            },
-            pivot: {
-              chat_id: 3552,
-              org_id: 6,
-              org_type: "performer",
-              read_message_id: 9864,
-            },
-          },
-        ],
-        read_message_id: 9864,
-      },
-      {
-        id: 2,
-        user_id: 2,
-        organization_id: 1,
-        deal_id: null,
-        deal: null,
-        product_id: null,
-        product: null,
-        status: null,
-        updated_at: "2024-10-14T09:53:53.000000Z",
-        messages: [
-          {
-            id: 9862,
-            chat_id: 2,
-            user_id: 2,
-            user: null,
-            organization_id: 1,
-            recipient_id: null,
-            recipient_type: null,
-            sent: 1,
-            options: null,
-            text: "test",
-            type: null,
-            files: [],
-            created_at: "2024-10-14T09:53:53.000000Z",
-            chat: null,
-          },
-        ],
-        organizations: [
-          {
-            id: 6,
-            name: "\u041e\u0440\u0433\u0430\u043d\u0438\u0437\u0430\u0446\u0438\u044f \u0418\u0441\u043f\u043e\u043b\u043d\u0438\u0442\u0435\u043b\u044c 101",
-            last_active_at: "2024-10-23T11:57:35.000000Z",
-            pubcard: {
-              id: 6,
-              active: 0,
-              type: "performer",
-              name: "\u041f\u041a \u041e\u0440\u0433\u0430\u043d\u0438\u0437\u0430\u0446\u0438\u044f \u0418\u0441\u043f\u043e\u043b\u043d\u0438\u0442\u0435\u043b\u044c 1",
-              logo: "uploads/6/pc/logo/00ce82d8f82913dec97f553389578efffc00e98e.png",
-              org_id: 6,
-            },
-            pivot: {
-              chat_id: 2,
-              org_id: 6,
-              org_type: "performer",
-              read_message_id: 9843,
-            },
-          },
-        ],
-        read_message_id: 9862,
-      },
-      {
-        id: 3573,
-        user_id: 2,
-        organization_id: 1,
-        deal_id: null,
-        deal: null,
-        product_id: null,
-        product: null,
-        status: null,
-        updated_at: "2024-10-14T09:32:48.000000Z",
-        messages: [
-          {
-            id: 9857,
-            chat_id: 3573,
-            user_id: 2,
-            user: null,
-            organization_id: 1,
-            recipient_id: null,
-            recipient_type: null,
-            sent: 1,
-            options: null,
-            text: "qwerty",
-            type: null,
-            files: [],
-            created_at: "2024-10-14T09:32:48.000000Z",
-            chat: null,
-          },
-        ],
-        organizations: [
-          {
-            id: 2332,
-            name: '\u041e\u041e\u041e "\u041a\u0410 \u0426\u0415\u041d\u0422\u0420 \u0421\u0415\u0420\u0412\u0418\u0421"',
-            last_active_at: "2024-04-24T14:35:20.000000Z",
-            pubcard: {
-              id: 1712,
-              active: 1,
-              type: "performer",
-              name: '\u041e\u041e\u041e "\u041a\u0410 \u0426\u0415\u041d\u0422\u0420 \u0421\u0415\u0420\u0412\u0418\u0421"',
-              logo: null,
-              org_id: 2332,
-            },
-            pivot: {
-              chat_id: 3573,
-              org_id: 2332,
-              org_type: "performer",
-              read_message_id: 0,
-            },
-          },
-        ],
-        read_message_id: 9858,
-      },
-      {
-        id: 3549,
-        user_id: 2,
-        organization_id: 1,
-        deal_id: null,
-        deal: null,
-        product_id: null,
-        product: null,
-        status: null,
-        updated_at: "2024-09-20T05:34:08.000000Z",
-        messages: [
-          {
-            id: 9841,
-            chat_id: 3549,
-            user_id: 2,
-            user: null,
-            organization_id: 1,
-            recipient_id: null,
-            recipient_type: null,
-            sent: 1,
-            options: null,
-            text: "test",
-            type: "manager",
-            files: [],
-            created_at: "2024-09-20T05:34:07.000000Z",
-            chat: null,
-          },
-        ],
-        organizations: [
-          {
-            id: 29,
-            name: "\u00ab\u0418\u043d\u0442\u0430\u0439-\u0422\u0435\u043a\u0441\u0442\u0438\u043b\u044c\u00bb / Intai-Textile",
-            last_active_at: "2023-04-11T12:12:53.000000Z",
-            pubcard: {
-              id: 25,
-              active: 1,
-              type: "performer",
-              name: "\u00ab\u0418\u043d\u0442\u0430\u0439-\u0422\u0435\u043a\u0441\u0442\u0438\u043b\u044c\u00bb / Intai-Textile",
-              logo: "uploads/29/pc/logo/bc7306109225f8b0f99e9cb1098d3b5c849e9eff.jpg",
-              org_id: 29,
-            },
-            pivot: {
-              chat_id: 3549,
-              org_id: 29,
-              org_type: "performer",
-              read_message_id: 0,
-            },
-          },
-        ],
-        read_message_id: 9841,
-      },
-      {
-        id: 3574,
-        user_id: 2,
-        organization_id: 1,
-        deal_id: null,
-        deal: {
-          id: 15,
-          chat_id: 3574,
-          stage: "creation",
-          status:
-            "\u043f\u0440\u0435\u0434\u043b\u043e\u0436\u0435\u043d\u0430 \u0441\u0434\u0435\u043b\u043a\u0430",
-          ended: false,
+        setRole(role) {
+            this.role = role;
         },
-        product_id: 4,
-        product: {
-          id: 4,
-          org_id: 1,
-          type: "order",
-          name: "\u041f\u043e\u0448\u0438\u0432\u043a\u0430 \u0431\u043e\u043b\u044c\u0448\u043e\u0439 \u043f\u0430\u0440\u0442\u0438\u0438 \u0431\u043b\u0443\u0437\u043e\u043a \u0434\u043b\u044f \u0432\u0435\u0434\u0443\u0449\u0435\u0433\u043e \u043e\u0442\u0435\u0447\u0435\u0441\u0442\u0432\u0435\u043d\u043d\u043e\u0433\u043e \u0431\u0440\u0435\u043d\u0434\u0430",
-          first_image: null,
+        async getChat(chat_id, is_short = false, message_id = null) {
+            return await useApi().post(`/chat/${chat_id}`, {
+                is_short: is_short,
+                message_id: message_id,
+            });
         },
-        status: null,
-        updated_at: "2024-09-19T05:26:17.000000Z",
-        messages: [
-          {
-            id: 9834,
-            chat_id: 3574,
-            user_id: 2,
-            user: null,
-            organization_id: 1,
-            recipient_id: 1,
-            recipient_type: "App\\Models\\Organization",
-            sent: 1,
-            options: {
-              buttons: [
-                {
-                  url: "https://test.bee-online.ru/deals/15",
-                  title:
-                    "\u041f\u0435\u0440\u0435\u0439\u0442\u0438 \u043a \u0441\u0434\u0435\u043b\u043a\u0435",
-                },
-              ],
-            },
-            text: "\u0412\u044b \u0441\u043e\u0437\u0434\u0430\u043b\u0438 \u0441\u0434\u0435\u043b\u043a\u0443 (\u0417\u0430\u043a\u0430\u0437\u0447\u0438\u043a 1)",
-            type: "system",
-            files: [],
-            created_at: "2024-09-19T05:26:17.000000Z",
-            chat: null,
-          },
-        ],
-        organizations: [
-          {
-            id: 2322,
-            name: "dgg",
-            last_active_at: "2024-04-26T08:28:13.000000Z",
-            pubcard: {
-              id: 1700,
-              active: 1,
-              type: "performer",
-              name: "dgg",
-              logo: null,
-              org_id: 2322,
-            },
-            pivot: {
-              chat_id: 3574,
-              org_id: 2322,
-              org_type: "performer",
-              read_message_id: 0,
-            },
-          },
-        ],
-        read_message_id: 9834,
-      },
-      {
-        id: 3551,
-        user_id: 2,
-        organization_id: 1,
-        deal_id: null,
-        deal: null,
-        product_id: 3,
-        product: {
-          id: 3,
-          org_id: 1,
-          type: "order",
-          name: "\u041f\u043e\u0448\u0438\u0432  \u043f\u0430\u0440\u0442\u0438\u0438 \u0433\u043e\u043b\u043e\u0432\u043d\u044b\u0445 \u0443\u0431\u043e\u0440\u043e\u0432 \u043f\u043e \u0420\u043e\u0441\u0441\u0438\u0438",
-          first_image: null,
+        async getChats(data) {
+            return await useApi().post("/chat/chats", data);
         },
-        status: null,
-        updated_at: "2023-12-29T08:38:37.000000Z",
-        messages: [
-          {
-            id: 9292,
-            chat_id: 3551,
-            user_id: null,
-            user: null,
-            organization_id: null,
-            recipient_id: null,
-            recipient_type: null,
-            sent: 1,
-            options: null,
-            text: "\u0412\u044b \u0441\u043e\u0437\u0434\u0430\u043b\u0438 \u0441\u0434\u0435\u043b\u043a\u0443 (\u0417\u0430\u043a\u0430\u0437\u0447\u0438\u043a 1)",
-            type: "system",
-            files: [],
-            created_at: "2023-12-29T08:38:37.000000Z",
-            chat: null,
-          },
-        ],
-        organizations: [
-          {
-            id: 6,
-            name: "\u041e\u0440\u0433\u0430\u043d\u0438\u0437\u0430\u0446\u0438\u044f \u0418\u0441\u043f\u043e\u043b\u043d\u0438\u0442\u0435\u043b\u044c 101",
-            last_active_at: "2024-10-23T11:57:35.000000Z",
-            pubcard: {
-              id: 6,
-              active: 0,
-              type: "performer",
-              name: "\u041f\u041a \u041e\u0440\u0433\u0430\u043d\u0438\u0437\u0430\u0446\u0438\u044f \u0418\u0441\u043f\u043e\u043b\u043d\u0438\u0442\u0435\u043b\u044c 1",
-              logo: "uploads/6/pc/logo/00ce82d8f82913dec97f553389578efffc00e98e.png",
-              org_id: 6,
-            },
-            pivot: {
-              chat_id: 3551,
-              org_id: 6,
-              org_type: "performer",
-              read_message_id: 9292,
-            },
-          },
-        ],
-        read_message_id: 9292,
-      },
-    ],
-    messages: [
-      [
-        {
-          id: 9831,
-          chat_id: 3572,
-          user_id: 2,
-          user: {
-            id: 2,
-            org_id: 1,
-            name: "\u0417\u0430\u043a\u0430\u0437\u0447\u0438\u043a 1",
-          },
-          organization_id: 1,
-          recipient_id: null,
-          recipient_type: null,
-          sent: 1,
-          options: null,
-          text: "123",
-          type: null,
-          files: [],
-          created_at: "2024-09-19T05:17:57.000000Z",
-          chat: null,
+        async searchMessages(data) {
+            return await useApi().post("/chat/search_messages", data);
         },
-        {
-          id: 9858,
-          chat_id: 3572,
-          user_id: 2,
-          user: {
-            id: 2,
-            org_id: 1,
-            name: "\u0417\u0430\u043a\u0430\u0437\u0447\u0438\u043a 1",
-          },
-          organization_id: 1,
-          recipient_id: null,
-          recipient_type: null,
-          sent: 1,
-          options: null,
-          text: "111",
-          type: null,
-          files: [],
-          created_at: "2024-10-14T09:34:05.000000Z",
-          chat: null,
+        async getInitChat(data) {
+            return await useApi().post("/chat/init", data);
         },
-        {
-          id: 9860,
-          chat_id: 3572,
-          user_id: 2,
-          user: {
-            id: 2,
-            org_id: 1,
-            name: "\u0417\u0430\u043a\u0430\u0437\u0447\u0438\u043a 1",
-          },
-          organization_id: 1,
-          recipient_id: null,
-          recipient_type: null,
-          sent: 1,
-          options: null,
-          text: "qwe",
-          type: null,
-          files: [],
-          created_at: "2024-10-14T09:39:23.000000Z",
-          chat: null,
+        async setAsReaded(chat_id, data) {
+            return await useApi().post(`/chat/${chat_id}/read`, data);
         },
-        {
-          id: 9861,
-          chat_id: 3572,
-          user_id: 2,
-          user: {
-            id: 2,
-            org_id: 1,
-            name: "\u0417\u0430\u043a\u0430\u0437\u0447\u0438\u043a 1",
-          },
-          organization_id: 1,
-          recipient_id: null,
-          recipient_type: null,
-          sent: 1,
-          options: null,
-          text: "test",
-          type: null,
-          files: [
-            {
-              id: 2300,
-              url: "/storage/uploads/1/chat_message/1a8b8601a147e359003cc50af37f8a379243c282.png",
-              name: "Frame 33478.png",
-              ext: "png",
-              loaded: true,
-            },
-          ],
-          created_at: "2024-10-14T09:39:42.000000Z",
-          chat: null,
+        async sendMessage(chat_id, data) {
+            return await useApi().post(`/chat/${chat_id}/send`, data);
         },
-        {
-          id: 9863,
-          chat_id: 3572,
-          user_id: 3,
-          user: {
-            id: 2,
-            org_id: 1,
-            name: "\u0417\u0430\u043a\u0430\u0437\u0447\u0438\u043a 1",
-          },
-          organization_id: 10,
-          recipient_id: null,
-          recipient_type: null,
-          sent: 1,
-          options: null,
-          text: "qwe",
-          type: null,
-          files: [],
-          created_at: "2024-10-14T10:00:52.000000Z",
-          chat: null,
+        async sendFirstMessage(data) {
+            return await useApi().post(`/chat/create`, data);
         },
-        {
-          id: 9865,
-          chat_id: 3572,
-          user_id: 3,
-          user: {
-            id: 2,
-            org_id: 1,
-            name: "\u0417\u0430\u043a\u0430\u0437\u0447\u0438\u043a 1",
-          },
-          organization_id: 10,
-          recipient_id: null,
-          recipient_type: null,
-          sent: 1,
-          options: null,
-          text: "444",
-          type: null,
-          files: [],
-          created_at: "2024-10-14T10:07:50.000000Z",
-          chat: null,
+        async getMessages(chat_id, message_id = null, direction = "up") {
+            return await useApi().post(`/chat/${chat_id}/messages`, {
+                message_id: message_id,
+                direction: direction,
+            });
         },
-        {
-          id: 9867,
-          chat_id: 3572,
-          user_id: 2,
-          user: {
-            id: 2,
-            org_id: 1,
-            name: "\u0417\u0430\u043a\u0430\u0437\u0447\u0438\u043a 1",
-          },
-          organization_id: 1,
-          recipient_id: null,
-          recipient_type: null,
-          sent: 1,
-          options: null,
-          text: "123",
-          type: null,
-          files: [],
-          created_at: "2024-10-15T06:04:11.000000Z",
-          chat: null,
+		async getOrders() {
+			if (this.role != "customer") return null;
+			if (!this.orders) {
+				this.orders = await useApi().post("/chat/orders");
+			}
+			return this.orders;
+		},
+
+        pluralize(number, forms) {
+            const cases = [2, 0, 1, 1, 1, 2];
+            number = Math.round(number);
+            return forms[
+                number % 100 > 4 && number % 100 < 20
+                    ? 2
+                    : cases[number % 10 < 5 ? number % 10 : 5]
+            ];
         },
-        {
-          id: 9868,
-          chat_id: 3572,
-          user_id: 2,
-          user: {
-            id: 2,
-            org_id: 1,
-            name: "\u0417\u0430\u043a\u0430\u0437\u0447\u0438\u043a 1",
-          },
-          organization_id: 1,
-          recipient_id: null,
-          recipient_type: null,
-          sent: 1,
-          options: null,
-          text: "123123",
-          type: null,
-          files: [],
-          created_at: "2024-10-15T06:04:35.000000Z",
-          chat: null,
+        getProductType(product) {
+            switch (product.type) {
+                case "service":
+                    return "Услуга";
+                case "order":
+                    return "Заказ";
+                default:
+                    return "";
+            }
         },
-      ],
-      [
-        {
-          id: 9832,
-          chat_id: 3573,
-          user_id: 2,
-          user: {
-            id: 2,
-            org_id: 1,
-            name: "\u0417\u0430\u043a\u0430\u0437\u0447\u0438\u043a 1",
-          },
-          organization_id: 1,
-          recipient_id: null,
-          recipient_type: null,
-          sent: 1,
-          options: null,
-          text: "123",
-          type: null,
-          files: [],
-          created_at: "2024-09-19T05:21:00.000000Z",
-          chat: null,
+        getOrgType(org) {
+            switch (org.pivot?.role) {
+                case "customer":
+                    return "Заказчик";
+                case "performer":
+                    return "Исполнитель";
+                default:
+                    return null;
+            }
         },
-        {
-          id: 9857,
-          chat_id: 3573,
-          user_id: 2,
-          user: {
-            id: 2,
-            org_id: 1,
-            name: "\u0417\u0430\u043a\u0430\u0437\u0447\u0438\u043a 1",
-          },
-          organization_id: 1,
-          recipient_id: null,
-          recipient_type: null,
-          sent: 1,
-          options: null,
-          text: "qwerty",
-          type: null,
-          files: [],
-          created_at: "2024-10-14T09:32:48.000000Z",
-          chat: null,
+        async sendReview(chat_id, data) {
+            return await useApi().post(`/chat/${chat_id}/review`, data);
         },
-        {
-          id: 9878,
-          chat_id: 3572,
-          user_id: 2,
-          user: {
-              id: 2,
-              org_id: 1,
-              name: "\u0417\u0430\u043a\u0430\u0437\u0447\u0438\u043a 1"
-          },
-          organization_id: 1,
-          recipient_id: null,
-          recipient_type: null,
-          sent: 1,
-          options: null,
-          text: "\u0417\u0430\u043a\u0430\u0437\u0447\u0438\u043a 1 \u043e\u0441\u0442\u0430\u0432\u0438\u043b \u043e\u0442\u0437\u044b\u0432",
-          type: "system",
-          files: [],
-          created_at: "2024-11-14T12:15:03.000000Z",
-          chat: null
-      },
-      {
-        id: 9301,
-        chat_id: 3552,
-        user_id: null,
-        user: null,
-        organization_id: null,
-        recipient_id: 1,
-        recipient_type: "App\\Models\\Organization",
-        sent: 1,
-        options: null,
-        text: "\u0412\u044b \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u043b\u0438 \u0434\u043e\u0433\u043e\u0432\u043e\u0440 (\u0417\u0430\u043a\u0430\u0437\u0447\u0438\u043a 1)",
-        type: "system",
-        files: [],
-        created_at: "2024-01-09T08:55:34.000000Z",
-        chat: null
+        async setPinned(chat_id, pinned = true) {
+            return await useApi().post(`/chat/${chat_id}/set_pinned`, {
+				pinned: pinned,
+			});
+        },
+
+        async makeRequest(
+            url,
+            data = null,
+            method = "post",
+            abortController = null
+        ) {
+            let params = {
+                method: method,
+                url: url,
+                data: data,
+            };
+
+            if (abortController) {
+                params.signal = abortController.signal;
+            }
+
+            return axios(params)
+                .then((response) => {
+                    return response.data;
+                })
+                .catch(function (error) {
+					let data = {};
+
+                    if (error.response) {
+						if (error.response.data) {
+							data = {
+								message: error.response.data.message,
+								file: error.response.data.file,
+								line: error.response.data.line,
+							}
+						}
+                    }
+
+					data.error = error;
+
+					// axios.post("/ajax_req/js_error", {
+                    //     channel: "chat",
+                    //     error: data,
+                    // });
+
+                    showMessage(
+                        "Ошибка",
+                        error.response?.data?.message || error.message
+                    );
+                });
+        },
     },
-    {
-        id: 9304,
-        chat_id: 3552,
-        user_id: null,
-        user: null,
-        organization_id: null,
-        recipient_id: 1,
-        recipient_type: "App\\Models\\Organization",
-        sent: 1,
-        options: null,
-        text: "\u041a\u043e\u043d\u0442\u0440\u0430\u0433\u0435\u043d\u0442 \u043f\u043e\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u043b \u0434\u043e\u0433\u043e\u0432\u043e\u0440",
-        type: "system",
-        files: [],
-        created_at: "2024-01-09T08:55:36.000000Z",
-        chat: null
-    },
-    {
-        id: 9305,
-        chat_id: 3552,
-        user_id: 1,
-        user: {
-            id: 1,
-            org_id: null,
-            name: "admin"
-        },
-        organization_id: null,
-        recipient_id: null,
-        recipient_type: null,
-        sent: 1,
-        options: null,
-        text: "\u041c\u0435\u043d\u0435\u0434\u0436\u0435\u0440 \u043e\u0434\u043e\u0431\u0440\u0438\u043b \u0441\u0434\u0435\u043b\u043a\u0443",
-        type: "system",
-        files: [],
-        created_at: "2024-01-09T08:58:25.000000Z",
-        chat: null
-    },
-    {
-        id: 9306,
-        chat_id: 3552,
-        user_id: null,
-        user: null,
-        organization_id: null,
-        recipient_id: 1,
-        recipient_type: "App\\Models\\Organization",
-        sent: 1,
-        options: null,
-        text: "\u041c\u0435\u043d\u0435\u0434\u0436\u0435\u0440 \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u043b \u0441\u0447\u0435\u0442",
-        type: "system",
-        files: [],
-        created_at: "2024-01-09T08:58:34.000000Z",
-        chat: null
-    },
-    {
-        id: 9307,
-        chat_id: 3552,
-        user_id: null,
-        user: null,
-        organization_id: null,
-        recipient_id: 1,
-        recipient_type: "App\\Models\\Organization",
-        sent: 1,
-        options: null,
-        text: "\u0412\u044b \u0441\u043e\u043e\u0431\u0449\u0438\u043b\u0438, \u0447\u0442\u043e \u043f\u0440\u043e\u0438\u0437\u0432\u0435\u043b\u0438 \u043e\u043f\u043b\u0430\u0442\u0443 (\u0417\u0430\u043a\u0430\u0437\u0447\u0438\u043a 1)",
-        type: "system",
-        files: [],
-        created_at: "2024-01-09T08:58:38.000000Z",
-        chat: null
-    },
-      ],
-    ],
-  }),
 });

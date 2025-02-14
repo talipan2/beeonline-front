@@ -28,13 +28,9 @@ const confirm = () => {
   font-family: "lato", sans-serif;
   font-size: 1rem;
 
-  .modal-dialog {
-    max-width: 40em;
-  }
-
   .modal-content {
+    max-width: 40em;
     padding: 2em;
-    width: 100%;
   }
 
   .modal-title {
@@ -46,7 +42,7 @@ const confirm = () => {
 
 @include tablet {
   .auth-modal {
-    .modal-dialog {
+    .modal-content {
       max-width: none;
       width: 40%;
     }
@@ -55,7 +51,7 @@ const confirm = () => {
 
 @include mobile {
   .auth-modal {
-    .modal-dialog {
+    .modal-content {
       width: 60%;
     }
   }
@@ -63,9 +59,9 @@ const confirm = () => {
 
 @include small-mobile {
   .auth-modal {
-    .modal-dialog {
+    .modal-content {
       width: 96%;
-      
+
     }
   }
 }

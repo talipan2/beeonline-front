@@ -33,9 +33,10 @@ const loading = ref(false);
 const formatData = computed(() => {
   if(!data.value) return []
   return {
+      id: data.value.id,
       props: [
         {
-          name: 'Категории:', 
+          name: 'Категории:',
           value: data.value.product_categories && data.value.product_categories.length ? data.value.product_categories : [],
           link: 'categories',
         },

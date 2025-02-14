@@ -1,395 +1,613 @@
 <template>
-  <div class="dialogs" :class="{'dialogs_loading': loading}">
-    <div class="dialogs__head">
-      <div class="dialogs__search">
-        <div class="dialogs__search-wrap">
-          <input type="text" class="dialogs__search-input" placeholder="Искать контакт или чат" v-model="search"
-            @input="onSearch" />
-          <div v-if="search.length" class="dialogs__search-reset" @click="resetSearch"></div>
-        </div>
-        <div class="dialogs__search-type" v-if="search.length">
-          <label :class="{
-            active: searchType === 'dialogs'
-          }">
-            <span>Диалоги</span>
-            <input type="radio" value="dialogs" v-model="searchType" />
-          </label>
-          <label :class="{
-            active: searchType === 'messages'
-          }">
-            <span>Сообщения</span>
-            <input type="radio" value="messages" v-model="searchType" />
-          </label>
-        </div>
-      </div>
-    </div>
-    <div class="dialogs__list" @scroll="onScroll" ref="dialogs">
-      <template v-if="dialogs.length">
-        <template v-for="(dialog, index) in dialogs" :key="index">
-          <ChatDialogsItem :dialog="dialog" :chat_id="chat_id" @change:chat="$emit('change:chat', $event)"
-            @change:chat-by-message="$emit('change:chat-by-message', $event)" />
-        </template>
-      </template>
-      <template v-else-if="!loading">
-        <div class="dialogs__text" v-if="search.length">
-          <span v-if="searchType === 'dialogs'">Диалоги не найдены</span>
-          <span v-else-if="searchType === 'messages'">Сообщения не найдены</span>
-        </div>
-      </template>
-    </div>
-  </div>
+	<div class="dialogs"
+		:class="{
+			'dialogs_loading': loading
+		}"
+	>
+		<div class="dialogs__head">
+			<!-- <div class="dialogs__head-title">Чаты</div> -->
+			<!-- <a href="javascript:;" class="dialogs__head-link"
+				><i class="icon-plus"></i> Новый чат</a
+			>
+			<a href="javascript:;" class="dialogs__head-link"
+				><i class="icon-filter"></i> Фильтр</a
+			> -->
+			<div class="dialogs__order mb-20" v-if="ordersOptions?.length">
+				<div class="dialogs__order-title">Фильтр чата</div>
+				<Multiselect
+					v-model="order"
+					:options="ordersOptions"
+				>
+					<!-- <template v-slot:singlelabel="{ value }">
+						<div class="multiselect-single-label">
+						<img class="character-label-icon" :src="value.icon"> {{ value.name }}
+						</div>
+					</template>
+
+					<template v-slot:option="{ option }">
+						<img class="character-option-icon" :src="option.icon"> {{ option.name }}
+					</template> -->
+				</Multiselect>
+			</div>
+			<div class="dialogs__search">
+				<div class="dialogs__search-wrap">
+					<input
+						type="text"
+						class="dialogs__search-input"
+						placeholder="Искать контакт или чат"
+						v-model="search"
+						@input="onSearch"
+					/>
+					<div
+						v-if="!search.length"
+						class="dialogs__search-icon"
+					></div>
+					<div
+						v-if="search.length"
+						class="dialogs__search-reset"
+						@click="resetSearch"
+					></div>
+				</div>
+				<div class="dialogs__search-type" v-if="search.length">
+					<label :class="{
+						active: searchType === 'dialogs'
+					}">
+						<span>Диалоги</span>
+						<input type="radio" value="dialogs" v-model="searchType" />
+					</label>
+					<label :class="{
+						active: searchType === 'messages'
+					}">
+						<span>Сообщения</span>
+						<input type="radio" value="messages" v-model="searchType" />
+					</label>
+				</div>
+			</div>
+		</div>
+
+		<div class="dialogs__list" @scroll="onScroll" ref="dialogs">
+			<template v-if="dialogs.length">
+				<template v-for="dialog in dialogs" :key="dialog">
+					<chat-dialogs-item
+						:dialog="dialog"
+						:chat_id="chat_id"
+						@change:chat="$emit('change:chat', $event)"
+						@change:chat-by-message="$emit('change:chat-by-message', $event)"
+						@change:pinned="dialog.is_pinned = $event"
+						v-if="dialog.is_pinned"
+					/>
+				</template>
+				<template v-for="dialog in dialogs" :key="dialog">
+					<chat-dialogs-item
+						:dialog="dialog"
+						:chat_id="chat_id"
+						@change:chat="$emit('change:chat', $event)"
+						@change:chat-by-message="$emit('change:chat-by-message', $event)"
+						@change:pinned="dialog.is_pinned = $event"
+						v-if="dialog.is_priority && !dialog.is_pinned"
+					/>
+				</template>
+				<template v-for="dialog in dialogs" :key="dialog">
+					<chat-dialogs-item
+						:dialog="dialog"
+						:chat_id="chat_id"
+						@change:chat="$emit('change:chat', $event)"
+						@change:chat-by-message="$emit('change:chat-by-message', $event)"
+						@change:pinned="dialog.is_pinned = $event"
+						v-if="!dialog.is_pinned && !dialog.is_priority"
+					/>
+				</template>
+			</template>
+			<template v-else-if="!loading">
+				<div class="dialogs__text" v-if="search.length">
+					<span v-if="searchType === 'dialogs'">Диалоги не найдены</span>
+					<span v-else-if="searchType === 'messages'">Сообщения не найдены</span>
+				</div>
+			</template>
+		</div>
+		<a href="javascript:;" class="btn btn-primary dialogs__lifecycle" @click="loadNewResponses" v-if="order?.lifecycle_status === 'yellow'">
+			Получить новые отклики
+		</a>
+	</div>
 </template>
 
-<script setup>
-import { useChatStore } from '~/store/chatStore';
+<style src="@vueform/multiselect/themes/default.css"></style>
 
+<script>
+import { useChatStore } from "~/store/chatStore";
+import { useChannelsStore } from "~/store/channelsStore";
+import { useUserStore } from "~/store/userStore";
+import ChatDialogsItem from "./item.vue";
+import Multiselect from "@vueform/multiselect";
 
+export default {
+	components: {
+		ChatDialogsItem,
+		Multiselect,
+	},
+	emits: ["change:chat", "change:chat-by-message"],
+    props: {
+        chat_id: {
+            type: Number,
+            default: null,
+        },
+    },
+    data: () => ({
+		search: '',
+		searchType: 'dialogs',
+		searching: false,
+		searchTimeout: null,
+		searchMinLength: 3,
 
-const chatStore = useChatStore();
+        dialogs: [],
+        loading_dialogs: [],
 
-const dialogs = computed(() =>
-  chatStore.chats.map(chat => ({
-    ...chat,
-    last_message: {...chat.messages[0], date: new Date(chat.messages[0].created_at)} || null
-  }))
-);
-const search = ref('')
-// const dialogs = [
-//   {
-//     id: 3572,
-//     user_id: 2,
-//     organization_id: 1,
-//     deal_id: null,
-//     deal: null,
-//     product_id: null,
-//     product: null,
-//     status: null,
-//     updated_at: "2024-10-15T06:04:35.000000Z",
-//     messages: [
-//       {
-//         id: 9868,
-//         chat_id: 3572,
-//         user_id: 2,
-//         user: null,
-//         organization_id: 1,
-//         recipient_id: null,
-//         recipient_type: null,
-//         sent: 1,
-//         options: null,
-//         text: "123123",
-//         type: null,
-//         files: [],
-//         created_at: "2024-10-15T06:04:35.000000Z",
-//         chat: null
-//       }
-//     ],
-//     organizations: [
-//       {
-//         id: 2322,
-//         name: "dgg",
-//         last_active_at: "2024-04-26T08:28:13.000000Z",
-//         pubcard: {
-//           id: 1700,
-//           active: 1,
-//           type: "performer",
-//           name: "dgg",
-//           logo: null,
-//           org_id: 2322
-//         },
-//         pivot: {
-//           chat_id: 3572,
-//           org_id: 2322,
-//           org_type: "performer",
-//           read_message_id: 0
-//         }
-//       }
-//     ],
-//     read_message_id: 9868
-//   },
-//   {
-//     id: 3552,
-//     user_id: 2,
-//     organization_id: 1,
-//     deal_id: null,
-//     deal: {
-//       id: 1,
-//       chat_id: 3552,
-//       stage: "creation",
-//       status: "\u043f\u0440\u0435\u0434\u043b\u043e\u0436\u0435\u043d\u0430 \u0441\u0434\u0435\u043b\u043a\u0430",
-//       ended: false
-//     },
-//     product_id: 1,
-//     product: {
-//       id: 1,
-//       org_id: 1,
-//       type: "order",
-//       name: "\u041f\u043e\u0448\u0438\u0432 \u0431\u043e\u043b\u044c\u0448\u043e\u0439 \u043f\u0430\u0440\u0442\u0438\u0438 \u043c\u0443\u0436\u0441\u043a\u0438\u0445 \u043a\u043e\u0441\u0442\u044e\u043c\u043e\u0432 ",
-//       first_image: null
-//     },
-//     status: null,
-//     updated_at: "2024-10-14T10:07:06.000000Z",
-//     messages: [
-//       {
-//         id: 9864,
-//         chat_id: 3552,
-//         user_id: 2,
-//         user: null,
-//         organization_id: 1,
-//         recipient_id: null,
-//         recipient_type: null,
-//         sent: 1,
-//         options: null,
-//         text: "123",
-//         type: null,
-//         files: [],
-//         created_at: "2024-10-14T10:07:06.000000Z",
-//         chat: null
-//       }
-//     ],
-//     organizations: [
-//       {
-//         id: 6,
-//         name: "\u041e\u0440\u0433\u0430\u043d\u0438\u0437\u0430\u0446\u0438\u044f \u0418\u0441\u043f\u043e\u043b\u043d\u0438\u0442\u0435\u043b\u044c 101",
-//         last_active_at: "2024-10-23T11:57:35.000000Z",
-//         pubcard: {
-//           id: 6,
-//           active: 0,
-//           type: "performer",
-//           name: "\u041f\u041a \u041e\u0440\u0433\u0430\u043d\u0438\u0437\u0430\u0446\u0438\u044f \u0418\u0441\u043f\u043e\u043b\u043d\u0438\u0442\u0435\u043b\u044c 1",
-//           logo: "uploads\/6\/pc\/logo\/00ce82d8f82913dec97f553389578efffc00e98e.png",
-//           org_id: 6
-//         },
-//         pivot: {
-//           chat_id: 3552,
-//           org_id: 6,
-//           org_type: "performer",
-//           read_message_id: 9864
-//         }
-//       }
-//     ],
-//     read_message_id: 9864
-//   },
-//   {
-//     id: 2,
-//     user_id: 2,
-//     organization_id: 1,
-//     deal_id: null,
-//     deal: null,
-//     product_id: null,
-//     product: null,
-//     status: null,
-//     updated_at: "2024-10-14T09:53:53.000000Z",
-//     messages: [
-//       {
-//         id: 9862,
-//         chat_id: 2,
-//         user_id: 2,
-//         user: null,
-//         organization_id: 1,
-//         recipient_id: null,
-//         recipient_type: null,
-//         sent: 1,
-//         options: null,
-//         text: "test",
-//         type: null,
-//         files: [],
-//         created_at: "2024-10-14T09:53:53.000000Z",
-//         chat: null
-//       }
-//     ],
-//     organizations: [
-//       {
-//         id: 6,
-//         name: "\u041e\u0440\u0433\u0430\u043d\u0438\u0437\u0430\u0446\u0438\u044f \u0418\u0441\u043f\u043e\u043b\u043d\u0438\u0442\u0435\u043b\u044c 101",
-//         last_active_at: "2024-10-23T11:57:35.000000Z",
-//         pubcard: {
-//           id: 6,
-//           active: 0,
-//           type: "performer",
-//           name: "\u041f\u041a \u041e\u0440\u0433\u0430\u043d\u0438\u0437\u0430\u0446\u0438\u044f \u0418\u0441\u043f\u043e\u043b\u043d\u0438\u0442\u0435\u043b\u044c 1",
-//           logo: "uploads\/6\/pc\/logo\/00ce82d8f82913dec97f553389578efffc00e98e.png",
-//           org_id: 6
-//         },
-//         pivot: {
-//           chat_id: 2,
-//           org_id: 6,
-//           org_type: "performer",
-//           read_message_id: 9843
-//         }
-//       }
-//     ],
-//     read_message_id: 9862
-//   }
-// ]
+        loading: false,
+        noMoreChats: false,
 
+		order: null,
+		lifecycle_status: 'green',
+		orders: [],
+		newResponses: 0,
+    }),
+
+    mounted() {
+        this.loadChats();
+		useChatStore().getOrders();
+
+        useChannelsStore()
+            .orgChannel.stopListening("NewChatMessage")
+            .listen("NewChatMessage", (event) => {
+                this.newMessage(event.message);
+            }).listen("ChatMessageReaded", (event) => {
+				 let index = this.dialogs.findIndex(
+					(dialog) => dialog.id == event.chat_id
+				);
+				if (index === -1) return;
+				let dialog = this.dialogs[index];
+
+				if (event.organization_id == useChatStore().org_id) {
+					if (dialog.read_message_id < event.message_id) {
+						dialog.read_message_id = event.message_id;
+					}
+				} else {
+					let organization = dialog.organizations.find(
+						(org) => org.id == event.organization_id
+					);
+					if (!organization) return;
+					if (organization.pivot.read_message_id < event.message_id) {
+						organization.pivot.read_message_id = event.message_id;
+					}
+				}
+			});
+    },
+
+    methods: {
+		changePinned(chat_id, is_pinned) {
+			console.log('changePinned');
+			let index = this.dialogs.findIndex(
+				(dialog) => dialog.id == chat_id
+			);
+			if (index === -1) return;
+			let dialog = this.dialogs[index];
+			dialog.is_pinned = is_pinned;
+		},
+		loadNewResponsesCount() {
+			if (!this.order) return;
+			this.newResponses = 0;
+			useChatStore().loadNewResponsesCount(this.order.id).then((data) => {
+				this.newResponses = data || 0;
+			});
+		},
+		loadNewResponses() {
+			this.loading = true;
+			useChatStore().loadNewResponses(this.order.id).then(() => {
+				this.newResponses = 0;
+				this.order.lifecycle_status = 'green';
+				this.loading = false;
+				this.runSearch();
+			}).finally(() => {
+				this.loading = false;
+			});
+		},
+        addDialog(dialog, to_end = true) {
+            dialog.last_message = dialog.messages[0] || null;
+            if (dialog.last_message) {
+                dialog.last_message.date = new Date(
+                    dialog.last_message.created_at
+                );
+            }
+            delete dialog.messages;
+            if (to_end) {
+                this.dialogs.push(dialog);
+            } else {
+                this.dialogs.unshift(dialog);
+            }
+        },
+        newMessage(message) {
+            let index = this.dialogs.findIndex(
+                (dialog) => dialog.id == message.chat_id
+            );
+
+            if (index == -1) {
+                if (this.loading_dialogs.includes(message.chat_id)) {
+                    return;
+                }
+                this.loading_dialogs.push(message.chat_id);
+
+                useChatStore()
+                    .getChat(message.chat_id, true)
+                    .then((response) => {
+                        const indexToRemove = this.loading_dialogs.indexOf(
+                            message.chat_id
+                        );
+                        if (indexToRemove !== -1) {
+                            this.loading_dialogs.splice(indexToRemove, 1);
+                        }
+                        this.addDialog(response, false);
+                    });
+
+                return;
+            }
+
+            message.date = new Date(message.created_at);
+            this.dialogs[index].last_message = message;
+            let dialog = this.dialogs.splice(index, 1)[0];
+            this.dialogs.unshift(dialog);
+
+			if (message.organization_id == useChatStore().org_id) {
+				if (dialog.read_message_id < message.id) {
+					dialog.read_message_id = message.id;
+				}
+			}
+        },
+
+        loadChats(clear = false) {
+            if (this.loading || this.noMoreChats) return;
+
+			if (!this.search.length) {
+				this.searchType = 'dialogs';
+			}
+
+            this.loading = true;
+            const lastMessageAt = this.dialogs.length
+                ? this.dialogs[this.dialogs.length - 1].last_message_at
+                : null;
+
+				console.log(lastMessageAt);
+			if (this.searchType === 'dialogs') {
+				const response = useChatStore()
+				.getChats({
+					last_message_at: lastMessageAt,
+					search: this.search?.length >= this.searchMinLength ? this.search : '',
+					order_id: this.order?.id,
+					lifecycle_status: this.lifecycle_status,
+				})
+				.then((data) => {
+					if (clear) {
+						this.dialogs = [];
+					}
+					if (data.length < 20) {
+						this.noMoreChats = true;
+					}
+					if (data.length > 0) {
+						data.forEach((dialog) => {
+							this.addDialog(dialog);
+						});
+						this.$nextTick(this.checkIfScrollable);
+					}
+				})
+				.finally(() => {
+					this.loading = false;
+				});
+			} else {
+				const response = useChatStore()
+				.searchMessages({
+					last_created_at: lastMessageAt,
+					search: this.search?.length >= this.searchMinLength ? this.search : '',
+					order_id: this.order?.id,
+					lifecycle_status: this.lifecycle_status,
+				})
+				.then((data) => {
+					if (data.length < 20) {
+						this.noMoreChats = true;
+					}
+					if (data.length > 0) {
+						data.forEach((message) => {
+							let chat = JSON.parse(JSON.stringify(message.chat));
+							delete message.chat;
+							chat.messages = [message];
+							chat.last_message_at = message.created_at;
+							chat.is_message_search = true;
+							this.addDialog(chat);
+						});
+						this.$nextTick(this.checkIfScrollable);
+					}
+				})
+				.finally(() => {
+					this.loading = false;
+				});
+			}
+
+        },
+        onScroll() {
+            const container = this.$refs.dialogs;
+            if (
+                container.scrollTop + container.clientHeight >=
+                container.scrollHeight
+            ) {
+                this.loadChats();
+            }
+        },
+        checkIfScrollable() {
+            const container = this.$refs.dialogs;
+            if (
+                container.scrollHeight <= container.clientHeight &&
+                !this.noMoreChats
+            ) {
+                this.loadChats();
+            }
+        },
+		runSearch() {
+			this.noMoreChats = false;
+			this.dialogs = [];
+			this.loadChats(true);
+		},
+		onSearch() {
+			clearTimeout(this.searchTimeout);
+			this.searchTimeout = setTimeout(() => {
+				if (!this.isSearching && this.search.length) return;
+				this.runSearch();
+			}, 500);
+		},
+		resetSearch() {
+			this.search = '';
+			this.runSearch();
+		}
+    },
+
+	computed: {
+		isSearching() {
+			return this.search?.length >= this.searchMinLength;
+		},
+		isSearchingMessages() {
+			return this.search?.length >= this.searchMinLength && this.searchType === 'messages';
+		},
+		ordersOptions() {
+			let orders = useChatStore().orders?.map((order) => {
+				return {
+					label: order.name,
+					value: order,
+				};
+			});
+			if (!orders?.length) return [];
+			this.order = orders[0].value;
+			orders.unshift({
+				label: 'Не выбран заказ',
+				value: null,
+			});
+			return orders;
+		},
+	},
+
+	watch: {
+		searchType() {
+			this.runSearch();
+		},
+		order() {
+			this.lifecycle_status = 'green';
+			this.loading = false;
+			this.noMoreChats = false;
+			this.dialogs = [];
+			this.runSearch();
+			this.loadNewResponsesCount();
+		},
+	}
+};
 </script>
 
 <style lang="scss">
 .dialogs {
-  --color-white: #fff;
-  --color-black: #000000;
-  --color-border-gray: #c4c4c4;
-  --color-purple: #6937a5;
-  --color-blue-100: #60a5fa;
-  --color-blue-200: #3897f0;
-  --color-gray-100: #f1f5f9;
-  --color-gray-200: #f0f4fb;
-  --color-gray-300: #e2e8f0;
-  --color-gray-400: #cbd5e1;
-  --color-gray-500: #94a3b8;
-  --color-gray-600: #64748b;
-  --color-gray-700: #475569;
+	--ms-option-bg-selected: #6937a5;
+	--ms-option-bg-selected-pointed: #6937a5;
+	--ms-ring-color: #6937a530;
+	--ms-font-size: 1.4rem;
+	--ms-option-font-size: 1.4rem;
+	--ms-max-height: 30rem;
 
-  font-size: 10px;
-  background-color: var(--color-white);
+    --color-white: #fff;
+    --color-black: #000000;
+    --color-border-gray: #c4c4c4;
+    --color-purple: #6937a5;
+    --color-blue-100: #60a5fa;
+    --color-blue-200: #3897f0;
+    --color-gray-100: #f1f5f9;
+    --color-gray-200: #f0f4fb;
+    --color-gray-300: #e2e8f0;
+    --color-gray-400: #cbd5e1;
+    --color-gray-500: #94a3b8;
+    --color-gray-600: #64748b;
+    --color-gray-700: #475569;
 
-  flex-grow: 1;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
+    font-size: 10px;
+    background-color: var(--color-white);
 
-  &_loading {
-    opacity: 0.5;
-  }
-
-  &__text {
-    padding: 0 2.4em;
-
-    span {
-      font-size: 1.4em;
-    }
-  }
-
-  &__head {
-    padding: 2.4em;
-    // display: flex;
-    // align-items: center;
-
-    &-title {
-      font-size: 2em;
-      line-height: 1.4em;
-      font-weight: 600;
-      color: var(--color-gray-700);
-      flex-grow: 1;
-    }
-
-    &-link {
-      font-size: 1.2em;
-      line-height: 1.5em;
-      font-weight: 600;
-      color: var(--color-gray-600);
-      margin-left: 1.5em;
-    }
-  }
-
-  &__search {
-    // padding: 0 2.4em 1.2em;
-
-    &-wrap {
-      position: relative;
-      height: 4em;
-    }
-
-    &-input {
-      position: absolute;
-      inset: 0;
-      // width: 100%;
-      // height: 100%;
-      font-size: 1.4em;
-      line-height: 1.5em;
-      background-color: var(--color-gray-300);
-      border-radius: 2px;
-      border: 0;
-      padding-left: 1em;
-      padding-right: 3em;
-      outline: none;
-      color: var(--color-gray-600);
-
-      &::placeholder {
-        color: var(--color-gray-500);
-      }
-    }
-
-    &-reset {
-      position: absolute;
-      top: 0;
-      right: 1em;
-      bottom: 0;
-      width: 2em;
-      height: 2em;
-      margin: auto 0;
-      background-color: var(--color-gray-400);
-      cursor: pointer;
-      opacity: 0.7;
-
-      &:hover {
-        opacity: 1;
-      }
-
-      &::after,
-      &::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        width: 50%;
-        height: 2px;
-        margin: auto;
-        background-color: var(--color-gray-600);
-      }
-
-      &::after {
-        transform: rotate(45deg);
-      }
-
-      &::before {
-        transform: rotate(-45deg);
-      }
-    }
-  }
-
-  &__search-type {
+	flex-grow: 1;
+    overflow: hidden;
     display: flex;
-    align-items: center;
-    padding: .5em;
-    background-color: var(--color-gray-200);
-    border-radius: 5px;
-    gap: .5em;
-    margin-top: .5em;
+    flex-direction: column;
 
-    label {
-      flex: 1 1 auto;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0;
-      background-color: var(--color-gray-300);
-      position: relative;
-      z-index: 0;
-      border-radius: 5px;
-      padding: .5em;
-      cursor: pointer;
+	&_loading {
+		opacity: 0.5;
+	}
 
-      &:hover,
-      &.active {
-        background-color: var(--color-gray-400);
-      }
+	&__text {
+		padding: 0 2.4em;
 
-      input {
-        position: absolute;
-        pointer-events: none;
-        z-index: -1;
-        opacity: 0;
-      }
+		span {
+			font-size: 1.4em;
+		}
+	}
 
-      span {
-        font-size: 1.3em;
-      }
+    &__head {
+        padding: 2.4em;
+        // display: flex;
+        // align-items: center;
+
+        &-title {
+            font-size: 2em;
+            line-height: 1.4em;
+            font-weight: 600;
+            color: var(--color-gray-700);
+            flex-grow: 1;
+        }
+
+        &-link {
+            font-size: 1.2em;
+            line-height: 1.5em;
+            font-weight: 600;
+            color: var(--color-gray-600);
+            margin-left: 1.5em;
+        }
     }
-  }
 
-  &__list {
-    overflow-y: auto;
-  }
+	&__order {
+		&-title {
+			font-size: 1.4em;
+			line-height: 1.5em;
+			font-weight: 600;
+			color: var(--color-gray-700);
+			margin-bottom: 0.5em;
+		}
+	}
+
+    &__search {
+        // padding: 0 2.4em 1.2em;
+
+        &-wrap {
+            position: relative;
+            height: 4em;
+        }
+
+        &-input {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            font-size: 1.4em;
+            line-height: 1.5em;
+            background-color: var(--color-gray-300);
+            border-radius: 2px;
+            border: 0;
+            padding-left: 1em;
+            padding-right: 3em;
+            outline: none;
+            color: var(--color-gray-600);
+
+            &::placeholder {
+                color: var(--color-gray-500);
+            }
+        }
+
+		&-icon {
+			pointer-events: none;
+			position: absolute;
+			top: 0;
+			right: 1em;
+			bottom: 0;
+			width: 2em;
+			height: 2em;
+			margin: auto 0;
+			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='24px' viewBox='0 -960 960 960' width='24px' fill='%2394a3b8'%3E%3Cpath d='M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z'/%3E%3C/svg%3E");
+		}
+
+		&-reset {
+			position: absolute;
+			top: 0;
+			right: 1em;
+			bottom: 0;
+			width: 2em;
+			height: 2em;
+			margin: auto 0;
+			background-color: var(--color-gray-400);
+			cursor: pointer;
+			opacity: 0.7;
+
+			&:hover {
+				opacity: 1;
+			}
+
+			&::after,
+			&::before {
+				content: "";
+				position: absolute;
+				inset: 0;
+				width: 50%;
+				height: 2px;
+				margin: auto;
+				background-color: var(--color-gray-600);
+			}
+
+			&::after {
+				transform: rotate(45deg);
+			}
+
+			&::before {
+				transform: rotate(-45deg);
+			}
+		}
+    }
+
+	&__search-type {
+		display: flex;
+		align-items: center;
+		padding: .5em;
+		background-color: var(--color-gray-200);
+		border-radius: 5px;
+		gap: .5em;
+		margin-top: .5em;
+
+		label {
+			flex: 1 1 auto;
+			width: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			margin: 0;
+			background-color: var(--color-gray-300);
+			position: relative;
+			z-index: 0;
+			border-radius: 5px;
+			padding: .5em;
+			cursor: pointer;
+
+			&:hover,
+			&.active {
+				background-color: var(--color-gray-400);
+			}
+
+			input {
+				position: absolute;
+				pointer-events: none;
+				z-index: -1;
+				opacity: 0;
+			}
+
+			span {
+				font-size: 1.3em;
+			}
+		}
+	}
+
+    &__list {
+        overflow-y: auto;
+    }
+
+	&__lifecycle {
+		padding: 2.4em;
+		display: flex;
+		border-radius: 0;
+		margin-top: auto;
+	}
 }
 </style>

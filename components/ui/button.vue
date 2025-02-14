@@ -41,6 +41,10 @@ const props = defineProps({
   target: {
     type: String,
     default: ''
+  },
+  withoutPadding: {
+    type: Boolean,
+    default: false,
   }
 });
 
@@ -53,6 +57,7 @@ const buttonClass = computed(() => {
     `btn-${props.variant}`,
     `btn-${props.size}`,
     { 'btn-disabled': props.disabled },
+    { 'btn-without-padding': props.withoutPadding },
   ];
 });
 
@@ -79,7 +84,7 @@ const handleClick = () => {
   // font-size: 1.6rem;
   font-weight: 600;
   line-height: 1em;
-  
+
   // &:hover {
   //   background-color: var(--button-background-primary-hover);
   // }
@@ -115,6 +120,15 @@ const handleClick = () => {
   line-height: 1em;
 
   @include hover {
+    background-color: var(--button-background-primary);
+    color: var(--text-color-octonary);
+
+    svg {
+      fill: var(--text-color-octonary);
+    }
+  }
+
+  &.active {
     background-color: var(--button-background-primary);
     color: var(--text-color-octonary);
 
@@ -210,6 +224,15 @@ const handleClick = () => {
   }
 }
 
+.btn-medium {
+    justify-content: center;
+    text-transform: uppercase;
+    font-size: 1.2em;
+    font-weight: 400;
+    padding: 1em;
+    border-radius: 100px;
+}
+
 .btn-large {
   padding: 1.2rem 2rem;
   border-radius: 100px;
@@ -241,6 +264,13 @@ const handleClick = () => {
 .btn-around {
   padding: 1.2rem;
   border-radius: 100px;
+  padding: 0 1em;
+  min-width: 4rem;
+  height: 4rem;
+}
+
+.btn-without-padding {
+  padding: 0!important;
 }
 
 </style>

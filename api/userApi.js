@@ -3,13 +3,14 @@ import axios from "axios";
 export default {
 
   // авторизация пользователя
-  async authUser(email, password) {
-    return axios.post('login', { email, password })
+  async authUser(values, form) {
+    // return axios.post('login', { email, password })
+    return useApi().post('login', values, form, false);
   },
 
   // регистрация пользователя
   async registerUser(name, email, post, phone, role) {
-    return axios.post('register', { name, email, phone, post, role })  
+    return axios.post('register', { name, email, phone, post, role })
   },
 
   // проверка авторизации

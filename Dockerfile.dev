@@ -1,0 +1,23 @@
+ARG NODE_VERSION=20.11.0
+
+# FROM dockerhub.timeweb.cloud/library/node:${NODE_VERSION}-slim as base
+FROM node:${NODE_VERSION}-slim as base
+
+ENV NODE_ENV=development
+
+WORKDIR /usr/src/app/nuxtjs
+
+# Build
+FROM base as build
+
+COPY --link package.json package-lock.json .
+RUN npm install
+
+# Run
+FROM base
+
+COPY --from=build /usr/src/app/nuxtjs/node_modules /usr/src/app/nuxtjs/node_modules
+
+CMD [ "npm", "run", "dev" ]
+
+#docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build

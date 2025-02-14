@@ -7,18 +7,18 @@
         </div>
         <div class="add-file-modal__content">
           <div class="add-file-modal__list">
-            <CommonFileList 
-              :data-list="fileList" 
-              :changed="true" 
-              @removeFile="$emit('removeFile', $event)" 
-              :divider="false" 
+            <CommonFileList
+              :data-list="fileList"
+              :changed="true"
+              @removeFile="$emit('removeFile', $event)"
+              :divider="false"
               :download-text="true"
               variant="dark"
             />
           </div>
           <div class="form-group">
-            <label class="form-group-data form-group__title"> 
-              Подпись 
+            <label class="form-group-data form-group__title">
+              Подпись
               <UiInput
                 class="form-group__value"
                 type="text"
@@ -73,7 +73,7 @@ watch(() => props.fileList, (newVal) => {
 
 .add-file-modal {
   font-size: 1rem;
-  
+
   .modal-content {
     width: 33vw;
   }
@@ -86,7 +86,7 @@ watch(() => props.fileList, (newVal) => {
     background-color: var(--bg-tertiary-color);
     padding-bottom: 1em;
   }
-  
+
   &__title {
     font-size: 1.8em;
   }
