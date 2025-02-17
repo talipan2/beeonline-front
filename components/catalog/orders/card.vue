@@ -2,23 +2,25 @@
     <div class="order-card">
         <h3 class="order-card__title">{{ data.name }}</h3>
         <div class="order-card__content">
-            <div class="image-box">
-                <img
-                    :src="logo || defaultImage"
-                    :alt="data.name"
-                />
-                <a href="javascript:;">
-                    <a
-                        href="javascript:;"
-                        class="order-card__status"
-                        :class="`order-card__status_${data.lifecycle_status}`"
-                        ><span
-                            data-toggle="tooltip"
-                            title="Подробнее о статусах"
-                            >{{ data.lifecycle_status_name }}</span
-                        ></a
-                    >
-                </a>
+            <div class="order-card__left">
+                <div class="image-box">
+                    <img
+                        :src="logo || defaultImage"
+                        :alt="data.name"
+                    />
+                </div>
+                <CommonTooltip text="Подробнее о статусах">
+                    <template #trigger>
+                        <a
+                            href="javascript:;"
+                            class="order-card__status"
+                            :class="`order-card__status_${data.lifecycle_status}`"
+                            @click="statusModal.open()"
+                        >
+                            <span>{{ data.lifecycle_status_name }}</span>
+                        </a>
+                    </template>
+                </CommonTooltip>
             </div>
             <div class="props">
                 <div
@@ -77,6 +79,9 @@ import defaultImage from "~/assets/images/nophoto_pc.png";
 import { selectFlag } from "#imports";
 import { useEntityStore } from "~/store/entityStore";
 import { useUserStore } from "~/store/userStore";
+import { useSettingStore } from "~/store/settingStore";
+import { useModal } from 'vue-final-modal';
+import CatalogOrdersStatusModal from "~/components/catalog/orders/statusModal.vue";
 
 const props = defineProps({
     data: {
@@ -91,12 +96,17 @@ const props = defineProps({
 
 const entityStore = useEntityStore();
 const userStore = useUserStore();
+const settingStore = useSettingStore();
 
 const logo = computed(() => props.data.logo);
 const entity = computed(() => {
     if (userStore.role === "performer") {
         return entityStore.service;
     } else return entityStore.order;
+});
+
+const statusModal = useModal({
+  component: CatalogOrdersStatusModal,
 });
 </script>
 
@@ -109,6 +119,7 @@ const entity = computed(() => {
     background-color: #fff;
     position: relative;
     transition: box-shadow 0.2s ease;
+    z-index: 1;
 
     &.highlight {
         position: relative;
@@ -146,25 +157,38 @@ const entity = computed(() => {
 
     &__content {
         display: flex;
+        gap: 5%;
     }
 
-    &__link {
-        position: absolute;
-        inset: 0;
+    &__left {
+        display: flex;
+        flex-direction: column;
+        gap: 1em;
+        flex: 0 0 30%;
+        width: 30%;
+
+        .image-box {
+            padding-top: 100%;
+            margin-right: 0;
+            max-width: 100%;
+            flex: 0 0 0;
+            height: 0;
+        }
     }
 
     &__status {
         font-weight: 400;
         font-size: 13px;
         line-height: 1;
-        margin: 0.5em 0;
         padding: 0.25em 0.4em;
         text-align: center;
-        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+            box-shadow 0.15s ease-in-out;
         vertical-align: baseline;
-        white-space: nowrap;
         border-radius: 1px;
-        color: #FFF;
+        color: #fff;
+        z-index: 2;
+        position: relative;
 
         &_green {
             background-color: #6dbf2f;
@@ -175,6 +199,12 @@ const entity = computed(() => {
         &_red {
             background-color: #dc3545;
         }
+    }
+
+    &__link {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
     }
 }
 </style>
