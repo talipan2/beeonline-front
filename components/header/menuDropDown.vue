@@ -1,5 +1,5 @@
 <template>
-  <UiNewDropdown 
+  <UiNewDropdown
     class="header__menu-dropdown"
     :arrow="false"
     placement="bottom-end"
@@ -38,28 +38,28 @@
         </template>
       </div>
       <div class="header__menu-dropdown-settings">
-        <UiButton type="button" variant="tertiary" size="centered" class="header__dropdown-change-role" 
+        <UiButton type="button" variant="tertiary" size="centered" class="header__dropdown-change-role"
         @click="handleSwitchRole" v-if="userStore.role === 'performer' && userData.roles.includes('customer')">
           <SvgoEnter class="svg-m" />
           <span>
             Переключиться<br>на заказчика
           </span>
         </UiButton>
-        <UiButton type="button" variant="tertiary" size="centered" class="header__dropdown-change-role" 
+        <UiButton type="button" variant="tertiary" size="centered" class="header__dropdown-change-role"
         @click="handleSwitchRole" v-if="userStore.role === 'customer' && userData.roles.includes('performer')">
           <SvgoEnter class="svg-m" />
           <span>
             Переключиться<br>на исполнителя
           </span>
         </UiButton>
-        <UiButton type="button" variant="tertiary" size="centered" class="header__dropdown-change-role" 
+        <UiButton type="button" variant="tertiary" size="centered" class="header__dropdown-change-role"
         @click="setRole('performer')" v-if="!userRoles.includes('performer')">
           <SvgoEnter class="svg-m" />
           <span>
             Стать<br>исполнителем
           </span>
         </UiButton>
-        <UiButton type="button" variant="tertiary" size="centered" class="header__dropdown-change-role" 
+        <UiButton type="button" variant="tertiary" size="centered" class="header__dropdown-change-role"
         @click="setRole('customer')" v-if="!userRoles.includes('customer')">
           <SvgoEnter class="svg-m" />
           <span>
@@ -118,9 +118,9 @@ const dropdownMenuLinks = computed(() => {
     { label: 'Рабочий стол', value: `/${role.value}/desktop` },
     { label: 'Bee-online Gifts', value: `/bonus` },
     { label: 'Профиль', value: `/${role.value}/profile` },
-    { 
-      label: `${role.value === 'customer' ? 'Заказы' : 'Услуги'}`, 
-      value: `/${role.value}/${role.value === 'customer' ? 'orders' : 'services'}` 
+    {
+      label: `${role.value === 'customer' ? 'Заказы' : 'Услуги'}`,
+      value: `/${role.value}/${role.value === 'customer' ? 'orders' : 'services'}`
     },
     { label: 'Сообщения', value: '/chat' },
     { label: 'Сделки', value: '/' },
@@ -173,7 +173,7 @@ const setRole = (role) => {
       })
       userStore.checkAuth()
       router.push({ path: `/${role}/profile` });
-      
+
     });
 }
 
@@ -272,7 +272,7 @@ const setRole = (role) => {
     &:last-child {
       margin-bottom: 0;
     }
-  } 
+  }
 
   .header__dropdown-logout {
     border-top: 1px solid var(--border-color-quinary);
@@ -283,13 +283,13 @@ const setRole = (role) => {
       background-color: var(--button-background-tertiary-hover) ;
     }
   }
-  
+
 
   @media screen and (max-width: 1420px) {
     .d-none {
       display: none;
     }
-    
+
   }
 
 </style>

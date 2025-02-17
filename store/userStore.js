@@ -109,6 +109,7 @@ export const useUserStore = defineStore("user", {
                     // useCookie('role').value = 'customer';
                     this.userRoles = response.data.user.roles;
                     this.role = response.data.user.role;
+                    console.log(this.role);
                     this.userOrganizationId =
                         response.data.user.organization_id;
                     if (response.data.user && response.data.user.organization) {

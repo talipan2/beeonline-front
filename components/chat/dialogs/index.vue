@@ -472,6 +472,8 @@ export default {
     }
 
 	&__order {
+        margin-bottom: 2em;
+
 		&-title {
 			font-size: 1.4em;
 			line-height: 1.5em;

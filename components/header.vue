@@ -68,7 +68,7 @@
           <HeaderMenuDropDown v-model="isAuth" />
         </div>
         <div class="header__auth" v-else>
-          <UiButton to="/search" variant="secondary" size="around"> 
+          <UiButton to="/search" variant="secondary" size="around">
             <SvgoSearchIcon class="svg-m" />
           </UiButton>
           <UiButton variant="secondary" size="large" type="button" @click="openAuthModal">Вход</UiButton>
@@ -77,13 +77,13 @@
         <UiButton v-if="!isAuth" type="button" variant="primary" size="small" class="header__login" @click="openAuthModal">Вход</UiButton>
       </div>
     </div>
-    <HeaderMenuMobileModal 
-      v-model="isOpenMobileModal" 
-      :headerHeight="headerHeight" 
-      :closeButton="false" 
-      :userName="userName" 
+    <HeaderMenuMobileModal
+      v-model="isOpenMobileModal"
+      :headerHeight="headerHeight"
+      :closeButton="false"
+      :userName="userName"
       :role="role"
-      :isAuth="isAuth" 
+      :isAuth="isAuth"
     />
     <HeaderAuthUserModal />
   </header>
@@ -188,7 +188,7 @@ onMounted(() => {
   adjustHeaderPadding();
 
 
-  userStore.role = localStorage.getItem('role');
+//   userStore.role = localStorage.getItem('role');
   // userStore.checkAuth();
   if(entityStore.entityData.categories.length < 1) {
     entityStore.getCategories();
@@ -467,7 +467,7 @@ body.vfm--scrollbar-hidden .fixed-header {
 }
 
 .header__logo-container .header__menu-btn_active div {
-    top: 10px; 
+    top: 10px;
 }
 
 .header__menu-btn_active > :nth-child(1) {
@@ -496,4 +496,3 @@ body.vfm--scrollbar-hidden .fixed-header {
 }
 
 </style>
-

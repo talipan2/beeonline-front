@@ -2,31 +2,42 @@
   <UiModal class="modal balance-documents-modal" v-model="settingStore.balanceDocumentsModalStatus" title="Запрос закрывающих документов" @confirm="() => confirm()">
     <template #header></template>
     <template #content>
-      <form @submit.prevent="handleSubmit">
+      <Form @submit="handleSubmit">
         <label class="form-group-data form-group__title">
           Комментарий
-          <UiTextArea v-model="textComment" type="number" class="form-group__value" />
+          <UiTextArea type="number" class="form-group__value" name="message"/>
         </label>
         <UiButton type="submit" class="balance-documents-modal__btn" variant="quinary" size="large">Отправить</UiButton>
-      </form>
+      </Form>
     </template>
   </UiModal>
 </template>
 
 <script setup>
 import { useSettingStore } from '~/store/settingStore';
+import { useTariffsStore } from "~/store/tariffsStore";
 
 const settingStore = useSettingStore();
+const tariffsStore = useTariffsStore();
 
-const textComment = ref('');
+const loading = ref(false);
 
 const confirm = () => {
   settingStore.balanceDocumentsModalStatus = false;
 }
 
-const handleSubmit = () => {
-  console.log(textComment.value);
-  confirm();
+const handleSubmit = (values, form) => {
+    console.log(values, form);
+    if (loading.value) return;
+    loading.value = true;
+
+    tariffsStore.closingDocsRequest(values, form)
+    .then((data) => {
+        form.resetForm();
+        confirm();
+    }).finally(() => {
+        loading.value = false;
+    });
 }
 
 </script>

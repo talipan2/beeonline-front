@@ -7,7 +7,7 @@
         <CommonSpinner v-else />
       </h3>
       <p class="plan-summary__text">
-        Срок подписки: 
+        Срок подписки:
         <template v-if="tariffsStore.balanceLoaded">
           <span class="plan-summary__text plan-summary__text_type_selection">
             <template v-if="tariffsStore.tariffExpiredAt">до {{ tariffsStore.tariffExpiredAt }}</template>
@@ -64,8 +64,13 @@ const availableUserFeatures = computed(() => {
 .plan-summary {
   font-size: 1rem;
 
+  p {
+	margin-bottom: 0;
+  }
+
   &__header {
     display: flex;
+	flex-wrap: wrap;
     column-gap: 1em;
     justify-content: space-between;
     align-items: center;
@@ -73,13 +78,13 @@ const availableUserFeatures = computed(() => {
   }
 
   &__header-text{
-    font-size: 1.8em;
+    font-size: 2.4em;
     font-weight: 400;
     line-height: 1.2em;
   }
 
   &__text {
-    font-size: 1.2em;
+    font-size: 1.6em;
     font-weight: 400;
     line-height: 1.2em;
 
@@ -97,7 +102,7 @@ const availableUserFeatures = computed(() => {
 
   &__list {
     max-width: 70%;
-    font-size: 1.2em;
+    font-size: 1em;
     display: flex;
     flex-direction: column;
     row-gap: .8em;

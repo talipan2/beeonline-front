@@ -54,7 +54,10 @@
                                         {{ orgOnline(org) }}
                                     </div>
                                 </div>
-                                <div class="dialog-head__buttons">
+                                <div
+                                    class="dialog-head__buttons"
+                                    v-if="chat?.id"
+                                >
                                     <UiButton
                                         v-if="chat.deal"
                                         :href="`/deals/${chat.deal.id}`"
@@ -83,7 +86,11 @@
                                         class="dialog-head__btn"
                                         type="button"
                                         @click="setPinned"
-                                        :variant="chat.is_pinned ? `primary` : `tertiary`"
+                                        :variant="
+                                            chat.is_pinned
+                                                ? `primary`
+                                                : `tertiary`
+                                        "
                                         size="around"
                                         target="_blank"
                                         :without-padding="true"
@@ -97,6 +104,7 @@
                                 <UiNewDropdown
                                     placement="bottom-end"
                                     :arrow="false"
+                                    v-if="chat?.id"
                                 >
                                     <UiButton
                                         class="dialog-head__btn"
@@ -353,10 +361,13 @@ export default {
 
     methods: {
         toggleTranslate() {
-            console.log('toggleTranslate');
+            console.log("toggleTranslate");
             this.translate = !this.translate;
 
-            localStorage.setItem("translate_chat_" + this.chat.id, this.translate);
+            localStorage.setItem(
+                "translate_chat_" + this.chat.id,
+                this.translate
+            );
 
             this.changeInitChatId(this.chat.id);
         },
@@ -676,14 +687,15 @@ export default {
                     const container = this.$refs.chatContainer;
 
                     this.translate =
-                        localStorage.getItem("translate_chat_" + response.id) == "true";
+                        localStorage.getItem("translate_chat_" + response.id) ==
+                        "true";
                     if (this.translate) {
                         this.translate = window.TranslateGetCode(
                             window.googleTranslateConfig
                         );
                     }
 
-                    this.channel.listen("NewChatMessage", (event) => {
+                    this.channel.listen("NewChatMessageEvent", (event) => {
                         const scrollEnd =
                             container.scrollHeight - container.scrollTop ===
                             container.clientHeight;
@@ -699,7 +711,7 @@ export default {
                         this.lastLoaded = false;
                         this.addMessage(event.message, scrollEnd, true);
                     });
-                    this.channel.listen("ChatMessageReaded", (event) => {
+                    this.channel.listen("ChatMessageReadedEvent", (event) => {
                         let organization = this.chat.organizations.find(
                             (org) => org.id == event.organization_id
                         );
@@ -1060,6 +1072,8 @@ export default {
                 justify-content: flex-start;
                 color: var(--text-color-primary);
                 text-align: left;
+                text-transform: none;
+                border-radius: 0;
 
                 &:hover {
                     background-color: var(--button-background-secondary-hover);

@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 import { useApi } from "~/composables/useApi";
+import { useUserStore } from "./userStore";
 
 export const useChatStore = defineStore("chatStore", {
     state: () => ({
@@ -64,7 +65,9 @@ export const useChatStore = defineStore("chatStore", {
             });
         },
 		async getOrders() {
-			if (this.role != "customer") return null;
+            const role = useUserStore().role;
+            console.log(role);
+			// if (role != "customer") return null;
 			if (!this.orders) {
 				this.orders = await useApi().post("/chat/orders");
 			}
