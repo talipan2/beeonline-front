@@ -79,6 +79,12 @@ export const useApi = () => {
         silent: boolean = false,
         isBlob: boolean = false
     ) => {
+        if (form) {
+            if (form.controlledValues?.isLoading) {
+                return;
+            }
+            form.setFieldValue('isLoading', true);
+        }
         try {
             endpoint = endpoint.startsWith("/")
                 ? endpoint.substring(1)
@@ -92,6 +98,10 @@ export const useApi = () => {
                 server: false,
                 responseType: isBlob ? "blob" : "json",
             });
+
+            if (form) {
+                form.resetField('isLoading');
+            }
 
             if (response.error.value) {
                 throw response.error.value;

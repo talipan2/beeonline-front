@@ -118,12 +118,7 @@ const password = ref("");
 const isRemember = ref(false);
 const isShowPassword = ref(false);
 
-const loading = ref(false);
-
 const handleSubmit = (values, form) => {
-    if (loading.value) return;
-    console.log(form);
-    loading.value = true;
     userStore
         .authUser(values, form)
         .then((res) => {
@@ -135,9 +130,6 @@ const handleSubmit = (values, form) => {
             } else {
                 router.push({ path: "/" });
             }
-        })
-        .finally(() => {
-            loading.value = false;
         });
 };
 </script>
