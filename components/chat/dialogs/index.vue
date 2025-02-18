@@ -374,7 +374,8 @@ export default {
 			return this.search?.length >= this.searchMinLength && this.searchType === 'messages';
 		},
 		ordersOptions() {
-			let orders = useChatStore().orders?.map((order) => {
+            if (!useChatStore().orders) return [];
+			let orders = useChatStore().orders.map((order) => {
 				return {
 					label: order.name,
 					value: order,

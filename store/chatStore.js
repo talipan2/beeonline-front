@@ -20,6 +20,11 @@ export const useChatStore = defineStore("chatStore", {
 				order_id: order_id
 			});
 		},
+		async selectPerformer(chat_id, performer_id) {
+			return await useApi().post(`/chat/${chat_id}/select_performer`, {
+				performer_id: performer_id
+			});
+		},
 		async unselectPerformer(chat_id, performer_id) {
 			return await useApi().post(`/chat/${chat_id}/unselect_performer`, {
 				performer_id: performer_id

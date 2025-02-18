@@ -71,16 +71,24 @@
                                     <UiButton
                                         class="dialog-head__btn dialog-head__btn_type_colored"
                                         type="button"
-                                        @click="openReviewModal(org)"
+                                        @click="selectPerformer(org)"
                                         variant="tertiary"
                                         size="around"
                                         target="_blank"
+                                        v-if="org.pivot.role === 'performer' && chat.order && !chat.deal && !chat.order.selected_performer_id"
                                     >
-                                        <SvgoDealIcon
-                                            class="svg-m"
-                                            fill="#6937a5"
-                                        />
-                                        Оставить отзыв
+                                        Выбрать исполнителя
+                                    </UiButton>
+                                    <UiButton
+                                        class="dialog-head__btn dialog-head__btn_type_colored"
+                                        type="button"
+                                        @click="unselectPerformer(org)"
+                                        variant="tertiary"
+                                        size="around"
+                                        target="_blank"
+                                        v-if="chat.order?.selected_performer_id === org.id"
+                                    >
+                                        Отменить выбор
                                     </UiButton>
                                     <UiButton
                                         class="dialog-head__btn"
@@ -381,6 +389,15 @@ export default {
             }
             const searchParams = new URLSearchParams(data);
             return `/deals/create?${searchParams.toString()}`;
+        },
+
+
+        selectPerformer(org) {
+            useChatStore()
+                .selectPerformer(this.chat.id, org.id)
+                .then(() => {
+                    this.changeInitChatId(this.chat.id);
+                });
         },
 
         unselectPerformer(org) {
