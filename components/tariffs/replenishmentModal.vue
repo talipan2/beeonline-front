@@ -1,5 +1,5 @@
 <template>
-  <UiModal class="modal replenishment-modal" v-model="settingStore.replenishmentModalStatus" title="Пополнение баланса" @confirm="() => confirm()">
+  <UiModal class="modal replenishment-modal" size="xs" v-model="settingStore.replenishmentModalStatus" title="Пополнение баланса" @confirm="() => confirm()">
     <template #header></template>
     <template #content>
       <form @submit.prevent="handleSubmit">
@@ -46,10 +46,6 @@ function handleSubmit() {
 .replenishment-modal {
   font-size: 1rem;
 
-  .modal-dialog {
-    width: 21%;
-  }
-
   .modal-content {
     padding: 5.5em 2em 2em;
   }
@@ -83,30 +79,6 @@ function handleSubmit() {
 
     &_type-account {
       color: #212529;
-    }
-  }
-
-  @include desktop {
-    .modal-dialog {
-      width: 30%;
-    }
-  }
-
-  @include tablet {
-    .modal-dialog {
-      width: 40%;
-    }
-  }
-
-  @include mobile {
-    .modal-dialog {
-      width: 70%;
-    }
-  }
-
-  @include small-mobile {
-    .modal-dialog {
-      width: 95%;
     }
   }
 }

@@ -147,6 +147,10 @@ export default {
     overflow: auto;
     inset: 0;
     padding: 2rem;
+
+    @include small-tablet {
+        align-items: normal;
+    }
 }
 
 .modal-close {
@@ -166,12 +170,25 @@ export default {
     position: relative;
     width: 100%;
     max-width: 100%;
-    margin: auto;
+    // margin: auto;
     flex-grow: 1;
     box-shadow: var(--box-shadow-primary);
+    margin-block: auto;
+
+    &-xs {
+        max-width: 40em;
+    }
 
     &-md {
         max-width: 60em;
+    }
+
+    &-lg {
+        max-width: 82.5em;
+    }
+
+    &-xl {
+        max-width: 110em;
     }
 }
 
@@ -182,7 +199,7 @@ export default {
     }
 
     .modal-content {
-        padding: 1em;
+        // padding: 1em;
         background-color: white;
         box-sizing: border-box;
     }
@@ -193,12 +210,23 @@ export default {
 }
 
 .header-menu {
+
     .modal-dialog {
+        align-items: flex-start;
+        padding: 0;
+    }
+
+    .modal-content {
+        box-shadow: none;
         top: 2rem;
         right: 0;
         padding-right: 7%;
         left: auto;
         transform: none;
+    }
+
+    .modal-body {
+        margin-left: auto;
     }
 
     .vfm--overlay {

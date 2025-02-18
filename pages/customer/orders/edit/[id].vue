@@ -99,13 +99,12 @@ const formatData = computed(() => {
 const currentHandleSubmit = computed(() => {
   switch (currentStep.value) {
     case 1:
-      return (() => {
-        console.log(orderData.value.categories)
+      return ((value, form) => {
         entityStore.editOrder(orderData.value.id, {
           name: orderData.value.name,
           completionDate: orderData.value.completionDate,
           categories: orderData.value.categories
-        })
+        }, form)
         .then(() => currentStep.value = 2)
         .catch(error => {
           console.log(error)
@@ -113,7 +112,7 @@ const currentHandleSubmit = computed(() => {
         });
       });
     case 2:
-      return (() => {
+      return ((value, form) => {
         entityStore.editOrder(orderData.value.id, {
           description: orderData.value.description,
           rawMaterials: orderData.value.rawMaterials,
@@ -124,7 +123,7 @@ const currentHandleSubmit = computed(() => {
           cities: orderData.value.locations.cities,
           regions: orderData.value.locations.regions,
           gallery: orderData.value.gallery,
-        }).then(() => currentStep.value = 4)
+        }, form).then(() => currentStep.value = 4)
 
         if(orderData.value.gallery && orderData.value.gallery.length) {
           const galleryIds = orderData.value.gallery.map(item => item.id)
@@ -137,10 +136,10 @@ const currentHandleSubmit = computed(() => {
         }
       });
     case 4:
-      return (() => {
+      return ((value, form) => {
         entityStore.editOrder(orderData.value.id, {
           isSafeDeal: orderData.value.isSafeDeal
-        })
+        }, form)
         router.push('/customer/orders')
       });
     default:
@@ -149,8 +148,8 @@ const currentHandleSubmit = computed(() => {
 })
 
 
-const handleSubmit = () => {
-  currentHandleSubmit.value()
+const handleSubmit = (value, form) => {
+  currentHandleSubmit.value(value, form)
 }
 
 const previousStep = () => {

@@ -211,7 +211,7 @@ export const useEntityStore = defineStore('entity', {
       }
     },
 
-    async addNewService(data) {
+    async addNewService(data, form) {
       try {
         const response = await serviceApi.setService({
           user_id: data.userId,
@@ -220,18 +220,18 @@ export const useEntityStore = defineStore('entity', {
           product_categories: data.categories,
           current_step: data.step,
           status: data.status
-        });
+        }, form);
 
-        if(response.data && response.data.data.id) {
-          this.service.id = response.data.data.id;
+        if(response && response.id) {
+          this.service.id = response.id;
         }
-        return response.data.data
+        return response
       } catch (error) {
         throw error;
       }
     },
 
-    async addNewOrder(data) {
+    async addNewOrder(data, form) {
       try {
         const response = await orderApi.setOrder({
           user_id: data.userId,
@@ -240,18 +240,18 @@ export const useEntityStore = defineStore('entity', {
           product_categories: data.category,
           deadline_at: data.completionDate,
           status: data.status
-        });
-        if(response.data && response.data.data.id) {
-          this.order.id = response.data.data.id;
+        }, form);
+        if(response && response.id) {
+          this.order.id = response.id;
         }
       } catch (error) {
         throw error;
       }
     },
 
-    async editService(id, data) {
+    async editService(id, data, form) {
       try {
-        const response = await serviceApi.editService(this.service.id || id, data);
+        const response = await serviceApi.editService(this.service.id || id, data, form);
       } catch (error) {
         throw error;
       }

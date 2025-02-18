@@ -1,5 +1,5 @@
 <template>
-  <UiModal v-model="isOpenModal" title="Выберите город" @confirm="() => confirm()" class="choose-city-modal modal">
+  <UiModal v-model="isOpenModal" size="lg" title="Выберите город" @confirm="() => confirm()" class="choose-city-modal choose-city-modal-header modal">
     <template #header>
       <CommonLocationSearch :locations="locations" :select-one-city="true" @selectCity="selectCity"/>
       <div class="popular-cities">
@@ -124,11 +124,14 @@ watch(isOpenModal, (newVal) => {
   emit('update:modelValue', newVal);
 });
 
-
-
-
 </script>
 
 <style lang="scss" >
+
+.choose-city-modal-header {
+  .modal-content {
+    height: auto;
+  }
+}
 
 </style>

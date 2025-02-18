@@ -79,6 +79,7 @@ const props = defineProps({
   }
 })
 
+const organizationStore = useOrganizationStore();
 const errorMessages = ref([]);
 
 const takeErrorMessage = (error) => {
@@ -101,11 +102,19 @@ const emit = defineEmits(['update:modelValue']);
 const router = useRouter();
 const userStore = useUserStore();
 
-const handleSubmit = () => {
+const handleSubmit = (values, form) => {
   if(props.submitFunc) {
-    props.submitFunc();
+    props.submitFunc(values, form);
   } else {
-    router.push({path: '/register/step4'});
+    organizationStore.editPubCards({
+      id: userStore.userPubCard.id, 
+      cities: data.value.locations.cities, 
+      regions: data.value.locations.regions,
+      status: 2,
+      is_active: 1, 
+    }, form).then(res => {
+      router.push({path: '/register/step4'});
+    })
   }
 }
 

@@ -24,7 +24,7 @@
           Ваша должность
           <UiInput
             :rules="{min: 2}"
-            name="jobTitle"
+            name="post"
             label="Ваша должность"
             class="form-group__value"
             type="text"
@@ -100,21 +100,15 @@ const userData = ref({
 });
 const isCreateOrder = computed(() => settingStore.isCreateOrder);
 
-const handleSubmit = () => {
+const handleSubmit = (values, form) => {
   userStore
-    .registerUser(
-      userData.value.name,
-      userData.value.email,
-      userData.value.jobTitle,
-      userData.value.phone,
-      userData.value.role
-    )
+    .registerUser({...values, role: userData.value.role}, form)
     .then((res) => {
-      if (isCreateOrder.value) {
-        router.push({ path: "/orders/create/step1" });
-      } else {
-        router.push({ path: "/register/step1" });
-      }
+        if (isCreateOrder.value) {
+          router.push({ path: "/orders/create/step1" });
+        } else {
+          router.push({ path: "/register/step1" });
+        }
     })
     .catch((err) => {
       console.log(err);

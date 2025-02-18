@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import uploadFilesApi from "~/api/uploadFilesApi";
 import commonApi from "~/api/commonApi";
+import { useToast } from "vue-toastification";
 
 export const useSettingStore = defineStore("setting", {
   state: () => ({
@@ -36,7 +37,8 @@ export const useSettingStore = defineStore("setting", {
       {id: 1, name: 'Российский рубль', value: 'RUB'},
       {id: 2, name: 'Доллар США', value: 'USD'},
       {id: 3, name: 'Евро', value: 'EUR'},
-    ]
+    ],
+    isLoadingResponse: false,
   }),
   getters: {
     getCurrencyNameById: (state) => (id) => {
@@ -45,6 +47,10 @@ export const useSettingStore = defineStore("setting", {
     }
   },
   actions: {
+    setResponseLoading(loading) {
+      this.isLoadingResponse = loading
+    },
+
     setAlert(status, text) {
       this.alertModal.isOpen = true;
       this.alertModal.status = status;
@@ -59,6 +65,7 @@ export const useSettingStore = defineStore("setting", {
         }
       } catch (error) {
         console.error(error);
+        useToast().error('Ошибка при загрузке файла');
       }
     },
     

@@ -1,5 +1,5 @@
 <template>
-  <UiModal class="reviews-modal modal" v-model="settingStore.reviewModalStatus" @confirm="() => confirm()">
+  <UiModal class="reviews-modal modal" size="xs" v-model="settingStore.reviewModalStatus" @confirm="() => confirm()">
     <template #content>
       <div class="reviews-modal__content">
         <div class="reviews-modal__header">
@@ -43,22 +43,22 @@ function confirm() {
 .reviews-modal {
   font-size: 1.6rem;
 
-  .modal-dialog {
-    max-width: 35%;
-    width: 100%;
+  // .modal-content {
+  //   max-width: 35%;
+  //   width: 100%;
 
-    @include tablet {
-      max-width: 50%;
-    }
+  //   @include tablet {
+  //     max-width: 50%;
+  //   }
 
-    @include mobile {
-      max-width: 70%;
-    }
+  //   @include mobile {
+  //     max-width: 70%;
+  //   }
 
-    @include small-mobile {
-      max-width: 95%;
-    }
-  }
+  //   @include small-mobile {
+  //     max-width: 95%;
+  //   }
+  // }
 
   .modal-content {
     padding: 3.4em 2.5em 2.5em;

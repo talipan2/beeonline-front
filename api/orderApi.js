@@ -13,11 +13,11 @@ export default {
     return axios.get(`orders/${id}`)
   },
 
-  async setOrder(data) {
-    return axios.post(`orders`, data)
+  async setOrder(values, form) {
+    return useApi().post(`orders`, values, form)
   },
 
-  async editOrder(id, data) {
+  async editOrder(id, data, form) {
     const { 
       name, 
       description, 
@@ -49,7 +49,7 @@ export default {
     if(status) params.status = status
     if(categories && categories.length > 0) params.product_categories = categories
     if(gallery && gallery.length > 0) params.gallery = gallery
-    return axios.patch(`orders/${id}`, params)
+    return useApi().patch(`orders/${id}`, params, form)
   },
 
   async uploadLogo(id, data) {

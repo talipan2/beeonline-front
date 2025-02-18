@@ -5,8 +5,8 @@ axios.defaults.headers.common['Content-Type'] = 'application/json; charset=UTF-8
 export default {
 
   // создание организации
-  async setOrganization(data) {
-    return axios.post('organizations', {
+  async setOrganization(data, form) {
+    return useApi().post('organizations', {
       name: data.name,
       user_id: data.userId,
       org_form: data.organizationForm,
@@ -19,12 +19,12 @@ export default {
       country_id: data.countryId,
       currency_id: data.currencyId,
       is_foreigner: data.countryId === 1 ? 0 : 1
-    })
+    }, form)
   },
 
   // создание карточки
-  async setPubCards(data) {
-    return axios.post('pubcards', {
+  async setPubCards(data, form) {
+    return useApi().post('pubcards', {
       organization_id: data.id,
       name: data.name,
       type: data.type,
@@ -33,7 +33,7 @@ export default {
       status: data.status,
       cities: data.cities,
       regions: data.regions,
-    })
+    }, form)
   },
 
   // получение организации пользователя
@@ -43,8 +43,8 @@ export default {
   },
 
   // редактирование публичной карточки пользователя
-  async editPubCard(data) {
-    return axios.patch(`pubcards/${data.id}`, {
+  async editPubCard(data, form) {
+    return useApi().patch(`pubcards/${data.id}`, {
       name: data.name,
       url_site: data.url_site,
       description: data.description,
@@ -54,7 +54,7 @@ export default {
       cities: data.cities,
       regions: data.regions,
       videos: data.videos,
-    })
+    }, form)
   },
 
   async getPubCards(params = {}) {

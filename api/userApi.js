@@ -9,8 +9,8 @@ export default {
   },
 
   // регистрация пользователя
-  async registerUser(name, email, post, phone, role) {
-    return axios.post('register', { name, email, phone, post, role })
+  async registerUser(values,form) {
+    return useApi().post('register', values, form);
   },
 
   // проверка авторизации
@@ -27,12 +27,12 @@ export default {
     return axios.get(`users/${id}`)
   },
 
-  async resetPassword(data) {
-    return axios.post('change-password', {old_password: data.oldPassword, new_password: data.newPassword})
+  async resetPassword(values, form) {
+    return useApi().post('change-password', values, form)
   },
 
-  async setUserData(data, id) {
-    return axios.patch(`users/${id}`, data)
+  async setUserData(values, id, form) {
+    return useApi().patch(`users/${id}`, values, form)
   }
 
 }

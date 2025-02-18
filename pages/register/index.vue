@@ -4,7 +4,8 @@
     <div class="register__container">
       <CommonCheckList 
         class="register__checklist register__checklist_type_left-side sticky" 
-        ref="leftSide" title="Заполнение профиля" 
+        ref="leftSide" 
+        title="Заполнение профиля" 
         :checkList="checkList" 
         adviceTitle="Полностью заполненный профиль выше в списке поиска"
         value-check

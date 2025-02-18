@@ -48,7 +48,7 @@ const options = [
     id: 1, 
     label: 'https://bee-together.ru', 
     link: 'https://bee-together.ru', 
-    img: 'https://i.pinimg.com/236x/29/ee/8f/29ee8f81b12ac806084e054f106f53cd.jpg'
+    img: ''
   },
 ] 
 

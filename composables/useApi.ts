@@ -41,7 +41,7 @@ export const useApi = () => {
                 for (let key in error.data.errors) {
                     form.setFieldTouched(key, true);
                 }
-                form.evt.target.scrollIntoView({ behavior: "smooth" });
+                form.evt.target.scrollIntoView({ behavior: "smooth", block: "center" });
             }
         } else {
             if (!silent) {
@@ -79,7 +79,14 @@ export const useApi = () => {
         silent: boolean = false,
         isBlob: boolean = false
     ) => {
+        if (form) {
+            if (form.controlledValues?.isLoading) {
+                throw new Error("Form is already loading");
+            }
+            form.setFieldValue('isLoading', true);
+        }
         try {
+
             endpoint = endpoint.startsWith("/")
                 ? endpoint.substring(1)
                 : endpoint;
@@ -105,6 +112,10 @@ export const useApi = () => {
             return result?.data || result;
         } catch (error) {
             handleFetchError(error, form, silent);
+        } finally {
+            if (form) {
+                form.setFieldValue('isLoading', false);
+            }
         }
     };
 

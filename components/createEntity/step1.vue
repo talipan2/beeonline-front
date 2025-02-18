@@ -136,6 +136,10 @@ const categories = [
   { id: 26, label: "Вязаные аксессуары" },
   { id: 27, label: "Разработка лекал" },
 ];
+
+const handleSubmit = (values, form) => {
+  props.handleSubmit(values, form)
+}
 </script>
 
 <style lang="scss">

@@ -65,7 +65,7 @@ const currentAuthPage = ref('write-email')
 const email = ref('');
 const password = ref('');
 
-const handleSubmit = () => {
+const handleSubmit = (values, form) => {
   currentAuthPage.value = 'write-password'
 }
 

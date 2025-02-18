@@ -7,16 +7,15 @@
               @click="prevStep">Назад</UiButton>
           </div>
           <div class="form-group-data">
-            <UiButton v-if="currentStep < 5" type="submit" class="form-group-data__btn" variant="quinary" size="large"
+            <UiButton v-if="currentStep < 4" type="submit" class="form-group-data__btn" variant="quinary" size="large"
               >Далее
               <SvgoBtnArrow class="svg-lx" />
             </UiButton>
-            <UiButton v-if="currentStep >= 5" type="submit" class="form-group-data__btn"
+            <UiButton v-if="currentStep >= 4" type="submit" class="form-group-data__btn"
               variant="quinary" size="large">Отправить на проверку
               <SvgoBtnArrow class="svg-lx" />
             </UiButton>
           </div>
-          {{ data }}
         </div>
       </component>
   </div>
@@ -64,12 +63,12 @@ const currentComponent = computed(() => {
       return Step2
     case 3:
       return Gallery
-    case 4:
-    if (userStore.role === 'customer') {
-        return addSocials;
-    }
-     return trademarksAndExhibition
-    case 5: 
+    // case 4:
+    // if (userStore.role === 'customer') {
+    //     return addSocials;
+    // }
+    //  return trademarksAndExhibition
+    case 4: 
      return addSocials
     default:
       return Step1;
@@ -88,27 +87,29 @@ const nextStep = () => {
 
 const prevStep = () => {
   if (currentStep.value > 1) {
-    if (currentStep.value === 5 && userStore.role === 'customer') {
-      currentStep.value -= 2;
-    } else {
-      currentStep.value--;
-    }
+    // if (currentStep.value === 4 && userStore.role === 'customer') {
+    //   currentStep.value -= 2;
+    // } else {
+    //   currentStep.value--;
+    // }
+    currentStep.value --
   }
 }
 
 
-async function handleSubmit() {
+async function handleSubmit(values, form) {
 
-  if (currentStep.value < 5) {
-    if (currentStep.value === 3 && userStore.role === 'customer') {
-      currentStep.value += 2;
-    } else {
-      currentStep.value++;
-    }
+  if (currentStep.value < 4) {
+    // if (currentStep.value === 3 && userStore.role === 'customer') {
+    //   currentStep.value += 2;
+    // } else {
+    //   currentStep.value++;
+    // }
+    currentStep.value ++
   } else {
     organizationStore.editPubCards({
       id: data.value.id,
-      name: data.value.companyName,
+      // name: data.value.companyName,
       description: data.value.description,
       cities: data.value.locations.cities,
       regions: data.value.locations.regions,
@@ -117,7 +118,7 @@ async function handleSubmit() {
       url_vk:data.value.urlVk,
       url_yt: data.value.urlYt,
       videos: data.value.videos,
-    });
+    }, form);
     if(data.value.companyLogo.id) {
       organizationStore.setPubCardLogo(data.value.id, data.value.companyLogo.id);
     }

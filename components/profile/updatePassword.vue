@@ -1,5 +1,6 @@
 <template>
   <div class="profile-update-password">
+    <CommonAlerts alert="На вашу почту было отправленно письмо для сброса пароля" type="info" v-if="isSendedMailToReset" />
     <h2 class="profile-update-password__title">Смена пароля</h2>
     <p class="profile-update-password__text">Указанные данные не разглашаются третьим лицам и необходимы для успешной работы на сервисе</p>
     <Form class="profile-update-password__form" @submit="handleResetPassword">
@@ -8,10 +9,10 @@
           <label class="form-group__title">
             Старый пароль*
             <UiInput
-              v-model="passwordData.oldPassword"
+              v-model="passwordData.old_password"
               :rules="{ required: true, min: 6 }"
               class="form-group__value" 
-              name="oldPassword" 
+              name="old_password" 
               label="Старый пароль" 
               type="password" 
               placeholder="*****" 
@@ -24,10 +25,10 @@
           <label class="form-group__title">
             Новый пароль*
             <UiInput
-              v-model="passwordData.newPassword"
+              v-model="passwordData.new_password"
               :rules="{ required: true, min: 6 }"
               class="form-group__value" 
-              name="newPassword" 
+              name="new_password" 
               label="Новый пароль" 
               :type="showNewPassword ? 'text' : 'password'" 
               placeholder="Не менее 6 символов"
@@ -69,13 +70,13 @@
           </label>
         </div>
       </div>
-      <UiButton type="button" @click="settingStore.resetPasswordModal = true" class="profile-update-password__forgot-btn" variant="default">Забыли пароль</UiButton>
+      <UiButton type="button" @click="settingStore.resetPasswordModal = true" class="profile-update-password__forgot-btn" variant="default">Забыли пароль?</UiButton>
       <UiButton type="submit" class="profile-update-password__btn" variant="quinary" size="large">
         Изменить пароль
         <SvgoBtnArrow class="svg-lx" />  
       </UiButton>
     </Form>
-    <ProfileResetPasswordModal />
+    <ProfileResetPasswordModal @reset="forgotPassword"/>
     <Alerts />
   </div>
 </template>
@@ -94,21 +95,22 @@ const props = defineProps({
 const userStore = useUserStore();
 const settingStore = useSettingStore();
 const router = useRouter();
+const isSendedMailToReset = ref(false);
 
 const showNewPassword = ref(false);
 const showConfirmPassword = ref(false);
 const passwordData = ref({
-  oldPassword: '',
-  newPassword: '',
+  old_password: '',
+  new_password: '',
   confirmPassword: '',
 })
 
-function handleResetPassword() {
-  if(passwordData.value.newPassword === passwordData.value.confirmPassword) {
+function handleResetPassword(values, form) {
+  if(passwordData.value.new_password === passwordData.value.confirmPassword) {
     userStore.resetPassword({
-      oldPassword: passwordData.value.oldPassword,
-      newPassword: passwordData.value.newPassword,
-    })
+      old_password: passwordData.value.old_password,
+      new_password: passwordData.value.new_password,
+    }, form)
     .then(res => {
       settingStore.setAlert('success', 'Пароль успешно изменен');
       router.push(`/${props.role}/profile`);
@@ -117,6 +119,10 @@ function handleResetPassword() {
       settingStore.setAlert('error', err.response.data.message);
     })
   }
+}
+
+function forgotPassword() {
+  isSendedMailToReset.value = true;
 }
 
 
@@ -160,8 +166,12 @@ function handleResetPassword() {
   }
 
   &__forgot-btn {
+    font-size: 1em;
     width: fit-content;
-    margin-bottom: 1em;
+    margin-bottom: 2em;
+    text-transform: none;
+    color: #a9abac;
+    padding: 0;
   }
 
   &__btn {

@@ -299,9 +299,11 @@ const settingStore = useSettingStore();
 const userStore = useUserStore();
 const emit = defineEmits(['update:modelValue']);
 
-const handleClick = (innSkip, validate) => {
+const handleClick = async(innSkip, validate) => {
   skipInn.value = innSkip;
-  getErrorsList(validate)
+  console.log(validate)
+  await nextTick();
+  await getErrorsList(validate)
 }
 
 const data = computed({
@@ -367,8 +369,22 @@ const handleSearchOrgByInn = (inn) => {
   .finally(() => isSearchInn.value = false);
 }
 
-const handleSubmit = () => {
-  router.push({ path: "/register/step2" });
+const handleSubmit = (value, form) => {
+  organizationStore.setOrganization({
+    userId: userStore.userData.id,
+    name: data.value.organizationName,
+    organizationForm: data.value.organizationForm,
+    inn: data.value.inn,
+    kpp: data.value.kpp,
+    ogrn: data.value.ogrn,
+    legalAddress: data.value.legalAddress,
+    selfEmployed: data.value.selfEmployed,
+    countryId: data.value.countryId,
+    currencyId: 1,
+  }, form).then((res) => {
+    userStore.checkAuth();
+    router.push({ path: "/register/step2" });
+  });
 };
 
 </script>

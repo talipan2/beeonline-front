@@ -85,4 +85,10 @@ const alertClass = computed(() => {
   color: #856404
 }
 
+.alerts-info {
+  background-color: #e2f2d5;
+  border-color: #d6edc5;
+  color: #396318
+}
+
 </style>

@@ -112,16 +112,16 @@ const data = computed(() => ({
 const currentHandleSubmit = computed(() => {
   switch (router.currentRoute.value.params.slug) {
     case 'step1':
-      return (() => {
+      return ((values, form) => {
         if(!service.value.id) {
           entityStore.addNewService(
             {
               userId: userStore.userData.id,
               organizationId: userStore.userData.organization_id, 
-              name: service.value.name, 
+              name: service.value.name,
               categories: service.value.categories,
               status: 'filling',
-            }
+            }, form
           ).then((res) => {
             if(res && res.id) {
               entityStore.updateServiceStep(res.id, 1)
@@ -133,12 +133,12 @@ const currentHandleSubmit = computed(() => {
           entityStore.editService(service.value.id, {
             name: service.value.name,
             categories: service.value.categories,
-          }).then(() => router.push('/services/create/step2'))
+          }, form).then(() => router.push('/services/create/step2'))
           .catch(error =>  console.log(error));
         }
       });
     case 'step2':
-      return (() =>{
+      return ((values, form) =>{
           entityStore.editService(service.value.id, {
             description: service.value.description,
             rawMaterials: service.value.rawMaterials,
@@ -146,8 +146,7 @@ const currentHandleSubmit = computed(() => {
             freeTestSamples: service.value.freeTestSamples,
             minLot: service.value.minLot,
             termsOfCooperation: service.value.termsOfCooperation,
-            step: 2
-          }).then(() => {
+          }, form).then(() => {
             entityStore.updateServiceStep(service.value.id, 2)
             entityStore.fillingService.currentStep = 2
             router.push('/services/create/step3')
@@ -169,11 +168,11 @@ const currentHandleSubmit = computed(() => {
           }
         });
     case 'step3':
-      return (() => {
+      return ((values, form) => {
         if(service.value.locations && service.value.locations.cities) {
           entityStore.editService(service.value.id, {
             cities: service.value.locations.cities
-          }).then(() => {
+          }, form).then(() => {
             entityStore.updateServiceStep(service.value.id, 3)
             router.push('/services/create/step4')
           })
@@ -181,10 +180,10 @@ const currentHandleSubmit = computed(() => {
         }
       });
     case 'step4':
-      return (() => {
+      return ((values, form) => {
         entityStore.editService(service.value.id, {
           status: 'active'
-        }).then(() => {
+        }, form).then(() => {
           entityStore.fillingService = null
           router.push(`/performer/services/show/${service.value.id}`)
           settingStore.createEntityFinalModal = true
@@ -195,8 +194,8 @@ const currentHandleSubmit = computed(() => {
   }
 })
 
-const handleSubmit = () => {
-  currentHandleSubmit.value();
+const handleSubmit = (values, form) => {
+  currentHandleSubmit.value(values, form);
   entityStore.isRedirectedToStep = false
 }
 

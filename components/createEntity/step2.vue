@@ -111,7 +111,7 @@
             }`" />
         </label>
         <UiTextArea 
-          :rules="{ required: true, min: 10 }"
+          
           name="conditions" 
           label="Условия сотрудничества" 
           v-model="data.termsOfCooperation" 
@@ -234,6 +234,10 @@ const router = useRouter();
 
 const handleSelectLogo = (url) => {
   props.data.logo = url
+}
+
+const handleSubmit = (values, form) => {
+  props.handleSubmit(values, form)
 }
 
 const locationData = ref({

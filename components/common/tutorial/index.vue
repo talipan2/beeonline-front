@@ -174,6 +174,7 @@ const showNextTip = () => {
   &__btn {
     font-size: 1.4rem;
     padding: 0.21em 0 0;
+    min-width: 2em;
     width: 2em;
     height: 2em;
   }

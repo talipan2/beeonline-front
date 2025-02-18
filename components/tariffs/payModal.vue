@@ -148,12 +148,10 @@ const handlePayment = () => {
 .pay-modal {
   font-size: 1rem;
   
-  .modal-dialog {
+  .modal-content {
     box-sizing: border-box;
     width: 29%;
     padding: 4em;
-    border-left: 2px solid #6937a5;
-    border-top: 2px solid #6937a5;
     background-color: #fff;
   }
 
@@ -220,24 +218,6 @@ const handlePayment = () => {
     font-size: 1.4em;
     width: 100%;
     text-transform: uppercase;
-  }
-
-  @include tablet {
-    .modal-dialog {
-      width: 40%;
-    }
-  }
-
-  @include mobile {
-    .modal-dialog {
-      width: 70%;
-    }
-  }
-
-  @include small-mobile {
-    .modal-dialog {
-      width: 95%;
-    }
   }
 
 }

@@ -102,44 +102,49 @@ const locationStore = useLocationStore();
 
 const registerData = computed(() => organizationStore.registerOrg);
 
-const handleSubmit = () => {
-  organizationStore.setOrganization({
-    name: registerData.value.organizationName,
-    userId: userStore.userData.id,
-    organizationForm: registerData.value.organizationForm,
-    inn: registerData.value.inn,
-    kpp: registerData.value.kpp,
-    ogrn: registerData.value.ogrn,
-    legalAddress: registerData.value.legalAddress,
-    selfEmployed: registerData.value.selfEmployed,
-    countryId: registerData.value.countryId,
-    currencyId: 1,
-  }).then((res) => {
-    if (res.data && res.data.id) {
-      if(registerData.value.verificationFiles && registerData.value.verificationFiles.length > 0) {
-        organizationStore.setVerificationDocuments(res.data.id, registerData.value.verificationFiles)
-      }
-      organizationStore.setPubCard({
-        id: res.data.id,
-        name: registerData.value.companyName,
-        type: userStore.role,
-        description: registerData.value.description,
-        cities: registerData.value.locations.cities || [],
-        regions: registerData.value.locations.regions || [],
-        siteUrl: registerData.value.siteUrl,
-        status: 1,
-      }).then((res) => {
-        userStore.checkAuth()
+// const handleSubmit = () => {
+//   organizationStore.setOrganization({
+//     name: registerData.value.organizationName,
+//     userId: userStore.userData.id,
+//     organizationForm: registerData.value.organizationForm,
+//     inn: registerData.value.inn,
+//     kpp: registerData.value.kpp,
+//     ogrn: registerData.value.ogrn,
+//     legalAddress: registerData.value.legalAddress,
+//     selfEmployed: registerData.value.selfEmployed,
+//     countryId: registerData.value.countryId,
+//     currencyId: 1,
+//   }).then((res) => {
+//     if (res.data && res.data.id) {
+//       if(registerData.value.verificationFiles && registerData.value.verificationFiles.length > 0) {
+//         organizationStore.setVerificationDocuments(res.data.id, registerData.value.verificationFiles)
+//       }
+//       organizationStore.setPubCard({
+//         id: res.data.id,
+//         name: registerData.value.companyName,
+//         type: userStore.role,
+//         description: registerData.value.description,
+//         cities: registerData.value.locations.cities || [],
+//         regions: registerData.value.locations.regions || [],
+//         siteUrl: registerData.value.siteUrl,
+//         status: 1,
+//       }).then((res) => {
+//         userStore.checkAuth()
         
-        if(res.data && res.data.id) {
-          router.push('/')
-        }
-        if (res.data && res.data.id && registerData.value.companyLogo.id) {
-          organizationStore.setPubCardLogo(res.data.id, registerData.value.companyLogo.id)
-        }
-      })
-    }
-  })
+//         if(res.data && res.data.id) {
+//           router.push('/')
+//         }
+//         if (res.data && res.data.id && registerData.value.companyLogo.id) {
+//           organizationStore.setPubCardLogo(res.data.id, registerData.value.companyLogo.id)
+//         }
+//       })
+//     }
+//   })
+// }
+
+const handleSubmit = () => {
+  router.push('/')
+  organizationStore.resetRegisterData();
 }
 
 </script>

@@ -5,6 +5,7 @@
     title="Контактные данные" 
     @confirm="() => confirm()" 
     :closeButton="false"
+    size="lg"
   >
     <template #header />
     <template #content>
@@ -83,14 +84,14 @@ const data = ref({
 
 const settingStore = useSettingStore();
 
-const handleSubmit = () => {
+const handleSubmit = (values, form) => {
   if(data.value.id) {
     userStore.setUserData({
       name: data.value.name,
       post: data.value.post,
       email: data.value.email,
-      phone: data.value.phone
-    }, data.value.id).then(res => {
+      phone: data.value.phone.replace(/^\+/, "")
+    }, data.value.id, form).then(res => {
       if(res) {
         settingStore.changeUserDataModal = false;
       }
@@ -120,11 +121,6 @@ watch(() => settingStore.changeUserDataModal, (newVal) => {
 
 .user-data-modal {
   font-size: 1rem;
-
-  .modal-dialog {
-    max-width: 82em;
-    width: 100%;
-  }
 
   .modal-content {
     padding: 2em;

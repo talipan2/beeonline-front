@@ -29,13 +29,13 @@ export default defineNuxtPlugin((nuxtApp) => {
     (response) => response,
     (error) => {
       console.log(error)
-      if (error.response && error.response.status === 404) {
-        throw showError({
-          statusCode: 404,
-          fatal: true,
-          message: error.response.data.msg
-       })
-      }
+      // if (error.response && error.response.status === 404) {
+      //   throw showError({
+      //     statusCode: 404,
+      //     fatal: true,
+      //     message: error.response.data.msg
+      //  })
+      // }
       return Promise.reject(error);
     }
   );

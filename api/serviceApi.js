@@ -9,11 +9,11 @@ export default {
     return axios.get(`services/${id}`)
   },
 
-  async setService(data) {
-    return axios.post(`services`, data)
+  async setService(data, form) {
+    return useApi().post(`services`, data, form)
   },
 
-  async editService(id, data) {
+  async editService(id, data, form) {
     const { 
       name, 
       description, 
@@ -41,7 +41,7 @@ export default {
     if(status) params.status = status
     if(minLot && minLot.length > 0) params.batches = minLot
     if(categories && categories.length > 0) params.product_categories = categories
-    return axios.patch(`services/${id}`, params)
+    return useApi().patch(`services/${id}`, params, form)
   },
 
   async uploadLogo(id, data) {

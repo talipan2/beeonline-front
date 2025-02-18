@@ -3,7 +3,6 @@ export async function getErrorsList (validate) {
   const result = await validate();
   
   if (!result.valid && result.errors) {
-    console.log(result.errors)
     scrollToError(result.errors);
   }
 };

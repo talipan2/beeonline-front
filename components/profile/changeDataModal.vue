@@ -5,6 +5,7 @@
     title="Данные организации" 
     @confirm="() => confirm()" 
     :closeButton="false"
+    size="xs"
   >
     <template #header />
     <template #content>
@@ -39,11 +40,6 @@ const confirm = () => {
 
 .change-data-modal {
   font-size: 1rem;
-
-  .modal-dialog {
-    max-width: 40em;
-    width: 100%;
-  }
 
   .modal-content {
     padding: 2em;

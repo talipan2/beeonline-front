@@ -64,36 +64,36 @@ export const useOrganizationStore = defineStore('organization', {
     },
   },
   actions: {
-    async setOrganization(data) {
+    async setOrganization(data, form) {
       try {
-        const response = await Api.setOrganization(data);
-        if(response.data) {
-          this.organization = response.data;
-          return response.data;
+        const response = await Api.setOrganization(data, form);
+        if(response) {
+          this.organization = response;
+          return response;
         }
       } catch (error) {
         throw error;
       }
     },
     
-    async setPubCard(data) {
+    async setPubCard(data, form) {
       try {
-        const response = await Api.setPubCards(data);
-        if(response.data) {
-          this.pubCards = response.data;
-          return response.data;
+        const response = await Api.setPubCards(data, form);
+        if(response) {
+          this.pubCards = response;
+          return response;
         }
       } catch (error) {
         throw error;
       }
     },
 
-    async editPubCards(data) {
+    async editPubCards(data, form) {
       try {
-        const response = await Api.editPubCard(data);
-        if(response.data) {
-          this.pubCards = response.data;
-          return response.data;
+        const response = await Api.editPubCard(data, form);
+        if(response) {
+          this.pubCards = response;
+          return response;
         }
       } catch (error) {
         throw error;
@@ -207,6 +207,38 @@ export const useOrganizationStore = defineStore('organization', {
         }
       } catch (error) {
         throw error;
+      }
+    },
+
+    resetRegisterData() {
+      this.registerOrg = {
+        countryId: 1,
+        inn: null,
+        KPP: null,
+        organizationForm: 3,
+        ogrn: null,
+        legalAddress: null,
+        organizationName: null,
+        companyName: null,
+        companyLogo: {
+          id: null,
+          url: null,
+        },
+        description: null,
+        locations: {
+          regions: [],
+          cities: [],
+        },
+        companyDescription: null,
+        productionCountry: null,
+        selfEmployed: false,
+        registerAddress: null,
+        selectedProductionCountries: {
+          fullNameLocation: [],
+          locationId: [],
+        },
+        siteUrl: null,
+        verificationFiles: [],
       }
     }
   }

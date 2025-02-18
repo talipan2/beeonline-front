@@ -66,24 +66,17 @@ export const useUserStore = defineStore("user", {
             }
         },
 
-        async registerUser(name, email, post, phone, role) {
+        async registerUser(values, form) {
             try {
-                const response = await Api.registerUser(
-                    name,
-                    email,
-                    post,
-                    phone,
-                    role
-                );
-                if (response.data) {
+                const response = await Api.registerUser(values, form)
+                if (response) {
                     this.isAuth = true;
-                    this.userToken = response.data.access_token;
+                    this.userToken = response.access_token;
                     localStorage.setItem("token", this.userToken);
-                    this.userData = response.data.user;
-                    this.userRoles = response.data.user.roles;
-                    this.role = response.data.user.role;
-                    this.userOrganizationId =
-                        response.data.user.organization_id;
+                    this.userData = response.user;
+                    this.userRoles = response.user.roles;
+                    this.role = response.user.role;
+                    this.userOrganizationId = response.user.organization_id;
                 }
             } catch (error) {
                 if (
@@ -152,14 +145,18 @@ export const useUserStore = defineStore("user", {
                     localStorage.removeItem("token");
                     this.isAuth = false;
                     this.userData = {};
+                    this.userRoles = [];
+                    this.userOrganization = {};
+                    this.userPubCard = {};
+                    this.userOrganizationId = null;
                 }
             } catch (error) {
                 throw error;
             }
         },
-        async resetPassword(data) {
+        async resetPassword(data, form) {
             try {
-                const response = await Api.resetPassword(data);
+                const response = await Api.resetPassword(data, form);
                 if (response.data) {
                     return response.data;
                 }
@@ -168,12 +165,13 @@ export const useUserStore = defineStore("user", {
             }
         },
 
-        async setUserData(data, id) {
+        async setUserData(data, id, form) {
             try {
-                const response = await Api.setUserData(data, id);
-                if (response.data) {
-                    this.userData = response.data.data;
-                    return response.data.data;
+                const response = await Api.setUserData(data, id, form);
+                console.log(response)
+                if (response) {
+                    this.userData = response;
+                    return response;
                 }
             } catch (error) {
                 throw error;

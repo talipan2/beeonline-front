@@ -67,7 +67,8 @@ const validSteps = ['step1', 'step2', 'step4'];
 const currentHandleSubmit = computed(() => {
   switch (router.currentRoute.value.params.slug) {
     case 'step1':
-      return (() => {
+      return ((value, form) => {
+        console.log
         if(!order.value.id) {
           entityStore.addNewOrder(
             {
@@ -77,12 +78,12 @@ const currentHandleSubmit = computed(() => {
               category: order.value.categories,
               completionDate: order.value.completionDate,
               status: 'filling',
-            }
+            },
+            form
           ).then(() => {
             entityStore.updateOrderStep(order.value.id, 1)
             router.push('/orders/create/step2')
           })
-          .catch(error => console.log(error));
 
         } else {
           entityStore.editOrder(order.value.id, {
@@ -90,11 +91,10 @@ const currentHandleSubmit = computed(() => {
             category: order.value.categories,
             completionDate: order.value.completionDate,
           }).then(() => router.push('/orders/create/step2'))
-          .catch(error =>  console.log(error));
         }    
       });
     case 'step2':
-      return (() =>{
+      return ((value, form) =>{
           // entityStore.uploadOrderLogo(1, order.value.logo).then((res) => console.log(res))
           entityStore.editOrder(order.value.id, {
             description: order.value.description,
@@ -105,12 +105,11 @@ const currentHandleSubmit = computed(() => {
             termsOfCooperation: order.value.termsOfCooperation,
             cities: order.value.locations.cities,
             regions: order.value.locations.regions,
-          }).then(() => {
+          }, form).then(() => {
             entityStore.updateOrderStep(order.value.id, 2)
             entityStore.fillingOrder.currentStep = 2
             router.push('/orders/create/step4')
           })
-          .catch(error => console.log(error));
 
           if(order.value.gallery && order.value.gallery.length) {
             entityStore.uploadOrderGallery(order.value.id, order.value.gallery.map(item => item.id))
@@ -125,11 +124,11 @@ const currentHandleSubmit = computed(() => {
           }
         });
     case 'step4':
-      return (() => {
+      return ((value, form) => {
         entityStore.editOrder(order.value.id, {
           isSafeDeal: order.value.isSafeDeal,
           status: 'under_moderation',
-        }).then(res => {
+        }, form).then(res => {
           entityStore.fillingOrder = null
           entityStore.resetOrder()
         });
@@ -144,8 +143,8 @@ const currentHandleSubmit = computed(() => {
   } 
 })
 
-const handleSubmit = () => {
-  currentHandleSubmit.value();
+const handleSubmit = (value, form) => {
+  currentHandleSubmit.value(value, form);
 }
 
 const currentComponent = computed(() => {

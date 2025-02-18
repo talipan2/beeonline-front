@@ -4,6 +4,7 @@
     v-model="settingStore.createEntityFinalModal"
     @confirm="confirm"
     :closeButton="false"
+    size="xs"
   >
   <template #content>
     <p>{{ text }}</p>
@@ -44,10 +45,6 @@ watch(() => modalState.value, (newVal) => {
 
 .create-entity-final-modal {
   font-size: 1rem;
-  .modal-dialog {
-    max-width: 40em;
-    width: 100%;
-  }
 
   .modal-content {
     padding: 4em;

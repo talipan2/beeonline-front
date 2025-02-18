@@ -1,11 +1,28 @@
 <template>
-  <UiModal class="reset-password-modal modal"  v-model="settingStore.resetPasswordModal" @confirm="() => confirm()" :closeButton="false">
+  <UiModal class="reset-password-modal modal" size="xs"  v-model="settingStore.resetPasswordModal" @confirm="() => confirm()" :closeButton="false">
     <template #content>
       <h2 class="reset-password-modal__title">Сброс пароля</h2>
       <p class="reset-password-modal__text">Вы уверены, что хотите сбросить пароль?</p>
       <div class="reset-password-modal__btn-container">
-        <UiButton class="reset-password-modal__btn" type="button" variant="quinary" size="large">Сбросить</UiButton>
-        <UiButton class="reset-password-modal__btn reset-password-modal__btn__type-cancel" type="button" variant="tertiary" size="large">Отменить</UiButton>
+        <UiButton 
+          class="reset-password-modal__btn" 
+          type="button" 
+          variant="quinary" 
+          size="large" 
+          @click="resetPassword"
+        >
+          Сбросить
+        </UiButton>
+        <UiButton 
+          class="reset-password-modal__btn 
+          reset-password-modal__btn__type-cancel" 
+          type="button" 
+          variant="tertiary" 
+          size="large" 
+          @click="confirm"
+        >
+          Отменить
+        </UiButton>
       </div>
     </template>
   </UiModal>
@@ -16,6 +33,12 @@ import { useSettingStore } from '~/store/settingStore';
 
 
 const settingStore = useSettingStore();
+const emit = defineEmits(['reset']);
+
+const resetPassword = () => {
+  confirm();
+  emit('reset');
+}
 
 function confirm() {
   settingStore.resetPasswordModal = false;
@@ -27,11 +50,6 @@ function confirm() {
 
 .reset-password-modal {
   font-size: 1rem;
-
-  .modal-dialog {
-    max-width: 40em;
-    width: 100%;
-  }
   
   .modal-content {
     padding: 2em;

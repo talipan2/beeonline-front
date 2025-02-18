@@ -262,9 +262,9 @@ const handleClick = () => {
 }
 
 .btn-around {
-  padding: 1.2rem;
+  // padding: 1.2rem;
   border-radius: 100px;
-  padding: 0 1em;
+  // padding: 0 1em;
   min-width: 4rem;
   height: 4rem;
 }

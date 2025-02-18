@@ -1,5 +1,5 @@
 <template>
-  <UiModal class="modal balance-documents-modal" v-model="settingStore.balanceDocumentsModalStatus" title="Запрос закрывающих документов" @confirm="() => confirm()">
+  <UiModal class="modal balance-documents-modal" size="xs" v-model="settingStore.balanceDocumentsModalStatus" title="Запрос закрывающих документов" @confirm="() => confirm()">
     <template #header></template>
     <template #content>
       <form @submit.prevent="handleSubmit">
@@ -36,10 +36,6 @@ const handleSubmit = () => {
 .balance-documents-modal {
   font-size: 1rem;
 
-  .modal-dialog {
-    width: 21%;
-  }
-
   .modal-content {
     padding: 5.5em 2em 2em;
   }
@@ -56,32 +52,12 @@ const handleSubmit = () => {
   }
 
   @include desktop {
-    .modal-dialog {
-      width: 30%;
-    }
 
     .modal-title {
       font-size: 2em;
     }
   }
 
-  @include tablet {
-    .modal-dialog {
-      width: 40%;
-    }
-  }
-
-  @include mobile {
-    .modal-dialog {
-      width: 70%;
-    }
-  }
-
-  @include small-mobile {
-    .modal-dialog {
-      width: 95%;
-    }
-  }
 }
 
 </style>

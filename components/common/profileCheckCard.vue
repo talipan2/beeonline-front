@@ -78,6 +78,7 @@ const props = defineProps({
 
   .form-group-data {
       margin-bottom: 2em;
+      color: var(--text-color-secondary);
     }
   
     .form-group__title {
@@ -112,6 +113,7 @@ const props = defineProps({
   &__link {
     color: var(--text-color-ternary);
     font-size: 1.2em;
+    text-transform: none;
   }
 }
 

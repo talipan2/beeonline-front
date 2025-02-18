@@ -18,8 +18,8 @@
       />
       <InfoModal :text="infoModal.text" :title="infoModal.title">
         <template #content>
-            <UiButton type="button" @click="infoModal.action" class="info-modal__btn" variant="quinary" size="around">Подтвердить</UiButton>
-            <UiButton type="button" class="info-modal__btn" variant="tertiary" @click="settingStore.infoModal = false" size="around">Закрыть</UiButton>
+            <UiButton type="button" @click="infoModal.action" class="info-modal__btn" variant="quinary" size="large">Подтвердить</UiButton>
+            <UiButton type="button" class="info-modal__btn" variant="tertiary" @click="settingStore.infoModal = false" size="large">Закрыть</UiButton>
         </template>
       </InfoModal>
     </template>

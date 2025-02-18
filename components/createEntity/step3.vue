@@ -111,6 +111,10 @@ const locationData = ref({
   fullNameLocation: dataLocation.value.placeOfProduction,
 })
 
+const handleSubmit = (values, form) => {
+  if(props.handleSubmit) props.handleSubmit(values, form)
+}
+
 watch(() => locationData.value, (newVal) => {
   dataLocation.value.placeOfProductionId = locationData.value.locationId
   dataLocation.value.placeOfProduction = locationData.value.fullNameLocation

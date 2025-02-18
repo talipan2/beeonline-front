@@ -1,5 +1,5 @@
 <template>
-  <UiModal v-model="isOpenModal" title="Выберите город" @confirm="() => confirm()" class="header-menu"
+  <UiModal v-model="isOpenModal" @confirm="() => confirm()" class="header-menu"
     :style="{ marginTop: `${headerHeight}px` }" ref="modall" :clickToClose="false">
     <template #content>
       <div class="header-menu__header">
@@ -164,7 +164,7 @@ watch(() => router.currentRoute.value.path, (newVal) => {
     width: 29em;
   }
 
-  .modal-dialog {
+  .modal-content {
     max-height: 100%;
     box-sizing: border-box;
     overflow-y: auto;

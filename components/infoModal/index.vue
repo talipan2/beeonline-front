@@ -1,10 +1,10 @@
 <template>
-  <UiModal class="info-modal modal" v-model="settingStore.infoModal" title="" @confirm="() => confirm()" :closeButton="false">
+  <UiModal class="info-modal modal" size="md" v-model="settingStore.infoModal" title="" @confirm="() => confirm()" :closeButton="false">
     <template #content>
       <h3 class="info-modal__title" v-if="title">{{ title }}</h3>
       <p class="info-modal__text" v-if="text">{{ text }}</p>
       <div class="info-modal__btn-container" v-if="$slots.content">
-        <UiButton type="button" class="info-modal__btn" variant="tertiary" @click="confirm" size="around" v-if="!$slots.content">Закрыть</UiButton>
+        <UiButton type="button" class="info-modal__btn" variant="tertiary" @click="confirm" size="large" v-if="!$slots.content">Закрыть</UiButton>
         <slot name="content"></slot>
       </div>
     </template>
@@ -40,10 +40,6 @@ function confirm() {
 
 .info-modal {
   font-size: 1rem;
-
-  .modal-dialog {
-    width: 21%;
-  }
   
   .modal-content {
     padding: 2em;

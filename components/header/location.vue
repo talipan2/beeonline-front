@@ -1,6 +1,6 @@
 <template>
   <div>
-    <UiNewDropdown placement="bottom-end" trigger="manual" ref="tippy">
+    <UiNewDropdown placement="bottom-start" trigger="manual" ref="tippy">
       <button class="header__location" @click="isOpen = true">
         <SvgoMapPin class="svg-m" filled />
         <span class="header__location-value">

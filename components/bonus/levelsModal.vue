@@ -1,5 +1,5 @@
 <template>
-  <UiModal class="bonus-modal modal" v-model="settingStore.bonusLevelModal" title="" @confirm="() => confirm()" colClass="card">
+  <UiModal class="bonus-modal modal" size="xl" v-model="settingStore.bonusLevelModal" title="" @confirm="() => confirm()" colClass="card">
     <template #content>
       <div class="card__container">
         <div class="card__content">
@@ -121,9 +121,10 @@ watch(() => levelGroupsContent.value, (newVal) => {
 <style lang="scss">
 
 .bonus-modal {
-  .modal-dialog {
+  .modal-content {
     box-shadow: none;
     width: 55%;
+    padding: 2.4em;
   }
 
   .card__container {
@@ -149,7 +150,7 @@ watch(() => levelGroupsContent.value, (newVal) => {
   }
 
   @include mobile {
-    .modal-dialog {
+    .modal-content {
       width: 80%;
     }
   }

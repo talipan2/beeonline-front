@@ -12,14 +12,15 @@
           <li class="header__item">
             <NuxtLink to="/contacts" class="header__link">Контакты</NuxtLink>
           </li>
+          <li class="header__item header__item_type-location">
+            <HeaderLocation />
+          </li>
         </ul>
         <ul class="header__list">
           <li class="header__item header__item_type-lang">
             <HeaderChooseLang />
           </li>
-          <li class="header__item header__item_type-location">
-            <HeaderLocation />
-          </li>
+
         </ul>
       </div>
     </div>

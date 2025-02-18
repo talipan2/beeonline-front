@@ -51,7 +51,7 @@
           <li  v-for="(step, index) in checkList" :key="index" :class="[
             'checklist__step',
             {
-              'checklist__step_current': step.value.includes(currentStep),
+              'checklist__step_current': step.value === currentStep,
               'checklist__step_passed': isStepPassed(step.value),
             }
           ]">

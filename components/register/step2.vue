@@ -77,6 +77,9 @@
 </template>
 
 <script setup>
+import { useOrganizationStore } from '~/store/organizationStore';
+import { useUserStore } from '~/store/userStore';
+
 
 const props = defineProps({
   blockTitle: {
@@ -102,6 +105,8 @@ const props = defineProps({
 });
 
 const router = useRouter();
+const organizationStore = useOrganizationStore();
+const userStore = useUserStore();
 const emit = defineEmits(['update:modelValue']);
 
 const data = computed({
@@ -114,11 +119,22 @@ const data = computed({
 });
 
 
-const handleSubmit = () => {
+const handleSubmit = (value, form) => {
   if(props.submitFunc) {
     props.submitFunc();
   } else {
-    router.push("/register/step3");
+    organizationStore.setPubCard({
+      ...value, 
+      id: userStore.userData.organization_id,
+      status: 1,
+      type: userStore.role,
+    }, form).then(res => {
+      if (res && res.id && data.value.companyLogo?.id) {
+        organizationStore.setPubCardLogo(res.data.id, registerData.value.companyLogo.id)
+      }
+      userStore.checkAuth()
+      router.push({path: '/register/step3'})
+    });
   } 
 };
 

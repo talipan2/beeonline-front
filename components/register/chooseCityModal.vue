@@ -1,5 +1,5 @@
 <template>
-  <UiModal v-model="settingStore.chooseLocationModal" :title="modalTitle" @confirm="() => confirm()"
+  <UiModal v-model="settingStore.chooseLocationModal" size="lg" :title="modalTitle" @confirm="() => confirm()"
     class="choose-city-modal choose-city-modal-register modal">
     <template #header>
       <CommonLocationSearch 
@@ -520,8 +520,8 @@ onMounted(() => {
 .choose-city-modal {
   
 
-  .modal-dialog {
-    max-width: 82.5em;
+  .modal-content {
+    // max-width: 82.5em;
     width: 100%;
   }
 
@@ -530,7 +530,7 @@ onMounted(() => {
     min-height: 60em;
     height: 100%;
     // padding-bottom: 6em;
-    overflow: hidden;
+    // overflow: hidden;
     display: flex;
     flex-direction: column;
   }
@@ -548,6 +548,8 @@ onMounted(() => {
     // margin-bottom: 7em;
     height: 100%;
     flex: 1;
+    display: flex;
+    flex-direction: column;
   }
 
   &__search {
@@ -590,6 +592,7 @@ onMounted(() => {
   padding: 3em 6em;
   overflow-y: auto;
   height: 48em;
+  flex-grow: 1;
 
   &__title {
     font-size: 1.4em;
@@ -643,7 +646,7 @@ onMounted(() => {
     min-width: 15.2em;
 
     &:nth-child(2) {
-      flex: 2;
+      flex: 1;
     }
 
     &:not(:last-child) {
@@ -728,7 +731,7 @@ onMounted(() => {
     font-size: 1em;
   }
 
-  .choose-city-modal .modal-dialog {
+  .choose-city-modal .modal-content {
     width: calc(100% - 3em);
     max-height: 70em;
   }
@@ -778,6 +781,7 @@ onMounted(() => {
       display: flex;
       padding: 0 !important;
       border: none !important;
+      flex: 1;
     }
   }
 }
@@ -792,6 +796,8 @@ onMounted(() => {
 
 .choose-city-modal-register .choose-city {
   height: 40em;
+  max-height: 48em;
+  flex-grow: 1;
 }
 
 .choose-city__btn-container {

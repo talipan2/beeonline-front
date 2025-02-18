@@ -81,14 +81,14 @@ const formatData = computed(() => {
 const currentHandleSubmit = computed(() => {
   switch (currentStep.value) {
     case 1:
-      return (() => {
+      return ((value, form) => {
         entityStore.editService(id, {
           name: serviceData.value.name,
           categories: serviceData.value.categories,
-        }).then(() => currentStep.value = 2)
+        }, form).then(() => currentStep.value = 2)
       });
     case 2:
-      return (() => {
+      return ((value, form) => {
         entityStore.editService(id, {
           description: serviceData.value.description,
           rawMaterials: serviceData.value.rawMaterials,
@@ -96,7 +96,7 @@ const currentHandleSubmit = computed(() => {
           freeTestSamples: serviceData.value.freeTestSamples,
           minLot: serviceData.value.minLot,
           termsOfCooperation: serviceData.value.termsOfCooperation
-        }).then(() => {currentStep.value = 3})
+        }, form).then(() => {currentStep.value = 3})
 
         if(serviceData.value.gallery && serviceData.value.gallery.length) {
           const galleryIds = serviceData.value.gallery.map(item => item.id)
@@ -109,10 +109,10 @@ const currentHandleSubmit = computed(() => {
         }
       });
     case 3:
-      return (() => {
+      return ((value, form) => {
         entityStore.editService(id, {
           cities: serviceData.value.locations.cities
-        })
+        }, form)
         currentStep.value = 4
       });
     case 4:
@@ -122,8 +122,8 @@ const currentHandleSubmit = computed(() => {
   }
 })
 
-const handleSubmit = () => {
-  currentHandleSubmit.value()
+const handleSubmit = (value, form) => {
+  currentHandleSubmit.value(value, form);
 }
 
 const previousStep = () => {

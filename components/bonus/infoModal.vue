@@ -1,5 +1,5 @@
 <template>
-  <UiModal class="bonus-info-modal modal" v-model="settingStore.bonusInfoModal" title="" @confirm="() => confirm()" colClass="card">
+  <UiModal class="bonus-info-modal modal" size="xs" v-model="settingStore.bonusInfoModal" title="" @confirm="() => confirm()" colClass="card">
     <template #content>
       <div class="card__container">
         <div class="card__content">
@@ -33,7 +33,7 @@ const confirm = () => {
 <style lang="scss">
 
 .bonus-info-modal {
-  .modal-dialog {
+  .modal-content {
     box-shadow: none;
     width: 22%;
     box-sizing: border-box;
@@ -43,6 +43,7 @@ const confirm = () => {
     display: flex;
     flex-direction: column;
     gap: 3rem;
+    padding: 1.4em;
   }
 
   .modal-close {
@@ -62,13 +63,13 @@ const confirm = () => {
   }
 
   @include tablet {
-    .modal-dialog {
+    .modal-content {
       width: 50%;
     }
   }
   
   @include mobile {
-    .modal-dialog {
+    .modal-content {
       width: 90%;
     }
   }
