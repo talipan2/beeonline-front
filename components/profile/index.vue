@@ -2,7 +2,7 @@
   <div class="profile__checklist">
     <CommonProfileCheckCard title="Представитель компании"
       text="Указанные данные не разглашаются третьим лицам, и необходимы для успешной работы на портале" :first-btn="handleOpenChangeUserDataModal"
-      changeLinkLabel="Изменить данные" :secondLink="`/${role}/profile/update_pwd`" secondLinkLabel="Изменить пароль">
+      changeLinkLabel="Изменить данные" secondLink="/profile/update_pwd" secondLinkLabel="Изменить пароль">
       <div class="form-group profile__representative">
         <div class="form-group-data">
           <div class="form-group__title">ФИО</div>
@@ -21,16 +21,14 @@
           <div class="form-group__value">{{ userData.phone }}</div>
         </div>
       </div>
-      <UiButton :to="role ? `/${role}/staff` : '/'" class="profile__employees-btn" variant="primary" size="large">
+      <UiButton to="/staff" class="profile__employees-btn" variant="primary" size="large">
         Сотрудники
       </UiButton>
     </CommonProfileCheckCard>
     <CommonProfileCheckCard 
       title="Карточка компании" 
       text="Указанные данные будут видны другим участникам портала"
-      :changeLink="userStore.role == 'customer' 
-        ? `/customer/pubcards/edit/${pubCardData.id}` 
-        : `/performer/pubcards/edit/${pubCardData.id}`" changeLinkLabel="Заполнить"
+      :changeLink="`/pubcards/edit/${pubCardData.id}`" changeLinkLabel="Заполнить"
     >
       <div class="register__check-company">
         <div class="register__check-company-container">
@@ -57,10 +55,10 @@
           <p class="form-group__title">Описание</p>
           <p class="form-group__value">{{ pubCardData.description }}</p>
         </div>
-        <div class="form-group-data" v-if="userStore.role === 'performer'">
+        <!-- <div class="form-group-data" v-if="userStore.role === 'performer'">
           <p class="form-group__title">Собственные торговые марки</p>
           <p class="form-group__value">{{ organizationStore.pubCards.url_site || '-' }}</p>
-        </div>
+        </div> -->
         <div class="form-group-data">
           <p class="form-group__title">Сайт</p>
           <a v-if="pubCardData.siteUrl" :href="pubCardData.siteUrl" target="_blank" class="form-group__value link text-wrap">{{ pubCardData.siteUrl}}</a>
@@ -88,7 +86,7 @@
     </CommonProfileCheckCard>
     <CommonProfileCheckCard title="Данные организации"
       text="Указанные данные не разглашаются третьим лицам, и необходимы для успешной работы на портале"
-      :first-btn="handleOpenChangeDataModal" changeLinkLabel="Изменить" secondLink="/" secondLinkLabel="Просмотр документов">
+      :first-btn="handleOpenChangeDataModal" changeLinkLabel="Изменить" secondLink="/documentation" secondLinkLabel="Просмотр документов">
       <div class="register__organization-data">
         <div class="form-group-data">
           <p class="form-group__title">Юридическое названии организации</p>

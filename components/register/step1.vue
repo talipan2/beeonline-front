@@ -38,7 +38,7 @@
           <label class="form-group__title">
             ИНН *
             <UiInput
-              :rules="skipInn ? {} : { required: true }"
+              :rules="getSkipInnRules"
               name="inn"
               label="ИНН"
               class="form-group__value"
@@ -91,7 +91,7 @@
             >
             <div class="form-group__value register__input-inn">
               <UiInput
-                :rules="skipInn ? {} : { required: true }"
+                :rules="getSkipInnRules"
                 name="inn"
                 label="ИНН"
                 class="register__input"
@@ -126,7 +126,7 @@
             <label class="form-group-data form-group__title">
               КПП *
               <UiInput
-                :rules="skipInn ? {} : { required: true }"
+                :rules="getSkipInnRules"
                 name="kpp"
                 label="КПП"
                 class="form-group__value"
@@ -155,7 +155,7 @@
             <label class="form-group-data form-group__title">
               ОГРН *
               <UiInput
-                :rules="skipInn ? {} : { required: true }"
+                :rules="getSkipInnRules"
                 name="ogrn"
                 label="ОГРН"
                 class="form-group__value"
@@ -172,7 +172,7 @@
           <label class="form-group-data form-group__title">
             Юридический адрес *
             <UiInput
-              :rules="skipInn ? {} : { required: true }"
+              :rules="getSkipInnRules"
               name="legal_address"
               label="Юридический адрес"
               class="form-group__value"
@@ -197,7 +197,7 @@
             >
             <div class="form-group__value register__input-inn">
               <UiInput
-                :rules="skipInn ? {} : { required: true, min: 2 }"
+                :rules="getSkipInnRules"
                 name="inn"
                 label="ИНН"
                 class="register__input"
@@ -230,7 +230,7 @@
           <label class="form-group__title">
             Юридический адрес *
             <UiInput
-              :rules="skipInn ? {} : { required: true, min: 2 }"
+              :rules="getSkipInnRules"
               name="legal_address"
               label="Юридический адрес"
               class="form-group__value"
@@ -299,11 +299,14 @@ const settingStore = useSettingStore();
 const userStore = useUserStore();
 const emit = defineEmits(['update:modelValue']);
 
+const getSkipInnRules = computed(() => {
+  return skipInn.value ? {} : { required: true }
+})
+
 const handleClick = async(innSkip, validate) => {
   skipInn.value = innSkip;
-  console.log(validate)
   await nextTick();
-  await getErrorsList(validate)
+  getErrorsList(validate)
 }
 
 const data = computed({
@@ -369,8 +372,8 @@ const handleSearchOrgByInn = (inn) => {
   .finally(() => isSearchInn.value = false);
 }
 
-const handleSubmit = (value, form) => {
-  organizationStore.setOrganization({
+const handleSubmit = async (value, form) => {
+  await organizationStore.setOrganization({
     userId: userStore.userData.id,
     name: data.value.organizationName,
     organizationForm: data.value.organizationForm,
@@ -382,8 +385,9 @@ const handleSubmit = (value, form) => {
     countryId: data.value.countryId,
     currencyId: 1,
   }, form).then((res) => {
-    userStore.checkAuth();
-    router.push({ path: "/register/step2" });
+    userStore.checkAuth().then(() => {
+      router.push("/register/step2");
+    });
   });
 };
 

@@ -125,13 +125,7 @@ const handleSubmit = (values, form) => {
         .authUser(values, form)
         .then((res) => {
             settingStore.authModalStatus = false;
-            if (role.value === "customer") {
-                router.push({ path: "/customer/desktop" });
-            } else if (role.value === "performer") {
-                router.push({ path: "/performer/desktop" });
-            } else {
-                router.push({ path: "/" });
-            }
+            router.push({ path: "/desktop" });
         })
 };
 </script>

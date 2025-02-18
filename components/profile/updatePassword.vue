@@ -86,10 +86,7 @@ import { useSettingStore } from '~/store/settingStore';
 import { useUserStore } from '~/store/userStore';
 
 const props = defineProps({
-  role: {
-    type: String,
-    required: true,
-  },
+
 })
 
 const userStore = useUserStore();
@@ -113,7 +110,7 @@ function handleResetPassword(values, form) {
     }, form)
     .then(res => {
       settingStore.setAlert('success', 'Пароль успешно изменен');
-      router.push(`/${props.role}/profile`);
+      router.push(`/profile`);
     })
     .catch(err => {
       settingStore.setAlert('error', err.response.data.message);

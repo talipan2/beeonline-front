@@ -109,7 +109,7 @@ async function handleSubmit(values, form) {
   } else {
     organizationStore.editPubCards({
       id: data.value.id,
-      // name: data.value.companyName,
+      name: data.value.companyName,
       description: data.value.description,
       cities: data.value.locations.cities,
       regions: data.value.locations.regions,
@@ -126,7 +126,8 @@ async function handleSubmit(values, form) {
     if(data.value.gallery && data.value.gallery.length) {
       organizationStore.setPubCardGallery(data.value.id, data.value.gallery.map(item => item.id));
     }
-    router.push(`/${userStore.role}/desktop`);
+    userStore.checkAuth();
+    router.push(`/desktop`);
   }
 }
 

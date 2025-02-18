@@ -56,13 +56,13 @@
           <UiButton class="header__page-link" to="/search" variant="secondary" size="around">
             <SvgoSearchIcon class="svg-m" />
           </UiButton>
-          <UiButton class="header__page-link" :to="role ? `/${role}/favorites` : '/'" variant="secondary" size="around">
+          <UiButton class="header__page-link" :to="role ? `/favorites` : '/'" variant="secondary" size="around">
             <SvgoFavorite class="svg-m" />
           </UiButton>
           <UiButton class="header__page-link" to="/chat" variant="secondary" size="around">
             <SvgoMessage class="svg-m" />
           </UiButton>
-          <UiButton class="header__page-link" :to="role ? `/${role}/notifications` : '/'" variant="secondary" size="around">
+          <UiButton class="header__page-link" :to="role ? `/notifications` : '/'" variant="secondary" size="around">
             <SvgoNotice class="svg-m" />
             <UiAlertBadge />
           </UiButton>
@@ -268,6 +268,8 @@ body.vfm--scrollbar-hidden .fixed-header {
   }
 
   .header__item_type-location {
+    display: flex;
+    align-items: center;
     color: #131523
   }
 

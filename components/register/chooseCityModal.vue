@@ -712,7 +712,7 @@ onMounted(() => {
   }
 
   .choose-city {
-    max-height: 50em;
+    // max-height: 50em;
   }
 }
 
@@ -796,7 +796,7 @@ onMounted(() => {
 
 .choose-city-modal-register .choose-city {
   height: 40em;
-  max-height: 48em;
+  // max-height: 48em;
   flex-grow: 1;
 }
 

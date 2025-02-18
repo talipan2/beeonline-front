@@ -2,7 +2,7 @@
   <NuxtLayout name="profile" title="Карточка заказа" class="entity-edit">
     <template #header>
       <UiBreadCrumb
-        :list="[{ label: 'Главная', link: '/' }, { label: 'Кабинет заказчика', link: '/performer/desktop' }, { label: 'Список заказов', link: '/performer/services' }, { label: 'Заказ', link: '' }]" />
+        :list="[{ label: 'Главная', link: '/' }, { label: `Кабинет ${roleName}`, link: '/desktop' }, { label: 'Список заказов', link: '/customer/orders' }, { label: 'Заказ', link: '' }]" />
     </template>
     <template #content>
       <EntityView v-if="!isLoading" :data="orderProps" role="customer" type="order"/>
@@ -14,11 +14,15 @@
 <script setup>
 import { useEntityStore } from '~/store/entityStore';
 import { useLocationStore } from '~/store/locationStore';
-
+import { useUserStore } from '~/store/userStore';
 
 const router = useRouter();
 const entityStore = useEntityStore();
 const locationStore = useLocationStore();
+const userStore = useUserStore();
+
+const roleName = userStore.getRoleNameForBreadcrumbs;
+
 const order = ref({});
 const isLoading = ref(false);
 

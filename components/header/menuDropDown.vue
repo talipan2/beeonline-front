@@ -115,19 +115,19 @@ const headerDropdown = ref(null);
 
 const dropdownMenuLinks = computed(() => {
   return [
-    { label: 'Рабочий стол', value: `/${role.value}/desktop` },
+    { label: 'Рабочий стол', value: `/desktop` },
     { label: 'Bee-online Gifts', value: `/bonus` },
-    { label: 'Профиль', value: `/${role.value}/profile` },
+    { label: 'Профиль', value: `/profile` },
     { 
       label: `${role.value === 'customer' ? 'Заказы' : 'Услуги'}`, 
       value: `/${role.value}/${role.value === 'customer' ? 'orders' : 'services'}` 
     },
     { label: 'Сообщения', value: '/chat' },
     { label: 'Сделки', value: '/' },
-    { label: 'Избранное', value: `/${role.value}/favorites` },
-    { label: 'Отзывы', value: `/${role.value}/my-reviews` },
+    { label: 'Избранное', value: `/favorites` },
+    { label: 'Отзывы', value: `/my-reviews` },
     { label: 'Баланс и платные услуги', value: '/tariffs' },
-    { label: 'Уведомления', value: `/${role.value}/notifications` },
+    { label: 'Уведомления', value: `/notifications` },
     { label: 'Техническая поддержка', value: '/support' },
     { label: 'Новости', value: '/news' },
   ]
@@ -148,7 +148,7 @@ const logOut = () => {
 const handleSwitchRole = async () => {
   const isCustomer = userStore.role === 'customer';
   const newRole = isCustomer ? 'performer' : 'customer';
-  const redirectPath = isCustomer ? '/performer/profile' : '/customer/profile';
+  const redirectPath = '/desktop';
 
   try {
     await userStore.setUserData({ role: newRole }, userData.value.id);
@@ -172,7 +172,7 @@ const setRole = (role) => {
         type: role
       })
       userStore.checkAuth()
-      router.push({ path: `/${role}/profile` });
+      router.push({ path: `/desktop` });
       
     });
 }

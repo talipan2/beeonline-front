@@ -143,8 +143,8 @@ const registerData = computed(() => organizationStore.registerOrg);
 // }
 
 const handleSubmit = () => {
-  router.push('/')
   organizationStore.resetRegisterData();
+  router.push('/desktop');
 }
 
 </script>

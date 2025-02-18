@@ -4,7 +4,7 @@
       <UiBreadCrumb
         :list="[
           { label: 'Главная', link: '/' }, 
-          { label: 'Кабинет заказчика', link: '/customer/desktop' }, 
+          { label: `Кабинет ${roleName}`, link: '/desktop' }, 
           { label: 'Список заказов', link: '/customer/orders' }, 
           { label: 'Редактирование заказа', link: '' }
         ]" 
@@ -37,10 +37,14 @@ import Step3 from '~/components/createEntity/step3.vue';
 import Step4 from '~/components/createEntity/step4.vue';
 import { useEntityStore } from '~/store/entityStore';
 import { useLocationStore } from '~/store/locationStore';
+import { useUserStore } from '~/store/userStore';
 
 const router = useRouter();
 const entityStore = useEntityStore();
 const locationStore = useLocationStore();
+const userStore = useUserStore();
+
+const roleName = userStore.getRoleNameForBreadcrumbs;
 
 const currentStep = ref(1);
 const title = ref('');

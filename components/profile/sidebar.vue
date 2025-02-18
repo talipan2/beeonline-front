@@ -66,7 +66,7 @@ const router = useRouter();
 const handleChangeRole = async () => {
   const isCustomer = userStore.role === 'customer';
   const newRole = isCustomer ? 'performer' : 'customer';
-  const redirectPath = isCustomer ? '/performer/desktop' : '/customer/desktop';
+  const redirectPath = '/desktop';
 
   try {
     await userStore.setUserData({ role: newRole }, userStore.userData.id);
@@ -85,18 +85,18 @@ function handleLogout() {
 }
 
 const getSidebarLinks = (role) => [
-  { id: 1, label: "Рабочий стол", value: `/${role}/desktop` },
+  { id: 1, label: "Рабочий стол", value: `/desktop` },
   { id: 2, label: "Bee-online Gifts", value: `/bonus` },
-  { id: 3, label: "Профиль", value: `/${role}/profile` },
+  { id: 3, label: "Профиль", value: `/profile` },
   { id: 4, label: role === "performer" ? "Услуги" : "Заказы", value: role === "performer" ? "/performer/services" : "/customer/orders", },
-  { id: 5, label: "Проверка контрагентов", value: `/${role}/org_check` },
+  { id: 5, label: "Проверка контрагентов", value: `/org_check` },
   { id: 6, label: "Сообщения", value: "/chat" },
   { id: 7, label: "Сделки", value: "/" },
-  { id: 8, label: "Документы", value: `/${role}/documentation` },
-  { id: 9, label: "Избранное", value: `/${role}/favorites` },
-  { id: 10, label: "Отзывы", value: `/${role}/my-reviews` },
+  { id: 8, label: "Документы", value: `/documentation` },
+  { id: 9, label: "Избранное", value: `/favorites` },
+  { id: 10, label: "Отзывы", value: `/my-reviews` },
   { id: 11, label: "Баланс и платные услуги", value: "/tariffs" },
-  { id: 12, label: "Уведомления", value: `/${role}/notifications` },
+  { id: 12, label: "Уведомления", value: `/notifications` },
   { id: 13, label: "Новости", value: "/news" },
 ];
 

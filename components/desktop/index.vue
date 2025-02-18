@@ -10,7 +10,7 @@
       />
     </div>
     <div class="desktop__card-container">
-      <DesktopCard title="Карточка организации" :link="{ url: getLinkWithRole(`/pubcards/edit/${pubCard.id}`), text: 'Изменить'}" >
+      <DesktopCard title="Карточка организации" :link="{ url: `/pubcards/edit/${pubCard.id}`, text: 'Изменить'}" >
         <template #body>
           <CardsPublic class="desktop__pub-card" :is-props-visible="true" :is-description="true" :data="pubCard"/>
         </template>
@@ -69,7 +69,7 @@
     </div>
     <DesktopStats :role="role"/>
       <div class="desktop__card-container">
-        <DesktopCard title="Отзывы (8)" :link="{ url: getLinkWithRole('/my-reviews'), text: 'Все отзывы'}">
+        <DesktopCard title="Отзывы (8)" :link="{ url: '/my-reviews', text: 'Все отзывы'}">
           <template #body>
             <DesktopSelectableEntity class="desktop__chats" :label="['Отзывы о нас', 'Мои отзывы']" :count="[8, 10]">
               <template #firstPage >
@@ -105,7 +105,7 @@
             </DesktopSelectableEntity>
           </template>
         </DesktopCard>
-        <DesktopCard title="Чаты (8)" :link="{ url: getLinkWithRole('/my-reviews'), text: 'Все чаты'}">
+        <DesktopCard title="Чаты (8)" :link="{ url: '/chat', text: 'Все чаты'}">
           <template #body>
             <DesktopSelectableEntity class="desktop__chats" :label="['Все чаты', 'Непрочитанные']" :count="[8, 10]" :disabledPage="[2]">
               <template #firstPage>
@@ -181,10 +181,6 @@ const pubCard = computed(() => {
   }
 });
 const emailVerified = computed(() => userStore.userData.email_verified_at ? true : false);
-
-function getLinkWithRole(link) {
-  return `/${props.role}${link}`
-}
 
 onMounted(() => {
   if(userStore.userData && userStore.userData.id) {

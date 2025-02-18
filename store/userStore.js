@@ -46,6 +46,17 @@ export const useUserStore = defineStore("user", {
         userBonuses: 100000,
         userInvoicing: null,
     }),
+    getters: {
+        getRole: (state) => state.role,
+        getRoleNameForBreadcrumbs: (state) => {
+            switch (state.role) {
+                case "customer":
+                    return "заказчика";
+                case "performer":
+                    return "исполнителя";
+            }
+        },
+    },
     actions: {
         loadFromLocalStorage() {
             if (localStorage.getItem("role")) {

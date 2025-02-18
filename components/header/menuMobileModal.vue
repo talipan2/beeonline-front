@@ -120,18 +120,18 @@ function getRoleName(role) {
 
 const dropdownMenuLinks = computed(() => {
   return [
-    { id: 1, label: "Рабочий стол", value: `/${props.role}/desktop` },
+    { id: 1, label: "Рабочий стол", value: `/desktop` },
     { id: 2, label: "Bee-online Gifts", value: `/bonus` },
-    { id: 3, label: "Профиль", value: `/${props.role}/profile` },
+    { id: 3, label: "Профиль", value: `/profile` },
     { id: 4, label: props.role === "performer" ? "Услуги" : "Заказы", value: props.role === "performer" ? "/performer/services" : "/customer/orders", },
-    { id: 5, label: "Проверка контрагентов", value: `/${props.role}/org_check` },
+    { id: 5, label: "Проверка контрагентов", value: `/org_check` },
     { id: 6, label: "Сообщения", value: "/chat" },
     { id: 7, label: "Сделки", value: "/" },
-    { id: 8, label: "Документы", value: `/${props.role}/documentation` },
-    { id: 9, label: "Избранное", value: `/${props.role}/favorites` },
-    { id: 10, label: "Отзывы", value: `/${props.role}/my-reviews` },
+    { id: 8, label: "Документы", value: `/documentation` },
+    { id: 9, label: "Избранное", value: `/favorites` },
+    { id: 10, label: "Отзывы", value: `/my-reviews` },
     { id: 11, label: "Баланс и платные услуги", value: "/" },
-    { id: 12, label: "Уведомления", value: `/${props.role}/notifications` },
+    { id: 12, label: "Уведомления", value: `/notifications` },
     { id: 13, label: "Новости", value: "/news" },
   ];
 });  
@@ -169,6 +169,7 @@ watch(() => router.currentRoute.value.path, (newVal) => {
     box-sizing: border-box;
     overflow-y: auto;
     padding-bottom: 3em;
+    margin-block: 0;
   }
 
   &__header {

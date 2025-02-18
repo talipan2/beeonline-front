@@ -29,7 +29,7 @@
           type="text"
           id="site"
           v-model="data.siteUrl"
-          placeholder="Компания"
+          placeholder="Ссылка на сайт"
         />
       </label>
       <div class="form-group register__input-list_type_company">
@@ -124,11 +124,14 @@ const handleSubmit = (value, form) => {
     props.submitFunc();
   } else {
     organizationStore.setPubCard({
-      ...value, 
       id: userStore.userData.organization_id,
+      name: data.value.companyName,
+      description: data.value.description,
+      siteUrl: data.value.siteUrl,
       status: 1,
       type: userStore.role,
-    }, form).then(res => {
+    }, form)
+    .then(res => {
       if (res && res.id && data.value.companyLogo?.id) {
         organizationStore.setPubCardLogo(res.data.id, registerData.value.companyLogo.id)
       }

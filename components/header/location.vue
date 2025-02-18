@@ -1,5 +1,4 @@
 <template>
-  <div>
     <UiNewDropdown placement="bottom-start" trigger="manual" ref="tippy">
       <button class="header__location" @click="isOpen = true">
         <SvgoMapPin class="svg-m" filled />
@@ -18,7 +17,6 @@
       </template>
     </UiNewDropdown>
     <HeaderChooseCityModal v-model="isOpen" :location="location" @selectCity="selectCity" />
-  </div>
 </template>
 
 

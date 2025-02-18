@@ -1,10 +1,10 @@
 <template>
-  <NuxtLayout name="profile" title="Премия Bee-online" class="bonus-layout">
+  <NuxtLayout name="profile" title="Избранное" class="favorites-layout">
     <template #header>
-      <UiBreadCrumb :list="[{label: 'Главная', link: '/'},{ label: `Кабинет ${roleName}`, link: `/desktop`}, { label: 'Премия Bee-online', link: '' }]" />
+      <UiBreadCrumb :list="[{label: 'Главная', link: '/'}, { label: `Кабинет ${roleName}`, link: '/desktop' }, { label: 'Избранное', link: '' }]" />
     </template>
     <template #content>
-      <Bonus />
+      <Favorites />
     </template>
   </NuxtLayout>
 </template>
@@ -12,8 +12,9 @@
 <script setup>
 import { useUserStore } from '~/store/userStore';
 
+
 useHead({
-  title: 'Премия Bee-online',
+  title: 'Избранное',
   meta: [
     {
       name: 'description',
@@ -25,5 +26,7 @@ useHead({
 const userStore = useUserStore();
 
 const roleName = userStore.getRoleNameForBreadcrumbs;
+
+
 
 </script>

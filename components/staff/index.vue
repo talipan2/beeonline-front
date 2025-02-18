@@ -4,7 +4,7 @@
       кабинет и осуществления операций по поиску заказчиков, работе с клиентами, размещению услуг, предоставляемых услуг
       в каталоге.
     </p>
-    <UiButton :to="`/${role}/staff/create`" class="staff__btn" variant="quinary" size="around">Добавить сотрудника</UiButton>
+    <UiButton :to="`/staff/create`" class="staff__btn" variant="quinary" size="around">Добавить сотрудника</UiButton>
     <h2 class="staff__title">Все сотрудники</h2>
     <div class="staff__list">
       <div class="staff__item" v-for="i in 3" :key="i">
@@ -29,7 +29,7 @@
           </div>
         </div>
         <div class="staff__col-4">
-          <UiButton :to="`/${role}/staff/edit/2394`" class="staff__item-btn" variant="quinary" size="large">Изменить</UiButton>
+          <UiButton :to="`/staff/edit/2394`" class="staff__item-btn" variant="quinary" size="large">Изменить</UiButton>
         </div>
       </div>
     </div>
@@ -39,10 +39,7 @@
 <script setup>
 
 const props = defineProps({
-  role: {
-    type: String,
-    required: true,
-  }
+
 })
 
 </script>

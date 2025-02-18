@@ -2,7 +2,7 @@
   <NuxtLayout name="profile" title="Заказы">
     <template #header>
       <UiBreadCrumb
-        :list="[{ label: 'Главная', link: '/' }, { label: 'Кабинет заказчика', link: '/customer/desktop' }, { label: 'Список заказов', link: '' }]" />
+        :list="[{ label: 'Главная', link: '/' }, { label: `Кабинет ${roleName}`, link: '/desktop' }, { label: 'Список заказов', link: '' }]" />
     </template>
     <template #content>
       <Entity
@@ -38,6 +38,8 @@ const entityStore = useEntityStore();
 const userStore = useUserStore();
 const locationStore = useLocationStore()
 const settingStore = useSettingStore();
+
+const roleName = userStore.getRoleNameForBreadcrumbs;
 
 const isLoading = ref(false);
 

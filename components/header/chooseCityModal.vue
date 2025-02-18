@@ -126,11 +126,13 @@ watch(isOpenModal, (newVal) => {
 
 </script>
 
-<style lang="scss" >
+<style lang="scss">
 
 .choose-city-modal-header {
-  .modal-content {
-    height: auto;
+  .modal-dialog {
+    .modal-content {
+      height: max-content;
+    }
   }
 }
 
