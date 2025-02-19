@@ -3,7 +3,7 @@
     <CommonAlerts alert="На вашу почту было отправленно письмо для сброса пароля" type="info" v-if="isSendedMailToReset" />
     <h2 class="profile-update-password__title">Смена пароля</h2>
     <p class="profile-update-password__text">Указанные данные не разглашаются третьим лицам и необходимы для успешной работы на сервисе</p>
-    <Form class="profile-update-password__form" @submit="handleResetPassword">
+    <UiForm class="profile-update-password__form" :submit="handleResetPassword">
       <div class="form-group">
         <div class="form-group-data profile-update-password__old-password">
           <label class="form-group__title">
@@ -50,7 +50,7 @@
             Подтвердите пароль
             <UiInput
               v-model="passwordData.confirmPassword"
-              :rules="{ required: true, min: 6, confirmed: passwordData.newPassword }"
+              :rules="{ required: true, min: 6, confirmed: passwordData.new_password }"
               class="form-group__value" 
               name="confirmPassword" 
               label="Подтвердите пароль" 
@@ -75,7 +75,7 @@
         Изменить пароль
         <SvgoBtnArrow class="svg-lx" />  
       </UiButton>
-    </Form>
+    </UiForm>
     <ProfileResetPasswordModal @reset="forgotPassword"/>
     <Alerts />
   </div>
@@ -102,9 +102,9 @@ const passwordData = ref({
   confirmPassword: '',
 })
 
-function handleResetPassword(values, form) {
+async function handleResetPassword(values, form) {
   if(passwordData.value.new_password === passwordData.value.confirmPassword) {
-    userStore.resetPassword({
+    await userStore.resetPassword({
       old_password: passwordData.value.old_password,
       new_password: passwordData.value.new_password,
     }, form)

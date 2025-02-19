@@ -129,7 +129,7 @@ const handleChangePage = (currentPage) => {
 
 watch(() => page.value.currentPage, () => {
   loading.value = true
-  entityStore.getOrders({page: page.value.currentPage}).then(res => {
+  entityStore.getOrders({page: page.value.currentPage, ...filter.value}).then(res => {
     if(res && res.meta && res.data) {
       page.value = {
         currentPage: res.meta.current_page,

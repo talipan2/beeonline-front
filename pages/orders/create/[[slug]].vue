@@ -9,7 +9,6 @@
     </template>
     <template #content>
       <component :is="currentComponent" :title="title" role="customer" :handleSubmit="handleSubmit" :formatData="data" :data="order"/>
-      {{ order }}
     </template>
     <template #right>
       <CommonCheckList class="create__checklist create__checklist_type_right" 
@@ -67,10 +66,9 @@ const validSteps = ['step1', 'step2', 'step4'];
 const currentHandleSubmit = computed(() => {
   switch (router.currentRoute.value.params.slug) {
     case 'step1':
-      return ((value, form) => {
-        console.log
+      return (async(value, form) => {
         if(!order.value.id) {
-          entityStore.addNewOrder(
+          await entityStore.addNewOrder(
             {
               userId: userStore.userData.id,
               organizationId: userStore.userData.organization_id || null, 
@@ -86,7 +84,7 @@ const currentHandleSubmit = computed(() => {
           })
 
         } else {
-          entityStore.editOrder(order.value.id, {
+          await entityStore.editOrder(order.value.id, {
             name: order.value.name,
             category: order.value.categories,
             completionDate: order.value.completionDate,
@@ -94,9 +92,9 @@ const currentHandleSubmit = computed(() => {
         }    
       });
     case 'step2':
-      return ((value, form) =>{
+      return (async (value, form) =>{
           // entityStore.uploadOrderLogo(1, order.value.logo).then((res) => console.log(res))
-          entityStore.editOrder(order.value.id, {
+          await entityStore.editOrder(33333, {
             description: order.value.description,
             rawMaterials: order.value.rawMaterials,
             price: order.value.price,
@@ -124,8 +122,8 @@ const currentHandleSubmit = computed(() => {
           }
         });
     case 'step4':
-      return ((value, form) => {
-        entityStore.editOrder(order.value.id, {
+      return (async (value, form) => {
+        await entityStore.editOrder(order.value.id, {
           isSafeDeal: order.value.isSafeDeal,
           status: 'under_moderation',
         }, form).then(res => {
@@ -143,8 +141,8 @@ const currentHandleSubmit = computed(() => {
   } 
 })
 
-const handleSubmit = (value, form) => {
-  currentHandleSubmit.value(value, form);
+const handleSubmit = async(value, form) => {
+  await currentHandleSubmit.value(value, form);
 }
 
 const currentComponent = computed(() => {

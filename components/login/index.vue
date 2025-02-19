@@ -2,10 +2,9 @@
     <div class="login">
         <div class="login__container">
             <h1 class="login__title">Авторизация</h1>
-            <Form
+            <UiForm
                 class="auth__form"
-                as="form"
-                @submit="handleSubmit"
+                :submit="handleSubmit"
             >
                 <UiInput
                     :rules="{ required: true, min: 6, email: true }"
@@ -79,7 +78,7 @@
                         >Забыли пароль?</NuxtLink
                     >
                 </div>
-            </Form>
+            </UiForm>
             <div class="auth__soc-reg">
                 <div class="auth__soc-divider">
                     <p>Или войти через</p>
@@ -121,7 +120,7 @@ const isShowPassword = ref(false);
 const loading = ref(false);
 
 const handleSubmit = (values, form) => {
-    userStore
+    return userStore
         .authUser(values, form)
         .then((res) => {
             settingStore.authModalStatus = false;

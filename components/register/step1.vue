@@ -4,13 +4,13 @@
     title="Данные организации"
     description="Указанные данные не разглашаются третьим лицам и необходимы для успешной работы на сервисе."
   >
-    <Form @submit="handleSubmit" v-slot="{validate}">
+    <UiForm :submit="handleSubmit">
       <div :class="{'animation-loading': isSearchInn}">
         <div class="form-group__data register__label_type_location">
           <label class="form-group__title">
             Выберите вашу страну*
             <UiSelect
-              name="location"
+              name="countryId"
               class="form-group__value"
               v-model="data.countryId"
               :options="locationList"
@@ -173,7 +173,7 @@
             Юридический адрес *
             <UiInput
               :rules="getSkipInnRules"
-              name="legal_address"
+              name="legalAddress"
               label="Юридический адрес"
               class="form-group__value"
               type="text"
@@ -258,7 +258,7 @@
           class="register__btn"
           variant="quinary"
           size="large"
-          @click="handleClick(true, validate)"
+          @click="handleClick(true)"
           >Пропустить ввод инн</UiButton
         >
         <UiButton
@@ -266,12 +266,12 @@
           class="register__btn"
           variant="quinary"
           size="large"
-          @click="handleClick(false, validate)"
+          @click="handleClick(false)"
           >Далее
           <SvgoBtnArrow class="svg-lx" />
         </UiButton>
       </div>
-    </Form>
+    </UiForm>
     <InfoModal :text="innModalText" title="Ошибка"/>
   </RegisterLayout>
 </template>
@@ -303,10 +303,8 @@ const getSkipInnRules = computed(() => {
   return skipInn.value ? {} : { required: true }
 })
 
-const handleClick = async(innSkip, validate) => {
+const handleClick = async(innSkip) => {
   skipInn.value = innSkip;
-  await nextTick();
-  getErrorsList(validate)
 }
 
 const data = computed({
@@ -367,28 +365,41 @@ const handleSearchOrgByInn = (inn) => {
     data.value.organizationForm = organizationStore.getOrganizationFormByValue('Другое');
     innModalText.value = "Организация не найдена";
     settingStore.infoModal = true;
-    console.log(err);
   })
   .finally(() => isSearchInn.value = false);
 }
 
 const handleSubmit = async (value, form) => {
-  await organizationStore.setOrganization({
-    userId: userStore.userData.id,
-    name: data.value.organizationName,
-    organizationForm: data.value.organizationForm,
-    inn: data.value.inn,
-    kpp: data.value.kpp,
-    ogrn: data.value.ogrn,
-    legalAddress: data.value.legalAddress,
-    selfEmployed: data.value.selfEmployed,
-    countryId: data.value.countryId,
-    currencyId: 1,
-  }, form).then((res) => {
-    userStore.checkAuth().then(() => {
+  if(userStore.userData.organization_id) {
+    await organizationStore.editOrganization({
+      ...value,
+      id: userStore.userData.organization_id,
+      name: data.value.organizationName,
+    }, form).then((res) => {
       router.push("/register/step2");
-    });
-  });
+    })
+
+    if(data.value.verificationFiles && data.value.verificationFiles.length > 0) {
+      organizationStore.setVerificationDocuments(res.data.id, data.value.verificationFiles)
+    }
+  } else {
+    await organizationStore.setOrganization({
+      ...value,
+      userId: userStore.userData.id,
+      name: data.value.organizationName,
+      currencyId: 1,
+    }, form)
+    .then((res) => {
+      if (res.data && res.data.id) {
+        if(data.value.verificationFiles && data.value.verificationFiles.length > 0) {
+          organizationStore.setVerificationDocuments(res.data.id, data.value.verificationFiles)
+        }
+      }
+      userStore.checkAuth().then(() => {
+        router.push("/register/step2");
+      });
+    })
+  }
 };
 
 </script>

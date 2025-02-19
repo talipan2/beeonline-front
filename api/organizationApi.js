@@ -22,6 +22,21 @@ export default {
     }, form)
   },
 
+  async editOrganization(data, form) {
+    return useApi().patch(`organizations/${data.id}`, {
+      name: data.name,
+      org_form: data.organizationForm,
+      inn: data.inn,
+      kpp: data.kpp,
+      ogrn: data.ogrn,
+      legal_address: data.legalAddress,
+      url_site: data.urlSite,
+      is_foreigner: data.selfEmployed,
+      country_id: data.countryId,
+      is_foreigner: data.countryId === 1 ? 0 : 1
+    }, form)
+  },
+
   // создание карточки
   async setPubCards(data, form) {
     return useApi().post('pubcards', {

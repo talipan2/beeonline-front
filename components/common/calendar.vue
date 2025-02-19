@@ -2,7 +2,6 @@
   <div class="calendar">
     <label class="calendar__label form-group__title">
       Дата выполнения
-      {{ modelValue }}
     </label>
       <div class="calendar__container">
         <div class="input-container">

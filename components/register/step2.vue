@@ -4,7 +4,7 @@
     :description="description"
     :block-title="blockTitle"
   >
-    <Form @submit="handleSubmit" v-slot="{validate}">
+    <UiForm :submit="handleSubmit">
       <label class="form-group__title" for="name"
         >Название компании *
         <UiInput
@@ -58,7 +58,7 @@
           class="register__btn"
           variant="senary"
           size="large"
-          @click="router.back"
+          @click="router.push('/register/step1')"
           >Назад
         </UiButton>
         <UiButton
@@ -66,13 +66,12 @@
           class="register__btn"
           variant="quinary"
           size="large"
-          @click="getErrorsList(validate)"
           >Далее
           <SvgoBtnArrow class="svg-lx" />
         </UiButton>
       </div>
       <slot></slot>
-    </Form>
+    </UiForm>
   </RegisterLayout>
 </template>
 
@@ -119,11 +118,11 @@ const data = computed({
 });
 
 
-const handleSubmit = (value, form) => {
+const handleSubmit = async(value, form) => {
   if(props.submitFunc) {
-    props.submitFunc();
+   await props.submitFunc();
   } else {
-    organizationStore.setPubCard({
+    await organizationStore.setPubCard({
       id: userStore.userData.organization_id,
       name: data.value.companyName,
       description: data.value.description,
@@ -133,7 +132,7 @@ const handleSubmit = (value, form) => {
     }, form)
     .then(res => {
       if (res && res.id && data.value.companyLogo?.id) {
-        organizationStore.setPubCardLogo(res.data.id, registerData.value.companyLogo.id)
+        organizationStore.setPubCardLogo(res.id, data.value.companyLogo.id)
       }
       userStore.checkAuth()
       router.push({path: '/register/step3'})

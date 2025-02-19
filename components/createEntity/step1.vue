@@ -1,7 +1,7 @@
 <template>
   <div class="entity">
     <h1 class="entity__title">{{ title }}</h1>
-    <Form @submit="handleSubmit" as="form" v-slot="{validate}">
+    <UiForm :submit="handleSubmit">
       <div
         class="form-group"
         v-if="router.currentRoute.value.name.includes('create')"
@@ -47,7 +47,6 @@
       <div v-if="role == 'customer'" class="entity__data">
         <h2 class="entity__subtitle">Сроки</h2>
         <p class="entity__description">Укажите дату до которой заказ будет актуален</p>
-        {{ data.completionDate }}
         <CommonCalendar v-model="data.completionDate" class="entity__calendar" />
       </div>
       <div class="entity__btn-container">
@@ -56,12 +55,11 @@
           class="form-group-data__btn entity__btn"
           variant="quinary"
           size="large"
-          @click="getErrorsList(validate)"
           >Далее
           <SvgoBtnArrow class="svg-lx" />
         </UiButton>
       </div>
-    </Form>
+    </UiForm>
   </div>
 </template>
 
@@ -137,8 +135,9 @@ const categories = [
   { id: 27, label: "Разработка лекал" },
 ];
 
-const handleSubmit = (values, form) => {
-  props.handleSubmit(values, form)
+const handleSubmit = async (values, form) => {
+  console.log(props.handleSubmit)
+  await props.handleSubmit(values, form)
 }
 </script>
 

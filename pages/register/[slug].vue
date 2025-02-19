@@ -36,7 +36,7 @@
           </CommonAdvice>
           <div class="register__preview" v-if="['/register/step2', '/register/step3', '/register/step4'].includes(route.path)">
             <h4 class="register__preview-title">Так вашу компанию будут видеть другие участники</h4>
-            <CardsPublic :data="checkListCard" :is-description="true"/>
+            <CardsPublic class="register__preview-card" :data="checkListCard" :is-description="true"/>
           </div>
         </div>
       </div>
@@ -63,7 +63,28 @@ const settingStore = useSettingStore();
 const userStore = useUserStore();
 const locationStore = useLocationStore();
 
-const data = ref(organizationStore.registerOrg);
+const data = ref({
+  countryId: 1,
+  inn: null,
+  kpp: null,
+  organizationForm: 3,
+  ogrn: null,
+  legalAddress: null,
+  organizationName: null,
+  companyName: null,
+  companyLogo: {
+    id: null,
+    url: null,
+  },
+  description: null,
+  locations: null,
+  companyDescription: null,
+  productionCountry: null,
+  selfEmployed: false,
+  registerAddress: null,
+  siteUrl: null,
+  verificationFiles: [],
+});
 
 const blockTitle = computed(() => {
   const titles = {
@@ -119,9 +140,9 @@ onUnmounted(() => {
 
 const checkListCard = computed(() => {
   return {
-    name: organizationStore.registerOrg.companyName,
-    description: organizationStore.registerOrg.description,
-    logo: organizationStore.registerOrg.companyLogo?.url,
+    name: data.value.companyName,
+    description: data.value.description,
+    logo: data.value.companyLogo?.url,
     countryId: { countries: [organizationStore.registerOrg.countryId]},
     entityCount: 0,
     type: userStore.role,
@@ -133,6 +154,49 @@ const userRole = computed(() => {
     return 'заказчика';
   } else if(userStore.role === 'performer') {
     return 'исполнителя';
+  }
+})
+
+onMounted(() => {
+  userStore.checkAuth()
+  .then((res) => {
+    console.log(res)
+    if(res && res.user && res.user) {
+      if(res.user.organization && res.user.organization.id) {
+        const userOrganization = res.user.organization;
+        data.value.countryId = userOrganization.country_id
+        data.value.selfEmployed = userOrganization.is_foreigner
+        data.value.inn = userOrganization.inn
+        data.value.organizationName = userOrganization.name
+        data.value.kpp = userOrganization.kpp
+        data.value.ogrn = userOrganization.ogrn
+        data.value.organizationForm = userOrganization.org_form,
+        data.value.legalAddress = userOrganization.legal_address
+      }
+
+      if(res.user.public_cards && res.user.public_cards && res.user.public_cards.length > 0) {
+        const pubCard = res.user.public_cards.find(item => item.type === userStore.role)
+        data.value.companyName = pubCard.name
+        data.value.description = pubCard.description
+        data.value.siteUrl = pubCard.site_url
+        data.value.companyLogo = {url:pubCard.logo}
+        data.value.locations = { regions: [...pubCard.regions.map(region => region.id)], cities: [...pubCard.cities.map(city => city.id)] };
+      }
+    }
+  });
+  if(userStore.userData.organization_id) {
+    organizationStore.getVerificationDocuments(userStore.userData.organization_id)
+    .then(res => {
+      if(res) {
+        data.value.verificationFiles = res.map(item => {
+          return {
+            id: item.id,
+            url: item.file_url,
+          }
+        });
+      }
+    })
+
   }
 })
 
@@ -152,21 +216,6 @@ useHead({
 <style lang="scss">
 .register {
   padding-block: 10em;
-
-  // .form-group-data {
-  //   margin-top: 0;
-  //   margin-bottom: 1em;
-  // }
-
-  // .form-group__title {
-  //   font-family: 'lato', sans-serif;
-  //   margin-bottom: .4em;
-  // }
-
-  // .form-group__value {
-  //   margin-top: .3em;
-  // }
-
 }
 
   .register__container {
@@ -193,18 +242,6 @@ useHead({
     font-size: 1.3em;
     margin-bottom: 1.46em;
   }
-
-  // .register__input-list {
-  //   display: flex;
-  //   column-gap: 3em;
-  //   row-gap: 1em;
-  //   flex-wrap: wrap;
-  //   margin-bottom: 1em;
-  // }
-
-  // &__input {
-  //   margin-top: 0.31em;
-  // }
 
   .register__label {
     font-size: 1.3em;
@@ -315,12 +352,6 @@ useHead({
     margin-top: 4.16em;
   }
 
-.register__checklist {
-  // max-width: 25.5em;
-}
-
-
-
 @media (min-width: 768px) {
   .checklist__header-right {
       display: none;
@@ -334,7 +365,6 @@ useHead({
 }
 
 .register__checklist {
-  // max-width: 25.5em;
   flex: 1 0 25.5em;
 }
 

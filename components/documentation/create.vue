@@ -37,7 +37,7 @@ const documentsList = ref([]);
 const handleSaveFiles = () => {
   console.log(dataListId.value)
   organizationStore.setVerificationDocuments(userStore.userData.organization_id, dataListId.value)
-  router.push({path: `/${userStore.role}/documentation`})
+  router.push({path: `/documentation`})
 }
 
 onMounted(() => {

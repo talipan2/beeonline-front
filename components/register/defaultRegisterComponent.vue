@@ -6,7 +6,7 @@
     title="Контактные данные"
     description="Указанные данные не разглашаются третьим лицам и необходимы для успешной работы на портале."
   >
-    <Form as="form" @submit="handleSubmit" v-slot="{validate}">
+    <UiForm :submit="handleSubmit">
       <div class="form-group">
         <label class="form-group-data form-group__title">
           Ваше имя *
@@ -70,12 +70,11 @@
         class="register__btn register__btn_type_secondary"
         variant="quinary"
         size="large"
-        @click="getErrorsList(validate)"
       >
         Зарегистрироваться
         <SvgoBtnArrow class="svg-lx" />
       </UiButton>
-    </Form>
+    </UiForm>
     <template #soc-reg>
       <RegisterSocialRegistr />
     </template>
@@ -100,8 +99,8 @@ const userData = ref({
 });
 const isCreateOrder = computed(() => settingStore.isCreateOrder);
 
-const handleSubmit = (values, form) => {
-  userStore
+const handleSubmit = async (values, form) => {
+  await userStore
     .registerUser({...values, role: userData.value.role}, form)
     .then((res) => {
         if (isCreateOrder.value) {
@@ -110,9 +109,6 @@ const handleSubmit = (values, form) => {
           router.push({ path: "/register/step1" });
         }
     })
-    .catch((err) => {
-      console.log(err);
-    });
 };
 
 onMounted(() => {

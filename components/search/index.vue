@@ -104,6 +104,7 @@ const searchResultMemberPage = ref({
 })
 
 const handleSearch = (searchQuery, page) => {
+  if(loading.value) return;
   loading.value = true;
   entityStore.search({query: searchQuery, page}).then(res => {
     if(res && res.orders && res.orders.data) {

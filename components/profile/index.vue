@@ -28,7 +28,7 @@
     <CommonProfileCheckCard 
       title="Карточка компании" 
       text="Указанные данные будут видны другим участникам портала"
-      :changeLink="`/pubcards/edit/${pubCardData.id}`" changeLinkLabel="Заполнить"
+      :changeLink="linkToChangePubCard" changeLinkLabel="Заполнить"
     >
       <div class="register__check-company">
         <div class="register__check-company-container">
@@ -149,6 +149,13 @@ const role = computed(() => userStore.role);
 
 const isLoading = ref(false);
 const getOrganizationFormById = organizationStore.getOrganizationFormById;
+const linkToChangePubCard = computed(() => {
+  if(userStore.userPubCard) {
+    return `/pubcards/edit/${userStore.userPubCard?.id}`
+  } else {
+    return '/register/step2'
+  }
+});
 
 const userData = computed(() => ({
   name: userStore.userData.name || '-',
@@ -184,8 +191,7 @@ const pubCardData = computed(() => ({
 }));
 
 const pubCardsVideo = computed(() => {
-  console.log(userStore.userPubCard.videos);
-  if (userStore.userPubCard.videos && userStore.userPubCard.videos.length) {
+  if (userStore.userPubCard?.videos && userStore.userPubCard?.videos.length) {
     return userStore.userPubCard.videos.map(video => video.external_url)
   } else {
     return []
@@ -193,7 +199,7 @@ const pubCardsVideo = computed(() => {
 })
 
 const pubCardGallery = computed(() => {
-  if (userStore.userPubCard.gallery && userStore.userPubCard.gallery.length) {
+  if (userStore.userPubCard?.gallery && userStore.userPubCard?.gallery.length) {
     return userStore.userPubCard.gallery.map(gallery => ({url: gallery.url}))
   } else {
     return []

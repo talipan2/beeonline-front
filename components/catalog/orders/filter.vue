@@ -38,10 +38,10 @@
         <h3 class="filter__title">Срочность:</h3>
         <UiCheckbox :is-validated="false" v-model="searchProps.is_rush">Только срочные</UiCheckbox>
       </div>
-      <div class="filter__item">
+      <!-- <div class="filter__item">
         <h3 class="filter__title">Безопасная сделка:</h3>
         <UiCheckbox :is-validated="false" v-model="searchProps.use_deals">С безопасной сделкой</UiCheckbox>
-      </div>
+      </div> -->
     </template>
   </CommonFilter>
 </template>

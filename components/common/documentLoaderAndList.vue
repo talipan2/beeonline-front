@@ -2,7 +2,6 @@
   <div class="documentation-loading">
     <CommonDocumentLoader :text="text" :isList="isList" :dataList="dataList" @addFile="addFile" :extension="extension"/>
     <CommonFileList :dataList="dataList" @removeFile="removeFile" :changed="changed"/>
-    <Alerts/>
   </div>
 </template>
 
@@ -76,9 +75,9 @@ onMounted(() => {
     dataList.value = props.modelValue.map(item => { 
       return {
         id: item.id, 
-        name: item.url.split('/').pop(), 
+        name: item.url ? item.url.split('/').pop() : '', 
         url: item.url, 
-        type: item.url.split('.').pop().toLowerCase(), 
+        type: item.url ? item.url.split('.').pop().toLowerCase() : '', 
       }
     });
   }

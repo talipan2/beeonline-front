@@ -123,11 +123,13 @@ const handleChangePage = (currentPage) => {
 watch(() => page.value.currentPage, () => {
   loading.value = true
   isLoaded.value = false
-  organizationStore.getPubCardsList({page: page.value.currentPage}).then(res => {
+  organizationStore.getPubCardsList({page: page.value.currentPage, ...filter.value}).then(res => {
     if(res && res.meta && res.data) {
       page.value = {
         currentPage: res.meta.current_page,
         lastPage: res.meta.last_page,
+        total: res.meta.total,
+        itemsToPage: res.meta.to - res.meta.from
       }
       const rect = anchor.value.getBoundingClientRect(); 
       const offset = window.scrollY + rect.top - settingStore.headerHeight;

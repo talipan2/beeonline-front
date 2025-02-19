@@ -2,8 +2,8 @@
   <div>
   <RegisterLayout :title="title" :block-title="blockTitle">
     <div class="register__step-three">
-      <Form @submit="handleSubmit" v-slot="{ errors }" ref="form">
-        <CommonAlerts v-if="errors && errors.selectedLocations" :alert="errors.selectedLocations" />
+      <UiForm :submit="handleSubmit" @setError="takeErrorMessage">
+        <CommonAlerts v-if="errorMessages && errorMessages.selectedLocations" :alert="errorMessages.selectedLocations" />
       <div class="register__text-container">
         <p class="register__text" v-if="userStore.role === 'performer'">
           Укажите город вашего производства. Если производств несколько - выберите несколько городов, но не более пяти.
@@ -27,7 +27,6 @@
           :max-selected="5"
           :is-required="true" 
           errorLabel="Города производства"
-          @update:errorMessage="takeErrorMessage"
         />
         <CommonLocation 
           v-if="userStore.role === 'customer'"
@@ -37,7 +36,6 @@
           :type="['selectCities', 'selectRegions']" 
           :is-required="true"
           errorLabel="Города производства"
-          @update:errorMessage="takeErrorMessage"
         />
         <div class="register__btn-container" v-if="router.currentRoute.value.path.includes('/register')">
           <UiButton type="button" class="register__btn" variant="senary" size="large" @click="router.back">Назад</UiButton>
@@ -46,7 +44,7 @@
           </UiButton>
         </div>
         <slot></slot>
-      </Form>
+      </UiForm>
     </div>
   </RegisterLayout>
   </div>
@@ -56,9 +54,6 @@
 
 import { useOrganizationStore } from '~/store/organizationStore';
 import { useUserStore } from '~/store/userStore';
-import { useForm } from 'vee-validate';
-
-const {meta} = useForm()
 
 const props = defineProps({
   blockTitle: {

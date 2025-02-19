@@ -112,9 +112,9 @@ const data = computed(() => ({
 const currentHandleSubmit = computed(() => {
   switch (router.currentRoute.value.params.slug) {
     case 'step1':
-      return ((values, form) => {
+      return (async (values, form) => {
         if(!service.value.id) {
-          entityStore.addNewService(
+          await entityStore.addNewService(
             {
               userId: userStore.userData.id,
               organizationId: userStore.userData.organization_id, 
@@ -130,7 +130,7 @@ const currentHandleSubmit = computed(() => {
           })
           .catch(error => console.log(error));
         } else {
-          entityStore.editService(service.value.id, {
+          await entityStore.editService(service.value.id, {
             name: service.value.name,
             categories: service.value.categories,
           }, form).then(() => router.push('/services/create/step2'))
@@ -138,8 +138,8 @@ const currentHandleSubmit = computed(() => {
         }
       });
     case 'step2':
-      return ((values, form) =>{
-          entityStore.editService(service.value.id, {
+      return (async (values, form) =>{
+          await entityStore.editService(service.value.id, {
             description: service.value.description,
             rawMaterials: service.value.rawMaterials,
             availabilityStm: service.value.availabilityStm,
@@ -168,9 +168,9 @@ const currentHandleSubmit = computed(() => {
           }
         });
     case 'step3':
-      return ((values, form) => {
+      return (async (values, form) => {
         if(service.value.locations && service.value.locations.cities) {
-          entityStore.editService(service.value.id, {
+          await entityStore.editService(service.value.id, {
             cities: service.value.locations.cities
           }, form).then(() => {
             entityStore.updateServiceStep(service.value.id, 3)
@@ -180,8 +180,8 @@ const currentHandleSubmit = computed(() => {
         }
       });
     case 'step4':
-      return ((values, form) => {
-        entityStore.editService(service.value.id, {
+      return (async(values, form) => {
+        await entityStore.editService(service.value.id, {
           status: 'active'
         }, form).then(() => {
           entityStore.fillingService = null
@@ -194,8 +194,8 @@ const currentHandleSubmit = computed(() => {
   }
 })
 
-const handleSubmit = (values, form) => {
-  currentHandleSubmit.value(values, form);
+const handleSubmit = async(values, form) => {
+  await currentHandleSubmit.value(values, form);
   entityStore.isRedirectedToStep = false
 }
 

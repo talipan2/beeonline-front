@@ -81,15 +81,15 @@ const formatData = computed(() => {
 const currentHandleSubmit = computed(() => {
   switch (currentStep.value) {
     case 1:
-      return ((value, form) => {
-        entityStore.editService(id, {
-          name: serviceData.value.name,
+      return (async (value, form) => {
+        await entityStore.editService(id, {
+          // name: serviceData.value.name,
           categories: serviceData.value.categories,
         }, form).then(() => currentStep.value = 2)
       });
     case 2:
-      return ((value, form) => {
-        entityStore.editService(id, {
+      return (async (value, form) => {
+        await entityStore.editService(id, {
           description: serviceData.value.description,
           rawMaterials: serviceData.value.rawMaterials,
           availabilityStm: serviceData.value.availabilityStm,
@@ -109,8 +109,8 @@ const currentHandleSubmit = computed(() => {
         }
       });
     case 3:
-      return ((value, form) => {
-        entityStore.editService(id, {
+      return (async (value, form) => {
+        await entityStore.editService(id, {
           cities: serviceData.value.locations.cities
         }, form)
         currentStep.value = 4
@@ -122,8 +122,8 @@ const currentHandleSubmit = computed(() => {
   }
 })
 
-const handleSubmit = (value, form) => {
-  currentHandleSubmit.value(value, form);
+const handleSubmit = async(value, form) => {
+  await currentHandleSubmit.value(value, form);
 }
 
 const previousStep = () => {

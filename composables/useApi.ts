@@ -67,6 +67,11 @@ export const useApi = () => {
             headers["X-Socket-ID"] = socketId;
         }
 
+        const role = getCurrentRole() ?? "";
+        if (role) {
+            headers["X-Role"] = role;
+        }
+
         return headers;
     };
 
@@ -79,12 +84,12 @@ export const useApi = () => {
         silent: boolean = false,
         isBlob: boolean = false
     ) => {
-        if (form) {
-            if (form.controlledValues?.isLoading) {
-                throw new Error("Form is already loading");
-            }
-            form.setFieldValue('isLoading', true);
-        }
+        // if (form) {
+        //     if (form.controlledValues?.isLoading) {
+        //         throw new Error("Form is already loading");
+        //     }
+        //     form.setFieldValue('isLoading', true);
+        // }
         try {
 
             endpoint = endpoint.startsWith("/")
@@ -113,9 +118,9 @@ export const useApi = () => {
         } catch (error) {
             handleFetchError(error, form, silent);
         } finally {
-            if (form) {
-                form.setFieldValue('isLoading', false);
-            }
+            // if (form) {
+            //     form.setFieldValue('isLoading', false);
+            // }
         }
     };
 

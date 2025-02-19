@@ -10,7 +10,7 @@
     <template #header />
     <template #content>
       <p class="user-data-modal__text">Указанные данные не разглашаются третьим лицам и необходимы для успешной работы на портале.</p>
-      <Form @submit="handleSubmit">
+      <UiForm :submit="handleSubmit">
         <div class="form-group">
           <label class="form-group__title form-group-data">
             Ваше имя *
@@ -63,7 +63,7 @@
         <div class="user-data-modal__btn-container">
           <UiButton class="user-data-modal__btn" type="submit" variant="quinary" size="large">Сохранить</UiButton>
         </div>
-      </Form>
+      </UiForm>
     </template>
   </UiModal>
 </template>
@@ -84,9 +84,9 @@ const data = ref({
 
 const settingStore = useSettingStore();
 
-const handleSubmit = (values, form) => {
+const handleSubmit = async(values, form) => {
   if(data.value.id) {
-    userStore.setUserData({
+    await userStore.setUserData({
       name: data.value.name,
       post: data.value.post,
       email: data.value.email,

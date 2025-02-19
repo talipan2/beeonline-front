@@ -75,6 +75,8 @@ const handleUpdateFilter = (data) => {
     return
   }
 
+  if(loading.value) return
+
   // добавление квери параметров для роутинга
   const newQuery = {
     categories: data.category ? data.category.join(',') : undefined,
@@ -139,7 +141,7 @@ const handleChangePage = (currentPage) => {
 
 watch(() => page.value.currentPage, () => {
   loading.value = true
-  entityStore.getServices({page: page.value.currentPage}).then(res => {
+  entityStore.getServices({page: page.value.currentPage, ...filter.value}).then(res => {
     if(res && res.meta && res.data) {
       page.value = {
         currentPage: res.meta.current_page,

@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-import { useSettingStore } from '~/store/settingStore';
+import { useToast } from 'vue-toastification'
 
 const props = defineProps({
   text: {
@@ -39,17 +39,15 @@ const props = defineProps({
 
 const emit = defineEmits(['addFile']);
 const selectedFile = ref(null);
-const settingStore = useSettingStore();
 const allowedExtensions = computed(() => props.extension);
+const toast = useToast();
 
 const handleFileChange = (event) => {
   const fileInput = event.target;
   selectedFile.value = fileInput.files[0];
   const fileExtension = selectedFile.value.name.split('.').pop().toLowerCase();
   if(!allowedExtensions.value.includes(fileExtension)) {
-    settingStore.alertModal.isOpen = true;
-    settingStore.alertModal.text = `Файл "${selectedFile.value.name}" должен быть типа: ${allowedExtensions.value.join(', ')}`;
-    settingStore.alertModal.status = "error";
+    toast.error(`Файл "${selectedFile.value.name}" должен быть типа: ${props.extension.join(', ')}`);
     fileInput.value = '';
     return
   }

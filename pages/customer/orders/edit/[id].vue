@@ -103,8 +103,8 @@ const formatData = computed(() => {
 const currentHandleSubmit = computed(() => {
   switch (currentStep.value) {
     case 1:
-      return ((value, form) => {
-        entityStore.editOrder(orderData.value.id, {
+      return (async (value, form) => {
+        await entityStore.editOrder(orderData.value.id, {
           name: orderData.value.name,
           completionDate: orderData.value.completionDate,
           categories: orderData.value.categories
@@ -116,8 +116,8 @@ const currentHandleSubmit = computed(() => {
         });
       });
     case 2:
-      return ((value, form) => {
-        entityStore.editOrder(orderData.value.id, {
+      return (async (value, form) => {
+        await entityStore.editOrder(orderData.value.id, {
           description: orderData.value.description,
           rawMaterials: orderData.value.rawMaterials,
           price: orderData.value.price,
@@ -140,8 +140,8 @@ const currentHandleSubmit = computed(() => {
         }
       });
     case 4:
-      return ((value, form) => {
-        entityStore.editOrder(orderData.value.id, {
+      return (async(value, form) => {
+        await entityStore.editOrder(orderData.value.id, {
           isSafeDeal: orderData.value.isSafeDeal
         }, form)
         router.push('/customer/orders')
@@ -152,8 +152,8 @@ const currentHandleSubmit = computed(() => {
 })
 
 
-const handleSubmit = (value, form) => {
-  currentHandleSubmit.value(value, form)
+const handleSubmit = async(value, form) => {
+ await currentHandleSubmit.value(value, form)
 }
 
 const previousStep = () => {

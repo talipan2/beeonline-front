@@ -1,12 +1,12 @@
 <template>
   <div class="entity">
     <h1 class="entity__title">География и Сроки</h1>
-    <Form @submit="handleSubmit" v-slot="{ errors }">
+    <UiForm :submit="handleSubmit" @setError="setError">
       <!-- <div v-if="role == 'customer'">
         <p class="entity__text">Укажите дату до которой заказ будет актуален</p>
         <CommonCalendar v-model="data.completionDate" class="entity__calendar" />
       </div> -->
-      <CommonAlerts v-if="errors && errors.selectedLocations" :alert="errors.selectedLocations" />
+      <CommonAlerts v-if="errorList && errorList.selectedLocations" :alert="errorList.selectedLocations" />
       <h2 class="entity__subtitle">Города фактического производства заказа</h2>
       <div class="entity__text-container">
         <p class="entity__text" v-if="role === 'performer'">
@@ -47,7 +47,7 @@
           <SvgoBtnArrow class="svg-lx" />
         </UiButton>
       </div>
-    </Form>
+    </UiForm>
   </div>
 </template>
 
@@ -81,6 +81,11 @@ const props = defineProps({
 const router = useRouter();
 const userStore = useUserStore();
 const entityStore = useEntityStore();
+const errorList = ref({});
+
+const setError = (error) => {
+  errorList.value = error
+}
 
 const backLink = computed(() => {
   if(props.type === 'create') {
@@ -111,8 +116,8 @@ const locationData = ref({
   fullNameLocation: dataLocation.value.placeOfProduction,
 })
 
-const handleSubmit = (values, form) => {
-  if(props.handleSubmit) props.handleSubmit(values, form)
+const handleSubmit = async(values, form) => {
+  if(props.handleSubmit) await props.handleSubmit(values, form)
 }
 
 watch(() => locationData.value, (newVal) => {

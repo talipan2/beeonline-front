@@ -41,7 +41,7 @@ const checkListArray = computed(() => [
     label: 'Данные организации', 
     value: 'chapter-current',
     checkList: [
-      { label: 'Название', value: organization.value.name},
+      { label: 'Название', value: organization.value?.name},
       { label: 'ИНН', value: organization.value.inn},
       { label: 'Страна', value: organization.value.country_id},
       { label: 'Активность', value: organization.value.is_active},
@@ -51,11 +51,11 @@ const checkListArray = computed(() => [
     label: 'Карточка компании', 
     value: 'chapter-current',
     checkList: [
-      { label: 'Название', value: pubCard.value.name},
-      { label: 'Логотип', value: pubCard.value.logo},
-      { label: 'Описание', value: pubCard.value.description},
-      { label: 'География фактического производства', value: pubCard.value.regions || pubCard.value.cities},
-      { label: 'Активность', value: pubCard.value.is_active},
+      { label: 'Название', value: pubCard.value?.name},
+      { label: 'Логотип', value: pubCard.value?.logo},
+      { label: 'Описание', value: pubCard.value?.description},
+      { label: 'География фактического производства', value: pubCard.value?.regions || pubCard.value?.cities},
+      { label: 'Активность', value: pubCard.value?.is_active},
     ]
   },
 ])
@@ -63,14 +63,14 @@ const checkListArray = computed(() => [
 const cardsData = computed(() => {
   if(role.value === 'performer') return {};
   return {
-    name: pubCard.value.name || '',
-    logo: pubCard.value.logo || '',
-    description: pubCard.value.description || '',
-    countryId: {countries: [pubCard.value.country_id]} || {},
-    entityCount: pubCard.value.orders_count || 0,
-    type: pubCard.value.type || '',
-    rawMaterials: [pubCard.value.materials_own ? 'Собственное' : '', pubCard.value.materials_tolling ? 'Давальческое' : ''].filter(Boolean),
-    category: pubCard.value.categories?.map(item => item.name) || [],
+    name: pubCard.value?.name,
+    logo: pubCard.value?.logo,
+    description: pubCard.value?.description,
+    countryId: {countries: [pubCard.value?.country_id]},
+    entityCount: pubCard.value?.orders_count || 0,
+    type: pubCard.value?.type,
+    rawMaterials: [pubCard.value?.materials_own ? 'Собственное' : '', pubCard.value?.materials_tolling ? 'Давальческое' : ''].filter(Boolean),
+    category: pubCard.value?.categories?.map(item => item.name) || [],
   }
 })
 

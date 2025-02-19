@@ -27,7 +27,7 @@ import { useOrganizationStore } from '~/store/organizationStore';
 import defaultImage from '~/assets/images/nophoto_pc.png';
 import { useUserStore } from '~/store/userStore';
 import { useSettingStore } from '~/store/settingStore';
-
+import { useToast } from 'vue-toastification';
 const props = defineProps({
   title: {
     type: String,
@@ -51,6 +51,7 @@ const props = defineProps({
 const settingStore = useSettingStore();
 const imagePreview = ref(props.modelValue.url || defaultImage);
 const userStore = useUserStore();
+const toast = useToast();
 
 const emit = defineEmits(['update:modelValue']);
 
@@ -61,18 +62,18 @@ const onFileChange = (event) => {
     if(file.size < props.maxSize * 1024 * 1024) {
       const formData = new FormData();
       formData.append('file', file);
-      imagePreview.value = URL.createObjectURL(file);
       settingStore.uploadFiles(userStore.userData.id, formData)
       .then(res => {
         if(res && res.media_id) {
+          imagePreview.value = URL.createObjectURL(file);
           emit('update:modelValue', {id: res.media_id, url: imagePreview.value});
         }
       })
     } else {
-      console.log('Файл слишком большой');
+      toast.error('Файл превышает допустимый размер');
     }
   } else {
-    console.log('Неверный тип файла');
+    toast.error('Неверный тип файла');
   }
 };
 

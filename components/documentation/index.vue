@@ -13,8 +13,8 @@
         <CommonFileList :dataList="dataList" />
       </div>
       <p v-else class="documentation__text">Файлы не загружены</p>
-      <UiButton v-if="!dataList.length" to="/documentation/custom/create" class="documentation__btn" variant="quinary" size="around">Загрузить</UiButton>
-      <UiButton v-else to="/documentation/custom/create" class="documentation__btn" variant="quinary" size="around">Изменить</UiButton>
+      <UiButton v-if="!dataList.length" to="/documentation/custom/create" class="documentation__btn" variant="quinary" size="large">Загрузить</UiButton>
+      <UiButton v-else to="/documentation/custom/create" class="documentation__btn" variant="quinary" size="large">Изменить</UiButton>
     </div>
   </div>
 </template>
@@ -36,7 +36,7 @@ const organizationVerified = computed(() => userStore.userOrganization.verified_
 const router = useRouter();
 
 const notifyAction = () => {
-  router.push(`/${userStore.role}/documentation/custom/create`)
+  router.push(`/documentation/custom/create`)
 }
 
 </script>

@@ -75,6 +75,18 @@ export const useOrganizationStore = defineStore('organization', {
         throw error;
       }
     },
+
+    async editOrganization(data, form) {
+      try {
+        const response = await Api.editOrganization(data, form);
+        if(response) {
+          this.organization = response;
+          return response;
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
     
     async setPubCard(data, form) {
       try {

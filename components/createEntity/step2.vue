@@ -1,7 +1,7 @@
 <template>
   <div class="entity">
     <h1 class="entity__title">Подробное описание</h1>
-    <Form as="form" @submit="handleSubmit" v-slot="{ errors, validate }">
+    <UiForm :submit="handleSubmit" @setError="getErrorList">
       <div class="entity__data">
         <div class="entity__photo">
           <label class="form-group__title entity__label">
@@ -111,7 +111,7 @@
             }`" />
         </label>
         <UiTextArea 
-          
+          :rules="{ required: true, min: 10}"
           name="conditions" 
           label="Условия сотрудничества" 
           v-model="data.termsOfCooperation" 
@@ -134,7 +134,7 @@
           :extension="['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'rtf', 'pdf', 'jpeg', 'png', 'jpg', 'gif', 'psd', 'djvu', 'fb2', 'ps', 'zip', 'rar']"
         />
       </div>
-      <CommonAlerts v-if="errors && errors.selectedLocations" :alert="errors.selectedLocations" alertType="validation" />
+      <CommonAlerts v-if="errorList.selectedLocations" :alert="errorList.selectedLocations" alertType="validation" />
       <div class="entity__data" v-if="role === 'customer'">
         <h2 class="entity__subtitle">Города фактического производства заказа</h2>
         <div class="entity__text-container">
@@ -180,11 +180,11 @@
         >
           Назад
         </UiButton>
-        <UiButton type="submit" class="form-group-data form-group-data__btn" @click="getErrorsList(validate, errorsList)" variant="quinary" size="large">Далее
+        <UiButton type="submit" class="form-group-data form-group-data__btn" variant="quinary" size="large">Далее
           <SvgoBtnArrow class="svg-lx" />
         </UiButton>
       </div>
-    </Form>
+    </UiForm>
   </div>
 </template>
 
@@ -230,14 +230,20 @@ const currentEntity = computed(() => {
   }
 })
 
+const errorList = ref({});
+
+const getErrorList = (errors) => {
+  errorList.value = errors
+}
+
 const router = useRouter();
 
 const handleSelectLogo = (url) => {
   props.data.logo = url
 }
 
-const handleSubmit = (values, form) => {
-  props.handleSubmit(values, form)
+const handleSubmit = async (values, form) => {
+  await props.handleSubmit(values, form)
 }
 
 const locationData = ref({
