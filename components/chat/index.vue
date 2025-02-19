@@ -54,7 +54,10 @@
                                         {{ orgOnline(org) }}
                                     </div>
                                 </div>
-                                <div class="dialog-head__buttons">
+                                <div
+                                    class="dialog-head__buttons"
+                                    v-if="chat?.id"
+                                >
                                     <UiButton
                                         v-if="chat.deal"
                                         :href="`/deals/${chat.deal.id}`"
@@ -68,22 +71,34 @@
                                     <UiButton
                                         class="dialog-head__btn dialog-head__btn_type_colored"
                                         type="button"
-                                        @click="openReviewModal(org)"
+                                        @click="selectPerformer(org)"
                                         variant="tertiary"
                                         size="around"
                                         target="_blank"
+                                        v-if="org.pivot.role === 'performer' && chat.order && !chat.deal && !chat.order.selected_performer_id"
                                     >
-                                        <SvgoDealIcon
-                                            class="svg-m"
-                                            fill="#6937a5"
-                                        />
-                                        Оставить отзыв
+                                        Выбрать исполнителя
+                                    </UiButton>
+                                    <UiButton
+                                        class="dialog-head__btn dialog-head__btn_type_colored"
+                                        type="button"
+                                        @click="unselectPerformer(org)"
+                                        variant="tertiary"
+                                        size="around"
+                                        target="_blank"
+                                        v-if="chat.order?.selected_performer_id === org.id"
+                                    >
+                                        Отменить выбор
                                     </UiButton>
                                     <UiButton
                                         class="dialog-head__btn"
                                         type="button"
                                         @click="setPinned"
-                                        :variant="chat.is_pinned ? `primary` : `tertiary`"
+                                        :variant="
+                                            chat.is_pinned
+                                                ? `primary`
+                                                : `tertiary`
+                                        "
                                         size="around"
                                         target="_blank"
                                         :without-padding="true"
@@ -97,6 +112,7 @@
                                 <UiNewDropdown
                                     placement="bottom-end"
                                     :arrow="false"
+                                    v-if="chat?.id"
                                 >
                                     <UiButton
                                         class="dialog-head__btn"
@@ -353,10 +369,13 @@ export default {
 
     methods: {
         toggleTranslate() {
-            console.log('toggleTranslate');
+            console.log("toggleTranslate");
             this.translate = !this.translate;
 
-            localStorage.setItem("translate_chat_" + this.chat.id, this.translate);
+            localStorage.setItem(
+                "translate_chat_" + this.chat.id,
+                this.translate
+            );
 
             this.changeInitChatId(this.chat.id);
         },
@@ -370,6 +389,15 @@ export default {
             }
             const searchParams = new URLSearchParams(data);
             return `/deals/create?${searchParams.toString()}`;
+        },
+
+
+        selectPerformer(org) {
+            useChatStore()
+                .selectPerformer(this.chat.id, org.id)
+                .then(() => {
+                    this.changeInitChatId(this.chat.id);
+                });
         },
 
         unselectPerformer(org) {
@@ -676,14 +704,15 @@ export default {
                     const container = this.$refs.chatContainer;
 
                     this.translate =
-                        localStorage.getItem("translate_chat_" + response.id) == "true";
+                        localStorage.getItem("translate_chat_" + response.id) ==
+                        "true";
                     if (this.translate) {
                         this.translate = window.TranslateGetCode(
                             window.googleTranslateConfig
                         );
                     }
 
-                    this.channel.listen("NewChatMessage", (event) => {
+                    this.channel.listen("NewChatMessageEvent", (event) => {
                         const scrollEnd =
                             container.scrollHeight - container.scrollTop ===
                             container.clientHeight;
@@ -699,7 +728,7 @@ export default {
                         this.lastLoaded = false;
                         this.addMessage(event.message, scrollEnd, true);
                     });
-                    this.channel.listen("ChatMessageReaded", (event) => {
+                    this.channel.listen("ChatMessageReadedEvent", (event) => {
                         let organization = this.chat.organizations.find(
                             (org) => org.id == event.organization_id
                         );
@@ -1060,6 +1089,8 @@ export default {
                 justify-content: flex-start;
                 color: var(--text-color-primary);
                 text-align: left;
+                text-transform: none;
+                border-radius: 0;
 
                 &:hover {
                     background-color: var(--button-background-secondary-hover);

@@ -1,6 +1,6 @@
 <template>
     <VueFinalModal
-        class=""
+        class="modal"
         content-class="modal-vfm-content"
         overlay-transition="vfm-fade"
         :hideOverlay="overlayHide"

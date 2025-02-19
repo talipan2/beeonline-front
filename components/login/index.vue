@@ -117,8 +117,6 @@ const password = ref("");
 const isRemember = ref(false);
 const isShowPassword = ref(false);
 
-const loading = ref(false);
-
 const handleSubmit = (values, form) => {
     return userStore
         .authUser(values, form)

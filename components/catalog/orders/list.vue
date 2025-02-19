@@ -39,6 +39,8 @@ const orderData = computed(() => {
       name: item.name,
       logo: item.gallery && item.gallery.length ? item.gallery[0].url : '',
       countryId: formatLocationsList(item.regions, item.cities, true),
+      lifecycle_status: item.lifecycle_status,
+      lifecycle_status_name: item.lifecycle_status_name,
       data: [
         { id: 1, name: 'Категории', value: item.product_categories && item.product_categories.length ? item.product_categories.map(item => item.name) : [] },
         { id: 2, name: 'Место производства', value: formatLocationsList(item.regions, item.cities) },
@@ -58,7 +60,7 @@ const formatLocationsList = (regions = [], cities = [], citiesId = false) => {
   const regionsIds = regions.map(item => item.id);
   const locations = locationStore.getLocationsByIds([], regionsIds, citiesIds);
   if (citiesId) {
-    return locations[0] && locations[0].countryId ? locations[0].countryId : null; 
+    return locations[0] && locations[0].countryId ? locations[0].countryId : null;
   } else {
     return locations.map(item => item.name);
   }

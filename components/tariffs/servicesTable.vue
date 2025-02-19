@@ -16,9 +16,7 @@
       <tbody>
         <tr v-for="(service, rowIndex) in services" :key="rowIndex">
           <td>
-            <UiCheckbox name="service" v-model="service.selected" :is-validated="false">
               {{ service.name }}
-            </UiCheckbox>
           </td>
           <td class="services-table__price" v-if="currentCurrency === 'RUB'">
             {{ formatMoney(service.price, currentCurrency, 0) }}
@@ -35,9 +33,7 @@
     <div class="services-list">
       <ul class="services-list__list">
         <li class="services-list__item" v-for="(services, index) in services" :key="index">
-          <UiCheckbox class="services-list__checkbox" name="service" v-model="services.selected" :is-validated="false">
             {{ services.name }}
-          </UiCheckbox>
           <p class="services-list__price" v-if="currentCurrency === 'RUB'">
             {{ formatMoney(services.price, currentCurrency, 0) }}
             <span v-if="services.period">{{ ` / ${services.period}` }}</span>
@@ -88,7 +84,6 @@ watch(() => userStoreServices.value, (newVal) => {
 			id: service.id,
 			name: service.name,
 			quantity: 0,
-			selected: false,
 			price: service.prices[0].amount,
 			period: service.numeral_forms ? service.numeral_forms[0] || null : null,
 		};
@@ -98,16 +93,14 @@ watch(() => userStoreServices.value, (newVal) => {
 const totalCount = computed(() => {
   let count = 0;
   services.value.forEach(service => {
-    if(service.selected) {
-        count += service.quantity * service.price;
-    }
+    count += service.quantity * service.price;
   });
   return count
 })
 
 const handlePayModal = () => {
   settingStore.payModalStatus = true;
-  const selectedServices = services.value.filter(service => service.selected);
+  const selectedServices = services.value.filter(service => service.quantity > 0);
   emit('select', selectedServices, totalCount.value, props.currentCurrency);
   emit('reset', handleReset);
 }
@@ -115,7 +108,6 @@ const handlePayModal = () => {
 const handleReset = () => {
   services.value.forEach(service => {
     service.quantity = 0;
-    service.selected = false;
   });
 }
 
@@ -160,7 +152,7 @@ const handleReset = () => {
   }
 
   tr td {
-    border-bottom: none; 
+    border-bottom: none;
   }
 
   th.services-table__price, td.services-table__price {
@@ -292,7 +284,7 @@ const handleReset = () => {
   &__price {
     flex: 0 1 30%;
     font-weight: 700;
-    line-height: 1.4em; 
+    line-height: 1.4em;
     text-align: right;
   }
 

@@ -17,22 +17,22 @@
 		<div class="dialogs-item__wrap">
 			<div class="dialogs-item__image"
 				:class="{
-				'dialogs-item__image_product': dialog.product,
+				'dialogs-item__image_product': dialog.order,
 			}">
 				<div class="dialogs-item__image-wrap">
 					<div
 						class="dialogs-item__image-product"
-						v-if="dialog.product"
+						v-if="dialog.order"
 					>
 						<UiImage
-							v-if="dialog.product?.first_image?.length"
-							:src="dialog.product.first_image"
-							:alt="dialog.product.name"
+							v-if="dialog.order?.first_image?.length"
+							:src="dialog.order.first_image"
+							:alt="dialog.order.name"
 						/>
 						<UiImage
 							v-else
 							src="/assets/svg/default.svg"
-							:alt="dialog.product.name"
+							:alt="dialog.order.name"
 						/>
 					</div>
 					<div class="dialogs-item__image-orgs">
@@ -72,10 +72,10 @@
 				</div>
 				<div
 					class="dialogs-item__subtitle"
-					v-if="dialog.product?.name"
+					v-if="dialog.order?.name"
 				>
-					{{ getProductType(dialog.product) }}:
-					{{ dialog.product.name }}
+					Заказ:
+					{{ dialog.order.name }}
 				</div>
 				<div
 					class="dialogs-item__deal"
@@ -228,9 +228,6 @@ export default {
         },
         getOrgType(organization) {
             return useChatStore().getOrgType(organization);
-        },
-        getProductType(product) {
-            return useChatStore().getProductType(product);
         },
         pluralize(number, forms) {
             return useChatStore().pluralize(number, forms);

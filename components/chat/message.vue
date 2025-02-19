@@ -22,10 +22,7 @@
             </div>
 			<div class="message__buttons" v-if="message.options?.buttons?.length">
 				<template v-for="button in message.options.buttons">
-					<a :href="button.url" class="message__button btn" target="_blank" :class="{
-						'btn-outline-primary': message.own,
-						'btn-primary': !message.own
-					}">{{ button.title }}</a>
+                    <UiButton class="message__button" :variant="message.own ? 'primary' : 'secondary'" size="large" target="_blank" :to="button.url">{{ button.title }}</UiButton>
 				</template>
 			</div>
             <!-- <file-list-new

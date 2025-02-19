@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 import { useApi } from "~/composables/useApi";
+import { useUserStore } from "./userStore";
 
 export const useChatStore = defineStore("chatStore", {
     state: () => ({
@@ -17,6 +18,11 @@ export const useChatStore = defineStore("chatStore", {
 		async loadNewResponses(order_id) {
 			return await useApi().post(`/chat/load_new_responses`, {
 				order_id: order_id
+			});
+		},
+		async selectPerformer(chat_id, performer_id) {
+			return await useApi().post(`/chat/${chat_id}/select_performer`, {
+				performer_id: performer_id
 			});
 		},
 		async unselectPerformer(chat_id, performer_id) {
@@ -64,7 +70,9 @@ export const useChatStore = defineStore("chatStore", {
             });
         },
 		async getOrders() {
-			if (this.role != "customer") return null;
+            const role = useUserStore().role;
+            console.log(role);
+			// if (role != "customer") return null;
 			if (!this.orders) {
 				this.orders = await useApi().post("/chat/orders");
 			}

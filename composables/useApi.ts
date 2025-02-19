@@ -105,6 +105,10 @@ export const useApi = () => {
                 responseType: isBlob ? "blob" : "json",
             });
 
+            if (form) {
+                form.resetField('isLoading');
+            }
+
             if (response.error.value) {
                 throw response.error.value;
             }
