@@ -7,7 +7,7 @@
         <HeaderChooseLang class="modal-lang"/>
       </div>
       <UiInput :placeholder="'Поиск по сайту'" class="header-menu__search" />
-      <template v-if="isAuth"> 
+      <template v-if="isAuth">
         <button class="header-menu__user-data" @click="() => isOpenDropDown = !isOpenDropDown">
           <div class="header-menu__user-image">
             <img src="~/assets/images/header/profile-image.jpg" :alt="userName">
@@ -126,7 +126,7 @@ const dropdownMenuLinks = computed(() => {
     { id: 4, label: props.role === "performer" ? "Услуги" : "Заказы", value: props.role === "performer" ? "/performer/services" : "/customer/orders", },
     { id: 5, label: "Проверка контрагентов", value: `/${props.role}/org_check` },
     { id: 6, label: "Сообщения", value: "/chat" },
-    { id: 7, label: "Сделки", value: "/" },
+    { id: 7, label: "Сделки", value: "/deals" },
     { id: 8, label: "Документы", value: `/${props.role}/documentation` },
     { id: 9, label: "Избранное", value: `/${props.role}/favorites` },
     { id: 10, label: "Отзывы", value: `/${props.role}/my-reviews` },
@@ -134,7 +134,7 @@ const dropdownMenuLinks = computed(() => {
     { id: 12, label: "Уведомления", value: `/${props.role}/notifications` },
     { id: 13, label: "Новости", value: "/news" },
   ];
-});  
+});
 
 
 function confirm() {
@@ -176,7 +176,7 @@ watch(() => router.currentRoute.value.path, (newVal) => {
     align-items: center;
     justify-content: space-between;
     margin-bottom: 1.5em;
-    
+
       .header__location {
         font-size: 1.4em;
       }
@@ -236,7 +236,7 @@ watch(() => router.currentRoute.value.path, (newVal) => {
     overflow: hidden;
   }
 
-  &__user-info { 
+  &__user-info {
     font-size: 1.4em;
     display: flex;
     flex-direction: column;

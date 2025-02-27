@@ -20,8 +20,8 @@
             <div class="message__text">
                 {{ message.text }}
             </div>
-			<div class="message__buttons" v-if="message.options?.buttons?.length">
-				<template v-for="button in message.options.buttons">
+			<div class="message__buttons" v-if="message?.buttons?.length">
+				<template v-for="button in message.buttons">
                     <UiButton class="message__button" :variant="message.own ? 'primary' : 'secondary'" size="large" target="_blank" :to="button.url">{{ button.title }}</UiButton>
 				</template>
 			</div>

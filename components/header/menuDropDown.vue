@@ -123,7 +123,7 @@ const dropdownMenuLinks = computed(() => {
       value: `/${role.value}/${role.value === 'customer' ? 'orders' : 'services'}`
     },
     { label: 'Сообщения', value: '/chat' },
-    { label: 'Сделки', value: '/' },
+    { label: 'Сделки', value: '/deals' },
     { label: 'Избранное', value: `/${role.value}/favorites` },
     { label: 'Отзывы', value: `/${role.value}/my-reviews` },
     { label: 'Баланс и платные услуги', value: '/tariffs' },
