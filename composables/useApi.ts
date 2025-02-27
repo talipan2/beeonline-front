@@ -118,7 +118,7 @@ export const useApi = () => {
             }
 
             const result = response.data.value;
-            return result?.data || result;
+            return result;
         } catch (error) {
             handleFetchError(error, form, silent);
         } finally {

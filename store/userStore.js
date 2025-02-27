@@ -65,6 +65,7 @@ export const useUserStore = defineStore("user", {
         },
         async authUser(values, form) {
             const data = await Api.authUser(values, form);
+            console.log(data);
             this.isAuth = true;
             this.userToken = data.access_token;
             this.userData = data.user;

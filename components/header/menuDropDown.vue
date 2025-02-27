@@ -130,12 +130,12 @@ const dropdownMenuLinks = computed(() => {
       { label: 'Рабочий стол', value: `/desktop` },
       { label: 'Bee-online Gifts', value: `/bonus` },
       { label: 'Профиль', value: `/profile` },
-      { 
-        label: `${role.value === 'customer' ? 'Заказы' : 'Услуги'}`, 
-        value: `/${role.value}/${role.value === 'customer' ? 'orders' : 'services'}` 
+      {
+        label: `${role.value === 'customer' ? 'Заказы' : 'Услуги'}`,
+        value: `/${role.value}/${role.value === 'customer' ? 'orders' : 'services'}`
       },
       { label: 'Сообщения', value: '/chat' },
-      { label: 'Сделки', value: '/' },
+      { label: 'Сделки', value: '/deals' },
       { label: 'Избранное', value: `/favorites` },
       { label: 'Отзывы', value: `/my-reviews` },
       { label: 'Баланс и платные услуги', value: '/tariffs' },
@@ -186,7 +186,7 @@ const setRole = (role) => {
       })
       userStore.checkAuth()
       router.push({ path: `/desktop` });
-      
+
     });
 }
 

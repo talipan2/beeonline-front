@@ -91,7 +91,7 @@ const getSidebarLinks = (role) => [
   { id: 4, label: role === "performer" ? "Услуги" : "Заказы", value: role === "performer" ? "/performer/services" : "/customer/orders", },
   { id: 5, label: "Проверка контрагентов", value: `/org_check` },
   { id: 6, label: "Сообщения", value: "/chat" },
-  { id: 7, label: "Сделки", value: "/" },
+  { id: 7, label: "Сделки", value: "/deals" },
   { id: 8, label: "Документы", value: `/documentation` },
   { id: 9, label: "Партнерские сервисы", value: `/related-industry-services` },
   { id: 10, label: "Избранное", value: `/favorites` },
@@ -137,7 +137,7 @@ const isActiveLink = (link) => {
 .profile-sidebar {
 
   .sidebar {
-    
+
     &__top {
       margin-left: -0.78em;
     }
