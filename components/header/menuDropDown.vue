@@ -9,9 +9,14 @@
   >
     <UiButton type="button" variant="secondary" size="large" class="header__auth-link">
       <SvgoUser class="svg-m" />
-      Кабинет
-      <span class="d-none" v-if="userStore.role === 'performer'"> исполнителя</span>
-      <span class="d-none" v-if="userStore.role === 'customer'"> заказчика</span>
+      <template v-if="userStore.role === 'customer' || userStore.role === 'performer'">
+        Кабинет
+        <span class="d-none" v-if="userStore.role === 'performer'"> исполнителя</span>
+        <span class="d-none" v-if="userStore.role === 'customer'"> заказчика</span>
+      </template>
+      <template v-else>
+        Личный кабинет
+      </template>
       <SvgoDropDown class="svg-m" />
     </UiButton>
     <template #content>
@@ -114,23 +119,31 @@ const logo = computed(() => {
 const headerDropdown = ref(null);
 
 const dropdownMenuLinks = computed(() => {
-  return [
-    { label: 'Рабочий стол', value: `/desktop` },
-    { label: 'Bee-online Gifts', value: `/bonus` },
-    { label: 'Профиль', value: `/profile` },
-    { 
-      label: `${role.value === 'customer' ? 'Заказы' : 'Услуги'}`, 
-      value: `/${role.value}/${role.value === 'customer' ? 'orders' : 'services'}` 
-    },
-    { label: 'Сообщения', value: '/chat' },
-    { label: 'Сделки', value: '/' },
-    { label: 'Избранное', value: `/favorites` },
-    { label: 'Отзывы', value: `/my-reviews` },
-    { label: 'Баланс и платные услуги', value: '/tariffs' },
-    { label: 'Уведомления', value: `/notifications` },
-    { label: 'Техническая поддержка', value: '/support' },
-    { label: 'Новости', value: '/news' },
-  ]
+  if(role.value === 'industry') {
+    return [
+      { label: 'Профиль', value: `/profile` },
+      { label: 'Сообщения', value: `/chat` },
+      { label: 'Техническая поддержка', value: '/support' },
+    ]
+  } else {
+    return [
+      { label: 'Рабочий стол', value: `/desktop` },
+      { label: 'Bee-online Gifts', value: `/bonus` },
+      { label: 'Профиль', value: `/profile` },
+      { 
+        label: `${role.value === 'customer' ? 'Заказы' : 'Услуги'}`, 
+        value: `/${role.value}/${role.value === 'customer' ? 'orders' : 'services'}` 
+      },
+      { label: 'Сообщения', value: '/chat' },
+      { label: 'Сделки', value: '/' },
+      { label: 'Избранное', value: `/favorites` },
+      { label: 'Отзывы', value: `/my-reviews` },
+      { label: 'Баланс и платные услуги', value: '/tariffs' },
+      { label: 'Уведомления', value: `/notifications` },
+      { label: 'Техническая поддержка', value: '/support' },
+      { label: 'Новости', value: '/news' },
+    ]
+  }
 })
 
 watch(() => router.currentRoute.value.path, (newVal) => {

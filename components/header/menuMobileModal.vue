@@ -10,7 +10,7 @@
       <template v-if="isAuth"> 
         <button class="header-menu__user-data" @click="() => isOpenDropDown = !isOpenDropDown">
           <div class="header-menu__user-image">
-            <img src="~/assets/images/header/profile-image.jpg" :alt="userName">
+            <img :src="logo || defaultLogoImage" :alt="userName">
           </div>
           <div class="header-menu__user-info">
             <div class="header-menu__user-name">{{ userName }}</div>
@@ -55,14 +55,50 @@
         </ul>
       </nav>
       <template v-if="isAuth">
-        <NuxtLink to="" class="header-menu__change-role">
+        <UiButton 
+          v-if="role === 'performer' && userRoles.includes('customer')" 
+          type="button"
+          variant="default"
+          class="header-menu__change-role"
+          @click="handleSwitchRole"
+        >
           <SvgoEnter class="svg-m" />
           Переключится на заказчика
-        </NuxtLink>
-        <NuxtLink to="" class="header-menu__change-role">
+        </UiButton>
+        <UiButton 
+          v-if="role === 'customer' && userRoles.includes('performer')" 
+          type="button" 
+          variant="default"
+          class="header-menu__change-role"
+          @click="handleSwitchRole"
+        >
+          <SvgoEnter class="svg-m" />
+          Переключится на исполнителя
+        </UiButton>
+        <!-- <NuxtLink to="" class="header-menu__change-role">
           <SvgoEnter class="svg-m" />
           В кабинет менеджера сделок
-        </NuxtLink>
+        </NuxtLink> -->
+        <UiButton 
+          type="button" 
+          variant="default" 
+          class="header-menu__change-role"
+          @click="setRole('performer')" 
+          v-if="!userRoles.includes('performer') && role === 'customer'"
+        >
+          <SvgoAdduser class="svg-m" />
+            Стать исполнителем
+        </UiButton>
+        <UiButton 
+          type="button" 
+          variant="default"
+          class="header-menu__change-role"
+          @click="setRole('customer')" 
+          v-if="!userRoles.includes('customer') && role === 'performer'"
+        >
+          <SvgoAdduser class="svg-m" />
+            Стать заказчиком
+        </UiButton>
       </template>
       <div class="header-menu__social">
         <NuxtLink to="https://www.youtube.com/channel/UC2c_djW8Mf6KLrmB5TOuP_w" class="header-menu__social-link">
@@ -76,6 +112,9 @@
 
 <script setup>
 import { useSettingStore } from '~/store/settingStore';
+import defaultLogoImage from "~/assets/images/nophoto_pc.png";
+import { useUserStore } from '~/store/userStore';
+import { useOrganizationStore } from '~/store/organizationStore';
 
 
 const props = defineProps({
@@ -97,6 +136,10 @@ const props = defineProps({
   isAuth: {
     type: Boolean,
     default: false,
+  },
+  logo: {
+    type: String,
+    default: '',
   }
 });
 
@@ -104,8 +147,11 @@ const router = useRouter();
 const emit = defineEmits(['update:modelValue']);
 const modall = ref(null);
 const settingStore = useSettingStore();
+const userStore = useUserStore();
+const organizationStore = useOrganizationStore();
 const isOpenModal = ref(props.modelValue);
-
+const userRoles = computed(() => userStore.userRoles);
+const userData = computed(() => userStore.userData);
 
 
 const isOpenDropDown = ref(false);
@@ -118,23 +164,64 @@ function getRoleName(role) {
   }
 }
 
+const handleSwitchRole = async () => {
+  const isCustomer = userStore.role === 'customer';
+  const newRole = isCustomer ? 'performer' : 'customer';
+  const redirectPath = '/desktop';
+
+  try {
+    await userStore.setUserData({ role: newRole }, userData.value.id);
+    userStore.role = newRole;
+    localStorage.setItem('role', newRole);
+    router.push({ path: redirectPath });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const setRole = (role) => {
+  userStore.setUserData({ role: role }, userData.value.id)
+    .then(res => {
+      userStore.role = role;
+      localStorage.setItem('role', role);
+      organizationStore.setPubCard({
+        id: userStore.userData.organization_id,
+        name: userStore.userData.public_cards[0].name,
+        status: 1,
+        type: role
+      })
+      userStore.checkAuth()
+      router.push({ path: `/desktop` });
+      
+    });
+}
+
 const dropdownMenuLinks = computed(() => {
-  return [
-    { id: 1, label: "Рабочий стол", value: `/desktop` },
-    { id: 2, label: "Bee-online Gifts", value: `/bonus` },
-    { id: 3, label: "Профиль", value: `/profile` },
-    { id: 4, label: props.role === "performer" ? "Услуги" : "Заказы", value: props.role === "performer" ? "/performer/services" : "/customer/orders", },
-    { id: 5, label: "Проверка контрагентов", value: `/org_check` },
-    { id: 6, label: "Сообщения", value: "/chat" },
-    { id: 7, label: "Сделки", value: "/" },
-    { id: 8, label: "Документы", value: `/documentation` },
-    { id: 9, label: "Избранное", value: `/favorites` },
-    { id: 10, label: "Отзывы", value: `/my-reviews` },
-    { id: 11, label: "Баланс и платные услуги", value: "/" },
-    { id: 12, label: "Уведомления", value: `/notifications` },
-    { id: 13, label: "Новости", value: "/news" },
-  ];
-});  
+  if(props.role === 'industry') {
+    return [
+      { id: 1, label: "Профиль", value: `/profile` },
+      { id: 2, label: "Сообщения", value: "/chat" },
+
+    ]
+  } else {
+    return [
+      { id: 1, label: "Рабочий стол", value: `/desktop` },
+      { id: 2, label: "Bee-online Gifts", value: `/bonus` },
+      { id: 3, label: "Профиль", value: `/profile` },
+      { id: 4, label: props.role === "performer" ? "Услуги" : "Заказы", value: props.role === "performer" ? "/performer/services" : "/customer/orders", },
+      { id: 5, label: "Проверка контрагентов", value: `/org_check` },
+      { id: 6, label: "Сообщения", value: "/chat" },
+      { id: 7, label: "Сделки", value: "/" },
+      { id: 8, label: "Документы", value: `/documentation` },
+      { id: 9, label: "Партнерские сервисы", value: `/related-industry-services` },
+      { id: 10, label: "Избранное", value: `/favorites` },
+      { id: 11, label: "Отзывы", value: `/my-reviews` },
+      { id: 12, label: "Баланс и платные услуги", value: "/" },
+      { id: 13, label: "Уведомления", value: `/notifications` },
+      { id: 14, label: "Новости", value: "/news" },
+    ];
+  }
+});
 
 
 function confirm() {
@@ -165,11 +252,14 @@ watch(() => router.currentRoute.value.path, (newVal) => {
   }
 
   .modal-content {
+    font-family: "Inter", sans-serif;
     max-height: 100%;
     box-sizing: border-box;
     overflow-y: auto;
     padding-bottom: 3em;
     margin-block: 0;
+    background-color: transparent;
+    padding-right: 1em;
   }
 
   &__header {
@@ -243,11 +333,13 @@ watch(() => router.currentRoute.value.path, (newVal) => {
     flex-direction: column;
     align-items: flex-start;
     flex: 1;
+    row-gap: .5em;
     color: var(--text-color-octonary);
   }
 
   &__user-role{
     font-size: 0.857em;
+    text-transform: uppercase;
   }
 
   &__dropdown-icon {
@@ -272,12 +364,13 @@ watch(() => router.currentRoute.value.path, (newVal) => {
     font-size: 1.2em;
     color: var(--text-color-octonary);
     text-transform: uppercase;
-    display: flex;
-    align-items: center;
     column-gap: 0.625em;
-    padding: 0.625em 0.625em 2.291em 2.5em;
+    padding-block: 0.625em 2.291em;
+    border: none;
     border-bottom: 1px solid var(--text-color-ternary);
     margin-bottom: 1.66em;
+    border-radius: 0;
+    width: 100%;
 
     svg {
       fill: #fff;

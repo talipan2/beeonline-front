@@ -53,16 +53,38 @@
           </ul>
         </nav>
         <div class="header__auth" v-if="isAuth">
-          <UiButton class="header__page-link" to="/search" variant="secondary" size="around">
+          <UiButton 
+            class="header__page-link" 
+            to="/search" 
+            variant="secondary" 
+            size="around"
+          >
             <SvgoSearchIcon class="svg-m" />
           </UiButton>
-          <UiButton class="header__page-link" :to="role ? `/favorites` : '/'" variant="secondary" size="around">
+          <UiButton
+            v-if="role !== 'industry'"
+            class="header__page-link" 
+            :to="role ? `/favorites` : '/'" 
+            variant="secondary" 
+            size="around"
+          >
             <SvgoFavorite class="svg-m" />
           </UiButton>
-          <UiButton class="header__page-link" to="/chat" variant="secondary" size="around">
+          <UiButton 
+            class="header__page-link" 
+            to="/chat" 
+            variant="secondary" 
+            size="around"
+          >
             <SvgoMessage class="svg-m" />
           </UiButton>
-          <UiButton class="header__page-link" :to="role ? `/notifications` : '/'" variant="secondary" size="around">
+          <UiButton 
+            v-if="role !== 'industry'"
+            class="header__page-link" 
+            :to="role ? `/notifications` : '/'" 
+            variant="secondary" 
+            size="around"
+          >
             <SvgoNotice class="svg-m" />
             <UiAlertBadge />
           </UiButton>
@@ -83,6 +105,7 @@
       :headerHeight="headerHeight"
       :closeButton="false"
       :userName="userName"
+      :logo="userLogo"
       :role="role"
       :isAuth="isAuth"
     />
@@ -104,6 +127,7 @@ const router = useRouter();
 
 const isAuth = computed(() => userStore.isAuth);
 const userName = computed(() => userStore.userData ? userStore.userData.name : null);
+const userLogo = computed(() => userStore.userPubCard ? userStore.userPubCard.logo : null);
 const isOpenMobileModal = ref(false);
 const header = ref(null);
 const headerMain = ref(null);

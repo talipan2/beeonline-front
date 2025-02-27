@@ -93,14 +93,29 @@ const getSidebarLinks = (role) => [
   { id: 6, label: "Сообщения", value: "/chat" },
   { id: 7, label: "Сделки", value: "/" },
   { id: 8, label: "Документы", value: `/documentation` },
-  { id: 9, label: "Избранное", value: `/favorites` },
-  { id: 10, label: "Отзывы", value: `/my-reviews` },
-  { id: 11, label: "Баланс и платные услуги", value: "/tariffs" },
-  { id: 12, label: "Уведомления", value: `/notifications` },
-  { id: 13, label: "Новости", value: "/news" },
+  { id: 9, label: "Партнерские сервисы", value: `/related-industry-services` },
+  { id: 10, label: "Избранное", value: `/favorites` },
+  { id: 11, label: "Отзывы", value: `/my-reviews` },
+  { id: 12, label: "Баланс и платные услуги", value: "/tariffs" },
+  { id: 13, label: "Уведомления", value: `/notifications` },
+  { id: 14, label: "Новости", value: "/news" },
 ];
 
-const sidebarTopLinks = computed(() => getSidebarLinks(props.role));
+const sidebarIndustryServices = computed(() => {
+  return [
+    { id: 1, label: "Профиль", value: `/profile` },
+    { id:2, label: 'Сообщения', value: '/chat'}
+  ]
+})
+
+const sidebarTopLinks = computed(() => {
+  console.log(props.role)
+  if(props.role === 'industry') {
+    return sidebarIndustryServices.value
+  } else {
+    return getSidebarLinks(props.role)
+  }
+});
 
 const isActiveLink = (link) => {
   if (link.includes('/reviews') || link.includes('/my-reviews')) {

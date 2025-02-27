@@ -41,7 +41,8 @@ const countries = computed(() => props.locationsList.countries || []);
 
 const data = ref([])
 
-watch(() => [cities.value, regions.value, countries.value], () => {
+watch(() => [cities.value, regions.value, countries.value, locationStore.locations], () => {
+
   data.value = locationStore.getLocationsByIds([...countries.value], [...regions.value], [...cities.value])
 }, {deep: true, immediate: true})
 

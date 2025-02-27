@@ -122,21 +122,37 @@ const handleSubmit = async(value, form) => {
   if(props.submitFunc) {
    await props.submitFunc();
   } else {
-    await organizationStore.setPubCard({
-      id: userStore.userData.organization_id,
-      name: data.value.companyName,
-      description: data.value.description,
-      siteUrl: data.value.siteUrl,
-      status: 1,
-      type: userStore.role,
-    }, form)
-    .then(res => {
-      if (res && res.id && data.value.companyLogo?.id) {
-        organizationStore.setPubCardLogo(res.id, data.value.companyLogo.id)
-      }
-      userStore.checkAuth()
-      router.push({path: '/register/step3'})
-    });
+    if(!userStore.userPubCard.id) {
+      await organizationStore.setPubCard({
+        id: userStore.userData.organization_id,
+        name: data.value.companyName,
+        description: data.value.description,
+        siteUrl: data.value.siteUrl,
+        status: 1,
+        type: userStore.role,
+      }, form)
+      .then(res => {
+        if (res && res.id && data.value.companyLogo?.id) {
+          organizationStore.setPubCardLogo(res.id, data.value.companyLogo.id)
+        }
+        userStore.checkAuth()
+        router.push({path: '/register/step3'})
+      });
+    } else {
+      await organizationStore.editPubCards({
+        id: userStore.userPubCard.id,
+        name: data.value.companyName,
+        description: data.value.description,
+        siteUrl: data.value.siteUrl,
+      }, form)
+      .then(res => {
+        if (res && res.id && data.value.companyLogo?.id) {
+          organizationStore.setPubCardLogo(res.id, data.value.companyLogo.id)
+        }
+        userStore.checkAuth()
+        router.push({path: '/register/step3'})
+      });
+    }
   } 
 };
 

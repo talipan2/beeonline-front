@@ -1,13 +1,14 @@
 <template>
   <div>
-    <NuxtLayout name="profile" :title='`Кабинет ${roleName}`'  :rightSideSticky="false">
+    <NuxtLayout name="profile" :title='contentWithRoles.title'  :rightSideSticky="false">
       <template #header>
-        <UiBreadCrumb :list="[{label: 'Главная', link: '/'}, { label: `Кабинет ${roleName}`, link: '/desktop' }, { label: 'Профиль', link: '' }]" />
+        <UiBreadCrumb :list="contentWithRoles.breadcrumbs" />
       </template>
       <template #content>
-        <Profile />
+        <IndustryServicesProfile v-if="role === 'industry'"/>
+        <Profile v-else/>
       </template>
-      <template #rightSide>
+      <template #rightSide v-if="role !== 'industry'">
         <CommonCheckList adviceTitle="Полностью заполненный профиль выше в списке поиска" :checkList="checkListArray" :valueCheck="true"/>
         <CommonAlerts type="warning" class="right-side__alert" v-if="!userData.organization_id">
               <p>У вас не заполнена карточка компании.
@@ -35,6 +36,20 @@ const userData = computed(() => userStore.userData);
 
 const role = userStore.getRole;
 const roleName = userStore.getRoleNameForBreadcrumbs;
+
+const contentWithRoles = computed(() => {
+  if (role === 'industry') {
+    return {
+      title: 'Партнерские сервисы',
+      breadcrumbs: [{ label: 'Главная', link: '/' }, { label: 'Партнерские сервисы', link: '/profile' }]
+    }
+  } else {
+    return { 
+      title: `Кабинет ${roleName}`, 
+      breadcrumbs: [{label: 'Главная', link: '/'}, { label: `Кабинет ${roleName}`, link: '/desktop' }, { label: 'Профиль', link: '' }]
+    }
+  }
+});
 
 const checkListArray = computed(() => [
   { 

@@ -128,6 +128,9 @@ watch(() => props.modelValue, (newVal) => {
     line-height: 1;
     font-size: 12px;
 
+    @include mobile {
+      font-size: 1em;
+    }
   }
 
   img {

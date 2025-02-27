@@ -113,9 +113,9 @@ const handleClick = () => {
 
 .btn-tertiary {
   background-color: var(--button-background-quaternary);
-  color: var(--text-color-ternary);
+  color: var(--text-color-primary);
   // font-size: 1.4rem;
-  font-weight: 600;
+  font-weight: 400;
   border: 2px solid var(--border-color-quaternary);
   line-height: 1em;
 

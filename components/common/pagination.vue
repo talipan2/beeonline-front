@@ -1,5 +1,5 @@
 <template>
-  <div class="pagination" :class="{'loading': loading,}">
+  <div class="pagination" :class="[paginationClass, {'loading': loading}]" >
     <div class="pagination__container">
       <UiButton
         type="button"
@@ -64,16 +64,27 @@ const props = defineProps({
   loading: {
     type: Boolean,
     default: false
+  },
+  btnType: {
+    type: String,
+    default: 'round',
+    validator: value => ['round', 'square'].includes(value),
+  },
+  position: {
+    type: String,
+    default: 'center',
+    validator: value => ['center', 'left', 'right'].includes(value),
   }
 })
 
-const currentPagePagination = ref(props.currentPage);
+const paginationClass = computed(() => {
+  return [
+    `pagination_type_${props.btnType}`,
+    `pagination_position_${props.position}`,
+  ];
+});
 
-// const data = Array.from({ length: 150 }, (_, i) => ({ id: i + 1 }));
-const itemsPerPage = 5;
-// const currentPage = ref(1);
 const maxVisiblePages = 10;
-// const totalPages = computed(() => Math.ceil(data.length / itemsPerPage));
 
 const emit = defineEmits(['changePage']);
 
@@ -206,6 +217,20 @@ const showedPages = computed(() => {
         opacity: 1;
       }
     }
+  }
+
+  &_type_square {
+    .pagination__btn {
+      border-radius: 0;
+    }
+  }
+
+  &_position_left {
+    justify-content: flex-start;
+  }
+
+  &_position_right {
+    justify-content: flex-end;
   }
 }
 </style>
