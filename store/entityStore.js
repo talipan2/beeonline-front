@@ -11,10 +11,10 @@ export const useEntityStore = defineStore('entity', {
       name: '',
       imageUrl: '',
       categories: [],
+      adjacentCategories: [],
       placeOfProduction: [],
       placeOfProductionId: [],
       batch: '',
-      patterns: '',
       price: '',
       rawMaterials: [],
       completionDate: '',
@@ -83,9 +83,9 @@ export const useEntityStore = defineStore('entity', {
         { id: 2, label: "Нет" },
       ],
       minLot: [
-        {id: 1, label: 'до 100'}, 
-        {id: 2, label: 'от 100 до 500'}, 
-        {id: 3, label: 'от 500 до 1 000'}, 
+        {id: 1, label: 'до 100'},
+        {id: 2, label: 'от 100 до 500'},
+        {id: 3, label: 'от 500 до 1 000'},
         {id: 4, label: '1 000 и выше'}
       ],
       status: [
@@ -126,8 +126,19 @@ export const useEntityStore = defineStore('entity', {
     }
   },
   actions: {
+    async getAdjacentCategories() {
+      try {
+        const response = await commonApi.getAdjacentCategories();
+        if(response.data) {
+          this.entityData.adjacentCategories = response.data;
+          return response.data
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
     async getCategories() {
-      try { 
+      try {
         const response = await commonApi.getCategories();
         if(response.data) {
           this.entityData.categories = response.data;

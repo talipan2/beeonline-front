@@ -71,6 +71,8 @@ export const useUserStore = defineStore("user", {
             this.userData = data.user;
             this.userRoles = data.user.roles;
             this.role = data.user.role;
+            localStorage.removeItem("token");
+            sessionStorage.removeItem("token");
             if (values.is_remember) {
                 localStorage.setItem("token", this.userToken);
             } else {
@@ -156,6 +158,7 @@ export const useUserStore = defineStore("user", {
                 if (response && response.data) {
                     this.userToken = null;
                     localStorage.removeItem("token");
+                    sessionStorage.removeItem("token");
                     this.isAuth = false;
                     this.userData = {};
                     this.userRoles = [];

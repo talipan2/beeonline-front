@@ -5,6 +5,10 @@ export default {
     return axios.get(`locations`)
   },
 
+  async getAdjacentCategories() {
+    return axios.get(`adjacent-categories`)
+  },
+
   async getCategories() {
     return axios.get(`product-categories`)
   },
