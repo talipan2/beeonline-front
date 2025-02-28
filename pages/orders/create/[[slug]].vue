@@ -93,8 +93,7 @@ const currentHandleSubmit = computed(() => {
       });
     case 'step2':
       return (async (value, form) =>{
-          // entityStore.uploadOrderLogo(1, order.value.logo).then((res) => console.log(res))
-          await entityStore.editOrder(33333, {
+          await entityStore.editOrder(order.value.id, {
             description: order.value.description,
             rawMaterials: order.value.rawMaterials,
             price: order.value.price,

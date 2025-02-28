@@ -23,6 +23,7 @@ export const useUserStore = defineStore("user", {
             type: null,
         },
         userToken: null,
+        userOrganizationId: null,
         isAuth: false,
         location: null,
         role: "",
@@ -114,7 +115,6 @@ export const useUserStore = defineStore("user", {
                     // useCookie('role').value = 'customer';
                     this.userRoles = response.data.user.roles;
                     this.role = response.data.user.role;
-                    console.log(this.role);
                     this.userOrganizationId =
                         response.data.user.organization_id;
                     if (response.data.user && response.data.user.organization) {
@@ -181,9 +181,8 @@ export const useUserStore = defineStore("user", {
         async setUserData(data, id, form) {
             try {
                 const response = await Api.setUserData(data, id, form);
-                console.log(response)
                 if (response) {
-                    this.userData = response;
+                    this.userData = response.data;
                     return response;
                 }
             } catch (error) {

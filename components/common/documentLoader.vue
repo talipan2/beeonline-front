@@ -103,5 +103,9 @@ const handleFileChange = (event) => {
     align-self: baseline;
     width: 3em;
   }
+
+  @include mobile {
+    font-size: .8rem;
+  }
 }
 </style>

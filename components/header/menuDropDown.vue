@@ -202,6 +202,7 @@ const setRole = (role) => {
   font-size: 1.4rem;
   padding: 1.7em;
   color: var(--text-color-monodecimal);
+  max-width: 20em;
 }
 
 .header__menu-dropdown-links {

@@ -11,6 +11,8 @@ export function formatDate(date, format = 'DD/MM/YYYY') {
   const minutes = String(dateObj.getMinutes()).padStart(2, '0');
   const seconds = String(dateObj.getSeconds()).padStart(2, '0');
 
+  const weekday = new Intl.DateTimeFormat('ru-RU', { weekday: 'long' }).format(dateObj);
+
   // Выбираем формат
   switch (format) {
     case 'DD/MM/YYYY':
@@ -27,6 +29,8 @@ export function formatDate(date, format = 'DD/MM/YYYY') {
         return `${day}.${month}.${year}`;
     case 'mm:HH':
       return `${hours}:${minutes}`;
+    case 'weekday, DD.MM.YYYY - HH:mm:ss':
+      return `${weekday}, ${day}.${month}.${year} - ${hours}:${minutes}:${seconds}`;
     default:
       // Если передан неизвестный формат, вернем стандартный 'DD/MM/YYYY'
       return `${day}/${month}/${year}`;

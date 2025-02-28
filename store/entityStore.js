@@ -221,7 +221,7 @@ export const useEntityStore = defineStore('entity', {
           current_step: data.step,
           status: data.status
         }, form);
-
+        console.log(response)
         if(response && response.id) {
           this.service.id = response.id;
         }

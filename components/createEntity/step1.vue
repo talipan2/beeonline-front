@@ -136,7 +136,6 @@ const categories = [
 ];
 
 const handleSubmit = async (values, form) => {
-  console.log(props.handleSubmit)
   await props.handleSubmit(values, form)
 }
 </script>
