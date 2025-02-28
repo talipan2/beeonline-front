@@ -66,6 +66,7 @@ onMounted(() => {
 });
 
 const updateFilter = (data) => {
+    console.log(data);
     filter.value = { ...data };
     fetchList(0);
 };

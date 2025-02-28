@@ -1,10 +1,10 @@
 <template>
-  <NuxtLayout name="info" className="related-industry-services" title="Национальный центр сертификации">
+  <NuxtLayout name="info" className="related-industry-services" :title="pubcard?.name">
     <template #header>
-      <UiBreadCrumb :list="[{label: 'Главная', link: '/'}, { label: 'Национальный центр сертификации', link: '' }]" />
+      <UiBreadCrumb :list="breadcrumb" />
     </template>
     <template #content>
-      <IndustryServicesCompanyDetails />
+      <IndustryServicesCompanyDetails :pubcard="pubcard" v-if="pubcard"/>
     </template>
   </NuxtLayout>
 </template>
@@ -17,3 +17,27 @@
 }
 
 </style>
+
+<script setup>
+import { useOrganizationStore } from '~/store/organizationStore';
+
+const organizationStore = useOrganizationStore();
+const router = useRouter();
+
+const pubcard = ref(null);
+const services = ref(null);
+
+const breadcrumb = computed(() => {
+    let bc = [{label: 'Главная', link: '/'},];
+    if (pubcard.value) {
+        bc.push({label: pubcard.value.name, link: ``});
+    }
+    return bc;
+});
+
+onMounted(() => {
+    organizationStore.getPubCard(router.currentRoute.value.params.id).then((response) => {
+        pubcard.value = response;
+    });
+})
+</script>

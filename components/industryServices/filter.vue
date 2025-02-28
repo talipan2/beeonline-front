@@ -7,10 +7,10 @@
             <div class="filter__item">
                 <h3 class="filter__title">Категории:</h3>
                 <UiCheckboxGroup
-                    :options="category"
+                    :options="categories"
                     :isValidated="false"
-                    v-model="searchProps.category"
-                    name="category"
+                    v-model="searchProps.categories"
+                    name="categories"
                 >
                     <template #btn-image>
                         <SvgoDropDownNew class="svg-m" />
@@ -32,14 +32,7 @@ const searchProps = ref({
     type: "adjacent",
 });
 
-// const category = computed(() => entityStore.entityData.adjacentCategories);
-const category = ref([
-    { id: 1, label: "Консалтинговые агентства", value: "production" },
-    { id: 2, label: "Логистических компании", value: "design" },
-    { id: 3, label: "Банки", value: "development" },
-    { id: 4, label: "Образовательные центры", value: "engineering" },
-    { id: 5, label: "Выставочные компании", value: "testing" },
-]);
+const categories = computed(() => entityStore.entityData.adjacentCategories);
 
 const handleSubmit = () => {
     emit("updateFilter", { ...searchProps.value });
@@ -47,12 +40,10 @@ const handleSubmit = () => {
 
 const resetFilter = () => {
     searchProps.value = {
-        type: "performer",
-        category: [],
-        location: [],
-        material: [],
+        type: "adjacent",
+        categories: [],
     };
-    emit("updateFilter", []);
+    emit("updateFilter", searchProps.value);
 };
 
 entityStore.getAdjacentCategories();

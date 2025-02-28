@@ -11,7 +11,6 @@ export const useEntityStore = defineStore('entity', {
       name: '',
       imageUrl: '',
       categories: [],
-      adjacentCategories: [],
       placeOfProduction: [],
       placeOfProductionId: [],
       batch: '',
@@ -65,6 +64,7 @@ export const useEntityStore = defineStore('entity', {
     servicesList: [],
     entityData: {
       categories: [],
+      adjacentCategories: [],
       rawMaterials: [
         { id: 1, label: "Собственное" },
         { id: 0, label: "Давальческое" },

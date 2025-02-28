@@ -10,9 +10,9 @@
         <div class="industry-card__details-container">
           <SvgoCase class="svg-m" fill="#C4C4C4" />
           <p>
-            {{ data.entityCount 
-              ? (data.entityCount + ' ' + plural(data.entityCount, { one: 'услуга', few: 'услуги', many: 'услуг' }) ) 
-              : 'Нет услуг' 
+            {{ data.entityCount
+              ? (data.entityCount + ' ' + plural(data.entityCount, { one: 'услуга', few: 'услуги', many: 'услуг' }) )
+              : 'Нет услуг'
             }}
           </p>
         </div>
@@ -22,7 +22,7 @@
             <p class="prop__value">{{ data.category && data.category.length > 0 ? data.category[0] : 'Не указано' }}</p>
             <ModalsMoreCities
               class="prop__more"
-              :list="data.category.slice(1)" 
+              :list="data.category.slice(1)"
               v-if="data.category && data.category.length > 1"
               title="Категории"
             />
@@ -42,7 +42,7 @@
     </div>
     <template v-if="!isPreview">
       <UiButton :to="`/related-industry-services/${3}`" class="industry-card__btn" variant="quinary" size="large">Подробнее</UiButton>
-      <NuxtLink class="industry-card__link" :to="`/related-industry-services/${3}`"></NuxtLink>
+      <NuxtLink class="industry-card__link" :to="`/related-industry-services/${data.id}`"></NuxtLink>
     </template>
   </div>
 </template>
