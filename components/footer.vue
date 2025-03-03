@@ -20,6 +20,9 @@
                 <NuxtLink to="/members" class="footer__link">Участники портала</NuxtLink>
               </li>
               <li class="footer__links-item">
+                <NuxtLink to="/related-industry-services" class="footer__link">Партнерские сервисы</NuxtLink>
+              </li>
+              <li class="footer__links-item">
                 <NuxtLink to="/contacts" class="footer__link">Контакты</NuxtLink>
               </li>
               <li class="footer__links-item">
