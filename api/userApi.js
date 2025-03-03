@@ -33,6 +33,32 @@ export default {
 
   async setUserData(values, id, form) {
     return useApi().patch(`users/${id}`, values, form)
-  }
+  },
+
+  async getFavorites(id, filter={}) {
+    console.log(filter)
+    let params = {
+      category_id: filter.category && filter.category !== 'all' ? filter.category : undefined,
+      batch_size_min: filter.minLot && filter.minLot !== 'all' ? filter.minLot : undefined,
+      deadline_at: filter.date && filter.date !== 'all' ? filter.date : undefined,
+      page: filter.page ? filter.page : undefined,
+    }
+    params = Object.fromEntries(Object.entries(params).filter(([key, value]) => value !== undefined));
+    return axios.get(`users/${id}/favorites`, {params})
+  },
+
+  async addFavorite(id, entityId, type) {
+    return axios.post(`users/${id}/favorites`, {favoritable_id: entityId, favoritable_type: type.charAt(0).toUpperCase() + type.slice(1)})
+  },
+
+  async removeFavorite(id, entityId, type) {
+    console.log(id, entityId, type)
+    return axios.delete(`users/${id}/favorites`, {
+      data: {
+        favoritable_id: entityId, 
+        favoritable_type: type.charAt(0).toUpperCase() + type.slice(1)
+      }
+    })
+  },
 
 }

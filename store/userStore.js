@@ -66,7 +66,6 @@ export const useUserStore = defineStore("user", {
         },
         async authUser(values, form) {
             const data = await Api.authUser(values, form);
-            console.log(data);
             this.isAuth = true;
             this.userToken = data.access_token;
             this.userData = data.user;
@@ -109,6 +108,7 @@ export const useUserStore = defineStore("user", {
         async checkAuth() {
             try {
                 const response = await Api.checkAuth();
+                console.log(response.data.user)
                 if (response.data) {
                     this.isAuth = true;
                     this.userData = response.data.user;
@@ -182,6 +182,7 @@ export const useUserStore = defineStore("user", {
             try {
                 const response = await Api.setUserData(data, id, form);
                 if (response) {
+                    console.log(response)
                     this.userData = response.data;
                     return response;
                 }
@@ -212,6 +213,39 @@ export const useUserStore = defineStore("user", {
                             this.userPubCard = performerCard;
                         }
                     }
+                    return response.data;
+                }
+            } catch (error) {
+                throw error;
+            }
+        },
+
+        async getFavorites(id, params) {
+            try {
+                const response = await Api.getFavorites(id, params);
+                if (response.data) {
+                    return response.data;
+                }
+            } catch (error) {
+                throw error;
+            }
+        },
+
+        async addFavorite(id, entityId, type) {
+            try {
+                const response = await Api.addFavorite(id, entityId, type);
+                if (response.data) {
+                    return response.data;
+                }
+            } catch (error) {
+                throw error;
+            }
+        },
+
+        async removeFavorite(id, entityId, type) {
+            try {
+                const response = await Api.removeFavorite(id, entityId, type);
+                if (response.data) {
                     return response.data;
                 }
             } catch (error) {

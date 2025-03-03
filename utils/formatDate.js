@@ -11,7 +11,11 @@ export function formatDate(date, format = 'DD/MM/YYYY') {
   const minutes = String(dateObj.getMinutes()).padStart(2, '0');
   const seconds = String(dateObj.getSeconds()).padStart(2, '0');
 
-  const weekday = new Intl.DateTimeFormat('ru-RU', { weekday: 'long' }).format(dateObj);
+  let weekday = '';
+
+  if(format === 'weekday, DD.MM.YYYY - HH:mm:ss') {
+    weekday = new Intl.DateTimeFormat('ru-RU', { weekday: 'long' }).format(dateObj);
+  }
 
   // Выбираем формат
   switch (format) {

@@ -84,6 +84,7 @@
 <script setup>
 import { useSettingStore } from '~/store/settingStore';
 import { useUserStore } from '~/store/userStore';
+import { useToast } from 'vue-toastification';
 
 const props = defineProps({
 
@@ -93,6 +94,7 @@ const userStore = useUserStore();
 const settingStore = useSettingStore();
 const router = useRouter();
 const isSendedMailToReset = ref(false);
+const toast = useToast();
 
 const showNewPassword = ref(false);
 const showConfirmPassword = ref(false);
@@ -109,7 +111,7 @@ async function handleResetPassword(values, form) {
       new_password: passwordData.value.new_password,
     }, form)
     .then(res => {
-      settingStore.setAlert('success', 'Пароль успешно изменен');
+      toast.success('Пароль успешно изменен');
       router.push(`/profile`);
     })
     .catch(err => {
