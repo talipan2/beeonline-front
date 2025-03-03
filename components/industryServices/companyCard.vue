@@ -6,12 +6,12 @@
         <img class="" :src="data.logo || defaultCompanyLogo" :alt="data.name || 'Логотип'">
       </div>
       <div class="industry-card__details">
-        <CommonLocationsList :locationsList="data.countryId"/>
+        <CommonLocationsList :locationsList="data.country_id"/>
         <div class="industry-card__details-container">
           <SvgoCase class="svg-m" fill="#C4C4C4" />
           <p>
-            {{ data.entityCount
-              ? (data.entityCount + ' ' + plural(data.entityCount, { one: 'услуга', few: 'услуги', many: 'услуг' }) )
+            {{ data.adjacent_services_count
+              ? (data.adjacent_services_count + ' ' + plural(data.adjacent_services_count, { one: 'услуга', few: 'услуги', many: 'услуг' }) )
               : 'Нет услуг'
             }}
           </p>
