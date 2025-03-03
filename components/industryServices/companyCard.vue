@@ -41,7 +41,7 @@
       <p class="form-group__value prop_type_hidden">{{ data.description || '-' }}</p>
     </div>
     <template v-if="!isPreview">
-      <UiButton :to="`/related-industry-services/${3}`" class="industry-card__btn" variant="quinary" size="large">Подробнее</UiButton>
+      <UiButton :to="`/related-industry-services/${data.id}`" class="industry-card__btn" variant="quinary" size="large">Подробнее</UiButton>
       <NuxtLink class="industry-card__link" :to="`/related-industry-services/${data.id}`"></NuxtLink>
     </template>
   </div>

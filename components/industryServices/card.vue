@@ -9,17 +9,17 @@
         <div class="props">
           <div class="prop">
             <p class="prop__name prop__name_type_grey">Категории:</p>
-            <p class="prop__value">{{ data.category && data.category.length > 0 ? data.category[0] : 'Не указано' }}</p>
+            <p class="prop__value">{{ data.categories && data.categories.length > 0 ? data.categories[0].name : 'Не указано' }}</p>
             <ModalsMoreCities
               class="prop__more"
-              :list="data.category.slice(1)" 
-              v-if="data.category && data.category.length > 1"
+              :list="data.categories.map(category => category.name).slice(1)"
+              v-if="data.categories?.length > 1"
               title="Категории"
             />
           </div>
-          <div class="prop" v-if="data.siteUrl">
+          <div class="prop" v-if="data.pubcard.url_site">
             <p class="prop__name prop__name_type_grey">Сайт:</p>
-            <a :href="data.siteUrl" class="prop__value link link_type_hidden" target="_blank">{{ data.siteUrl }}</a>
+            <a :href="data.pubcard.url_site" class="prop__value link link_type_hidden" target="_blank">{{ data.pubcard.url_site }}</a>
           </div>
           <div class="prop prop_type_text">
             <p class="industry-services-card__description-title">Описание:</p>
@@ -31,14 +31,14 @@
     </div>
     <template v-if="!isPreview">
       <div class="industry-services-card__buttons" v-if="!isChanged">
-        <UiButton class="industry-services-card__btn" variant="tertiary" size="large">Написать</UiButton>
-        <UiButton to="/related-industry-services/3/2" class="industry-services-card__btn" variant="quinary" size="large">Подробнее</UiButton>
+        <UiButton class="industry-services-card__btn" variant="tertiary" size="large" :to="{path: '/chat', query: { adjacent_service_id: data.id }}">Написать</UiButton>
+        <UiButton :to="`/related-industry-services/${data.pubcard.id}/${data.id}`" class="industry-services-card__btn" variant="quinary" size="large">Подробнее</UiButton>
       </div>
       <div class="industry-services-card__buttons industry-services-card__buttons_type_edit" v-else>
         <UiButton
           to="related-industry-services/edit/service/1"
-          class="industry-services-card__btn industry-services-card__btn_type_edit" 
-          variant="quinary" 
+          class="industry-services-card__btn industry-services-card__btn_type_edit"
+          variant="quinary"
           size="large"
         >
           Изменить
@@ -46,8 +46,8 @@
         <UiButton
           v-if="data.type === 'published'"
           type="button"
-          class="industry-services-card__btn industry-services-card__btn_type_edit" 
-          variant="quinary" 
+          class="industry-services-card__btn industry-services-card__btn_type_edit"
+          variant="quinary"
           size="large"
           @click="emit('selectInfoModal', {type: 'unpublished', id: data.id})"
         >
@@ -56,8 +56,8 @@
         <UiButton
           v-if="data.type === 'unpublished'"
           type="button"
-          class="industry-services-card__btn industry-services-card__btn_type_edit" 
-          variant="quinary" 
+          class="industry-services-card__btn industry-services-card__btn_type_edit"
+          variant="quinary"
           size="large"
           @click="emit('selectInfoModal', {type: 'published', id: data.id})"
         >
@@ -65,7 +65,7 @@
         </UiButton>
       </div>
     </template>
-    <NuxtLink v-if="!isPreview" class="industry-services-card__link" :to="`/related-industry-services/3/2`" />
+    <NuxtLink v-if="!isPreview" class="industry-services-card__link" :to="`/related-industry-services/${data.pubcard.id}/${data.id}`" />
   </div>
 </template>
 
@@ -98,12 +98,12 @@ const emit = defineEmits(['selectInfoModal']);
   font-size: 1rem;
   padding: 2em;
   border: 1px solid var(--border-color-senary);
-  display: flex; 
+  display: flex;
   flex-direction: column;
   background-color: var(--bg-secondary-color);
   position: relative;
   transition: box-shadow 0.2s ease;
-  
+
   &_type_hover {
     &:hover {
       box-shadow: var(--box-shadow-primary);
@@ -132,7 +132,7 @@ const emit = defineEmits(['selectInfoModal']);
     display: flex;
     margin-bottom: 4.1em;
 
-    .prop_type_hidden { 
+    .prop_type_hidden {
       -webkit-line-clamp: 6;
     }
   }

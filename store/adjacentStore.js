@@ -12,5 +12,9 @@ export const useAdjacentStore = defineStore("adjacentStore", {
         async getServices(id, values = {}) {
             return await Api.getServices(id, values);
         },
+
+        async getService(pubcard_id, id) {
+            return await Api.getService(pubcard_id, id);
+        },
     },
 });

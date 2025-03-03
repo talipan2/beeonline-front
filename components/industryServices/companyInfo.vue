@@ -1,7 +1,7 @@
 <template>
     <div class="company-info">
         <div class="company-info__header">
-            <h3 class="company-info__title title-hidden">{{ data?.name }}</h3>
+            <h3 class="company-info__title title-hidden">{{ data.name }}</h3>
             <SvgoVerified class="svg-l" />
             <UiButton
                 v-if="isChange"
@@ -16,37 +16,37 @@
         <div class="company-info__content">
             <div class="image-box company-info__logo">
                 <img
-                    :src="data?.logo || defaultCompanyLogo"
-                    :alt="data?.name"
+                    :src="data.logo || defaultCompanyLogo"
+                    :alt="data.name"
                 />
             </div>
             <div class="company-info__wrapper company-info__mobile">
                 <CommonLocationsList
                     class="company-info__locations"
-                    :locationsList="data?.countryId"
+                    :locationsList="data.country_id"
                 />
-                <h4 class="company-info__site">
+                <h4 class="company-info__site" v-if="data.url_site">
                     Сайт:
                     <a
-                        :href="data?.siteUrl"
+                        :href="data.url_site"
                         class="link link_type_hidden"
                         target="_blank"
-                        >{{ data?.siteUrl }}</a
+                        >{{ data.url_site }}</a
                     >
                 </h4>
             </div>
             <div class="company-info__wrapper">
                 <CommonLocationsList
                     class="company-info__locations company-info__desktop"
-                    :locationsList="data?.countryId"
+                    :locationsList="data.country_id"
                 />
-                <h4 class="company-info__site company-info__desktop">
+                <h4 class="company-info__site company-info__desktop" v-if="data.url_site">
                     Сайт:
                     <a
-                        :href="data?.siteUrl"
+                        :href="data.url_site"
                         class="link"
                         target="_blank"
-                        >{{ data?.siteUrl }}</a
+                        >{{ data.url_site }}</a
                     >
                 </h4>
                 <div class="company-info__description">
@@ -58,7 +58,7 @@
                                 !isVisible,
                         }"
                     >
-                        {{ data?.description }}
+                        {{ data.description }}
                     </p>
                 </div>
                 <div
@@ -66,7 +66,7 @@
                     v-if="isVisible"
                 >
                     <h4>Галерея:</h4>
-                    <CommonGalleryShow :images="data?.gallery" />
+                    <CommonGalleryShow :images="data.gallery" />
                 </div>
                 <UiButton
                     type="button"

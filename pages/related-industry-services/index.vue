@@ -8,7 +8,7 @@
             <UiBreadCrumb
                 :list="[
                     { label: 'Главная', link: '/' },
-                    { label: 'Сервисы смежных отраслей', link: '' },
+                    {label: 'Партнерские сервисы', link: ''}
                 ]"
             />
         </template>

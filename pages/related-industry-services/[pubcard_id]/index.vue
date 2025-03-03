@@ -28,7 +28,7 @@ const pubcard = ref(null);
 const services = ref(null);
 
 const breadcrumb = computed(() => {
-    let bc = [{label: 'Главная', link: '/'},];
+    let bc = [{label: 'Главная', link: '/'}, {label: 'Партнерские сервисы', link: '/related-industry-services'}];
     if (pubcard.value) {
         bc.push({label: pubcard.value.name, link: ``});
     }
@@ -36,7 +36,7 @@ const breadcrumb = computed(() => {
 });
 
 onMounted(() => {
-    organizationStore.getPubCard(router.currentRoute.value.params.id).then((response) => {
+    organizationStore.getPubCard(router.currentRoute.value.params.pubcard_id).then((response) => {
         pubcard.value = response;
     });
 })

@@ -1,6 +1,6 @@
 <template>
   <div class="company-details">
-    <IndustryServicesCompanyInfo :data="pubcard"/>
+    <IndustryServicesCompanyInfo :data="pubcard" v-if="pubcard"/>
     <div class="company-details__list" >
       <template v-for="(item, index) in services" :key="index">
         <IndustryServicesCard :data="item"/>
