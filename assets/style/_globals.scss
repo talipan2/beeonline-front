@@ -146,7 +146,8 @@ img {
 a:active,
 button:active,
 input:active,
-label:active {
+label:active,
+div:active {
   -webkit-tap-highlight-color: transparent;
   outline: none; 
   box-shadow: none; 

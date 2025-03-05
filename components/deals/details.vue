@@ -1,9 +1,13 @@
 <template>
-
+ <div class="deals-details">
+    <DealsInfo :isManager="isManager"/>
+    <DealsStages :isManager="isManager" :role="role"/>
+ </div>
 </template>
 
 <script setup>
 import { useDealStore } from "~/store/dealStore";
+import { useUserStore } from "~/store/userStore";
 
 const props = defineProps({
     id: {
@@ -17,6 +21,9 @@ const props = defineProps({
 });
 
 const dealStore = useDealStore();
+const userStore = useUserStore();
+
+const role = computed(() => userStore.role);
 const loading = ref(false);
 const deal = ref(null);
 

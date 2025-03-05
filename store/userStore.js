@@ -23,6 +23,7 @@ export const useUserStore = defineStore("user", {
             type: null,
         },
         userToken: null,
+        userOrganizationId: null,
         isAuth: false,
         location: null,
         role: "",
@@ -65,7 +66,6 @@ export const useUserStore = defineStore("user", {
         },
         async authUser(values, form) {
             const data = await Api.authUser(values, form);
-            console.log(data);
             this.isAuth = true;
             this.userToken = data.access_token;
             this.userData = data.user;
@@ -110,13 +110,13 @@ export const useUserStore = defineStore("user", {
         async checkAuth() {
             try {
                 const response = await Api.checkAuth();
+                console.log(response.data.user)
                 if (response.data) {
                     this.isAuth = true;
                     this.userData = response.data.user;
                     // useCookie('role').value = 'customer';
                     this.userRoles = response.data.user.roles;
                     this.role = response.data.user.role;
-                    console.log(this.role);
                     this.userOrganizationId =
                         response.data.user.organization_id;
                     if (response.data.user && response.data.user.organization) {
@@ -184,9 +184,9 @@ export const useUserStore = defineStore("user", {
         async setUserData(data, id, form) {
             try {
                 const response = await Api.setUserData(data, id, form);
-                console.log(response)
                 if (response) {
-                    this.userData = response;
+                    console.log(response)
+                    this.userData = response.data;
                     return response;
                 }
             } catch (error) {
@@ -216,6 +216,39 @@ export const useUserStore = defineStore("user", {
                             this.userPubCard = performerCard;
                         }
                     }
+                    return response.data;
+                }
+            } catch (error) {
+                throw error;
+            }
+        },
+
+        async getFavorites(id, params) {
+            try {
+                const response = await Api.getFavorites(id, params);
+                if (response.data) {
+                    return response.data;
+                }
+            } catch (error) {
+                throw error;
+            }
+        },
+
+        async addFavorite(id, entityId, type) {
+            try {
+                const response = await Api.addFavorite(id, entityId, type);
+                if (response.data) {
+                    return response.data;
+                }
+            } catch (error) {
+                throw error;
+            }
+        },
+
+        async removeFavorite(id, entityId, type) {
+            try {
+                const response = await Api.removeFavorite(id, entityId, type);
+                if (response.data) {
                     return response.data;
                 }
             } catch (error) {

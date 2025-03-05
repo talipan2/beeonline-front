@@ -49,5 +49,13 @@ export default {
 
   async getFaqs() {
     return axios.get(`faqs`)
-  }
+  },
+
+  async getNewsList() {
+    return axios.get(`news`)
+  },
+
+  async getNews(id) {
+    return axios.get(`news/${id}`)
+  },
 }

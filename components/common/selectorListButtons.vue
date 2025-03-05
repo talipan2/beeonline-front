@@ -1,5 +1,5 @@
 <template>
-  <div class="selector-buttons">
+  <div class="selector-buttons" :class="`selector-buttons_type_${type}`">
     <button
       v-for="(button, index) in buttonsList" :key="index"
       class="selector-buttons__btn"
@@ -9,7 +9,7 @@
       @click="toggleEntity(button.value)"
     >
       {{ button.label }}
-      <span>{{ button.count }}</span>
+      <span v-if="type === 'primary'">{{ button.count }}</span>
     </button>
   </div>
 </template>
@@ -27,6 +27,11 @@ const props = defineProps({
     type: String,
     default: null,
   },
+  type: {
+    type: String,
+    default: 'primary',
+    validator: value => ['primary', 'secondary'].includes(value),
+  }
 });
 
 const emit = defineEmits(['updateActiveButton']);
@@ -55,6 +60,22 @@ watch(() => props.activeBtn, (newVal) => {
   margin-bottom: 2.18em;
   @include small-mobile {
     margin-inline: calc(-1 * var(--container-padding-x));;
+  }
+
+  &_type_secondary {
+    font-size: 1.2rem;
+    padding: .83em;
+    background-color: var(--bg-secondary-color);
+    border: 1px solid var(--border-color-senary);
+
+    .selector-buttons__btn {
+      font-size: 1em;
+      justify-content: center;
+      box-shadow: none;
+      border: 2px solid var(--border-color-quaternary);
+      text-transform: uppercase;
+      padding: .83em;
+    }
   }
 
   &__btn {

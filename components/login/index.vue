@@ -121,8 +121,10 @@ const handleSubmit = (values, form) => {
     return userStore
         .authUser(values, form)
         .then((res) => {
+            userStore.checkAuth();
             settingStore.authModalStatus = false;
             router.push({ path: "/desktop" });
+
         })
 };
 </script>

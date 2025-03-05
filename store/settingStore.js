@@ -80,6 +80,28 @@ export const useSettingStore = defineStore("setting", {
       }
     },
 
+    async getNewsList() {
+      try {
+        const response = await commonApi.getNewsList();
+        if (response.data) {
+          return response.data
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
+    async getNews(id) {
+      try {
+        const response = await commonApi.getNews(id);
+        if (response.data) {
+          return response.data
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
   },
 
 

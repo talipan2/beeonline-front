@@ -18,5 +18,11 @@ export function formatMoney(value, currency = 'RUB', part = 2, symbol = true) {
       return `${value.toLocaleString('ru-RU', { 
         maximumFractionDigits: 0
       }).replace(/,/g, ' ')}`;
+    default:
+      value /= 100;
+      return `${value.toLocaleString('ru-RU', { 
+        minimumFractionDigits: part, 
+        maximumFractionDigits: part 
+      }).replace(/,/g, ', ')} ${symbol ? '₽' : ''}`;
   }
 }

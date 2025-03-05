@@ -232,11 +232,10 @@ export const useEntityStore = defineStore('entity', {
           current_step: data.step,
           status: data.status
         }, form);
-
-        if(response && response.id) {
-          this.service.id = response.id;
+        if(response && response.data && response.data.id) {
+          this.service.id = response.data.id;
         }
-        return response
+        return response.data
       } catch (error) {
         throw error;
       }
@@ -252,9 +251,10 @@ export const useEntityStore = defineStore('entity', {
           deadline_at: data.completionDate,
           status: data.status
         }, form);
-        if(response && response.id) {
-          this.order.id = response.id;
+        if(response && response.data && response.data.id) {
+          this.order.id = response.data.id;
         }
+        return response.data
       } catch (error) {
         throw error;
       }

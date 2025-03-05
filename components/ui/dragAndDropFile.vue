@@ -5,9 +5,9 @@
       @drop.prevent="onDrop"
       :class="{ 'dropzone_dragover': isDragOver }"
     >
-      <!-- <CommonDocumentLoader class="dropzone__loader" @addFile="$emit('addFile', $event)" @removeFile="$emit('removeFile', $event)">
+      <CommonDocumentLoader class="dropzone__loader" @addFile="$emit('addFile', $event)" @removeFile="$emit('removeFile', $event)">
         <template #action></template>
-      </CommonDocumentLoader> -->
+      </CommonDocumentLoader>
       <p class="dropzone__text">{{ text }}</p>
       <p class="dropzone__text">{{ maxSizeText }}</p>
       <p class="dropzone__text">{{ acceptText }}</p>
@@ -148,6 +148,10 @@ onUnmounted(() => {
       width: 100%;
       height: 100%;
     }
+  }
+
+  @include small-mobile {
+    font-size: 1em;
   }
 }
 
