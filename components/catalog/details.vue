@@ -192,11 +192,13 @@ onMounted(() => {
 
   &__title {
     margin-right: .625em;
+    margin-bottom: 0;
   }
 
   &__value {
     display: flex;
     align-items: center;
+    margin-bottom: 0;
   }
 
   &__divider {

@@ -17,9 +17,15 @@
             <DealsDetails
                 :id="id"
                 :is-manager="isManager"
+                @chat:open="chatId = $event"
             />
         </template>
-        <template #rightSide></template>
+        <template #rightSide>
+            <Chat
+                :init_chat_id="chatId"
+                :small="true"
+            />
+        </template>
     </NuxtLayout>
 </template>
 
@@ -31,6 +37,8 @@ const router = useRouter();
 const id = computed(() => Number(router.currentRoute.value.params.id));
 const isManager = computed(() => router.currentRoute.value.query.is_manager);
 
+const chatId = ref(null);
+
 </script>
 
 <style lang="scss">
@@ -38,6 +46,12 @@ const isManager = computed(() => router.currentRoute.value.query.is_manager);
 .deals-layout {
     .profile__container {
         column-gap: 3em;
+    }
+    .profile__right {
+        .sticky {
+            border: 1px solid #e9e9e9;
+            height: calc(100vh - var(--header-height) - 60px);
+        }
     }
 }
 

@@ -197,7 +197,7 @@ const setRole = (role) => {
 }
 
 const dropdownMenuLinks = computed(() => {
-  if(props.role === 'industry') {
+  if(props.role === 'adjacent') {
     return [
       { id: 1, label: "Профиль", value: `/profile` },
       { id: 2, label: "Сообщения", value: "/chat" },

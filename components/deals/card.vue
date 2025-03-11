@@ -34,18 +34,18 @@
             </div>
             <div class="deals-body__contacts">
                 <div class="deals-body__contacts-item">
-                    <p class="deals-body__contacts-name">Заказчик:</p>
-                    <p class="deals-body__contacts-value">Пк Организация заказчик 1</p>
+                    <div class="deals-body__contacts-name">Заказчик:</div>
+                    <div class="deals-body__contacts-value">Пк Организация заказчик 1</div>
                 </div>
                 <div class="deals-body__contacts-item">
-                    <p class="deals-body__contacts-name">Исполнитель:</p>
-                    <p class="deals-body__contacts-value">Пк Организация Исполнитель 1</p>
+                    <div class="deals-body__contacts-name">Исполнитель:</div>
+                    <div class="deals-body__contacts-value">Пк Организация Исполнитель 1</div>
                 </div>
             </div>
         </div>
         <NuxtLink
             class="deals-card__link"
-            :to="`/deals/show/${1}`"
+            :to="`/deals/${1}`"
         />
     </div>
 </template>
@@ -119,6 +119,6 @@ const props = defineProps({
             font-family: 'fira-sans', sans-serif;
         }
     }
-    
+
 }
 </style>

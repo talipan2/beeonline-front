@@ -110,7 +110,7 @@ const sidebarIndustryServices = computed(() => {
 
 const sidebarTopLinks = computed(() => {
   console.log(props.role)
-  if(props.role === 'industry') {
+  if(props.role === 'adjacent') {
     return sidebarIndustryServices.value
   } else {
     return getSidebarLinks(props.role)

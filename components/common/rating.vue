@@ -2,9 +2,9 @@
   <div class="rating">
     <div class="rating__wrapper">
       <div class="rate" v-if="isSelected" :class="{ 'rate_selected': hoverRating }"
-        :style="{ '--rating': (hoverRating !== null ? hoverRating : selectedRating || 0) / 5 * 100 + '%' }" 
-        @mouseleave="clearHoverRating" 
-        @mousemove="setHoverRating" 
+        :style="{ '--rating': (hoverRating !== null ? hoverRating : selectedRating || 0) / 5 * 100 + '%' }"
+        @mouseleave="clearHoverRating"
+        @mousemove="setHoverRating"
         @click="setRating">
       </div>
       <div class="rate" v-else
@@ -16,7 +16,7 @@
       </p>
       <p class="rating__count" v-if="isCountRating">({{ rating }})</p>
     </div>
-    <UiInput 
+    <UiInput
       v-if="isSelected"
       v-model="selectedRating"
       type="number"

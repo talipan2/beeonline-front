@@ -55,6 +55,8 @@ export const useUserStore = defineStore("user", {
                     return "заказчика";
                 case "performer":
                     return "исполнителя";
+                case "adjacent":
+                    return "партнера";
             }
         },
     },
@@ -141,6 +143,13 @@ export const useUserStore = defineStore("user", {
                                 );
                             console.log(performerCard);
                             this.userPubCard = performerCard;
+                        } else if (this.role === "adjacent") {
+                            const adjacentCard =
+                                response.data.user.public_cards.find(
+                                    (card) => card.type === "adjacent"
+                                );
+                            console.log(adjacentCard);
+                            this.userPubCard = adjacentCard;
                         }
                     }
                 }
@@ -214,6 +223,12 @@ export const useUserStore = defineStore("user", {
                                     (card) => card.type === "performer"
                                 );
                             this.userPubCard = performerCard;
+                        } else if (this.role === "adjacent") {
+                            const adjacentCard =
+                                response.data.data.public_cards.find(
+                                    (card) => card.type === "adjacent"
+                                );
+                            this.userPubCard = adjacentCard;
                         }
                     }
                     return response.data;

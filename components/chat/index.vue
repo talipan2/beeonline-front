@@ -73,7 +73,7 @@
                                         type="button"
                                         @click="selectPerformer(org)"
                                         variant="tertiary"
-                                        size="around"
+                                        size="large"
                                         target="_blank"
                                         v-if="org.pivot.role === 'performer' && chat.order && !chat.deal && !chat.order.selected_performer_id"
                                     >
@@ -84,7 +84,7 @@
                                         type="button"
                                         @click="unselectPerformer(org)"
                                         variant="tertiary"
-                                        size="around"
+                                        size="large"
                                         target="_blank"
                                         v-if="chat.order?.selected_performer_id === org.id"
                                     >
@@ -982,6 +982,8 @@ export default {
     --font-size-12: 1.2em;
     --font-size-14: 1.4em;
     --font-size-16: 1.6em;
+
+    background-color: var(--color-white);
 
     position: absolute;
     inset: 0;

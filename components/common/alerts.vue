@@ -58,6 +58,7 @@ const alertClass = computed(() => {
 
   &__text {
     font-size: 1.6em;
+    margin-bottom: 0;
   }
 }
 
