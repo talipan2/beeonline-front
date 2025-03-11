@@ -23,7 +23,7 @@
             <div class="company-info__wrapper company-info__mobile">
                 <CommonLocationsList
                     class="company-info__locations"
-                    :locationsList="data.country_id"
+                    :locationsList="{countries: [1]}"
                 />
                 <h4 class="company-info__site" v-if="data.url_site">
                     Сайт:
@@ -38,7 +38,7 @@
             <div class="company-info__wrapper">
                 <CommonLocationsList
                     class="company-info__locations company-info__desktop"
-                    :locationsList="data.country_id"
+                    :locationsList="{countries: [1]}"
                 />
                 <h4 class="company-info__site company-info__desktop" v-if="data.url_site">
                     Сайт:
