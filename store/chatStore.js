@@ -7,6 +7,7 @@ export const useChatStore = defineStore("chatStore", {
     state: () => ({
         is_manager: null,
 		orders: null,
+		adjacentServices: null,
     }),
     getters: {},
     actions: {
@@ -77,6 +78,14 @@ export const useChatStore = defineStore("chatStore", {
 				this.orders = await useApi().post("/chat/orders");
 			}
 			return this.orders;
+		},
+		async getAdjacentServices() {
+            const role = useUserStore().role;
+			// if (role != "adjacent") return null;
+			if (!this.adjacentServices) {
+				this.adjacentServices = await useApi().post("/chat/adjacentServices");
+			}
+			return this.adjacentServices;
 		},
 
         pluralize(number, forms) {

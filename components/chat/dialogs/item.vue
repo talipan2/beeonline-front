@@ -64,11 +64,16 @@
 				>
 					<template v-if="organization.id != org_id">
 						<div class="dialogs-item__org-title">
-							{{ organization.pubcard.name }} ({{
-								getOrgType(organization)
-							}})
+							{{ organization.pubcard.name }}
 						</div>
 					</template>
+				</div>
+                <div
+					class="dialogs-item__subtitle"
+					v-if="dialog.adjacent_service"
+				>
+					Услуга:
+					{{ dialog.adjacent_service?.name }}
 				</div>
 				<div
 					class="dialogs-item__subtitle"

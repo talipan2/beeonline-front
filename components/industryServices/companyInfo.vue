@@ -5,7 +5,7 @@
             <SvgoVerified class="svg-l" />
             <UiButton
                 v-if="isChange"
-                to="related-industry-services/edit/company/1"
+                :to="`/pubcards/edit/${data.id}`"
                 class="company-info__link link"
                 variant="default"
                 withoutPadding
@@ -83,17 +83,20 @@
 </template>
 
 <script setup>
+import { useUserStore } from "~/store/userStore";
 import defaultCompanyLogo from "~/assets/images/nophoto_pc.png";
+
+const userStore = useUserStore();
 
 const props = defineProps({
     data: {
         type: Object,
         default: {},
     },
-    isChange: {
-        type: Boolean,
-        default: false,
-    },
+});
+
+const isChange = computed(() => {
+    return props.data.organization_id === userStore.userOrganizationId;
 });
 
 // const data = ref({
