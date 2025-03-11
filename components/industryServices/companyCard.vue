@@ -6,7 +6,7 @@
         <img class="" :src="data.logo || defaultCompanyLogo" :alt="data.name || 'Логотип'">
       </div>
       <div class="industry-card__details">
-        <CommonLocationsList :locationsList="data.country_id"/>
+        <CommonLocationsList :locationsList="{countries: [1]}"/>
         <div class="industry-card__details-container">
           <SvgoCase class="svg-m" fill="#C4C4C4" />
           <p>
