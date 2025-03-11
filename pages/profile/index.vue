@@ -5,14 +5,14 @@
         <UiBreadCrumb :list="contentWithRoles.breadcrumbs" />
       </template>
       <template #content>
-        <IndustryServicesProfile v-if="role === 'industry'"/>
+        <IndustryServicesProfile v-if="role === 'adjacent'"/>
         <Profile v-else/>
       </template>
-      <template #rightSide v-if="role !== 'industry'">
+      <template #rightSide v-if="role !== 'adjacent'">
         <CommonCheckList adviceTitle="Полностью заполненный профиль выше в списке поиска" :checkList="checkListArray" :valueCheck="true"/>
         <CommonAlerts type="warning" class="right-side__alert" v-if="!userData.organization_id">
               <p>У вас не заполнена карточка компании.
-                Заказы/услуги не будут доступны в каталоге без карточки компании. 
+                Заказы/услуги не будут доступны в каталоге без карточки компании.
                 <NuxtLink class="link" to="/pubcards/edit/1">Заполнить карточку компании</NuxtLink>
               </p>
           </CommonAlerts>
@@ -38,22 +38,22 @@ const role = userStore.getRole;
 const roleName = userStore.getRoleNameForBreadcrumbs;
 
 const contentWithRoles = computed(() => {
-  if (role === 'industry') {
+  if (role === 'adjacent') {
     return {
       title: 'Партнерские сервисы',
       breadcrumbs: [{ label: 'Главная', link: '/' }, { label: 'Партнерские сервисы', link: '/profile' }]
     }
   } else {
-    return { 
-      title: `Кабинет ${roleName}`, 
+    return {
+      title: `Кабинет ${roleName}`,
       breadcrumbs: [{label: 'Главная', link: '/'}, { label: `Кабинет ${roleName}`, link: '/desktop' }, { label: 'Профиль', link: '' }]
     }
   }
 });
 
 const checkListArray = computed(() => [
-  { 
-    label: 'Данные организации', 
+  {
+    label: 'Данные организации',
     value: 'chapter-current',
     checkList: [
       { label: 'Название', value: organization.value?.name},
@@ -62,8 +62,8 @@ const checkListArray = computed(() => [
       { label: 'Активность', value: organization.value.is_active},
     ]
   },
-  { 
-    label: 'Карточка компании', 
+  {
+    label: 'Карточка компании',
     value: 'chapter-current',
     checkList: [
       { label: 'Название', value: pubCard.value?.name},

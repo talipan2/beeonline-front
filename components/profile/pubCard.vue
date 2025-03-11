@@ -53,6 +53,13 @@ const data = ref({
   videos: [],
 })
 
+const skipStep = (step) => {
+    if (userStore.role === 'adjacent') {
+        return [2, 4].includes(step);
+    }
+    return false;
+}
+
 const currentComponent = computed(() => {
   switch (currentStep.value) {
     case 1:
@@ -68,44 +75,33 @@ const currentComponent = computed(() => {
     //     return addSocials;
     // }
     //  return trademarksAndExhibition
-    case 4: 
+    case 4:
      return addSocials
     default:
       return Step1;
   }
 })
 
-const nextStep = () => {
-  if (currentStep.value < 5) {
-    if (currentStep.value === 3 && userStore.role === 'customer') {
-      currentStep.value += 2;
-    } else {
-      currentStep.value++;
-    }
-  }
-}
-
 const prevStep = () => {
-  if (currentStep.value > 1) {
-    // if (currentStep.value === 4 && userStore.role === 'customer') {
-    //   currentStep.value -= 2;
-    // } else {
-    //   currentStep.value--;
-    // }
-    currentStep.value --
-  }
+    let prev = currentStep.value - 1;
+    while (skipStep(prev)) {
+        prev--;
+    }
+    if (prev < 1) {
+        pref = 1;
+    }
+  currentStep.value = prev;
 }
 
 
 async function handleSubmit(values, form) {
-
-  if (currentStep.value < 4) {
-    // if (currentStep.value === 3 && userStore.role === 'customer') {
-    //   currentStep.value += 2;
-    // } else {
-    //   currentStep.value++;
-    // }
-    currentStep.value ++
+    let nextStep = currentStep.value + 1;
+    while (skipStep(nextStep)) {
+        nextStep++;
+    }
+    console.log(nextStep);
+  if (nextStep <= 4) {
+    currentStep.value = nextStep;
   } else {
     organizationStore.editPubCards({
       id: data.value.id,
@@ -165,7 +161,7 @@ onMounted(() => {
   &__title {
     margin-block: 1.25em .78em;
   }
-  
+
   &__main {
     display: flex;
     column-gap: 3em;

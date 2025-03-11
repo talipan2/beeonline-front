@@ -40,6 +40,7 @@ const type = ref('information');
   &__text {
     font-size: 1em;
     line-height: 1em;
+    margin-bottom: 0;
   }
 
   &__date {

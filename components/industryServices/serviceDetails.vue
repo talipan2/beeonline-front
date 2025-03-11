@@ -3,11 +3,16 @@
     <div class="service-details__props">
       <div class="service-details__prop">
         <p class="service-details__prop-name">Категории:</p>
-        <p class="service-details__prop-value">{{ service.category?.join(' / ') }}</p>
+        <p class="service-details__prop-value">
+            <template v-for="(category, index) in service.categories" :key="category.id">
+                <span v-if="index"> / </span>
+                <span>{{ category.name }}</span>
+            </template>
+        </p>
       </div>
       <div class="service-details__prop">
-        <p class="service-details__prop-name">Сайт:
-          <a href="http://nccenter.ru" class="link" target="_blank">{{ 'http://nccenter.ru' }}</a>
+        <p class="service-details__prop-name" v-if="service.pubcard.site">Сайт:
+          <a :href="service.pubcard.site" class="link" target="_blank">{{ service.pubcard.site }}</a>
         </p>
       </div>
     </div>
@@ -16,11 +21,11 @@
         <img :src="service.logo || defaultLogoImage" alt="logo">
       </div>
       <div class="service-details__company-info">
-        <p class="service-details__company-name">Национальный центр сертификации</p>
+        <NuxtLink :to="`/related-industry-services/${service.pubcard.id}`" class="service-details__company-name">{{ service.pubcard.name }}</NuxtLink>
         <CommonLocationsList class="service-details__company-locations" :locationsList="{countries: [1]}"/>
       </div>
     </div>
-    <UiButton class="service-details__btn" variant="tertiary" size="large">Написать</UiButton>
+    <UiButton class="service-details__btn" variant="tertiary" size="large" :to="{path: '/chat', query: { adjacent_service_id: service.id }}">Написать</UiButton>
     <div class="service-details__description">
       <h3 class="service-details__description-title">Описание</h3>
       <p class="service-details__description-text">{{ service.description }}</p>
@@ -31,17 +36,24 @@
 <script setup>
 import defaultLogoImage from '~/assets/images/nophoto_pc.png';
 
-const service = ref({});
-
-onMounted(() => {
-  service.value =
-    {
-      description: 'Добровольная сертификация представляет собой процесс получения официального подтверждения, \n\nсвидетельствующего о том, что товары, услуги или выполненные работы отвечают определенным стандартам, включая ГОСТ Р. что товары, услуги или выполненные работы отвечают определенным стандартам, включая ГОСТ Р ',
-      siteUrl: 'https://www.youtube.com/feed/subscriptions',
-      logo: '',
-      category: ['Пошив женской одежды', 'Пошив мужской одежды'],
-    }
+const props = defineProps({
+service: {
+    type: Object,
+    required: true,
+  },
 })
+
+// const service = ref({});
+
+// onMounted(() => {
+//   service.value =
+//     {
+//       description: 'Добровольная сертификация представляет собой процесс получения официального подтверждения, \n\nсвидетельствующего о том, что товары, услуги или выполненные работы отвечают определенным стандартам, включая ГОСТ Р. что товары, услуги или выполненные работы отвечают определенным стандартам, включая ГОСТ Р ',
+//       siteUrl: 'https://www.youtube.com/feed/subscriptions',
+//       logo: '',
+//       category: ['Пошив женской одежды', 'Пошив мужской одежды'],
+//     }
+// })
 
 </script>
 
@@ -127,7 +139,7 @@ onMounted(() => {
       flex-basis: 30%;
       padding-top: 30%;
       max-width: 30%;
-    } 
+    }
   }
 }
 

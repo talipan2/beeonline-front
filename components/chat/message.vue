@@ -268,7 +268,7 @@ export default {
 	}
 
 	&__button {
-
+        font-size: var(--font-size-14);
 	}
 
     &__right {
@@ -352,9 +352,9 @@ export default {
     }
 
     &_small {
-        font-size: 5px;
+        font-size: 6px;
         --font-size-12: 11px;
-        --font-size-14: 12px;
+        --font-size-14: 13px;
     }
 }
 </style>

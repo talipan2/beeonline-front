@@ -26,8 +26,8 @@ const props = defineProps({
   extension: {
     type: [Array],
     default: [
-      "jpeg", "jpeg", "png", "bmp", "pdf",
-      "doc", "docx", "xls", "xlsx", "ppt", 
+      "jpg", "jpeg", "png", "bmp", "pdf",
+      "doc", "docx", "xls", "xlsx", "ppt",
       "pptx", "zip", "rar", "7z"
     ]
   },

@@ -53,36 +53,36 @@
           </ul>
         </nav>
         <div class="header__auth" v-if="isAuth">
-          <UiButton 
-            class="header__page-link" 
-            to="/search" 
-            variant="secondary" 
+          <UiButton
+            class="header__page-link"
+            to="/search"
+            variant="secondary"
             size="around"
           >
             <SvgoSearchIcon class="svg-m" />
           </UiButton>
           <UiButton
-            v-if="role !== 'industry'"
-            class="header__page-link" 
-            :to="role ? `/favorites` : '/'" 
-            variant="secondary" 
+            v-if="role !== 'adjacent'"
+            class="header__page-link"
+            :to="role ? `/favorites` : '/'"
+            variant="secondary"
             size="around"
           >
             <SvgoFavorite class="svg-m" />
           </UiButton>
-          <UiButton 
-            class="header__page-link" 
-            to="/chat" 
-            variant="secondary" 
+          <UiButton
+            class="header__page-link"
+            to="/chat"
+            variant="secondary"
             size="around"
           >
             <SvgoMessage class="svg-m" />
           </UiButton>
-          <UiButton 
-            v-if="role !== 'industry'"
-            class="header__page-link" 
-            :to="role ? `/notifications` : '/'" 
-            variant="secondary" 
+          <UiButton
+            v-if="role !== 'adjacent'"
+            class="header__page-link"
+            :to="role ? `/notifications` : '/'"
+            variant="secondary"
             size="around"
           >
             <SvgoNotice class="svg-m" />

@@ -6,13 +6,13 @@ export default defineNuxtRouteMiddleware(async(to, from) => {
   const router = useRouter();
 
   const publicPaths = [
-    '/', 
-    '/login', 
-    '/register', 
-    '/services', 
-    '/orders', 
-    '/members', 
-    '/contacts', 
+    '/',
+    '/login',
+    '/register',
+    '/services',
+    '/orders',
+    '/members',
+    '/contacts',
     '/help',
     '/page-policy',
     '/page-oferta',
@@ -22,7 +22,8 @@ export default defineNuxtRouteMiddleware(async(to, from) => {
     '/page-oferta-st',
     '/page-oferta-ct',
     '/welcome',
-    '/search'
+    '/search',
+    '/related-industry-services',
   ];
 
   // if(!userStore.isAuth) {

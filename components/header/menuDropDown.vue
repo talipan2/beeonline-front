@@ -119,7 +119,7 @@ const logo = computed(() => {
 const headerDropdown = ref(null);
 
 const dropdownMenuLinks = computed(() => {
-  if(role.value === 'industry') {
+  if(role.value === 'adjacent') {
     return [
       { label: 'Профиль', value: `/profile` },
       { label: 'Сообщения', value: `/chat` },

@@ -29,6 +29,7 @@
 						ref="chat"
 						:init_chat_id="chatId"
 						:init_order_id="initOrderId"
+						:init_adjacent_service_id="initAdjacentServiceId"
 						@change:chat="
 							chatId = $event;
 							open = true;
@@ -61,6 +62,10 @@ export default {
 			default: null,
 		},
 		initOrderId: {
+			type: Number,
+			default: null,
+		},
+		initAdjacentServiceId: {
 			type: Number,
 			default: null,
 		},

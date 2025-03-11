@@ -12,22 +12,47 @@
 			<a href="javascript:;" class="dialogs__head-link"
 				><i class="icon-filter"></i> Фильтр</a
 			> -->
-			<div class="dialogs__order mb-20" v-if="ordersOptions?.length">
+            <div class="dialogs__order">
 				<div class="dialogs__order-title">Фильтр чата</div>
-				<Multiselect
-					v-model="order"
-					:options="ordersOptions"
-				>
-					<!-- <template v-slot:singlelabel="{ value }">
-						<div class="multiselect-single-label">
-						<img class="character-label-icon" :src="value.icon"> {{ value.name }}
-						</div>
-					</template>
+                <div class="dialogs__search">
+                    <div class="dialogs__search-type">
+                        <label :class="{
+                            active: chatType === 'order'
+                        }">
+                            <span>Заказы</span>
+                            <input type="radio" value="order" v-model="chatType" />
+                        </label>
+                        <label :class="{
+                            active: chatType === 'adjacent'
+                        }">
+                            <span>ССО</span>
+                            <input type="radio" value="adjacent" v-model="chatType" />
+                        </label>
+                    </div>
+                </div>
+                <template v-if="chatType === 'adjacent' && adjacentOptions?.length">
+                    <Multiselect
+                        v-model="adjacentService"
+                        :options="adjacentOptions"
+                    >
+                    </Multiselect>
+                </template>
+                <template v-if="chatType === 'order' && ordersOptions?.length">
+                    <Multiselect
+                        v-model="adjacentService"
+                        :options="adjacentOptions"
+                    >
+                        <!-- <template v-slot:singlelabel="{ value }">
+                            <div class="multiselect-single-label">
+                            <img class="character-label-icon" :src="value.icon"> {{ value.name }}
+                            </div>
+                        </template>
 
-					<template v-slot:option="{ option }">
-						<img class="character-option-icon" :src="option.icon"> {{ option.name }}
-					</template> -->
-				</Multiselect>
+                        <template v-slot:option="{ option }">
+                            <img class="character-option-icon" :src="option.icon"> {{ option.name }}
+                        </template> -->
+                    </Multiselect>
+                </template>
 			</div>
 			<div class="dialogs__search">
 				<div class="dialogs__search-wrap">
@@ -146,14 +171,18 @@ export default {
         noMoreChats: false,
 
 		order: null,
+		adjacentService: null,
 		lifecycle_status: 'green',
 		orders: [],
 		newResponses: 0,
+
+        chatType: 'order',
     }),
 
     mounted() {
         this.loadChats();
 		useChatStore().getOrders();
+		useChatStore().getAdjacentServices();
 
         useChannelsStore()
             .orgChannel.stopListening("NewChatMessage")
@@ -281,7 +310,9 @@ export default {
 					last_message_at: lastMessageAt,
 					search: this.search?.length >= this.searchMinLength ? this.search : '',
 					order_id: this.order?.id,
+					adjacent_service_id: this.adjacentService?.id,
 					lifecycle_status: this.lifecycle_status,
+                    chat_type: this.chatType,
 				})
 				.then((data) => {
 					if (clear) {
@@ -389,6 +420,26 @@ export default {
 			});
 			return orders;
 		},
+		adjacentOptions() {
+            if (!useChatStore().adjacentServices) return [];
+			let adjacentServices = useChatStore().adjacentServices.map((adjacentService) => {
+				return {
+					label: adjacentService.name,
+					value: adjacentService,
+				};
+			});
+			if (!adjacentServices?.length) return [];
+            let empty = {
+				label: 'Не выбрана услуга',
+				value: null,
+			};
+			this.adjacentService = adjacentServices[0].value;
+			adjacentServices.unshift({
+				label: 'Не выбрана услуга',
+				value: null,
+			});
+			return adjacentServices;
+		},
 	},
 
 	watch: {
@@ -403,6 +454,19 @@ export default {
 			this.runSearch();
 			this.loadNewResponsesCount();
 		},
+		adjacentService() {
+			this.loading = false;
+			this.noMoreChats = false;
+			this.dialogs = [];
+			this.runSearch();
+			this.loadNewResponsesCount();
+		},
+        chatType() {
+            this.loading = false;
+            this.noMoreChats = false;
+            this.dialogs = [];
+            this.runSearch();
+        }
 	}
 };
 </script>
@@ -488,6 +552,7 @@ export default {
         // padding: 0 2.4em 1.2em;
 
         &-wrap {
+            margin-top: 1em;
             position: relative;
             height: 4em;
         }

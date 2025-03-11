@@ -38,7 +38,7 @@ const onSubmit = handleSubmit(async (values, form) => {
   emit('setError', errors.errors);
 });
 
-// Очистка ошибок при валидной форме 
+// Очистка ошибок при валидной форме
 watch(errors, (newErrors) => {
   if (Object.keys(newErrors).length === 0) {
     emit("setError", {});

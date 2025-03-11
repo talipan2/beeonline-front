@@ -1,12 +1,13 @@
 <template>
+    <IndustryServicesCompanyDetails @pubcard:loaded="pubcard = $event" :id="userStore.userPubCard.id"/>
   <div class="industry-services-profile">
-    <IndustryServicesCompanyInfo is-change/>
+    <!-- <IndustryServicesCompanyInfo is-change/>
     <h4 class="industry-services-profile__list-title">Услуги</h4>
     <div class="industry-services-profile__list">
       <template v-for="(item, index) in servicesData" :key="index">
         <IndustryServicesCard :data="item" isChanged @selectInfoModal="selectInfoModalData"/>
       </template>
-    </div>
+    </div> -->
     <div class="industry-services-profile__statistics">
       <h3>Статистика</h3>
       <IndustryServicesStatisticsTable />
@@ -22,8 +23,10 @@
 
 <script setup>
 import { useSettingStore } from '~/store/settingStore';
+import { useUserStore } from '~/store/userStore';
 
 const settingStore = useSettingStore();
+const userStore = useUserStore();
 
 const infoModal = ref({
   title: '',

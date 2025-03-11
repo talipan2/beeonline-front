@@ -6,24 +6,24 @@
         <img class="" :src="data.logo || defaultCompanyLogo" :alt="data.name || 'Логотип'">
       </div>
       <div class="industry-card__details">
-        <CommonLocationsList :locationsList="data.countryId"/>
+        <CommonLocationsList :locationsList="{countries: [1]}"/>
         <div class="industry-card__details-container">
           <SvgoCase class="svg-m" fill="#C4C4C4" />
           <p>
-            {{ data.entityCount 
-              ? (data.entityCount + ' ' + plural(data.entityCount, { one: 'услуга', few: 'услуги', many: 'услуг' }) ) 
-              : 'Нет услуг' 
+            {{ data.adjacent_services_count
+              ? (data.adjacent_services_count + ' ' + plural(data.adjacent_services_count, { one: 'услуга', few: 'услуги', many: 'услуг' }) )
+              : 'Нет услуг'
             }}
           </p>
         </div>
         <div class="props">
           <div class="prop">
             <p class="prop__name prop__name_type_grey">Категории:</p>
-            <p class="prop__value">{{ data.category && data.category.length > 0 ? data.category[0] : 'Не указано' }}</p>
+            <p class="prop__value">{{ data.adjacent_categories && data.adjacent_categories.length > 0 ? data.adjacent_categories[0].name : 'Не указано' }}</p>
             <ModalsMoreCities
               class="prop__more"
-              :list="data.category.slice(1)" 
-              v-if="data.category && data.category.length > 1"
+              :list="data.adjacent_categories.map(category => category.name).slice(1)"
+              v-if="data.adjacent_categories?.length > 1"
               title="Категории"
             />
           </div>
@@ -41,8 +41,8 @@
       <p class="form-group__value prop_type_hidden">{{ data.description || '-' }}</p>
     </div>
     <template v-if="!isPreview">
-      <UiButton :to="`/related-industry-services/${3}`" class="industry-card__btn" variant="quinary" size="large">Подробнее</UiButton>
-      <NuxtLink class="industry-card__link" :to="`/related-industry-services/${3}`"></NuxtLink>
+      <UiButton :to="`/related-industry-services/${data.id}`" class="industry-card__btn" variant="quinary" size="large">Подробнее</UiButton>
+      <NuxtLink class="industry-card__link" :to="`/related-industry-services/${data.id}`"></NuxtLink>
     </template>
   </div>
 </template>

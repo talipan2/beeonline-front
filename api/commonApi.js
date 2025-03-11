@@ -5,6 +5,10 @@ export default {
     return axios.get(`locations`)
   },
 
+  async getAdjacentCategories() {
+    return axios.get(`adjacent-categories`)
+  },
+
   async getCategories() {
     return axios.get(`product-categories`)
   },
@@ -52,6 +56,6 @@ export default {
   },
 
   async getNews(id) {
-    return axios.get(`news/${id}`)    
+    return axios.get(`news/${id}`)
   },
 }

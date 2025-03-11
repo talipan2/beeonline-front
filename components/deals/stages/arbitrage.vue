@@ -1,6 +1,6 @@
 <template>
   <div class="stage-arbitrage">
-    <UiTextArea 
+    <UiTextArea
       class="stage-arbitrage__textarea"
       type="text"
       label="Сообщение менеджеру"
@@ -24,10 +24,10 @@
 <script setup>
 
 const props = defineProps({
-  active: {
-    type: Boolean,
-    default: false,
-  },
+    isActive: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 const maxFilesSize = 2048
@@ -39,6 +39,7 @@ const data = ref({
 });
 
 const fileLoad = ref(null);
+const uploadedFiles = ref([]);
 
 const addFile = (file) => {
   uploadedFiles.value.push({
