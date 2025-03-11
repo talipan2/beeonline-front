@@ -68,13 +68,13 @@
     </div>
     <div class="tariffs-list">
       <template v-for="(tariff, index) in tariffs" :key="index">
-        <TariffsMobileCards 
-          :tariff="tariff" 
-          :feature="getMobileTariffsFeatures(tariff.id)" 
+        <TariffsMobileCards
+          :tariff="tariff"
+          :feature="getMobileTariffsFeatures(tariff.id)"
           :price="getPrice(tariff)"
-          currency="RUB" 
-          :discount="discount" 
-          @handlePay="handlePayModal(column.value, props.subDuration)" 
+          currency="RUB"
+          :discount="discount"
+          @handlePay="handlePayModal(column.value, props.subDuration)"
         />
       </template>
     </div>
@@ -98,16 +98,16 @@ const settingStore = useSettingStore();
 const emit = defineEmits(['select']);
 
 const columns = [
-  { 
-    id: 1, 
-    value: 'free', 
-    title: 'Бесплатный', 
-    price: 0 
+  {
+    id: 1,
+    value: 'free',
+    title: 'Бесплатный',
+    price: 0
   },
-  { 
-    id: 2, 
-    value: 'premium', 
-    title: 'Тариф Премиум', 
+  {
+    id: 2,
+    value: 'premium',
+    title: 'Тариф Премиум',
     price: [
       {id: 1, value: '1', price: 3000},
       {id: 2, value: '3', price: 8550},
@@ -115,10 +115,10 @@ const columns = [
       {id: 4, value: '12', price: 30600},
     ],
   },
-  // { 
-  //   id: 3, 
-  //   value: 'ultra', 
-  //   title: 'Тариф Ультра', 
+  // {
+  //   id: 3,
+  //   value: 'ultra',
+  //   title: 'Тариф Ультра',
   //   price: [
   //     {id: 1, value: '1', price: 7000},
   //     {id: 2, value: '3', price: 19950},
@@ -139,7 +139,7 @@ const getMobileTariffsFeatures = (tariff) => {
     if(row.values[tariff]) features.push({feature: row.feature, value: row.values[tariff]});
   });
   return features;
-} 
+}
 
 const rows = [
   {
@@ -266,7 +266,7 @@ const handlePayModal = (tariff_code, duration) => {
   }
 
   tr td {
-    border-bottom: none; 
+    border-bottom: none;
   }
 
   tfoot tr td {
@@ -302,6 +302,7 @@ const handlePayModal = (tariff_code, duration) => {
   &__feature {
     max-width: 320px;
     display: block;
+    margin-bottom: 0;
   }
 
   &__icon {
@@ -311,7 +312,7 @@ const handlePayModal = (tariff_code, duration) => {
     width: 2rem;
     height: 2rem;
     border-radius: 100%;
-    
+
     &_type_positive {
       background-color: var(--button-background-primary);
       svg {

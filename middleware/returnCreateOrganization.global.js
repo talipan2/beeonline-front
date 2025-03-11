@@ -2,12 +2,21 @@ import { useSettingStore } from "~/store/settingStore";
 import { useUserStore } from "~/store/userStore"
 
 
-export default defineNuxtRouteMiddleware((to, from) => {
+export default defineNuxtRouteMiddleware(async (to, from) => {
+  const nuxtApp = useNuxtApp();
   const userStore = useUserStore();
   const settingStore = useSettingStore();
   const router = useRouter();
 
-  if(userStore.isAuth && !userStore.userOrganization?.id && to.path !== '/register/step1' &&  settingStore.isCreateOrder === false) {
+  await nextTick();
+
+  // try {
+  //   await userStore.checkAuth();
+  // } catch (error) {
+
+  // }
+
+  if(userStore.isAuth && userStore.userData.id && !userStore.userData?.organization_id && to.path !== '/register/step1' &&  settingStore.isCreateOrder === false) {
     return navigateTo({path: '/register/step1'})
   }
   

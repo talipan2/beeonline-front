@@ -16,6 +16,7 @@
             <ChatPage
                 :init-chat-id="route.query.chat_id"
                 :init-order-id="route.query.order_id"
+                :init-adjacent-service-id="route.query.adjacent_service_id"
                 :is-manager="route.query.is_manager"
             />
         </template>

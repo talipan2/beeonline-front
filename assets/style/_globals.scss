@@ -99,7 +99,7 @@ button {
   background-color: inherit;
   border: none;
   padding: 0;
-  
+
   @include hover {
     color: var(--text-color-hover-primary);
   }
@@ -109,6 +109,7 @@ p {
   font-size: 1em;
   margin: 0;
   overflow-wrap: break-word;
+  margin-bottom: 1em;
 }
 
 h1, h2, h3, h4, h5, .h1, .h2, .h3, .h4, .h5 {
@@ -146,10 +147,11 @@ img {
 a:active,
 button:active,
 input:active,
-label:active {
+label:active,
+div:active {
   -webkit-tap-highlight-color: transparent;
-  outline: none; 
-  box-shadow: none; 
+  outline: none;
+  box-shadow: none;
 }
 
 // размеры свг иконок
@@ -314,6 +316,7 @@ label:active {
     margin-right: .416em;
     // white-space: nowrap;
     width: fit-content;
+    margin-bottom: 0;
 
     &_type_grey {
       background-color: #dadada;
@@ -632,7 +635,7 @@ input[type="number"]::-webkit-inner-spin-button {
 
   figure {
     margin: 0;
-  } 
+  }
 }
 
 .highlighted-element {
@@ -702,12 +705,12 @@ input[type="number"]::-webkit-inner-spin-button {
   }
 }
 
-// Разделитель 
+// Разделитель
 .inline-divider {
   margin-inline: .2em;
 }
 
-// loading 
+// loading
 
 .animation-loading {
   position: relative;
@@ -759,8 +762,8 @@ body {
   display: none !important;
 }
 
-.goog-te-banner-frame, 
-.goog-te-menu-frame, 
+.goog-te-banner-frame,
+.goog-te-menu-frame,
 .goog-te-gadget {
     pointer-events: none !important;
 }

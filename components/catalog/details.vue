@@ -54,7 +54,7 @@
         <SvgoMessage class="svg-m" />
         Написать Заказчику
       </UiButton>
-      <UiButton class="orders-details__btn" variant="tertiary" size="around">
+      <UiButton type="button" class="orders-details__btn" :class="{ 'orders-details__btn_type_active': isFavorite }" variant="tertiary" size="around" @click="handleAddFavorite">
         <SvgoFavorite class="svg-m" />
       </UiButton>
     </div>
@@ -80,6 +80,8 @@
 <script setup>
 import defaultImage from '~/assets/images/nophoto_pc.png';
 import { useLocationStore } from '~/store/locationStore';
+import { useUserStore } from '~/store/userStore';
+import { useToast } from 'vue-toastification';
 
 const props = defineProps({
   type: {
@@ -97,6 +99,10 @@ const props = defineProps({
 })
 
 const locationStore = useLocationStore();
+const userStore = useUserStore();
+const isFavorite = ref(false);
+const toast = useToast();
+const isLoading = ref(false);
 
 const routeLinkForType = computed(() => {
   switch (props.type) {
@@ -127,6 +133,44 @@ const formatDocumentsArray = computed(() => {
   })
 })
 
+function handleAddFavorite() {
+  if(isLoading.value) return;
+  isLoading.value = true;
+
+  if(isFavorite.value) {
+    userStore.removeFavorite( userStore.userData.id, props.entityData.id, props.type).then(res => {
+      isFavorite.value = false;
+      toast.info('Удалено из избранных');
+    }).finally(() => isLoading.value = false)
+  } else {
+    userStore.addFavorite( userStore.userData.id, props.entityData.id, props.type).then(res => {
+      isFavorite.value = true;
+      toast.success('Добавлено в избранные');
+    }).finally(() => isLoading.value = false)
+  }
+}
+
+onMounted(() => {
+  userStore.getFavorites(userStore.userData.id).then(res => {
+    if(props.type === 'order') {
+      if(res && res.orders && res.orders.data) {
+        res.orders.data.forEach(item => {
+          if(item.id === props.entityData.id) {
+            isFavorite.value = true;
+          }
+        })
+      }
+    }
+    if(res && res.services && res.services.data) {
+      res.services.data.forEach(item => {
+        if(item.id === props.entityData.id) {
+          isFavorite.value = true;
+        }
+      })
+    }
+  })
+})
+
 </script>
 
 <style lang="scss">
@@ -148,11 +192,13 @@ const formatDocumentsArray = computed(() => {
 
   &__title {
     margin-right: .625em;
+    margin-bottom: 0;
   }
 
   &__value {
     display: flex;
     align-items: center;
+    margin-bottom: 0;
   }
 
   &__divider {
@@ -207,6 +253,14 @@ const formatDocumentsArray = computed(() => {
     column-gap: .75em;
     text-transform: uppercase;
     font-size: .75em;
+
+    &_type_active {
+      background-color: var(--border-color-quaternary);
+      color: var(--text-color-octonary);
+      svg {
+        fill: var(--text-color-octonary);
+      }
+    }
   }
 
   &__details {

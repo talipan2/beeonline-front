@@ -43,7 +43,7 @@
             <SvgoMessage class="svg-m" fill="#6937a5" />
             Написать {{ pubCardType }}
           </UiButton>
-          <UiButton class="member-details__btn" variant="tertiary" size="around">
+          <UiButton type="button" class="member-details__btn" :class="{ 'member-details__btn_type_active': isFavorite }" variant="tertiary" size="around" @click="handleAddFavorite">
             <SvgoFavorite class="svg-m" />
           </UiButton>
         </div>
@@ -69,6 +69,8 @@
 
 <script setup>
 import defaultLogoImage from '@/assets/images/nophoto_pc.png';
+import { useUserStore } from '~/store/userStore';
+import { useToast } from 'vue-toastification';
 
 const props = defineProps({
   data: {
@@ -77,6 +79,11 @@ const props = defineProps({
   },
 })
 
+const toast = useToast();
+const userStore = useUserStore();
+const isFavorite = ref(false);
+const isLoading = ref(false);
+
 const pubCardType = computed(() => {
   switch (props.data.type) {
     case 'performer':
@@ -84,6 +91,35 @@ const pubCardType = computed(() => {
     case 'customer':
       return 'заказчику'
   }
+})
+
+function handleAddFavorite() {
+  if(isLoading.value) return;
+  isLoading.value = true
+
+  if(isFavorite.value) {
+    userStore.removeFavorite( userStore.userData.id, props.data.id, 'pubCard').then(res => {
+      isFavorite.value = false;
+      toast.info('Удалено из избранных');
+    }).finally(() => isLoading.value = false)
+  } else {
+    userStore.addFavorite( userStore.userData.id, props.data.id, 'pubCard').then(res => {
+      isFavorite.value = true;
+      toast.success('Добавлено в избранные');
+    }).finally(() => isLoading.value = false)
+  }
+}
+
+onMounted(() => {
+  userStore.getFavorites(userStore.userData.id).then(res => {
+    if(res && res.pubCard && res.pubCard.data) {
+      res.pubCard.data.forEach(item => {
+        if(item.id === props.data.id) {
+          isFavorite.value = true;
+        }
+      })
+    }
+  })
 })
 
 </script>
@@ -158,6 +194,15 @@ const pubCardType = computed(() => {
     font-size: 1.2rem;
     column-gap: 1em;
     text-transform: uppercase;
+
+    &_type_active {
+      background-color: var(--border-color-quaternary);
+      color: var(--text-color-octonary);
+
+      svg {
+        fill: var(--text-color-octonary);
+      }
+    }
   }
 }
 

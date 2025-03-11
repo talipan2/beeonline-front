@@ -2,11 +2,11 @@
   <div class="favorites">
     <div class="favorites__catalog">
       <div class="favorites__catalog-wrapper">
-        <UiButton variant="quinary" size="around" class="favorites__catalog-btn favorites__catalog-btn_type_left">
+        <UiButton to="/services" variant="quinary" size="around" class="favorites__catalog-btn favorites__catalog-btn_type_left">
           <SvgoBtnArrow class="svg-l" />
           <span>Каталог исполнителей</span>
         </UiButton>
-        <UiButton variant="quinary" size="around" class="favorites__catalog-btn favorites__catalog-btn_type_right">
+        <UiButton to="/orders" variant="quinary" size="around" class="favorites__catalog-btn favorites__catalog-btn_type_right">
           <span>Каталог заказчиков</span>
           <SvgoBtnArrow class="svg-l" />
         </UiButton>
@@ -15,15 +15,15 @@
     <div class="favorites__content" :class="{'loading': loading}">
       <h2 class="favorites__title">{{ blockTitle }}</h2>
       <CommonSelectorListButtons :buttonsList="selectorButtons" @updateActiveButton="toggleEntity" :activeBtn="currentEntity"/>
-      <CommonFilterSelectList class="favorites__filter" v-if="currentEntity === 'orders'" :filters="ordersFilterList" @setFilters="setFilters" :activeFilters="activeFilter"/>
-      <CommonFilterSelectList class="favorites__filter" v-if="currentEntity === 'services'" :filters="servicesFilterList" @setFilters="setFilters" :activeFilters="activeFilter"/>
+      <CommonFilterSelectList class="favorites__filter" v-if="currentEntity === 'orders'" :filters="ordersFilterList" @setFilters="setFiltersOrders" :activeFilters="activeFilterOrders"/>
+      <CommonFilterSelectList class="favorites__filter" v-if="currentEntity === 'services'" :filters="servicesFilterList" @setFilters="setFiltersServices" :activeFilters="activeFilterServices"/>
       <div class="favorites__list-wrapper" v-if="currentEntity === 'services'">
         <div class="favorites__list" v-if="servicesData && servicesData.length > 0" >
           <div class="favorites__card" v-for="data in servicesData" :key="data" >
             <CatalogServiceCard :data="data" :linkBlank="true">
               <template #favorite-delete>
                 <div class="favorites__delete">
-                  <UiButton variant="senary" size="small" class="favorites__delete-btn">
+                  <UiButton type="button" variant="senary" size="small" class="favorites__delete-btn" @click="handleDeleteFavorite(data.id, 'service')">
                     <SvgoFavorite class="svg-m" />
                     Удалить из избранного
                   </UiButton>
@@ -49,7 +49,7 @@
             <CatalogOrdersCard :data="data" :linkBlank="true">
               <template #favorite-delete>
                 <div class="favorites__delete">
-                  <UiButton variant="senary" size="small" class="favorites__delete-btn">
+                  <UiButton type="button" variant="senary" size="small" class="favorites__delete-btn" @click="handleDeleteFavorite(data.id, 'order')">
                     <SvgoFavorite class="svg-m" />
                     Удалить из избранного
                   </UiButton>
@@ -75,7 +75,7 @@
             <CardsPublic :data="data" :is-list="true" :is-description="true" :linkBlank="true">
               <template #favorite-delete>
                 <div class="favorites__delete">
-                  <UiButton variant="senary" size="small" class="favorites__delete-btn">
+                  <UiButton type="button" variant="senary" size="small" class="favorites__delete-btn" @click="handleDeleteFavorite(data.id, 'pubCard')">
                     <SvgoFavorite class="svg-m" />
                     Удалить из избранного
                   </UiButton>
@@ -103,13 +103,17 @@
 import { useEntityStore } from '~/store/entityStore';
 import { useLocationStore } from '~/store/locationStore';
 import { useOrganizationStore } from '~/store/organizationStore';
+import { useUserStore } from '~/store/userStore';
+import { useToast } from 'vue-toastification';
 
 
 const router = useRouter();
+const toast = useToast();
 const organizationStore = useOrganizationStore();
 const entityStore = useEntityStore();
 const currentEntity = ref(null);
 const locationStore = useLocationStore();
+const userStore = useUserStore();
 const blockTitle = computed(() => {
   switch (currentEntity.value) {
     case 'orders':
@@ -158,10 +162,15 @@ const selectorButtons = [
 
 const ordersFilterList = ['category', 'minLot', 'date']; // Список фильтров для заказов;
 const servicesFilterList = ['category', 'minLot']; // Список фильтров для услуг;
-const activeFilter = ref({});
+const activeFilterOrders = ref({});
+const activeFilterServices = ref({});
 
-const setFilters = (filters) => {
-  activeFilter.value = filters
+const setFiltersOrders = (filters) => {
+  activeFilterOrders.value = filters
+}
+
+const setFiltersServices = (filters) => {
+  activeFilterServices.value = filters
 }
 
 // ДАННЫЕ ПОКА БЕРУТСЯ С СПИСКА ВСЕХ СУЩНОСТЕЙ
@@ -275,15 +284,15 @@ const fetchData = async(type, filter) => {
   if(type  === 'orders') {
     try {
       loading.value = true
-      const response = await entityStore.getOrders(filter);
-      if(response && response.data) {
-        data.value.orders = response.data;
+      const response = await userStore.getFavorites(userStore.userData.id, {...filter, page: pageOrders.value.currentPage});
+      if(response && response.orders) {
+        data.value.orders = response.orders.data;
         router.replace({ query: { entity: type, ...filter }});
         pageOrders.value = {
-          currentPage: response.meta.current_page,
-          lastPage: response.meta.last_page,
-          total: response.meta.total,
-          itemsToPage: response.meta.per_page
+          currentPage: response.orders.current_page,
+          lastPage: response.orders.last_page,
+          total: response.orders.total,
+          itemsToPage: response.orders.per_page
         }
       }
     } catch (error) {
@@ -294,15 +303,15 @@ const fetchData = async(type, filter) => {
   } else if(type === 'services') {
     try {
       loading.value = true
-      const response = await entityStore.getServices(filter);
-      if(response && response.data) {
-        data.value.services = response.data;
+      const response = await  userStore.getFavorites(userStore.userData.id, {...filter, page: pageServices.value.currentPage});
+      if(response && response.services) {
+        data.value.services = response.services.data;
         router.replace({ query: { entity: type, ...filter } });
         pageServices.value = {
-          currentPage: response.meta.current_page,
-          lastPage: response.meta.last_page,
-          total: response.meta.total,
-          itemsToPage: response.meta.per_page
+          currentPage: response.services.current_page,
+          lastPage: response.services.last_page,
+          total: response.services.total,
+          itemsToPage: response.services.per_page
         }
       }
     } catch (error) {
@@ -313,15 +322,15 @@ const fetchData = async(type, filter) => {
   } else if(type === 'members') {
     try {
       loading.value = true
-      const response = await organizationStore.getPubCardsList();
-      if(response && response.data) {
-        data.value.members = response.data
+      const response = await  userStore.getFavorites(userStore.userData.id, {...filter, page: pageMembers.value.currentPage});
+      if(response && response.pubCards) {
+        data.value.members = response.pubCards.data;
         router.replace({ query: { entity: type } });
         pageMembers.value = {
-          currentPage: response.meta.current_page,
-          lastPage: response.meta.last_page,
-          total: response.meta.total,
-          itemsToPage: response.meta.per_page
+          currentPage: response.pubCards.current_page,
+          lastPage: response.pubCards.last_page,
+          total: response.pubCards.total,
+          itemsToPage: response.pubCards.per_page
         }
       }
     } catch (error) {
@@ -333,11 +342,11 @@ const fetchData = async(type, filter) => {
 }
 
 // функция для переключения страниц
-const handleChangePage = (type,currentPage) => {
+const handleChangePage = (type, currentPage) => {
   if(!type || !currentPage) return
   switch (type) {
     case 'orders':
-      pageServices.value.currentPage = currentPage
+      pageOrders.value.currentPage = currentPage
       fetchData('orders', {page: currentPage})
       break;
     case 'services':
@@ -351,21 +360,69 @@ const handleChangePage = (type,currentPage) => {
   }
 }
 
+const handleDeleteFavorite = (id, type) => {
+  if(loading.value) return
+  loading.value = true
+  userStore.removeFavorite(userStore.userData.id, id, type).then(res => {
+    if(type === 'order') {
+      fetchData('orders', activeFilterOrders.value)
+    } else if(type === 'service') {
+      fetchData('services', activeFilterServices.value)
+    } else if(type === 'pubCard') {
+      fetchData('members')
+    }
+    toast.info('Удалено из избранных');
+  }).finally(() => loading.value = false)
+}
+
 watch(() => currentEntity.value, (newVal, oldVal) => {
   if(newVal !== oldVal && oldVal !== null && newVal === 'members') {
     fetchData(newVal)
   }
 })
 
-watch(() => activeFilter.value, (newVal) => {
+watch(() => activeFilterOrders.value, (newVal) => {
   if(!newVal || Object.keys(newVal).length === 0) return
-  fetchData(currentEntity.value, newVal)
+  fetchData('orders', newVal)
 }, {deep: true});
 
-onMounted(() => {
-  fetchData('orders');
-  fetchData('services');
-  fetchData('members');
+watch(() => activeFilterServices.value, (newVal) => {
+  if(!newVal || Object.keys(newVal).length === 0) return
+  fetchData('services', newVal)
+}, {deep: true});
+
+onMounted(async() => {
+  try {
+    loading.value = true
+    const response = await userStore.getFavorites(userStore.userData.id);
+    if(response) {
+      data.value.orders = response.orders.data;
+      pageOrders.value = {
+        currentPage: response.orders.current_page,
+        lastPage: response.orders.last_page,
+        total: response.orders.total,
+        itemsToPage: response.orders.per_page
+      }
+      data.value.services = response.services.data;
+      pageServices.value = {
+        currentPage: response.services.current_page,
+        lastPage: response.services.last_page,
+        total: response.services.total,
+        itemsToPage: response.services.per_page
+      }
+      data.value.members = response.pubCards.data;
+      pageMembers.value = {
+        currentPage: response.pubCards.current_page,
+        lastPage: response.pubCards.last_page,
+        total: response.pubCards.total,
+        itemsToPage: response.pubCards.per_page
+      }
+    }
+  } catch (error) {
+    console.error("Ошибка при загрузке данных:", error);
+  } finally {
+    loading.value = false
+  }
   if(router.currentRoute.value.query && router.currentRoute.value.query.entity) {
     currentEntity.value = router.currentRoute.value.query.entity
     const filters = Object.fromEntries(
@@ -373,8 +430,11 @@ onMounted(() => {
         .filter(([key]) => key !== 'entity')
         .map(([key, value]) => [key, Number(value)])
     );
-    if(filters) {
-      activeFilter.value = {...filters}
+    if(currentEntity.value === 'orders') {
+      activeFilterOrders.value = {...filters}
+    }
+    if(currentEntity.value === 'services') {
+      activeFilterServices.value = {...filters}
     }
   } else {
     currentEntity.value = 'orders'

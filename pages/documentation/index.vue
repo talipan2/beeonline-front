@@ -42,9 +42,9 @@ onMounted(() => {
         dataList.value = res.map(item => {
           return {
             id: item.id,
-            name: 'Не приходит url с бека',
+            name: item.file_url?.split('/').pop(),
             url: item.file_url,
-            type: 'pdf',
+            type: item.file_url?.split('.').pop().toLowerCase(),
           }
         });
       }

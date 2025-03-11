@@ -19,11 +19,11 @@
         <div class="props">
           <div class="prop">
             <p class="prop__name prop__name_type_grey">Категории:</p>
-            <p class="prop__value">{{ data.category && data.category.length > 0 ? data.category[0] : 'Не указано' }}</p>
+            <p class="prop__value">{{ data.adjacent_categories && data.adjacent_categories.length > 0 ? data.adjacent_categories[0].name : 'Не указано' }}</p>
             <ModalsMoreCities
               class="prop__more"
-              :list="data.category.slice(1)"
-              v-if="data.category && data.category.length > 1"
+              :list="data.adjacent_categories.map(category => category.name).slice(1)"
+              v-if="data.adjacent_categories?.length > 1"
               title="Категории"
             />
           </div>

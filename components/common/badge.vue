@@ -25,6 +25,10 @@ const props = defineProps({
   font-weight: 600;
   border-radius: 1px;
   margin-inline: 1em;
+
+  &__text {
+    margin-bottom: 0;
+  }
 }
 
 </style>

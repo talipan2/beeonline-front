@@ -114,8 +114,8 @@ watch(() => props.activeFilters, (newVal, oldVal) => {
 // Инициализируем значения фильтров
 onMounted(() => {
   props.filters.forEach((filter) => {
-    selectedFilters.value[filter] = 'all'; // значение по умолчанию
-  });
+    selectedFilters.value[filter] = props.activeFilters[filter] || 'all';
+  })
 })
 
 

@@ -26,8 +26,8 @@ const props = defineProps({
   extension: {
     type: [Array],
     default: [
-      "jpeg", "jpeg", "png", "bmp", "pdf",
-      "doc", "docx", "xls", "xlsx", "ppt", 
+      "jpg", "jpeg", "png", "bmp", "pdf",
+      "doc", "docx", "xls", "xlsx", "ppt",
       "pptx", "zip", "rar", "7z"
     ]
   },
@@ -102,6 +102,10 @@ const handleFileChange = (event) => {
     -ms-flex-item-align: baseline;
     align-self: baseline;
     width: 3em;
+  }
+
+  @include mobile {
+    font-size: .8rem;
   }
 }
 </style>

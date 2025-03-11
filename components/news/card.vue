@@ -2,14 +2,12 @@
   <div class="news-card">
     <div class="news-card__header" >
       <h3 class="news-card__title">
-        Агентство креативных индустрий (АКИ) и медиахолдинг PROfashion запускают в
-        Москве первую совместную программу подготовки сотрудников в сфере легкой
-        промышленности.
+        {{ data.name }}
       </h3>
-      <p class="news-card__date">24.03.2023</p>
+      <p class="news-card__date">{{formatDate(data.created_at, 'DD.MM.YYYY')}}</p>
     </div>
-    <div class="news-body" v-html="data"  ></div>
-    <NuxtLink  class="news-card__link" :to="`/news/${1}`" />
+    <div class="news-body" v-html="data.preview_text"></div>
+    <NuxtLink  class="news-card__link" :to="`/news/${data.id}`" />
   </div>
 </template>
 

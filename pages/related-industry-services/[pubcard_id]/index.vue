@@ -4,7 +4,7 @@
       <UiBreadCrumb :list="breadcrumb" />
     </template>
     <template #content>
-      <IndustryServicesCompanyDetails :pubcard="pubcard" v-if="pubcard"/>
+      <IndustryServicesCompanyDetails @pubcard:loaded="pubcard = $event" :id="router.currentRoute.value.params.pubcard_id"/>
     </template>
   </NuxtLayout>
 </template>
@@ -19,13 +19,9 @@
 </style>
 
 <script setup>
-import { useOrganizationStore } from '~/store/organizationStore';
-
-const organizationStore = useOrganizationStore();
 const router = useRouter();
 
 const pubcard = ref(null);
-const services = ref(null);
 
 const breadcrumb = computed(() => {
     let bc = [{label: 'Главная', link: '/'}, {label: 'Партнерские сервисы', link: '/related-industry-services'}];
@@ -34,10 +30,4 @@ const breadcrumb = computed(() => {
     }
     return bc;
 });
-
-onMounted(() => {
-    organizationStore.getPubCard(router.currentRoute.value.params.pubcard_id).then((response) => {
-        pubcard.value = response;
-    });
-})
 </script>

@@ -73,7 +73,7 @@
                                         type="button"
                                         @click="selectPerformer(org)"
                                         variant="tertiary"
-                                        size="around"
+                                        size="large"
                                         target="_blank"
                                         v-if="org.pivot.role === 'performer' && chat.order && !chat.deal && !chat.order.selected_performer_id"
                                     >
@@ -84,7 +84,7 @@
                                         type="button"
                                         @click="unselectPerformer(org)"
                                         variant="tertiary"
-                                        size="around"
+                                        size="large"
                                         target="_blank"
                                         v-if="chat.order?.selected_performer_id === org.id"
                                     >
@@ -321,6 +321,10 @@ export default {
             type: Number,
             default: 0,
         },
+        init_adjacent_service_id: {
+            type: Number,
+            default: 0,
+        },
         class: {
             type: String,
             default: "",
@@ -361,6 +365,8 @@ export default {
         if (this.init_chat_id) {
             this.changeInitChatId(this.init_chat_id);
         } else if (this.init_order_id) {
+            this.initChatByProps();
+        } else if (this.init_adjacent_service_id) {
             this.initChatByProps();
         } else if (this.init_org_id && this.init_org_type?.length) {
             this.initChatByProps();
@@ -748,6 +754,7 @@ export default {
             useChatStore()
                 .getInitChat({
                     order_id: this.init_order_id,
+                    adjacent_service_id: this.init_adjacent_service_id,
                 })
                 .then((response) => {
                     if (response.type === "chat_id") {
@@ -816,6 +823,7 @@ export default {
                         organization_id: this.init_org_id,
                         organization_type: this.init_org_type,
                         order_id: this.init_order_id,
+                        adjacent_service_id: this.init_adjacent_service_id,
                     })
                     .then((response) => {
                         this.$emit("change:chat", response);
@@ -974,6 +982,8 @@ export default {
     --font-size-12: 1.2em;
     --font-size-14: 1.4em;
     --font-size-16: 1.6em;
+
+    background-color: var(--color-white);
 
     position: absolute;
     inset: 0;

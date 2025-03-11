@@ -3,7 +3,7 @@
     <h2 class="industry-services-card__title">{{ data.name || 'Название услуги' }}</h2>
     <div class="industry-services-card__content">
       <div class="image-box">
-        <img :src="data.logo || defaultImage" alt="">
+        <img :src="data.pubcard.logo || defaultImage" alt="">
       </div>
       <div class="industry-services-card__wrapper">
         <div class="props">

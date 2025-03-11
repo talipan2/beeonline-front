@@ -35,6 +35,7 @@ const isLoading = ref(false);
 const formatData = computed(() => {
   if(!data.value) return []
   return {
+      id: data.value.id,
       props: [
         {
           name: 'Партии:', 

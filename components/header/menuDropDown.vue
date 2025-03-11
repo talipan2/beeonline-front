@@ -119,7 +119,7 @@ const logo = computed(() => {
 const headerDropdown = ref(null);
 
 const dropdownMenuLinks = computed(() => {
-  if(role.value === 'industry') {
+  if(role.value === 'adjacent') {
     return [
       { label: 'Профиль', value: `/profile` },
       { label: 'Сообщения', value: `/chat` },
@@ -202,6 +202,7 @@ const setRole = (role) => {
   font-size: 1.4rem;
   padding: 1.7em;
   color: var(--text-color-monodecimal);
+  max-width: 20em;
 }
 
 .header__menu-dropdown-links {

@@ -7,6 +7,7 @@
           v-bind="field"
           :rows="rows" 
           :disabled="disabled"
+          :placeholder="placeholder"
           @input="field.handleChange"
           ref="refValue"
         />
@@ -49,6 +50,10 @@ const props = defineProps({
   errorShow: {
     type: Boolean,
     default: true,
+  },
+  placeholder: {
+    type: String,
+    default: '',
   }
 })
 

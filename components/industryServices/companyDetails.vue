@@ -12,29 +12,42 @@
 
 <script setup>
 import { useAdjacentStore } from '~/store/adjacentStore';
+import { useOrganizationStore } from '~/store/organizationStore';
+
+const organizationStore = useOrganizationStore();
+const router = useRouter();
 
 const adjacentStore = useAdjacentStore();
 
 const services = ref([]);
 const page = ref({});
 const loading = ref(false);
+const pubcard = ref(null);
+
+const emits = defineEmits(['pubcard:loaded']);
 
 const props = defineProps({
-    pubcard: {
-        type: Object,
-        default: {},
-    },
+  id: {
+    type: Number,
+    requited: true,
+  }
 });
 
 onMounted(() => {
-    fetchServices(1);
+    organizationStore
+    .getPubCard(props.id)
+    .then((response) => {
+        pubcard.value = response;
+        emits('pubcard:loaded', response);
+        fetchServices(1);
+    });
 })
 
 function fetchServices(currentPage) {
     if (loading.value) return;
     loading.value = true;
 
-    adjacentStore.getServices(props.pubcard.id, {
+    adjacentStore.getServices(pubcard.value.id, {
         limit: 10,
         page: currentPage,
 
