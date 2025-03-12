@@ -32,7 +32,7 @@ const breadcrumb = computed(() => {
 });
 
 onMounted(() => {
-    adjacentStore.getService(router.currentRoute.value.params.pubcard_id, router.currentRoute.value.params.id)
+    adjacentStore.getService(router.currentRoute.value.params.id)
     .then((response) => {
         service.value = response.data;
     });

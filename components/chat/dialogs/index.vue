@@ -240,7 +240,7 @@ export default {
 			});
 		},
         addDialog(dialog, to_end = true) {
-            dialog.last_message = dialog.messages[0] || null;
+            dialog.last_message = dialog.messages ? dialog.messages[0] : null;
             if (dialog.last_message) {
                 dialog.last_message.date = new Date(
                     dialog.last_message.created_at

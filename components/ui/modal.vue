@@ -176,18 +176,22 @@ export default {
     margin-block: auto;
 
     &-xs {
+        padding: 1em;
         max-width: 40em;
     }
 
     &-md {
+        padding: 2em;
         max-width: 60em;
     }
 
     &-lg {
+        padding: 2em;
         max-width: 82.5em;
     }
 
     &-xl {
+        padding: 2em;
         max-width: 110em;
     }
 }
