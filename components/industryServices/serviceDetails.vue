@@ -22,7 +22,7 @@
       </div>
       <div class="service-details__company-info">
         <NuxtLink :to="`/related-industry-services/${service.pubcard.id}`" class="service-details__company-name">{{ service.pubcard.name }}</NuxtLink>
-        <CommonLocationsList class="service-details__company-locations" :locationsList="{countries: [1]}"/>
+        <CommonLocationsList class="service-details__company-locations" :locationsList="{countries: [service.pubcard.country_id]}"/>
       </div>
     </div>
     <UiButton class="service-details__btn" variant="tertiary" size="large" :to="{path: '/chat', query: { adjacent_service_id: service.id }}">Написать</UiButton>
