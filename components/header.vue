@@ -146,7 +146,7 @@ const menuItems = ref([
   { to: '/services', text: 'Найти исполнителя' },
   { to: '/orders', text: 'Найти заказчика' },
   { to: '/members', text: 'Участники портала' },
-  { to: '/related-industry-services', text: 'Партнерские сервисы' },
+  { to: '/related-industry-services', text: 'ССО' },
 ]);
 
 const visibleMenuItems = ref([]);
