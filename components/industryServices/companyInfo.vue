@@ -175,6 +175,7 @@ function handleMoreShow() {
 
         &_reverse {
             flex-direction: row-reverse;
+            justify-content: space-between;
 
             .company-info__logo {
                 margin-right: 0;
