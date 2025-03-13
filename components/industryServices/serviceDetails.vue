@@ -18,7 +18,7 @@
     </div>
     <div class="service-details__company">
       <div class="image-box service-details__company-logo">
-        <img :src="service.logo || defaultLogoImage" alt="logo">
+        <img :src="service.pubcard.logo || defaultLogoImage" alt="logo">
       </div>
       <div class="service-details__company-info">
         <NuxtLink :to="`/related-industry-services/${service.pubcard.id}`" class="service-details__company-name">{{ service.pubcard.name }}</NuxtLink>
