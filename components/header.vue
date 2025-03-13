@@ -40,65 +40,59 @@
           <UiButton type="button" @click="handleCreateOrder" variant="primary" size="large" class="header__logo-button">Разместить заказ</UiButton>
         </div>
         <nav class="header__menu-links">
-          <ul class="header__menu-list">
-            <li class="header__links-item">
-              <NuxtLink to="/services" class="header__link">Найти исполнителя</NuxtLink>
-            </li>
-            <li class="header__links-item">
-              <NuxtLink to="/orders" class="header__link">Найти заказчика</NuxtLink>
-            </li>
-            <li class="header__links-item">
-              <NuxtLink to="/members" class="header__link">Участники портала</NuxtLink>
-            </li>
-            <li class="header__links-item">
-              <NuxtLink to="/related-industry-services" class="header__link">Партнерские сервисы</NuxtLink>
+          <ul class="header__menu-list" ref="menuList">
+            <li class="header__links-item" v-for="(item, index) in visibleMenuItems" :key="index">
+              <NuxtLink :to="item.to" class="header__link">{{ item.text }}</NuxtLink>
             </li>
           </ul>
         </nav>
-        <div class="header__auth" v-if="isAuth">
-          <UiButton
-            class="header__page-link"
-            to="/search"
-            variant="secondary"
-            size="around"
-          >
-            <SvgoSearchIcon class="svg-m" />
-          </UiButton>
-          <UiButton
-            v-if="role !== 'adjacent'"
-            class="header__page-link"
-            :to="role ? `/favorites` : '/'"
-            variant="secondary"
-            size="around"
-          >
-            <SvgoFavorite class="svg-m" />
-          </UiButton>
-          <UiButton
-            class="header__page-link"
-            to="/chat"
-            variant="secondary"
-            size="around"
-          >
-            <SvgoMessage class="svg-m" />
-          </UiButton>
-          <UiButton
-            v-if="role !== 'adjacent'"
-            class="header__page-link"
-            :to="role ? `/notifications` : '/'"
-            variant="secondary"
-            size="around"
-          >
-            <SvgoNotice class="svg-m" />
-            <UiAlertBadge />
-          </UiButton>
-          <HeaderMenuDropDown v-model="isAuth" />
-        </div>
-        <div class="header__auth" v-else>
-          <UiButton to="/search" variant="secondary" size="around">
-            <SvgoSearchIcon class="svg-m" />
-          </UiButton>
-          <UiButton variant="secondary" size="large" type="button" @click="openAuthModal">Вход</UiButton>
-          <HeaderChooseRegistrProfileDropdown class="header__page-link"/>
+        <div class="header__auth">
+            <HeaderHiddenMenuDropDown :items="hiddenMenuItems" />
+            <template v-if="isAuth">
+                <UiButton
+                    class="header__page-link"
+                    to="/search"
+                    variant="secondary"
+                    size="around"
+                >
+                    <SvgoSearchIcon class="svg-m" />
+                </UiButton>
+                <UiButton
+                    v-if="role !== 'adjacent'"
+                    class="header__page-link"
+                    :to="role ? `/favorites` : '/'"
+                    variant="secondary"
+                    size="around"
+                >
+                    <SvgoFavorite class="svg-m" />
+                </UiButton>
+                <UiButton
+                    class="header__page-link"
+                    to="/chat"
+                    variant="secondary"
+                    size="around"
+                >
+                    <SvgoMessage class="svg-m" />
+                </UiButton>
+                <UiButton
+                    v-if="role !== 'adjacent'"
+                    class="header__page-link"
+                    :to="role ? `/notifications` : '/'"
+                    variant="secondary"
+                    size="around"
+                >
+                    <SvgoNotice class="svg-m" />
+                    <UiAlertBadge />
+                </UiButton>
+                <HeaderMenuDropDown v-model="isAuth" />
+            </template>
+            <template v-else>
+                <UiButton to="/search" variant="secondary" size="around">
+                    <SvgoSearchIcon class="svg-m" />
+                </UiButton>
+                <UiButton variant="secondary" size="large" type="button" @click="openAuthModal">Вход</UiButton>
+                <HeaderChooseRegistrProfileDropdown class="header__page-link"/>
+            </template>
         </div>
         <UiButton v-if="!isAuth" type="button" variant="primary" size="small" class="header__login" @click="openAuthModal">Вход</UiButton>
       </div>
@@ -145,6 +139,65 @@ const role = computed(() => {
     return userStore.role
   }
 })
+
+const menuList = ref(null);
+const isDropdownVisible = ref(false);
+const menuItems = ref([
+  { to: '/services', text: 'Найти исполнителя' },
+  { to: '/orders', text: 'Найти заказчика' },
+  { to: '/members', text: 'Участники портала' },
+  { to: '/related-industry-services', text: 'Партнерские сервисы' },
+]);
+
+const visibleMenuItems = ref([]);
+const hiddenMenuItems = ref([]);
+
+
+const updateMenuVisibility = () => {
+  if (!menuList.value) return;
+
+  // Сбрасываем скрытые элементы
+  hiddenMenuItems.value = [];
+  visibleMenuItems.value = [...menuItems.value];
+
+  // Ждём, пока элементы отрендерятся
+  nextTick(() => {
+    // Рекурсивная функция для скрытия элементов
+    const hideOverflowingItems = () => {
+      // Проверяем, выходит ли содержимое за пределы видимой области
+      const isOverflowing = menuList.value.scrollWidth > menuList.value.offsetWidth;
+
+      if (isOverflowing && visibleMenuItems.value.length > 0) {
+        // Перемещаем последний видимый элемент в скрытые
+        const lastVisibleItem = visibleMenuItems.value.pop();
+        if (lastVisibleItem) {
+          hiddenMenuItems.value.unshift(lastVisibleItem);
+        }
+
+        // Ждём обновления DOM и повторяем проверку
+        requestAnimationFrame(() => {
+          hideOverflowingItems();
+        });
+      }
+    };
+
+    // Запускаем процесс скрытия элементов
+    hideOverflowingItems();
+  });
+};
+
+const toggleDropdown = () => {
+  isDropdownVisible.value = !isDropdownVisible.value;
+};
+
+onMounted(() => {
+  updateMenuVisibility();
+  window.addEventListener('resize', updateMenuVisibility);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', updateMenuVisibility);
+});
 
 const handleCreateOrder = () => {
   if (!isAuth.value) {
@@ -362,7 +415,10 @@ body.vfm--scrollbar-hidden .fixed-header {
 
 .header__menu-links {
   align-items: center;
-  display: flex
+  display: flex;
+  flex: 1 1 100%;
+  justify-content: center;
+  padding: 0 1rem;
 }
 
 .header__menu-list {
