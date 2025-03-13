@@ -3,7 +3,7 @@ export default function(id) {
     case (1):
       return 'flag_russia';
     case 2:
-      return 'flag_kazakhstan';
+      return 'flag_kyrgyzstan';
     case 3:
       return 'flag_belarus';
     case 4:
@@ -11,7 +11,7 @@ export default function(id) {
     case 5:
       return 'flag_uzbekistan';
     case 6:
-      return 'flag_kyrgyzstan';
+      return 'flag_kazakhstan';
     default:
       return '';
   }
