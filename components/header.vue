@@ -50,6 +50,9 @@
             <li class="header__links-item">
               <NuxtLink to="/members" class="header__link">Участники портала</NuxtLink>
             </li>
+            <li class="header__links-item">
+              <NuxtLink to="/related-industry-services" class="header__link">Партнерские сервисы</NuxtLink>
+            </li>
           </ul>
         </nav>
         <div class="header__auth" v-if="isAuth">

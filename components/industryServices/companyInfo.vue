@@ -13,7 +13,7 @@
                 Изменить
             </UiButton>
         </div>
-        <div class="company-info__content">
+        <div class="company-info__content" :class="[`company-info__content_${data.template}`]">
             <div class="image-box company-info__logo">
                 <img
                     :src="data.logo || defaultCompanyLogo"
@@ -172,6 +172,15 @@ function handleMoreShow() {
 
     &__content {
         display: flex;
+
+        &_reverse {
+            flex-direction: row-reverse;
+
+            .company-info__logo {
+                margin-right: 0;
+                margin-left: 5%;
+            }
+        }
     }
 
     &__logo {
