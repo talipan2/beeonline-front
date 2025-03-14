@@ -40,7 +40,7 @@ export default {
       ...(bonus !== undefined && bonus !== null ? { bonus } : {}),
     };
 
-    return axios.get(`achievements/${organizationId}`, { params })
+    return useApi().get(`achievements/${organizationId}`, params)
   },
 
   async search (params = {}) {

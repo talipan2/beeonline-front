@@ -11,8 +11,8 @@
 
       <div class="tabs tabs_slim">
         <template v-for="(item, index) in filterTypes" :key="index">
-          <div class="tabs__tab" 
-            :class="{active: filter.type === item.type,}" 
+          <div class="tabs__tab"
+            :class="{active: filter.type === item.type,}"
             @click="changeFilter('type', item.type)">
             <span>{{ item.title }}</span>
           </div>
@@ -22,11 +22,11 @@
     <div class="card__content" v-if="bonuses.length">
       <div class="bonus-achievement-types">
         <template v-for="(bonus, index) in bonuses" :key="index">
-          <UiButton 
+          <UiButton
             type="button"
-            class="bonus-btn" 
-            variant="secondary" 
-            size="small" 
+            class="bonus-btn"
+            variant="secondary"
+            size="small"
             @click="changeFilter('bonus', bonus.id)"
             :class="{active: filter.bonus === bonus.id}"
           >
@@ -97,20 +97,18 @@ const getBonuses = (organizationId, filterType) => {
     .finally(() => loading.value = false);
 }
 
-// Получение ачивок 
+// Получение ачивок
 const getAchievements = (organizationId, filterList) => {
   loading.value = true;
   bonusStore.getAchievements(organizationId, filterList)
     .then(res => {
-      if(res && res.current_page === 1) {
+      if(res.meta.current_page === 1) {
         achievements.value = res.data;
-        lastPage.value = res.last_page;
-        filter.value.page = res.current_page
-      } else if (res && res.current_page > 1) {
+      } else if (res.meta.current_page > 1) {
         achievements.value = [...achievements.value, ...res.data];
-        lastPage.value = res.last_page;
-        filter.value.page = res.current_page
       }
+      lastPage.value = res.meta.last_page;
+      filter.value.page = res.meta.current_page
     })
     .finally(() => loading.value = false);
 }

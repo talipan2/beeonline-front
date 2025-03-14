@@ -3,7 +3,7 @@ import commonApi from '~/api/commonApi'
 
 export const useBonusStore = defineStore("bonus", {
   state: () => ({
-    
+
   }),
   actions: {
     async getBonuses(organizationId, { type } = {}) {
@@ -29,7 +29,7 @@ export const useBonusStore = defineStore("bonus", {
             throw error;
         }
     },
-    
+
     async getBonusesTransactions(organizationId, { page } = {}) {
         if(!organizationId) return
         try {
@@ -44,16 +44,8 @@ export const useBonusStore = defineStore("bonus", {
     },
 
     async getAchievements(organizationId, { page, limit, type, bonus } = {}) {
-        if(!organizationId) return
-        try {
-            const response = await commonApi.getAchievements(organizationId, { page, limit, type, bonus });
-            if(response.data) {
-                return response.data
-            }
-        } catch (error) {
-            throw error;
-        }
+        return await commonApi.getAchievements(organizationId, { page, limit, type, bonus });
     },
-    
+
   },
 });

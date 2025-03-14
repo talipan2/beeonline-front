@@ -1,7 +1,7 @@
 <template>
   <div class="achievement">
     <div class="achievement__content">
-      <BonusIcon class="achievement__image" />
+      <BonusIcon class="achievement__image" :src="achievement.image"/>
       <div class="achievement__info">
         <div class="achievement__title">{{ achievement.name }}</div>
         <div class="achievement__description">
@@ -10,11 +10,11 @@
       </div>
       <div class="achievement__completed" v-if="achievement.completed"></div>
       <div class="achievement__action" v-if="showAction">
-        <UiButton 
+        <UiButton
           :to="bonus.link_path"
-          variant="secondary" 
+          variant="secondary"
           size="small"
-          class="bonus-btn" 
+          class="bonus-btn"
           @click="changeFilter('bonus', null)"
         >
           {{ bonus.link_title }}
@@ -37,10 +37,10 @@
       </div>
     </div>
     <div class="achievement__action-mobile" v-if="showAction">
-      <UiButton 
+      <UiButton
         :to="bonus.link_path"
-        variant="secondary" 
-        size="small" 
+        variant="secondary"
+        size="small"
         @click="changeFilter('bonus', null)"
       >
         {{ bonus.link_title }}

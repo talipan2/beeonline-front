@@ -7,7 +7,7 @@
           <div class="bonus-progress-modal">
             <div class="bonus-progress-modal__level bonus-progress__block" v-if="level">
               <div class="bonus-progress-modal__level-image">
-                <BonusIcon />
+                <BonusIcon :src="level.image"/>
               </div>
               <div class="bonus-progress-modal__level-body">
                 <div class="bonus-progress-modal__level-title">
@@ -49,16 +49,16 @@
             </template>
           </div>
         </div>
-        <div class="card__content card__content_scroll" 
-          v-if="levelGroups && levelGroups.length" 
-          ref="levelGroupsContent" 
+        <div class="card__content card__content_scroll"
+          v-if="levelGroups && levelGroups.length"
+          ref="levelGroupsContent"
           :style="contentHeight ? { height: contentHeight + 'px' } : {}"
         >
           <div class="levels">
             <template v-for="(level, index) in levelGroups" :key="index">
               <div :class="{ levels__level: true, active: levelNumber >= level.from_level, }"
                 v-if="filter.type === 'all' || levelNumber >= level.from_level">
-                <BonusIcon class="levels__image" />
+                <BonusIcon class="levels__image" :src="level.image"/>
                 <div class="levels__name">
                   {{ level.name }}
                 </div>
@@ -93,7 +93,7 @@ const props = defineProps({
   levelGroups: {
     type: Array,
     default: [],
-  }
+  },
 })
 const settingStore = useSettingStore();
 
@@ -122,9 +122,8 @@ watch(() => levelGroupsContent.value, (newVal) => {
 
 .bonus-modal {
   .modal-content {
+    margin-bottom: auto;
     box-shadow: none;
-    width: 55%;
-    padding: 2.4em;
   }
 
   .card__container {

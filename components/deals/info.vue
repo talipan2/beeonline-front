@@ -25,7 +25,7 @@
                     class="deals-info__button"
                     variant="tertiary"
                     @click="emit('action', 'cancel')"
-                    v-if="!deal.is_active"
+                    v-if="deal.is_active"
                     >Отменить сделку</UiButton
                 >
                 <template v-if="deal.is_manager">

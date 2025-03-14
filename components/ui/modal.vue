@@ -146,7 +146,7 @@ export default {
     height: 100%;
     overflow: auto;
     inset: 0;
-    padding: 2rem;
+    padding: var(--container-padding-x);
 
     @include small-tablet {
         align-items: normal;
