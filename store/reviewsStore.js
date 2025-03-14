@@ -1,0 +1,58 @@
+import { defineStore } from "pinia";
+import Api from "~/api/reviewsApi";
+import { useToast } from "vue-toastification";
+
+export const useReviewsStore = defineStore("reviews", {
+  state: () => ({
+    
+  }),
+  actions: {
+    // получение отзывов
+    async getReviews(organization_id, params) {
+      try {
+        const response = await Api.getReviews(organization_id, params);
+        return response.data;
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    
+    // получение отзывов организации
+    async getReviewsForUs(organization_id, params = {}) {
+      try {
+        const response = await Api.getReviewsForUs(organization_id, params);
+        return response.data;
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
+    async getReview(id) {
+      try {
+        const response = await Api.getReview(id);
+        return response.data;
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
+    // создание отзыва
+    async createReview(values, form) {
+      try {
+        const response = await Api.createReview(values, form);
+        return response.data;
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
+    async replyReview(value, form) {
+      try {
+        const response = await Api.replyReview(value, form);
+        return response.data;
+      } catch (error) {
+        console.error(error);
+      }
+    },
+  }
+})
