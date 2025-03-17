@@ -45,9 +45,9 @@ const getOptions = (type) => {
       return minLotOptions.value;
     case 'date':
       return dateOptions.value;
-    case 'statusReview':
+    case 'rate':
       return statusReviewOptions;
-    case 'participant':
+    case 'org_type':
       return participantOptions;
   }
 };
@@ -112,7 +112,8 @@ watch(() => props.activeFilters, (newVal, oldVal) => {
 }, { deep: true, immediate: true });
 
 // Инициализируем значения фильтров
-onMounted(() => {
+onMounted(async() => {
+  await nextTick();
   props.filters.forEach((filter) => {
     selectedFilters.value[filter] = props.activeFilters[filter] || 'all';
   })

@@ -3,30 +3,30 @@
     <div class="reviews-card__col-1">
       <div class="reviews-card__container">
         <div class="image-box reviews-card__image">
-          <img :src="defaultImage" alt="">
+          <img :src="data.about?.image || defaultImage" :alt="data.about?.name">
         </div>
         <div class="reviews-card__content">
-          <h3 class="reviews-card__title">Организация Исполнитель 101</h3>
-          <p class="reviews-card__text">Исполнитель</p>
+          <h3 class="reviews-card__title">{{ data.about?.name }}</h3>
+          <p class="reviews-card__text">{{ role }}</p>
         </div>
       </div>
     </div>
     <div class="reviews-card__col-2">
       <div class="reviews-card__rating">
-        <p class="reviews-card__rating-text">Оценка: (4/5)</p>
-        <CommonRating :is-count-rating="false" :is-count-reviews="false"/>
+        <p class="reviews-card__rating-text">Оценка: ({{ data.rate }}/5)</p>
+        <CommonRating :rating="data.rate" :is-count-rating="false" :is-count-reviews="false"/>
       </div>
     </div>
     <div class="reviews-card__col-3">
         <div class="reviews-card__content">
           <p class="reviews-card__title">Плюсы сотрудничества</p>
-          <p class="reviews-card__text">Плюсы сотрудничества Плюсы сотрудничестваПлюсы сотрудничества Плюсы сотрудничестваПлюсы сотрудничества Плюсы сотрудничестваПлюсы сотрудничества Плюсы сотрудничестваПлюсы сотрудничества Плюсы сотрудничестваПлюсы сотрудничества Плюсы сотрудничестваПлюсы сотрудничества Плюсы сотрудничестваПлюсы сотрудничества Плюсы сотрудничестваПлюсы сотрудничества Плюсы сотрудничестваПлюсы сотрудничества Плюсы сотрудничестваПлюсы сотрудничества Плюсы сотрудничестваПлюсы сотрудничества Плюсы сотрудничестваПлюсы сотрудничества Плюсы сотрудничестваПлюсы сотрудничества Плюсы сотрудничестваПлюсы сотрудничества Плюсы сотрудничестваПлюсы сотрудничества Плюсы сотрудничества</p>
+          <p class="reviews-card__text">{{ data.positive }}</p>
         </div>
         <div class="reviews-card__content">
           <p class="reviews-card__title">Минусы сотрудничества</p>
-          <p class="reviews-card__text">Плюсы сотрудничества Плюсы сотрудничестваПлюсы сотрудничества Плюсы сотрудничестваПлюсы сотрудничества Плюсы сотрудничестваПлюсы сотрудничества Плюсы сотрудничестваПлюсы сотрудничества Плюсы сотрудничестваПлюсы сотрудничества Плюсы сотрудничестваПлюсы сотрудничества Плюсы сотрудничестваПлюсы сотрудничества Плюсы сотрудничестваПлюсы сотрудничества Плюсы сотрудничестваПлюсы сотрудничества Плюсы сотрудничестваПлюсы сотрудничества Плюсы сотрудничестваПлюсы сотрудничества Плюсы сотрудничества</p>
+          <p class="reviews-card__text">{{ data.negative }}</p>
         </div>
-        <NuxtLink class="reviews-card__btn" :to="`${reviewsState}/show/${1}`" >
+        <NuxtLink class="reviews-card__btn" :to="`reviews/show/${data.id}`" >
           <span>Подробнее</span>
           <SvgoBtnArrow class="svg-m"/>
         </NuxtLink>
@@ -38,6 +38,11 @@
 import defaultImage from '~/assets/images/nophoto_pc.png'
 
 const props = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+    required: true,
+  },
   reviewsState: {
     type: String,
     default: "",
@@ -47,6 +52,13 @@ const props = defineProps({
 });
 
 const router = useRouter();
+const role = computed(() => {
+  if(props.data && props.data.about?.role === 'customer') {
+    return 'Заказчик';
+  } else if (props.data && props.data.about?.role === 'performer') {
+    return 'Исполнитель';
+  }
+})
 
 </script>
 

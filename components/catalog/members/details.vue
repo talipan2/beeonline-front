@@ -6,7 +6,7 @@
       </div>
       <div class="member-details__header-content">
         <h1 class="member-details__title">{{ data.name || 'Не указано' }}</h1>
-        <CommonRating :rating="data.fillRating" :is-count-rating="false" />
+        <CommonRating :rating="data.rating" :is-count-rating="false" :reviews="data.reviewCount" />
         <CommonLocationsList class="member-details__locations" :locationsList="data.location" :is-country="true"/>
         <div class="member-details__props" v-if="data.siteUrl">
           <SvgoWeb class="svg-m" fill="#a9abac"/>
@@ -58,8 +58,10 @@
       <CommonGallerySlider :images="data.gallery" :videos="data.videos"/>
     </div>
     <div class="member-details__content-container">
-      <h3 class="member-details__content-title" style="color: red">отзывы</h3>
-      <ReviewsEntity />
+      <h3 class="member-details__content-title">Отзывы</h3>
+      <p class="member-details__content-rating">Общий рейтинг {{ props.data.type === 'performer' ? 'исполнителя' : props.data.type === 'customer' ? 'заказчика' : '' }}: {{ data.rating }}/5</p>
+      <ReviewsEntity :data="reviews"/>
+      <CommonPagination v-if="reviewsPage.lastPage > 1" class="member-details__pagination" :current-page="reviewsPage.currentPage" :total-pages="reviewsPage.lastPage" @change-page="handleChangeReviewsPage" />
     </div>
     <div class="member-details__activity">
       <p>Последняя активность: {{ data.updatedAt }}</p>
@@ -71,6 +73,7 @@
 import defaultLogoImage from '@/assets/images/nophoto_pc.png';
 import { useUserStore } from '~/store/userStore';
 import { useToast } from 'vue-toastification';
+import { useReviewsStore } from '~/store/reviewsStore';
 
 const props = defineProps({
   data: {
@@ -81,7 +84,9 @@ const props = defineProps({
 
 const toast = useToast();
 const userStore = useUserStore();
+const reviewStore = useReviewsStore();
 const isFavorite = ref(false);
+const reviews = ref(null);
 const isLoading = ref(false);
 
 const pubCardType = computed(() => {
@@ -92,6 +97,38 @@ const pubCardType = computed(() => {
       return 'заказчику'
   }
 })
+
+const organizationId = computed(() => props.data.organizationId)
+
+watch(() => organizationId.value, (newVal) => {
+  if(newVal) {
+    isLoading.value = true
+    reviewStore.getOrganizationReviews(newVal).then((res) => {
+      reviews.value = res.data
+      reviewsPage.value = {
+        currentPage: res.pagination.current_page,
+        lastPage: res.pagination.last_page
+      }
+    }).finally(() => isLoading.value = false)
+  }
+},{once: true})
+
+const reviewsPage = ref({
+  currentPage: 1,
+  lastPage: 1
+})
+
+const handleChangeReviewsPage = (page) => {
+  isLoading.value = true
+  reviewStore.getOrganizationReviews(organizationId.value, {page}).then((res) => {
+    console.log(res)
+    reviews.value = res.data
+    reviewsPage.value = {
+      currentPage: res.pagination.current_page,
+      lastPage: res.pagination.last_page
+    }
+  }).finally(() => isLoading.value = false)
+}
 
 function handleAddFavorite() {
   if(isLoading.value) return;
@@ -203,6 +240,11 @@ onMounted(() => {
         fill: var(--text-color-octonary);
       }
     }
+  }
+
+  &__content-rating {
+    font-size: 1em;
+    margin-bottom: 2em;
   }
 }
 

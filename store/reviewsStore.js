@@ -40,7 +40,7 @@ export const useReviewsStore = defineStore("reviews", {
     async createReview(values, form) {
       try {
         const response = await Api.createReview(values, form);
-        return response.data;
+        return response;
       } catch (error) {
         console.error(error);
       }
@@ -49,6 +49,33 @@ export const useReviewsStore = defineStore("reviews", {
     async replyReview(value, form) {
       try {
         const response = await Api.replyReview(value, form);
+        return response;
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
+    async addAdditionsReview(value, form) {
+      try {
+        const response = await Api.addAdditionsReview(value, form);
+        return response
+      } catch (error) {
+        console.error(error)
+      }
+    },
+
+    async addReviewFiles(id, files) {
+      try {
+        const response = await Api.addReviewFiles(id, files);
+        return response.data
+      } catch (error) {
+        console.error(error)
+      }
+    },
+
+    async getOrganizationReviews(orgId, params) {
+      try {
+        const response = await Api.getOrganizationReviews(orgId, params);
         return response.data;
       } catch (error) {
         console.error(error);

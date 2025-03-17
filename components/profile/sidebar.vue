@@ -95,7 +95,7 @@ const getSidebarLinks = (role) => [
   { id: 8, label: "Документы", value: `/documentation` },
   { id: 9, label: "Партнерские сервисы", value: `/related-industry-services` },
   { id: 10, label: "Избранное", value: `/favorites` },
-  { id: 11, label: "Отзывы", value: `/my-reviews` },
+  { id: 11, label: "Отзывы", value: `/reviews` },
   { id: 12, label: "Баланс и платные услуги", value: "/tariffs" },
   { id: 13, label: "Уведомления", value: `/notifications` },
   { id: 14, label: "Новости", value: "/news" },

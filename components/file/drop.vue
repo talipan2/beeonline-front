@@ -252,7 +252,7 @@ export default {
 				}
 
 				let file = this.files[fileIndex];
-				file.id = result.id;
+				file.id = result.media_id;
 				file.url = result.url;
 				file.loaded = true;
 				file.loading = false;

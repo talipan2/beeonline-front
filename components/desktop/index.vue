@@ -69,13 +69,15 @@
     </div>
     <DesktopStats :role="role"/>
       <div class="desktop__card-container">
-        <DesktopCard title="Отзывы (8)" :link="{ url: '/my-reviews', text: 'Все отзывы'}">
+        <DesktopCard :title="`Отзывы (${reviewsListTotal + reviewsAboutUsListTotal})`" :link="{ url: '/reviews', text: 'Все отзывы'}">
           <template #body>
-            <DesktopSelectableEntity class="desktop__chats" :label="['Отзывы о нас', 'Мои отзывы']" :count="[8, 10]">
+            <DesktopSelectableEntity class="desktop__chats" :label="['Отзывы о нас', 'Мои отзывы']" :count="[reviewsAboutUsListTotal, reviewsListTotal]">
               <template #firstPage >
                 <template v-if="true">
-                  <DesktopReviewRating :role="role"/>
-                  <DesktopSelectableEntityCard v-for="(item, index) in 2" :key="index" btnLabel="Читать полный отзыв" :isRating="true"/>
+                  <DesktopReviewRating :data="pubCard.rating" />
+                  <template v-for="review in reviewsAboutUsList" :key="review.id">
+                    <DesktopSelectableEntityCard :data="review" btnLabel="Читать полный отзыв" :isRating="true" :btn-link="`/reviews/show/${review.id}`"/>
+                  </template>
                 </template>
                 <template v-else>
                   <DesktopEmptyCard 
@@ -90,7 +92,9 @@
               </template>
               <template #secondPage>
                 <template v-if="true">
-                  <DesktopSelectableEntityCard v-for="(item, index) in 3" :key="index" btnLabel="Читать полный отзыв" :isRating="true"/>
+                  <template v-for="review in reviewList" :key="review.id">
+                    <DesktopSelectableEntityCard :data="review" btnLabel="Читать полный отзыв" :isRating="true" :btn-link="`/reviews/show/${review.id}`"/>
+                  </template>
                 </template>
                 <template v-else>
                   <DesktopEmptyCard 
@@ -110,7 +114,9 @@
             <DesktopSelectableEntity class="desktop__chats" :label="['Все чаты', 'Непрочитанные']" :count="[8, 10]" :disabledPage="[2]">
               <template #firstPage>
                 <template v-if="true">
-                  <DesktopSelectableEntityCard v-for="(item, index) in 3" :key="index" btnLabel="Читать полностью"/>
+                  <template v-for="chat in allChatsList" :key="chat.id">
+                    <DesktopSelectableEntityCard :data="chat" btnLabel="Читать полностью"/>
+                  </template>
                 </template>
                 <template v-else>
                   <DesktopEmptyCard 
@@ -128,7 +134,9 @@
                 </template>
               </template>
               <template #secondPage>
-                <DesktopSelectableEntityCard v-for="(item, index) in 3" :key="index" btnLabel="Читать полностью"/>
+                <template v-for="chat in allChatsList" :key="chat.id">
+                  <DesktopSelectableEntityCard :data="chat" btnLabel="Читать полностью"/>
+                </template>
               </template>
             </DesktopSelectableEntity>
           </template>
@@ -139,6 +147,7 @@
 </template>
 
 <script setup>
+import { useReviewsStore } from '~/store/reviewsStore';
 import { useTariffsStore } from '~/store/tariffsStore';
 import { useUserStore } from '~/store/userStore';
 
@@ -159,6 +168,7 @@ const props = defineProps({
 
 
 const tariffsStore = useTariffsStore();
+const reviewStore = useReviewsStore();
 
 const userStore = useUserStore();
 
@@ -166,6 +176,38 @@ const transactionsList = ref([]);
 const userBalance = computed(() => tariffsStore.userBalance);
 const userBonuses = computed(() => tariffsStore.userBonuses);
 const userCurrency = computed(() => tariffsStore.userCurrency);
+
+const reviewList = ref(null)
+const reviewsListTotal = ref(0);
+const reviewsAboutUsList = ref(null);
+const reviewsAboutUsListTotal = ref(0);
+
+const allChatsList = ref([
+  {
+    id: 1,
+    text: 'Исполнитель оставил отзыв',
+    date: '12.12.2022',
+    fromName: 'Иван Иванов',
+    name: 'Иван Иванов',
+    logo: '',
+  },
+  {
+    id: 2,
+    text: 'Исполнитель оставил отзыв',
+    date: '12.12.2022',
+    fromName: 'Имя исполнитель',
+    name: 'Имя заказчик',
+    logo: '',
+  },
+  {
+    id: 3,
+    text: 'Исполнитель оставил отзыв',
+    date: '12.12.2022',
+    fromName: 'Иван Иванов',
+    name: 'Иван Иванов',
+    logo: '',
+  },
+]);
 
 const pubCard = computed(() => {
   if (!userStore.userPubCard) return {}
@@ -175,6 +217,10 @@ const pubCard = computed(() => {
     type: userStore.userPubCard.type,
     description: userStore.userPubCard.description,
     countryId: {countries: [userStore.userPubCard.country_id]},
+    rating: {
+      ...userStore.userPubCard.reviews_stats_about,
+      reviewCount: userStore.userPubCard.reviews_about_count
+    },
     entityCount: userStore.userPubCard.orders_count || userStore.userPubCard.services_count,
     rawMaterials: [userStore.userPubCard.materials_own ? 'Собственное': '', userStore.userPubCard.materials_tolling ? 'Давальческое' : ''].filter(Boolean),
     category: userStore.userPubCard.categories && userStore.userPubCard.categories.length ? userStore.userPubCard.categories.map(item => item.name) : []
@@ -190,6 +236,43 @@ onMounted(() => {
       transactionsList.value = res.data && res.data.length ? res.data.slice(0, 5) : [];
     });
   }
+
+  reviewStore.getReviewsForUs(userStore.userData.organization_id, {limit: 3}).then((res) => {
+    if (res) {
+      if (res.data && res.data.length) {
+        reviewsAboutUsList.value = res.data.map(item => {
+          return {
+            id: item.id,
+            text: item.text_positive,
+            rating: item.rate,
+            name: item.owner_org?.name,
+            logo: item.owner_org?.logo,
+            date: item.date_created,
+          }
+        });
+        reviewsAboutUsListTotal.value = res.pagination?.total;
+      }
+    }
+  });
+
+  reviewStore.getReviews(userStore.userData.organization_id, {per_page: 3} ).then((res) => {
+    if (res) {
+      if (res.data && res.data.length) {
+        reviewList.value = res.data.map(item => {
+          return {
+            id: item.id,
+            text: item.text_positive,
+            rating: item.rate,
+            name: item.about_org?.name,
+            logo: item.about_org?.logo,
+            date: item.date_created,
+          }
+        });
+        reviewsListTotal.value = res.pagination?.total;
+      }
+    }
+  });
+  
 })
 
 </script>
