@@ -66,5 +66,9 @@ export default {
 
   async updateOrderStep(id, currentStep) {
     return axios.patch(`orders/${id}/update-step`, {current_step: currentStep})
-  }
+  },
+
+  async getSelfOrders(organizationId, params={}) {
+    return axios.get(`organizations/${organizationId}/orders`, {params})
+  },
 }

@@ -73,7 +73,7 @@
           <template #body>
             <DesktopSelectableEntity class="desktop__chats" :label="['Отзывы о нас', 'Мои отзывы']" :count="[reviewsAboutUsListTotal, reviewsListTotal]">
               <template #firstPage >
-                <template v-if="true">
+                <template v-if="reviewsAboutUsList">
                   <DesktopReviewRating :data="pubCard.rating" />
                   <template v-for="review in reviewsAboutUsList" :key="review.id">
                     <DesktopSelectableEntityCard :data="review" btnLabel="Читать полный отзыв" :isRating="true" :btn-link="`/reviews/show/${review.id}`"/>
@@ -91,7 +91,7 @@
                 </template>
               </template>
               <template #secondPage>
-                <template v-if="true">
+                <template v-if="reviewList">
                   <template v-for="review in reviewList" :key="review.id">
                     <DesktopSelectableEntityCard :data="review" btnLabel="Читать полный отзыв" :isRating="true" :btn-link="`/reviews/show/${review.id}`"/>
                   </template>

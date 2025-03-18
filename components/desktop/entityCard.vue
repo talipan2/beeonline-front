@@ -58,9 +58,9 @@ const props = defineProps({
 
 .desktop-entity-card {
   font-family: 'fira-sans', sans-serif;
-  flex: 1 1 40%;
+  flex: 1 1 50%;
   position: relative;
-  max-width: 45%;
+  max-width: calc(50% - 1.2em);
   display: flex;
   background-color: #fff;
   border: 1px solid #dcdce4;

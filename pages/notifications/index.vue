@@ -30,4 +30,10 @@ const userStore = useUserStore();
 
 const roleName = userStore.getRoleNameForBreadcrumbs;
 
+onMounted(() => {
+  if(userStore.userData.id) {
+    userStore.getNotifications(userStore.userData.id);
+  }
+});
+
 </script>

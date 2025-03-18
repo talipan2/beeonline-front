@@ -6,16 +6,26 @@
     </template>
     <template #content>
       <Entity
+        :class="{'loading': isLoading}"
         role="customer"
         title="Все заказы"
         subtitle="Размещайте список своих заказов в каталоге заказчиков и ищите исполнителей в кратчайшие сроки с учетом именно ваших потребностей"
         btnLabel="Создать заказ"
         btnLink="/orders/create"
         :data="cardData"
-        :isLoading="isLoading"
+        :isLoaded="isLoaded"
         emptyAlertText="Заказов нет"
         :entityIsFilling="entityIsFilling"
         @selectInfoModal="selectInfoModalData"
+        @setFilters="setFilters"
+      />
+      <CommonPagination 
+        :class="{'loading': isLoading}"
+        v-if="page.lastPage > 1"
+        :currentPage="page.currentPage"
+        :totalPages="page.lastPage"
+        :activeFilters="activeFilter"
+        @changePage="handlePageChange"
       />
       <InfoModal :text="infoModal.text" :title="infoModal.title">
         <template #content>
@@ -42,6 +52,7 @@ const settingStore = useSettingStore();
 const roleName = userStore.getRoleNameForBreadcrumbs;
 
 const isLoading = ref(false);
+const isLoaded = ref(false);
 
 const infoModal = ref({
   title: '',
@@ -49,8 +60,31 @@ const infoModal = ref({
   action: () => {}
 })
 
+const page = ref({
+  currentPage: 1,
+  lastPage: 1,
+})
+
+const activeFilter = ref({})
+
+const setFilters = (filters) => {
+  filters = deleteEmptyFilters(filters);
+  activeFilter.value = {...filters}
+
+  getOrders({...filters})
+}
+
+const deleteEmptyFilters = (filter) => {
+  if(!filter) return;
+  for (const key in filter) {
+    if (filter[key] === "all") {
+      delete filter[key];
+    }
+  }
+  return filter;
+}
+
 const selectInfoModalData = ({type, id}) => {
-  console.log(type)
   settingStore.infoModal = true;
   switch (type) {
     case 'published':
@@ -105,13 +139,30 @@ const cardData = computed(() => {
   }})
 })
 
+const handlePageChange = (page) => {
+  getOrders({page, ...activeFilter.value});
+}
+
+function getOrders(params) {
+  if(isLoading.value) return;
+  isLoading.value = true
+  entityStore.getSelfOrders(userStore.userData.organization_id, params)
+  .then(res => {
+    if(res && res.orders) {
+      page.value.currentPage = res.orders.current_page;
+      page.value.lastPage = res.orders.last_page;
+    }
+  })
+  .finally(() => {
+    isLoading.value = false;
+    isLoaded.value = true;
+  });
+}
+
 onMounted(() => {
   if(userStore.userData.organization_id) {
-    isLoading.value = true
-    entityStore.getOrganizationOrders(userStore.userData.organization_id)
-    .finally(() => isLoading.value = false);
-  }
-  
+    getOrders();
+  }  
 });
 
 </script>

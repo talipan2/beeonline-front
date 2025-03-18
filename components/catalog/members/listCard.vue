@@ -10,7 +10,7 @@
         <NuxtLink :to="`/members/${data.id}/${data.type}`" class="link">
           <h5 class="list-card__title">{{ data.name || 'Название компании' }}</h5>
         </NuxtLink>
-        <CommonRating :rating="data.fillRating" :is-count-rating="false"/>
+        <CommonRating :rating="data.stars" :reviews="data.reviewCount" :is-count-rating="false"/>
       </div>
     </div>
     <div class="list-card__col-3">
