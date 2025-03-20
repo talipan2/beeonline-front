@@ -46,13 +46,13 @@ const toast = useToast();
 const selectedSettings = ref({});
 
 function handleDisableSettings(type, id) {
-  // Находим настройку по типу и id
-  const notification = notificationsSetting.value.find(n => n.value === type);
-  if (notification) {
-    const setting = notification.settings.find(s => s.id === id);
-    return setting ? setting.disabled : false; // Возвращаем значение disabled
-  }
-  return false; // Если настройка не найдена, возвращаем false
+  // // Находим настройку по типу и id
+  // const notification = notificationsSetting.value.find(n => n.value === type);
+  // if (notification) {
+  //   const setting = notification.settings.find(s => s.id === id);
+  //   return setting ? setting.disabled : false; // Возвращаем значение disabled
+  // }
+  // return false; // Если настройка не найдена, возвращаем false
 }
 
 // список уведомлений

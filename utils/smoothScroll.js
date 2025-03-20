@@ -1,12 +1,14 @@
 export const smoothScroll = (() => {
   let lastTargetOffset = null; // Локальная область видимости
-  return (targetOffset, animation = true, duration = 1000) => {
+  return (targetOffset, animation = true, duration = 1000, checkLastTargetOffset = false) => {
     if (!animation) {
       window.scrollTo(0, targetOffset);
       return;
     }
 
-    if (lastTargetOffset !== null && lastTargetOffset === targetOffset) return // Если новое значение такое же как предыдущее, то отменяем скролл
+    console.log(targetOffset)
+
+    if (lastTargetOffset !== null && lastTargetOffset === targetOffset && checkLastTargetOffset) return // Если новое значение такое же как предыдущее, то отменяем скролл
 
     lastTargetOffset = targetOffset;
 

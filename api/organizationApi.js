@@ -114,5 +114,9 @@ export default {
 
   async setPubCardGallery(id, data) {
     return axios.post(`pubcards/${id}/attach-gallery`, {media_ids: data})
-  }
+  },
+
+  async getPubCardStats(id) {
+    return axios.get(`pubcards/${id}/stats`)
+  },
 }

@@ -222,6 +222,17 @@ export const useOrganizationStore = defineStore('organization', {
       }
     },
 
+    async getPubCardStats(id) {
+      try {
+        const response = await Api.getPubCardStats(id);
+        if(response.data) {
+          return response.data;
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
+
     resetRegisterData() {
       this.registerOrg = {
         countryId: 1,

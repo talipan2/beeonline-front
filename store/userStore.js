@@ -316,5 +316,16 @@ export const useUserStore = defineStore("user", {
                 throw error;
             }
         },
+
+        async getNotificationsList(id, params) {
+            try {
+                const response = await Api.getNotificationsList(id, params);
+                if (response.data) {
+                    return response.data;
+                }
+            } catch (error) {
+                throw error;
+            }
+        },
     },
 });
