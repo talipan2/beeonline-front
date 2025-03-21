@@ -13,7 +13,7 @@
         <CommonRating v-if="isRating" class="selectable-entity-card__item-rating" :is-count-rating="false" :is-count-reviews="false" :rating="data?.rating"/>
         <span class="selectable-entity-card__item-rating">{{ data?.rating }}/5</span>
       </template>
-      <span v-else class="selectable-entity-card__item-date">{{ data?.date }}</span>
+      <span v-else class="selectable-entity-card__item-date">{{ formatDate(data?.date, 'DD.MM.YYYY, mm:HH') }}</span>
     </div>
     <div class="selectable-entity-card__item-text">{{data?.text}}</div>
     <NuxtLink class="link selectable-entity-card__item-link" :to="btnLink">{{ btnLabel }}</NuxtLink>
