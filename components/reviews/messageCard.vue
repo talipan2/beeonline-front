@@ -2,25 +2,31 @@
   <div class="message-card">
     <div class="message-card__container">
       <div class="image-box message-card__image">
-        <img :src="defaultImage" alt="">
+        <img :src="data.logo || defaultImage" alt="">
       </div>
       <div class="message-card__content">
-        <h3 class="message-card__title">Организация Исполнитель 2</h3>
-        <CommonRating :isCountRating="false" />
+        <h3 class="message-card__title">{{ data.name }}</h3>
+        <CommonRating :isCountRating="false" :rating="data.reviews_stats_about?.stars" :reviews="data.reviews_about_count"/>
         <div class="details">
           <SvgoCase class="svg-m details__icon" fill="#C4C4C4" />
-          <p class="details__content">
-            {{ data.entityCount 
-              ? (data.entityCount + ' ' + plural(data.entityCount, { one: 'услуга', few: 'услуги', many: 'услуг' }) ) 
+          <p class="details__content" v-if="data.type === 'performer'">
+            {{ data.services_count 
+              ? (data.services_count + ' ' + plural(data.services_count, { one: 'услуга', few: 'услуги', many: 'услуг' }) ) 
+              : 'Нет услуг' 
+            }}
+          </p>
+          <p class="details__content" v-if="data.type === 'customer'">
+            {{ data.orders_count 
+              ? (data.orders_count + ' ' + plural(data.orders_count, { one: 'заказ', few: 'заказа', many: 'заказов' }) ) 
               : 'Нет услуг' 
             }}
           </p>
         </div>
       </div>
     </div>
-    <UiButton class="message-card__btn" variant="quinary" size="large">
+    <UiButton type="button" class="message-card__btn" variant="quinary" size="large">
       <SvgoMessage class="svg-m" />
-      Написать исполнителю
+      {{ labelButton }}
     </UiButton>
   </div>
 </template>
@@ -28,7 +34,21 @@
 <script setup>
 import defaultImage from '~/assets/images/nophoto_pc.png';
 
-const data = ref({});
+const props = defineProps({
+  data: {
+    type: Object,
+    required: true,
+    default: () => ({})
+  }
+})
+
+const labelButton = computed(() => {
+  if(props.data.type === 'performer') {
+    return 'Написать исполнителю'
+  } else {
+    return 'Написать заказчику'
+  }
+})
 
 </script>
 
@@ -78,6 +98,7 @@ const data = ref({});
     font-size: .75em;
     column-gap: .5em;
     text-transform: uppercase;
+    width: 100%;
 
     @include mobile {
       padding: .9rem;

@@ -42,6 +42,9 @@ const pubCard = computed(() => {
     ytUrl: data.value.url_yt,
     viewCount: data.value.view_count,
     fillRating: data.value.fill_rating,
+    reviewCount: data.value.reviews_about_count,
+    stars: data.value.reviews_stats_about?.stars,
+    rating: data.value.reviews_stats_about?.average_rating,
     statusComment: data.value.status_comment,
     updatedAt: formatDate(data.value.updated_at, 'DD.MM.YYYY, mm:HH'),
     entityCount: data.value.type === 'performer' ? data.value.services_count : data.value.orders_count,
@@ -54,7 +57,6 @@ const pubCard = computed(() => {
 const activeEntity = computed(() => data.value.orders || [])
 
 onMounted(async() => {
-  console.log(router.currentRoute.value.params.id)
   data.value = await organizationStore.getPubCard(router.currentRoute.value.params.id)
 })
 

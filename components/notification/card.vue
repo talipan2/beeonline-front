@@ -1,18 +1,25 @@
 <template>
   <div class="notification-card">
     <div class="notification-card__image">
-      <SvgoSetting class="svg-lx" v-if="type === 'system'"/>
-      <SvgoSewingMachine class="svg-lx" v-if="type === 'information'" />
-      <SvgoReview class="svg-lx" v-if="type === 'review'" />
+      <SvgoSetting class="svg-lx" v-if="data.group === 'Системные'"/>
+      <SvgoSewingMachine class="svg-lx" v-if="data.group === 'Заказы/Услуги'" />
+      <SvgoReview class="svg-lx" v-if="data.group === 'Отзывы'" />
+      <SvgoNotifyMessage class="svg-lx" v-if="data.group === 'Сообщения'" />
+      <SvgoNotifyDeal class="svg-lx" v-if="data.group === 'Сделки'" />
     </div>
-    <p class="notification-card__text">Вход в личный кабинет.</p>
-    <p class="notification-card__date">22.06.2023 13:25</p>
+    <p class="notification-card__text">{{ data.message }}</p>
+    <p class="notification-card__date">{{ data.date }}</p>
   </div>
 </template>
 
 <script setup>
 
-const type = ref('information');
+const props = defineProps({
+  data: {
+    type: Object,
+    default: () => ({})
+  }
+})
 
 </script>
 

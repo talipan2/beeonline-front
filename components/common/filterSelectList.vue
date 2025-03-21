@@ -28,6 +28,10 @@ const props = defineProps({
   resetFilters: {
     type: Boolean,
     default: false,
+  }, 
+  filterMapping: {
+    type: Object,
+    default: () => ({}),
   }
 });
 
@@ -45,10 +49,12 @@ const getOptions = (type) => {
       return minLotOptions.value;
     case 'date':
       return dateOptions.value;
-    case 'statusReview':
+    case 'rate':
       return statusReviewOptions;
-    case 'participant':
+    case 'org_type':
       return participantOptions;
+    case 'status':
+      return entityStatusOptions;
   }
 };
 
@@ -87,6 +93,16 @@ const participantOptions = [
   { id: 3, label: "От поставщиков", value: "supplier" },
 ];
 
+const entityStatusOptions = [
+  { id: 0, label: 'Все статусы', value: 'all' },
+  { id: 1, label: 'Активные', value: 'active' },
+  { id: 2, label: 'Черновики', value: 'draft' },
+  { id: 3, label: 'В архиве', value: 'archive' },
+  { id: 4, label: 'Заполняется', value: 'filling' },
+  { id: 5, label: 'На модерации', value: 'under_moderation' },
+  { id: 6, label: 'Отклонен', value: 'rejected' },
+]
+
 // Сброс фильтров
 const resetFilters = () => {
   Object.keys(selectedFilters.value).forEach((key) => {
@@ -96,7 +112,15 @@ const resetFilters = () => {
 
 // ОТправка родителю выбранных фильтров
 watch(() => selectedFilters.value, (newVal, oldVal) => {
-  emit('setFilters', newVal);
+  const mappedFilters = {};
+
+  // Применяем маппинг имен
+  for (const key in newVal) {
+    const backendKey = props.filterMapping[key] || key; // Используем маппинг или оставляем оригинальное имя
+    mappedFilters[backendKey] = newVal[key];
+  }
+
+  emit('setFilters', mappedFilters); // Отправляем фильтры с именами для бэкенда
 }, { deep: true });
 
 
@@ -112,7 +136,8 @@ watch(() => props.activeFilters, (newVal, oldVal) => {
 }, { deep: true, immediate: true });
 
 // Инициализируем значения фильтров
-onMounted(() => {
+onMounted(async() => {
+  await nextTick();
   props.filters.forEach((filter) => {
     selectedFilters.value[filter] = props.activeFilters[filter] || 'all';
   })

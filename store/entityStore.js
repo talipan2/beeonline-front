@@ -95,6 +95,11 @@ export const useEntityStore = defineStore('entity', {
         {id: 4, label: 'Заполнение', value: 'filling'},
         {id: 5, label: 'На модерации', value: 'under_moderation'},
         {id: 6, label: 'Отклонено', value: 'rejected'},
+      ],
+      deadline: [
+        {id: 1, label: '1 неделя'},
+        {id: 2, label: '1 месяц'},
+        {id: 3, label: '1 год'},
       ]
     }
   }),
@@ -411,5 +416,29 @@ export const useEntityStore = defineStore('entity', {
         throw error;
       }
     },
-  }
+
+    async getSelfOrders(organizationId, params) {
+      try {
+        const response = await orderApi.getSelfOrders(organizationId, params);
+        if(response.data && response.data.orders && response.data.orders.data) {
+          this.organizationOrders = response.data.orders.data;
+          return response.data
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    async getSelfServices(organizationId, params) {
+      try {
+        const response = await serviceApi.getSelfServices(organizationId, params);
+        if(response.data && response.data.services && response.data.services.data) {
+          this.organizationServices = response.data.services.data;
+          return response.data
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
+  },
 });

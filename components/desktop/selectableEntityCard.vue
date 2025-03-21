@@ -2,23 +2,21 @@
   <div class="selectable-entity-card">
     <div class="selectable-entity-card__item-header">
       <div class="selectable-entity-card__item-image">
-        <img :src="defaultImage" alt="">
+        <img :src="data?.logo || defaultImage" alt="">
       </div>
       <div class="selectable-entity-card__item-title">
-        <h2>Исполнитель 11</h2>
-        <span v-if="isRating">11.04.2023</span>
-        <span v-else>Заказчик 1</span>
+        <h2>{{ data?.name }}</h2>
+        <span v-if="isRating">{{data?.date}}</span>
+        <span v-else>{{ data?.fromName }}</span>
       </div>
-      <CommonRating v-if="isRating" class="selectable-entity-card__item-rating" :is-count-rating="false" :is-count-reviews="false" />
-      <span v-else class="selectable-entity-card__item-date">14.10.2024</span>
+      <template v-if="isRating">
+        <CommonRating v-if="isRating" class="selectable-entity-card__item-rating" :is-count-rating="false" :is-count-reviews="false" :rating="data?.rating"/>
+        <span class="selectable-entity-card__item-rating">{{ data?.rating }}/5</span>
+      </template>
+      <span v-else class="selectable-entity-card__item-date">{{ data?.date }}</span>
     </div>
-    <div class="selectable-entity-card__item-text">
-      Вы создали сделку (Заказчик 1) Вы создали сделку (Заказчик 1) Вы создали сделку (Заказчик 1)Вы создали сделкуВы
-      создали сделкуВы создали сделкуВы создали сделкуВы создали сделкуВы создали сделкуВы создали сделкуВы создали
-      сделкуВы создали сделкуВы создали сделкуВы создали сделкуВы создали сделкуВы создали сделкуВы создали сделкуВы
-      создали сделку Вы создали сделку (Заказчик 1) Вы создали сделку (Заказчик 1)
-    </div>
-    <NuxtLink class="link selectable-entity-card__item-link" to="#">{{ btnLabel }}</NuxtLink>
+    <div class="selectable-entity-card__item-text">{{data?.text}}</div>
+    <NuxtLink class="link selectable-entity-card__item-link" :to="btnLink">{{ btnLabel }}</NuxtLink>
   </div>
 </template>
 
@@ -26,6 +24,10 @@
 import defaultImage from '~/assets/images/nophoto_pc.png'
 
 const props = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
   btnLabel: {
     type: String,
     default: 'Подробнее',
@@ -33,6 +35,10 @@ const props = defineProps({
   isRating: {
     type: Boolean,
     default: false,
+  },
+  btnLink: {
+    type: String,
+    default: '#',
   }
 })
 
@@ -83,6 +89,12 @@ const props = defineProps({
     font-family: 'fira-sans', sans-serif;
     font-size: 1.4em;
     color: #a9abac;
+  }
+
+  &__item-rating {
+    font-family: 'fira-sans', sans-serif;
+    font-size: 1.2em;
+    font-weight: 500;
   }
 
   &__item-text {

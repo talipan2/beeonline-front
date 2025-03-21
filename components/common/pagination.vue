@@ -112,10 +112,8 @@ const showedPages = computed(() => {
 
   // Если страниц <= 10, просто выводим их все
   if (total <= maxVisiblePages) {
-    console.log(total, maxVisiblePages)
     for (let i = 1; i <= total; i++) {
       pages.push(i);
-      console.log(pages)
     }
   } else {
     // Если текущая страница ближе к началу (меньше 8)

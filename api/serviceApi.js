@@ -58,6 +58,10 @@ export default {
 
   async updateServiceStep(id, currentStep) {
     return axios.patch(`services/${id}/update-step`, {current_step: currentStep})
-  }
+  },
+
+  async getSelfServices( organizationId, params = {}) {
+    return axios.get(`organizations/${organizationId}/services`, {params})
+  },
 
 }

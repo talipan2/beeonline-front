@@ -2,69 +2,14 @@
   <div class="notification-setting">
     <h2 class="notification-setting__title">Настройка уведомлений</h2>
     <div class="notification-setting__list">
-      <div class="notification-setting__container">
-        <p class="notification-setting__text">
-          Хочу получать уведомления о новых заказах
-        </p>
+      <div class="notification-setting__container" v-for="notification in notificationsSetting" :key="notification.id">
+        <p class="notification-setting__text">{{ notification.label }}</p>
         <UiCheckboxGroup
           class="notification-setting__checkbox"
-          :options="[
-            { id: 0, label: 'по электронной почте' },
-            { id: 1, label: 'в личном кабинете' },
-          ]"
+          :options="notification.settings"
           :isValidated="false"
-        />
-      </div>
-      <div class="notification-setting__container">
-        <p class="notification-setting__text">
-          Хочу получать уведомления о новых отзывах или ответах на мои отзывы
-        </p>
-        <UiCheckboxGroup
-          class="notification-setting__checkbox"
-          :options="[
-            { id: 0, label: 'по электронной почте' },
-            { id: 1, label: 'в личном кабинете' },
-          ]"
-          :isValidated="false"
-        />
-      </div>
-      <div class="notification-setting__container">
-        <p class="notification-setting__text">
-          Хочу получать уведомления о новых сообщениях в чате
-        </p>
-        <UiCheckboxGroup
-          class="notification-setting__checkbox"
-          :options="[
-            { id: 0, label: 'по электронной почте' },
-            { id: 1, label: 'в личном кабинете' },
-          ]"
-          :isValidated="false"
-        />
-      </div>
-      <div class="notification-setting__container">
-        <p class="notification-setting__text">
-          Хочу получать системные уведомления
-        </p>
-        <UiCheckboxGroup
-          class="notification-setting__checkbox"
-          :options="[
-            { id: 0, label: 'по электронной почте' },
-            { id: 1, label: 'в личном кабинете' },
-          ]"
-          :isValidated="false"
-        />
-      </div>
-      <div class="notification-setting__container">
-        <p class="notification-setting__text">
-          Хочу получать уведомления о новостях
-        </p>
-        <UiCheckboxGroup
-          class="notification-setting__checkbox"
-          :options="[
-            { id: 0, label: 'по электронной почте' },
-            { id: 1, label: 'в личном кабинете' },
-          ]"
-          :isValidated="false"
+          v-model="selectedSettings[notification.value]"
+          :disabled="(id) => handleDisableSettings(notification.value, id)"
         />
       </div>
     </div>
@@ -76,9 +21,11 @@
         >Включить уведомления в telegram
       </UiButton>
       <UiButton
+        type="button"
         class="notification-setting__button"
         variant="tertiary"
         size="small"
+        @click="handleSelectSettings"
       >
         Сохранить
         <SvgoBtnArrow class="svg-lx" />
@@ -86,6 +33,171 @@
     </div>
   </div>
 </template>
+
+<script setup>
+import { useUserStore } from '~/store/userStore';
+import {useToast} from "vue-toastification";
+
+
+const userStore = useUserStore();
+const toast = useToast();
+
+// список выбранных уведомлений
+const selectedSettings = ref({});
+
+function handleDisableSettings(type, id) {
+  // // Находим настройку по типу и id
+  // const notification = notificationsSetting.value.find(n => n.value === type);
+  // if (notification) {
+  //   const setting = notification.settings.find(s => s.id === id);
+  //   return setting ? setting.disabled : false; // Возвращаем значение disabled
+  // }
+  // return false; // Если настройка не найдена, возвращаем false
+}
+
+// список уведомлений
+const notificationsSetting = ref([
+  {
+    id: 0, 
+    label: 'Хочу получать уведомления о новых заказах',
+    value: 'Новые заказы',
+    settings: [
+      {id: 0, label: 'по электронной почте', value:'email'},
+      {id: 1, label: 'в личном кабинете', value: 'cabinet', disabled: true},
+      {id: 2, label: 'в Telegram', value: 'telegram'},
+      {id: 3, label: 'в WhatsApp', value: 'whatsapp'},
+    ]
+  },
+  {
+    id: 1,
+    label: 'Хочу получать уведомления о новых отзывах или ответах на мои отзывы',
+    value: 'Новые отзывы или ответы',
+    settings: [
+      {id: 0, label: 'по электронной почте', value:'email'},
+      {id: 1, label: 'в личном кабинете', value: 'cabinet', disabled: true},
+      {id: 2, label: 'в Telegram', value: 'telegram'},
+      {id: 3, label: 'в WhatsApp', value: 'whatsapp'},
+    ]
+  },
+  {
+    id: 1, 
+    label: 'Хочу получать уведомления о новых сообщениях в чате',
+    value: 'Новые сообщения в чате',
+    settings: [
+      {id: 0, label: 'по электронной почте', value:'email'},
+      {id: 1, label: 'в личном кабинете', value: 'cabinet', disabled: true},
+      {id: 2, label: 'в Telegram', value: 'telegram'},
+      {id: 3, label: 'в WhatsApp', value: 'whatsapp'},
+    ]
+  },
+  {
+    id: 2, 
+    label: 'Хочу получать системные уведомления',
+    value: 'Системные уведомления',
+    settings: [
+      {id: 0, label: 'по электронной почте', value:'email'},
+      {id: 1, label: 'в личном кабинете', value: 'cabinet', disabled: true},
+      {id: 2, label: 'в Telegram', value: 'telegram'},
+      {id: 3, label: 'в WhatsApp', value: 'whatsapp'},
+    ]
+  },
+  {
+    id: 3, 
+    label: 'Хочу получать уведомления о новостях',
+    value: 'Новости',
+    settings: [
+      {id: 0, label: 'по электронной почте', value:'email'},
+      {id: 1, label: 'в личном кабинете', value: 'cabinet', disabled: true},
+      {id: 2, label: 'в Telegram', value: 'telegram'},
+      {id: 3, label: 'в WhatsApp', value: 'whatsapp'},
+    ]
+  },
+  {
+    id: 4, 
+    label: 'Хочу получать уведомления о сделках',
+    value: 'Сделки',
+    settings: [
+      {id: 0, label: 'по электронной почте', value:'email'},
+      {id: 1, label: 'в личном кабинете', value: 'cabinet'},
+      {id: 2, label: 'в Telegram', value: 'telegram'},
+      {id: 3, label: 'в WhatsApp', value: 'whatsapp'},
+    ]
+  },
+])
+
+// список значений
+const settingValues = [
+  {
+    id: 0,
+    value: 'email'
+  },
+  {
+    id: 1,
+    value: 'cabinet'
+  },
+  {
+    id: 2,
+    value: 'telegram'
+  },
+  {
+    id: 3,
+    value: 'whatsapp'
+  },
+]
+
+// изменение с id на value
+const formatSettingsToRequest = (settings) => {
+  console.log(settings)
+  const result = {};
+
+  for (const key in settings) {
+    if (settings[key].length > 0) {
+      result[key] = settings[key].map(setting => {
+        return settingValues.find(item => item.id === setting)?.value;
+      }).filter(Boolean);
+    }
+  }
+
+  return result;
+};
+
+const formatSettingsToState = (settings) => {
+  const result = {};
+
+  for (const key in settings) {
+    if (Array.isArray(settings[key])) {
+      result[key] = settings[key].map(value => {
+        return settingValues.find(item => item.value === value)?.id;
+      }).filter(id => id !== undefined); // Убираем undefined, если значение не найдено
+    }
+  }
+
+  return result;
+};
+
+const handleSelectSettings = () => {
+  let formattedSettings = formatSettingsToRequest(selectedSettings.value)
+  console.log(formattedSettings)
+  if(userStore.userData.id) {
+    userStore.setNotification(userStore.userData.id, formattedSettings).then(res => {
+      if(res) {
+        toast.success(res.message);
+      }
+    })
+  }
+}
+
+onMounted(() => {
+  if(userStore.userData.id) {
+    userStore.getNotifications(userStore.userData.id).then(res => {
+      if(res && res.notification_settings) {
+        selectedSettings.value = formatSettingsToState(res.notification_settings);
+      }
+    })
+  }
+})
+
+</script>
 
 <style lang="scss">
 .notification-setting {

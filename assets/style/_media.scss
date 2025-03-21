@@ -40,13 +40,13 @@ $mobile-content-width: 540px;
 
 @mixin hover {
   @media (hover: hover) {
-    &:hover {
+    &:not(:disabled):hover {
       @content;
     }
   }
 
   @media (hover: none) {
-    &:active {
+    &:not(:disabled):active {
       @content;
     }
   }

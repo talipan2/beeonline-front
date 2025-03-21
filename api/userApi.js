@@ -61,4 +61,29 @@ export default {
     })
   },
 
+  // получение настроек уведомлений
+  async getNotifications(id) {
+    return axios.get(`users/${id}/notifications`)
+  },
+
+  // изменение настроек уведомлений
+  async changeNotification(id, data) {
+    return axios.put(`users/${id}/notifications`, data)
+  },
+
+  // установка настроек уведомлений
+  async setNotification(id, data) {
+    return axios.post(`users/${id}/notifications`, data)
+  },
+
+  // сброс настроек уведомлений
+  async resetNotifications(id) {
+    return axios.delete(`users/${id}/notifications`)
+  },
+
+  async getNotificationsList(id, params={}) {
+    return axios.get(`users/${id}/notifications/all`, {params})
+  },
+
+
 }

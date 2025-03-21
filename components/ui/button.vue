@@ -78,6 +78,11 @@ const handleClick = () => {
   position: relative;
 }
 
+.btn-disabled {
+  opacity: .5;
+  cursor: default;
+}
+
 .btn-primary {
   background-color: var(--button-background-primary);
   color: var(--text-color-octonary);

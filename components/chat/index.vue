@@ -346,6 +346,7 @@ export default {
 
         user_id: null,
         org_id: null,
+        user_role: null,
         message: "",
         files: [],
         // groupedMessages: {},
@@ -361,6 +362,7 @@ export default {
         console.log(useUserStore().userData);
         this.user_id = useUserStore().userData?.id;
         this.org_id = useUserStore().userData?.organization_id;
+        this.user_role = useUserStore().role;
 
         if (this.init_chat_id) {
             this.changeInitChatId(this.init_chat_id);
@@ -855,7 +857,7 @@ export default {
         },
 
         openReviewModal(org) {
-            this.$refs.modalReview.open(this.chat, org);
+            this.$refs.modalReview.open(this.org_id, this.user_role, this.chat, org);
         },
 
         orgOnline(org) {

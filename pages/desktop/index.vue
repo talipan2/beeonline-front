@@ -17,6 +17,7 @@
                 :getEntity="getEntity"
                 :role="role"
                 :filterList="filterList"
+                :filterMapping="filterMapping"
             />
         </template>
     </NuxtLayout>
@@ -62,15 +63,31 @@ const filterList = computed(() => {
     }
 });
 
-async function getEntity(type, filter) {
+const filterMapping = computed(() => {
+    switch (role.value) {
+        case "customer":
+            return {
+                category: "product_category_id",
+                minLot: "minLot",
+                date: "date",
+            };
+        case "performer":
+            return {
+                category: "product_category_id",
+            }
+        default:
+            return [];
+    }
+});
+async function getEntity(filter) {
+    console.log(filter)
     switch (role.value) {
         case "customer":
             try {
-                const res = await entityStore.getOrganizationOrders(
-                    userStore.userData.organization_id
-                );
-                if (res) {
-                    return entityStore.organizationOrders;
+                const res = await entityStore.getSelfOrders(userStore.userData.organization_id, filter);
+                console.log(res)
+                if (res && res.orders) {
+                    return {data: res.orders, total: res.order_counts};
                 }
                 return [];
             } catch (error) {
@@ -78,11 +95,9 @@ async function getEntity(type, filter) {
             }
         case "performer":
             try {
-                const res = await entityStore.getOrganizationServices(
-                    userStore.userData.organization_id
-                );
+                const res = await entityStore.getSelfServices(userStore.userData.organization_id, filter);
                 if (res) {
-                    return entityStore.organizationServices;
+                    return {data: res.services, total: res.service_counts};
                 }
                 return [];
             } catch (error) {

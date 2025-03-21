@@ -99,7 +99,7 @@ watch(() => props.activeBtn, (newVal) => {
       color: #fff;
   
       &:hover {
-        color: #fff;
+        color: #fff !important;
       }
     }
   }

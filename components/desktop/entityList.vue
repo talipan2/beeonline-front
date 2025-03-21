@@ -4,13 +4,14 @@
     <h2 class="desktop__title" v-if="role == 'performer'">Услуги</h2>
     <div :class="{ loading: isLoading }">
       <CommonSelectorListButtons :buttonsList="selectorButtons" @updateActiveButton="currentEntityType" />
-        <CommonFilterSelectList :filters="filterList" @setFilters="setFilters" :activeFilters="activeFilter"/>
+        <CommonFilterSelectList :filters="filterList" @setFilters="setFilters" :activeFilters="activeFilter" :filter-mapping="filterMapping"/>
         <div class="desktop-entity__list" v-if="currentEntityList.length">
           <template v-for="(item, index) in currentEntityList" :key="index">
             <DesktopEntityCard :data="item" />
           </template>
         </div>
         <CommonAlerts v-else type="warning" :alert="currentEmptyList"/>
+        <CommonPagination v-if="page.lastPage > 1" :current-page="page.currentPage" :total-pages="page.lastPage" @change-page="handlePageChange" />
       </div>
   </div>
 </template>
@@ -31,8 +32,14 @@ const props = defineProps({
   filterList: {
     type: Array,
     required: true,
-  }
+  },
 })
+
+const filterMapping = {
+  category: 'product_category_id',
+  minLot: 'batch_size',
+  date: 'deadline'
+}
 
 const isLoading = ref(true);  // Состояние загрузки
 const activeFilter = ref({}) // Активные фильтры
@@ -40,9 +47,9 @@ const currentEntityList = ref([]); // Текущий список сущност
 const entityStore = useEntityStore();
 
 const selectorButtons = [
-  { id: 1, label: 'Активные', value: 'active', count: computed(() => currentEntityList.value.length), },
-  { id: 2, label: 'Черновики', value: 'draft', count: computed(() => currentEntityList.value.length), },
-  { id: 3, label: 'В архиве', value: 'archive', count: computed(() => currentEntityList.value.length) },
+  { id: 1, label: 'Активные', value: 'active', count: computed(() => statusCounts.value.active), },
+  { id: 2, label: 'Черновики', value: 'draft', count: computed(() => statusCounts.value.draft), },
+  { id: 3, label: 'В архиве', value: 'archive', count: computed(() => statusCounts.value.archive), },
 ];
 
 const currentButton = ref(selectorButtons[0].value); // Текущая кнопка
@@ -56,16 +63,62 @@ const currentEmptyList = computed(() => {
   }
 }) 
 
+const page = ref({
+  currentPage: 1,
+  lastPage: 1
+});
+
 // функция обновления активной кнопки
 const currentEntityType = (type) => {
   currentButton.value = type;
 }
 
-// Имитируем запрос за данными и скрытие анимации после его завершения
+const statusCounts = ref({
+  active: 0,
+  draft: 0,
+  archive: 0
+});
+
+const batchSize = [
+
+];
+
 const fetchData = async (type, filter) => {
   isLoading.value = true;
+  if(!filter) filter = {}
+  let activeFilters = deleteEmptyFilters(filter);
+  if(activeFilters.batch_size) {
+    activeFilters.batch_size = entityStore.getEntityLabelById('minLot', activeFilters.batch_size);
+    activeFilters.batch_size = activeFilters.batch_size.charAt(0).toUpperCase() + activeFilters.batch_size.slice(1);
+  }
+  if(activeFilters.deadline) {
+    switch (activeFilters.deadline) {
+      case('week'):
+        activeFilters.deadline = '1 неделя';
+        break;
+      case('month'):
+        activeFilters.deadline = '1 месяц';
+        break;
+      case('year'):
+        activeFilters.deadline = '1 год';
+        break;
+    }
+  }
   try {
-    currentEntityList.value = await props.getEntity(type, filter);
+    await props.getEntity({status: type, ...activeFilters}).then((res) => {
+      if(res && res.data && res.data.data) {
+        currentEntityList.value = res.data.data;
+        page.value = {
+          currentPage: res.data.current_page,
+          lastPage: res.data.last_page
+        }
+        statusCounts.value = {
+          active: res.total?.active || 0,
+          draft: res.total?.draft || 0,
+          archive: res.total?.archive || 0
+        }
+      }
+    })
     currentEntityList.value = currentEntityList.value.map((item) => {
       return {
         id: item.id,
@@ -84,9 +137,23 @@ const fetchData = async (type, filter) => {
   }
 };
 
+const deleteEmptyFilters = (filter) => {
+  if(!filter) return;
+  for (const key in filter) {
+    if (filter[key] === "all") {
+      delete filter[key];
+    }
+  }
+  return filter;
+}
+
 const setFilters = (filters) => {
   activeFilter.value = {...filters}
   fetchData(currentButton.value, {...filters})
+}
+
+const handlePageChange = (page) => {
+  fetchData(currentButton.value, {page, ...activeFilter.value});
 }
 
 // сброс фильтров при изменении списка сущности

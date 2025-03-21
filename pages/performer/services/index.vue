@@ -6,15 +6,24 @@
     </template>
     <template #content>
       <Entity
+        :class="{'loading': isLoading}"
         role="performer"
         title="Все услуги"
         subtitle="Размещайте список своих услуг в каталоге исполнителей и ищите заказчиков в кратчайшие сроки с учетом именно ваших потребностей."
         btnLabel="Создать услугу"
         btnLink="/services/create" 
         :data="cardData"
-        :isLoading="isLoading"
+        :isLoaded="isLoaded"
         emptyAlertText="Услуг нет"
         @selectInfoModal="selectInfoModalData"
+        @setFilters="setFilters"
+      />
+      <CommonPagination 
+        :class="{'loading': isLoading}"
+        v-if="page.lastPage > 1"
+        :currentPage="page.currentPage"
+        :totalPages="page.lastPage"
+        @changePage="handlePageChange"
       />
       <InfoModal :text="infoModal.text" :title="infoModal.title">
         <template #content>
@@ -37,12 +46,37 @@ const userStore = useUserStore();
 const locationStore = useLocationStore();
 const settingStore = useSettingStore();
 const isLoading = ref(false);
+const isLoaded = ref(false);
 
 const infoModal = ref({
   title: '',
   text: '',
   action: () => {}
 })
+
+const page = ref({
+  currentPage: 1,
+  lastPage: 1,
+})
+
+const activeFilter = ref({})
+
+const setFilters = (filters) => {
+  filters = deleteEmptyFilters(filters);
+  activeFilter.value = {...filters}
+
+  getServices({...filters})
+}
+
+const deleteEmptyFilters = (filter) => {
+  if(!filter) return;
+  for (const key in filter) {
+    if (filter[key] === "all") {
+      delete filter[key];
+    }
+  }
+  return filter;
+}
 
 const selectInfoModalData = ({type, id}) => {
   console.log(type)
@@ -108,9 +142,30 @@ const cardData = computed(() => {
   }})
 })
 
-onMounted(() => {
+const handlePageChange = (page) => {
+  getServices({page, ...activeFilter.value});
+}
+
+function getServices(params) {
+  if(isLoading.value) return;
   isLoading.value = true
-  entityStore.getOrganizationServices(userStore.userData.organization_id).finally(() => isLoading.value = false);
+  entityStore.getSelfServices(userStore.userData.organization_id, params)
+  .then(res => {
+    if(res && res.services) {
+      page.value.currentPage = res.services.current_page;
+      page.value.lastPage = res.services.last_page;
+    }
+  })
+  .finally(() => {
+    isLoading.value = false;
+    isLoaded.value = true;
+  });
+}
+
+onMounted(() => {
+  if(userStore.userData.organization_id) {
+    getServices();
+  }
 })
 
 </script>

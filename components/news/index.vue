@@ -1,10 +1,13 @@
 <template>
   <div class="news">
-    <div class="news__list">
-      <div class="news__item" v-for="(news, index) in data" :key="index">
-        <NewsCard :data="news"/>
+    <template v-if="isLoaded">
+      <div class="news__list" v-if="data.length">
+        <div class="news__item" v-for="(news, index) in data" :key="index">
+          <NewsCard :data="news"/>
+        </div>
       </div>
-    </div>
+      <CommonAlerts alert="Новостей нет" :type="'warning'" v-if="!data.length" />
+    </template>
   </div>
 </template>
 
@@ -13,12 +16,15 @@ import { useSettingStore } from '~/store/settingStore';
 
 
 const settingStore = useSettingStore();
+const isLoaded = ref(false);
 
 const data = ref([]);
 
 onMounted(() => {
   settingStore.getNewsList().then((res) => {
     data.value = res.data
+  }).finally(() => {
+    isLoaded.value = true
   })
 })
 

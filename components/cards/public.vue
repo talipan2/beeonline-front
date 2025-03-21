@@ -7,7 +7,7 @@
       </div>
       <div class="card-pub__details">
         <div class="card-pub__details-container">
-          <CommonRating :isCountRating="false" />
+          <CommonRating :isCountRating="false" :rating="data.rating" :reviews="data.reviewCount"/>
         </div>
         <CommonLocationsList :locationsList="data.countryId"/>
         <div class="card-pub__details-container">

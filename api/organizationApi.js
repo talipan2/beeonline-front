@@ -116,11 +116,7 @@ export default {
     return axios.post(`pubcards/${id}/attach-gallery`, {media_ids: data})
   },
 
-  async counterpartyCheckPrepare(id) {
-    return useApi().get(`organizations/${id}/counterparty-check`, null, null, true);
-  },
-
-  async counterpartyCheck(id) {
-    return useApi().post(`organizations/${id}/counterparty-check`, null, null, true);
+  async getPubCardStats(id) {
+    return axios.get(`pubcards/${id}/stats`)
   },
 }

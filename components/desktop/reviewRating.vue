@@ -2,8 +2,8 @@
   <div class="review-rating">
     <div class="review-rating__count-container">
       <h2 class="review-rating__title">Общий рейтинг</h2>
-      <p class="review-rating__count">{{ 4.5 }}<span>/ 5</span></p>
-      <CommonRating class="review-rating__rating" :rating="4" :reviews="5" :isReviewText="false" :isCountRating="false">
+      <p class="review-rating__count">{{ data.average_rating }}<span>/ 5</span></p>
+      <CommonRating class="review-rating__rating" :rating="data.average_rating" :reviews="data.reviewCount" :isReviewText="false" :isCountRating="false">
       </CommonRating>
     </div>
     <div class="stats-rating">
@@ -21,14 +21,23 @@
 <script setup>
 
 const props = defineProps({
-  ratings: {
-    type: Array,
+  data: {
+    type: Object,
     required: true,
-    default: () => [0, 0, 0, 2, 2],
-  },
+    default: () => ({}),
+  }
 });
 
-const totalRatings = computed(() => props.ratings.reduce((acc, rating) => acc + rating, 0));
+const ratings = computed(() => {
+  if(!props.data.ratings) return [0, 0, 0, 0, 0];
+  return props.data.ratings
+});
+
+const totalRatings = computed(() => {
+  if(!props.data.ratings) return [0, 0, 0, 0, 0];
+  if(props.data.ratings.length === 0) return [0, 0, 0, 0, 0];
+  return props.data.ratings.reduce((acc, rating) => acc + rating, 0)
+});
 
 const getBarWidth = (count) => {
   return totalRatings.value ? (count / totalRatings.value) * 100 : 0;

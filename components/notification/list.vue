@@ -1,35 +1,91 @@
 <template>
-  <div class="notifications">
+  <div class="notifications" :class="{'loading': isLoading}">
     <UiSelect class="notifications__filter" :options="filterOptions" v-model="selectedFilter" name="filter" return-value/>
-    <div class="notifications__list">
-      <NotificationCard v-for="index in 3" :key="index" />
+    <div class="notifications__list" ref="notificationsList">
+      <template v-for="notification in data" :key="notification.id">
+        <NotificationCard :data="notification" />
+      </template>
     </div>
-    <CommonPagination />
+    <CommonAlerts :alert="'Уведомлений не найдено'" :type="'warning'" v-if="!data.length && isLoaded"/>
+    <CommonPagination v-if="page.lastPage > 1" :current-page="page.currentPage" :total-pages="page.lastPage" @change-page="handlePageChange"/>
   </div>
 </template>
 
 <script setup>
+import { useSettingStore } from '~/store/settingStore';
+import { useUserStore } from '~/store/userStore'
+
 
 const router = useRouter()
 const selectedFilter = ref('all')
+const userStore = useUserStore();
+const settingStore = useSettingStore();
+
+const data = ref([])
+const page = ref({
+  currentPage: 1,
+  lastPage: 1
+})
+
+const isLoading = ref(false)
+const isLoaded = ref(false)
+
+const notificationsList = ref(null)
 
 const filterOptions = [
   { id: 1, label: 'Все уведомления', value: 'all' },
   { id: 2, label: 'Системные', value: 'system' },
-  { id: 3, label: 'Заказы/услуги', value: 'product' },
+  { id: 3, label: 'Заказы/Услуги', value: 'product' },
   { id: 4, label: 'Сообщения', value: 'message' },
   { id: 5, label: 'Отзывы', value: 'reply' },
   { id: 6, label: 'Сделки', value: 'deal' },
 ]
 
 watch(() => selectedFilter.value, (newVal) => {
-  router.replace({ query: { filter: 1, type: newVal } })
+  const filter = clearFilter(newVal)
+  getData({group: filter?.label})
+  router.replace({ query: {group: newVal} })
 })
+
+const clearFilter = (filterValue) => {
+  const filter = { ...filterOptions.find(item => item.value === filterValue)}
+  if(!filter.label) return
+  if(filter.value === 'all') filter.label = ''
+  return filter
+}
+
+const getData = (filter) => {
+  if(isLoading.value) return;
+  isLoading.value = true
+  userStore.getNotificationsList(userStore.userData.id, filter)
+  .then((res) => {
+    data.value = res.data
+    page.value.currentPage = res.current_page;
+    page.value.lastPage = res.last_page;
+  }).finally(() => {
+    isLoading.value = false
+    isLoaded.value = true
+  })
+}
+
+const handlePageChange = (page) => {
+  const filter = clearFilter(selectedFilter.value)
+  getData({page, group: filter?.label})
+}
+
+watch(() => page.value.currentPage, () => {
+  const rect = notificationsList.value.getBoundingClientRect(); 
+  const offset = window.scrollY + rect.top - settingStore.headerHeight - (window.innerHeight / 2);
+  smoothScroll(offset, false);
+}, {deep: true})
 
 onMounted(() => {
   if(router.currentRoute.value.query && router.currentRoute.value.query.type) {
     selectedFilter.value = router.currentRoute.value.query.type
   }
+
+  getData();
+
 })
 
 </script>

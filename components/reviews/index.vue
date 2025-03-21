@@ -1,19 +1,66 @@
 <template>
-  <div class="reviews">
-    <CommonSelectorListButtons :buttonsList="selectorButtons" @updateActiveButton="updateActiveButton" :active-btn="reviewsState" />
-    <div class="reviews__rating" v-if="reviewsState === 'reviews'">
+  <div class="reviews" :class="{'loading' : isLoading}">
+    <CommonSelectorListButtons
+      :buttonsList="selectorButtons"
+      @updateActiveButton="updateActiveButton"
+      :active-btn="currentButtonType"
+    />
+    <div class="reviews__rating" v-if="currentButtonType === 'reviews'">
       <h3 class="reviews__rating-title">Ваш рейтинг:</h3>
-      <span class="reviews__rating-value">0.89/5</span>
-      <CommonRating :is-count-rating="false" :is-count-reviews="false" />
+      <span class="reviews__rating-value">{{pubCardRate.average_rating}}/5</span>
+      <CommonRating :is-count-rating="false" :is-count-reviews="false" :rating="pubCardRate.stars"/>
     </div>
-    <CommonFilterSelectList class="reviews__filter" :filters="filterList" @setFilters="setFilters" :activeFilters="activeFilter"/>
-    <div class="reviews__list" >
-      <ReviewsCard v-for="i in 3" :key="i" :reviewsState="reviewsState"/>
+    <CommonFilterSelectList
+      v-if="currentButtonType === 'my-reviews'"
+      class="reviews__filter"
+      :filters="filterList"
+      @setFilters="setFilters"
+      :activeFilters="activeFilterMyReviews"
+    />
+    <CommonFilterSelectList
+      v-if="currentButtonType === 'reviews'"
+      class="reviews__filter"
+      :filters="filterList"
+      @setFilters="setFilters"
+      :activeFilters="activeFilterReviewsAboutUs"
+    />
+    <div class="reviews__list">
+      <template v-if="currentButtonType === 'my-reviews'">
+        <template v-for="review in reviewsListFormatted" :key="review.id">
+          <ReviewsCard :data="review" :reviewsState="currentButtonType" />
+        </template>
+        <CommonAlerts :alert="alertEmptyText" :type="'warning'" v-if="!reviewsListFormatted.length && isLoaded" />
+        <CommonPagination
+          v-if="pageReviews.lastPage > 1"
+          :current-page="pageReviews.currentPage"
+          :total-pages="pageReviews.lastPage"
+          @change-page="handleChangePage"
+        />
+      </template>
+      <template v-if="currentButtonType === 'reviews'">
+        <template
+          v-for="review in reviewsAboutUsListFormatted"
+          :key="review.id"
+        >
+          <ReviewsCard :data="review" :reviewsState="currentButtonType" />
+        </template>
+        <CommonAlerts :alert="alertEmptyText" :type="'warning'" v-if="!reviewsAboutUsListFormatted.length && isLoaded" />
+        <CommonPagination
+          v-if="pageReviewsAboutUs.lastPage > 1"
+          :current-page="pageReviewsAboutUs.currentPage"
+          :total-pages="pageReviewsAboutUs.lastPage"
+          @change-page="handleChangePage"
+        />
+      </template>
     </div>
   </div>
 </template>
 
 <script setup>
+import { del } from "~/node_modules/nuxt/dist/app/compat/capi";
+import { useReviewsStore } from "~/store/reviewsStore";
+import { useUserStore } from "~/store/userStore";
+
 const props = defineProps({
   reviewsState: {
     type: String,
@@ -25,55 +72,266 @@ const props = defineProps({
 
 const router = useRouter();
 
-const currentStatusOptions = ref('all');
-const currentTypeOptions = ref('all');
-const activeFilter = ref({});
+const currentStatusOptions = ref("all");
+const currentTypeOptions = ref("all");
+const activeFilterMyReviews = ref({});
+const activeFilterReviewsAboutUs = ref({});
+const reviewStore = useReviewsStore();
+const userStore = useUserStore();
 
-const selectorButtons = [
-  { id: 1, label: 'Мои отзывы', value: 'my-reviews', count: 2, },
-  { id: 2, label: 'Отзывы о нас', value: 'reviews', count: 3, },
-];
+const pageReviews = ref({
+  currentPage: 1,
+  lastPage: 0,
+  total: 0,
+});
 
-const statusOptions = [
-  { id: 1, label: "Все отзывы", value: "all" },
-  { id: 2, label: "Положительные", value: "positive" },
-  { id: 3, label: "Отрицательные", value: "negative" },
-];
+const pageReviewsAboutUs = ref({
+  currentPage: 1,
+  lastPage: 0,
+  total: 0,
+});
 
-const typeOptions = [
-  { id: 1, label: "От всех участников", value: "all" },
-  { id: 2, label: "От исполнителей", value: "performer" },
-  { id: 3, label: "От заказчиков", value: "customer" },
-  { id: 4, label: "От поставщиков", value: "supplier" },
-];
+const reviewsList = ref([]);
+const reviewsAboutUsList = ref([]);
+const isLoading = ref(false);
+const isLoaded = ref(false);
 
-const filterList = ['statusReview', 'participant'];
-
-const updateActiveButton = (type) => {
-  if (type === "my-reviews") {
-    router.push("my-reviews");
-  } else if (type === "reviews") {
-    router.push("reviews");
-  }
-};
-
-const setFilters = (filters) => {
-  activeFilter.value = filters
-}
-
-watch(() => activeFilter.value, (newVal) => {
-  router.replace({ query: { rate_status: newVal.statusReview, from_type: newVal.participant } });
-}, {deep: true});
-
-onMounted(() => {
-  if ( router.currentRoute.value.query ) {
-    activeFilter.value = {
-      statusReview: router.currentRoute.value.query.rate_status,
-      participant: router.currentRoute.value.query.from_type
-    }
+const alertEmptyText = computed(() => {
+  if (currentButtonType.value === "my-reviews") {
+    const filteredList = deleteEmptyFilters({...activeFilterMyReviews.value});
+    if (Object.keys(filteredList).length) return "Отзывов нет. Попробуйте изменить условия отбора.";
+    return "Отзывов нет";
+  } else if (currentButtonType.value === "reviews") {
+    const filteredList = deleteEmptyFilters({...activeFilterReviewsAboutUs.value});
+    if (Object.keys(filteredList).length) return "Отзывов нет. Попробуйте изменить условия отбора.";
+    return "Отзывов нет";
   }
 })
 
+const reviewsListFormatted = computed(() => {
+  if (reviewsList.length === 0) return [];
+
+  return reviewsList.value.map((item) => {
+    return {
+      id: item.id,
+      rate: item.rate,
+      positive: item.text_positive,
+      negative: item.text_negative,
+      about: {
+        id: item.about_org.id,
+        name: item.about_org.name,
+        image: item.about_org.image,
+        role: item.about_org.type,
+      },
+    };
+  });
+});
+
+const reviewsAboutUsListFormatted = computed(() => {
+  if (reviewsAboutUsList.length === 0) return [];
+
+  return reviewsAboutUsList.value.map((item) => {
+    return {
+      id: item.id,
+      rate: item.rate,
+      positive: item.text_positive,
+      negative: item.text_negative,
+      about: {
+        id: item.owner_org.id,
+        name: item.owner_org.name,
+        image: item.owner_org.image,
+        role: item.owner_org.type,
+      },
+    };
+  });
+});
+
+const organizationId = computed(() => userStore.userOrganization?.id);
+const pubCardRate = computed(() => userStore.userPubCard?.reviews_stats_about || {});
+
+const currentButtonType = ref("my-reviews");
+
+const selectorButtons = [
+  {
+    id: 1,
+    label: "Мои отзывы",
+    value: "my-reviews",
+    count: computed(() => pageReviews.value.total),
+  },
+  {
+    id: 2,
+    label: "Отзывы о нас",
+    value: "reviews",
+    count: computed(() => pageReviewsAboutUs.value.total),
+  },
+];
+const filterList = ["rate", "org_type"];
+
+const updateActiveButton = (type) => {
+  currentButtonType.value = type;
+  router.push({ query: { ...router.currentRoute.value.query, type: type } });
+};
+
+const setFilters = (filters) => {
+  console.log(filters)
+  if(currentButtonType.value === "my-reviews") {
+    activeFilterMyReviews.value = {...filters};
+  } else if(currentButtonType.value === "reviews") {
+    activeFilterReviewsAboutUs.value = {...filters};
+  }
+};
+
+watch(() => activeFilterMyReviews.value, (newVal, oldVal) => {
+  if (JSON.stringify(newVal) === JSON.stringify(oldVal)) {
+    return; // Если объекты одинаковы, выходим из функции
+  }
+  const query = deleteEmptyFilters({...newVal});
+  getReviews(query)
+}, {deep: true});
+
+watch(() => activeFilterReviewsAboutUs.value, (newVal, oldVal) => {
+  if (JSON.stringify(newVal) === JSON.stringify(oldVal)) {
+    return; // Если объекты одинаковы, выходим из функции
+  }
+  const query = deleteEmptyFilters({...newVal});
+  getReviewsForUs(query);
+}, {deep: true});
+
+const deleteEmptyFilters = (filter) => {
+  if(!filter) return;
+  for (const key in filter) {
+    if (filter[key] === "all") {
+      delete filter[key];
+    }
+  }
+  return filter;
+}
+
+function handleChangePage(page) {
+  switch (currentButtonType.value) {
+    case "my-reviews":
+      const queryMyReview = deleteEmptyFilters({...activeFilterMyReviews.value});
+      getReviews({ page, ...queryMyReview });
+      router.replace({ query: {...router.currentRoute.value.query, page} });
+      break;
+    case "reviews":
+      const queryReviewsAboutUs = deleteEmptyFilters({...activeFilterReviewsAboutUs.value});
+      getReviewsForUs({ page, ...queryReviewsAboutUs });
+      router.replace({ query: {...router.currentRoute.value.query, page} });
+      break;
+  }
+}
+
+const getReviews = (filters) => {
+  if(isLoading.value) return;
+  isLoading.value = true;
+  reviewStore.getReviews(organizationId.value, filters)
+  .then((res) => {
+    if (res) {
+      if (res.data) {
+        reviewsList.value = res.data;
+        if (res.pagination) {
+          pageReviews.value.currentPage = res.pagination.current_page;
+          pageReviews.value.lastPage = res.pagination.last_page;
+          pageReviews.value.total = res.pagination.total;
+        }
+      }
+    }
+    router.replace({ query: {...router.currentRoute.value.query, page: pageReviews.value.currentPage, ...activeFilterMyReviews.value} });
+  })
+  .finally(() => {
+    isLoading.value = false;
+  });
+};
+
+const getReviewsForUs = (filters) => {
+  if(isLoading.value) return;
+  isLoading.value = true;
+  reviewStore.getReviewsForUs(organizationId.value, filters)
+  .then((res) => {
+    if (res) {
+      if (res.data) {
+        reviewsAboutUsList.value = res.data;
+        if (res.pagination) {
+          pageReviewsAboutUs.value.currentPage = res.pagination.current_page;
+          pageReviewsAboutUs.value.lastPage = res.pagination.last_page;
+          pageReviewsAboutUs.value.total = res.pagination.total;
+        }
+      }
+    }
+    router.replace({ query: {...router.currentRoute.value.query, page: pageReviewsAboutUs.value.currentPage, ...activeFilterReviewsAboutUs.value} });
+
+  })
+  .finally(() => {
+    isLoading.value = false;
+  });
+}
+
+onMounted(() => {
+  const query = router.currentRoute.value.query;
+  let reviewsParams = {};
+  let reviewsAboutUsParams = {};
+
+  if (query.type) {
+    updateActiveButton(query.type);
+  }
+
+  if(currentButtonType.value === "my-reviews") {
+    activeFilterMyReviews.value = {
+      rate: query.rate || "all",
+      org_type: query.org_type || "all",
+    };
+    reviewsParams = deleteEmptyFilters({...activeFilterMyReviews.value});
+    if(query.page) {
+      reviewsParams.page = query.page
+    }
+  } else if(currentButtonType.value === "reviews") {
+    activeFilterReviewsAboutUs.value = {
+      rate: query.rate || "all",
+      org_type: query.org_type || "all",
+    };
+    reviewsAboutUsParams = deleteEmptyFilters({...activeFilterReviewsAboutUs.value});
+    if(query.page) {
+      reviewsAboutUsParams.page = query.page
+    }
+  }
+
+  isLoading.value = true
+  reviewStore.getReviews(organizationId.value, reviewsParams).then((res) => {
+    if (res) {
+      if (res.data) {
+        reviewsList.value = res.data;
+        if (res.pagination) {
+          pageReviews.value = {
+            currentPage: res.pagination.current_page,
+            lastPage: res.pagination.last_page,
+            total: res.pagination.total,
+          };
+        }
+      }
+    }
+  }).finally(() => {
+    isLoaded.value = true
+    isLoading.value = false
+  });
+  reviewStore.getReviewsForUs(organizationId.value, reviewsAboutUsParams).then((res) => {
+    if (res) {
+      if (res.data) {
+        reviewsAboutUsList.value = res.data;
+        if (res.pagination) {
+          pageReviewsAboutUs.value = {
+            currentPage: res.pagination.current_page,
+            lastPage: res.pagination.last_page,
+            total: res.pagination.total,
+          };
+        }
+      }
+    }
+  }).finally(() => {
+    isLoaded.value = true
+    isLoading.value = false
+  });
+});
 </script>
 
 <style lang="scss">
@@ -84,8 +342,8 @@ onMounted(() => {
     display: flex;
     font-size: 1.75em;
     align-items: center;
-    column-gap: .3em;
-    margin-bottom: .9em;
+    column-gap: 0.3em;
+    margin-bottom: 0.9em;
   }
 
   &__rating-title {
@@ -94,15 +352,14 @@ onMounted(() => {
   }
 
   &__rating-value {
-    font-family: 'fira-sans', sans-serif;
+    font-family: "fira-sans", sans-serif;
     color: var(--text-color-ternary);
     line-height: 1em;
-
   }
 
   &__filter {
     .select__select {
-      padding: .625em;
+      padding: 0.625em;
     }
   }
 

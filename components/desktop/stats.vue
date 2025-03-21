@@ -6,24 +6,34 @@
           <div class="stats__items-container">
             <div class="stats__item" @mouseover="currentViewSetting = 'profile'">
               <p class="stats__title" :class="{ 'active': currentViewSetting === 'profile'}">Просмотры профиля</p>
-              <p class="stats__value">{{ `0 (0)` }}</p>
+              <p class="stats__value">{{ `${data.profile_views?.weekly || 0} (${data.profile_views?.total || 0})` }}</p>
               <div class="stats__status">
-                <div class="add">
+                <div :class="handleCheckStatsPosition(data.profile_views?.percentage)">
                   <SvgoBalanceArrow class="svg-m " />
-                  <p class="stats__status-text">100%</p>
+                  <p class="stats__status-text">{{ data.profile_views?.percentage || 0 }}%</p>
                 </div>
                 <span class="desktop__selected">за неделю</span>
               </div>
             </div>
             <div class="divider-vertical"></div>
-            <div class="stats__item" @mouseover="currentViewSetting = 'orders'">
-              <p class="stats__title" :class="{ 'active': currentViewSetting === 'orders'}" v-if="role === 'customer'">Просмотры заказов</p>
-              <p class="stats__title" :class="{ 'active': currentViewSetting === 'orders'}" v-if="role === 'performer'">Просмотры услуг</p>
-              <p class="stats__value">{{ `0 (0)` }}</p>
+            <div class="stats__item" @mouseover="currentViewSetting = 'orders'" v-if="role === 'customer'">
+              <p class="stats__title" :class="{ 'active': currentViewSetting === 'orders'}">Просмотры заказов</p>
+              <p class="stats__value">{{ `${data.order_views?.weekly || 0} (${data.order_views?.total || 0})` }}</p>
               <div class="stats__status">
-                <div class="add">
+                <div :class="handleCheckStatsPosition(data.order_views?.percentage)">
                   <SvgoBalanceArrow class="svg-m" />
-                  <p class="stats__status-text">100%</p>
+                  <p class="stats__status-text">{{ data.order_views?.percentage || 0 }}%</p>
+                </div>
+                <span class="desktop__selected">за неделю</span>
+              </div>
+            </div>
+            <div class="stats__item" @mouseover="currentViewSetting = 'services'" v-if="role === 'performer'">
+              <p class="stats__title" :class="{ 'active': currentViewSetting === 'services'}">Просмотры услуг</p>
+              <p class="stats__value">{{ `${data.service_views?.weekly || 0} (${data.service_views?.total || 0})` }}</p>
+              <div class="stats__status">
+                <div :class="handleCheckStatsPosition(data.service_views?.percentage)">
+                  <SvgoBalanceArrow class="svg-m" />
+                  <p class="stats__status-text">{{ data.service_views?.percentage || 0 }}%</p>
                 </div>
                 <span class="desktop__selected">за неделю</span>
               </div>
@@ -31,11 +41,11 @@
             <div class="divider-vertical"></div>
             <div class="stats__item" @mouseover="currentViewSetting = 'favorites'">
               <p class="stats__title" :class="{ 'active': currentViewSetting === 'favorites'}" >Добавлен в избранное</p>
-              <p class="stats__value">{{ `0 (0)` }}</p>
+              <p class="stats__value">{{ `${data.favorites?.weekly || 0} (${data.favorites?.total || 0})` }}</p>
               <div class="stats__status">
-                <div class="add">
+                <div :class="handleCheckStatsPosition(data.favorites?.percentage)">
                   <SvgoBalanceArrow class="svg-m" />
-                  <p class="stats__status-text">100%</p>
+                  <p class="stats__status-text">{{ data.favorites?.percentage || 0 }}%</p>
                 </div>
                 <span class="desktop__selected">за неделю</span>
               </div>
@@ -54,14 +64,25 @@ const props = defineProps({
   role: {
     type: String,
     required: true,
+  }, 
+  data: {
+    type: Object,
+    default: () => ({}),
   }
 })
 
-const chartDataSets =[
-  [2323, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 1],
-  [150, 140, 130, 120, 110, 100, 90, 80, 70, 60, 50, 40, 30, 20, 2210],
-  [15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165, 180, 195, 210, 500]
-];
+const chartDataSets = computed(() => {
+  if(props.data && props.data.daily_stats) {
+    return props.data.daily_stats
+  } else {
+    return {
+      profile_views: Array(15).fill(0),
+      order_views: Array(15).fill(0),
+      service_views: Array(15).fill(0),
+      favorites: Array(15).fill(0),
+    };
+  }
+})
 
 const currentViewSetting = ref(null)
 const isHover = ref(false)
@@ -69,15 +90,26 @@ const isHover = ref(false)
 const currentDataSet = computed(() => {
   switch (currentViewSetting.value) {
     case 'profile':
-      return chartDataSets[0];
+      return chartDataSets.value.profile_views;
     case 'orders':
-      return chartDataSets[1];
+      return chartDataSets.value.order_views;
     case 'favorites':
-      return chartDataSets[2];
+      return chartDataSets.value.favorites;
+    case 'services':
+      return chartDataSets.value.service_views;
     default:
       return Array(15).fill(0);
   }
 });
+
+const handleCheckStatsPosition = (percent) => {
+  if(!percent) return 'add';
+  if (percent < 0) {
+    return 'purchase';
+  } else {
+    return 'add';
+  }
+}
 
 </script>
 

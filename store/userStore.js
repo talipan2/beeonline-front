@@ -282,5 +282,62 @@ export const useUserStore = defineStore("user", {
                 throw error;
             }
         },
+
+        // получение уведомления
+        async getNotifications(id) {
+            try {
+                const response = await Api.getNotifications(id);
+                if (response.data) {
+                    return response.data;
+                }
+            } catch (error) {
+                throw error;
+            }
+        },
+
+        // изменение уведомления
+        async changeNotification(id, data) {
+            try {
+                const response = await Api.changeNotification(id, data);
+                if (response.data) {
+                    return response.data;
+                }
+            } catch (error) {
+                throw error;
+            }
+        },
+
+        async resetNotification(id) {
+            try {
+                const response = await Api.resetNotifications(id);
+                if (response.data) {
+                    return response.data;
+                }
+            } catch (error) {
+                throw error;
+            }
+        },
+
+        async setNotification(id, data) {
+            try {
+                const response = await Api.setNotification(id, data);
+                if (response.data) {
+                    return response.data;
+                }
+            } catch (error) {
+                throw error;
+            }
+        },
+
+        async getNotificationsList(id, params) {
+            try {
+                const response = await Api.getNotificationsList(id, params);
+                if (response.data) {
+                    return response.data;
+                }
+            } catch (error) {
+                throw error;
+            }
+        },
     },
 });
