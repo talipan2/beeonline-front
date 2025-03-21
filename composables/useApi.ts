@@ -49,7 +49,10 @@ export const useApi = () => {
             }
         }
 
-        throw new Error(errorMessage);
+        throw {
+            message: errorMessage,
+            data: error?.data,
+        };
     };
 
     const getHeaders = () => {

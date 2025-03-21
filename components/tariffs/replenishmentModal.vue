@@ -6,7 +6,28 @@
         @confirm="() => confirm()"
     >
         <template #content>
-            <Form @submit="handleSubmit">
+            <template v-if="invoice">
+                <div class="invoice">
+                    <ul class="invoice__list">
+                        <li>Номер: {{ invoice.number }}</li>
+                        <li>Сумма: {{ invoice.amount }}</li>
+                        <li>Статус: {{ invoice.status_name }}</li>
+                    </ul>
+                    <UiButton
+                        type="submit"
+                        class="invoice__btn"
+                        variant="primary"
+                        size="large"
+                        @click="payInvoice"
+                        v-if="invoice.status === 'generated'"
+                    >
+                        Оплатить
+                    </UiButton>
+                    <CommonSpinner v-if="invoice.status === 'in_progress'" />
+                    <CommonAlerts :alert="invoice.message || 'Что-то пошло не так'" type="error" v-if="invoice.status === 'failed'"/>
+                </div>
+            </template>
+            <Form @submit="handleSubmit" v-else>
                 <p class="replenishment-modal__text">
                     Вы будете перенаправлены на страницу банка.
                 </p>
@@ -25,7 +46,7 @@
                         class="replenishment-modal__btn"
                         variant="primary"
                         size="large"
-                        @click="buttonValue = 'ext'"
+                        @click="buttonValue = 'external'"
                         >Оплатить картой</UiButton
                     >
                     <UiButton
@@ -46,7 +67,8 @@
 
 <script setup>
 import { useSettingStore } from "~/store/settingStore";
-import { useTariffsStore } from "~/store/tariffsStore";
+import { useInvoiceStore } from "~/store/invoiceStore";
+import { useChannelsStore } from "~/store/channelsStore";
 
 const props = defineProps({
     currentCurrency: {
@@ -57,52 +79,60 @@ const props = defineProps({
 
 const router = useRouter();
 
+const invoiceStore = useInvoiceStore();
 const settingStore = useSettingStore();
-const tariffsStore = useTariffsStore();
+const channelsStore = useChannelsStore();
 
 const buttonValue = ref('');
 const amount = ref(1000);
 
 const loading = ref(false);
+const invoice = ref(null);
 
 const confirm = () => {
     settingStore.replenishmentModalStatus = false;
 };
 
-
-function handleSubmit(form) {
+function handleSubmit(values, form) {
     if (loading.value) return;
 	loading.value = true;
 	const data = {
-		...form,
+		...values,
 		type: buttonValue.value,
+        redirect_url: router.currentRoute.value.fullPath,
 	};
 
-	tariffsStore.balanceAdd(data)
+	invoiceStore.makeInvoice(data)
 	.then((response) => {
-		confirm();
-		if (response.open_new_tab?.length) {
-			showMessage(
-				"Счет создан",
-				response.message,
-			);
-			setTimeout(() => {
-				window.open(response.open_new_tab, "_blank");
-			}, 500);
-		} else if (response.redirect?.length) {
-			showMessage(
-				"Счет создан",
-				response.message,
-			);
-			setTimeout(() => {
-                router.push({ path: response.redirect });
-			}, 500);
-		}
+        invoice.value = response.data;
+        channelsStore
+        .orgChannel.stopListening("InvoiceUpdate")
+        .listen("InvoiceUpdate", (event) => {
+            console.log("InvoiceUpdate", event);
+            if (invoice.value?.id === event.id) {
+                invoice.value = event;
+                payInvoice();
+            }
+        });
 	}).finally(() => {
 		loading.value = false;
-		confirm();
 	});
 }
+
+function payInvoice() {
+    if (!invoice.value) return;
+    if (invoice.value.status != 'generated') return;
+    if (invoice.value.type === 'external') {
+        window.open(invoice.value.payment_url, '_blank');
+    } else if (invoice.value.type === 'invoice') {
+        window.open(invoice.value.pdf_url, '_blank');
+    }
+}
+
+watch(() => settingStore.replenishmentModalStatus, (newVal) => {
+    loading.value = false;
+    invoice.value = null;
+});
 </script>
 
 <style lang="scss">
@@ -114,12 +144,8 @@ function handleSubmit(form) {
         flex-direction: column;
     }
 
-    .modal-dialog {
-        width: 21%;
-    }
-
     .modal-content {
-        padding: 5.5em 2em 2em;
+        max-width: 21%;
     }
 
     .modal-title {
@@ -176,6 +202,24 @@ function handleSubmit(form) {
         .modal-dialog {
             width: 95%;
         }
+    }
+}
+
+.invoice {
+    font-size: 14px;
+    &__list {
+        li {
+            margin-bottom: 0.5em;
+        }
+    }
+
+    &__btn {
+        font-size: 1em;
+        font-weight: 400;
+        text-transform: uppercase;
+        width: 100%;
+        padding: 0.8em;
+        text-wrap: wrap;
     }
 }
 </style>

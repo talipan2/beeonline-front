@@ -31,6 +31,7 @@ const data = ref({});
 const pubCard = computed(() => {
   return {
     id: data.value.id,
+    organizationId: data.value.organization_id,
     name: data.value.name,
     logo: data.value.logo,
     description: data.value.description,
