@@ -172,5 +172,10 @@ export const useChatStore = defineStore("chatStore", {
                     );
                 });
         },
+
+
+        async getChatList() {
+            return await useApi().get("/chat/list");
+        },
     },
 });
