@@ -109,7 +109,7 @@
             </DesktopSelectableEntity>
           </template>
         </DesktopCard>
-        <DesktopCard title="Чаты (8)" :link="{ url: '/chat', text: 'Все чаты'}">
+        <DesktopCard :title="`Чаты (${allChatsListTotal + unreadChatsListTotal})`" :link="{ url: '/chat', text: 'Все чаты'}">
           <template #body>
             <DesktopSelectableEntity class="desktop__chats" :label="['Все чаты', 'Непрочитанные']" :count="[allChatsListTotal, unreadChatsListTotal]">
               <template #firstPage>
