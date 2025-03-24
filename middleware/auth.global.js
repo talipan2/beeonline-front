@@ -24,6 +24,7 @@ export default defineNuxtRouteMiddleware(async(to, from) => {
     '/welcome',
     '/search',
     '/related-industry-services',
+    '/telegram',
   ];
 
   // if(!userStore.isAuth) {

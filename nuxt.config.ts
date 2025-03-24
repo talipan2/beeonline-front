@@ -35,6 +35,7 @@ export default defineNuxtConfig({
     css: ["~/assets/style/style.scss", "vue-final-modal/style.css"],
     devServer: {
         port: process.env.DEV_PORT,
+        host: process.env.DEV_HOST,
     },
     vite: {
         css: {
