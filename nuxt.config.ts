@@ -17,6 +17,7 @@ export default defineNuxtConfig({
                 host: process.env.PUSHER_HOST,
                 key: process.env.PUSHER_APP_KEY,
                 port: process.env.PUSHER_PORT,
+                scheme: process.env.PUSHER_SCHEME || 'http',
             },
         },
         baseUrl: process.env.API_BASE_URL,

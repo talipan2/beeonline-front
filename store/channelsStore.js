@@ -46,12 +46,12 @@ export const useChannelsStore = defineStore("channelsStore", {
                 wsHost: config.pusher.host,
                 wsPort: config.pusher.port,
                 wssPort: config.pusher.port,
-                forceTLS: false,
+                forceTLS: config.pusher.scheme === "https",
                 encrypted: true,
                 disableStats: true,
                 enabledTransports: ["ws", "wss"],
                 cluster: "mt1",
-                authEndpoint: `http://${config.pusher.host}/broadcasting/auth`,
+                authEndpoint: `${config.pusher.scheme}://${config.pusher.host}/broadcasting/auth`,
                 auth: {
                     headers: {
                         Authorization: `Bearer ${token}`,
