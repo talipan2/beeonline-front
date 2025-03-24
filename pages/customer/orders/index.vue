@@ -44,6 +44,10 @@ import { useLocationStore } from '~/store/locationStore';
 import { useSettingStore } from '~/store/settingStore';
 import { useUserStore } from '~/store/userStore';
 
+definePageMeta({
+  middleware: 'telegram' 
+});
+
 const entityStore = useEntityStore();
 const userStore = useUserStore();
 const locationStore = useLocationStore()

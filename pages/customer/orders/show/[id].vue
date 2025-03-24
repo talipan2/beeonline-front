@@ -16,6 +16,10 @@ import { useEntityStore } from '~/store/entityStore';
 import { useLocationStore } from '~/store/locationStore';
 import { useUserStore } from '~/store/userStore';
 
+definePageMeta({
+  middleware: 'telegram' 
+});
+
 const router = useRouter();
 const entityStore = useEntityStore();
 const locationStore = useLocationStore();

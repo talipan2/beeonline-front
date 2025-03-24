@@ -43,6 +43,10 @@ useHead({
   ],
 });
 
+definePageMeta({
+  middleware: 'telegram' 
+});
+
 const router = useRouter();
 const route = useRoute();
 const entityStore = useEntityStore();

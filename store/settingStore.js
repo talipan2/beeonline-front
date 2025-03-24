@@ -39,6 +39,7 @@ export const useSettingStore = defineStore("setting", {
       {id: 3, name: 'Евро', value: 'EUR'},
     ],
     isLoadingResponse: false,
+    isTelegram: false,
   }),
   getters: {
     getCurrencyNameById: (state) => (id) => {

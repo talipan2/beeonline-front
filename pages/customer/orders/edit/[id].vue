@@ -20,8 +20,6 @@
         :data="orderData"
         type="edit"
       />
-
-      {{ orderData }}
     </template>
     <template #rightSide>
       <div class="h4">Предварительный просмотр заказа</div>
@@ -38,6 +36,10 @@ import Step4 from '~/components/createEntity/step4.vue';
 import { useEntityStore } from '~/store/entityStore';
 import { useLocationStore } from '~/store/locationStore';
 import { useUserStore } from '~/store/userStore';
+
+definePageMeta({
+  middleware: 'telegram' 
+});
 
 const router = useRouter();
 const entityStore = useEntityStore();

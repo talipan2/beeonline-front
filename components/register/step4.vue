@@ -170,7 +170,11 @@ const registerData = computed(() => organizationStore.registerOrg);
 
 const handleSubmit = () => {
   organizationStore.resetRegisterData();
-  router.push('/desktop');
+  if(userStore.role === 'customer') {
+    router.push('/orders/create/step1');
+  } else if(userStore.role === 'performer') {
+    router.push('/services/create/step1');
+  }
 }
 
 </script>
