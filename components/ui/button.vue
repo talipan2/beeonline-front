@@ -96,6 +96,7 @@ const handleClick = () => {
 
   @include hover {
     background-color: var(--button-background-primary-hover);
+    color: var(--text-color-octonary);
   }
 
   @include mobile {
@@ -270,6 +271,13 @@ const handleClick = () => {
   // padding: 1.2rem;
   border-radius: 100px;
   // padding: 0 1em;
+  min-width: 4rem;
+  height: 4rem;
+}
+
+.btn-icon {
+  padding: 0;
+  border-radius: 100px;
   min-width: 4rem;
   height: 4rem;
 }

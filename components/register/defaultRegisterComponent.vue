@@ -62,7 +62,7 @@
       <div class="register__checkbox">
         <UiCheckbox name="Политика конфиденциальности" :rules="{ required: true }" v-model="userData.privacyPolicy">
           Я согласен(а) с&nbsp;
-          <NuxtLink to="/">политикой конфиденциальности.</NuxtLink>
+          <NuxtLink to="/page-policy" target="_blank">политикой конфиденциальности.</NuxtLink>
         </UiCheckbox>
       </div>
       <UiButton

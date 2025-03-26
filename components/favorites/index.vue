@@ -173,8 +173,6 @@ const setFiltersServices = (filters) => {
   activeFilterServices.value = filters
 }
 
-// ДАННЫЕ ПОКА БЕРУТСЯ С СПИСКА ВСЕХ СУЩНОСТЕЙ
-
 const ordersData = computed(() => {
   if(!data.value.orders || data.value.orders.length === 0) {
     return [];
@@ -281,10 +279,15 @@ const toggleEntity = (type) => {
 }
 
 const fetchData = async(type, filter) => {
+  const query = {...filter}
+  if(query?.minLot !== 'all' && query?.minLot) {
+    query.minLot = entityStore.getEntityLabelById('minLot', query.minLot);
+    query.minLot = query.minLot.charAt(0).toUpperCase() + query.minLot.slice(1);
+  }
   if(type  === 'orders') {
     try {
       loading.value = true
-      const response = await userStore.getFavorites(userStore.userData.id, {...filter, page: pageOrders.value.currentPage});
+      const response = await userStore.getFavorites(userStore.userData.id, {...query});
       if(response && response.orders) {
         data.value.orders = response.orders.data;
         router.replace({ query: { entity: type, ...filter }});
@@ -303,7 +306,7 @@ const fetchData = async(type, filter) => {
   } else if(type === 'services') {
     try {
       loading.value = true
-      const response = await  userStore.getFavorites(userStore.userData.id, {...filter, page: pageServices.value.currentPage});
+      const response = await  userStore.getFavorites(userStore.userData.id, {...query});
       if(response && response.services) {
         data.value.services = response.services.data;
         router.replace({ query: { entity: type, ...filter } });
@@ -322,7 +325,7 @@ const fetchData = async(type, filter) => {
   } else if(type === 'members') {
     try {
       loading.value = true
-      const response = await  userStore.getFavorites(userStore.userData.id, {...filter, page: pageMembers.value.currentPage});
+      const response = await  userStore.getFavorites(userStore.userData.id, {...filter});
       if(response && response.pubCards) {
         data.value.members = response.pubCards.data;
         router.replace({ query: { entity: type } });
@@ -347,11 +350,11 @@ const handleChangePage = (type, currentPage) => {
   switch (type) {
     case 'orders':
       pageOrders.value.currentPage = currentPage
-      fetchData('orders', {page: currentPage})
+      fetchData('orders', {page: currentPage, ...activeFilterOrders.value})
       break;
     case 'services':
       pageServices.value.currentPage = currentPage
-      fetchData('services', {page: currentPage})
+      fetchData('services', {page: currentPage, ...activeFilterServices.value})
       break;
     case 'members':
       pageMembers.value.currentPage = currentPage
@@ -377,7 +380,13 @@ const handleDeleteFavorite = (id, type) => {
 
 watch(() => currentEntity.value, (newVal, oldVal) => {
   if(newVal !== oldVal && oldVal !== null && newVal === 'members') {
-    fetchData(newVal)
+    if(newVal === 'members') {
+      fetchData('members', {page: pageMembers.value.currentPage})
+    } else if(newVal === 'orders') {
+      fetchData('orders', {page: pageOrders.value.currentPage, ...activeFilterOrders.value})
+    } else if(newVal === 'services') {
+      fetchData('services', {page: pageServices.value.currentPage, ...activeFilterServices.value})
+    }
   }
 })
 
@@ -392,9 +401,31 @@ watch(() => activeFilterServices.value, (newVal) => {
 }, {deep: true});
 
 onMounted(async() => {
+  let filterList = {}
+  if(router.currentRoute.value.query && router.currentRoute.value.query.entity) {
+    currentEntity.value = router.currentRoute.value.query.entity
+    const filters = Object.fromEntries(
+      Object.entries(router.currentRoute.value.query)
+        .filter(([key]) => key !== 'entity')
+        .map(([key, value]) => [key, value])
+    )
+
+    if(currentEntity.value === 'orders') {
+      activeFilterOrders.value = {...filters}
+      filterList = {...filters}
+    }
+    if(currentEntity.value === 'services') {
+      activeFilterServices.value = {...filters}
+      filterList = {...filters}
+    }
+  } else {
+    currentEntity.value = 'orders'
+  }
+
+
   try {
     loading.value = true
-    const response = await userStore.getFavorites(userStore.userData.id);
+    const response = await userStore.getFavorites(userStore.userData.id, {...filterList});
     if(response) {
       data.value.orders = response.orders.data;
       pageOrders.value = {
@@ -422,22 +453,6 @@ onMounted(async() => {
     console.error("Ошибка при загрузке данных:", error);
   } finally {
     loading.value = false
-  }
-  if(router.currentRoute.value.query && router.currentRoute.value.query.entity) {
-    currentEntity.value = router.currentRoute.value.query.entity
-    const filters = Object.fromEntries(
-      Object.entries(router.currentRoute.value.query)
-        .filter(([key]) => key !== 'entity')
-        .map(([key, value]) => [key, Number(value)])
-    );
-    if(currentEntity.value === 'orders') {
-      activeFilterOrders.value = {...filters}
-    }
-    if(currentEntity.value === 'services') {
-      activeFilterServices.value = {...filters}
-    }
-  } else {
-    currentEntity.value = 'orders'
   }
 })
 

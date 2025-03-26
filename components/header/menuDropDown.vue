@@ -166,6 +166,7 @@ const handleSwitchRole = async () => {
   try {
     await userStore.setUserData({ role: newRole }, userData.value.id);
     userStore.role = newRole;
+    userStore.checkAuth();
     localStorage.setItem('role', newRole);
     router.push({ path: redirectPath });
   } catch (error) {
@@ -174,6 +175,7 @@ const handleSwitchRole = async () => {
 };
 
 const setRole = (role) => {
+  if(!userStore.userPubCard?.id) return  
   userStore.setUserData({ role: role }, userData.value.id)
     .then(res => {
       userStore.role = role;
@@ -186,7 +188,6 @@ const setRole = (role) => {
       })
       userStore.checkAuth()
       router.push({ path: `/desktop` });
-
     });
 }
 

@@ -127,8 +127,8 @@
                       <SvgoEmptyMessage class="svg-lx" />
                     </template>
                     <template #button>
-                      <UiButton v-if="role === 'customer'" to="/services" variant="quinary" size="around">Каталог услуг</UiButton>
-                      <UiButton v-if="role === 'performer'" to="/orders" variant="quinary" size="around">Каталог заказов</UiButton>
+                      <UiButton v-if="role === 'customer'" to="/services" variant="quinary" size="large">Каталог услуг</UiButton>
+                      <UiButton v-if="role === 'performer'" to="/orders" variant="quinary" size="large">Каталог заказов</UiButton>
                     </template>
                   </DesktopEmptyCard>
                 </template>

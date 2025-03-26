@@ -1,13 +1,17 @@
 <template>
-  <div class="notification-card">
+  <div class="notification-card" :class="{ 'notification-card_type_not-readad': !data.readed }">
+    {{ data }}
     <div class="notification-card__image">
-      <SvgoSetting class="svg-lx" v-if="data.group === 'Системные'"/>
-      <SvgoSewingMachine class="svg-lx" v-if="data.group === 'Заказы/Услуги'" />
-      <SvgoReview class="svg-lx" v-if="data.group === 'Отзывы'" />
-      <SvgoNotifyMessage class="svg-lx" v-if="data.group === 'Сообщения'" />
-      <SvgoNotifyDeal class="svg-lx" v-if="data.group === 'Сделки'" />
+      <SvgoSetting class="svg-lx" v-if="data.group === 'system'"/>
+      <SvgoSewingMachine class="svg-lx" v-if="data.group === 'orders' || data.group === 'services'" />
+      <SvgoReview class="svg-lx" v-if="data.group === 'reviews'" />
+      <SvgoNotifyMessage class="svg-lx" v-if="data.group === 'chat'" />
+      <SvgoNotifyDeal class="svg-lx" v-if="data.group === 'deals'" />
     </div>
-    <p class="notification-card__text">{{ data.message }}</p>
+    <p class="notification-card__text">
+      {{ data.message }}.
+      <NuxtLink class="notification-card__link" :to="data.link">{{ data.link_text }}</NuxtLink>
+    </p>
     <p class="notification-card__date">{{ data.date }}</p>
   </div>
 </template>
@@ -44,10 +48,24 @@ const props = defineProps({
     }
   }
 
+  &_type_not-readad {
+    box-shadow: var(--box-shadow-primary);
+  }
+
   &__text {
     font-size: 1em;
     line-height: 1em;
     margin-bottom: 0;
+    display: inline;
+  }
+
+  &__link {
+    display: inline;
+    
+    &:hover {
+      color: var(--text-color-hover-primary);
+      text-decoration: underline;
+    }
   }
 
   &__date {

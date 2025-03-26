@@ -135,8 +135,11 @@ const handleSubmit = async(value, form) => {
         if (res && res.id && data.value.companyLogo?.id) {
           organizationStore.setPubCardLogo(res.id, data.value.companyLogo.id)
         }
-        userStore.checkAuth()
-        router.push({path: '/register/step3'})
+        userStore.checkAuth().then(() => {
+          if(userStore.userPubCard.id) {
+            router.push({path: '/register/step3'})
+          }
+        })
       });
     } else {
       await organizationStore.editPubCards({

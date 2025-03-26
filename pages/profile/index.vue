@@ -9,7 +9,7 @@
         <Profile v-else/>
       </template>
       <template #rightSide v-if="role !== 'adjacent'">
-        <CommonCheckList adviceTitle="Полностью заполненный профиль выше в списке поиска" :checkList="checkListArray" :valueCheck="true"/>
+        <CommonCheckList adviceTitle="Полностью заполненный профиль выше в списке поиска" :checkList="checkListArray" :valueCheck="true" :fillRating="fillRating"/>
         <CommonAlerts type="warning" class="right-side__alert" v-if="!userData.organization_id">
               <p>У вас не заполнена карточка компании.
                 Заказы/услуги не будут доступны в каталоге без карточки компании.
@@ -89,6 +89,7 @@ const cardsData = computed(() => {
   }
 })
 
+const fillRating = computed(() => pubCard.value?.fill_rating);
 
 onMounted(() => {
   userStore.getUserData(userStore.userData.id)

@@ -179,9 +179,34 @@ export const useUserStore = defineStore("user", {
                 throw error;
             }
         },
+
+        // Изменение пароля
         async resetPassword(data, form) {
             try {
                 const response = await Api.resetPassword(data, form);
+                if (response.data) {
+                    return response.data;
+                }
+            } catch (error) {
+                throw error;
+            }
+        },
+
+        // отправка запроса для восстановления пароля
+        async forgotPassword(data, form) {
+            try {
+                const response = await Api.forgotPassword(data, form);
+                if (response.data) {
+                    return response.data;
+                }
+            } catch (error) {
+                throw error;
+            }
+        },
+
+        async resetForgotPassword(data, form) {
+            try {
+                const response = await Api.resetForgotPassword(data, form);
                 if (response.data) {
                     return response.data;
                 }

@@ -71,7 +71,9 @@
 <script setup>
 import { useSettingStore } from '~/store/settingStore';
 import { useUserStore } from '~/store/userStore';
+import { useToast } from 'vue-toastification';
 
+const toast = useToast();
 const userStore = useUserStore();
 
 const data = ref({
@@ -92,6 +94,7 @@ const handleSubmit = async(values, form) => {
       email: data.value.email,
       phone: data.value.phone.replace(/^\+/, "")
     }, data.value.id, form).then(res => {
+      toast.success('Данные успешно обновлены');
       if(res) {
         settingStore.changeUserDataModal = false;
       }

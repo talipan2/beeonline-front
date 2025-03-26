@@ -23,15 +23,15 @@
         <div class="desktop-entity-card__activity">
           <div class="desktop-entity-card__activity-item">
             <SvgoNviews class="svg-m desktop-entity-card__activity-icon"/>
-            <span class="desktop-entity-card__activity-value">{{ data.views }}</span>
+            <span class="desktop-entity-card__activity-value">{{ data.viewsCount }}</span>
           </div>
           <div class="desktop-entity-card__activity-item">
             <SvgoUser class="svg-m desktop-entity-card__activity-icon"/>
-            <span class="desktop-entity-card__activity-value">33</span>
+            <span class="desktop-entity-card__activity-value">{{ data.chatsCount }}</span>
           </div>
           <div class="desktop-entity-card__activity-item">
             <SvgoFavorite class="svg-m desktop-entity-card__activity-icon"/>
-            <span class="desktop-entity-card__activity-value">33</span>
+            <span class="desktop-entity-card__activity-value">{{ data.favoritesCount }}</span>
           </div>
         </div>
         <p class="desktop-entity-card__status">{{ data.status }}</p>

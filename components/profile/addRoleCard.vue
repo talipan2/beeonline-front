@@ -18,7 +18,9 @@
 </template>
 
 <script setup>
+import { useOrganizationStore } from '~/store/organizationStore';
 import { useUserStore } from '~/store/userStore';
+import { useToast } from 'vue-toastification';
 
 
 const props = defineProps({
@@ -27,24 +29,41 @@ const props = defineProps({
     default: '',
   }
 })
+const toast = useToast();
 
 const userStore = useUserStore();
+const organizationStore = useOrganizationStore();
+const router = useRouter();
 
 function handleCreateRole(role) {
-  userStore.setUserData({ role: role }, userData.value.id)
+  if(!userStore.userData?.id) return
+  userStore.setUserData({ role: role }, userStore.userData.id)
   .then(res => {
-    userStore.role = role;
-    localStorage.setItem('role', role);
     organizationStore.setPubCard({
       id: userStore.userData.organization_id,
       name: userStore.userData.public_cards[0].name,
       status: 1,
       type: role
+    }).then(res => {
+      userStore.role = role;
+      localStorage.setItem('role', role);
+      userStore.checkAuth()
+      router.push({ path: `/desktop` });
+      toast.success('Вы успешно стали ' + formatLangRole.value);
     })
-    userStore.checkAuth()
-    router.push({ path: `/desktop` });
   });
 }
+
+const formatLangRole = computed(() => {
+  switch (userStore.role) {
+    case 'customer':
+      return 'заказчиком'
+    case 'performer': 
+      return 'исполнителем'
+    default:
+      return ''
+  }
+})
 
 const checkEmptyRole = computed(() => {
   switch (userStore.role) {

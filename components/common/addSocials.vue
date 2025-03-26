@@ -6,7 +6,7 @@
         <div class="add-socials__item">
           <label class="form-group-data form-group__title"> Telegram </label>
           <div class="add-socials__input">
-            <SvgoTelegram class="svg-lx" />
+            <SvgoTelegram class="svg-lx add-socials__icon" />
             <UiInput
               name="url_tg"
               label="Ссылка на Telegram"
@@ -21,7 +21,7 @@
         <div class="add-socials__item">
           <label class="form-group-data form-group__title"> VK </label>
           <div class="add-socials__input">
-            <SvgoVk class="svg-lx" />
+            <SvgoVk class="svg-lx add-socials__icon" />
             <UiInput
               name="url_vk"
               label="Ссылка на VK"
@@ -36,7 +36,7 @@
         <div class="add-socials__item">
           <label class="form-group-data form-group__title"> Youtube </label>
           <div class="add-socials__input">
-            <SvgoYoutube class="svg-lx" />
+            <SvgoYoutube class="svg-lx add-socials__icon" />
             <UiInput
               name="url_yt"
               label="Ссылка на Youtube"
@@ -103,11 +103,15 @@ const handleSubmit = () => {
     
   }
 
+  .form-group__title {
+    width: auto;
+  }
+
   .form-group-value {
     margin-top: 0;
   }
 
-  .form-group__title {
+  &__icon {
     margin-bottom: 1em;
   }
 

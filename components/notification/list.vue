@@ -36,14 +36,14 @@ const filterOptions = [
   { id: 1, label: 'Все уведомления', value: 'all' },
   { id: 2, label: 'Системные', value: 'system' },
   { id: 3, label: 'Заказы/Услуги', value: 'product' },
-  { id: 4, label: 'Сообщения', value: 'message' },
-  { id: 5, label: 'Отзывы', value: 'reply' },
-  { id: 6, label: 'Сделки', value: 'deal' },
+  { id: 4, label: 'Сообщения', value: 'chat' },
+  { id: 5, label: 'Отзывы', value: 'reviews' },
+  { id: 6, label: 'Сделки', value: 'deals' },
 ]
 
 watch(() => selectedFilter.value, (newVal) => {
   const filter = clearFilter(newVal)
-  getData({group: filter?.label})
+  getData({group: filter?.value})
   router.replace({ query: {group: newVal} })
 })
 

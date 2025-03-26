@@ -73,7 +73,7 @@
                         Запомнить меня
                     </UiCheckbox>
                     <NuxtLink
-                        to=""
+                        to="/forgot-password"
                         class="auth__link"
                         >Забыли пароль?</NuxtLink
                     >

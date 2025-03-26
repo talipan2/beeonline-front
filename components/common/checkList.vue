@@ -90,6 +90,10 @@ const props = defineProps({
     default: 'checkValue',
     validator: value => ['checkValue', 'checkStage'].includes(value),
   },
+  fillRating: {
+    type: String,
+    default: '',
+  }
 })
 
 const route = useRoute();

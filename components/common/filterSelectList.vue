@@ -154,6 +154,7 @@ onMounted(async() => {
   font-size: 1.6rem;
   margin-bottom: 2em;
   column-gap: 2em;
+  row-gap: 1em;
 
   &__select {
     flex: 1 1 30%;
@@ -171,6 +172,7 @@ onMounted(async() => {
     
     &__select {
       flex: 0 1 100%;
+      max-width: 100%;
     }
   }
 }

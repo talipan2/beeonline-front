@@ -13,7 +13,7 @@
       <CatalogMembersDetails :data="pubCard"/>
     </template>
     <template #rightSide>
-      <CatalogOtherEntityCompany :type="pubCard.type" :data="activeEntity" title="Актуальные услуги компании"/>
+      <CatalogOtherEntityCompany v-if="activeEntity.length" :type="pubCard.type" :data="activeEntity" title="Актуальные услуги компании"/>
       <div class="views">
         <p>Просмотры: {{ pubCard.viewCount }}</p>
       </div>

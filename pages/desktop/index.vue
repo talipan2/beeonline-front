@@ -79,8 +79,8 @@ const filterMapping = computed(() => {
             return [];
     }
 });
+
 async function getEntity(filter) {
-    console.log(filter)
     switch (role.value) {
         case "customer":
             try {
@@ -105,4 +105,9 @@ async function getEntity(filter) {
             }
     }
 }
+
+watch(() => role.value, () => {
+    getEntity({status: 'active'});
+})
+
 </script>

@@ -3,7 +3,6 @@
     <h2 class="gallery__title">Галерея</h2>
     <Form @submit="handleSubmit"> 
       <CommonGalleryLoad v-model="data.gallery"/>
-      {{data.gallery}}
       <p class="gallery__description">Если у вас есть видео о компании, вы можете указать ссылку на видео в
         Youtube</p>
       <label class="gallery__label" v-for="(link, index) in videoLinks" :key="index">Cсылка на видео в Youtube
@@ -24,7 +23,6 @@
       </label>
       <slot></slot>
     </Form>
-    {{ videoLinks }}
   </div>
 </template>
 

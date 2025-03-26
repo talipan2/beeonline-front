@@ -79,10 +79,6 @@ const statusCounts = ref({
   archive: 0
 });
 
-const batchSize = [
-
-];
-
 const fetchData = async (type, filter) => {
   isLoading.value = true;
   if(!filter) filter = {}
@@ -124,10 +120,12 @@ const fetchData = async (type, filter) => {
         id: item.id,
         name: item.name,
         logo: item.logo ? item.logo : '',
-        views: 0,
         categories: item.product_categories && item.product_categories.length ? item.product_categories.map(item => item.name) : [],
         status: entityStore.getEntityStatusByValue(item.status),
         type: props.role,
+        viewsCount: item.view_count,
+        chatsCount: item.chats_count,
+        favoritesCount: item.favorites_count
       }
     })
   } catch (error) {
@@ -162,6 +160,10 @@ watch(() => currentButton.value, (newVal) => {
   fetchData(newVal)
 }, {deep: true});
 
+watch(() => props.role, (newVal) => {
+  fetchData(currentButton.value)
+}, {deep: true});
+
 // для установки фильтров при обновлении страницы с query параметров
 
 // onMounted(() => {
@@ -173,6 +175,7 @@ watch(() => currentButton.value, (newVal) => {
 // });
 
 onMounted(() => {
+  activeFilter.value = {}
   fetchData(currentButton.value);
 });
 

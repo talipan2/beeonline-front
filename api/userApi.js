@@ -31,15 +31,22 @@ export default {
     return useApi().post('change-password', values, form)
   },
 
+  async forgotPassword(values, form) {
+    return useApi().post('forgot-password', values, form)
+  },
+
+  async resetForgotPassword(values, form) {
+    return useApi().post('reset-password', values, form)
+  },
+
   async setUserData(values, id, form) {
     return useApi().patch(`users/${id}`, values, form)
   },
 
   async getFavorites(id, filter={}) {
-    console.log(filter)
     let params = {
       category_id: filter.category && filter.category !== 'all' ? filter.category : undefined,
-      batch_size_min: filter.minLot && filter.minLot !== 'all' ? filter.minLot : undefined,
+      batch_size_name: filter.minLot && filter.minLot !== 'all' ? filter.minLot : undefined,
       deadline_at: filter.date && filter.date !== 'all' ? filter.date : undefined,
       page: filter.page ? filter.page : undefined,
     }
