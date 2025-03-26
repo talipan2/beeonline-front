@@ -40,10 +40,10 @@ export const useChatStore = defineStore("chatStore", {
         setRole(role) {
             this.role = role;
         },
-        async getChat(chat_id, is_short = false, message_id = null) {
+        async getChat(chat_id, data) {
             return await useApi().post(`/chat/${chat_id}`, {
-                is_short: is_short,
-                message_id: message_id,
+                ...data,
+                is_manager: this.is_manager,
             });
         },
         async getChats(data) {
@@ -53,13 +53,19 @@ export const useChatStore = defineStore("chatStore", {
             return await useApi().post("/chat/search_messages", data);
         },
         async getInitChat(data) {
-            return await useApi().post("/chat/init", data);
+            return await useApi().post("/chat/init", {
+                ...data,
+                is_manager: this.is_manager,
+            });
         },
         async setAsReaded(chat_id, data) {
             return await useApi().post(`/chat/${chat_id}/read`, data);
         },
         async sendMessage(chat_id, data) {
-            return await useApi().post(`/chat/${chat_id}/send`, data);
+            return await useApi().post(`/chat/${chat_id}/send`, {
+                ...data,
+                is_manager: this.is_manager,
+            });
         },
         async sendFirstMessage(data) {
             return await useApi().post(`/chat/create`, data);
@@ -68,6 +74,7 @@ export const useChatStore = defineStore("chatStore", {
             return await useApi().post(`/chat/${chat_id}/messages`, {
                 message_id: message_id,
                 direction: direction,
+                is_manager: this.is_manager,
             });
         },
 		async getOrders() {

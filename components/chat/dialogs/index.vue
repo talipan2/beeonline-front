@@ -265,7 +265,9 @@ export default {
                 this.loading_dialogs.push(message.chat_id);
 
                 useChatStore()
-                    .getChat(message.chat_id, true)
+                    .getChat(message.chat_id, {
+                        is_short: true,
+                    })
                     .then((response) => {
                         const indexToRemove = this.loading_dialogs.indexOf(
                             message.chat_id

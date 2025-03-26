@@ -20,7 +20,7 @@
                     <svg
                         class="doc-new__icon"
                         :class="[
-                            file.ext ? 'doc-new__icon_' + file.ext : '',
+                            'doc-new__icon_' + (file.ext || getExtension(file)),
                             file.type ? 'doc-new__icon_' + file.type : '',
                         ]"
                         viewbox="0 0 50 50"
@@ -28,7 +28,7 @@
                         height="50"
                     >
                         <use xlink:href="~/assets/images/sprite.svg#doc" />
-                        <text x="13" y="33">{{ file.ext }}</text>
+                        <text x="13" y="33">{{ file.ext || getExtension(file) }}</text>
                     </svg>
                     <div class="doc-new__body">
                         <div class="doc-new__title">{{ file.name }}</div>
@@ -95,6 +95,9 @@ export default {
     mounted() {},
 
     methods: {
+        getExtension(file) {
+            return file.name.split(".").pop().substr(0, 4);
+        },
         deleteFile(file) {
             let self = this;
             let index = self.files.indexOf(file);

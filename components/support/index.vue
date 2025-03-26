@@ -8,7 +8,13 @@
       <UiButton to="/support/create" class="support__button" variant="quinary" size="large">Создать запрос</UiButton>
     </div>
     <h2 class="support__title">Ваши обращения</h2>
-    <UiSelect class="support__select" :options="supportList" v-model="selectedSupport" :error-show="false" name="support" returnValue/>
+    <UiSelect
+        class="support__select"
+        name="status"
+        :options="supportStatuses"
+        v-model="filterList.status"
+        value="0"
+    />
     <div class="support__list">
       <div class="support__list-header">
         <p class="support__list-col-1">Запрос</p>
@@ -16,31 +22,68 @@
         <p class="support__list-col-3">Статус</p>
         <p class="support__list-col-4">Тема обращения</p>
       </div>
-      <div class="support__list-item-container" v-for="(item, index) in 5" :key="index">
+      <div class="support__list-item-container" v-for="(ticket, index) in supportTickets" :key="index">
         <div class="support__list-item support__list-item_type_solved">
-          <p class="support__list-col-1">#3</p>
-          <p class="support__list-col-2">2021-08-06 09:58:26</p>
-          <p class="support__list-col-3">Есть ответ</p>
-          <p class="support__list-col-4">Работа сервиса</p>
-          <NuxtLink class="support__list-link" to="/support/show/2" />
+          <p class="support__list-col-1">#{{ ticket.id }}</p>
+          <p class="support__list-col-2">{{ formatDate(ticket.updated_at, 'weekday, DD.MM.YYYY - HH:mm:ss') }}</p>
+          <p class="support__list-col-3">{{ ticket.status_name }}</p>
+          <p class="support__list-col-4">{{ ticket.type_name }}</p>
+          <NuxtLink class="support__list-link" :to="`/support/${ticket.id}`" />
         </div>
       </div>
     </div>
+    <CommonPagination
+        v-if="page?.last_page > 1"
+        :current-page="page.current_page"
+        :total-pages="page.last_page"
+        @changePage="fetchTickets"
+        :loading="loading"
+    />
   </div>
 </template>
 
 <script setup>
+import { useSupportStore } from "~/store/supportStore";
 
-const selectedSupport = ref('all')
+const supportStore = useSupportStore();
 
-const supportList = [
-  {id: 1, label: 'Все запросы', value: 'all'},
-  {id: 2, label: 'Есть ответ', value: 'answered'},
-  {id: 3, label: 'Ожидает ответа', value: 'wait_answer'},
-  {id: 4, label: 'Закрыт', value: 'closed'},
-]
+const page = ref({});
+const supportTickets = ref([]);
+const filterList = ref({
+    status: 0,
+});
 
+const fetchTickets = (currentPage) => {
+    supportStore.getSupportTickets({
+        ...filterList.value,
+        page: currentPage,
+        limit: 10,
+    })
+    .then((data) => {
+        supportTickets.value = data.data;
+        page.value = data.meta;
+    });
+}
 
+watch(filterList, (newVal) => {
+    fetchTickets();
+}, {deep: true});
+
+const supportStatuses = computed(() => {
+  const list = [
+    { id: 0, label: "Все", value: 0, disabled: false },
+  ];
+  return list.concat(supportStore.getSupportTicketStatuses.map((item) => (
+    { id: item.id, label: item.label, value: item.value }
+  )));
+});
+
+onMounted(() => {
+    supportStore.fetchSupportTicketStatuses()
+    .then((response) => {
+        fetchTickets();
+    });
+});
 
 </script>
 
