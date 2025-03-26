@@ -28,7 +28,7 @@
     "maska": "^3.1.0",
     "nuxt": "^3.16.0",
     "nuxt-svgo": "^4.0.15",
-    "nuxt-swiper": "^2.0.0",
+    "nuxt-swiper": "^1.2.2",
     "nuxt-tiptap-editor": "^2.1.4",
     "primevue": "^4.3.2",
     "scrollbooster": "^3.0.2",
