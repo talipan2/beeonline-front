@@ -1,6 +1,6 @@
 <template>
   <div class="bonus-icon" :class="className">
-      <UiImage :src="src" />
+      <UiImage :src="src" :external="true" />
   </div>
 </template>
 

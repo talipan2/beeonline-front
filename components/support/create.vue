@@ -1,14 +1,14 @@
 <template>
   <div class="support-create">
     <h2 class="support-create__title">Создать запрос</h2>
-    <Form class="support-create__form" @submit="handleSubmit">
+    <UiForm class="support-create__form" :submit="handleSubmit">
       <label class="support-create__label form-group__title">
         Тема обращения
         <UiSelect
           class="support-create__select form-group__value"
-          :options="topicList"
-          v-model="appealData.topic"
-          name="support-topic"
+          :options="typeList"
+          v-model="appealData.type"
+          name="type"
           label="Тема обращения"
           :rules="{ required: true }"
         />
@@ -17,25 +17,17 @@
         Опишите вашу ситуацию
         <UiTextArea
           class="form-group__value"
-          v-model="appealData.situation"
-          name="support-situation"
+          v-model="appealData.description"
+          name="description"
           label="Опишите вашу ситуацию"
           :rules="{ required: true, min: 2 }"
         />
       </label>
+      <CommonDocumentLoaderAndList v-model="appealData.files"
+          text="Прикрепить файлы"
+          :extension="['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'rtf', 'pdf', 'jpeg', 'png', 'jpg', 'gif', 'psd', 'djvu', 'fb2', 'ps', 'zip', 'rar']"
+        />
       <div class="support-create__footer">
-        <CommonFileList
-          class="support-create__files"
-          :dataList="appealData.files"
-          :changed="true"
-          @removeFile="removeFile"
-        />
-        <CommonDocumentLoader
-          class="support-create__loader"
-          @addFile="addFile"
-          text="Прикрепить файлы"
-          :isList="true"
-        />
         <UiButton
           class="support-create__btn"
           type="submit"
@@ -44,59 +36,61 @@
           >Отправить</UiButton
         >
       </div>
-    </Form>
+    </UiForm>
   </div>
 </template>
 
 <script setup>
+import { useSupportStore } from "~/store/supportStore";
 
-const topicList = ref([
-  { id: 1, label: "Выберете тему", value: "", disabled: true },
-  { id: 2, label: "Вопросы по участию в мероприятии", value: "topic-2" },
-  { id: 3, label: "Прочее", value: "topic-3" },
-  { id: 4, label: "Вопросы по модерации", value: "topic-4" },
-  { id: 5, label: "Отзывы", value: "topic-5" },
-  { id: 6, label: "Технические вопросы", value: "topic-6" },
-  { id: 7, label: "Финансовый отдел", value: "topic-7" },
-  { id: 8, label: "Другое", value: "topic-7" },
-  { id: 9, label: "Жалоба на заказчика", value: "topic-7" },
-  { id: 10, label: "Информация о компании", value: "topic-7" },
-]);
+const supportStore = useSupportStore();
+
+const typeList = computed(() => {
+  const list = [
+    { id: null, label: "Выберите тему", value: null, disabled: true },
+  ];
+  return list.concat(supportStore.getSupportTicketTypes.map((item) => (
+    { id: item.id, label: item.label, value: item.value }
+  )));
+});
 
 const appealData = ref({
-  topic: "",
+  type: null,
   situation: "",
   files: [],
 });
 
-const formData = ref(new FormData());
+const loading = ref(false);
 
-function addFile(files) {
-  appealData.value.files.push({
-    id: crypto.randomUUID(),
-    name: files.name,
-    url: URL.createObjectURL(files),
-    type: files.name.split(".").pop().toLowerCase(),
-    file: files,
-  });
-  formData.value.append("files[]", files);
-}
+const handleSubmit = (values, form) => {
+    if (loading.value) return;
+    loading.value = true;
 
-function removeFile(id) {
-  appealData.value.files = appealData.value.files.filter(
-    (file) => file.id != id
-  );
-  formData.value.delete("files[]");
-  appealData.value.files.forEach((file) =>
-    formData.value.append("files[]", file.file)
-  );
-}
+    const data = {
+        ...appealData.value,
+    };
 
+    data.files = data.files.map((file) => {
+        return file.id;
+    });
 
+    return supportStore
+    .createSupportTicket(data)
+    .then((response) => {
+        form.resetForm();
+        appealData.value = {
+            type: null,
+            situation: "",
+            files: [],
+        };
 
-const handleSubmit = () => {
-  console.log(appealData.value);
+        navigateTo({ path: `/support/${response.data.id}` });
+    });
 };
+
+onMounted(() => {
+    supportStore.fetchSupportTicketTypes();
+});
 </script>
 
 <style lang="scss">

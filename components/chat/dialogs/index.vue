@@ -240,7 +240,7 @@ export default {
 			});
 		},
         addDialog(dialog, to_end = true) {
-            dialog.last_message = dialog.messages[0] || null;
+            dialog.last_message = dialog.messages ? dialog.messages[0] : null;
             if (dialog.last_message) {
                 dialog.last_message.date = new Date(
                     dialog.last_message.created_at
@@ -265,7 +265,9 @@ export default {
                 this.loading_dialogs.push(message.chat_id);
 
                 useChatStore()
-                    .getChat(message.chat_id, true)
+                    .getChat(message.chat_id, {
+                        is_short: true,
+                    })
                     .then((response) => {
                         const indexToRemove = this.loading_dialogs.indexOf(
                             message.chat_id

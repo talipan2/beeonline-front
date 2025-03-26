@@ -87,7 +87,7 @@ export const useOrganizationStore = defineStore('organization', {
         throw error;
       }
     },
-    
+
     async setPubCard(data, form) {
       try {
         const response = await Api.setPubCards(data, form);
@@ -130,7 +130,7 @@ export const useOrganizationStore = defineStore('organization', {
         const response = await Api.getPubCard(id);
         if(response.data) {
           return response.data.data;
-        }        
+        }
       } catch (error) {
         throw error;
       }
@@ -188,7 +188,7 @@ export const useOrganizationStore = defineStore('organization', {
         throw error;
       }
     },
-    
+
     async deleteVerificationDocument(id) {
       try {
         const response = await Api.deleteVerificationDocument(id);
@@ -211,7 +211,7 @@ export const useOrganizationStore = defineStore('organization', {
       }
     },
 
-    async setPubCardGallery(id, data) { 
+    async setPubCardGallery(id, data) {
       try {
         const response = await Api.setPubCardGallery(id, data);
         if(response.data) {
@@ -263,6 +263,14 @@ export const useOrganizationStore = defineStore('organization', {
         siteUrl: null,
         verificationFiles: [],
       }
-    }
+    },
+
+    async counterpartyCheckPrepare(id) {
+        return await Api.counterpartyCheckPrepare(id);
+    },
+
+    async counterpartyCheck(id) {
+        return await Api.counterpartyCheck(id);
+    },
   }
 })

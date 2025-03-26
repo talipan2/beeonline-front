@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import Api from "@/api/userApi";
 import { useSettingStore } from "./settingStore";
+import { useChannelsStore } from "./channelsStore";
 
 export const useUserStore = defineStore("user", {
     state: () => ({
@@ -152,6 +153,17 @@ export const useUserStore = defineStore("user", {
                             this.userPubCard = adjacentCard;
                         }
                     }
+
+                    useChannelsStore().orgChannel
+                    .stopListening("OrganizationUpdate")
+                    .listen("OrganizationUpdate", (event) => {
+                        if (this.userOrganization.id === event.id) {
+                            this.userOrganization = {
+                                ...this.userOrganization,
+                                ...event,
+                            };
+                        }
+                    })
                 }
                 return response.data;
             } catch (error) {

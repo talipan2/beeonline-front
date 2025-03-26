@@ -21,7 +21,7 @@
       v-model="selectedRating"
       type="number"
       class="rating__input"
-      name="rating"
+      name="rate"
       :rules="{ required: true }"
       customErrorMessage="Поставьте оценку"
     />

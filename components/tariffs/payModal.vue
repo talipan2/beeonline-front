@@ -55,7 +55,7 @@ const props = defineProps({
   },
   deleteResetFunction: {
     type: Function,
-  }  
+  }
 })
 
 const settingStore = useSettingStore();
@@ -116,7 +116,7 @@ const handlePayment = () => {
   if (data.isServices) {
     paymentData.services = data.data
       .filter(service => {
-        return service.selected && service.quantity > 0;
+        return service.quantity > 0;
       })
       .map(service => {
         return {
@@ -147,7 +147,7 @@ const handlePayment = () => {
 
 .pay-modal {
   font-size: 1rem;
-  
+
   .modal-content {
     box-sizing: border-box;
     width: 29%;

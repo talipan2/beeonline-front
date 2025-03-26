@@ -14,16 +14,16 @@
         </div>
         <div class="member-details__props">
           <SvgoCase class="svg-m" fill="#a9abac" />
-          <p v-if="data.type === 'performer'"> 
-            {{ data.entityCount 
-              ? (data.entityCount + ' ' + plural(data.entityCount, { one: 'услуга', few: 'услуги', many: 'услуг' }) ) 
-              : 'Нет услуг' 
+          <p v-if="data.type === 'performer'">
+            {{ data.entityCount
+              ? (data.entityCount + ' ' + plural(data.entityCount, { one: 'услуга', few: 'услуги', many: 'услуг' }) )
+              : 'Нет услуг'
             }}
           </p>
           <p v-if="data.type === 'customer'">
-            {{ data.entityCount 
-              ? (data.entityCount + ' ' + plural(data.entityCount, { one: 'заказ', few: 'заказа', many: 'заказов' }) ) 
-              : 'Нет заказов' 
+            {{ data.entityCount
+              ? (data.entityCount + ' ' + plural(data.entityCount, { one: 'заказ', few: 'заказа', many: 'заказов' }) )
+              : 'Нет заказов'
             }}
           </p>
         </div>
@@ -46,6 +46,18 @@
           <UiButton type="button" class="member-details__btn" :class="{ 'member-details__btn_type_active': isFavorite }" variant="tertiary" size="around" @click="handleAddFavorite">
             <SvgoFavorite class="svg-m" />
           </UiButton>
+        </div>
+        <div class="member-details__btn-container">
+            <PaidServiceCounterpartyCheck
+                :id="data.organizationId"
+            >
+                <template #button="{ open }">
+                    <UiButton class="member-details__btn" variant="quinary" size="large" type="button" @click="open">
+                        <SvgoSearch class="svg-m" fill="#6937a5" />
+                        Проверить контрагента
+                    </UiButton>
+                </template>
+            </PaidServiceCounterpartyCheck>
         </div>
       </div>
     </div>

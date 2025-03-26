@@ -16,94 +16,68 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(item, index) in data" :key="index">
-          <td>{{ item.name }}</td>
-          <td>{{ item.inn }}</td>
-          <td>{{ item.service }}</td>
-          <td>{{ formatDate(item.date, 'DD.MM.YYYY') }} </td>
+        <tr v-for="(item, index) in statistics" :key="index">
+          <td>{{ item.recipient_name }}</td>
+          <td>{{ item.recipient_inn }}</td>
+          <td>{{ item.adjacent_service_name }}</td>
+          <td>{{ formatDate(item.created_at, 'DD.MM.YYYY') }} </td>
         </tr>
       </tbody>
     </table>
     <div class="statistics-table__mobile">
-      <div class="statistics-table__card" v-for="(item, index) in data" :key="index">
+      <div class="statistics-table__card" v-for="(item, index) in statistics" :key="index">
         <div class="statistics-table__card-info">
           <p class="statistics-table__card-name">Компания</p>
-          <p class="statistics-table__card-value">{{ item.name }}</p>
+          <p class="statistics-table__card-value">{{ item.recipient_name }}</p>
         </div>
         <div class="statistics-table__card-info">
           <p class="statistics-table__card-name">Услуга</p>
-          <p class="statistics-table__card-value">{{ item.service }}</p>
+          <p class="statistics-table__card-value">{{ item.adjacent_service_name }}</p>
         </div>
         <div class="statistics-table__card-info">
           <p class="statistics-table__card-name">Инн</p>
-          <p class="statistics-table__card-value">{{ item.inn }}</p>
+          <p class="statistics-table__card-value">{{ item.recipient_inn }}</p>
         </div>
         <div class="statistics-table__card-info">
           <p class="statistics-table__card-name">Дата</p>
-          <p class="statistics-table__card-value">{{ formatDate(item.date, 'DD.MM.YYYY') }}</p>
+          <p class="statistics-table__card-value">{{ formatDate(item.created_at, 'DD.MM.YYYY') }}</p>
         </div>
       </div>
     </div>
-    <CommonPagination v-if="page.lastPage > 1" :current-page="page.currentPage" :total-pages="page.lastPage" btn-type="square"  position="left"/>
+    <CommonPagination v-if="page?.last_page > 1" :current-page="page.current_page" :total-pages="page.last_page" btn-type="square"  position="left" @changePage="fetchStatistics"/>
   </div>
 </template>
 
 <script setup>
+import { useAdjacentStore } from "~/store/adjacentStore";
 
-const data = ref([
-  {
-    name: 'ООО Компания 1 очень длинное название просто пример переноса',
-    service: 'Сертификат соответствия',
-    inn: '0000 0000 0000',
-    date: '2025-02-28 00:00:00'
-  },
-  {
-    name: 'ООО Компания',
-    service: 'Сертификат соответствия',
-    inn: '0000 0000 0000',
-    date: '2025-02-28 00:00:00'
-  },
-  {
-    name: 'ООО Компания 1 очень длинное название просто пример переноса',
-    service: 'Сертификат соответствия',
-    inn: '0000 0000 0000',
-    date: '2025-02-28 00:00:00'
-  },
-  {
-    name: 'ООО Компания 1 очень длинное название просто пример переноса',
-    service: 'Сертификат соответствия',
-    inn: '0000 0000 0000',
-    date: '2025-02-28 00:00:00'
-  },
-  {
-    name: 'ООО Компания 1 очень длинное название просто пример переноса',
-    service: 'Сертификат соответствия',
-    inn: '0000 0000 0000',
-    date: '2025-02-28 00:00:00'
-  },
-  {
-    name: 'ООО Компания 1 очень длинное название просто пример переноса',
-    service: 'Сертификат соответствия',
-    inn: '0000 0000 0000',
-    date: '2025-02-28 00:00:00'
-  },  {
-    name: 'ООО Компания 1 очень длинное название просто пример переноса',
-    service: 'Сертификат соответствия',
-    inn: '0000 0000 0000',
-    date: '2025-02-28 00:00:00'
-  },
-  {
-    name: 'ООО Компания 1 очень длинное название просто пример переноса',
-    service: 'Сертификат соответствия',
-    inn: '0000 0000 0000',
-    date: '2025-02-28 00:00:00'
-  }
-])
+const adjacentStore = useAdjacentStore();
 
-const page = ref({
-  currentPage: 1,
-  lastPage: 2,
+const loading = ref(false);
+const statistics = ref([]);
+const page = ref({});
+
+onMounted(() => {
+    fetchStatistics(1);
 });
+
+function fetchStatistics(currentPage) {
+    if (loading.value) return;
+    loading.value = true;
+
+    adjacentStore
+        .getStatistics({
+            limit: 10,
+            page: currentPage,
+        })
+        .then((response) => {
+            statistics.value = response.data;
+            page.value = response.meta;
+        })
+        .finally(() => {
+            loading.value = false;
+        });
+}
 
 </script>
 

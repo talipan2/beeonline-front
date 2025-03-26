@@ -34,9 +34,8 @@ const confirm = () => {
 
 .bonus-info-modal {
   .modal-content {
+    margin-bottom: auto;
     box-shadow: none;
-    width: 22%;
-    box-sizing: border-box;
   }
 
   .card__container {
@@ -67,7 +66,7 @@ const confirm = () => {
       width: 50%;
     }
   }
-  
+
   @include mobile {
     .modal-content {
       width: 90%;

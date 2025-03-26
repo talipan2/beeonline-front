@@ -29,10 +29,20 @@ const onSubmit = handleSubmit(async (values, form) => {
 
   try {
     await props.submit(values, form);
+  } catch (error) {
+    const errors = error.data.errors;
+    form.setErrors(errors);
+    for (let key in errors) {
+        form.setFieldTouched(key, true);
+    }
+    form.evt.target.scrollIntoView({ behavior: "smooth", block: "center" });
+    scrollToError(errors);
+    emit('setError', errors);
   } finally {
     loading.value = false;
   }
 }, (errors) => {
+    console.log(errors);
   // Обработка ошибок
   scrollToError(errors.errors);
   emit('setError', errors.errors);

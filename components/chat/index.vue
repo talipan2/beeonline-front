@@ -333,6 +333,10 @@ export default {
             type: Boolean,
             default: false,
         },
+        isManager: {
+            type: Boolean,
+            default: false,
+        },
     },
     emits: ["change:chat", "change:deal-stage", "change:pinned"],
     data: () => ({
@@ -359,6 +363,7 @@ export default {
     }),
 
     mounted() {
+        useChatStore().setIsManager(this.isManager);
         console.log(useUserStore().userData);
         this.user_id = useUserStore().userData?.id;
         this.org_id = useUserStore().userData?.organization_id;
@@ -691,6 +696,7 @@ export default {
                     }
 
                     this.chat = response;
+                    useChatStore().setIsManager(this.chat.is_manager);
                     this.changeDealStage();
 
                     // if (this.chat.messages) {

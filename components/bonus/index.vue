@@ -68,7 +68,7 @@ onMounted(() => {
 		})
 		.finally(() => loading.value = false);
 
-		bonusStore.getAchievements(organizationId.value)
+		// bonusStore.getAchievements(organizationId.value)
 	}
 })
 
@@ -127,7 +127,7 @@ onMounted(() => {
 		overflow-x: hidden; /* Отключить горизонтальную прокрутку */
 		max-height: 50em;
 	}
-	
+
 	&_loading {
 		pointer-events: none;
 		opacity: .6;
@@ -225,7 +225,7 @@ onMounted(() => {
 .bonus-btn {
   font-size: 1.4em;
   color: var(--text-color-primary);
-  padding: .57em .71em .35em;
+  padding: .5em .7em;
   font-weight: 400;
 }
 

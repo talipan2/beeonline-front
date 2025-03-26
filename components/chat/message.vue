@@ -25,12 +25,12 @@
                     <UiButton class="message__button" :variant="message.own ? 'primary' : 'secondary'" size="large" target="_blank" :to="button.url">{{ button.title }}</UiButton>
 				</template>
 			</div>
-            <!-- <file-list-new
-                v-if="message.files && message.files.length"
+            <file-list-new
                 v-model:files-value="message.files"
+                v-if="message.files"
                 :readonly="true"
                 :style="message.own ? 'dark' : 'light'"
-            /> -->
+            />
         </div>
         <div class="message__right">
             <div class="message__time">{{ time }}</div>

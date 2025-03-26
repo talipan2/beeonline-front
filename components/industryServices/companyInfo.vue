@@ -13,7 +13,7 @@
                 Изменить
             </UiButton>
         </div>
-        <div class="company-info__content">
+        <div class="company-info__content" :class="[`company-info__content_${data.template}`]">
             <div class="image-box company-info__logo">
                 <img
                     :src="data.logo || defaultCompanyLogo"
@@ -23,7 +23,7 @@
             <div class="company-info__wrapper company-info__mobile">
                 <CommonLocationsList
                     class="company-info__locations"
-                    :locationsList="{countries: [1]}"
+                    :locationsList="{countries: [data.country_id]}"
                 />
                 <h4 class="company-info__site" v-if="data.url_site">
                     Сайт:
@@ -38,7 +38,7 @@
             <div class="company-info__wrapper">
                 <CommonLocationsList
                     class="company-info__locations company-info__desktop"
-                    :locationsList="{countries: [1]}"
+                    :locationsList="{countries: [data.country_id]}"
                 />
                 <h4 class="company-info__site company-info__desktop" v-if="data.url_site">
                     Сайт:
@@ -172,6 +172,16 @@ function handleMoreShow() {
 
     &__content {
         display: flex;
+
+        &_reverse {
+            flex-direction: row-reverse;
+            justify-content: space-between;
+
+            .company-info__logo {
+                margin-right: 0;
+                margin-left: 5%;
+            }
+        }
     }
 
     &__logo {

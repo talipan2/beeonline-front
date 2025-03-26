@@ -17,6 +17,7 @@ export default defineNuxtConfig({
                 host: process.env.PUSHER_HOST,
                 key: process.env.PUSHER_APP_KEY,
                 port: process.env.PUSHER_PORT,
+                scheme: process.env.PUSHER_SCHEME || 'http',
             },
         },
         baseUrl: process.env.API_BASE_URL,
@@ -29,9 +30,9 @@ export default defineNuxtConfig({
     yandexMaps: {
         apikey: process.env.YANDEX_MAPS_API_KEY,
     },
-    alias: {
-        pinia: "/node_modules/@pinia/nuxt/node_modules/pinia/dist/pinia.mjs",
-    },
+    // alias: {
+    //     pinia: "/node_modules/@pinia/nuxt/node_modules/pinia/dist/pinia.mjs",
+    // },
     css: ["~/assets/style/style.scss", "vue-final-modal/style.css"],
     devServer: {
         port: process.env.DEV_PORT,
@@ -50,10 +51,11 @@ export default defineNuxtConfig({
         server: {
             hmr: {
                 clientPort: process.env.DEV_PORT,
-                protocol: "wss",
+                protocol: "ws",
                 // clientPort: 443,
                 path: "hmr/",
             },
+            allowedHosts: ['bee.online.front'],
         },
     },
     tiptap: {

@@ -7,7 +7,7 @@
   >
     <div class="bonus-progress__content bonus-progress__content_center">
       <template v-if="level">
-        <BonusIcon class="bonus-progress__image" />
+        <BonusIcon class="bonus-progress__image" :src="level.image"/>
         <div class="bonus-progress__title">{{ level.name }}</div>
       </template>
       <div @click="handleOpenLevelModal" class="bonus-progress__level">
@@ -46,6 +46,7 @@
       @click="settingStore.bonusInfoModal = true"
       ><span>Как получить уровень?</span></a
     >
+
     <BonusLevelsModal :levelGroups="levelGroups" :level="level" :levelNumber="levelNumber" :levelProgress="levelProgress"/>
     <BonusInfoModal />
   </div>
@@ -224,7 +225,7 @@ const handleOpenLevelModal = () => {
     color: var(--primary-color);
     border-radius: 1.2em;
     height: 4.8em;
-    text-transform: none; 
+    text-transform: none;
     background-color: #f1e7f7;
     border-color: #f1e7f7;
 
@@ -245,6 +246,10 @@ const handleOpenLevelModal = () => {
   display: flex;
   gap: 2.4em;
   margin-top: 2.4em;
+
+  @include mobile {
+      flex-direction: column;
+  }
 
   &__level {
     flex: 1 1 35%;
@@ -297,6 +302,10 @@ const handleOpenLevelModal = () => {
     background-color: #fff;
     transition: opacity 0.2s ease-in-out;
 
+    @include mobile {
+        font-size: max(7px, 1.7vw);
+    }
+
     &:hover {
       opacity: 1;
     }
@@ -308,6 +317,10 @@ const handleOpenLevelModal = () => {
 
   &__image {
     margin-bottom: 1.6em;
+
+    @include mobile {
+        grid-template-columns: 1fr 1fr;
+    }
   }
 
   &__name {

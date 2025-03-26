@@ -29,7 +29,7 @@
                 <p class="balance-card__details-type desktop__selected">Операция</p>
               </div>
               <div class="balance-card__details-item" v-for="item in transactionsList" :key="item">
-                <p class="balance-card__details-date">{{ formatDate(item.updated_at, 'DD.MM.YYYY') }} 
+                <p class="balance-card__details-date">{{ formatDate(item.updated_at, 'DD.MM.YYYY') }}
                   <span class="balance-card__details-time desktop__selected">{{ formatDate(item.updated_at, 'mm:HH') }}</span>
                 </p>
                 <div class="balance-card__details-sum" :class="{ 'add': item.type === 'add', 'purchase': item.type === 'purchase'}">
@@ -80,9 +80,9 @@
                   </template>
                 </template>
                 <template v-else>
-                  <DesktopEmptyCard 
-                    title="У вас нет отзывов" 
-                    text="Попросите ваших контрагентов оставить отзыв о работе с вами, чем больше отзывов, тем выше ваша карточка организации в поиске" 
+                  <DesktopEmptyCard
+                    title="У вас нет отзывов"
+                    text="Попросите ваших контрагентов оставить отзыв о работе с вами, чем больше отзывов, тем выше ваша карточка организации в поиске"
                   >
                     <template #image>
                       <SvgoEmptyReview class="svg-lx" />
@@ -97,7 +97,7 @@
                   </template>
                 </template>
                 <template v-else>
-                  <DesktopEmptyCard 
+                  <DesktopEmptyCard
                     title="Вы не оставляли отзывов"
                   >
                     <template #image>
@@ -109,17 +109,17 @@
             </DesktopSelectableEntity>
           </template>
         </DesktopCard>
-        <DesktopCard title="Чаты (8)" :link="{ url: '/chat', text: 'Все чаты'}">
+        <DesktopCard :title="`Чаты (${allChatsListTotal + unreadChatsListTotal})`" :link="{ url: '/chat', text: 'Все чаты'}">
           <template #body>
-            <DesktopSelectableEntity class="desktop__chats" :label="['Все чаты', 'Непрочитанные']" :count="[8, 10]" :disabledPage="[2]">
+            <DesktopSelectableEntity class="desktop__chats" :label="['Все чаты', 'Непрочитанные']" :count="[allChatsListTotal, unreadChatsListTotal]">
               <template #firstPage>
-                <template v-if="true">
+                <template v-if="allChatsListTotal">
                   <template v-for="chat in allChatsList" :key="chat.id">
-                    <DesktopSelectableEntityCard :data="chat" btnLabel="Читать полностью"/>
+                    <DesktopSelectableEntityCard :data="chat" btnLabel="Читать полностью" :btn-link="`/chat?chat_id=${chat.id}`"/>
                   </template>
                 </template>
                 <template v-else>
-                  <DesktopEmptyCard 
+                  <DesktopEmptyCard
                     title="Сообщений пока нет"
                     text="У вас нет активных чатов, начните беседу в карточке участника"
                   >
@@ -134,8 +134,20 @@
                 </template>
               </template>
               <template #secondPage>
-                <template v-for="chat in allChatsList" :key="chat.id">
-                  <DesktopSelectableEntityCard :data="chat" btnLabel="Читать полностью"/>
+                <template v-if="unreadChatsListTotal">
+                    <template v-for="chat in unreadChatsList" :key="chat.id">
+                    <DesktopSelectableEntityCard :data="chat" btnLabel="Читать полностью" :btn-link="`/chat?chat_id=${chat.id}`"/>
+                    </template>
+                </template>
+                <template v-else>
+                    <DesktopEmptyCard
+                        title="Сообщений пока нет"
+                        text="У вас нет непрочитанных сообщений"
+                    >
+                        <template #image>
+                        <SvgoEmptyMessage class="svg-lx" />
+                        </template>
+                    </DesktopEmptyCard>
                 </template>
               </template>
             </DesktopSelectableEntity>
@@ -151,6 +163,7 @@ import { useOrganizationStore } from '~/store/organizationStore';
 import { useReviewsStore } from '~/store/reviewsStore';
 import { useTariffsStore } from '~/store/tariffsStore';
 import { useUserStore } from '~/store/userStore';
+import { useChatStore } from '~/store/chatStore';
 
 const props = defineProps({
   getEntity: {
@@ -173,6 +186,7 @@ const reviewStore = useReviewsStore();
 
 const userStore = useUserStore();
 const organizationStore = useOrganizationStore();
+const chatStore = useChatStore();
 
 const emailVerified = computed(() => userStore.userData.email_verified_at ? true : false);
 
@@ -192,32 +206,36 @@ const pubCardLoader = ref(false);
 const statsLoader = ref(false);
 const reviewsLoader = ref(false);
 
-const allChatsList = ref([
-  {
-    id: 1,
-    text: 'Исполнитель оставил отзыв',
-    date: '12.12.2022',
-    fromName: 'Иван Иванов',
-    name: 'Иван Иванов',
-    logo: '',
-  },
-  {
-    id: 2,
-    text: 'Исполнитель оставил отзыв',
-    date: '12.12.2022',
-    fromName: 'Имя исполнитель',
-    name: 'Имя заказчик',
-    logo: '',
-  },
-  {
-    id: 3,
-    text: 'Исполнитель оставил отзыв',
-    date: '12.12.2022',
-    fromName: 'Иван Иванов',
-    name: 'Иван Иванов',
-    logo: '',
-  },
-]);
+const allChatsList = ref(null);
+const unreadChatsList = ref(null);
+const allChatsListTotal = ref(0);
+const unreadChatsListTotal = ref(0);
+// const allChatsList = ref([
+//   {
+//     id: 1,
+//     text: 'Исполнитель оставил отзыв',
+//     date: '12.12.2022',
+//     fromName: 'Иван Иванов',
+//     name: 'Иван Иванов',
+//     logo: '',
+//   },
+//   {
+//     id: 2,
+//     text: 'Исполнитель оставил отзыв',
+//     date: '12.12.2022',
+//     fromName: 'Имя исполнитель',
+//     name: 'Имя заказчик',
+//     logo: '',
+//   },
+//   {
+//     id: 3,
+//     text: 'Исполнитель оставил отзыв',
+//     date: '12.12.2022',
+//     fromName: 'Иван Иванов',
+//     name: 'Иван Иванов',
+//     logo: '',
+//   },
+// ]);
 
 const pubCard = computed(() => {
   if (!userStore.userPubCard) return {}
@@ -300,6 +318,29 @@ onMounted(() => {
   })
 })
 
+chatStore.getChatList().then((res) => {
+    allChatsListTotal.value = res.all_chats_total;
+    unreadChatsListTotal.value = res.unread_chats_total;
+
+    function mapChat(item) {
+        let message = item.messages[0];
+        let user = message?.user;
+        let organization = item.organizations[0];
+        let pubcard = organization?.pubcard;
+        return {
+            id: item.id,
+            text: message ? message.text : '',
+            date: message ? message.created_at : '',
+            fromName: user ? user.name : '',
+            name: organization ? organization.name : '',
+            logo: pubcard ? pubcard.logo : '',
+      };
+    }
+
+    allChatsList.value = res.all_chats.map(mapChat);
+    unreadChatsList.value = res.unread_chats.map(mapChat);
+});
+
 </script>
 
 <style lang="scss">
@@ -330,7 +371,7 @@ onMounted(() => {
     }
   }
 
-  &__selected { 
+  &__selected {
     color: #a9abac;
   }
 
@@ -378,7 +419,7 @@ onMounted(() => {
     display: flex;
     padding-block: .5em;
     margin-bottom: .5em;
-    border-bottom: 1px solid var(--border-color-senary); 
+    border-bottom: 1px solid var(--border-color-senary);
   }
 
   &__details-date {
@@ -430,7 +471,7 @@ onMounted(() => {
     text-transform: uppercase;
   }
 
-  
+
 }
 @include mobile {
   .desktop {
@@ -438,7 +479,7 @@ onMounted(() => {
       flex-direction: column;
     }
   }
-  
+
   .balance-card {
 
     &__balance {

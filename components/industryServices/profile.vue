@@ -1,5 +1,10 @@
 <template>
-    <IndustryServicesCompanyDetails @pubcard:loaded="pubcard = $event" :id="userStore.userPubCard.id"/>
+    <IndustryServicesCompanyDetails
+        @pubcard:loaded="pubcard = $event"
+        :id="userStore.userPubCard.id"
+        :is-cabinet="true"
+        @selectInfoModal="selectInfoModalData"
+    />
   <div class="industry-services-profile">
     <!-- <IndustryServicesCompanyInfo is-change/>
     <h4 class="industry-services-profile__list-title">Услуги</h4>
@@ -67,45 +72,6 @@ const selectInfoModalData = ({type, id}) => {
   }
 }
 
-const servicesData = [
-  {
-    id: 1,
-    name: 'Добровольная сертификация',
-    description: 'Добровольная сертификация представляет собой процесс получения официального подтверждения, свидетельствующего о том, что товары, услуги или выполненные работы отвечают определенным стандартам, включая ГОСТ Р. что товары, услуги или выполненные работы отвечают определенным стандартам, включая ГОСТ Р ',
-    siteUrl: 'https://www.youtube.com/feed/subscriptions',
-    logo: '',
-    category: ['Пошив женской одежды', 'Пошив мужской одежды'],
-    type: 'published'
-  },
-  {
-    id: 2,
-    name: 'Добровольная сертификация',
-    description: 'Добровольная сертификация',
-    siteUrl: 'https://www.youtube.com/feed/subscriptions',
-    logo: '',
-    category: ['Пошив женской одежды', 'Пошив мужской одежды'],
-    type: 'unpublished'
-  },
-  {
-    id: 3,
-    name: 'Добровольная сертификация',
-    description: 'Добровольная сертификация',
-    siteUrl: 'https://www.youtube.com/feed/subscriptions',
-    logo: '',
-    category: ['Пошив женской одежды', 'Пошив мужской одежды'],
-    type: 'published'
-  },
-  {
-    id: 4,
-    name: 'Добровольная сертификация',
-    description: 'Добровольная сертификация',
-    siteUrl: 'https://www.youtube.com/feed/subscriptions',
-    logo: '',
-    category: ['Пошив женской одежды', 'Пошив мужской одежды'],
-    type: 'unpublished'
-  }
-]
-
 </script>
 
 <style lang="scss">
@@ -145,6 +111,7 @@ const servicesData = [
     h3 {
       font-size: 1.8em;
       line-height: 1.2em;
+      margin-top: 2em;
       margin-bottom: 1.5em;
     }
   }

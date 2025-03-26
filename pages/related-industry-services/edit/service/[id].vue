@@ -3,41 +3,38 @@
     <template #header>
       <UiBreadCrumb
         :list="[
-          { label: 'Главная', link: '/' }, 
-          { label: `Профиль`, link: '/profile' }, 
+          { label: 'Главная', link: '/' },
+          { label: `Профиль`, link: '/profile' },
           { label: 'Редактирование услуги', link: '' }
-        ]" 
+        ]"
       />
     </template>
     <template #content>
-      <IndustryServicesEditService :data="data"/>
+      <IndustryServicesEditService v-if="service" :data="service"/>
     </template>
     <template #rightSide>
       <div class="h4 mb-1">Предварительный просмотр услуги</div>
-      <IndustryServicesCard :data="previewCardData" isPreview/>
-    </template>    
+      <IndustryServicesCard v-if="service" :data="service" :isPreview="true"/>
+    </template>
   </NuxtLayout>
 </template>
 
 <script setup>
+import { useAdjacentStore } from '~/store/adjacentStore';
 import { useEntityStore } from '~/store/entityStore';
 
 const entityStore = useEntityStore();
+const adjacentStore = useAdjacentStore();
 
-const data = ref({
-  description: 'Добровольная сертификация представляет собой процесс получения официального подтверждения, \n\nсвидетельствующего о том, что товары, услуги или выполненные работы отвечают определенным стандартам, включая ГОСТ Р. что товары, услуги или выполненные работы отвечают определенным стандартам, включая ГОСТ Р ',
-  siteUrl: 'sdfasdfasd',
-  logo: '',
-  categories: [1, 2],
-  name: 'Добровольная сертификация',
-})
+const router = useRoute();
 
-const previewCardData = computed(() => ({
-  name: data.value.name,
-  logo: data.value.logo?.url,
-  siteUrl: data.value.siteUrl,
-  category: entityStore.getEntityLabelById('categories', data.value.categories),
-  description: data.value.description
-}))
+const service = ref(null);
+
+onMounted(() => {
+    adjacentStore.getService(router.params.id)
+    .then((response) => {
+        service.value = response.data;
+    });
+});
 
 </script>
