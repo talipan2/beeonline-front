@@ -298,6 +298,19 @@ const fetchData = async(type, filter) => {
     query.minLot = entityStore.getEntityLabelById('minLot', query.minLot);
     query.minLot = query.minLot.charAt(0).toUpperCase() + query.minLot.slice(1);
   }
+  if(query?.date) {
+    switch (query.date) {
+      case('week'):
+        query.date = '1 неделя';
+        break;
+      case('month'):
+        query.date = '1 месяц';
+        break;
+      case('year'):
+        query.date = '1 год';
+        break;
+    }
+  }
   if(type  === 'orders') {
     try {
       loading.value = true

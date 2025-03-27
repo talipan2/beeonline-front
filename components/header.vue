@@ -82,7 +82,7 @@
                     size="around"
                 >
                     <SvgoNotice class="svg-m" />
-                    <UiAlertBadge />
+                    <UiAlertBadge v-if="userNotifications > 0" :count="userNotifications"/>
                 </UiButton>
                 <HeaderMenuDropDown v-model="isAuth" />
             </template>
@@ -151,6 +151,10 @@ const menuItems = ref([
 
 const visibleMenuItems = ref([]);
 const hiddenMenuItems = ref([]);
+
+const userNotifications = computed(() => {
+  return userStore.userNotifications
+})
 
 
 const updateMenuVisibility = () => {

@@ -1,6 +1,17 @@
 <template>
-  <span class="alert-badge">1</span>
+  <span class="alert-badge">{{ count }}</span>
 </template>
+
+<script setup>
+
+const props = defineProps({
+  count: {
+    type: Number,
+    default: 0
+  }
+})
+
+</script>
 
 <style lang="scss">
 .alert-badge {

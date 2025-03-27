@@ -75,6 +75,7 @@ export const useUserStore = defineStore("user", {
             this.userData = data.user;
             this.userRoles = data.user.roles;
             this.role = data.user.role;
+            this.userNotifications = data.user?.unread_log_events_count
             localStorage.removeItem("token");
             sessionStorage.removeItem("token");
             if (values.is_remember) {
@@ -95,6 +96,7 @@ export const useUserStore = defineStore("user", {
                     this.userRoles = response.user.roles;
                     this.role = response.user.role;
                     this.userOrganizationId = response.user.organization_id;
+                    this.userNotifications = response.user?.unread_log_events_count
                 }
             } catch (error) {
                 if (
@@ -118,6 +120,7 @@ export const useUserStore = defineStore("user", {
                 if (response.data) {
                     this.isAuth = true;
                     this.userData = response.data.user;
+                    this.userNotifications = response.data.user?.unread_log_events_count
                     // useCookie('role').value = 'customer';
                     this.userRoles = response.data.user.roles;
                     this.role = response.data.user.role;
