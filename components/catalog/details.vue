@@ -54,6 +54,22 @@
         <SvgoMessage class="svg-m" />
         Написать Заказчику
       </UiButton>
+      <PhoneNumberModal
+        :order-id="entityData.id"
+        v-if="type === 'order'"
+      >
+        <template #button="{ open }">
+            <UiButton class="orders-details__btn"
+                v-if="type === 'order'"
+                variant="quinary" size="large"
+                type="button"
+                @click="open"
+            >
+                <SvgoMessage class="svg-m" />
+                Позвонить заказчику
+            </UiButton>
+        </template>
+      </PhoneNumberModal>
       <UiButton type="button" class="orders-details__btn" :class="{ 'orders-details__btn_type_active': isFavorite }" variant="tertiary" size="around" @click="handleAddFavorite">
         <SvgoFavorite class="svg-m" />
       </UiButton>
@@ -242,8 +258,13 @@ onMounted(() => {
   &__btn-container {
     display: flex;
     align-items: center;
-    column-gap: 1em;
+    gap: 1em;
     margin-bottom: 3.125em;
+
+    @include mobile {
+      flex-direction: column;
+      align-items: start;
+    }
   }
 
   &__btn {
@@ -253,6 +274,10 @@ onMounted(() => {
     column-gap: .75em;
     text-transform: uppercase;
     font-size: .75em;
+
+    @include mobile {
+      width: 100%;
+    }
 
     &_type_active {
       background-color: var(--border-color-quaternary);

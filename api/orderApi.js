@@ -18,15 +18,15 @@ export default {
   },
 
   async editOrder(id, data, form) {
-    const { 
-      name, 
-      description, 
-      termsOfCooperation, 
-      rawMaterials, 
-      price, 
-      batch, 
-      completionDate, 
-      patterns, 
+    const {
+      name,
+      description,
+      termsOfCooperation,
+      rawMaterials,
+      price,
+      batch,
+      completionDate,
+      patterns,
       cities,
       regions,
       isSafeDeal,
@@ -71,4 +71,9 @@ export default {
   async getSelfOrders(organizationId, params={}) {
     return axios.get(`organizations/${organizationId}/orders`, {params})
   },
+
+  async getPhoneNumber(id)
+  {
+    return useApi().get(`orders/${id}/phone-number`, null, null, true);
+  }
 }
