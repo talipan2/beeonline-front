@@ -20,32 +20,41 @@
                             :type="'error'"
                         />
                     </template>
-                    <template v-else>
-                        {{ phoneNumberAssignment }}
+                    <template v-else-if="phoneNumberAssignment">
+                        <div class="phone-number">
+                            Временный номер:
+                            <a :href="`tel:+${phoneNumber}`"
+                                >+{{ phoneNumber }}</a
+                            >
+                        </div>
+                        <p>
+                            Он защищает заказчика от нежелательных звонков. Не
+                            сохраняйте его: скоро телефон заменится на другой.
+                            Компания не получит смс и любые сообщения в
+                            мессенджерах не будут доставлены.
+                        </p>
                     </template>
                 </template>
             </div>
             <div class="modal-buttons">
-                <template v-if="responseErrorData">
-                    <template v-if="responseErrorData.button">
-                        <UiButton
-                            class="modal-button"
-                            variant="quinary"
-                            size="large"
-                            :target="responseErrorData.button.target"
-                            :to="responseErrorData.button.url"
-                            >{{ responseErrorData.button.title }}</UiButton
-                        >
-                    </template>
-                    <template v-if="responseErrorData.can_chat">
-                        <UiButton
-                            class="modal-button"
-                            variant="quinary"
-                            size="large"
-                            :to="`/chat?order_id=${orderId}`"
-                            >Написать заказчику</UiButton
-                        >
-                    </template>
+                <template v-if="responseErrorData?.button">
+                    <UiButton
+                        class="modal-button"
+                        variant="quinary"
+                        size="large"
+                        :target="responseErrorData.button.target"
+                        :to="responseErrorData.button.url"
+                        >{{ responseErrorData.button.title }}</UiButton
+                    >
+                </template>
+                <template v-if="phoneNumberAssignment || responseErrorData?.can_chat">
+                    <UiButton
+                        class="modal-button"
+                        variant="quinary"
+                        size="large"
+                        :to="`/chat?order_id=${orderId}`"
+                        >Написать заказчику</UiButton
+                    >
                 </template>
                 <UiButton
                     class="modal-button"
@@ -79,6 +88,10 @@ const loading = ref(false);
 const responseError = ref(null);
 const responseErrorKey = ref(null);
 const responseErrorData = ref(null);
+
+const phoneNumber = computed(() => {
+    return phoneNumberAssignment.value?.phone_number;
+});
 
 const getPhoneNumber = async () => {
     if (loading.value) return;
@@ -130,8 +143,22 @@ watch(
 </script>
 
 <style lang="scss" scoped>
+.phone-number {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+
+    a {
+        display: inline;
+    }
+}
+
 .modal-text {
     font-size: max(12px, 1.4em);
+
+    p {
+        margin-bottom: 1em;
+    }
 }
 .modal-buttons {
     display: flex;
