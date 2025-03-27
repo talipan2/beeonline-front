@@ -68,22 +68,11 @@ const formatLocationsList = (regions=[], cities=[]) => {
   return locations.map(item => item.name).join(' / ');
 }
 
-onMounted(async () => {
-    loading.value = true;
-
-    try {
-      const ordersResponse = await entityStore.getOrder(router.currentRoute.value.params.id);
-      data.value = ordersResponse.data;
-      if(ordersResponse.data && ordersResponse.data.pub_card) {
-        pubCard.value = ordersResponse.data.pub_card;
-      }
-    } catch (err) {
-      console.error(err);
-    } finally {
-      loading.value = false;
-    }
-  }
-);
+const { ...ordersResponse } = await entityStore.getOrder(router.currentRoute.value.params.id)
+data.value = ordersResponse.data;
+if (ordersResponse.data && ordersResponse.data.pub_card) {
+  pubCard.value = ordersResponse.data.pub_card;
+}
 
 const pageTitle = computed(() => formatData.value.name || '');
 

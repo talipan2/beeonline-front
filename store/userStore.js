@@ -47,6 +47,7 @@ export const useUserStore = defineStore("user", {
         userBalance: 1000.2,
         userBonuses: 100000,
         userInvoicing: null,
+        userNotifications: null,
     }),
     getters: {
         getRole: (state) => state.role,
@@ -164,6 +165,13 @@ export const useUserStore = defineStore("user", {
                             };
                         }
                     })
+
+                    useChannelsStore().userChannel
+                    .stopListening("UnreadNotificationCountUpdated")
+                    .listen("UnreadNotificationCountUpdated", (event) => {
+                        console.log(event, 12312312312);
+                    })
+
                 }
                 return response.data;
             } catch (error) {

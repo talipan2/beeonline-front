@@ -1,7 +1,7 @@
 <template>
   <div class="tariff-card">
     <div class="tariff-card__header">
-      <h3 class="tariff-card__title">{{ tariff.title }}</h3>
+      <h3 class="tariff-card__title">{{ tariff.name }}</h3>
       <p class="tariff-card__duration">{{ duration }}</p>
     </div>
     <p class="tariff-card__discount" v-if="discount && tariff.value !== 'free'">{{ `(-${discount}%)`}}</p>

@@ -1,6 +1,5 @@
 <template>
   <div class="tariffs-table-wrapper">
-
     <div class="tariffs-table">
       <table class="tariffs-table__table">
         <colgroup>
@@ -13,7 +12,7 @@
           <tr>
             <th>Возможности</th>
             <th v-for="(tariff, index) in tariffs" :key="index">
-              {{ tariff.title }}
+              {{ tariff.name }}
             </th>
           </tr>
         </thead>
@@ -74,7 +73,7 @@
           :price="getPrice(tariff)"
           currency="RUB"
           :discount="discount"
-          @handlePay="handlePayModal(column.value, props.subDuration)"
+          @handlePay="handlePayModal(tariff.code, props.subDuration)"
         />
       </template>
     </div>
@@ -97,37 +96,6 @@ const settingStore = useSettingStore();
 
 const emit = defineEmits(['select']);
 
-const columns = [
-  {
-    id: 1,
-    value: 'free',
-    title: 'Бесплатный',
-    price: 0
-  },
-  {
-    id: 2,
-    value: 'premium',
-    title: 'Тариф Премиум',
-    price: [
-      {id: 1, value: '1', price: 3000},
-      {id: 2, value: '3', price: 8550},
-      {id: 3, value: '6', price: 16200},
-      {id: 4, value: '12', price: 30600},
-    ],
-  },
-  // {
-  //   id: 3,
-  //   value: 'ultra',
-  //   title: 'Тариф Ультра',
-  //   price: [
-  //     {id: 1, value: '1', price: 7000},
-  //     {id: 2, value: '3', price: 19950},
-  //     {id: 3, value: '6', price: 37800},
-  //     {id: 4, value: '12', price: 71400},
-  //   ],
-  // },
-];
-
 const tariffsStore = useTariffsStore();
 
 const tariffs = computed(() => tariffsStore.tariffs);
@@ -135,66 +103,15 @@ const services = computed(() => tariffsStore.services?.filter(service => service
 
 const getMobileTariffsFeatures = (tariff) => {
   const features = [];
-  rows.forEach(row => {
-    if(row.values[tariff]) features.push({feature: row.feature, value: row.values[tariff]});
-  });
+
+  if(services.value.length === 0) return
+
+  services.value.forEach(service => {
+    const tariffValue = service.tariffs.find(item => item.id === tariff);
+    if(tariffValue) features.push({feature: service.name, value: tariffValue.description});
+  })
   return features;
 }
-
-const rows = [
-  {
-    feature: 'Мониторинг заказов',
-    values: [true, true, true],
-  },
-  {
-    feature: 'Персональный менеджер (проф. оформление публичной карты и создание услуг)',
-    values: [false, false, true],
-  },
-  {
-    feature: 'Доступ к контактам заказчика',
-    values: [false, false, true],
-  },
-  {
-    feature: 'Приоритетная отправка уведомлений о новых заказах в личный кабинет на сайте, почта\телеграм',
-    values: ['Через 3 часа после публикации', 'Мгновенно', 'Мгновенно'],
-  },
-  {
-    feature: 'Приоритетная отправка откликов',
-    values: ['Отклик отправится через час', 'Мгновенно', 'Мгновенно'],
-  },
-  {
-    feature: 'Выделение отклика исполнителя в чате заказчика',
-    values: [false, true, true],
-  },
-  {
-    feature: 'Размещение в начале диалогов заказчика',
-    values: [false, false, true],
-  },
-  {
-    feature: 'Закрепление интересующих чатов',
-    values: [true, true, true],
-  },
-  {
-    feature: 'Проверенный исполнитель галочка, заказчик может бесплтано посмотреть отчет о компании',
-    values: [false, true, true],
-  },
-  {
-    feature: 'Выделение карточки исполнителя в каталоге исполнителей',
-    values: [false, true, true],
-  },
-  {
-    feature: 'Размещение карточки в слайдере на первой странице каталога услуг',
-    values: [false, false, true],
-  },
-  {
-    feature: 'Поднятие карточки исполнителя в топ (не более 1 услуги в день)',
-    values: [false, '7 раз', '10 раз'],
-  },
-  {
-    feature: 'Сервис проверки контрагента',
-    values: [false, '7 проверок', '10 проверок'],
-  }
-];
 
 const discount = computed(() => {
   if (!props.subDuration) return null;

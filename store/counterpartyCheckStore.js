@@ -15,5 +15,9 @@ export const useCounterpartyCheckStore = defineStore("counterpartyCheck", {
         async show(id) {
             return await Api.show(id);
         },
+
+        async getCounterparties(params) {
+            return await Api.getCounterparties(params);
+        },
     },
 });

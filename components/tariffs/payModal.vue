@@ -11,6 +11,29 @@
           <p class="pay-modal__balance">Ваш баланс: <span>{{ formatMoney(userBonuses, 'bonuses') }} баллов</span></p>
           <UiCheckbox :is-validated="false" v-model="isPaymentWithBonuses" name="bonuses">Оплата баллами</UiCheckbox>
         </div>
+        <div class="pay-modal__total" v-if="data.isServices && data.data?.length > 0">
+          <table>
+            <colgroup>
+              <col class="pay-modal__total-col-1" />
+              <col class="pay-modal__total-col-2" />
+              <col class="pay-modal__total-col-3" />
+          </colgroup>
+            <thead>
+              <tr>
+                <th>Название</th>
+                <th>Кол-во</th>
+                <th>Сумма</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(service, index) in data.data" :key="index">
+                <td>{{ service.name }}</td>
+                <td>{{ service.quantity }}</td>
+                <td>{{ formatMoney(service.price * service.quantity, currentCurrency, 0) }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
         <div class="pay-modal__footer">
           <div class="pay-modal__order">
             <p class="pay-modal__order-label">Итого к оплате</p>
@@ -218,6 +241,59 @@ const handlePayment = () => {
     font-size: 1.4em;
     width: 100%;
     text-transform: uppercase;
+  }
+
+  &__total {
+    font-size: 1.2em;
+
+    &-col-1 {
+      width: 50%;
+    }
+
+    &-col-2 {
+      width: 20%;
+    }
+
+    &-col-3 {
+      width: 30%;
+    }
+
+    table {
+      font-size: 1.2em;
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    thead {
+      text-align: right;
+      border-bottom: 1px solid #C4C4C4;
+
+      th:first-child {
+        text-align: left;
+      }
+
+      tr {
+        border-bottom: 1px solid #C4C4C4;
+      }
+    }
+
+    tbody {
+      text-align: right;
+
+      td:first-child {
+        text-align: left;
+      }
+
+      tr:not(:last-child) {
+        border-bottom: 1px solid #f1f1f1;
+      }
+
+      td {
+        padding-block: .5em;
+      }
+    }
+
+
   }
 
 }

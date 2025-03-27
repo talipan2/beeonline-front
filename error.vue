@@ -28,6 +28,7 @@ const router = useRouter();
 
 function goBack() {
   const previousRoute = router.options.history.state.back;
+  console.log(previousRoute)
   if (previousRoute) {
     router.back();
   } else {

@@ -9,6 +9,7 @@
         :escToClose="true"
         :background="background"
         :lockScroll="lockScroll"
+        @closed="$emit('update:modelValue', false)"
     >
         <div class="modal-dialog"
             @click.self="() => $emit('update:modelValue', false)"

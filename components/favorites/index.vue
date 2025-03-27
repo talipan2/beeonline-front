@@ -239,11 +239,25 @@ const membersData = computed(() => {
 
   return data.value.members.map(item => {
     return {
+      // id: item.id,
+      // name: item.name,
+      // logo: item.logo,
+      // description: item.description,
+      // fillRating: item.fill_rating,
+      // entityCount: item.type === 'performer' ? item.services_count : item.orders_count,
+      // category: item.categories && item.categories.length ? item.categories.map(item => item.name) : [],
+      // rawMaterials: [item.materials_own ? 'Собственное' : '', item.materials_tolling ? 'Давальческое' : ''].filter(Boolean),
+      // type: item.type,
+      // countryId: {countries: [item.country_id]},
+
       id: item.id,
       name: item.name,
       logo: item.logo,
       description: item.description,
       fillRating: item.fill_rating,
+      reviewCount: item.reviews_about_count,
+      stars: item.reviews_stats_about?.stars,
+      rating: item.reviews_stats_about?.average_rating,
       entityCount: item.type === 'performer' ? item.services_count : item.orders_count,
       category: item.categories && item.categories.length ? item.categories.map(item => item.name) : [],
       rawMaterials: [item.materials_own ? 'Собственное' : '', item.materials_tolling ? 'Давальческое' : ''].filter(Boolean),

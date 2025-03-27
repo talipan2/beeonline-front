@@ -10,4 +10,8 @@ export default {
     async show(id) {
         return useApi().get(`counterparty-check/${id}`, null, null, true);
     },
+
+    async getCounterparties(params = {}) {
+        return useApi().get(`counterparty-check`, params);
+    }
 };

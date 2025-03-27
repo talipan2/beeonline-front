@@ -133,6 +133,10 @@ watch(isOpenModal, (newVal) => {
     .modal-content {
       height: max-content;
     }
+
+    .modal-content-lg {
+      padding: 0;
+    }
   }
 }
 

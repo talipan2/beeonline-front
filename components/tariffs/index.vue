@@ -8,7 +8,7 @@
       <div class="tariffs__content-header">
         <h2 class="tariffs__title">Тарифы</h2>
         <CommonTabs class="tariffs__tabs" :tabs="tabsList" v-model="currentTab" v-if="!isInternational"/>
-        <UiSelect class="tariffs__selector" :options="tabsList" v-model="currentTab" v-if="!isInternational" />
+        <UiSelect class="tariffs__selector" :options="tabsList" v-model="currentTab" v-if="!isInternational" :return-value="true" />
       </div>
       <TariffsPriceTable :subDuration="currentTab" @select="selectTariff" v-if="!isInternational"/>
       <TariffsInternational v-if="isInternational" @select="selectTariff"/>

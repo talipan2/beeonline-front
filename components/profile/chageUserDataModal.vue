@@ -64,6 +64,7 @@
           <UiButton class="user-data-modal__btn" type="submit" variant="quinary" size="large">Сохранить</UiButton>
         </div>
       </UiForm>
+      {{ isOpen }}
     </template>
   </UiModal>
 </template>
@@ -87,6 +88,7 @@ const data = ref({
 const settingStore = useSettingStore();
 
 const handleSubmit = async(values, form) => {
+
   if(data.value.id) {
     await userStore.setUserData({
       name: data.value.name,

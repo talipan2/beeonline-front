@@ -1,6 +1,5 @@
 <template>
   <div class="notification-card" :class="{ 'notification-card_type_not-readad': !data.readed }">
-    {{ data }}
     <div class="notification-card__image">
       <SvgoSetting class="svg-lx" v-if="data.group === 'system'"/>
       <SvgoSewingMachine class="svg-lx" v-if="data.group === 'orders' || data.group === 'services'" />

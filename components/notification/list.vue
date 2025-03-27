@@ -35,7 +35,7 @@ const notificationsList = ref(null)
 const filterOptions = [
   { id: 1, label: 'Все уведомления', value: 'all' },
   { id: 2, label: 'Системные', value: 'system' },
-  { id: 3, label: 'Заказы/Услуги', value: 'product' },
+  { id: 3, label: 'Заказы/Услуги', value: 'services/orders' },
   { id: 4, label: 'Сообщения', value: 'chat' },
   { id: 5, label: 'Отзывы', value: 'reviews' },
   { id: 6, label: 'Сделки', value: 'deals' },

@@ -20,12 +20,9 @@ const { handleSubmit, errors } = useForm();
 const loading = ref(false);
 
 const onSubmit = handleSubmit(async (values, form) => {
-  console.log(form)
   if (!props.submit || loading.value) return;
 
   loading.value = true;
-
-  console.log(props.submit)
 
   try {
     await props.submit(values, form);
