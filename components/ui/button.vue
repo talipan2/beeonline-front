@@ -4,6 +4,7 @@
     :to="to"
     v-if="type === 'link'"
     :target="target"
+    :download="download"
   >
     <slot />
   </NuxtLink>
@@ -45,6 +46,10 @@ const props = defineProps({
   withoutPadding: {
     type: Boolean,
     default: false,
+  },
+  download: {
+    type: Boolean,
+    default: false
   }
 });
 

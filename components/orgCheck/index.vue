@@ -6,7 +6,7 @@
         v-model="currentFilter"
         :options="filterOptions"
         :error-show="false"
-        return-value="value"
+        :return-value="true"
       />
       <div class="org-check__header">
         <p class="org-check__col org-check__col_type_one">Дата:</p>
@@ -18,9 +18,9 @@
           <p class="org-check__col org-check__col_type_one">{{ formatDate(org.created_at, 'DD.MM.YYYY - mm:HH') }}</p>
           <p class="org-check__col org-check__col_type_two">{{ org.counterparty_name }}</p>
           <p class="org-check__col org-check__col_type_three">{{ formatStatus(org.status) }}</p>
-          <div class="org-check__col org-check__btn-container">
+          <div class="org-check__col org-check__btn-container" v-if="org.file">
             <PaidServiceCounterpartyCheck
-                :id="org?.organizationId"
+                :id="org?.counterparty_id"
             >
                 <template #button="{ open }">
                   <UiButton type="button" class="org-check__btn org-check__btn_type_one" variant="tertiary" size="large" @click="open">
@@ -29,13 +29,13 @@
                   </UiButton>
                 </template>
             </PaidServiceCounterpartyCheck>
-            <UiButton class="org-check__btn org-check__btn_type_one" variant="tertiary" size="large">
+            <UiButton class="org-check__btn org-check__btn_type_one" variant="tertiary" size="large" :to="org.file?.url" target="_blank">
               Открыть
             </UiButton>
-            <UiButton class="org-check__btn" variant="quinary" size="large">
+            <a class="btn btn-quinary btn-large org-check__btn" :href="org.file?.url" download>
               <SvgoDownload class="svg-m" fill="#fff"/>
               Скачать PDF
-            </UiButton>
+            </a>
           </div>
         </div>
       </div>
@@ -69,7 +69,7 @@ const formatStatus = (status) => {
 
 const page = ref({
   currentPage: 1,
-  lastPage: 2
+  lastPage: 1
 })
 
 const currentFilter = ref('all')
