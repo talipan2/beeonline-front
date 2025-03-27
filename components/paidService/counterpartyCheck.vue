@@ -44,7 +44,7 @@ const preparedData = ref(null);
 const usedData = ref(null);
 
 const prepare = () => {
-    return counterpartyCheckStore.check(props.id)
+    return counterpartyCheckStore.prepare(props.id)
     .then((response) => {
         preparedData.value = response;
     });
