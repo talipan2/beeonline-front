@@ -10,7 +10,7 @@
                 </template>
                 <template v-else>
                     <p>Обратите внимание что повторная проверка контрагента так же будет платной</p>
-                    <p>Количество доступных проверок: {{ preparedData.check_service.quantity }}</p>
+                    <p>Количество доступных проверок: {{ preparedData.check_service?.quantity || 0 }}</p>
                 </template>
                 <div class="counterparty-check__organization">
                     <div class="counterparty-check__organization-title">Юридическое название организации</div>
