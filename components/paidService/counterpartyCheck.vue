@@ -10,7 +10,7 @@
                 </template>
                 <template v-else>
                     <p>Обратите внимание что повторная проверка контрагента так же будет платной</p>
-                    <p>Количество доступных проверок: {{ preparedData.check_service.quantity }}</p>
+                    <p>Количество доступных проверок: {{ preparedData.check_service?.quantity || 0 }}</p>
                 </template>
                 <div class="counterparty-check__organization">
                     <div class="counterparty-check__organization-title">Юридическое название организации</div>
@@ -44,7 +44,7 @@ const preparedData = ref(null);
 const usedData = ref(null);
 
 const prepare = () => {
-    return counterpartyCheckStore.check(props.id)
+    return counterpartyCheckStore.prepare(props.id)
     .then((response) => {
         preparedData.value = response;
     });
