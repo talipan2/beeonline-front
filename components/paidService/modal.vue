@@ -69,6 +69,7 @@ const responseErrorKey = ref(null);
 const responseErrorData = ref(null);
 
 watch(() => open.value, (value) => {
+    if (!value) return;
     prepare();
 });
 

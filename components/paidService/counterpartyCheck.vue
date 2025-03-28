@@ -20,7 +20,22 @@
         </template>
         <template #used>
             <div class="counterparty-check" v-if="usedData">
-                {{ usedData }}
+                <ul class="counterparty-check__list">
+                    <li>Номер проверки: {{ usedData.id }}</li>
+                    <li>Название организации: {{ usedData.counterparty_name }}</li>
+                    <li>Статус: {{ usedData.status_name }}</li>
+                </ul>
+                <UiButton
+                    class="counterparty-check__btn"
+                    variant="primary"
+                    size="large"
+                    :to="usedData.file.url"
+                    v-if="usedData.status === 'success'"
+                >
+                    Открыть
+                </UiButton>
+                <CommonSpinner v-if="usedData.status === 'in_progress'" />
+                <CommonAlerts :alert="'Во время проверки произошла ошибка'" type="error" v-if="usedData.status === 'failed'"/>
             </div>
         </template>
     </PaidServiceModal>
@@ -53,10 +68,13 @@ const use = () => {
     return counterpartyCheckStore.check(props.id)
     .then((response) => {
         usedData.value = response.data;
-        channelsStore.orgChannel.stopListening("CounterpartyUpdate")
-            .listen("CounterpartyUpdate", (event) => {
-                if (event.id == props.id) {
-                    counterpartyCheckStore.show(usedData.value.id);
+        channelsStore.orgChannel.stopListening("CounterpartyCheckUpdate")
+            .listen("CounterpartyCheckUpdate", (event) => {
+                if (event.id == usedData.value.id) {
+                    counterpartyCheckStore.show(usedData.value.id)
+                    .then((response) => {
+                        usedData.value = response.data;
+                    });
                 }
             })
     });
