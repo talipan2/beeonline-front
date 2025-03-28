@@ -25,17 +25,17 @@
       </div>
       <TariffsTransactionsTable />
     </div>
-    <!-- <div class="tariffs__content">
+    <div class="tariffs__content">
       <div class="tariffs__content-header">
         <h2 class="tariffs__title">Выставленные счета</h2>
       </div>
       <TariffsInvoicesTable />
-    </div> -->
-    <TariffsPayModal 
-      :data="currentPaymentData" 
-      :userBalance="userBalance" 
-      :userBonuses="userBonuses" 
-      :currentCurrency="currentCurrency" 
+    </div>
+    <TariffsPayModal
+      :data="currentPaymentData"
+      :userBalance="userBalance"
+      :userBonuses="userBonuses"
+      :currentCurrency="currentCurrency"
       :reset="handleReset"
       :deleteResetFunction="deleteResetFunction"
     />
@@ -54,7 +54,7 @@ const userStore = useUserStore();
 const userBalance = computed(() => formatMoney(tariffsStore.userBalance, currentCurrency.value));
 const userBonuses = computed(() => tariffsStore.userBonuses);
 
-// переменная для определения международного тарифа 
+// переменная для определения международного тарифа
 const isInternational = computed(() => tariffsStore.isForeigner);
 
 

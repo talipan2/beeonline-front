@@ -12,6 +12,8 @@
         <tr>
           <th>Дата и время</th>
           <th>Сумма</th>
+          <th>Тип</th>
+          <th>Статус</th>
           <th>Оплачен</th>
           <th>Действия</th>
         </tr>
@@ -19,9 +21,9 @@
       <tbody>
         <tr v-for="(invoice, index) in invoiceList" :key="index">
           <td class="invoices-table__date">
-            {{ $formatDate(invoice.created_at, "DD.MM.YYYY") }}
+            {{ formatDate(invoice.created_at, "DD.MM.YYYY") }}
             <span>{{
-              $formatDate(invoice.created_at, "mm:HH")
+              formatDate(invoice.created_at, "mm:HH")
             }}</span>
           </td>
           <td class="invoices-table__sum" :class="{
@@ -30,23 +32,30 @@
             'invoices-table__sum_type_add':
               invoice.type === 'add',
           }">
-            {{ $formatMoney(
+            {{ formatMoney(
               invoice.amount,
               invoice.currency?.code
             )
             }}
           </td>
           <td class="invoices-table__date">
+            {{ invoice.type_name }}
+          </td>
+          <td class="invoices-table__date">
+            {{ invoice.status_name }}
+          </td>
+          <td class="invoices-table__date">
             <template v-if="invoice.is_payed && invoice.payed_at">
-              {{ $formatDate(invoice.payed_at, "DD.MM.YYYY") }}
+              {{ formatDate(invoice.payed_at, "DD.MM.YYYY") }}
               <span>{{
-                $formatDate(invoice.payed_at, "mm:HH")
+                formatDate(invoice.payed_at, "mm:HH")
               }}</span>
             </template>
             <template v-else>Не оплачен</template>
           </td>
           <td>
-            <a :href="`/storage/${invoice.file}`" target="_blank">Открыть</a>
+            <a :href="invoice.pdf_url" target="_blank" v-if="invoice.pdf_url">Открыть</a>
+            <a :href="invoice.payment_url" target="_blank" v-if="invoice.payment_url">Открыть</a>
           </td>
         </tr>
       </tbody>
@@ -58,10 +67,11 @@
 </template>
 
 <script setup>
+import { useTariffsStore } from '~/store/tariffsStore';
 import { useUserStore } from '~/store/userStore';
 
-
 const userStore = useUserStore();
+const tariffStore = useTariffsStore();
 const anchor = ref('anchor');
 
 const invoiceList = ref([]);
@@ -93,29 +103,29 @@ function getInvoices(dropPage = true, need_scroll = true) {
     };
   }
 
-  // userStore.getInvoices(page.value.current_page)
-  //   .then((data) => {
-  //     invoiceList.value = data.data;
-  //     page.value = {
-  //       current_page: data.current_page,
-  //       last_page: data.last_page,
-  //       prev_page: page.value.prev_page,
-  //     }
-  //     // document.body.scrollIntoView({ behavior: "smooth" });
-  //     if (need_scroll && anchor.value) {
-  //       anchor.value.scrollIntoView({ behavior: "smooth" });
-  //     }
-  //   })
-  //   .catch(() => {
-  //     page.value = {
-  //       current_page: page.value.prev_page,
-  //       last_page: page.value.last_page,
-  //       prev_page: page.value.prev_page,
-  //     };
-  //   })
-  //   .finally(() => {
-  //     loading.value = false;
-  //   });
+  tariffStore.getInvoices(userStore.userData?.id, page.value.current_page)
+    .then((data) => {
+      invoiceList.value = data.data;
+      page.value = {
+        current_page: data.current_page,
+        last_page: data.last_page,
+        prev_page: page.value.prev_page,
+      }
+      // document.body.scrollIntoView({ behavior: "smooth" });
+      if (need_scroll && anchor.value) {
+        anchor.value.scrollIntoView({ behavior: "smooth" });
+      }
+    })
+    .catch(() => {
+      page.value = {
+        current_page: page.value.prev_page,
+        last_page: page.value.last_page,
+        prev_page: page.value.prev_page,
+      };
+    })
+    .finally(() => {
+      loading.value = false;
+    });
 }
 
 getInvoices(true, false);
@@ -139,7 +149,7 @@ getInvoices(true, false);
   table {
     border-collapse: separate;
     border-spacing: 0 10px;
-    width: 50%;
+    width: 55%;
     border-bottom: 2px solid #6937a5;
   }
 
