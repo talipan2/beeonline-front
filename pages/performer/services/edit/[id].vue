@@ -157,27 +157,48 @@ watch(() => router.currentRoute.value.query.step, (newVal) => {
   currentStep.value = Number(newVal)
 })
 
-onMounted(() => {
-  entityStore.getService(id).then(res => {
-    if(res && res.data) {
-      serviceData.value = {
-        id: res.data.id,
-        name: res.data.name,
-        logo: res.data.gallery && res.data.gallery.length ? res.data.gallery[0] : {url: null, id: null},
-        categories: res.data.product_categories ? res.data.product_categories.map(item => item.id) : [],
-        locations: res.data.cities ? {cities: res.data.cities.map(item => item.id)}: {},
-        availabilityStm: Number(res.data.is_stm),
-        freeTestSamples: Number(res.data.free_samples),
-        minLot: res.data.batches && res.data.batches.length ? res.data.batches.map(item => item.id) : [],
-        rawMaterials: [res.data.materials_own ? 1 : '', res.data.materials_tolling ? 0 : ''].filter(item => item !== '') || [],
-        description: res.data.description,
-        termsOfCooperation: res.data.conditions,
-        gallery: res.data.gallery || [],
-        tzFiles: res.data.tz_files || []
-      }
+await entityStore.getService(id).then(res => {
+  if (res && res.data) {
+    serviceData.value = {
+      id: res.data.id,
+      name: res.data.name,
+      logo: res.data.gallery && res.data.gallery.length ? res.data.gallery[0] : { url: null, id: null },
+      categories: res.data.product_categories ? res.data.product_categories.map(item => item.id) : [],
+      locations: res.data.cities ? { cities: res.data.cities.map(item => item.id) } : {},
+      availabilityStm: Number(res.data.is_stm),
+      freeTestSamples: Number(res.data.free_samples),
+      minLot: res.data.batches && res.data.batches.length ? res.data.batches.map(item => item.id) : [],
+      rawMaterials: [res.data.materials_own ? 1 : '', res.data.materials_tolling ? 0 : ''].filter(item => item !== '') || [],
+      description: res.data.description,
+      termsOfCooperation: res.data.conditions,
+      gallery: res.data.gallery || [],
+      tzFiles: res.data.tz_files || []
     }
-  })
+  }
 })
+
+
+// onMounted(() => {
+//   entityStore.getService(id).then(res => {
+//     if(res && res.data) {
+//       serviceData.value = {
+//         id: res.data.id,
+//         name: res.data.name,
+//         logo: res.data.gallery && res.data.gallery.length ? res.data.gallery[0] : {url: null, id: null},
+//         categories: res.data.product_categories ? res.data.product_categories.map(item => item.id) : [],
+//         locations: res.data.cities ? {cities: res.data.cities.map(item => item.id)}: {},
+//         availabilityStm: Number(res.data.is_stm),
+//         freeTestSamples: Number(res.data.free_samples),
+//         minLot: res.data.batches && res.data.batches.length ? res.data.batches.map(item => item.id) : [],
+//         rawMaterials: [res.data.materials_own ? 1 : '', res.data.materials_tolling ? 0 : ''].filter(item => item !== '') || [],
+//         description: res.data.description,
+//         termsOfCooperation: res.data.conditions,
+//         gallery: res.data.gallery || [],
+//         tzFiles: res.data.tz_files || []
+//       }
+//     }
+//   })
+// })
 
 onMounted(() => {
   if(router.currentRoute.value.query.step) {

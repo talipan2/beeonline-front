@@ -28,7 +28,6 @@ export default defineNuxtPlugin((nuxtApp) => {
   axios.interceptors.response.use(
     (response) => response,
     (error) => {
-      console.log(error)
       // if (error.response && error.response.status === 404) {
       //   throw showError({
       //     statusCode: 404,

@@ -77,14 +77,22 @@ const filterList = ref({
     status: props.isCabinet ? 'ANY' : 'ACTIVE',
 });
 
-onMounted(() => {
-    organizationStore
+await organizationStore
     .getPubCard(props.id)
     .then((response) => {
         pubcard.value = response;
         emits("pubcard:loaded", response);
         fetchServices(1);
     });
+
+onMounted(() => {
+    // organizationStore
+    // .getPubCard(props.id)
+    // .then((response) => {
+    //     pubcard.value = response;
+    //     emits("pubcard:loaded", response);
+    //     fetchServices(1);
+    // });
 
     adjacentStore.getStatusList();
 });

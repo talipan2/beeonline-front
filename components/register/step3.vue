@@ -8,14 +8,14 @@
         <p class="register__text" v-if="userStore.role === 'performer'">
           Укажите город вашего производства. Если производств несколько - выберите несколько городов, но не более пяти.
         </p>
-        <p class="register__text" v-else>
-          Укажите предпочтительные города или регионы производства заказа.
+        <p class="register__text" v-if="userStore.role === 'customer'">
+          Укажите предпочтительные регионы производства заказа.
         </p>
         <p class="register__text" v-if="userStore.role === 'performer'">
           Указанные города используются для автоматического добавления в новые услуги и позволят потенциальным заказчикам находить их в поиске по регионам.
         </p>
-        <p class="register__text" v-else>
-          Указанные города и регионы используются для автоматического добавления в новые заказы и позволят потенциальным исполнителям находить их в поиске.
+        <p class="register__text" v-if="userStore.role === 'customer'">
+          Указанные регионы используются для автоматического добавления в новые заказы и позволят потенциальным исполнителям находить их в поиске.
         </p>
       </div>
         <CommonLocation 
@@ -31,14 +31,14 @@
         <CommonLocation 
           v-if="userStore.role === 'customer'"
           class="register__location"
-          buttonLabel="Выбрать город или регион" 
+          buttonLabel="Выбрать регион" 
           v-model="data.locations"
           :type="['selectCities', 'selectRegions']" 
           :is-required="true"
           errorLabel="Города производства"
         />
         <div class="register__btn-container" v-if="router.currentRoute.value.path.includes('/register')">
-          <UiButton type="button" class="register__btn" variant="senary" size="large" @click="router.back">Назад</UiButton>
+          <UiButton class="register__btn" variant="senary" size="large" to="/register/step2">Назад</UiButton>
           <UiButton type="submit" class="register__btn" variant="quinary" size="large">Далее
             <SvgoBtnArrow class="svg-lx" />
           </UiButton>
@@ -62,7 +62,15 @@ const props = defineProps({
   },
   title: {
     type: String,
-    default: 'Города фактического производства *',
+    default: () => {
+      if(useUserStore().role === 'performer') {
+        return 'Города фактического производства *';
+      } else if(useUserStore().role === 'customer') {
+        return 'Регионы фактического производства *';
+      } else {
+        return ''
+      }
+    }
   },
   modelValue: {
     type: Object,
@@ -105,8 +113,7 @@ const handleSubmit = (values, form) => {
       id: userStore.userPubCard.id, 
       cities: data.value.locations.cities, 
       regions: data.value.locations.regions,
-      status: 2,
-      is_active: 1, 
+      currentStep: 2 
     }, form).then(res => {
       router.push({path: '/register/step4'});
     })

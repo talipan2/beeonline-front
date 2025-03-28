@@ -15,7 +15,7 @@
           :name="name"
           :value="option.value"
           v-model="field.value"
-          @input="handleChange($event.target.value)"
+          @input="handleChange(Number($event.target.value))"
           :checked="field.value === option.value"
           class="radio-buttons__input"
         />

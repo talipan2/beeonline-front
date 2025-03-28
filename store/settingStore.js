@@ -40,7 +40,8 @@ export const useSettingStore = defineStore("setting", {
     ],
     isLoadingResponse: false,
     isTelegram: false,
-    confirmModal: false
+    confirmModal: false,
+    sendMessageModal: false
   }),
   getters: {
     getCurrencyNameById: (state) => (id) => {

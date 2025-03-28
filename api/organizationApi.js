@@ -69,7 +69,18 @@ export default {
       cities: data.cities,
       regions: data.regions,
       videos: data.videos,
+      current_step: data.currentStep
     }, form)
+  },
+
+  // изменение шага создания публичной карточки
+  async updateCreateStepPubCard(id, step) {
+    return axios.patch(`pubcards/${id}/update-step`, {current_step: step})
+  },
+
+  // опубликовать публичную карточку
+  async pubCardPublish(id) {
+    return axios.patch(`pubcards/${id}/publish`)
   },
 
   async getPubCards(params = {}) {

@@ -157,8 +157,8 @@ watch((selectedCities), (newVal) => {
 
 let stopWatcher = false;
 
-watchEffect(() => {
-  console.log(props.modelValue && (props.modelValue.cities || props.modelValue.regions || props.modelValue.countries) && !stopWatcher)
+watchEffect(async() => {
+  await nextTick();
   if(props.modelValue && (props.modelValue.cities || props.modelValue.regions || props.modelValue.countries) && !stopWatcher) {
     if(props.modelValue.cities) {
       selectedCities.value = {...selectedCities.value, cities: [...(props.modelValue.cities || [])] };

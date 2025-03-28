@@ -544,6 +544,10 @@ onMounted(() => {
     background-color: var(--bg-tertiary-color);
   }
 
+  .modal-content-lg {
+    padding: 0;
+  }
+
   .modal-body {
     // margin-bottom: 7em;
     height: 100%;

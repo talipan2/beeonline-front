@@ -169,12 +169,23 @@ const registerData = computed(() => organizationStore.registerOrg);
 // }
 
 const handleSubmit = () => {
-  organizationStore.resetRegisterData();
-  if(userStore.role === 'customer') {
-    router.push('/orders/create/step1');
-  } else if(userStore.role === 'performer') {
-    router.push('/services/create/step1');
-  }
+  organizationStore.pubCardPublish(userStore.userPubCard.id).then(res => {
+    if (res) {
+      organizationStore.resetRegisterData();
+      organizationStore.editPubCards({
+        id: userStore.userPubCard.id,
+        currentStep: 3
+      }).then(res => {
+        userStore.checkAuth();
+      });
+
+      if (userStore.role === 'customer') {
+        router.push('/orders/create/step1');
+      } else if (userStore.role === 'performer') {
+        router.push('/services/create/step1');
+      }
+    }
+  });
 }
 
 </script>

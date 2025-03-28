@@ -112,6 +112,28 @@ export const useOrganizationStore = defineStore('organization', {
       }
     },
 
+    async updateCreateStepPubCard(id, step) {
+      try {
+        const response = await Api.updateCreateStepPubCard(id, step);
+        if(response) {
+          return response;
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    async pubCardPublish(id) {
+      try {
+        const response = await Api.pubCardPublish(id);
+        if(response) {
+          return response;
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
+
     async getPubCardsList(params) {
       try {
         const response = await Api.getPubCards(params);

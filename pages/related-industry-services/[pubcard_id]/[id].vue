@@ -31,11 +31,16 @@ const breadcrumb = computed(() => {
     return bc;
 });
 
+await adjacentStore.getService(router.currentRoute.value.params.id)
+  .then((response) => {
+    service.value = response.data;
+  });
+
 onMounted(() => {
-    adjacentStore.getService(router.currentRoute.value.params.id)
-    .then((response) => {
-        service.value = response.data;
-    });
+    // adjacentStore.getService(router.currentRoute.value.params.id)
+    // .then((response) => {
+    //     service.value = response.data;
+    // });
 })
 
 </script>

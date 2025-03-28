@@ -30,14 +30,14 @@ const confirm = () => {
   settingStore.createEntityFinalModal = false;
 }
 
-watch(() => modalState.value, (newVal) => {
-  console.log(newVal)
-  if(newVal === true) {
-    setTimeout(() => {
-      settingStore.createEntityFinalModal = false;
-    }, 4000);
-  }
-}, {immediate: true});
+// watch(() => modalState.value, (newVal) => {
+//   console.log(newVal)
+//   if(newVal === true) {
+//     setTimeout(() => {
+//       settingStore.createEntityFinalModal = false;
+//     }, 4000);
+//   }
+// }, {immediate: true});
 
 </script>
 

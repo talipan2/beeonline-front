@@ -110,12 +110,12 @@
       <p class="form-group__title">Условия сотрудничества</p>
       <p class="form-group__value">{{ formatData.termsOfCooperation || '-' }}</p>
     </div>
-    <UiCheckbox v-model="data.isSafeDeal" class="form-group-data" v-if="entityOfRole === 'orders'" :isValidated="false">
+    <!-- <UiCheckbox v-model="data.isSafeDeal" class="form-group-data" v-if="entityOfRole === 'orders'" :isValidated="false">
       Использовать &nbsp;<a>безопасную сделку.</a>
       <CommonTooltip
         text='Безопасная сделка'
       />
-    </UiCheckbox>
+    </UiCheckbox> -->
     <UiCheckbox v-model="data.isAgreedOrderPlacement" class="form-group-data entity_step-check__checkbox" v-if="entityOfRole === 'orders'" :isValidated="false">
       Согласен на размещение заказа в телеграм-канале &nbsp;<a>"Аутсорсинг в легпроме"</a>. 
       <CommonTooltip class=""

@@ -44,14 +44,22 @@ const reviewsState = computed(() => {
 
 const otherSidePubCard = ref({});
 
-onMounted(() => {
-  const reviewId = router.currentRoute.value.params.id;
+const reviewId = router.currentRoute.value.params.id;
 
-  if (reviewId) {
-    reviewsStore.getReview(reviewId).then((res) => {
-      review.value = res;
-      if(reviewsState.value === 'reviews') {
-        organizationStore.getPubCard(res.owner_org?.id)
+if (reviewId) {
+  await reviewsStore.getReview(reviewId).then((res) => {
+    review.value = res;
+    if(reviewsState.value === 'reviews') {
+      organizationStore.getPubCard(res.owner_org?.id)
+      .then((res) => {
+        review.value = {
+          ...review.value,
+          aboutOrgLogo: res.logo ? res.logo : null,
+        };
+        otherSidePubCard.value = res;
+      });
+    } else {
+      organizationStore.getPubCard(res.about_org?.id)
         .then((res) => {
           review.value = {
             ...review.value,
@@ -59,19 +67,38 @@ onMounted(() => {
           };
           otherSidePubCard.value = res;
         });
-      } else {
-        organizationStore.getPubCard(res.about_org?.id)
-          .then((res) => {
-            review.value = {
-              ...review.value,
-              aboutOrgLogo: res.logo ? res.logo : null,
-            };
-            otherSidePubCard.value = res;
-          });
-      }
-    });
-  }
-});
+    }
+  });
+}
+
+// onMounted(() => {
+//   const reviewId = router.currentRoute.value.params.id;
+
+//   if (reviewId) {
+//     reviewsStore.getReview(reviewId).then((res) => {
+//       review.value = res;
+//       if(reviewsState.value === 'reviews') {
+//         organizationStore.getPubCard(res.owner_org?.id)
+//         .then((res) => {
+//           review.value = {
+//             ...review.value,
+//             aboutOrgLogo: res.logo ? res.logo : null,
+//           };
+//           otherSidePubCard.value = res;
+//         });
+//       } else {
+//         organizationStore.getPubCard(res.about_org?.id)
+//           .then((res) => {
+//             review.value = {
+//               ...review.value,
+//               aboutOrgLogo: res.logo ? res.logo : null,
+//             };
+//             otherSidePubCard.value = res;
+//           });
+//       }
+//     });
+//   }
+// });
 
 </script>
 

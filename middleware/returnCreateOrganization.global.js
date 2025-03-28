@@ -20,8 +20,43 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     return navigateTo({path: '/register/step1'})
   }
 
-  if(userStore.isAuth && userStore.userData.id && userStore.userData?.organization_id && !userStore.userData?.public_cards[0]?.id && to.path !== '/register/step2') {
-    return navigateTo({path: '/register/step2'})
+  const availableLinkList = [
+    '/login',
+    '/register',
+    '/services',
+    '/orders',
+    '/members',
+    '/contacts',
+    '/help',
+    '/page-policy',
+    '/page-oferta',
+    '/page-requisites',
+    '/sitemap',
+    '/page-terms-of-use',
+    '/page-oferta-st',
+    '/page-oferta-ct',
+    '/welcome',
+    '/search',
+    '/related-industry-services',
+  ]
+
+  if (
+    userStore.isAuth &&
+    userStore.userData.id &&
+    userStore.userData?.organization_id &&
+    !availableLinkList.some((item) => to.path.startsWith(item)) &&
+    !to.path !== '/' &&
+    userStore.userData?.public_cards
+  ) {
+    const publicCards = userStore.userData.public_cards || []
+    const firstCard = publicCards[0];
+
+    if(!firstCard) {
+      return navigateTo({ path: "/register/step2" });
+    } else if (firstCard?.current_step === 1 && publicCards.length === 1) {
+      return navigateTo({ path: "/register/step3" });
+    } else if (firstCard?.current_step === 2 && publicCards.length === 1) {
+      return navigateTo({ path: "/register/step4" });
+    }
   }
-  
 })

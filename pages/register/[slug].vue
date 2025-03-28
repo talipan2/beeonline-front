@@ -164,7 +164,6 @@ const userRole = computed(() => {
 onMounted(() => {
   userStore.checkAuth()
   .then((res) => {
-    console.log(res)
     if(res && res.user && res.user) {
       if(res.user.organization && res.user.organization.id) {
         const userOrganization = res.user.organization;
@@ -172,6 +171,7 @@ onMounted(() => {
         data.value.selfEmployed = userOrganization.is_foreigner
         data.value.inn = userOrganization.inn
         data.value.organizationName = userOrganization.name
+        data.value.companyName = userOrganization.name
         data.value.kpp = userOrganization.kpp
         data.value.ogrn = userOrganization.ogrn
         data.value.organizationForm = userOrganization.org_form,
@@ -180,7 +180,7 @@ onMounted(() => {
 
       if(res.user.public_cards && res.user.public_cards && res.user.public_cards.length > 0) {
         const pubCard = res.user.public_cards.find(item => item.type === userStore.role)
-        data.value.companyName = pubCard.name
+        data.value.companyName = pubCard.name.length > 0 && pubCard.name
         data.value.description = pubCard.description
         data.value.siteUrl = pubCard.site_url
         data.value.companyLogo = {url:pubCard.logo}

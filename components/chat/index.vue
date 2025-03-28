@@ -325,6 +325,10 @@ export default {
             type: Number,
             default: 0,
         },
+        init_performer_id: {
+            type: Number,
+            default: 0,
+        },
         class: {
             type: String,
             default: "",
@@ -763,6 +767,7 @@ export default {
                 .getInitChat({
                     order_id: this.init_order_id,
                     adjacent_service_id: this.init_adjacent_service_id,
+                    performer_id: this.init_performer_id,
                 })
                 .then((response) => {
                     if (response.type === "chat_id") {
@@ -832,6 +837,7 @@ export default {
                         organization_type: this.init_org_type,
                         order_id: this.init_order_id,
                         adjacent_service_id: this.init_adjacent_service_id,
+                        performer_id: this.init_performer_id,
                     })
                     .then((response) => {
                         this.$emit("change:chat", response);

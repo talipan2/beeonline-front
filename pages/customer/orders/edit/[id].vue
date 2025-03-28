@@ -189,28 +189,50 @@ watch(() => router.currentRoute.value.query.step, (newVal) => {
   currentStep.value = Number(newVal)
 })
 
-onMounted(() => {
-  entityStore.getOrder(id).then(res => {
-    if(res && res.data) {
-      orderData.value = {
-        id: res.data.id,
-        name: res.data.name,
-        description: res.data.description,
-        logo: res.data.logo,
-        gallery: res.data.gallery,
-        tzFiles: res.data.tz_files,
-        termsOfCooperation: res.data.conditions,
-        batch: Number(res.data.batch),
-        categories: res.data.product_categories && res.data.product_categories.map(item => item.id) || [],
-        rawMaterials: !res.data.material ? 0 : 1,
-        patterns: !res.data.pattern ? 0 : 1,
-        price: Number(res.data.price),
-        completionDate: res.data.deadline_at,
-        locations: res.data.cities && res.data.regions && {cities: res.data.cities.map(item => item.id), regions: res.data.regions.map(item => item.id)},
-        isSafeDeal: Boolean(res.data.is_safedeal)
-      }
+await entityStore.getOrder(id).then(res => {
+  if (res && res.data) {
+    orderData.value = {
+      id: res.data.id,
+      name: res.data.name,
+      description: res.data.description,
+      logo: res.data.logo,
+      gallery: res.data.gallery,
+      tzFiles: res.data.tz_files,
+      termsOfCooperation: res.data.conditions,
+      batch: Number(res.data.batch),
+      categories: res.data.product_categories && res.data.product_categories.map(item => item.id) || [],
+      rawMaterials: !res.data.material ? 0 : 1,
+      patterns: !res.data.pattern ? 0 : 1,
+      price: Number(res.data.price),
+      completionDate: res.data.deadline_at,
+      locations: res.data.cities && res.data.regions && { cities: res.data.cities.map(item => item.id), regions: res.data.regions.map(item => item.id) },
+      isSafeDeal: Boolean(res.data.is_safedeal)
     }
-  })
+  }
+})
+
+onMounted(() => {
+  // entityStore.getOrder(id).then(res => {
+  //   if(res && res.data) {
+  //     orderData.value = {
+  //       id: res.data.id,
+  //       name: res.data.name,
+  //       description: res.data.description,
+  //       logo: res.data.logo,
+  //       gallery: res.data.gallery,
+  //       tzFiles: res.data.tz_files,
+  //       termsOfCooperation: res.data.conditions,
+  //       batch: Number(res.data.batch),
+  //       categories: res.data.product_categories && res.data.product_categories.map(item => item.id) || [],
+  //       rawMaterials: !res.data.material ? 0 : 1,
+  //       patterns: !res.data.pattern ? 0 : 1,
+  //       price: Number(res.data.price),
+  //       completionDate: res.data.deadline_at,
+  //       locations: res.data.cities && res.data.regions && {cities: res.data.cities.map(item => item.id), regions: res.data.regions.map(item => item.id)},
+  //       isSafeDeal: Boolean(res.data.is_safedeal)
+  //     }
+  //   }
+  // })
 })
 
 onMounted(() => {

@@ -67,6 +67,7 @@
         </div>
         <slot name="favorite-delete" />
         <NuxtLink
+            v-if="isLink"
             class="order-card__link"
             :to="`/orders/${data.id}`"
             :target="linkBlank ? '_blank' : ''"
@@ -92,6 +93,10 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+    isLink: {
+        type: Boolean,
+        default: true,
+    }
 });
 
 const entityStore = useEntityStore();

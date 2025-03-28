@@ -67,7 +67,7 @@
           <div class="entity__data-item">
             <p class="form-group__title entity__label">
               Сырье *
-              <CommonTooltip text="Написать про сырье" />
+              <CommonTooltip text="Укажите чье будет сырье" />
               </p>
             <UiRadioButtonGroup :rules="{ required: true }" name="rawMaterials" label="Сырье"
               class="entity__group form-group__value" v-model="data.rawMaterials" :options="[
@@ -78,7 +78,7 @@
           <div class="entity__data-item">
             <p class="form-group__title entity__label">
               Лекала *
-              <CommonTooltip text="Написать про лекала" />
+              <CommonTooltip text="Укажите есть ли у вас лекала" />
               </p>
             <UiRadioButtonGroup :rules="{ required: true }" name="pattern" label="Лекала"
               class="entity__group form-group__value" v-model="data.patterns" :options="[
@@ -105,13 +105,13 @@
       </div>
       <div class="entity__data">
         <label class="form-group__title entity__label">
-          Условия сотрудничества *
+          Условия сотрудничества
           <CommonTooltip :text="`Опишите условия, на которых вы готовы сотрудничать с ${
               role === 'performer' ? 'заказчиками' : 'исполнителями заказа'
             }`" />
         </label>
         <UiTextArea 
-          :rules="{ required: true, min: 10}"
+          :rules="{min: 10}"
           name="conditions" 
           label="Условия сотрудничества" 
           v-model="data.termsOfCooperation" 
@@ -136,25 +136,25 @@
       </div>
       <CommonAlerts v-if="errorList.selectedLocations" :alert="errorList.selectedLocations" alertType="validation" />
       <div class="entity__data" v-if="role === 'customer'">
-        <h2 class="entity__subtitle">Города фактического производства заказа</h2>
+        <h2 class="entity__subtitle">Регионы фактического производства заказа</h2>
         <div class="entity__text-container">
           <p class="entity__text" v-if="role === 'performer'">
             Укажите город вашего производства. Если производств несколько - выберите несколько городов, но не более
             пяти.
           </p>
           <p class="entity__text" v-else>
-            Укажите предпочтительные города или регионы производства заказа.
+            Укажите предпочтительные регионы производства заказа.
           </p>
           <p class="entity__text" v-if="role === 'performer'">
             Потенциальный заказчик сможет вас найти по регионам указанных городов.
           </p>
-          <p class="entity__text" v-else>
+          <!-- <p class="entity__text" v-else>
             Указанные города и регионы используются для автоматического добавления в новые заказы и позволят
             потенциальным
             исполнителям находить их в поиске.
-          </p>
+          </p> -->
         </div>
-        <CommonLocation 
+        <!-- <CommonLocation 
           v-if="role === 'performer'"
           buttonLabel="Выбрать город"
           v-model="data.locations"
@@ -162,15 +162,16 @@
           :is-required="true"
           errorLabel="Города производства"
           name="selectedLocations"
-        />
+        /> -->
         <CommonLocation
           v-if="role === 'customer'"
-          buttonLabel="Выбрать город или регион"
+          buttonLabel="Выбрать регион"
           v-model="data.locations"
           :type="['selectCities', 'selectRegions']"
           :is-required="true"
-          errorLabel="Города производства"
+          errorLabel="Регионы производства"
           name="selectedLocations"
+          modalTitle="Выберите регион"
         />
       </div>
       <div class="form-group">

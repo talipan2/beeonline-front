@@ -147,6 +147,7 @@ const handleSubmit = async(value, form) => {
         name: data.value.companyName,
         description: data.value.description,
         siteUrl: data.value.siteUrl,
+        currentStep: 1
       }, form)
       .then(res => {
         if (res && res.id && data.value.companyLogo?.id) {

@@ -39,13 +39,13 @@ const picker = ref(null);
 const date = ref('');
 const config = ref({
     altFormat: 'd.m.Y',
-    altInput: false,
+    altInput: true,
     dateFormat: 'Y-m-d', 
     locale: Russian,
     minDate: new Date(),
     altInputClass: 'input',
     disableMobile: true,
-    allowInvalidPreload: true
+    allowInvalidPreload: true,
 });
 
 watch(() => date.value, (newVal) => {
@@ -79,6 +79,7 @@ watchEffect(() => {
 <style lang="scss">
 
 .calendar {
+  
   .flatpickr-input {
     overflow: hidden;
     border: none;
@@ -87,6 +88,9 @@ watchEffect(() => {
   
   &__label {
     .input {
+      border: none !important;
+      background: transparent !important;
+      cursor: pointer;
     }
   }
 
@@ -102,6 +106,22 @@ watchEffect(() => {
 
       .input {
         padding: 1rem;
+        border: none !important;
+        background: transparent !important;
+        cursor: pointer;
+    
+        /* Отключаем все эффекты при фокусе */
+        &:focus {
+          outline: none !important;
+          box-shadow: none !important;
+          border: none !important;
+        }
+      
+        /* Отключаем выделение при активном состоянии */
+        &:active {
+          box-shadow: none !important;
+          border: none !important;
+        }
       }
 
     }

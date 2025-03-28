@@ -15,11 +15,15 @@ const settingStore = useSettingStore();
 const data = ref({});
 const router = useRouter();
 
-onMounted(() => {
-  settingStore.getNews(router.currentRoute.value.params.id).then((res) => {
-    data.value = res
-  })
+await settingStore.getNews(router.currentRoute.value.params.id).then((res) => {
+  data.value = res
 })
+
+// onMounted(() => {
+//   settingStore.getNews(router.currentRoute.value.params.id).then((res) => {
+//     data.value = res
+//   })
+// })
 
 </script>
 

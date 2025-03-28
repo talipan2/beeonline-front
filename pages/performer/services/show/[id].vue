@@ -62,11 +62,16 @@ const formatFreeSamples = (freeSamples) => {
     }
   }
 
-onMounted(() => {
-  isLoading.value = true;
-  entityStore.getService(router.currentRoute.value.params.id)
+isLoading.value = true;
+await entityStore.getService(router.currentRoute.value.params.id)
   .then((res) => service.value = res.data)
   .finally(() => isLoading.value = false)
-})
+
+// onMounted(() => {
+//   isLoading.value = true;
+//   entityStore.getService(router.currentRoute.value.params.id)
+//   .then((res) => service.value = res.data)
+//   .finally(() => isLoading.value = false)
+// })
 
 </script>

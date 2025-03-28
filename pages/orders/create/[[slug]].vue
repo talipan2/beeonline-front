@@ -234,7 +234,7 @@ onBeforeMount(async () => {
             completionDate: orderInProgress.deadline_at,
             locations: {
               cities: orderInProgress.cities && Array.isArray(orderInProgress.cities) ? orderInProgress.cities.map(item => item.id) : [],
-              regions: orderInProgress.regions && Array.isArray(orderInProgress.regions) ? orderInProgress.regions.map(item => item.id) : [],
+              regions: orderInProgress.regions && Array.isArray(orderInProgress.regions) && orderInProgress.regions.length ? orderInProgress.regions.map(item => item.id) : userStore.userPubCard?.regions?.map(item => item.id),
             },
             currentStep: orderInProgress.current_step,
             isSafeDeal: orderInProgress.is_safedeal,
@@ -277,6 +277,12 @@ const handleRedirect = () => {
   entityStore.isRedirectedToStep = false;
 };
 
+onMounted(() => {
+  if(!order.value.locations.regions.length && userStore.userPubCard?.regions?.length) {
+    order.value.locations.regions = userStore.userPubCard.regions.map(item => item.id)
+    order.value = {...order.value}
+  }
+});
 
 
 </script>

@@ -70,11 +70,16 @@ function getLocationNames(cities, regions) {
   return names
 }
 
-onMounted(() => {
-  isLoading.value = true;
-  entityStore.getOrder(router.currentRoute.value.params.id)
+isLoading.value = true;
+await entityStore.getOrder(router.currentRoute.value.params.id)
   .then((res) => order.value = res.data)
   .finally(() => isLoading.value = false)
-})
+
+// onMounted(() => {
+//   isLoading.value = true;
+//   entityStore.getOrder(router.currentRoute.value.params.id)
+//   .then((res) => order.value = res.data)
+//   .finally(() => isLoading.value = false)
+// })
 
 </script>

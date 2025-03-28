@@ -39,24 +39,35 @@
       </div>
     </div>
     <div class="orders-details__btn-container">
-      <UiButton class="orders-details__btn"
-        v-if="type === 'service'"
-        variant="quinary" size="large"
-      >
-        <SvgoMessage class="svg-m" />
-        Написать исполнителю
-      </UiButton>
-      <UiButton class="orders-details__btn"
-        v-if="type === 'order'"
-        variant="quinary" size="large"
-        :to="{path: '/chat', query: { order_id: entityData.id }}"
-      >
-        <SvgoMessage class="svg-m" />
-        Написать Заказчику
-      </UiButton>
-      <UiButton type="button" class="orders-details__btn" :class="{ 'orders-details__btn_type_active': isFavorite }" variant="tertiary" size="around" @click="handleAddFavorite">
-        <SvgoFavorite class="svg-m" />
-      </UiButton>
+      <template v-if="isSelfEntity">
+        <UiButton :to="editLinkData.link" class="orders-details__btn" variant="quinary" size="large">
+          Редактировать {{ editLinkData.type }}
+        </UiButton>
+      </template>
+      <template v-else>
+        <UiButton
+          type="button"
+          class="orders-details__btn"
+          v-if="type === 'service'"
+          variant="quinary" 
+          size="large"
+          @click="settingStore.sendMessageModal = true"
+        >
+          <SvgoMessage class="svg-m" />
+          Написать исполнителю
+        </UiButton>
+        <UiButton class="orders-details__btn"
+          v-if="type === 'order'"
+          variant="quinary" size="large"
+          :to="{path: '/chat', query: { order_id: entityData.id }}"
+        >
+          <SvgoMessage class="svg-m" />
+          Написать Заказчику
+        </UiButton>
+        <UiButton type="button" class="orders-details__btn" :class="{ 'orders-details__btn_type_active': isFavorite }" variant="tertiary" size="around" @click="handleAddFavorite">
+          <SvgoFavorite class="svg-m" />
+        </UiButton>
+      </template>
     </div>
     <div class="orders-details__details">
       <p class="orders-details__details-title" v-if="entityData.description">Описание</p>
@@ -74,6 +85,7 @@
       <p class="orders-details__details-title">Галерея</p>
       <CommonGallerySlider :images="entityData.gallery"/>
     </div>
+    <CatalogServiceSendMessageModal v-if="type === 'service'" :performer_id="props.pubCard.organization_id"/>
   </div>
 </template>
 
@@ -82,6 +94,7 @@ import defaultImage from '~/assets/images/nophoto_pc.png';
 import { useLocationStore } from '~/store/locationStore';
 import { useUserStore } from '~/store/userStore';
 import { useToast } from 'vue-toastification';
+import { useSettingStore } from '~/store/settingStore';
 
 const props = defineProps({
   type: {
@@ -103,6 +116,9 @@ const userStore = useUserStore();
 const isFavorite = ref(false);
 const toast = useToast();
 const isLoading = ref(false);
+const settingStore = useSettingStore();
+
+const isSelfEntity = computed(() => props.pubCard.id === userStore.userPubCard?.id)
 
 const routeLinkForType = computed(() => {
   switch (props.type) {
@@ -119,6 +135,21 @@ const role = computed(() => {
       return 'performer';
     case 'order':
       return 'customer';
+  }
+})
+
+const editLinkData = computed(() => {
+  switch (props.type) {
+    case 'service':
+      return {
+       type: 'услугу',
+       link: '/performer/services/edit/' + props.entityData.id
+      };
+    case 'order':
+      return {
+       type: 'заказ',
+       link: '/customer/orders/edit/' + props.entityData.id
+      };
   }
 })
 
