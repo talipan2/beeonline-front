@@ -28,6 +28,7 @@
 							v-if="dialog.order?.first_image?.length"
 							:src="dialog.order.first_image"
 							:alt="dialog.order.name"
+                            :external="true"
 						/>
 						<UiImage
 							v-else
@@ -45,6 +46,7 @@
 									v-if="organization.pubcard.logo?.length"
 									:src="organization.pubcard.logo"
 									:alt="organization.pubcard.name"
+                                    :external="true"
 								/>
                                 <UiImage
                                     v-else

@@ -35,6 +35,7 @@
                                         v-if="org.pubcard.logo?.length"
                                         :src="org.pubcard.logo"
                                         :alt="org.pubcard.name"
+                                        :external="true"
                                     />
                                     <UiImage
                                         v-else
