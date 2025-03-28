@@ -22,7 +22,7 @@ export default {
 
     async getTransactions(userId, page) {
         return useApi().get(`tariffs/${userId}/transactions`, {
-            params: { page: page },
+             page: page,
         });
     },
 
