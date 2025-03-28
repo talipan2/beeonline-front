@@ -273,8 +273,13 @@ onMounted(() => {
   &__btn-container {
     display: flex;
     align-items: center;
-    column-gap: 1em;
+    gap: 1em;
     margin-bottom: 3.125em;
+
+    @include mobile {
+      flex-direction: column;
+      align-items: start;
+    }
   }
 
   &__btn {
@@ -284,6 +289,10 @@ onMounted(() => {
     column-gap: .75em;
     text-transform: uppercase;
     font-size: .75em;
+
+    @include mobile {
+      width: 100%;
+    }
 
     &_type_active {
       background-color: var(--border-color-quaternary);

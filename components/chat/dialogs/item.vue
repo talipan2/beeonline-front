@@ -28,10 +28,11 @@
 							v-if="dialog.order?.first_image?.length"
 							:src="dialog.order.first_image"
 							:alt="dialog.order.name"
+                            :external="true"
 						/>
 						<UiImage
 							v-else
-							src="/assets/svg/default.svg"
+							src="/assets/images/default.svg"
 							:alt="dialog.order.name"
 						/>
 					</div>
@@ -45,10 +46,11 @@
 									v-if="organization.pubcard.logo?.length"
 									:src="organization.pubcard.logo"
 									:alt="organization.pubcard.name"
+                                    :external="true"
 								/>
                                 <UiImage
                                     v-else
-                                    src="/assets/svg/default.svg"
+                                    src="/assets/images/default.svg"
                                     :alt="organization.pubcard.name"
                                 />
 							</div>

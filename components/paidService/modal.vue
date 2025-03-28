@@ -25,13 +25,14 @@
                 </template>
             </div>
             <div class="modal-buttons">
+                <slot name="buttons" />
                 <template v-if="responseErrorKey === 'buy_service' && responseErrorData">
-                    <UiButton class="modal-button" type="submit" variant="quinary" size="large" @click="settingStore.payModalStatus = true">Приобрести</UiButton>
+                    <UiButton type="submit" variant="quinary" size="large" @click="settingStore.payModalStatus = true">Приобрести</UiButton>
                 </template>
                 <template v-if="canUse">
-                    <UiButton class="modal-button" type="submit" variant="quinary" size="large" @click="use">Подтвердить</UiButton>
+                    <UiButton type="submit" variant="quinary" size="large" @click="use">Подтвердить</UiButton>
                 </template>
-                <UiButton class="modal-button" type="button" variant="tertiary" size="large" @click="closeModal">Закрыть</UiButton>
+                <UiButton type="button" variant="tertiary" size="large" @click="closeModal">Закрыть</UiButton>
             </div>
         </template>
     </UiModal>
@@ -69,6 +70,7 @@ const responseErrorKey = ref(null);
 const responseErrorData = ref(null);
 
 watch(() => open.value, (value) => {
+    if (!value) return;
     prepare();
 });
 
@@ -147,9 +149,10 @@ function reset() {
     display: flex;
     justify-content: flex-end;
     gap: 1em;
-}
-.modal-button {
-    font-size: 12px;
-    text-transform: uppercase;
+
+    .btn {
+        font-size: 12px;
+        text-transform: uppercase;
+    }
 }
 </style>

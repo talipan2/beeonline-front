@@ -29,14 +29,14 @@
                 <p class="balance-card__details-type desktop__selected">Операция</p>
               </div>
               <div class="balance-card__details-item" v-for="item in transactionsList" :key="item">
-                <p class="balance-card__details-date">{{ formatDate(item.updated_at, 'DD.MM.YYYY') }}
-                  <span class="balance-card__details-time desktop__selected">{{ formatDate(item.updated_at, 'mm:HH') }}</span>
+                <p class="balance-card__details-date">{{ formatDate(item.created_at, 'DD.MM.YYYY') }}
+                  <span class="balance-card__details-time desktop__selected">{{ formatDate(item.created_at, 'mm:HH') }}</span>
                 </p>
-                <div class="balance-card__details-sum" :class="{ 'add': item.type === 'add', 'purchase': item.type === 'purchase'}">
+                <div class="balance-card__details-sum" :class="{ 'debit': item.type === 'debit', 'credit': item.type === 'credit'}">
                   <SvgoBalanceArrow class="balance-card__details-status" />
-                  {{ formatMoney(item.amount, item.currency?.code || 'bonuses') }}
+                  {{ formatMoney(item.amount, item.currency?.code || 'bonus') }}
                 </div>
-                <p class="balance-card__details-type">{{ item.comment }}</p>
+                <p class="balance-card__details-type">{{ item.message }}</p>
               </div>
             </div>
             <div class="balance-card__details-list balance-card__details-list_type_mobile">
@@ -51,7 +51,7 @@
                   <div class="balance-card__details-item-line">
                     <p class="balance-card__details-date desktop__selected">Сумма</p>
                     <div class="balance-card__details-sum replenishment">
-                      <span>{{ item.type === 'add' ? '+' : '-' }}</span>
+                      <span>{{ item.type === 'debit' ? '+' : '-' }}</span>
                       {{ formatMoney(item.amount, item.currency?.code || 'bonuses', 2) }}
                     </div>
                   </div>

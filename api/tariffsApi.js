@@ -22,12 +22,12 @@ export default {
 
     async getTransactions(userId, page) {
         return useApi().get(`tariffs/${userId}/transactions`, {
-            params: { page: page },
+             page: page,
         });
     },
 
     async getInvoices(userId, page = 1) {
-        return useApi().get(`tariffs/invoices`, { page: page });
+        return useApi().get(`tariffs/${userId}/invoices`, { page: page });
     },
 
     async balanceAdd(data) {

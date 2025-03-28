@@ -57,8 +57,8 @@ export const useTariffsStore = defineStore("tariffs", {
             return Api.getTransactions(userId, page);
         },
 
-        async getInvoicing(userId, page = 1) {
-            return Api.getInvoicing(userId, page);
+        async getInvoices(userId, page = 1) {
+            return Api.getInvoices(userId, page);
         },
 
         async balanceAdd(data) {

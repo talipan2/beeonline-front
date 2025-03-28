@@ -20,8 +20,29 @@
         </template>
         <template #used>
             <div class="counterparty-check" v-if="usedData">
-                {{ usedData }}
+                <div class="counterparty-check__organization">
+                    <div class="counterparty-check__organization-title">Юридическое название организации</div>
+                    <div class="counterparty-check__organization-name">{{ usedData.counterparty_name }}</div>
+                </div>
+                <ul class="counterparty-check__list">
+                    <li>Номер проверки: {{ usedData.id }}</li>
+                    <li>Статус: {{ usedData.status_name }}</li>
+                </ul>
+                <CommonSpinner v-if="usedData.status === 'in_progress'" />
+                <CommonAlerts :alert="'Во время проверки произошла ошибка'" type="error" v-if="usedData.status === 'failed'"/>
             </div>
+        </template>
+        <template #buttons>
+            <UiButton
+                class="counterparty-check-btn"
+                variant="primary"
+                size="large"
+                :to="usedData?.file?.url"
+                v-if="usedData?.file?.url"
+                target="_blank"
+            >
+                Открыть
+            </UiButton>
         </template>
     </PaidServiceModal>
 </template>
@@ -44,6 +65,9 @@ const preparedData = ref(null);
 const usedData = ref(null);
 
 const prepare = () => {
+    usedData.value = null;
+    preparedData.value = null;
+
     return counterpartyCheckStore.prepare(props.id)
     .then((response) => {
         preparedData.value = response;
@@ -53,10 +77,16 @@ const use = () => {
     return counterpartyCheckStore.check(props.id)
     .then((response) => {
         usedData.value = response.data;
-        channelsStore.orgChannel.stopListening("CounterpartyUpdate")
-            .listen("CounterpartyUpdate", (event) => {
-                if (event.id == props.id) {
-                    counterpartyCheckStore.show(usedData.value.id);
+        channelsStore.orgChannel.stopListening("CounterpartyCheckUpdate")
+            .listen("CounterpartyCheckUpdate", (event) => {
+                if (event.id == usedData.value.id) {
+                    counterpartyCheckStore.show(usedData.value.id)
+                    .then((response) => {
+                        usedData.value = response.data;
+                        if (usedData.value.file?.url) {
+                            window.open(usedData.value.file?.url, '_blank');
+                        }
+                    });
                 }
             })
     });
@@ -76,6 +106,12 @@ const use = () => {
         &-title {
             font-weight: 700;
         }
+    }
+
+    &-btn {
+        font-size: 12px;
+        font-weight: 400;
+        text-transform: uppercase;
     }
 }
 </style>
