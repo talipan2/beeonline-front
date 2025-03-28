@@ -22,8 +22,8 @@
                 <td>{{ transaction.amount }}</td>
                 <td>
                   <div v-if="transaction.bonus">{{ transaction.bonus.name }}</div>
-                  <div class="text-secondary" v-if="transaction.comment && transaction.comment.length">{{
-                    transaction.comment }}</div>
+                  <div class="text-secondary" v-if="transaction.message && transaction.message.length">{{
+                    transaction.message }}</div>
                 </td>
                 <td>{{ formatDate(transaction.created_at, 'DD.MM.YYYY mm:HH') }}</td>
               </tr>
