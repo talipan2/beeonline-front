@@ -32,7 +32,7 @@
 						/>
 						<UiImage
 							v-else
-							src="/assets/svg/default.svg"
+							src="/assets/images/default.svg"
 							:alt="dialog.order.name"
 						/>
 					</div>
@@ -50,7 +50,7 @@
 								/>
                                 <UiImage
                                     v-else
-                                    src="/assets/svg/default.svg"
+                                    src="/assets/images/default.svg"
                                     :alt="organization.pubcard.name"
                                 />
 							</div>

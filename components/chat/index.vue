@@ -39,7 +39,7 @@
                                     />
                                     <UiImage
                                         v-else
-                                        src="/assets/svg/default.svg"
+                                        src="/assets/images/default.svg"
                                         :alt="org.pubcard.name"
                                     />
                                 </div>
