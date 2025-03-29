@@ -40,16 +40,30 @@
         </div>
       </div>
     </div>
-    <CommonAlerts v-if="!counterpartyCheckList.length && !isLoading" alert="Проверок нет" :type="'warning'" />
+    <template v-if="!counterpartyCheckList.length && !isLoading">
+      <CommonAlerts alert="Проверок нет" :type="'warning'" />
+      <div class="org-check__link-container">
+        <UiButton to="/services" variant="quinary" size="large" class="org-check__link" v-if="userS">
+          <span>Каталог исполнителей</span>
+          <SvgoBtnArrow class="svg-l" />
+        </UiButton>
+        <UiButton to="/orders" variant="quinary" size="large" class="org-check__link">
+          <span>Каталог заказчиков</span>
+          <SvgoBtnArrow class="svg-l" />
+        </UiButton>
+      </div>
+    </template>
     <CommonPagination v-if="page?.lastPage > 1" class="org-check__pagination" :current-page="page.currentPage" :total-pages="page.lastPage" @changePage="handleChangePage" />
   </div>
 </template>
 
 <script setup>
 import { useCounterpartyCheckStore } from '~/store/counterpartyCheckStore';
+import { useUserStore } from '~/store/userStore';
 
 
 const counterpartyCheckStore = useCounterpartyCheckStore();
+const userStore = useUserStore();
 
 const counterpartyCheckList = ref([]);
 const isLoading = ref(false);
@@ -197,6 +211,24 @@ onMounted(() => {
 
     &__btn-container {
       font-size: 1rem;
+    }
+  }
+
+
+  &__link {
+    max-width: 50%;
+    font-size: 0.875em;
+    text-transform: uppercase;
+    width: 100%;
+    -moz-column-gap: 1em;
+    column-gap: 1em;
+
+    @include mobile {
+      font-size: 0.75em;
+    }
+  
+    @include small-mobile {
+      max-width: 100%;
     }
   }
 }

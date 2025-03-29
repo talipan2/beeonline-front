@@ -9,6 +9,19 @@
         btnText="Подтвердить"
       />
     </div>
+    <div class="desktop__banner" v-if="role === 'performer'">
+      <div class="desktop__banner-content">
+        <h2 class="desktop__banner-title">Новые тарифы Премиум и Ультра!</h2>
+        <div class="desktop__banner-container">
+          <p class="desktop__banner-text">Выделите свое производство среди конкурентов! Используйте прямую связь с заказчиками для эффективного продвижения услуг. Не упустите шанс улучшить результаты!</p>
+          <UiButton class="desktop__banner-btn"  variant="quaternary" size="large">Узнать подробнее</UiButton>
+        </div>
+      </div>
+      <div class="desktop__banner-image">
+        <UiImage src="/assets/images/desktop-banner.png" />
+      </div>
+      <NuxtLink class="desktop__banner-link" to="/tariffs"></NuxtLink>
+    </div>
     <div class="desktop__card-container">
       <DesktopCard title="Карточка организации" :link="{ url: `/pubcards/edit/${pubCard.id}`, text: 'Изменить'}">
         <template #body>
@@ -242,6 +255,7 @@ const pubCard = computed(() => {
   return {
     id: userStore.userPubCard.id,
     name: userStore.userPubCard.name,
+    logo: userStore.userPubCard.logo,
     type: userStore.userPubCard.type,
     description: userStore.userPubCard.description,
     countryId: {countries: [userStore.userPubCard.country_id]},
@@ -378,6 +392,79 @@ chatStore.getChatList().then((res) => {
   &__title {
     font-size: 1.8em;
     margin-bottom: 1.66em;
+  }
+
+  &__banner {
+    background-image: url('/assets/images/desktop-banner-bg.jpg');
+    background-position: center center;
+    background-size: cover;
+    padding: 3em 1em 3em 6.4em;
+    display: flex;
+    justify-content: space-between;
+    column-gap: 1em;
+    align-items: center;
+    border-radius: 24px;
+    margin-bottom: 7em;
+    position: relative;
+
+    @include mobile {
+      flex-direction: column;
+      padding: 3em;
+    }
+
+    &-link {
+      position: absolute;
+      inset: 0;
+    }
+
+
+    &-title {
+      font-size: 3.2em;
+      font-weight: 600;
+      line-height: 120%;
+      color: var(--text-color-octonary);
+      margin-bottom: .84em;
+
+      @include mobile {
+        text-align: center;
+      }
+    }
+
+    &-container {
+      display: flex;
+      align-items: flex-end;
+      gap: 8.5em;
+      max-width: 71em;
+
+      @include mobile {
+        flex-direction: column;
+        align-items: center;
+        gap: 3em;
+      }
+    }
+
+    &-text {
+      font-size: 1.6em;
+      font-weight: 500;
+      line-height: 1.5em;
+      color: var(--text-color-octonary);
+      opacity: .8;
+
+      @include mobile {
+        text-align: center;
+      }
+    }
+
+    &-btn {
+      font-size: 1.8em;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      z-index: 2;
+    }
+
+    &-image {
+      width: 39em;
+    }
   }
 
 }

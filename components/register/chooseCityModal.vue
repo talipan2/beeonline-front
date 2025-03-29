@@ -499,19 +499,29 @@ function searchRegionAndCountry(cityId, regionId) {
   }
 }
 
-onMounted(() => {
-  locationStore.getLocations()
-  .then(res => {
-    locations.value = locationStore.locations
-    updateCitySelection();
-    if(selectedRegionIds.value.length > 0) {
-      searchRegionAndCountry(null, selectedRegionIds.value[0]);
-    } else if(selectedCities.value.length > 0) {
-      searchRegionAndCountry(selectedCities.value[0]);
-    }
-  })
-  .catch(err => console.log(err));
-})
+// onMounted(() => {
+//   locationStore.getLocations()
+//   .then(res => {
+//     locations.value = locationStore.locations
+//     updateCitySelection();
+//     if(selectedRegionIds.value.length > 0) {
+//       searchRegionAndCountry(null, selectedRegionIds.value[0]);
+//     } else if(selectedCities.value.length > 0) {
+//       searchRegionAndCountry(selectedCities.value[0]);
+//     }
+//   })
+//   .catch(err => console.log(err));
+// })
+
+watch(() => locationStore.locations, (newVal) => {
+  locations.value = locationStore.locations
+  updateCitySelection();
+  if(selectedRegionIds.value.length > 0) {
+    searchRegionAndCountry(null, selectedRegionIds.value[0]);
+  } else if(selectedCities.value.length > 0) {
+    searchRegionAndCountry(selectedCities.value[0]);
+  }
+}, {deep: true, once: true})
 
 </script>
 

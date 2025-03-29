@@ -109,11 +109,13 @@ async function handleSubmit(values, form) {
       description: data.value.description,
       cities: data.value.locations.cities,
       regions: data.value.locations.regions,
+      countries: data.value.locations.countries,
       url_site: data.value.siteUrl,
       url_tg: data.value.urlTg,
       url_vk:data.value.urlVk,
       url_yt: data.value.urlYt,
       videos: data.value.videos,
+      currentStep: 3
     }, form);
     if(data.value.companyLogo.id) {
       organizationStore.setPubCardLogo(data.value.id, data.value.companyLogo.id);

@@ -116,7 +116,8 @@ function openAuthModal () {
   settingStore.chooseLocationModal = true;
 }
 
-// watch(() => props.modelValue, (newVal) => {
+// watch(() => props.modelValue, async(newVal) => {
+//   await nextTick();
 //   if(newVal) {
 //     if(newVal.cities) {
 //       selectedCities.value = {...selectedCities.value, cities: [...(newVal.cities || [])] };
@@ -155,11 +156,12 @@ watch((selectedCities), (newVal) => {
 //   }
 // })
 
-let stopWatcher = false;
+const stopWatcher = ref(false);
 
-watchEffect(async() => {
-  await nextTick();
-  if(props.modelValue && (props.modelValue.cities || props.modelValue.regions || props.modelValue.countries) && !stopWatcher) {
+await nextTick();
+
+watchEffect(() => {
+  if(props.modelValue && (props.modelValue.cities || props.modelValue.regions || props.modelValue.countries) && !stopWatcher.value) {
     if(props.modelValue.cities) {
       selectedCities.value = {...selectedCities.value, cities: [...(props.modelValue.cities || [])] };
     }
@@ -170,9 +172,10 @@ watchEffect(async() => {
       selectedCities.value = {...selectedCities.value, countries: [...props.modelValue.countries || []] };
     }
 
-    stopWatcher = true;
+    stopWatcher.value = true;
   }
 })
+
 
 </script> 
 

@@ -1,6 +1,6 @@
 <template>
   <div class="entity">
-    <h1 class="entity__title">География и Сроки</h1>
+    <h1 class="entity__title">География</h1>
     <UiForm :submit="handleSubmit" @setError="setError">
       <!-- <div v-if="role == 'customer'">
         <p class="entity__text">Укажите дату до которой заказ будет актуален</p>

@@ -189,10 +189,13 @@ const setRole = (role) => {
         name: userStore.userData.public_cards[0].name,
         status: 1,
         type: role
+      }).then(res => {
+        if(res && res.data && res.data.id) {
+          router.push({ path: `/pubcards/edit/${res.data.id}` });
+          toast.success('Вы успешно стали ' + formatLangRole.value);
+          userStore.checkAuth()
+        }
       })
-      userStore.checkAuth()
-      router.push({ path: `/desktop` });
-
     });
 }
 

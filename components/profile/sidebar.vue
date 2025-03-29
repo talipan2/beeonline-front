@@ -15,13 +15,23 @@
     </template>
     <template #bottom>
       <nav class="sidebar__bottom">
-        <button v-if="role === 'customer'" @click="handleChangeRole('performer')" class="sidebar__bottom-link">
+        <button v-if="userStore.role === 'customer' && userData.roles.includes('performer')" @click="handleChangeRole('performer')" class="sidebar__bottom-link">
           <SvgoAdduser class="svg-m" fill="#6937a5" />
           Кабинет исполнителя
         </button>
-        <button v-if="role === 'performer'" @click="handleChangeRole('customer')" class="sidebar__bottom-link">
+        <button v-if="userStore.role === 'performer' && userData.roles.includes('performer')" @click="handleChangeRole('customer')" class="sidebar__bottom-link">
           <SvgoAdduser class="svg-m" fill="#6937a5" />
           Кабинет заказчика
+        </button>
+        <button type="button" variant="default" class="sidebar__bottom-link"
+        @click="setRole('performer')" v-if="!userRoles.includes('performer')" :without-padding="true">
+          <SvgoAdduser class="svg-m" fill="#6937a5" />
+          Стать исполнителем
+        </button>
+        <button type="button" variant="default" class="sidebar__bottom-link"
+        @click="setRole('customer')" v-if="!userRoles.includes('customer')" :without-padding="true">
+          <SvgoAdduser class="svg-m" fill="#6937a5" />
+          Стать заказчиком
         </button>
         <NuxtLink
           class="sidebar__bottom-link"
@@ -41,7 +51,9 @@
 </template>
 
 <script setup>
+import { useOrganizationStore } from "~/store/organizationStore";
 import { useUserStore } from "~/store/userStore";
+import { useToast } from "vue-toastification";
 
 const props = defineProps({
   role: {
@@ -51,6 +63,7 @@ const props = defineProps({
 })
 
 const userStore = useUserStore();
+const organizationStore = useOrganizationStore();
 const router = useRouter();
 
 // function handleChangeRole(role) {
@@ -62,6 +75,10 @@ const router = useRouter();
 //     router.push({ path: '/performer/desktop' })
 //   }
 // }
+
+const userRoles = computed(() => userStore.userRoles);
+const userData = computed(() => userStore.userData);
+const toast = useToast();
 
 const handleChangeRole = async () => {
   const isCustomer = userStore.role === 'customer';
@@ -77,6 +94,38 @@ const handleChangeRole = async () => {
     console.error(error);
   }
 };
+
+const setRole = (role) => {
+  if(!userStore.userPubCard?.id) return  
+  userStore.setUserData({ role: role }, userData.value.id)
+    .then(res => {
+      userStore.role = role;
+      localStorage.setItem('role', role);
+      organizationStore.setPubCard({
+        id: userStore.userData.organization_id,
+        name: userStore.userData.public_cards[0].name,
+        status: 1,
+        type: role
+      }).then(res => {
+        if(res && res.data && res.data.id) {
+          router.push({ path: `/pubcards/edit/${res.data.id}` });
+          toast.success('Вы успешно стали ' + formatLangRole.value);
+          userStore.checkAuth()
+        }
+      });
+    });
+}
+
+const formatLangRole = computed(() => {
+  switch (userStore.role) {
+    case 'customer':
+      return 'заказчиком'
+    case 'performer': 
+      return 'исполнителем'
+    default:
+      return ''
+  }
+})
 
 function handleLogout() {
   userStore.logOut()

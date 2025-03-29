@@ -9,7 +9,7 @@
                         :alt="data.name"
                     />
                 </div>
-                <CommonTooltip text="Подробнее о статусах">
+                <CommonTooltip class="order-card__tooltip" text="Подробнее о статусах">
                     <template #trigger>
                         <a
                             href="javascript:;"
@@ -29,7 +29,7 @@
                     :key="prop.id"
                     :class="{ prop_type_text: prop.name === 'Описание' }"
                 >
-                    <p class="prop__name">{{ prop.name }}:</p>
+                    <p class="prop__name prop__name_type_grey">{{ prop.name }}:</p>
                     <p
                         class="prop__value"
                         :class="{ prop_type_hidden: prop.name === 'Описание' }"
@@ -65,6 +65,26 @@
                 </div>
             </div>
         </div>
+        <div class="order-card__footer" v-if="isFooter">
+            <div class="order-card__footer-container">
+                <UiButton
+                    type="button"
+                    class="order-card__footer-button"
+                    variant="tertiary"
+                >
+                    <SvgoMessage class="svg-m" fill="#6937a5" />
+                    Написать
+                </UiButton>
+                <UiButton
+                    type="button"
+                    class="order-card__footer-button"
+                    variant="tertiary"
+                >
+                    <SvgoPhone class="svg-m" fill="#6937a5" />
+                    Позвонить
+                </UiButton>
+            </div>
+        </div>
         <slot name="favorite-delete" />
         <NuxtLink
             v-if="isLink"
@@ -96,6 +116,10 @@ const props = defineProps({
     isLink: {
         type: Boolean,
         default: true,
+    },
+    isFooter: {
+        type: Boolean,
+        default: false
     }
 });
 
@@ -152,6 +176,12 @@ const statusModal = useModal({
         box-shadow: -2px -2px 0 #6937a5, 0px 4px 20px rgba(0, 0, 0, 0.1);
     }
 
+    &__tooltip {
+        span {
+            width: 100%;
+        }
+    }
+
     &__title {
         font-size: 1.8em;
         padding-bottom: 1em;
@@ -163,6 +193,7 @@ const statusModal = useModal({
     &__content {
         display: flex;
         gap: 5%;
+        margin-bottom: 3em;
     }
 
     &__left {
@@ -210,6 +241,18 @@ const statusModal = useModal({
         position: absolute;
         inset: 0;
         z-index: 1;
+    }
+
+    &__footer-container {
+        display: flex;
+        gap: 1em;
+        flex-wrap: wrap;
+    }
+
+    &__footer-button {
+        flex: 0 1 calc(50% - 0.5em);
+        z-index: 2;
+        column-gap: 1em;
     }
 }
 </style>

@@ -3,7 +3,7 @@
     <div class="orders__list">
       <template v-if="orderData.length > 0">
         <div class="orders__item" v-for="(data, index) in orderData" :key="index" v-bind="setFirstCardRef(index)">
-          <CatalogOrdersCard  :data="data" />
+          <CatalogOrdersCard  :data="data" isFooter />
         </div>
       </template>
       <CommonAlerts alert="Заказов нет" :type="'warning'" v-if="!orderData.length && isLoaded" />

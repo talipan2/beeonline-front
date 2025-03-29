@@ -68,6 +68,7 @@ export default {
       url_yt: data.url_yt,
       cities: data.cities,
       regions: data.regions,
+      countries: data.countries,
       videos: data.videos,
       current_step: data.currentStep
     }, form)

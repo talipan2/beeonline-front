@@ -2,16 +2,18 @@
   <div class="notification-setting">
     <h2 class="notification-setting__title">Настройка уведомлений</h2>
     <div class="notification-setting__list">
-      <div class="notification-setting__container" v-for="notification in notificationsSetting" :key="notification.id">
-        <p class="notification-setting__text">{{ notification.label }}</p>
-        <UiCheckboxGroup
-          class="notification-setting__checkbox"
-          :options="notification.settings"
-          :isValidated="false"
-          v-model="selectedSettings[notification.value]"
-          :disabled="(id) => handleDisableSettings(notification.value, id)"
-        />
-      </div>
+      <template v-for="notification in notificationsSetting" :key="notification.id">
+        <div class="notification-setting__container" v-if="notification.role.includes(userStore.role)">
+            <p class="notification-setting__text">{{ notification.label }}</p>
+            <UiCheckboxGroup
+              class="notification-setting__checkbox"
+              :options="notification.settings"
+              :isValidated="false"
+              v-model="selectedSettings[notification.value]"
+              :disabled="(id) => handleDisableSettings(notification.value, id)"
+            />
+        </div>
+      </template>
     </div>
     <div class="notification-setting__buttons">
       <UiButton
@@ -46,13 +48,13 @@ const toast = useToast();
 const selectedSettings = ref({});
 
 function handleDisableSettings(type, id) {
-  // // Находим настройку по типу и id
-  // const notification = notificationsSetting.value.find(n => n.value === type);
-  // if (notification) {
-  //   const setting = notification.settings.find(s => s.id === id);
-  //   return setting ? setting.disabled : false; // Возвращаем значение disabled
-  // }
-  // return false; // Если настройка не найдена, возвращаем false
+  // Находим настройку по типу и id
+  const notification = notificationsSetting.value.find(n => n.value === type);
+  if (notification) {
+    const setting = notification.settings.find(s => s.id === id);
+    return setting ? setting.disabled : false; // Возвращаем значение disabled
+  }
+  return false; // Если настройка не найдена, возвращаем false
 }
 
 // список уведомлений
@@ -61,6 +63,7 @@ const notificationsSetting = ref([
     id: 0, 
     label: 'Хочу получать уведомления о новых заказах',
     value: 'Новые заказы',
+    role: 'customer',
     settings: [
       {id: 0, label: 'по электронной почте', value:'email'},
       {id: 1, label: 'в личном кабинете', value: 'cabinet', disabled: true},
@@ -72,6 +75,7 @@ const notificationsSetting = ref([
     id: 1,
     label: 'Хочу получать уведомления о новых отзывах или ответах на мои отзывы',
     value: 'Новые отзывы или ответы',
+    role: 'customer/performer',
     settings: [
       {id: 0, label: 'по электронной почте', value:'email'},
       {id: 1, label: 'в личном кабинете', value: 'cabinet', disabled: true},
@@ -83,6 +87,7 @@ const notificationsSetting = ref([
     id: 1, 
     label: 'Хочу получать уведомления о новых сообщениях в чате',
     value: 'Новые сообщения в чате',
+    role: 'customer/performer',
     settings: [
       {id: 0, label: 'по электронной почте', value:'email'},
       {id: 1, label: 'в личном кабинете', value: 'cabinet', disabled: true},
@@ -94,6 +99,7 @@ const notificationsSetting = ref([
     id: 2, 
     label: 'Хочу получать системные уведомления',
     value: 'Системные уведомления',
+    role: 'customer/performer',
     settings: [
       {id: 0, label: 'по электронной почте', value:'email'},
       {id: 1, label: 'в личном кабинете', value: 'cabinet', disabled: true},
@@ -105,6 +111,7 @@ const notificationsSetting = ref([
     id: 3, 
     label: 'Хочу получать уведомления о новостях',
     value: 'Новости',
+    role: 'customer/performer',
     settings: [
       {id: 0, label: 'по электронной почте', value:'email'},
       {id: 1, label: 'в личном кабинете', value: 'cabinet', disabled: true},
@@ -116,9 +123,10 @@ const notificationsSetting = ref([
     id: 4, 
     label: 'Хочу получать уведомления о сделках',
     value: 'Сделки',
+    role: 'customer/performer',
     settings: [
       {id: 0, label: 'по электронной почте', value:'email'},
-      {id: 1, label: 'в личном кабинете', value: 'cabinet'},
+      {id: 1, label: 'в личном кабинете', value: 'cabinet', disabled: true},
       {id: 2, label: 'в Telegram', value: 'telegram'},
       {id: 3, label: 'в WhatsApp', value: 'whatsapp'},
     ]

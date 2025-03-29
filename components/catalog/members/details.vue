@@ -39,15 +39,25 @@
           </NuxtLink>
         </div>
         <div class="member-details__btn-container">
-          <UiButton class="member-details__btn" variant="quinary" size="large">
+          <!-- <UiButton class="member-details__btn" variant="quinary" size="large">
             <SvgoMessage class="svg-m" fill="#6937a5" />
             Написать {{ pubCardType }}
-          </UiButton>
+          </UiButton> -->
+          <PaidServiceCounterpartyCheck
+                :id="data.organizationId"
+            >
+                <template #button="{ open }">
+                    <UiButton class="member-details__btn" variant="quinary" size="large" type="button" @click="open">
+                        <SvgoSearch class="svg-m" fill="#6937a5" />
+                        Проверить контрагента
+                    </UiButton>
+                </template>
+            </PaidServiceCounterpartyCheck>
           <UiButton type="button" class="member-details__btn" :class="{ 'member-details__btn_type_active': isFavorite }" variant="tertiary" size="around" @click="handleAddFavorite">
             <SvgoFavorite class="svg-m" />
           </UiButton>
         </div>
-        <div class="member-details__btn-container">
+        <!-- <div class="member-details__btn-container">
             <PaidServiceCounterpartyCheck
                 :id="data.organizationId"
             >
@@ -58,7 +68,7 @@
                     </UiButton>
                 </template>
             </PaidServiceCounterpartyCheck>
-        </div>
+        </div> -->
       </div>
     </div>
     <div class="member-details__content-container">
@@ -69,7 +79,7 @@
       <h3 class="member-details__content-title">Галерея</h3>
       <CommonGallerySlider :images="data.gallery" :videos="data.videos"/>
     </div>
-    <div class="member-details__content-container">
+    <div class="member-details__content-container" v-if="reviews?.length">
       <h3 class="member-details__content-title">Отзывы</h3>
       <p class="member-details__content-rating">Общий рейтинг {{ props.data.type === 'performer' ? 'исполнителя' : props.data.type === 'customer' ? 'заказчика' : '' }}: {{ data.rating }}/5</p>
       <ReviewsEntity :data="reviews"/>
@@ -110,7 +120,7 @@ const pubCardType = computed(() => {
   }
 })
 
-const organizationId = computed(() => props.data.organizationId)
+const organizationId = computed(() => props.data.organizationId || null)
 
 watch(() => organizationId.value, (newVal) => {
   if(newVal) {
@@ -123,7 +133,7 @@ watch(() => organizationId.value, (newVal) => {
       }
     }).finally(() => isLoading.value = false)
   }
-},{once: true})
+}, { immediate: true })
 
 const reviewsPage = ref({
   currentPage: 1,

@@ -21,7 +21,6 @@
       </div>
       <div class="filter__item" ref="tutorialRef2">
         <h3 class="filter__title">Регионы производства:</h3>
-        {{ searchProps.location }}
         <CommonLocation
           v-model="searchProps.location"
           buttonLabel="Выбрать регионы"

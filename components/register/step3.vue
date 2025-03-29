@@ -33,7 +33,7 @@
           class="register__location"
           buttonLabel="Выбрать регион" 
           v-model="data.locations"
-          :type="['selectCities', 'selectRegions']" 
+          :type="['selectCountry', 'selectRegions']" 
           :is-required="true"
           errorLabel="Города производства"
         />
@@ -113,6 +113,7 @@ const handleSubmit = (values, form) => {
       id: userStore.userPubCard.id, 
       cities: data.value.locations.cities, 
       regions: data.value.locations.regions,
+      countries: data.value.locations.countries,
       currentStep: 2 
     }, form).then(res => {
       router.push({path: '/register/step4'});
