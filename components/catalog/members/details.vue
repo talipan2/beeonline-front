@@ -7,7 +7,7 @@
       <div class="member-details__header-content">
         <h1 class="member-details__title">{{ data.name || 'Не указано' }}</h1>
         <CommonRating :rating="data.rating" :is-count-rating="false" :reviews="data.reviewCount" />
-        <CommonLocationsList class="member-details__locations" :locationsList="data.location" :is-country="true"/>
+        <CommonLocationsList class="member-details__locations" :locationsList="data.location"/>
         <div class="member-details__props" v-if="data.siteUrl">
           <SvgoWeb class="svg-m" fill="#a9abac"/>
           <a :href="data.siteUrl" _target="_blank">{{ data.siteUrl }}</a>

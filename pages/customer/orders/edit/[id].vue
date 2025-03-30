@@ -20,6 +20,7 @@
         :data="orderData"
         type="edit"
       />
+      {{ orderData }}
     </template>
     <template #rightSide>
       <div class="h4">Предварительный просмотр заказа</div>
@@ -73,10 +74,10 @@ const orderData = ref({
 const previewCardData = computed(() => ({
   name: orderData.value.name,
   logo: orderData.value.gallery && orderData.value.gallery.length ? orderData.value.gallery[0].url : '',
-  countryId: formatData.value.locations && formatData.value.locations.length ? formatData.value.locations[0].countryId : null,
+  alias: formatData.value.alias,
   data: [
     { id: 1, name: 'Категории', value: formatData.value.categories },
-    { id: 2, name: 'Место производства', value: formatData.value.locations.map(item => item.name) },
+    { id: 2, name: 'Место производства', value: formatData.value.locations },
     { id: 3, name: 'Партия', value: formatData.value.batch },
     { id: 4, name: 'Лекала', value: formatData.value.patterns },
     { id: 5, name: 'Сырье', value: formatData.value.rawMaterials },
@@ -85,14 +86,17 @@ const previewCardData = computed(() => ({
   ],
 }))
 
+
+
 const formatData = computed(() => {
+  const {locations, alias} = locationFormatter({cities: [...orderData.value.locations.cities], regions: [...orderData.value.locations.regions], countries: [...orderData.value.locations.countries]});
+
   return {
     name: orderData.value.name,
     logo: orderData.value.logo,
     categories: entityStore.getEntityLabelById('categories', orderData.value.categories),
-    locations: orderData.value.locations && orderData.value.locations.cities && orderData.value.locations.regions 
-      ? locationStore.getLocationsByIds([], orderData.value.locations.regions, orderData.value.locations.cities)
-      : [],
+    locations: locations,
+    alias: alias,
     batch: orderData.value.batch,
     patterns: entityStore.getEntityLabelById('patterns', orderData.value.patterns),
     rawMaterials: entityStore.getEntityLabelById('rawMaterials', orderData.value.rawMaterials),
@@ -126,8 +130,9 @@ const currentHandleSubmit = computed(() => {
           batch: orderData.value.batch,
           patterns: orderData.value.patterns,
           termsOfCooperation: orderData.value.termsOfCooperation,
-          cities: orderData.value.locations.cities,
-          regions: orderData.value.locations.regions,
+          cities: orderData.value.locations.cities.map(item => item.id),
+          regions: orderData.value.locations.regions.map(item => item.id),
+          countries: orderData.value.locations.countries.map(item => item.id),
           gallery: orderData.value.gallery,
         }, form).then(() => currentStep.value = 4)
 
@@ -205,7 +210,10 @@ await entityStore.getOrder(id).then(res => {
       patterns: !res.data.pattern ? 0 : 1,
       price: Number(res.data.price),
       completionDate: res.data.deadline_at,
-      locations: res.data.cities && res.data.regions && { cities: res.data.cities.map(item => item.id), regions: res.data.regions.map(item => item.id) },
+      locations: {
+        cities: [], 
+        regions: res.data.regions?.map(region => ({...region, name: locationFormatter({regions: [{...region}]}).locations[0]})) || [], 
+        countries: res.data.countries?.map(country => ({...country, name: locationFormatter({countries: [{...country}]}).locations[0]})) || []},
       isSafeDeal: Boolean(res.data.is_safedeal)
     }
   }

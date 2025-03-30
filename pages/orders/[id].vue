@@ -32,6 +32,7 @@ const pubCard = ref({});
 const loading = ref(false);
 const formatData = computed(() => {
   if(!data.value) return []
+  const {locations, alias} = locationFormatter({cities: data.value.cities, regions: data.value.regions});
   return {
       id: data.value.id,
       props: [
@@ -44,7 +45,7 @@ const formatData = computed(() => {
         {name: 'Сырье:', value: data.value.material === 1 ? 'Давальческое' : data.value.material === 0 ? 'Собственное' : ''},
         {name: 'Размер партии:', value: parseInt(data.value.batch)},
         {name: 'Сроки выполнения:', value: formatDate(data.value.deadline_at)},
-        {name: 'Предпочтительные регионы производства:', value: formatLocationsList(data.value.regions, data.value.cities)},
+        {name: 'Предпочтительные регионы производства:', value: locations.join(' / ')},
       ],
       description: data.value.description,
       conditions: data.value.conditions,
@@ -59,14 +60,6 @@ const otherActiveEntity = computed(() => {
     return pubCard.value.orders.filter(item => item.id !== data.value.id);
   } else return [];
 });
-
-const formatLocationsList = (regions=[], cities=[]) => {
-  if(!regions.length && !cities.length) return [];
-  const citiesIds = cities.map(item => item.id);
-  const regionsIds = regions.map(item => item.id);
-  const locations = locationStore.getLocationsByIds([], regionsIds, citiesIds);
-  return locations.map(item => item.name).join(' / ');
-}
 
 const { ...ordersResponse } = await entityStore.getOrder(router.currentRoute.value.params.id)
 data.value = ordersResponse.data;

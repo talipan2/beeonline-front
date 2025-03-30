@@ -4,17 +4,15 @@
     <div class="entity-card__body">
       <div class="entity-card__details" v-if="data.placeOfProduction && data.placeOfProduction.length > 0">
         <div class="entity-card__region">
-          {{ data.placeOfProduction[0] ? data.placeOfProduction[0].name : 'Не указано' }}
+          {{ data.placeOfProduction[0] ? data.placeOfProduction[0] : 'Не указано' }}
             <ModalsMoreCities 
-              :list="data.placeOfProduction.map(el => el.name).slice(1)" 
+              :list="data.placeOfProduction.slice(1)" 
               title="Регионы" 
               placement="bottom-end" 
               v-if="Array.isArray(data.placeOfProduction) && data.placeOfProduction.length >= 1"
             />
         </div>
-        <i class="flag flag_round" :class="data.placeOfProduction && data.placeOfProduction[0]
-          ? selectFlag(data.placeOfProduction[0].countryId)
-          : ''" />
+        <i :class="`flag flag_round flag_${data.alias}`" />
       </div>
       <div class="entity-card__details" v-if="role === 'customer'">
         <p class="entity-card__details-name">Размер партии</p>
@@ -117,14 +115,6 @@ const handleClickActions = (type, id) => {
 
 
 const isLinkHovered = ref(false);
-
-const entityLocations = computed(() => {
-  if(props.data.locations && props.data.locations.cities && props.data.locations.regions) {
-    const regionsId = props.data.locations.regions.map(item => item.id);
-    const citiesId = props.data.locations.cities.map(item => item.id);
-    return locationStore.getLocationsByIds([], regionsId, citiesId)
-  }
-})
 
 const entityCategories = computed(() => {
   if(props.data.category) {

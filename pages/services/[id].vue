@@ -34,6 +34,7 @@ const isLoading = ref(false);
 
 const formatData = computed(() => {
   if(!data.value) return []
+  const {locations, alias} = locationFormatter({cities: data.value.cities});
   return {
       id: data.value.id,
       props: [
@@ -49,7 +50,7 @@ const formatData = computed(() => {
         {name: 'Материалы:', value: [data.value.material ? {name:'Давальческое', id: 1} : {name: 'Собственное', id: 0}], link: 'material'},
         {name: 'Наличие СТМ:', value: entityStore.getEntityLabelById('availabilityStm', data.value.is_stm)},
         {name: 'Бесплатные образцы:', value: entityStore.getEntityLabelById('freeTestSamples', data.value.free_samples)},
-        {name: 'Регион производства:', value: formatLocationsList(data.value.cities)},
+        {name: 'Регион производства:', value: locations.join(' / ')},
       ],
       organizationId: data.value.organization_id,
       description: data.value.description,
@@ -65,13 +66,6 @@ const otherActiveEntity = computed(() => {
     return pubCard.value.services.filter(item => item.id !== data.value.id);
   } else return [];
 });
-
-const formatLocationsList = (cities=[]) => {
-  if(!cities.length) return [];
-  const citiesIds = cities.map(item => item.id);
-  const locations = locationStore.getLocationsByIds([], [], citiesIds);
-  return locations.map(item => item.name).join(' / ');
-}
 
 const serviceResponse = await entityStore.getService(router.currentRoute.value.params.id);
 

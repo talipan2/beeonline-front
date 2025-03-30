@@ -29,16 +29,12 @@
       <div class="form-group-data">
         <p class="form-group__title">Место производства</p>
         <p class="form-group__value">
-          <i class="flag flag_round" v-if="formatData.locations && formatData.locations[0]" 
-            :class="formatData.locations[0]
-            ? flagClass
-            :''" 
-          />
-          {{ (formatData.locations && formatData.locations.length > 0 && formatData.locations[0].name) 
-            ? formatData.locations[0].name : 'не указан' 
+          <i :class="`flag flag_round flag_${formatData.alias}`" v-if="formatData.locations && formatData.locations[0]" />
+          {{ (formatData.locations && formatData.locations.length > 0 && formatData.locations[0]) 
+            ? formatData.locations[0] : 'не указан' 
           }}
           <ModalsMoreCities 
-            :list="formatData.locations.map(item => item.name).slice(1)" 
+            :list="formatData.locations.slice(1)" 
             title="Место производства" 
             placement="bottom-end" 
             v-if="Array.isArray(formatData.locations) && formatData.locations && formatData.locations.length > 1"

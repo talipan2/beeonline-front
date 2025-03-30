@@ -78,7 +78,13 @@ const selectedCities = ref({
 });
 
 // получение название локации по id
-const formattedLocation = computed(() => locationStore.getLocationsByIds( selectedCities.value.countries, selectedCities.value.regions, selectedCities.value.cities))
+const formattedLocation = computed(() => {
+  return [
+    ...selectedCities.value.cities.map((city) => ({id: city.id, type: 'city', name: city.name})),
+    ...selectedCities.value.regions.map((region) => ({id: region.id, type: 'region', name: region.name})),
+    ...selectedCities.value.countries.map((country) => ({id: country.id, type: 'country', name: country.name}))
+  ]
+})
 
 function deleteLocation(id, type) {
   if (!selectedCities.value) {
@@ -90,19 +96,19 @@ function deleteLocation(id, type) {
     case 'country':
       selectedCities.value = {
         ...selectedCities.value,
-        countries: selectedCities.value.countries.filter(country => country !== id),
+        countries: selectedCities.value.countries.filter(country => country.id !== id),
       };
       break;
     case 'region':
       selectedCities.value = {
         ...selectedCities.value,
-        regions: selectedCities.value.regions.filter(region => region !== id),
+        regions: selectedCities.value.regions.filter(region => region.id !== id),
       };
       break;
     case 'city':
       selectedCities.value = {
         ...selectedCities.value,
-        cities: selectedCities.value.cities.filter(city => city !== id),
+        cities: selectedCities.value.cities.filter(city => city.id !== id),
       };
       break;
     default:
@@ -161,7 +167,8 @@ const stopWatcher = ref(false);
 await nextTick();
 
 watchEffect(() => {
-  if(props.modelValue && (props.modelValue.cities || props.modelValue.regions || props.modelValue.countries) && !stopWatcher.value) {
+  if(props.modelValue && (props.modelValue.cities?.length || props.modelValue.regions?.length || props.modelValue.countries?.length) && !stopWatcher.value) {
+    console.log(props.modelValue)
     if(props.modelValue.cities) {
       selectedCities.value = {...selectedCities.value, cities: [...(props.modelValue.cities || [])] };
     }

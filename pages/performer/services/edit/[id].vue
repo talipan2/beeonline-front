@@ -38,6 +38,7 @@ const serviceData = ref({
   locations: {
     cities: [],
   },
+  locationsName: [],
   availabilityStm: null,
   freeTestSamples: null,
   minLot: [],
@@ -51,10 +52,10 @@ const serviceData = ref({
 const previewCardData = computed(() => ({
   name: serviceData.value.name,
   logo: serviceData.value.gallery && serviceData.value.gallery.length ? serviceData.value.gallery[0].url : '',
-  countryId: formatData.value.locations && formatData.value.locations.length ? formatData.value.locations[0].countryId : null,
+  alias: serviceData.value.alias,
   data: [
     {id: 1, name: 'Категории', value: formatData.value.categories},
-    {id: 2, name: 'Место производства', value: formatData.value.locations.map(item => item.name)},
+    {id: 2, name: 'Место производства', value: formatData.value.locations},
     {id: 3, name: 'Мин. партия', value: formatData.value.minLot},
     {id: 4, name: 'Наличие СТМ', value: formatData.value.availabilityStm},
     {id: 5, name: 'Бесплатные тестовые образцы', value: formatData.value.freeTestSamples},
@@ -64,10 +65,12 @@ const previewCardData = computed(() => ({
 }))
 
 const formatData = computed(() => {
+  const {locations, alias} = locationFormatter({cities: serviceData.value.locationsName});
   return {
     name: serviceData.value.name,
     categories: entityStore.getEntityLabelById('categories', serviceData.value.categories),
-    locations: locationStore.getLocationsByIds([], [], serviceData.value.locations.cities),
+    locations: locations,
+    alias: alias,
     availabilityStm: entityStore.getEntityLabelById('availabilityStm', serviceData.value.availabilityStm),
     freeTestSamples: entityStore.getEntityLabelById('freeTestSamples', serviceData.value.freeTestSamples),
     minLot: entityStore.getEntityLabelById('minLot', serviceData.value.minLot),
@@ -111,7 +114,7 @@ const currentHandleSubmit = computed(() => {
     case 3:
       return (async (value, form) => {
         await entityStore.editService(id, {
-          cities: serviceData.value.locations.cities
+          cities: serviceData.value.locations.cities.map(item => item.id)
         }, form)
         currentStep.value = 4
       });
@@ -164,7 +167,8 @@ await entityStore.getService(id).then(res => {
       name: res.data.name,
       logo: res.data.gallery && res.data.gallery.length ? res.data.gallery[0] : { url: null, id: null },
       categories: res.data.product_categories ? res.data.product_categories.map(item => item.id) : [],
-      locations: res.data.cities ? { cities: res.data.cities.map(item => item.id) } : {},
+      locations: {cities: res.data.cities.map(city => ({...city, name: locationFormatter({cities: [{...city}]}).locations[0]}))},
+      locationsName: res.data.cities,
       availabilityStm: Number(res.data.is_stm),
       freeTestSamples: Number(res.data.free_samples),
       minLot: res.data.batches && res.data.batches.length ? res.data.batches.map(item => item.id) : [],

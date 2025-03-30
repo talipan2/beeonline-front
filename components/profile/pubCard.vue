@@ -107,9 +107,9 @@ async function handleSubmit(values, form) {
       id: data.value.id,
       name: data.value.companyName,
       description: data.value.description,
-      cities: data.value.locations.cities,
-      regions: data.value.locations.regions,
-      countries: data.value.locations.countries,
+      cities: data.value.locations.cities.map(item => item.id),
+      regions: data.value.locations.regions.map(item => item.id),
+      countries: data.value.locations.countries.map(item => item.id),
       url_site: data.value.siteUrl,
       url_tg: data.value.urlTg,
       url_vk:data.value.urlVk,
@@ -145,10 +145,15 @@ onMounted(() => {
         data.value.urlVk = res.url_vk;
         data.value.urlYt = res.url_yt;
         data.value.companyLogo.url = res.logo;
-        data.value.locations = { regions: res.regions.map(region => region.id), cities: res.cities.map(city => city.id) };
+        data.value.locations = {
+          cities: res.cities?.map(city => ({...city, name: locationFormatter({cities: [{...city}]}).locations[0]})) ?? [], 
+          regions: res.regions?.map(region => ({...region, name: locationFormatter({regions: [{...region}]}).locations[0]})) ?? [], 
+          countries: res.countries?.map(country => ({...country, name: locationFormatter({countries: [{...country}]}).locations[0]})) ?? []
+        };
         data.value.gallery = res.gallery;
         data.value.videos = res.videos;
       }
+      console.log(data.value);
     })
     .catch(err => console.log(err))
 })

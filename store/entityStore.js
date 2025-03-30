@@ -30,6 +30,7 @@ export const useEntityStore = defineStore('entity', {
       locations: {
         regions: [],
         cities: [],
+        countries: [],
       },
     },
     fillingOrder: null,
@@ -327,6 +328,7 @@ export const useEntityStore = defineStore('entity', {
         locations: {
           regions: [],
           cities: [],
+          countries: [],
         },
       }
     },

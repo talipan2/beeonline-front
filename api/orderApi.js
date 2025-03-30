@@ -29,6 +29,7 @@ export default {
       patterns,
       cities,
       regions,
+      countries,
       isSafeDeal,
       status,
       categories,
@@ -45,6 +46,7 @@ export default {
     if(completionDate !== '') params.deadline_at = completionDate
     if(cities && cities.length > 0) params.cities = cities
     if(regions && regions.length > 0) params.regions = regions
+    if(countries && countries.length > 0) params.countries = countries
     if(isSafeDeal !== null) params.is_safedeal = isSafeDeal
     if(status) params.status = status
     if(categories && categories.length > 0) params.product_categories = categories

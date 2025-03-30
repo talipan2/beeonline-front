@@ -112,7 +112,7 @@ const pubCard = computed(() => {
     name: userStore.userPubCard?.name || '-',
     logo: userStore.userPubCard?.logo || '',
     description: userStore.userPubCard?.description || '',
-    location: {regions: userStore.userPubCard?.regions.map(region => region.id) || [], cities: userStore.userPubCard?.cities.map(city => city.id) || []},
+    location: {regions: userStore.userPubCard?.regions || [], cities: userStore.userPubCard?.cities || []},
   }
 });
 const organization = computed(() => {
@@ -122,7 +122,7 @@ const organization = computed(() => {
     kpp: userStore.userOrganization?.kpp || '-',
     ogrn: userStore.userOrganization?.ogrn || '-',
     legalAddress: userStore.userOrganization?.legal_address || '-',
-    countryId: userStore.userOrganization?.country_id || '-',
+    countryId: userStore.userOrganization?.country || '-',
     organizationForm: userStore.userOrganization?.org_form || '-',
   }
 });

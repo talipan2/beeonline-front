@@ -14,7 +14,7 @@
         <div class="welcome-service-card__props">
           <div class="welcome-service-card__prop">
             <p class="welcome-service-card__prop-name">{{data.location && data.location[0] ? data.location[0].name : 'Не указано'}}</p>
-            <p class="welcome-service-card__prop-value"><i class="flag flag_round" :class="data.location && data.location.length ? selectFlag(data.location[0].countryId) : ''"></i></p>
+            <p class="welcome-service-card__prop-value"><i :class="`flag flag_round flag_${data.alias}`"></i></p>
           </div>
           <div class="welcome-service-card__prop">
             <p class="welcome-service-card__prop-name">Размер партии:</p>

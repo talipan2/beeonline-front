@@ -23,6 +23,7 @@ const isLoading = ref(false);
 const locationStore = useLocationStore();
 
 const serviceProps = computed(() => {
+  const {locations, alias} = locationFormatter({cities: [...service.value.cities]});
   return {
     id: service.value.id,
     name: service.value.name,
@@ -37,16 +38,9 @@ const serviceProps = computed(() => {
       rawMaterials: {label: "Сырье", value: [service.value.materials_own ? 'Собственное' : '', service.value.materials_tolling ? 'Давальческое' : ''].filter(Boolean).join(' / ')},
       availabilityStm: {label: "Наличие СТМ", value: service.value.availabilityStm ? 'Да' : 'Нет'},
       freeSamples: {label: "Бесплатные образцы", value: formatFreeSamples(service.value.free_samples)},
-      placeOfProduction: {label: "Место производства", value: locations.value.map(item => item.name)},
+      placeOfProduction: {label: "Место производства", value: locations,}
     }
   }
-});
-
-const locations = computed(() => {
-  if (service.value.cities && service.value.cities.length) {
-    return locationStore.getLocationsByIds([], [], service.value.cities.map(item => item.id));
-  }
-  return [];
 });
 
 const formatFreeSamples = (freeSamples) => {

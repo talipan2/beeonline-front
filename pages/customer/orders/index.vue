@@ -126,21 +126,24 @@ const entityIsFilling = ref({});
 
 const cardData = computed(() => {
   return entityStore.organizationOrders.map(item => {
+    const {locations, alias} = locationFormatter({cities: item.cities, regions: item.regions});
     return {
-    id: item.id,
-    name: item.name,
-    placeOfProduction: locationStore.getLocationsByIds([], item.regions.map(item => item.id), item.cities.map(item => item.id)),
-    rawMaterials: !item.material ? ['Собственное'] : ['Давальческое'],
-    completionDate: item.deadline_at,
-    batch: item.batch,
-    category: item.product_categories.map(item => item.id),
-    status: entityStore.getEntityStatusByValue(item.status),
-    locations: {
-      cities: [...item.cities],
-      regions: [...item.regions]
-    },
-    statusType: item.status,
-  }})
+      id: item.id,
+      name: item.name,
+      placeOfProduction: locations,
+      alias: alias,
+      rawMaterials: !item.material ? ['Собственное'] : ['Давальческое'],
+      completionDate: item.deadline_at,
+      batch: item.batch,
+      category: item.product_categories.map(item => item.id),
+      status: entityStore.getEntityStatusByValue(item.status),
+      locations: {
+        cities: [...item.cities],
+        regions: [...item.regions]
+      },
+      statusType: item.status,
+    }
+  })
 })
 
 const handlePageChange = (page) => {

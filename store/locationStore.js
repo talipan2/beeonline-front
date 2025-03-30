@@ -6,6 +6,20 @@ export const useLocationStore = defineStore("location", {
     selectedCountry: null,
     selectedRegion: null,
     locations: {country: []},
+    countries: [
+      { id: 1, name: 'Россия' },
+      { id: 2, name: 'Белоруссия' },
+      { id: 3, name: 'Казахстан' },
+      { id: 4, name: 'Армения' },
+      { id: 5, name: 'Узбекистан' },
+      { id: 6, name: 'Киргизия' },
+      { id: 7, name: 'Испания' },
+      { id: 8, name: 'Тунис' },
+      { id: 9, name: 'Грузия' },
+      { id: 10, name: 'Австрия' },
+      { id: 11, name: 'Литва' },
+      { id: 12, name: 'Албания' },
+    ]
   }),
   getters: {
     getLocationsByIds: (state) => (countryIds = [], regionIds = [], cityIds = []) => {
@@ -38,8 +52,8 @@ export const useLocationStore = defineStore("location", {
     },
 
     getCountryById: (state) => (id) => {
-      if(state.locations.country.length == 0) return '';
-      const country = state.locations.country.find(country => country.id == id);
+      const country = state.countries.find(country => country.id == id);
+      console.log(country)
       if(country && country.name) return country.name;
     },
   },
@@ -48,7 +62,7 @@ export const useLocationStore = defineStore("location", {
       try {
         const response = await Api.getLocations();
         if (response.data) {
-          this.locations = {country: [...response.data.locations]};
+          return {country: [...response.data.locations]};
         }
       } catch (error) {
         throw error;

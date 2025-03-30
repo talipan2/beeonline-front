@@ -12,7 +12,8 @@
                             <p class="brands__card-brend">
                                 <span>{{ brand.pubCard.name }}</span>
                             </p>
-                            <p class="brands__card-city">{{ locationStore.getCountryById(brand.pubCard.countryId) }}</p>
+                            <p class="brands__card-city">{{ brand.pubCard.country }}</p>
+                            {{ brand }}
                         </div>
                     </div>
                     <div class="brands__card-image">
@@ -80,7 +81,7 @@ onMounted(() => {
                         pubCard: {
                             logo: item.pub_card && item.pub_card.logo ? item.pub_card.logo : '',
                             name: item.pub_card && item.pub_card.name ? item.pub_card.name : '',
-                            countryId: item.pub_card && item.pub_card.country_id ? item.pub_card.country_id : '',
+                            country: item.pub_card && item.pub_card.country ? item.pub_card.country.name : '',
                         },
                         name: item.name,
                         gallery: item.gallery && item.gallery.length ? item.gallery[0].url : undefined,

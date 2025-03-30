@@ -167,7 +167,7 @@
           v-if="role === 'customer'"
           buttonLabel="Выбрать регион"
           v-model="data.locations"
-          :type="['selectCities', 'selectRegions']"
+          :type="['selectCountry', 'selectRegions']"
           :is-required="true"
           errorLabel="Регионы производства"
           name="selectedLocations"
@@ -247,15 +247,15 @@ const handleSubmit = async (values, form) => {
   await props.handleSubmit(values, form)
 }
 
-const locationData = ref({
-  locationId: props.data.placeOfProductionId,
-  fullNameLocation: props.data.placeOfProduction,
-})
+// const locationData = ref({
+//   locationId: props.data.placeOfProductionId,
+//   fullNameLocation: props.data.placeOfProduction,
+// })
 
-watch(()=> locationData.value, (newVal) => {
-  props.data.placeOfProductionId = newVal.locationId
-  props.data.placeOfProduction = newVal.fullNameLocation
-})
+// watch(()=> locationData.value, (newVal) => {
+//   props.data.placeOfProductionId = newVal.locationId
+//   props.data.placeOfProduction = newVal.fullNameLocation
+// })
 
 const minPart = [
   { id: 1, label: "до 100" },

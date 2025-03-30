@@ -82,7 +82,7 @@ const handleUpdateFilter = (data) => {
   // добавление квери параметров для запроса
   filter.value = {
     categories: data.category && data.category.length ? data.category : undefined,
-    regions: Object.keys(data.location).length ? Object.values(data.location).flat() : undefined,
+    regions: Object.keys(data.location).length ? Object.values(data.location).flat().map(item => item.id) : undefined,
     batch_size_min: data.batch && data.batch.length > 1 ? data.batch[0] : undefined,
     batch_size_max: data.batch && data.batch.length > 1 ? data.batch[1] : undefined,
     urgent: data.is_rush ? data.is_rush : undefined,

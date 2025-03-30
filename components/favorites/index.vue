@@ -179,14 +179,15 @@ const ordersData = computed(() => {
   }
 
   return data.value.orders.map(item => {
+    const {locations, alias} = locationFormatter({cities: item.cities, regions: item.regions});
     return {
       id: item.id,
       name: item.name,
       logo: item.logo ? item.logo : '',
-      countryId: formatLocationsList(item.regions, item.cities, true),
+      alias: alias,
       data: [
         { id: 1, name: 'Категории', value: item.product_categories && item.product_categories.length ? item.product_categories.map(item => item.name) : [] },
-        { id: 2, name: 'Место производства', value: formatLocationsList(item.regions, item.cities) },
+        { id: 2, name: 'Место производства', value: locations },
         { id: 3, name: 'Партия', value: Number(item.batch) },
         { id: 4, name: 'Лекала', value: entityStore.getEntityLabelById('patterns', item.pattern) },
         { id: 5, name: 'Сырье', value: entityStore.getEntityLabelById('rawMaterials', item.material) },
@@ -197,29 +198,19 @@ const ordersData = computed(() => {
   });
 });
 
-const formatLocationsList = (regions = [], cities = [], countryId = false) => {
-  const citiesIds = cities.map(item => item.id);
-  const regionsIds = regions.map(item => item.id);
-  const locations = locationStore.getLocationsByIds([], regionsIds, citiesIds);
-  if (countryId) {
-    return locations[0] && locations[0].countryId ? locations[0].countryId : null; 
-  } else {
-    return locations.map(item => item.name);
-  }
-}
-
 const servicesData = computed(() => {
   if(!data.value.services || data.value.services === 0) {
     return [];
   }
 
   return data.value.services.map(item => {
+    const {locations, alias} = locationFormatter({cities: item.cities});
     return {
       id: item.id,
       name: item.name,
       logo: item.logo ? item.logo : '',
-      location: formatLocationsList([], item.cities),
-      countryId: formatLocationsList([], item.cities, true),
+      location: locations,
+      alias: alias,
       minLot: item.batches && item.batches.length ? item.batches[0].name : '',
       views: 0, // нет на бэке
       companyName: item.pub_card && item.pub_card.name ? item.pub_card.name : '',
@@ -239,17 +230,6 @@ const membersData = computed(() => {
 
   return data.value.members.map(item => {
     return {
-      // id: item.id,
-      // name: item.name,
-      // logo: item.logo,
-      // description: item.description,
-      // fillRating: item.fill_rating,
-      // entityCount: item.type === 'performer' ? item.services_count : item.orders_count,
-      // category: item.categories && item.categories.length ? item.categories.map(item => item.name) : [],
-      // rawMaterials: [item.materials_own ? 'Собственное' : '', item.materials_tolling ? 'Давальческое' : ''].filter(Boolean),
-      // type: item.type,
-      // countryId: {countries: [item.country_id]},
-
       id: item.id,
       name: item.name,
       logo: item.logo,
@@ -262,7 +242,7 @@ const membersData = computed(() => {
       category: item.categories && item.categories.length ? item.categories.map(item => item.name) : [],
       rawMaterials: [item.materials_own ? 'Собственное' : '', item.materials_tolling ? 'Давальческое' : ''].filter(Boolean),
       type: item.type,
-      countryId: {countries: [item.country_id]},
+      countryId: {countries: [item.country]},
     }
   })
 });

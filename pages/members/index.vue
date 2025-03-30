@@ -50,7 +50,8 @@ const data = computed(() => {
       category: item.categories && item.categories.length ? item.categories.map(item => item.name) : [],
       rawMaterials: [item.materials_own ? 'Собственное' : '', item.materials_tolling ? 'Давальческое' : ''].filter(Boolean),
       type: item.type,
-      countryId: {countries: [item.country_id]},
+      countryId: {countries: [item.country]},
+      country: {countries: [item.country]},
     }
   })
 });

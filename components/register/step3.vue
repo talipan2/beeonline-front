@@ -28,6 +28,7 @@
           :is-required="true" 
           errorLabel="Города производства"
         />
+        {{ data.locations }}
         <CommonLocation 
           v-if="userStore.role === 'customer'"
           class="register__location"
@@ -111,9 +112,9 @@ const handleSubmit = (values, form) => {
   } else {
     organizationStore.editPubCards({
       id: userStore.userPubCard.id, 
-      cities: data.value.locations.cities, 
-      regions: data.value.locations.regions,
-      countries: data.value.locations.countries,
+      cities: data.value.locations.cities.map(item => item.id), 
+      regions: data.value.locations.regions.map(item => item.id),
+      countries: data.value.locations.countries.map(item => item.id),
       currentStep: 2 
     }, form).then(res => {
       router.push({path: '/register/step4'});

@@ -35,13 +35,9 @@
                         :class="{ prop_type_hidden: prop.name === 'Описание' }"
                     >
                         <i
-                            class="flag flag_round"
+                            :class="`flag flag_round flag_${data.alias}`"
                             v-if="
-                                prop.name === 'Место производства' &&
-                                data.countryId
-                            "
-                            :class="
-                                data.countryId ? selectFlag(data.countryId) : ''
+                                prop.name === 'Место производства'
                             "
                         />
                         <span>
@@ -68,21 +64,26 @@
         <div class="order-card__footer" v-if="isFooter">
             <div class="order-card__footer-container">
                 <UiButton
-                    type="button"
                     class="order-card__footer-button"
                     variant="tertiary"
+                    :to="`/chat?order_id=${data.id}`"
                 >
                     <SvgoMessage class="svg-m" fill="#6937a5" />
                     Написать
                 </UiButton>
-                <UiButton
-                    type="button"
-                    class="order-card__footer-button"
-                    variant="tertiary"
-                >
-                    <SvgoPhone class="svg-m" fill="#6937a5" />
-                    Позвонить
-                </UiButton>
+                <PhoneNumberModal :order-id="data.id">
+                    <template #button="{ open }">
+                        <UiButton
+                            type="button"
+                            class="order-card__footer-button"
+                            variant="tertiary"
+                            @click="open"
+                        >
+                            <SvgoPhone class="svg-m" fill="#6937a5" />
+                            Позвонить
+                        </UiButton>
+                    </template>
+                </PhoneNumberModal>
             </div>
         </div>
         <slot name="favorite-delete" />

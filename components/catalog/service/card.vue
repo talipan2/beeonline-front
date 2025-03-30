@@ -18,9 +18,7 @@
               <ModalsMoreCities :list="data.location.slice(1)" title="Регионы" placement="bottom-end" v-if="Array.isArray(data.location) && data.location && data.location.length > 1" />
               </p>
             <p class="service-card__prop-value">
-              <i class="flag flag_round" v-if="data.countryId" :class="data.countryId
-              ? selectFlag(data.countryId)
-              : ''" />
+              <i :class="`flag flag_round flag_${data.alias}`" />
             </p>
           </div>
           <div class="service-card__prop">

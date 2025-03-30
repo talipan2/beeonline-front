@@ -15,24 +15,26 @@
     </template>
     <template #bottom>
       <nav class="sidebar__bottom">
-        <button v-if="userStore.role === 'customer' && userData.roles.includes('performer')" @click="handleChangeRole('performer')" class="sidebar__bottom-link">
-          <SvgoAdduser class="svg-m" fill="#6937a5" />
-          Кабинет исполнителя
-        </button>
-        <button v-if="userStore.role === 'performer' && userData.roles.includes('performer')" @click="handleChangeRole('customer')" class="sidebar__bottom-link">
-          <SvgoAdduser class="svg-m" fill="#6937a5" />
-          Кабинет заказчика
-        </button>
-        <button type="button" variant="default" class="sidebar__bottom-link"
-        @click="setRole('performer')" v-if="!userRoles.includes('performer')" :without-padding="true">
-          <SvgoAdduser class="svg-m" fill="#6937a5" />
-          Стать исполнителем
-        </button>
-        <button type="button" variant="default" class="sidebar__bottom-link"
-        @click="setRole('customer')" v-if="!userRoles.includes('customer')" :without-padding="true">
-          <SvgoAdduser class="svg-m" fill="#6937a5" />
-          Стать заказчиком
-        </button>
+        <template v-if="userStore.role === 'customer' || userStore.role === 'performer'">
+          <button v-if="userStore.role === 'customer' && userData.roles?.includes('performer')" @click="handleChangeRole('performer')" class="sidebar__bottom-link">
+            <SvgoAdduser class="svg-m" fill="#6937a5" />
+            Кабинет исполнителя
+          </button>
+          <button v-if="userStore.role === 'performer' && userData.roles?.includes('customer')" @click="handleChangeRole('customer')" class="sidebar__bottom-link">
+            <SvgoAdduser class="svg-m" fill="#6937a5" />
+            Кабинет заказчика
+          </button>
+          <button type="button" variant="default" class="sidebar__bottom-link"
+          @click="setRole('performer')" v-if="!userRoles.includes('performer')" :without-padding="true">
+            <SvgoAdduser class="svg-m" fill="#6937a5" />
+            Стать исполнителем
+          </button>
+          <button type="button" variant="default" class="sidebar__bottom-link"
+          @click="setRole('customer')" v-if="!userRoles.includes('customer')" :without-padding="true">
+            <SvgoAdduser class="svg-m" fill="#6937a5" />
+            Стать заказчиком
+          </button>
+        </template>
         <NuxtLink
           class="sidebar__bottom-link"
           :to="`/support`"

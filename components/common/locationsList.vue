@@ -1,7 +1,7 @@
 <template>
   <div class="location-container">
-    <i class="flag flag_round" :class="selectFlag(firstLocation && firstLocation.countryId || '')"></i>
-    <p v-if="!isCountry">{{ firstLocation && firstLocation.name || '-' }} </p>
+    <i :class="`flag flag_round flag_${aliasState}`"></i>
+    <p v-if="!isCountry">{{ firstLocation || '-' }} </p>
     <p v-else>{{ countryName || '-' }} </p>
     <ModalsMoreCities 
       class="location-container__more-cities"
@@ -9,6 +9,7 @@
       :title="title" 
       placement="bottom-end" 
       v-if="otherLocations && !isCountry"
+
     />
   </div>
 </template>
@@ -40,10 +41,14 @@ const regions = computed(() => props.locationsList.regions || []);
 const countries = computed(() => props.locationsList.countries || []);
 
 const data = ref([])
+const aliasState = ref('')
 
 watch(() => [cities.value, regions.value, countries.value, locationStore.locations], () => {
 
-  data.value = locationStore.getLocationsByIds([...countries.value], [...regions.value], [...cities.value])
+  const {locations, alias} = locationFormatter({cities: [...cities.value], regions: [...regions.value], countries: [...countries.value]});
+  data.value = locations
+  aliasState.value = alias
+  console.log(alias)
 }, {deep: true, immediate: true})
 
 const firstLocation = computed(() => {
@@ -53,7 +58,7 @@ const firstLocation = computed(() => {
 
 const otherLocations = computed(() => {
   if(!data.value.length && props.isCountry) return null;
-  return data.value.slice(1).map(item => item.name);
+  return data.value.slice(1);
 })
 
 const countryName = computed(() => {

@@ -34,16 +34,17 @@ const emit = defineEmits(['updateOrderCardRef']);
 
 const orderData = computed(() => {
   return props.data.map(item => {
+    const {locations, alias} = locationFormatter({cities: item.cities, regions: item.regions});
     return {
       id: item.id,
       name: item.name,
       logo: item.gallery && item.gallery.length ? item.gallery[0].url : '',
-      countryId: formatLocationsList(item.regions, item.cities, true),
+      alias: alias,
       lifecycle_status: item.lifecycle_status,
       lifecycle_status_name: item.lifecycle_status_name,
       data: [
         { id: 1, name: 'Категории', value: item.product_categories && item.product_categories.length ? item.product_categories.map(item => item.name) : [] },
-        { id: 2, name: 'Место производства', value: formatLocationsList(item.regions, item.cities) },
+        { id: 2, name: 'Место производства', value: locations },
         { id: 3, name: 'Партия', value: Number(item.batch) },
         { id: 4, name: 'Лекала', value: entityStore.getEntityLabelById('patterns', item.pattern) },
         { id: 5, name: 'Сырье', value: entityStore.getEntityLabelById('rawMaterials', item.material) },
@@ -53,18 +54,6 @@ const orderData = computed(() => {
     };
   });
 });
-
-const formatLocationsList = (regions = [], cities = [], citiesId = false) => {
-  if(!regions.length && !cities.length) return [];
-  const citiesIds = cities.map(item => item.id);
-  const regionsIds = regions.map(item => item.id);
-  const locations = locationStore.getLocationsByIds([], regionsIds, citiesIds);
-  if (citiesId) {
-    return locations[0] && locations[0].countryId ? locations[0].countryId : null;
-  } else {
-    return locations.map(item => item.name);
-  }
-}
 
 const setFirstCardRef = (index) => {
   return index === 0 ? { ref: firstCardRef } : {};

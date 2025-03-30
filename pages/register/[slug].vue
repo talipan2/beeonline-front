@@ -88,6 +88,7 @@ const data = ref({
   registerAddress: null,
   siteUrl: null,
   verificationFiles: [],
+  country: {}
 });
 
 const blockTitle = computed(() => {
@@ -148,6 +149,7 @@ const checkListCard = computed(() => {
     description: data.value.description,
     logo: data.value.companyLogo?.url,
     countryId: { countries: [organizationStore.registerOrg.countryId]},
+    country: data.value.country,
     entityCount: 0,
     type: userStore.role,
   }
@@ -167,7 +169,8 @@ onMounted(() => {
     if(res && res.user && res.user) {
       if(res.user.organization && res.user.organization.id) {
         const userOrganization = res.user.organization;
-        data.value.countryId = userOrganization.country_id
+        data.value.country = {countries: [{...userOrganization.country}]}
+        data.value.countryId = userOrganization.country.id
         data.value.selfEmployed = userOrganization.is_foreigner
         data.value.inn = userOrganization.inn
         data.value.organizationName = userOrganization.name
@@ -184,7 +187,7 @@ onMounted(() => {
         data.value.description = pubCard.description
         data.value.siteUrl = pubCard.site_url
         data.value.companyLogo = {url:pubCard.logo}
-        data.value.locations = { regions: [...pubCard.regions.map(region => region.id)], cities: [...pubCard.cities.map(city => city.id)] };
+        data.value.locations = { regions: [...pubCard.regions], cities: [...pubCard.cities] };
       }
     }
   });

@@ -14,6 +14,7 @@
     <template #right>
       <div class="h4">Предварительный просмотр услуги</div>
       <CreateEntityPreview :data="servicesData"/>
+      {{ service }}
     </template>
   </NuxtLayout>
 </template>
@@ -85,9 +86,10 @@ const servicesData = computed(() => ({
   name: data.value.name,
   logo: service.value.gallery && service.value.gallery.length ? service.value.gallery[0].url : '',
   countryId: data.value.locations && data.value.locations.length ? data.value.locations[0].countryId : null,
+  alias: data.value.alias,
   data: [
     {id: 1, name: 'Категории', value: data.value.categories},
-    {id: 2, name: 'Место производства', value: data.value.locations.map(item => item.name)},
+    {id: 2, name: 'Место производства', value: data.value.locations},
     {id: 3, name: 'Мин. партия', value: data.value.minLot},
     {id: 4, name: 'Наличие СТМ', value: data.value.availabilityStm},
     {id: 5, name: 'Бесплатные тестовые образцы', value: data.value.freeTestSamples},
@@ -96,18 +98,22 @@ const servicesData = computed(() => ({
   ],
 }))
 
-const data = computed(() => ({
-  name: service.value.name,
-  logo: service.value.gallery && service.value.gallery.length ? service.value.gallery[0] : {id: null, url: ''},
-  categories: entityStore.getEntityLabelById('categories', service.value.categories),
-  locations: locationStore.getLocationsByIds([], service.value.locations?.regions, service.value.locations?.cities),
-  availabilityStm: entityStore.getEntityLabelById('availabilityStm', service.value.availabilityStm),
-  freeTestSamples: entityStore.getEntityLabelById('freeTestSamples', service.value.freeTestSamples),
-  minLot: entityStore.getEntityLabelById('minLot', service.value.minLot),
-  rawMaterials: entityStore.getEntityLabelById('rawMaterials', service.value.rawMaterials),
-  description: service.value.description,
-  termsOfCooperation: service.value.termsOfCooperation
-}))
+const data = computed(() => {
+  const {locations, alias} = locationFormatter({cities: service.value.locations?.cities});
+  return {  
+    name: service.value.name,
+    logo: service.value.gallery && service.value.gallery.length ? service.value.gallery[0] : {id: null, url: ''},
+    categories: entityStore.getEntityLabelById('categories', service.value.categories),
+    locations: locations,
+    alias: alias,
+    availabilityStm: entityStore.getEntityLabelById('availabilityStm', service.value.availabilityStm),
+    freeTestSamples: entityStore.getEntityLabelById('freeTestSamples', service.value.freeTestSamples),
+    minLot: entityStore.getEntityLabelById('minLot', service.value.minLot),
+    rawMaterials: entityStore.getEntityLabelById('rawMaterials', service.value.rawMaterials),
+    description: service.value.description,
+    termsOfCooperation: service.value.termsOfCooperation
+  }
+})
 
 const currentHandleSubmit = computed(() => {
   switch (router.currentRoute.value.params.slug) {
@@ -171,7 +177,7 @@ const currentHandleSubmit = computed(() => {
       return (async (values, form) => {
         if(service.value.locations && service.value.locations.cities) {
           await entityStore.editService(service.value.id, {
-            cities: service.value.locations.cities
+            cities: service.value.locations.cities.map(item => item.id)
           }, form).then(() => {
             entityStore.updateServiceStep(service.value.id, 3)
             router.push('/services/create/step4')
@@ -244,8 +250,8 @@ onBeforeMount(async () => {
               serviceInProgress.materials_tolling ? 0 : '',
             ].filter(item => item !== ''),
             locations: {
-              cities: serviceInProgress.cities && Array.isArray(serviceInProgress.cities) ? serviceInProgress.cities.map(item => item.id) : [],
-              regions: serviceInProgress.regions && Array.isArray(serviceInProgress.regions) ? serviceInProgress.regions.map(item => item.id) : [],
+              cities: serviceInProgress.cities?.map(item => ({ id: item.id, name: locationFormatter(item) })) ?? [],
+              regions: serviceInProgress.regions?.map(item => ({ id: item.id, name: locationFormatter(item) })) ?? [],
             },
             availabilityStm: serviceInProgress.is_stm !== null ? Number(serviceInProgress.is_stm) : null,
             freeTestSamples: serviceInProgress.free_samples !== null ? Number(serviceInProgress.free_samples) : null,

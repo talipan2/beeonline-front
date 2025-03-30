@@ -104,8 +104,9 @@ const currentHandleSubmit = computed(() => {
             batch: order.value.batch,
             patterns: order.value.patterns,
             termsOfCooperation: order.value.termsOfCooperation,
-            cities: order.value.locations.cities,
-            regions: order.value.locations.regions,
+            cities: order.value.locations.cities.map(item => item.id),
+            regions: order.value.locations.regions.map(item => item.id),
+            countries: order.value.locations.countries.map(item => item.id),
           }, form).then(() => {
             entityStore.updateOrderStep(order.value.id, 2)
             entityStore.fillingOrder.currentStep = 2
@@ -177,10 +178,11 @@ const order = ref(entityStore.order);
 const ordersData = computed(() => ({
   name: order.value.name,
   logo: order.value.gallery && order.value.gallery.length ? order.value.gallery[0].url : '',
+  alias: data.value.alias,
   countryId: data.value.locations && data.value.locations.length ? data.value.locations[0].countryId : null,
   data: [
     { id: 1, name: 'Категории', value: data.value.categories },
-    { id: 2, name: 'Место производства', value: data.value.locations.map(item => item.name) },
+    { id: 2, name: 'Место производства', value: data.value.locations },
     { id: 3, name: 'Партия', value: data.value.batch },
     { id: 4, name: 'Лекала', value: data.value.patterns },
     { id: 5, name: 'Сырье', value: data.value.rawMaterials },
@@ -189,18 +191,22 @@ const ordersData = computed(() => ({
   ],
 }))
 
-const data = computed(() => ({
-  name: order.value.name,
-  logo: order.value.gallery && order.value.gallery.length ? order.value.gallery[0].url : '',
-  categories: entityStore.getEntityLabelById('categories', order.value.categories),
-  locations: locationStore.getLocationsByIds([], order.value.locations?.regions, order.value.locations?.cities),
-  batch: order.value.batch,
-  patterns: entityStore.getEntityLabelById('patterns', order.value.patterns),
-  rawMaterials: entityStore.getEntityLabelById('rawMaterials', order.value.rawMaterials),
-  completionDate: order.value.completionDate ? formatDate(order.value.completionDate) : '',
-  description: order.value.description,
-  termsOfCooperation: order.value.termsOfCooperation
-}))
+const data = computed(() => {
+  const {locations, alias} = locationFormatter({cities: [...order.value.locations.cities], regions: [...order.value.locations.regions], countries: [...order.value.locations.countries]});
+  return {    
+    name: order.value.name,
+    logo: order.value.gallery && order.value.gallery.length ? order.value.gallery[0].url : '',
+    categories: entityStore.getEntityLabelById('categories', order.value.categories),
+    locations: locations,
+    alias: alias,
+    batch: order.value.batch,
+    patterns: entityStore.getEntityLabelById('patterns', order.value.patterns),
+    rawMaterials: entityStore.getEntityLabelById('rawMaterials', order.value.rawMaterials),
+    completionDate: order.value.completionDate ? formatDate(order.value.completionDate) : '',
+    description: order.value.description,
+    termsOfCooperation: order.value.termsOfCooperation
+  }
+})
 
   
 onBeforeMount(async () => {
@@ -209,6 +215,7 @@ onBeforeMount(async () => {
     await entityStore.getOrganizationOrders(userStore.userData.organization_id).then((res) => {
       if (res?.data?.orders && Array.isArray(res.data.orders)) {
         const orderInProgress = res.data.orders.find((item) => item.status === 'filling');
+        console.log('регионы из бд')
         if (orderInProgress) {
           entityStore.fillingOrder = {
             id: orderInProgress.id,
@@ -233,8 +240,9 @@ onBeforeMount(async () => {
             price: orderInProgress.price ? Number(orderInProgress.price) : '',
             completionDate: orderInProgress.deadline_at,
             locations: {
-              cities: orderInProgress.cities && Array.isArray(orderInProgress.cities) ? orderInProgress.cities.map(item => item.id) : [],
-              regions: orderInProgress.regions && Array.isArray(orderInProgress.regions) && orderInProgress.regions.length ? orderInProgress.regions.map(item => item.id) : userStore.userPubCard?.regions?.map(item => item.id),
+              cities: orderInProgress.cities?.map(item => ({ id: item.id, name: locationFormatter(item) })) ?? [],
+              regions: orderInProgress.regions?.map(item => ({ id: item.id, name: locationFormatter(item) })) ?? [],
+              countries: orderInProgress.countries?.map(item => ({ id: item.id, name: locationFormatter(item) })) ?? [],
             },
             currentStep: orderInProgress.current_step,
             isSafeDeal: orderInProgress.is_safedeal,
@@ -252,6 +260,8 @@ onBeforeMount(async () => {
   if (entityStore.fillingOrder && entityStore.fillingOrder?.id) {
     order.value = entityStore.fillingOrder;
   }
+
+  getLocationsForPubCard();
 
   // Выполняем редирект после загрузки данных
   handleRedirect();
@@ -277,12 +287,27 @@ const handleRedirect = () => {
   entityStore.isRedirectedToStep = false;
 };
 
-onMounted(() => {
-  if(!order.value.locations.regions.length && userStore.userPubCard?.regions?.length) {
-    order.value.locations.regions = userStore.userPubCard.regions.map(item => item.id)
-    order.value = {...order.value}
+function getLocationsForPubCard() {
+  if((!order.value.locations.regions.length && userStore.userPubCard?.regions?.length) || 
+     (!order.value.locations.countries.length && userStore.userPubCard?.countries?.length)) {
+    
+    // Для регионов
+    if(userStore.userPubCard?.regions?.length && !order.value.locations.regions.length) {
+      order.value.locations.regions = userStore.userPubCard.regions.map(item => ({
+        id: item.id,
+        name: locationFormatter(item)
+      }))
+    }
+    
+    // Для стран
+    if(userStore.userPubCard?.countries?.length && !order.value.locations.countries.length) {
+      order.value.locations.countries = userStore.userPubCard.countries.map(item => ({
+        id: item.id,
+        name: locationFormatter(item)
+      }))
+    }
   }
-});
+}
 
 
 </script>

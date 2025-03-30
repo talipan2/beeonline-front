@@ -113,8 +113,8 @@
         <div class="form-group-data">
           <p class="form-group__title">Страна</p>
           <p class="form-group__value">
-            <i class="flag flag_round" :class="organizationData.country ? selectFlag(organizationData.country) : ''" />
-            {{ locationStore.getCountryById(organizationData.country) }}
+            <i :class="`flag flag_round flag_${organizationData.country?.alias}`" />
+            {{ organizationData.country?.name }}
           </p>
         </div>
         <div class="form-group-data">
@@ -171,7 +171,7 @@ const organizationData = computed(() => ({
   kpp: userStore.userOrganization?.kpp || '-',
   ogrn: userStore.userOrganization?.ogrn || '-',
   legalAddress: userStore.userOrganization?.legal_address || '-',
-  country: userStore.userOrganization?.country_id || '-',
+  country: userStore.userOrganization.country || {},
   currency: userStore.userOrganization?.currency_id || null,
 }));
 
@@ -185,8 +185,8 @@ const pubCardData = computed(() => ({
   url_vk: userStore.userPubCard?.url_vk || null,
   url_yt: userStore.userPubCard?.url_yt || null,
   locations: {
-    regions: userStore.userPubCard && userStore.userPubCard.regions ? userStore.userPubCard.regions.map(region => region.id) : [],
-    cities: userStore.userPubCard && userStore.userPubCard.cities ? userStore.userPubCard.cities.map(city => city.id) : [],
+    regions: userStore.userPubCard && userStore.userPubCard.regions ? userStore.userPubCard.regions : [],
+    cities: userStore.userPubCard && userStore.userPubCard.cities ? userStore.userPubCard.cities : [],
   },
 }));
 

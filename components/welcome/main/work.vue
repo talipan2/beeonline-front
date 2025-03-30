@@ -92,13 +92,15 @@ const cardsData = ref([])
 
 const cardData = computed(() => {
   return cardsData.value.map(item => {
+    const {locations, alias} = locationFormatter({cities: item.cities});
     return {
       id: item.id,
       name: item.name,
       logo: item.logo,
       minLot: item.batches,
       companyName: item.pub_card?.name,
-      location: getLocations(item.cities) ,
+      location: locations,
+      alias: alias,
       data: [
         { id: 1, name: 'Сырье', value: [item.materials_own ? 'Собственное' : '', item.materials_tolling ? 'Давальческое' : ''].filter(Boolean).join(' / ') },
         { id: 2, name: 'Категории', value: item.product_categories ? item.product_categories.map(item => item.name).join(' / ') : [] },
@@ -106,13 +108,6 @@ const cardData = computed(() => {
       ],
   }})
 })
-
-const getLocations = (cities) => {
-  if(cities.length === 0 ) return
-  const citiesIds = cities.map(item => item.id)
-  const locationsName = locationsStore.getLocationsByIds([], [], citiesIds)
-  return locationsName.length ? locationsName : []
-}
 
 onMounted(() => {
   locationsStore.getLocations()

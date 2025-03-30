@@ -31,6 +31,7 @@ const order = ref({});
 const isLoading = ref(false);
 
 const orderProps = computed(() => {
+  const {locations, alias} = locationFormatter({cities: order.value.cities, regions: order.value.regions});
   return {
     id: order.value.id,
     name: order.value.name,
@@ -51,24 +52,11 @@ const orderProps = computed(() => {
       completionDate: {label: "Срок выполнения", value: `До ${formatDate(order.value.deadline_at)}`},
       placeOfProduction: {
         label: "Предпочтительные регионы производства", 
-        value: order.value.cities || order.value.regions 
-        ? locationStore.getLocationsByIds([], order.value.regions.map(item => item.id), order.value.cities.map(item => item.id)).map(item => item.name)
-        : ''
+        value: locations
       },
     }
   }
 });
-
-function getLocationNames(cities, regions) {
-  const names = []
-  if(cities && cities.length) {
-    names.push(...cities.map(item => item.name))
-  }
-  if(regions && regions.length) {
-    names.push(...regions.map(item => item.name))
-  }
-  return names
-}
 
 isLoading.value = true;
 await entityStore.getOrder(router.currentRoute.value.params.id)

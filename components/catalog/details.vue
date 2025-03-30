@@ -33,8 +33,8 @@
           <CommonRating />
         </div>
         <div class="orders-details__pub-card-location">
-          <i class="flag flag_round" :class="pubCard.country_id ? selectFlag(pubCard.country_id) : ''"/>
-          {{ locationStore.getCountryById(pubCard.country_id) }}
+          <i :class="`flag flag_round flag_${pubCard.country?.alias}`"/>
+          {{ pubCard.country?.name || '' }}
         </div>
       </div>
     </div>

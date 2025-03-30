@@ -50,12 +50,13 @@ watch(() => firstCardRef.value, (newVal) => {
 
 const ordersData = computed(() => {
   return props.data.map((item) => {
+    const {locations, alias} = locationFormatter({cities: item.cities});
     return {
       id: item.id,
       name: item.name,
       logo: item.pub_card && item.pub_card.logo ? item.pub_card.logo : '',
-      location: formatLocationsList(item.cities),
-      countryId: formatLocationsList(item.cities, true),
+      location: locations,
+      alias: alias,
       minLot: item.batches && item.batches.length ? item.batches[0].name : '',
       views: 0,
       companyName: item.pub_card && item.pub_card.name ? item.pub_card.name : '',
@@ -76,17 +77,6 @@ const ordersData = computed(() => {
     }
   })
 })
-
-const formatLocationsList = (cities = [], citiesId = false) => {
-  if(!cities.length) return [];
-  const citiesIds = cities.map(item => item.id);
-  const locations = locationStore.getLocationsByIds([], [], citiesIds);
-  if (citiesId) {
-    return locations[0] && locations[0].countryId ? locations[0].countryId : null; 
-  } else {
-    return locations.map(item => item.name);
-  }
-}
 
 </script>
 

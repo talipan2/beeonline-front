@@ -80,23 +80,27 @@ const handleUpdateFilter = (data) => {
   // добавление квери параметров для роутинга
   const newQuery = {
     categories: data.category ? data.category.join(',') : undefined,
-    countries: data.location && data.location.countries ? data.location.countries.join(',') : undefined,
-    regions: data.location && data.location.regions ? data.location.regions.join(',') : undefined,
+    countries: data.location && data.location.countries ? data.location.countries?.map(item => item.id).join(',') : undefined,
+    regions: data.location && data.location.regions ? data.location.regions?.map(item => item.id).join(',') : undefined,
     is_stm: data.has_stm && data.has_stm.length ? data.has_stm.join(',') : undefined,
     free_samples: data.free_test && data.free_test.length ? data.free_test.join(',') : undefined,
     materials_own: data.material && data.material.length && data.material.includes(0) ? 1 : undefined,
     materials_tolling: data.material && data.material.length && data.material.includes(1) ? 1 : undefined,
   }
 
+  console.log(newQuery)
+
   // добавление квери параметров для запроса
   filter.value = {
     categories: data.category && data.category.length ? data.category : undefined,
-    regions: Object.keys(data.location).length ? Object.values(data.location).flat() : undefined,
+    regions: Object.keys(data.location).length ? Object.values(data.location).flat().map(item => item.id) : undefined,
     is_stm: data.has_stm && data.has_stm.length ? data.has_stm : undefined,
     free_samples: data.free_test && data.free_test.length ? data.free_test : undefined,
     materials_own: data.material && data.material.length && data.material.includes(0) ? 1 : undefined,
     materials_tolling: data.material && data.material.length && data.material.includes(1) ? 1 : undefined,
   }
+
+  console.log(filter.value)
 
   // удаление пустых параметров
   Object.keys(newQuery).forEach((key) => {

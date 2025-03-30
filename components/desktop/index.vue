@@ -258,7 +258,7 @@ const pubCard = computed(() => {
     logo: userStore.userPubCard.logo,
     type: userStore.userPubCard.type,
     description: userStore.userPubCard.description,
-    countryId: {countries: [userStore.userPubCard.country_id]},
+    countryId: {countries: [userStore.userPubCard.country]},
     rating: userStore.userPubCard.reviews_stats_about?.stars,
     reviewCount: userStore.userPubCard.reviews_about_count,
     ratingData: {...userStore.userPubCard.reviews_stats_about, reviewCount: userStore.userPubCard.reviews_about_count},

@@ -9,11 +9,7 @@
       <div class="prop" v-for="prop in data.data" :key="prop.id" :class="{ 'prop_type_text' : prop.name === 'Описание' }">
         <p class="prop__name">{{ prop.name }}:</p>
         <p class="prop__value" :class="{ 'prop_type_hidden' : prop.name === 'Описание' }">
-          <i class="flag flag_round" v-if="prop.name === 'Место производства' && data.countryId" 
-            :class=" data.countryId
-            ? selectFlag(data.countryId)
-            :''" 
-          />
+          <i :class="`flag flag_round flag_${data.alias}`" v-if="prop.name === 'Место производства'" />
           <span>
             {{ Array.isArray(prop.value) ? (prop.value[0] || 'не указано') : (prop.value || 'не указано') }}
           </span>

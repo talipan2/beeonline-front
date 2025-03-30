@@ -19,6 +19,7 @@
         <template v-if="cardsData.name && role === 'customer'">
           <h3 class="right-side__title">Так вашу компанию будут видеть другие участники портала:</h3>
           <CardsPublic :data="cardsData" isDescription isPropsVisible/>
+          {{ cardsData }}
         </template>
         <ProfileAddRoleCard :role="role"/>
       </template>
@@ -81,7 +82,7 @@ const cardsData = computed(() => {
     name: pubCard.value?.name,
     logo: pubCard.value?.logo,
     description: pubCard.value?.description,
-    countryId: {countries: [pubCard.value?.country_id]},
+    countryId: {countries: [pubCard.value?.country]},
     entityCount: pubCard.value?.orders_count || 0,
     type: pubCard.value?.type,
     rawMaterials: [pubCard.value?.materials_own ? 'Собственное' : '', pubCard.value?.materials_tolling ? 'Давальческое' : ''].filter(Boolean),
@@ -92,7 +93,7 @@ const cardsData = computed(() => {
 const fillRating = computed(() => pubCard.value?.fill_rating);
 
 onMounted(() => {
-  userStore.getUserData(userStore.userData.id)
+  userStore.checkAuth();
 })
 
 

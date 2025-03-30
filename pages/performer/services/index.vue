@@ -128,10 +128,11 @@ const formatFreeSamples = (freeSamples) => {
 
 const cardData = computed(() => {
   return entityStore.organizationServices.map(item => {
+    const {locations, alias} = locationFormatter({cities: item.cities, regions: item.regions});
     return {
     id: item.id,
     name: item.name,
-    placeOfProduction: locationStore.getLocationsByIds([], [], item.cities.map(item => item.id)) || [],
+    placeOfProduction: locations,
     rawMaterials: [item.materials_own ? 'Собственное' : '', item.materials_tolling ? 'Давальческое' : ''].filter(Boolean),
     availabilityStm: item.is_stm ? 'Да' : 'Нет',
     freeSamples: formatFreeSamples(item.free_samples),

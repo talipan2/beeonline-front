@@ -277,7 +277,7 @@ onMounted(() => {
   // userStore.checkAuth();
   if(entityStore.entityData.categories.length < 1) {
     entityStore.getCategories();
-    locationStore.getLocations();
+    // locationStore.getLocations();
   }
 });
 

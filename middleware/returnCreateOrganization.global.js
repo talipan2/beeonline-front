@@ -42,6 +42,8 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
   if (
     userStore.isAuth &&
+    userStore.role === 'customer' &&
+    userStore.role === 'performer' &&
     userStore.userData.id &&
     userStore.userData?.organization_id &&
     !availableLinkList.some((item) => to.path.startsWith(item)) &&
