@@ -132,7 +132,7 @@ const cardData = computed(() => {
       name: item.name,
       placeOfProduction: locations,
       alias: alias,
-      rawMaterials: !item.material ? ['Собственное'] : ['Давальческое'],
+      rawMaterials: !item.material ? ['Исполнителя'] : ['Заказчика'],
       completionDate: item.deadline_at,
       batch: item.batch,
       category: item.product_categories.map(item => item.id),

@@ -20,7 +20,6 @@
         :data="orderData"
         type="edit"
       />
-      {{ orderData }}
     </template>
     <template #rightSide>
       <div class="h4">Предварительный просмотр заказа</div>

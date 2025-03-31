@@ -38,10 +38,9 @@
             <SvgoYoutube class="svg-l" />
           </NuxtLink>
         </div>
-        <div class="member-details__btn-container">
-          <!-- <UiButton class="member-details__btn" variant="quinary" size="large">
-            <SvgoMessage class="svg-m" fill="#6937a5" />
-            Написать {{ pubCardType }}
+        <div class="member-details__btn-container" v-if="userStore.isAuth">
+          <!-- <UiButton :to="`/pubcards/edit/${data.id}`" class="member-details__btn" variant="quinary" size="large" v-if="isSelfEntity">
+            Редактировать
           </UiButton> -->
           <PaidServiceCounterpartyCheck
                 :id="data.organizationId"
@@ -54,6 +53,21 @@
                 </template>
             </PaidServiceCounterpartyCheck>
           <UiButton type="button" class="member-details__btn" :class="{ 'member-details__btn_type_active': isFavorite }" variant="tertiary" size="around" @click="handleAddFavorite">
+            <SvgoFavorite class="svg-m" />
+          </UiButton>
+        </div>
+        <div class="member-details__btn-container" v-else>
+          <PaidServiceCounterpartyCheck
+                :id="data.organizationId"
+            >
+                <template #button>
+                    <UiButton class="member-details__btn" variant="quinary" size="large" type="button" @click="settingStore.authModalStatus = true">
+                        <SvgoSearch class="svg-m" fill="#6937a5" />
+                        Проверить контрагента
+                    </UiButton>
+                </template>
+            </PaidServiceCounterpartyCheck>
+          <UiButton type="button" class="member-details__btn" :class="{ 'member-details__btn_type_active': isFavorite }" variant="tertiary" size="around" @click="settingStore.authModalStatus = true">
             <SvgoFavorite class="svg-m" />
           </UiButton>
         </div>
@@ -96,6 +110,7 @@ import defaultLogoImage from '@/assets/images/nophoto_pc.png';
 import { useUserStore } from '~/store/userStore';
 import { useToast } from 'vue-toastification';
 import { useReviewsStore } from '~/store/reviewsStore';
+import { useSettingStore } from '~/store/settingStore';
 
 const props = defineProps({
   data: {
@@ -107,9 +122,12 @@ const props = defineProps({
 const toast = useToast();
 const userStore = useUserStore();
 const reviewStore = useReviewsStore();
+const settingStore = useSettingStore();
 const isFavorite = ref(false);
 const reviews = ref(null);
 const isLoading = ref(false);
+
+const isSelfEntity = computed(() => props.data.id === userStore.userPubCard?.id)
 
 const pubCardType = computed(() => {
   switch (props.data.type) {

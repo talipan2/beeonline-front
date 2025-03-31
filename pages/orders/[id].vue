@@ -1,19 +1,23 @@
 <template>
   <NuxtLayout name="details-entity" :title="data.name" badge="Заказ">
     <template #header>
-      <UiBreadCrumb
-        :list="[
+      <UiBreadCrumb :list="[
           { label: 'Главная', link: '/' },
           { label: 'Каталог заказов', link: '/orders' },
           { label: 'Заказ', link: '' },
-        ]"
-      />
+        ]" />
+    </template>
+    <template #title>
+      <a href="javascript:;" class="order-card__status order-card__status_details_page" :class="`order-card__status_${data.lifecycle_status}`"
+        @click="statusModal.open()">
+        <span>{{ data.lifecycle_status_name }}</span>
+      </a>
     </template>
     <template #content>
-      <CatalogDetails type="order" :pubCard="pubCard" :entityData="formatData" v-if="!loading"/>
+      <CatalogDetails type="order" :pubCard="pubCard" :entityData="formatData" v-if="!loading" />
     </template>
     <template #rightSide>
-      <CatalogOtherEntityCompany v-if="otherActiveEntity.length" :data="otherActiveEntity" type="customer"/>
+      <CatalogOtherEntityCompany v-if="otherActiveEntity.length" :data="otherActiveEntity" type="customer" />
     </template>
   </NuxtLayout>
 </template>
@@ -22,6 +26,8 @@
 import { useEntityStore } from '~/store/entityStore';
 import { useLocationStore } from '~/store/locationStore';
 import { useOrganizationStore } from '~/store/organizationStore';
+import { useModal } from 'vue-final-modal';
+import CatalogOrdersStatusModal from "~/components/catalog/orders/statusModal.vue";
 
 const router = useRouter();
 const entityStore = useEntityStore();
@@ -42,7 +48,7 @@ const formatData = computed(() => {
           link: 'categories',
         },
         {name: 'Лекала:', value: entityStore.getEntityLabelById('patterns', data.value.pattern)},
-        {name: 'Сырье:', value: data.value.material === 1 ? 'Давальческое' : data.value.material === 0 ? 'Собственное' : ''},
+        {name: 'Сырье:', value: data.value.material === 1 ? 'Заказчика' : data.value.material === 0 ? 'Исполнителя' : ''},
         {name: 'Размер партии:', value: parseInt(data.value.batch)},
         {name: 'Сроки выполнения:', value: formatDate(data.value.deadline_at)},
         {name: 'Предпочтительные регионы производства:', value: locations.join(' / ')},
@@ -59,6 +65,10 @@ const otherActiveEntity = computed(() => {
   if(pubCard.value && pubCard.value.orders ) {
     return pubCard.value.orders.filter(item => item.id !== data.value.id);
   } else return [];
+});
+
+const statusModal = useModal({
+  component: CatalogOrdersStatusModal,
 });
 
 const { ...ordersResponse } = await entityStore.getOrder(router.currentRoute.value.params.id)
@@ -81,3 +91,16 @@ useHead({
 
 
 </script>
+
+<style lang="scss">
+
+.order-card {
+  &__status {
+    &_details_page {
+      display: inline;
+      font-size: 1.2rem;
+      padding: .5em .75em;
+    }
+  }
+}
+</style>

@@ -188,7 +188,7 @@ const currentHandleSubmit = computed(() => {
     case 'step4':
       return (async(values, form) => {
         await entityStore.editService(service.value.id, {
-          status: 'active'
+          status: 'under_moderation',
         }, form).then(() => {
           entityStore.fillingService = null
           router.push(`/performer/services/show/${service.value.id}`)

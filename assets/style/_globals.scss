@@ -683,6 +683,26 @@ input[type="number"]::-webkit-inner-spin-button {
   }
 }
 
+.debit {
+  color: #b42318;
+
+  path {
+    stroke: #f04438;
+  }
+}
+
+.credit {
+  color: #027a48;
+
+  svg {
+    transform: rotate(180deg);
+
+    path {
+      stroke: #12b76a;
+    }
+  }
+}
+
 // таблица
 .table {
   color: var(--text-color-primary);

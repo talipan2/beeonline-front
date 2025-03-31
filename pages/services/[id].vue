@@ -47,7 +47,7 @@ const formatData = computed(() => {
           value: data.value.product_categories && data.value.product_categories.length ? data.value.product_categories : [], 
           link: 'categories',
         },
-        {name: 'Материалы:', value: [data.value.material ? {name:'Давальческое', id: 1} : {name: 'Собственное', id: 0}], link: 'material'},
+        {name: 'Материалы:', value: [data.value.material ? {name:'Заказчика', id: 1} : {name: 'Исполнителя', id: 0}], link: 'material'},
         {name: 'Наличие СТМ:', value: entityStore.getEntityLabelById('availabilityStm', data.value.is_stm)},
         {name: 'Бесплатные образцы:', value: entityStore.getEntityLabelById('freeTestSamples', data.value.free_samples)},
         {name: 'Регион производства:', value: locations.join(' / ')},

@@ -102,7 +102,7 @@ const cardData = computed(() => {
       location: locations,
       alias: alias,
       data: [
-        { id: 1, name: 'Сырье', value: [item.materials_own ? 'Собственное' : '', item.materials_tolling ? 'Давальческое' : ''].filter(Boolean).join(' / ') },
+        { id: 1, name: 'Сырье', value: [item.materials_own ? 'Исполнителя' : '', item.materials_tolling ? 'Заказчика' : ''].filter(Boolean).join(' / ') },
         { id: 2, name: 'Категории', value: item.product_categories ? item.product_categories.map(item => item.name).join(' / ') : [] },
         { id: 3, name: 'Наличие СТМ', value: item.is_stm ? 'Да' : 'Нет' },
       ],

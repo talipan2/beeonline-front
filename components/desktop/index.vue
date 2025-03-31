@@ -263,13 +263,14 @@ const pubCard = computed(() => {
     reviewCount: userStore.userPubCard.reviews_about_count,
     ratingData: {...userStore.userPubCard.reviews_stats_about, reviewCount: userStore.userPubCard.reviews_about_count},
     entityCount: userStore.userPubCard.orders_count || userStore.userPubCard.services_count,
-    rawMaterials: [userStore.userPubCard.materials_own ? 'Собственное': '', userStore.userPubCard.materials_tolling ? 'Давальческое' : ''].filter(Boolean),
+    rawMaterials: [userStore.userPubCard.materials_own ? 'Исполнителя': '', userStore.userPubCard.materials_tolling ? 'Заказчика' : ''].filter(Boolean),
     category: userStore.userPubCard.categories && userStore.userPubCard.categories.length ? userStore.userPubCard.categories.map(item => item.name) : []
   }
 });
 
 onMounted(() => {
   if(userStore.userData && userStore.userData.id) {
+    userStore.checkAuth();
     pubCardLoader.value = true;
     tariffsStore.getBalance(userStore.userData.id);
     tariffsStore.getTransactions(userStore.userData.id)

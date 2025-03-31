@@ -19,7 +19,6 @@
         <template v-if="cardsData.name && role === 'customer'">
           <h3 class="right-side__title">Так вашу компанию будут видеть другие участники портала:</h3>
           <CardsPublic :data="cardsData" isDescription isPropsVisible/>
-          {{ cardsData }}
         </template>
         <ProfileAddRoleCard :role="role"/>
       </template>
@@ -51,6 +50,7 @@ const contentWithRoles = computed(() => {
     }
   }
 });
+
 
 const checkListArray = computed(() => [
   {
@@ -85,10 +85,16 @@ const cardsData = computed(() => {
     countryId: {countries: [pubCard.value?.country]},
     entityCount: pubCard.value?.orders_count || 0,
     type: pubCard.value?.type,
-    rawMaterials: [pubCard.value?.materials_own ? 'Собственное' : '', pubCard.value?.materials_tolling ? 'Давальческое' : ''].filter(Boolean),
+    rawMaterials: [pubCard.value?.materials_own ? 'Исполнителя' : '', pubCard.value?.materials_tolling ? 'Заказчика' : ''].filter(Boolean),
     category: pubCard.value?.categories?.map(item => item.name) || [],
+    stars: pubCard.value?.reviews_stats_about?.stars,
+    reviewCount: pubCard.value?.reviews_about_count,
   }
 })
+
+watch(() => cardsData.value, () => {
+  console.log(cardsData.value)
+}, {deep: true})
 
 const fillRating = computed(() => pubCard.value?.fill_rating);
 

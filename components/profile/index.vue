@@ -214,10 +214,10 @@ const handleOpenChangeUserDataModal = () => {
   settingStore.changeUserDataModal = true;
 }
 
-onMounted(() => {
-  isLoading.value = true;
-  userStore.getUserData(userStore.userData.id).finally(() => isLoading.value = false);
-})
+// onMounted(() => {
+//   isLoading.value = true;
+//   userStore.getUserData(userStore.userData.id).finally(() => isLoading.value = false);
+// })
 
 </script>
 

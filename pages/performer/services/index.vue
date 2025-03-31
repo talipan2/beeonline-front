@@ -133,7 +133,7 @@ const cardData = computed(() => {
     id: item.id,
     name: item.name,
     placeOfProduction: locations,
-    rawMaterials: [item.materials_own ? 'Собственное' : '', item.materials_tolling ? 'Давальческое' : ''].filter(Boolean),
+    rawMaterials: [item.materials_own ? 'Исполнителя' : '', item.materials_tolling ? 'Заказчика' : ''].filter(Boolean),
     availabilityStm: item.is_stm ? 'Да' : 'Нет',
     freeSamples: formatFreeSamples(item.free_samples),
     minLot: item.batches && item.batches.length ? item.batches.map(item => item.name) : [],

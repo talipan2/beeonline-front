@@ -32,9 +32,9 @@
           <div class="header__user-role" v-if="userStore.role === 'customer'">
             Заказчик
           </div>
-          <div class="header__user-role">
+          <!-- <div class="header__user-role">
             (ID={{ userData.id }})
-          </div>
+          </div> -->
         </div>
       </div>
       <div class="header__menu-dropdown-links">
@@ -58,14 +58,14 @@
           </span>
         </UiButton>
         <UiButton type="button" variant="tertiary" size="centered" class="header__dropdown-change-role"
-        @click="setRole('performer')" v-if="!userRoles.includes('performer')">
+        @click="setRole('performer')" v-if="!userRoles.includes('performer')" :disabled="router.currentRoute.value.path.startsWith('/register')">
           <SvgoEnter class="svg-m" />
           <span>
             Стать<br>исполнителем
           </span>
         </UiButton>
         <UiButton type="button" variant="tertiary" size="centered" class="header__dropdown-change-role"
-        @click="setRole('customer')" v-if="!userRoles.includes('customer')">
+        @click="setRole('customer')" v-if="!userRoles.includes('customer')" :disabled="router.currentRoute.value.path.startsWith('/register')">
           <SvgoEnter class="svg-m" />
           <span>
             Стать<br>заказчиком

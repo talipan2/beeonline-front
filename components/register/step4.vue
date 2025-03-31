@@ -81,7 +81,7 @@
         <p class="form-group__value">{{ organization.legalAddress || '-' }}</p>
       </div>
       <div class="register__btn-container">
-        <UiButton type="button" class="register__btn" variant="senary" size="large" @click="router.back">Назад</UiButton>
+        <UiButton class="register__btn" variant="senary" size="large" to="/register/step3">Назад</UiButton>
         <UiButton type="button" class="register__btn" variant="quinary" size="large" @click="handleSubmit">Подтвердить </UiButton>
       </div>
     </CommonProfileCheckCard>
@@ -175,15 +175,17 @@ const handleSubmit = () => {
       organizationStore.editPubCards({
         id: userStore.userPubCard.id,
         currentStep: 3
-      }).then(res => {
-        userStore.checkAuth();
+      }).then(async(res) => {
+        await userStore.checkAuth();
+        if (userStore.role === 'customer') {
+          router.push('/orders/create/step1');
+        } else if (userStore.role === 'performer') {
+          router.push('/services/create/step1');
+        } else {
+          router.push('/desktop');
+        }
       });
 
-      if (userStore.role === 'customer') {
-        router.push('/orders/create/step1');
-      } else if (userStore.role === 'performer') {
-        router.push('/services/create/step1');
-      }
     }
   });
 }

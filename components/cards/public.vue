@@ -5,9 +5,10 @@
       <div class="card-pub__image image-box image-box_type_frame">
         <img class="" :src="data.logo || defaultCompanyLogo" :alt="data.name || 'Логотип'">
       </div>
+      
       <div class="card-pub__details">
         <div class="card-pub__details-container">
-          <CommonRating :isCountRating="false" :rating="data.rating" :reviews="data.reviewCount"/>
+          <CommonRating :isCountRating="false" :rating="data.stars" :reviews="data.reviewCount"/>
         </div>
         <CommonLocationsList :locationsList="data.countryId"/>
         <div class="card-pub__details-container">

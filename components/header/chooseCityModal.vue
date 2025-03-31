@@ -64,7 +64,7 @@ const props = defineProps({
 
 
 const locationStore = useLocationStore();
-const locations = computed(() => locationStore.locations )
+const locations = ref([])
 
 const isOpenModal = ref(props.modelValue);
 const regions = ref([]);
@@ -123,6 +123,12 @@ watch(isOpenModal, (newVal) => {
   isOpenModal.value = newVal;
   emit('update:modelValue', newVal);
 });
+
+onMounted(() => {
+  locationStore.getLocations().then((res) => {
+    locations.value = res
+  })
+})
 
 </script>
 

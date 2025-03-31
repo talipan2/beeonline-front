@@ -59,8 +59,8 @@
         <h3 class="filter__title">Сырье:</h3>
         <UiCheckboxGroup
           :options="[
-            { id: 0, label: 'Собственное' },
-            { id: 1, label: 'Давальческое' },
+            { id: 0, label: 'Исполнителя' },
+            { id: 1, label: 'Заказчика' },
           ]"
           :isValidated="false"
           v-model="searchProps.material"

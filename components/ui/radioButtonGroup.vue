@@ -15,7 +15,7 @@
           :name="name"
           :value="option.value"
           v-model="field.value"
-          @input="handleChange(Number($event.target.value))"
+          @input="handleChange(returnNumber ? Number($event.target.value) : $event.target.value)"
           :checked="field.value === option.value"
           class="radio-buttons__input"
         />
@@ -47,6 +47,10 @@ const props = defineProps({
     type: [Object, String],
     default: "",
   },
+  returnNumber: {
+    type: Boolean,
+    default: true
+  }
 });
 </script>
 

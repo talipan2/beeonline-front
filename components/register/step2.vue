@@ -23,7 +23,7 @@
         >Ссылка на сайт
         <UiInput
           :rules="{ url: true }"
-          name="site"
+          name="url_site"
           label="Ссылка на сайт"
           class="form-group__value"
           type="text"

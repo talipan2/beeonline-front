@@ -1,5 +1,5 @@
 <template>
-  <NuxtLayout name="profile" title="Новости" class="news-layout">
+  <NuxtLayout name="default" title="Новости" class="news-layout">
     <template #header>
       <UiBreadCrumb :list="[{label: 'Главная', link: '/'}, { label: 'Новости', link: '/news' }, { label: 'Агентство креативных индустрий (АКИ) ', link: '' }]" />
     </template>

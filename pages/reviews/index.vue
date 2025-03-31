@@ -1,10 +1,10 @@
 <template>
-  <NuxtLayout name="profile" title="Отзывы о нас" class="reviews-layout">
+  <NuxtLayout name="profile" :title="pageTitle" class="reviews-layout">
     <template #header>
-      <UiBreadCrumb :list="[{label: 'Главная', link: '/'}, { label: `Кабинет ${roleName}`, link: '/desktop' }, { label: 'Отзывы о нас', link: '' }]" />
+      <UiBreadCrumb :list="[{label: 'Главная', link: '/'}, { label: `Кабинет ${roleName}`, link: '/desktop' }, { label: pageTitle, link: '' }]" />
     </template>
     <template #content>
-      <Reviews reviewsState="reviews"/>
+      <Reviews reviewsState="reviews" @updateState="updateReviewsState"/>
     </template>
   </NuxtLayout>
 </template>
@@ -12,9 +12,29 @@
 <script setup>
 import { useUserStore } from '~/store/userStore';
 
+const currentReviewsState = ref('my-reviews');
+const pageTitle = ref('Мои отзывы');
+
+const updateReviewsState = (state) => {
+  console.log(state)
+  currentReviewsState.value = state;
+}
+
+watch(() => currentReviewsState.value, (newVal) => {
+  if(newVal) {
+    switch(newVal) {
+      case 'my-reviews':
+        pageTitle.value = 'Мои отзывы';
+        return;
+      case 'reviews':
+        pageTitle.value = 'Отзывы о нас';
+        return;
+    }
+  }
+}, {deep: true})
 
 useHead({
-  title: 'Отзывы о нас',
+  title: pageTitle,
   meta: [
     {
       name: 'description',
@@ -22,6 +42,8 @@ useHead({
     },
   ],
 });
+
+
 
 const userStore = useUserStore();
 

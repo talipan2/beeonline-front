@@ -215,7 +215,7 @@ const servicesData = computed(() => {
       views: 0, // нет на бэке
       companyName: item.pub_card && item.pub_card.name ? item.pub_card.name : '',
       data: [
-        { id: 1, name: 'Сырье', value: [item.materials_own ? 'Собственное' : '', item.materials_tolling ? 'Давальческое' : ''].filter(Boolean).join(' / ') },
+        { id: 1, name: 'Сырье', value: [item.materials_own ? 'Исполнителя' : '', item.materials_tolling ? 'Заказчика' : ''].filter(Boolean).join(' / ') },
         { id: 2, name: 'Категории', value: item.product_categories && item.product_categories.length ? item.product_categories.map(item => item.name).join(' / ') : '' },
         { id: 3, name: 'Наличие СТМ', value: item.is_stm ? 'Да' : 'Нет' },
         { id: 4, name: 'Бесплатные образцы', value: entityStore.getEntityLabelById('freeTestSamples', item.free_samples) },
@@ -240,7 +240,7 @@ const membersData = computed(() => {
       rating: item.reviews_stats_about?.average_rating,
       entityCount: item.type === 'performer' ? item.services_count : item.orders_count,
       category: item.categories && item.categories.length ? item.categories.map(item => item.name) : [],
-      rawMaterials: [item.materials_own ? 'Собственное' : '', item.materials_tolling ? 'Давальческое' : ''].filter(Boolean),
+      rawMaterials: [item.materials_own ? 'Исполнителя' : '', item.materials_tolling ? 'Заказчика' : ''].filter(Boolean),
       type: item.type,
       countryId: {countries: [item.country]},
     }

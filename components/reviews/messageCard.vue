@@ -24,10 +24,10 @@
         </div>
       </div>
     </div>
-    <UiButton type="button" class="message-card__btn" variant="quinary" size="large">
+    <!-- <UiButton type="button" class="message-card__btn" variant="quinary" size="large">
       <SvgoMessage class="svg-m" />
       {{ labelButton }}
-    </UiButton>
+    </UiButton> -->
   </div>
 </template>
 

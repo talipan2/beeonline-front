@@ -62,29 +62,57 @@
             </div>
         </div>
         <div class="order-card__footer" v-if="isFooter">
-            <div class="order-card__footer-container">
-                <UiButton
-                    class="order-card__footer-button"
-                    variant="tertiary"
-                    :to="`/chat?order_id=${data.id}`"
-                >
-                    <SvgoMessage class="svg-m" fill="#6937a5" />
-                    Написать
-                </UiButton>
-                <PhoneNumberModal :order-id="data.id">
-                    <template #button="{ open }">
-                        <UiButton
-                            type="button"
-                            class="order-card__footer-button"
-                            variant="tertiary"
-                            @click="open"
-                        >
-                            <SvgoPhone class="svg-m" fill="#6937a5" />
-                            Позвонить
-                        </UiButton>
-                    </template>
-                </PhoneNumberModal>
-            </div>
+            <template v-if="userStore.isAuth">
+                <div class="order-card__footer-container">
+                    <UiButton
+                        class="order-card__footer-button"
+                        variant="tertiary"
+                        :to="`/chat?order_id=${data.id}`"
+                    >
+                        <SvgoMessage class="svg-m" fill="#6937a5" />
+                        Написать
+                    </UiButton>
+                    <PhoneNumberModal :order-id="data.id">
+                        <template #button="{ open }">
+                            <UiButton
+                                type="button"
+                                class="order-card__footer-button"
+                                variant="tertiary"
+                                @click="open"
+                            >
+                                <SvgoPhone class="svg-m" fill="#6937a5" />
+                                Позвонить
+                            </UiButton>
+                        </template>
+                    </PhoneNumberModal>
+                </div>
+            </template>
+            <template v-else>
+                <div class="order-card__footer-container">
+                    <UiButton
+                        type="button"
+                        class="order-card__footer-button"
+                        variant="tertiary"
+                        @click="settingStore.authModalStatus = true"
+                    >
+                        <SvgoMessage class="svg-m" fill="#6937a5" />
+                        Написать
+                    </UiButton>
+                    <PhoneNumberModal :order-id="data.id">
+                        <template #button>
+                            <UiButton
+                                type="button"
+                                class="order-card__footer-button"
+                                variant="tertiary"
+                                @click="settingStore.authModalStatus = true"
+                            >
+                                <SvgoPhone class="svg-m" fill="#6937a5" />
+                                Позвонить
+                            </UiButton>
+                        </template>
+                    </PhoneNumberModal>
+                </div>
+            </template>
         </div>
         <slot name="favorite-delete" />
         <NuxtLink

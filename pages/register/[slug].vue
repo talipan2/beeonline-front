@@ -148,7 +148,7 @@ const checkListCard = computed(() => {
     name: data.value.companyName,
     description: data.value.description,
     logo: data.value.companyLogo?.url,
-    countryId: { countries: [organizationStore.registerOrg.countryId]},
+    countryId: data.value.country,
     country: data.value.country,
     entityCount: 0,
     type: userStore.role,

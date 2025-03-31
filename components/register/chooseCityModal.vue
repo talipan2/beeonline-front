@@ -2,13 +2,13 @@
   <UiModal v-model="settingStore.chooseLocationModal" size="lg" :title="modalTitle" @confirm="() => confirm()"
     class="choose-city-modal choose-city-modal-register modal">
     <template #header>
-      <CommonLocationSearch 
+      <!-- <CommonLocationSearch 
         @addCity="AddCityForSearchList" 
         :locations="locations" 
         :maxSelected="maxSelected" 
         :selectedCities="selectedCities" 
         :locationTypes="locationTypes"
-      />
+      /> -->
       <div class="choose-city__count" v-if="maxSelected">
         <p class="choose-city__count-value">Выбрано локаций: {{ selectedCities.length || 0 }}/{{ maxSelected }}</p>
       </div>
@@ -102,9 +102,6 @@
           </ul>
         </div>
       </div>
-      {{ selectedCities }}
-      {{ selectedRegionIds }}
-      {{ selectedCountryIds }}
       <div class="choose-city__btn-container">
         <UiButton type="button" class="choose-city__btn" variant="quinary" size="large" @click="handleSubmit">
           Применить

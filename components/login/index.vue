@@ -105,12 +105,14 @@
 <script setup>
 import { useUserStore } from "~/store/userStore";
 import { useSettingStore } from "~/store/settingStore";
+import { useToast } from "vue-toastification";
 
 const role = computed(() => userStore.role);
 
 const userStore = useUserStore();
 const settingStore = useSettingStore();
 const router = useRouter();
+const toast = useToast();
 
 const email = ref("");
 const password = ref("");
@@ -121,9 +123,18 @@ const handleSubmit = (values, form) => {
     return userStore
         .authUser(values, form)
         .then((res) => {
+            toast.success("Вы успешно авторизовались");
             userStore.checkAuth();
             settingStore.authModalStatus = false;
-            router.push({ path: "/desktop" });
+            if(router.currentRoute.value.path === '/login'){
+                if(router.back !== null){
+                    router.back()
+                    return
+                } else {
+                    router.push({ path: "/desktop" });
+                }
+
+            } 
 
         })
 };

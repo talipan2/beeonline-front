@@ -67,8 +67,8 @@ export const useEntityStore = defineStore('entity', {
       categories: [],
       adjacentCategories: [],
       rawMaterials: [
-        { id: 1, label: "Собственное" },
-        { id: 0, label: "Давальческое" },
+        { id: 0, label: "Исполнителя" },
+        { id: 1, label: "Заказчика" },
       ],
       patterns: [
         { id: 1, label: "Есть лекала" },

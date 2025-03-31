@@ -28,7 +28,6 @@
           :is-required="true" 
           errorLabel="Города производства"
         />
-        {{ data.locations }}
         <CommonLocation 
           v-if="userStore.role === 'customer'"
           class="register__location"
@@ -36,7 +35,8 @@
           v-model="data.locations"
           :type="['selectCountry', 'selectRegions']" 
           :is-required="true"
-          errorLabel="Города производства"
+          errorLabel="Регионы производства"
+          modalTitle="Выберите регион"
         />
         <div class="register__btn-container" v-if="router.currentRoute.value.path.includes('/register')">
           <UiButton class="register__btn" variant="senary" size="large" to="/register/step2">Назад</UiButton>

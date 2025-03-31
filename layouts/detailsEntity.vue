@@ -6,6 +6,7 @@
         <div class="entity-detail__title-container" v-if="title">
           <h1 class="entity-detail__title">{{ title }}</h1>
           <CommonBadge :badge="badge" />
+          <slot name="title" />
         </div>
         <div class="entity-detail__content">
           <slot name="content"  />

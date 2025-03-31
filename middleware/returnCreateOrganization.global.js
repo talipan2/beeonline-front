@@ -21,29 +21,13 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   }
 
   const availableLinkList = [
-    '/login',
     '/register',
-    '/services',
-    '/orders',
-    '/members',
-    '/contacts',
-    '/help',
-    '/page-policy',
-    '/page-oferta',
-    '/page-requisites',
-    '/sitemap',
-    '/page-terms-of-use',
-    '/page-oferta-st',
-    '/page-oferta-ct',
-    '/welcome',
-    '/search',
-    '/related-industry-services',
   ]
 
   if (
     userStore.isAuth &&
-    userStore.role === 'customer' &&
-    userStore.role === 'performer' &&
+    (userStore.role === 'customer' ||
+    userStore.role === 'performer') &&
     userStore.userData.id &&
     userStore.userData?.organization_id &&
     !availableLinkList.some((item) => to.path.startsWith(item)) &&

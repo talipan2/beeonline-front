@@ -96,7 +96,6 @@ const prevPage = () => {
 
 const nextPage = () => {
   if (props.currentPage < props.totalPages) {
-    props.currentPage++
     emit('changePage', props.currentPage + 1);
   };
 };

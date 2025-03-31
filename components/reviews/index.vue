@@ -72,6 +72,8 @@ const props = defineProps({
 
 const router = useRouter();
 
+const emit = defineEmits(["updateState"]);
+
 const currentStatusOptions = ref("all");
 const currentTypeOptions = ref("all");
 const activeFilterMyReviews = ref({});
@@ -170,6 +172,7 @@ const filterList = ["rate", "org_type"];
 const updateActiveButton = (type) => {
   currentButtonType.value = type;
   router.push({ query: { ...router.currentRoute.value.query, type: type } });
+  emit("updateState", type);
 };
 
 const setFilters = (filters) => {

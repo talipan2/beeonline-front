@@ -37,7 +37,7 @@
         <p class="desktop-entity-card__status">{{ data.status }}</p>
       </div>
     </div>
-    <NuxtLink class="desktop-entity-card__link" :to="`/${data.type}/${data.type === 'performer' ? 'services' : 'orders'}/show/${data.id}`"></NuxtLink>
+    <NuxtLink v-if="data.type" class="desktop-entity-card__link" :to="`/${data.type}/${data.type === 'performer' ? 'services' : 'orders'}/show/${data.id}`"></NuxtLink>
   </div>
 </template>
 

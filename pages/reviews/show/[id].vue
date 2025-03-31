@@ -1,11 +1,11 @@
 <template>
-  <NuxtLayout name="profile" title="Отзыв о нас" class="reviews-layout">
+  <NuxtLayout name="profile" :title="pageTitle" class="reviews-layout">
     <template #header>
       <UiBreadCrumb
         :list="[
           { label: 'Главная', link: '/' },
           { label: `Кабинет ${roleName}`, link: '/desktop' },
-          { label: 'Отзывы о нас', link: '/reviews' },
+          { label: pageTitle, link: '/reviews' },
           { label: 'Отзыв ', link: '' },
         ]"
       />
@@ -33,14 +33,25 @@ const reviewsStore = useReviewsStore();
 const organizationStore = useOrganizationStore();
 const router = useRouter();
 
+const pageTitle = ref('');
+
 const review = ref({});
 const reviewsState = computed(() => {
-  if(review.value.owner_org?.id === userStore.userOrganization.id) {
+  console.log(review.value.owner_org?.id, userStore.userOrganization.id)
+  if(review.value.owner_org?.id === userStore.userPubCard.id) {
     return 'my-reviews';
   } else {
     return 'reviews';
   }
 });
+
+watch(() => reviewsState.value, () => {
+  if(reviewsState.value === 'my-reviews') {
+    pageTitle.value = 'Мои отзывы';
+  } else {
+    pageTitle.value = 'Отзывы о нас';
+  }
+}, {immediate: true})
 
 const otherSidePubCard = ref({});
 

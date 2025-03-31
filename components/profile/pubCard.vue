@@ -66,7 +66,11 @@ const currentComponent = computed(() => {
       title.value = 'Основные данные компании';
       return Step1
     case 2:
-      title.value = 'Города фактического производства (по-умолчанию)*';
+      if (userStore.role === 'customer') {
+        title.value = 'Регионы фактического производства (по-умолчанию)*';
+      } else {
+        title.value = 'Города фактического производства (по-умолчанию)*';
+      }
       return Step2
     case 3:
       return Gallery
