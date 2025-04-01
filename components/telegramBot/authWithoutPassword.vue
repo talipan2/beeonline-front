@@ -103,6 +103,24 @@ const handleSubmit = (values, form) => {
     position: relative;
     flex: 1;
   }
+
+  &__btn-container {
+    display: flex;
+    // flex-direction: column;
+    gap: 1em;
+
+  }
+
+  &__btn {
+    font-size: 1.2rem;
+    text-transform: uppercase;
+  }
+
+  @include mobile {
+    &__input {
+      font-size: 1.6rem;
+    }
+  }
 }
 
 </style>

@@ -23,7 +23,7 @@ useHead({
 </script>
 
 <template>
-  <div class="body">
+  <div class="body telegram-body">
     <TelegramBotHeader />
     <main class="telegram-main container">
       <ClientOnly>
@@ -46,6 +46,10 @@ useHead({
   .breadcrumb-wrapper {
     display: none;
   }
+}
+
+.telegram-body {
+  max-width: 767px;
 }
 
 </style>

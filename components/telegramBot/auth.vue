@@ -255,11 +255,11 @@ const handleSubmit = (values, form) => {
 
     &__input {
       padding: 1rem;
-      font-size: 1.6rem;
+      font-size: 1.2rem;
     }
 
     &__show-password {
-      flex: 0 2.5em;
+      flex: 0 3.5em;
     }
   }
 
