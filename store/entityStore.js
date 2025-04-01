@@ -19,8 +19,8 @@ export const useEntityStore = defineStore('entity', {
       completionDate: '',
       description: '',
       termsOfCooperation: '',
-      isSafeDeal: true,
-      isAgreedOrderPlacement: true,
+      isSafeDeal: false,
+      isAgreedOrderPlacement: false,
       logo: {
         id: null,
         url: null,

@@ -142,11 +142,15 @@
                                                 type="button"
                                                 >Оставить отзыв</UiButton
                                             >
-                                            <UiButton
-                                                class="dropdown-menu__btn"
-                                                variant="default"
-                                                >Проверить контрагента</UiButton
+                                            <PaidServiceCounterpartyCheck
+                                                :id="this.org_id"
                                             >
+                                                <template #button="{ open }">
+                                                    <UiButton class="dropdown-menu__btn" variant="default" type="button" @click="open">
+                                                        Проверить контрагента
+                                                    </UiButton>
+                                                </template>
+                                            </PaidServiceCounterpartyCheck>
                                             <UiButton
                                                 class="dropdown-menu__btn"
                                                 variant="default"

@@ -88,7 +88,7 @@ const handleChangeRole = async () => {
   const redirectPath = '/desktop';
 
   try {
-    await userStore.setUserData({ role: newRole }, userStore.userData.id);
+    await userStore.setUserData({ role: newRole }, userStore.userData.id)
     userStore.role = newRole;
     localStorage.setItem('role', newRole);
     router.push({ path: redirectPath });
@@ -102,6 +102,7 @@ const setRole = (role) => {
   userStore.setUserData({ role: role }, userData.value.id)
     .then(res => {
       userStore.role = role;
+      userStore.userRoles = res.data.roles;
       localStorage.setItem('role', role);
       organizationStore.setPubCard({
         id: userStore.userData.organization_id,
@@ -110,9 +111,9 @@ const setRole = (role) => {
         type: role
       }).then(res => {
         if(res && res.data && res.data.id) {
+          userStore.userPubCard = res.data;
           router.push({ path: `/pubcards/edit/${res.data.id}` });
           toast.success('Вы успешно стали ' + formatLangRole.value);
-          userStore.checkAuth()
         }
       });
     });

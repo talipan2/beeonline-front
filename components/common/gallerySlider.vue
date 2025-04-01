@@ -50,11 +50,11 @@ import {Grid, Pagination, Navigation} from 'swiper/modules';
 const props = defineProps({
   images: {
     type: Array,
-    default: [],
+    default: () => [],
   },
   videos: {
     type: Array,
-    default: [],
+    default: () => [],
   }
 })
 

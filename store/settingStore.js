@@ -105,6 +105,17 @@ export const useSettingStore = defineStore("setting", {
       }
     },
 
+    async getBanners(params) {
+      try {
+        const response = await commonApi.getBanners(params);
+        if (response.data) {
+          return response.data
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
   },
 
 

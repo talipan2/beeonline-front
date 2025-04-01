@@ -1,10 +1,10 @@
 <template>
   <div class="checklist">
     <div class="checklist__header">
-      <div class="checklist__header-left">
+      <div class="checklist__header-left" :class="progressClass">
         <div class="checklist__head">
           <div class="checklist__title">{{ title }}</div>
-          <div class="checklist__status">низкое</div>
+          <div class="checklist__status">{{ levelText }}</div>
         </div>
         <div class="checklist__progress" :class="progressClass">
           <div v-for="(step, index) in progressSteps" :key="index" 
@@ -27,8 +27,9 @@
             'checklist__step',
             'checklist__chapter',
             {
-              'checklist__step_current': step.value == 'chapter-current',
-              'checklist__step_passed': step.value !== null || step.value !== '',
+              'checklist__step_current': step.value == 'chapter-current' && !isSectionFilled(step),
+              'checklist__step_passed': isSectionFilled(step),
+              'checklist__step_completed': isSectionFilled(step),
             }
           ]">
             {{ step.label }}
@@ -37,8 +38,8 @@
                 'checklist__step',
                 'checklist__substep',
                 {
-                  'checklist__step_passed': subStep.value !== null || subStep.value !== '',
                   'checklist__step_crossed': subStep.value == null || subStep.value == '',
+                  'checklist__step_passed': subStep.value !== null || subStep.value !== '',
                 }]"
               >
                 {{ subStep.label }}
@@ -91,8 +92,8 @@ const props = defineProps({
     validator: value => ['checkValue', 'checkStage'].includes(value),
   },
   fillRating: {
-    type: String,
-    default: '',
+    type: [Number],
+    default: 0,
   }
 })
 
@@ -103,23 +104,30 @@ const organizationStore = useOrganizationStore();
 const steps = computed(() => props.checkList);
 
 const progressLevel = computed(() => {
-  if (nullPercentage.value <= 10) return '5';
-  if (nullPercentage.value <= 20) return '4';
-  if (nullPercentage.value <= 30) return '3';
-  if (nullPercentage.value <= 60) return '2';
-  if (nullPercentage.value <= 99) return '1';
+  if (nullPercentage.value >= 100) return '5';
+  if (nullPercentage.value >= 75) return '4';
+  if (nullPercentage.value >= 50) return '3';
+  if (nullPercentage.value >= 25) return '2';
+  if (nullPercentage.value >= 0) return '1';
 
   return '';
 });
 
+const levelText = computed(() => {
+  if (nullPercentage.value === 100) return 'отлично';
+  if (nullPercentage.value >= 80) return 'достаточно';
+  if (nullPercentage.value >= 50) return 'среднее';
+  if (nullPercentage.value < 50) return 'низкое';
+  return '';
+});
 
 
 const progressSteps = [1, 2, 3, 4, 5]; 
 
 const progressClass = computed(() => {
-  if (nullPercentage.value <= 20) return 'checklist_100';
-  if (nullPercentage.value <= 30) return 'checklist_80';
-  if (nullPercentage.value <= 60) return 'checklist_50';
+  if (nullPercentage.value === 100 ) return 'checklist_100';
+  if (nullPercentage.value >= 80) return 'checklist_80';
+  if (nullPercentage.value >= 50) return 'checklist_50';
   return '';
 });
 const currentStep = ref(null);
@@ -135,12 +143,30 @@ const isStepPassed = (stepPath) => {
 };
 
 
-const nullPercentage = computed(() => {
-  const registerOrg = organizationStore.registerOrg;
-  const totalFields = Object.keys(registerOrg).length;
-  const nullCount = Object.values(registerOrg).filter(value => value === null || value === '' || (Array.isArray(value) && value.length === 0)).length;
-  return parseInt((nullCount / totalFields) * 100);
-});
+const nullPercentage = computed(() => props.fillRating);
+
+// Проверка заполненности элемента
+const isItemFilled = (item) => {
+  const value = item.value
+  if (value === undefined || value === null) return false
+  if (typeof value === 'string' && value.trim() === '') return false
+  if (typeof value === 'number' && isNaN(value)) return false
+  if (Array.isArray(value) && value.length === 0) return false
+  if (typeof value === 'object' && Object.keys(value).length === 0) return false
+  if (typeof value === 'boolean') return value
+  return true
+}
+
+// Проверка заполненности всей секции
+const isSectionFilled = (section) => {
+  return section.checkList?.every(isItemFilled) ?? false
+}
+
+// Есть ли незаполненные секции
+const hasUnfilledSections = computed(() => {
+  return props.checkList?.some(section => !isSectionFilled(section)) ?? false
+})
+    
 
 </script>
 
@@ -310,6 +336,13 @@ const nullPercentage = computed(() => {
 
 .checklist__step_crossed:before {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='none'%3E%3Cpath d='M5 5L15 15M5 15L15 5' stroke='%23de5434' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E%0A");
+}
+
+.checklist__step_completed {
+  color: var(--text-color-primary) !important;
+  .checklist__substeps {
+    display: none;
+  }
 }
 
 .checklist__chapter {

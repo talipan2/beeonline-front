@@ -1,6 +1,9 @@
 <template>
   <header class="header container" ref="header" :class="{ 'header_fixed': headerFixed }">
     <div class="header__top-side" ref="headerInfo">
+      <div class="header__banner">
+        <Banners :banner="banner"/>
+      </div>
       <div class="header__info" >
         <ul class="header__list">
           <!-- <li class="header__item">
@@ -139,6 +142,8 @@ const role = computed(() => {
     return userStore.role
   }
 })
+
+const banner = ref({})
 
 const menuList = ref(null);
 const isDropdownVisible = ref(false);
@@ -279,6 +284,12 @@ onMounted(() => {
     entityStore.getCategories();
     // locationStore.getLocations();
   }
+
+  settingStore.getBanners({banner_type: 'top_banner'}).then((res) => {
+    if(res && res.length > 0) {
+      banner.value = res[0];
+    }
+  });
 });
 
 onUnmounted(() => {

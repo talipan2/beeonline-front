@@ -1,5 +1,5 @@
 <template>
-  <div class="notify" :class="`notify_${type}`">
+  <div class="notify" :class="[`notify_${type}`, {'notify_center': !text}]">
     <SvgoAlertIcon class="notify__icon svg-m" />
     <div class="notify__content">
       <h4 class="notify__title" v-if="title">{{ title }}</h4>
@@ -48,6 +48,10 @@ const props = defineProps({
   padding: 1.6em;
   background-color: #d1d3ff;
   margin-bottom: 2em;
+
+  &_center {
+    align-items: center;
+  }
 
   &_round {
     border-radius: 1em;
@@ -101,13 +105,13 @@ const props = defineProps({
     font-weight: 500;
     font-size: 1.4em;
     line-height: 1.42;
-    margin-bottom: 0.28em;
   }
 
   &__text {
     font-family: "fira-sans", sans-serif;
     font-size: 1.2em;
     line-height: 1.66;
+    margin-top: .33em;
   }
   
   &__btn {

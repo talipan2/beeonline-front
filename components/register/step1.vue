@@ -19,7 +19,7 @@
           </label>
         </div>
         <UiCheckbox
-          name="isSelfEmployed"
+          name="selfEmployed"
           class="form-group-title register__checkbox"
           v-if="data.countryId === 1"
           variant="round"
@@ -27,7 +27,6 @@
         >
           Я самозанятый
         </UiCheckbox>
-
         <div
           class="form-group"
           v-if="
@@ -65,7 +64,7 @@
             Адрес регистрации *
             <UiInput
               :rules="{ required: true, min: 2 }"
-              name="legal_address"
+              name="legalAddress"
               label="Адрес регистрации"
               class="form-group__value"
               type="text"
@@ -231,12 +230,12 @@
             Юридический адрес *
             <UiInput
               :rules="getSkipInnRules"
-              name="legal_address"
+              name="legalAddress"
               label="Юридический адрес"
               class="form-group__value"
               type="text"
               placeholder="____________"
-              v-model="data.kpp"
+              v-model="data.legalAddress"
               :required="!skipInn"
               :disabled="true"
             />
@@ -376,7 +375,13 @@ const handleSubmit = async (value, form) => {
       id: userStore.userData.organization_id,
       name: data.value.organizationName,
     }, form).then((res) => {
-      router.push("/register/step2");
+      if(res.data) {
+        userStore.userOrganization = res.data;
+        if(userStore.userData && userStore.userData.organization) {
+          userStore.userData.organization = res.data;
+        }
+        router.push("/register/step2");
+      }
     })
 
     if(data.value.verificationFiles && data.value.verificationFiles.length > 0) {
@@ -387,17 +392,19 @@ const handleSubmit = async (value, form) => {
       ...value,
       userId: userStore.userData.id,
       name: data.value.organizationName,
-      currencyId: 1,
     }, form)
     .then((res) => {
       if (res.data && res.data.id) {
+        userStore.userData.organization_id = res.data.id;
         if(data.value.verificationFiles && data.value.verificationFiles.length > 0) {
           organizationStore.setVerificationDocuments(res.data.id, data.value.verificationFiles)
         }
-      }
-      userStore.checkAuth().then(() => {
+        userStore.userOrganization = res.data;
+        if(userStore.userData && userStore.userData.organization) {
+          userStore.userData.organization = res.data;
+        }
         router.push("/register/step2");
-      });
+      }
     })
   }
 };

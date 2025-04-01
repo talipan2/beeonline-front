@@ -12,7 +12,7 @@
   >
     <slot/>
     <template #content>
-      <div class="dropdown" :class="dropdownClass">
+      <div class="dropdown" :class="dropdownClass" @click="handleDropdownClick">
         <slot name="content"></slot>
       </div>
     </template>
@@ -49,22 +49,35 @@
   });
 
   const tippy = ref(null);
-  defineExpose({ tippy });
+
+  const close = () => {
+    tippy.value?.tippy.hide();
+  };
+
+  defineExpose({ tippy, close });
 
   const calculateOffset = ({ placement }) => {
-  if(props.placement === 'bottom-end') {
-    return props.offset.length > 0 ? props.offset : [0, 14];
-  } else {
-    if (placement.startsWith('top')) {
-    return props.offset.length > 0 ? props.offset : [0, 0]; // Смещение 0
-  }
-  if (placement.startsWith('bottom')) {
-    return props.offset.length > 0 ? props.offset : [0, 20]; // Смещение больше
-  }
-  return [props.offset.length > 0 ? props.offset : 0, 5]; // Небольшое смещение
-  }
+    if (props.placement === 'bottom-end') {
+      return props.offset.length > 0 ? props.offset : [0, 14];
+    } else {
+      if (placement.startsWith('top')) {
+        return props.offset.length > 0 ? props.offset : [0, 0]; // Смещение 0
+      }
+      if (placement.startsWith('bottom')) {
+        return props.offset.length > 0 ? props.offset : [0, 20]; // Смещение больше
+      }
+      return [props.offset.length > 0 ? props.offset : 0, 5]; // Небольшое смещение
+    }
+  };
 
-};
+  const handleDropdownClick = (event) => {
+    // Закрываем только при клике на кнопки
+    if (event.target.tagName === 'BUTTON') {
+      close();
+    }
+  };
+
+
 
 </script>
 

@@ -87,7 +87,7 @@ const selectInfoModalData = ({type, id}) => {
         title: 'Публикация',
         text: 'Вы уверены, что хотите опубликовать эту услугу?',
         action: () => {
-          entityStore.editService(id, {status: 'active'})
+          entityStore.editService(id, {status: 'under_moderation'})
           .then(() => {
             entityStore.getOrganizationServices(userStore.userData.organization_id)
             settingStore.infoModal = false

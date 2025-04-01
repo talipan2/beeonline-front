@@ -94,11 +94,13 @@ import selectFlag from '~/utils/selectFlag';
 import { useUserStore } from '~/store/userStore';
 import { useOrganizationStore } from '~/store/organizationStore';
 import { useLocationStore } from '~/store/locationStore';
+import { useSettingStore } from '~/store/settingStore';
 
 const router = useRouter();
 const userStore = useUserStore();
 const organizationStore = useOrganizationStore();
 const locationStore = useLocationStore();
+const settingStore = useSettingStore();
 
 const props = defineProps({
   modelValue: {
@@ -169,6 +171,26 @@ const registerData = computed(() => organizationStore.registerOrg);
 // }
 
 const handleSubmit = () => {
+
+  // organizationStore.editPubCards({
+  //   id: userStore.userPubCard.id,
+  //   currentStep: 3
+  // }).then(async(res) => {
+  //   await userStore.checkAuth().then(() => {
+  //     organizationStore.resetRegisterData();
+  //     organizationStore.pubCardPublish(userStore.userPubCard.id);
+  //     if (userStore.role === 'customer') {
+  //         router.push('/orders/create/step1');
+  //       } else if (userStore.role === 'performer') {
+  //         router.push('/services/create/step1');
+  //       } else {
+  //         router.push('/desktop');
+  //       }
+  //   })
+
+  // })
+
+
   organizationStore.pubCardPublish(userStore.userPubCard.id).then(res => {
     if (res) {
       organizationStore.resetRegisterData();
@@ -177,10 +199,13 @@ const handleSubmit = () => {
         currentStep: 3
       }).then(async(res) => {
         await userStore.checkAuth();
-        if (userStore.role === 'customer') {
+        if (userStore.role === 'customer' && !settingStore.isCreateOrder) {
           router.push('/orders/create/step1');
         } else if (userStore.role === 'performer') {
           router.push('/services/create/step1');
+        } else if(settingStore.isCreateOrder) {
+          router.push('/desktop');
+          settingStore.isCreateOrder = false
         } else {
           router.push('/desktop');
         }

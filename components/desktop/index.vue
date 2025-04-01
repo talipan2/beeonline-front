@@ -1,12 +1,26 @@
 <template>
   <div class="desktop">
-    <div class="desktop__notify" v-if="!emailVerified">
+    <div class="desktop__notify" v-if="!emailVerified || pubCard.status == 1 || pubCard.status == 3">
       <h2 class="desktop__notify-title">Уведомления</h2>
       <CommonNotify
         v-if="!emailVerified"
         type="warning"
         text="Ваша электронная почта не подтверждена. Для полноценной работы на портале и доступа ко всем функциям рекомендуем подтвердить."
         btnText="Подтвердить"
+      />
+      <CommonNotify
+        v-if="pubCard.status == 1"
+        type="success"
+        title="Карточка компании отправлена на проверку."
+        :text="`После успешной проверки ваши ${role === 'customer' ? 'заказы' : role === 'performer' ? 'услуги' : 'сервисы'} будут доступны в каталоге.`"
+      />
+      <CommonNotify
+        v-if="pubCard.status == 3"
+        type="danger"
+        title="Карточка компании отклонена."
+        :text="`Причина: ${pubCard.statusComment}`"
+        btnText="Изменить"
+        :btn-function="() => $router.push('/pubcards/edit/' + pubCard.id)"
       />
     </div>
     <div class="desktop__banner" v-if="role === 'performer'">
@@ -264,7 +278,9 @@ const pubCard = computed(() => {
     ratingData: {...userStore.userPubCard.reviews_stats_about, reviewCount: userStore.userPubCard.reviews_about_count},
     entityCount: userStore.userPubCard.orders_count || userStore.userPubCard.services_count,
     rawMaterials: [userStore.userPubCard.materials_own ? 'Исполнителя': '', userStore.userPubCard.materials_tolling ? 'Заказчика' : ''].filter(Boolean),
-    category: userStore.userPubCard.categories && userStore.userPubCard.categories.length ? userStore.userPubCard.categories.map(item => item.name) : []
+    category: userStore.userPubCard.categories && userStore.userPubCard.categories.length ? userStore.userPubCard.categories.map(item => item.name) : [],
+    status: userStore.userPubCard.status,
+    statusComment: userStore.userPubCard.status_comment
   }
 });
 

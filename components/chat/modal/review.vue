@@ -1,5 +1,5 @@
 <template>
-    <UiModal v-model="opened" @confirm="() => confirm()" class="modal">
+    <UiModal v-model="opened" @confirm="() => confirm()" class="modal review-modal">
         <template #content>
       <div class="review-modal__wrapper">
         <div class="review-modal__header">
@@ -186,6 +186,10 @@ export default {
   
   .modal-content {
     width: 28vw;
+  }
+
+  .modal-content-md {
+    padding: 0;
   }
 
   &__header, &__content {

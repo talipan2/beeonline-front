@@ -9,7 +9,7 @@
         <Profile v-else/>
       </template>
       <template #rightSide v-if="role !== 'adjacent'">
-        <CommonCheckList adviceTitle="Полностью заполненный профиль выше в списке поиска" :checkList="checkListArray" :valueCheck="true" :fillRating="fillRating"/>
+        <CommonCheckList adviceTitle="Полностью заполненный профиль выше в списке поиска" :checkList="checkListArray" :valueCheck="true" :fillRating="fillRating" title="Заполнение профиля"/>
         <CommonAlerts type="warning" class="right-side__alert" v-if="!userData.organization_id">
               <p>У вас не заполнена карточка компании.
                 Заказы/услуги не будут доступны в каталоге без карточки компании.
@@ -56,6 +56,7 @@ const checkListArray = computed(() => [
   {
     label: 'Данные организации',
     value: 'chapter-current',
+    type: 'organization',
     checkList: [
       { label: 'Название', value: organization.value?.name},
       { label: 'ИНН', value: organization.value.inn},
@@ -66,12 +67,13 @@ const checkListArray = computed(() => [
   {
     label: 'Карточка компании',
     value: 'chapter-current',
+    type: 'pubCard',
     checkList: [
       { label: 'Название', value: pubCard.value?.name},
       { label: 'Логотип', value: pubCard.value?.logo},
       { label: 'Описание', value: pubCard.value?.description},
-      { label: 'География фактического производства', value: pubCard.value?.regions || pubCard.value?.cities},
-      { label: 'Активность', value: pubCard.value?.is_active},
+      { label: 'География фактического производства', value: pubCard.value?.regions?.length || pubCard.value?.cities?.length || pubCard.value?.countries?.length},
+      { label: 'Активность', value: pubCard.value?.status === 2},
     ]
   },
 ])
@@ -91,10 +93,6 @@ const cardsData = computed(() => {
     reviewCount: pubCard.value?.reviews_about_count,
   }
 })
-
-watch(() => cardsData.value, () => {
-  console.log(cardsData.value)
-}, {deep: true})
 
 const fillRating = computed(() => pubCard.value?.fill_rating);
 

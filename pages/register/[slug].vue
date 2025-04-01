@@ -9,6 +9,7 @@
         adviceTitle="Полностью заполненный профиль выше в списке поиска"
         value-check
         type="checkStage"
+        :fill-rating="fillRating"
       />
       <div class="register__main">
         <component :is="currentComponent" v-model="data" :blockTitle="blockTitle"/>
@@ -163,6 +164,8 @@ const userRole = computed(() => {
   }
 })
 
+const fillRating = computed(() => userStore.userPubCard?.fill_rating || 0); 
+
 onMounted(() => {
   userStore.checkAuth()
   .then((res) => {
@@ -170,7 +173,7 @@ onMounted(() => {
       if(res.user.organization && res.user.organization.id) {
         const userOrganization = res.user.organization;
         data.value.country = {countries: [{...userOrganization.country}]}
-        data.value.countryId = userOrganization.country.id
+        data.value.countryId = userOrganization.country_id
         data.value.selfEmployed = userOrganization.is_foreigner
         data.value.inn = userOrganization.inn
         data.value.organizationName = userOrganization.name
@@ -179,6 +182,7 @@ onMounted(() => {
         data.value.ogrn = userOrganization.ogrn
         data.value.organizationForm = userOrganization.org_form,
         data.value.legalAddress = userOrganization.legal_address
+        data.value.registerAddress = userOrganization.legal_address
       }
 
       if(res.user.public_cards && res.user.public_cards && res.user.public_cards.length > 0) {
@@ -206,6 +210,77 @@ onMounted(() => {
 
   }
 })
+
+// onMounted(() => {
+//   if(!userStore.userData.id) {
+//     userStore.checkAuth()
+//     .then((res) => {
+//       if(res && res.user && res.user) {
+//         if(res.user.organization && res.user.organization.id) {
+//           const userOrganization = res.user.organization;
+//           data.value.country = {countries: [{...userOrganization.country}]}
+//           data.value.countryId = userOrganization.country_id
+//           data.value.selfEmployed = Boolean(userOrganization.is_foreigner)
+//           data.value.inn = userOrganization.inn
+//           data.value.organizationName = userOrganization.name
+//           data.value.companyName = userOrganization.name
+//           data.value.kpp = userOrganization.kpp
+//           data.value.ogrn = userOrganization.ogrn
+//           data.value.organizationForm = userOrganization.org_form,
+//           data.value.legalAddress = userOrganization.legal_address,
+//           data.value.registerAddress = userOrganization.legal_address
+//         }
+  
+//         if(res.user.public_cards && res.user.public_cards && res.user.public_cards.length > 0) {
+//           const pubCard = res.user.public_cards.find(item => item.type === userStore.role)
+//           data.value.companyName = pubCard.name.length > 0 && pubCard.name
+//           data.value.description = pubCard.description
+//           data.value.siteUrl = pubCard.site_url
+//           data.value.companyLogo = {url:pubCard.logo}
+//           data.value.locations = { regions: [...pubCard.regions], cities: [...pubCard.cities] };
+//         }
+//       }
+//     });
+//   } else {
+//     if (userStore.userData && userStore.userData.organization) {
+//       const userOrganization = userStore.userData.organization
+//       data.value.country = { countries: [{ ...userOrganization.country }] }
+//       data.value.countryId = userOrganization.country.id
+//       data.value.selfEmployed = Boolean(userOrganization.is_foreigner)
+//       data.value.inn = userOrganization.inn
+//       data.value.organizationName = userOrganization.name
+//       data.value.companyName = userOrganization.name
+//       data.value.kpp = userOrganization.kpp
+//       data.value.ogrn = userOrganization.ogrn
+//       data.value.organizationForm = userOrganization.org_form,
+//       data.value.legalAddress = userOrganization.legal_address,
+//       data.value.registerAddress = userOrganization.legal_address
+//     }
+
+//     if (userStore.userData && userStore.userData.public_cards && userStore.userData.public_cards.length > 0) {
+//       const pubCard = userStore.userData.public_cards.find(item => item.type === userStore.role)
+//       data.value.companyName = pubCard.name.length > 0 && pubCard.name
+//       data.value.description = pubCard.description
+//       data.value.siteUrl = pubCard.site_url
+//       data.value.companyLogo = { url: pubCard.logo }
+//       data.value.locations = { regions: [...pubCard.regions], cities: [...pubCard.cities] };
+//     }
+//   }
+//   if(userStore.userData.organization_id && route.path === '/register/step1') {
+//     organizationStore.getVerificationDocuments(userStore.userData.organization_id)
+//     .then(res => {
+//       if(res) {
+//         data.value.verificationFiles = res.map(item => {
+//           return {
+//             id: item.id,
+//             url: item.file_url,
+//           }
+//         });
+//       }
+//     })
+
+//   }
+// })
 
 useHead({
   title: userRole,

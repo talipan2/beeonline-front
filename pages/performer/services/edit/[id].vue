@@ -21,10 +21,12 @@ import Step3 from '~/components/createEntity/step3.vue';
 import Step4 from '~/components/createEntity/step4.vue';
 import { useEntityStore } from '~/store/entityStore';
 import { useLocationStore } from '~/store/locationStore';
+import {useToast} from "vue-toastification";
 
 const router = useRouter();
 const entityStore = useEntityStore();
 const locationStore = useLocationStore();
+const toast = useToast();
 
 const currentStep = ref(1);
 const title = ref('');
@@ -119,7 +121,10 @@ const currentHandleSubmit = computed(() => {
         currentStep.value = 4
       });
     case 4:
-      return (() => router.push('/performer/services'));
+      return (() => {
+        router.push(`/performer/services/show/${id}`)
+        useToast().success('Услуга отправлена на модерацию');
+      });
     default:
       return (() => currentStep.value = 2);
   }

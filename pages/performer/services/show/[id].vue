@@ -6,7 +6,7 @@
     </template>
     <template #content>
       <EntityView v-if="!isLoading" :data="serviceProps" role="performer" type="service"/>
-      <CreateEntityFinalModal :text="'Услуга отправлена на модерацию'"/>
+      <CreateEntityFinalModal :text="'Услуга отправлена на модерацию'" :type="'service'"/>
     </template>
   </NuxtLayout>
 </template>
@@ -32,6 +32,7 @@ const serviceProps = computed(() => {
     conditions: service.value.conditions,
     tzFiles: service.value.tz_files && service.value.tz_files.length ? service.value.tz_files.map(item => item.url) : [],
     status: service.value.status,
+    rejectReason: service.value.reject_reason || '',
     props: {
       minLot: {label: "Партии", value: service.value.batches && service.value.batches.length ? service.value.batches.map(item => item.name) : []},
       category: { label: "Категория", value: service.value.product_categories && service.value.product_categories.length ? service.value.product_categories.map(item => item.name) : []},

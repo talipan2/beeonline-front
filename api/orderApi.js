@@ -34,6 +34,7 @@ export default {
       status,
       categories,
       gallery,
+      isAgreedOrderPlacement,
     } = data
     const params = {}
     if(name !== '') params.name = name
@@ -51,6 +52,7 @@ export default {
     if(status) params.status = status
     if(categories && categories.length > 0) params.product_categories = categories
     if(gallery && gallery.length > 0) params.gallery = gallery
+    if(isAgreedOrderPlacement !== null) params.tg_publish = isAgreedOrderPlacement
     return useApi().patch(`orders/${id}`, params, form)
   },
 

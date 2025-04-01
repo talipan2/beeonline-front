@@ -2,6 +2,7 @@
   <div class="entity-status">
     <h3 class="entity-status__title">{{ cardStatusText.title }} <span class="entity-status__status">{{ cardStatusText.status }}</span></h3>
     <p class="entity-status__text">{{ cardStatusText.text }}</p>
+    <!-- <TariffsServiceUpPayment /> -->
   </div>
 </template>
 
@@ -16,6 +17,10 @@ const props = defineProps({
     type: String,
     default: '',
     validator: value => ['order', 'service'].includes(value),
+  },
+  rejectReason: {
+    type: String,
+    default: '',
   }
 })
 
@@ -52,7 +57,17 @@ const cardStatusText = computed(() => {
       title: 'Текущий статус услуги:',
       status: 'Заполнение',
       text: 'Ваша услуга не размещена.'
-    }
+    },
+    'rejected-order': {
+      title: 'Текущий статус заказа:',
+      status: 'Отклонён',
+      text: `Причина: ${props.rejectReason}`
+    },
+    'rejected-service': {
+      title: 'Текущий статус услуги:',
+      status: 'Отклонён',
+      text: `Причина: ${props.rejectReason}`
+    },
   };
 
   return statusMap[key] || {

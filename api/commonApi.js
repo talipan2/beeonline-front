@@ -58,4 +58,8 @@ export default {
   async getNews(id) {
     return axios.get(`news/${id}`)
   },
+
+  async getBanners(params = {}) {
+    return axios.get(`banners`, { params })
+  }
 }

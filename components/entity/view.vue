@@ -1,6 +1,6 @@
 <template>
   <section class="view-entity">
-    <EntityStatus class="view-entity__status" v-if="data.status" :status="data.status" :type="type"/>
+    <EntityStatus class="view-entity__status" v-if="data.status" :status="data.status" :type="type" :rejectReason="data.rejectReason"/>
     <div class="view-entity__container">
       <h3 class="view-entity__title">{{ data.name }}</h3>
       <div class="view-entity__props">

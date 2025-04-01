@@ -34,7 +34,6 @@
           </div>
         </div>
       </div>
-
       <div class="sidebar__bottom" v-show="isFilterVisible && isMobile">
         <UiButton  
           @click="toggleFilter" 
@@ -45,6 +44,10 @@
         >
           Скрыть фильтры
         </UiButton>
+      </div>
+
+      <div class="filter__banner" v-if="filterBanner">
+        <Banners :banner="filterBanner" />
       </div>
     </template>
   </CommonSidebar>
@@ -71,6 +74,8 @@ const props = defineProps({
 const settingStore = useSettingStore();
 const submitRef = ref(null);
 const emit = defineEmits(['updateTutorialRefSubmit']);
+
+const filterBanner = ref(null)
 
 const isMobile = ref(false);
 const isFilterVisible = ref(false);
@@ -101,6 +106,17 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('resize', updateWidth);
 });
+
+
+onMounted(() => {
+  settingStore.getBanners({banner_type: 'banner'}).then((res) => {
+    if(res && res.data && !res.data.length) return
+    filterBanner.value = res.data.find((item) => item.type === 'filter') || {};
+    console.log(filterBanner.value);
+  });
+
+
+})
 </script>
 
 <style lang="scss">

@@ -14,7 +14,6 @@
     <template #right>
       <div class="h4">Предварительный просмотр услуги</div>
       <CreateEntityPreview :data="servicesData"/>
-      {{ service }}
     </template>
   </NuxtLayout>
 </template>
@@ -29,6 +28,7 @@ import { useLocationStore } from '~/store/locationStore';
 import { useOrganizationStore } from '~/store/organizationStore';
 import { useSettingStore } from '~/store/settingStore';
 import { useUserStore } from '~/store/userStore';
+import { useToast } from 'vue-toastification';
 
 useHead({
   title: 'Создание услуги',
@@ -49,6 +49,7 @@ const locationStore = useLocationStore();
 
 const service = ref(entityStore.service)
 const title = ref('');
+const toast = useToast();
 const validSteps = ['step1', 'step2', 'step3', 'step4'];
 
 // onBeforeMount(() => {
@@ -190,6 +191,7 @@ const currentHandleSubmit = computed(() => {
         await entityStore.editService(service.value.id, {
           status: 'under_moderation',
         }, form).then(() => {
+          toast.success('Услуга отправлена на модерацию');
           entityStore.fillingService = null
           router.push(`/performer/services/show/${service.value.id}`)
           settingStore.createEntityFinalModal = true
@@ -271,7 +273,23 @@ onBeforeMount(async () => {
     service.value = entityStore.fillingService;
   }
 
+  getLocationsForPubCard();
+
   handleRedirect();
 });
+
+function getLocationsForPubCard() {
+  if(!service.value.locations.cities.length && userStore.userPubCard?.cities?.length) {
+    
+    // Для городов
+    if(userStore.userPubCard?.cities?.length && !service.value.locations.cities.length) {
+      service.value.locations.cities = userStore.userPubCard.cities.map(item => ({
+        id: item.id,
+        name: locationFormatter(item)
+      }))
+    }
+    
+  }
+}
 
 </script>

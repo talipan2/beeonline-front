@@ -32,8 +32,8 @@ export default {
     if(name !== '') params.name = name
     if(description !== '') params.description = description
     if(termsOfCooperation !== '') params.conditions = termsOfCooperation
-    if(rawMaterials && rawMaterials.length > 0) params.materials_own = rawMaterials.includes(1)
-    if(rawMaterials && rawMaterials.length > 0) params.materials_tolling = rawMaterials.includes(0)
+    if(rawMaterials && rawMaterials.length > 0) params.materials_own = rawMaterials.includes(0)
+    if(rawMaterials && rawMaterials.length > 0) params.materials_tolling = rawMaterials.includes(1)
     if(availabilityStm !== '' && availabilityStm) params.is_stm = String(availabilityStm)
     if(freeTestSamples !== '' && freeTestSamples) params.free_samples = String(freeTestSamples)
     if(step !== '' || null) params.current_step = step

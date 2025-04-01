@@ -17,12 +17,11 @@ export default {
       url_site: data.urlSite,
       is_foreigner: data.selfEmployed,
       country_id: data.countryId,
-      currency_id: data.currencyId,
-      is_foreigner: data.countryId === 1 ? 0 : 1
     }, form)
   },
 
   async editOrganization(data, form) {
+    console.log(data)
     return useApi().patch(`organizations/${data.id}`, {
       name: data.name,
       org_form: data.organizationForm,
@@ -33,7 +32,6 @@ export default {
       url_site: data.urlSite,
       is_foreigner: data.selfEmployed,
       country_id: data.countryId,
-      is_foreigner: data.countryId === 1 ? 0 : 1
     }, form)
   },
 

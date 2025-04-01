@@ -4,6 +4,7 @@
         content-class="modal-vfm-content"
         overlay-transition="vfm-fade"
         :hideOverlay="overlayHide"
+        overlay-class="custom-overlay"
         content-transition="vfm-fade"
         :clickToClose="clickToClose"
         :escToClose="true"
@@ -211,6 +212,10 @@ export default {
 
     .modal-title {
         color: var(--text-color-monodecimal);
+    }
+
+    .custom-overlay {
+        background-color: rgba(0, 0, 0, 0.6);
     }
 }
 

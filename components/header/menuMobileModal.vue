@@ -171,7 +171,6 @@ const handleSwitchRole = async () => {
 
   try {
     await userStore.setUserData({ role: newRole }, userData.value.id);
-    userStore.role = newRole;
     localStorage.setItem('role', newRole);
     router.push({ path: redirectPath });
   } catch (error) {
@@ -191,9 +190,9 @@ const setRole = (role) => {
         type: role
       }).then(res => {
         if(res && res.data && res.data.id) {
+          userStore.userPubCard = res.data;
           router.push({ path: `/pubcards/edit/${res.data.id}` });
           toast.success('Вы успешно стали ' + formatLangRole.value);
-          userStore.checkAuth()
         }
       })
     });

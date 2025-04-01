@@ -132,15 +132,13 @@ const handleSubmit = async(value, form) => {
         type: userStore.role,
       }, form)
       .then(res => {
-        console.log(res)
         if (res && res.data && res.data.id && data.value.companyLogo?.id) {
           organizationStore.setPubCardLogo(res.data.id, data.value.companyLogo.id)
         }
-        userStore.checkAuth().then(() => {
-          if(userStore.userPubCard.id) {
-            router.push({path: '/register/step3'})
-          }
-        })
+        if(res.data) {
+          userStore.userPubCard = res.data;
+          router.push({path: '/register/step3'})
+        }
       });
     } else {
       await organizationStore.editPubCards({
@@ -151,13 +149,13 @@ const handleSubmit = async(value, form) => {
         currentStep: 1
       }, form)
       .then(res => {
-        console.log(res)
-
         if (res && res.data && res.data.id && data.value.companyLogo?.id) {
           organizationStore.setPubCardLogo(res.data.id, data.value.companyLogo.id)
         }
-        userStore.checkAuth()
-        router.push({path: '/register/step3'})
+        if(res.data) {
+          userStore.userPubCard = res.data;
+          router.push({path: '/register/step3'})
+        }
       });
     }
   } 

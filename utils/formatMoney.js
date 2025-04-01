@@ -13,7 +13,7 @@ export function formatMoney(value, currency = 'RUB', part = 2, symbol = true) {
         minimumFractionDigits: part,
         maximumFractionDigits: part
       }).replace(/,/g, ', ')} ${symbol ? '₽' : ''}`;
-    case 'bonus':
+    case 'bonuses':
       part = 0;
       return `${value.toLocaleString('ru-RU', {
         maximumFractionDigits: 0

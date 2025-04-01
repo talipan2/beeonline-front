@@ -34,8 +34,8 @@
             </p>
             <UiCheckboxGroup :rules="{ minSelected: 1 }" name="rawMaterials" label="Сырье"
               class="entity__group form-group__value" v-model="data.rawMaterials" :options="[
-                { id: 1, label: 'Исполнителя' },
-                { id: 0, label: 'Заказчика' },
+                { id: 0, label: 'Исполнителя' },
+                { id: 1, label: 'Заказчика' },
               ]" />
           </div>
           <div class="entity__data-item">
@@ -71,8 +71,8 @@
               </p>
             <UiRadioButtonGroup :rules="{ required: true }" name="rawMaterials" label="Сырье"
               class="entity__group form-group__value" v-model="data.rawMaterials" :options="[
-                { value: 1, label: 'Исполнителя' },
-                { value: 0, label: 'Заказчика' },
+                { value: 0, label: 'Исполнителя' },
+                { value: 1, label: 'Заказчика' },
               ]" />
           </div>
           <div class="entity__data-item">

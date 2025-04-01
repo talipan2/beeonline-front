@@ -198,18 +198,12 @@ useHead({
   }
 }
 
-// @include tablet {
-//   .register {
-//     &__container {
-//       column-gap: 5em;
-//     }
-//   }
-// }
-
-
-@include mobile {
+@include small-tablet {
   .register {
-    padding-block: 3.5rem 9rem;
+    &__container {
+      column-gap: 5em;
+    }
+
 
     &__container {
       flex-direction: column;
@@ -230,6 +224,32 @@ useHead({
     &__right-side {
       flex-basis: auto;
     }
+  }
+}
+
+@include mobile {
+  .register {
+    padding-block: 3.5rem 9rem;
+
+    // &__container {
+    //   flex-direction: column;
+    // }
+
+    // &__btn-container {
+    //   flex-direction: column;
+    // }
+
+    // &__checklist {
+    //   display: none;
+    // }
+
+    // &__advice {
+    //   margin-top: 1em;
+    // }
+
+    // &__right-side {
+    //   flex-basis: auto;
+    // }
 
     &__btn {
       font-size: 12px;

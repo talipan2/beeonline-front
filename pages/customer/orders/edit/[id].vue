@@ -36,6 +36,7 @@ import Step4 from '~/components/createEntity/step4.vue';
 import { useEntityStore } from '~/store/entityStore';
 import { useLocationStore } from '~/store/locationStore';
 import { useUserStore } from '~/store/userStore';
+import {useToast} from "vue-toastification";
 
 definePageMeta({
   middleware: 'telegram' 
@@ -45,6 +46,7 @@ const router = useRouter();
 const entityStore = useEntityStore();
 const locationStore = useLocationStore();
 const userStore = useUserStore();
+const toast = useToast();
 
 const roleName = userStore.getRoleNameForBreadcrumbs;
 
@@ -148,9 +150,11 @@ const currentHandleSubmit = computed(() => {
     case 4:
       return (async(value, form) => {
         await entityStore.editOrder(orderData.value.id, {
-          isSafeDeal: orderData.value.isSafeDeal
+          isSafeDeal: orderData.value.isSafeDeal,
+          isAgreedOrderPlacement: orderData.value.isAgreedOrderPlacement
         }, form)
-        router.push('/customer/orders')
+        router.push(`/customer/orders/show/${orderData.value.id}`)
+        toast.success('Заказ отправлен на модерацию');
       });
     default:
       return (() => currentStep.value = 2);
@@ -213,7 +217,8 @@ await entityStore.getOrder(id).then(res => {
         cities: [], 
         regions: res.data.regions?.map(region => ({...region, name: locationFormatter({regions: [{...region}]}).locations[0]})) || [], 
         countries: res.data.countries?.map(country => ({...country, name: locationFormatter({countries: [{...country}]}).locations[0]})) || []},
-      isSafeDeal: Boolean(res.data.is_safedeal)
+      isSafeDeal: Boolean(res.data.is_safedeal),
+      isAgreedOrderPlacement: Boolean(res.data.tg_publish)
     }
   }
 })

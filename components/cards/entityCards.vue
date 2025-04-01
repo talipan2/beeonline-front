@@ -60,7 +60,7 @@
         class="entity-card__btn"
         variant="quinary" 
         size="large" 
-        v-if="data.statusType === 'archived'"
+        v-if="data.statusType === 'archived' || data.statusType === 'rejected'"
         @click="handleClickActions('published', data.id)"
       >
         Опубликовать

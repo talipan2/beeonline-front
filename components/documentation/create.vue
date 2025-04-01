@@ -1,7 +1,7 @@
 <template>
   <div class="documentation-loading">
     <CommonDocumentLoaderAndList 
-      :extension="['jpeg', 'pdf', 'doc', 'zip']"
+      :extension="['jpeg', 'pdf', 'doc', 'zip', 'docx']"
       text="Загрузить jpeg, pdf, doc, zip"
       :is-list="true"
       :changed="true"

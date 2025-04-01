@@ -27,6 +27,7 @@ const onSubmit = handleSubmit(async (values, form) => {
   try {
     await props.submit(values, form);
   } catch (error) {
+    console.log(error);
     const errors = error.data.errors;
     form.setErrors(errors);
     for (let key in errors) {

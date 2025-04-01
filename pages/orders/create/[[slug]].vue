@@ -32,6 +32,7 @@ import { useLocationStore } from '~/store/locationStore';
 import { useOrganizationStore } from '~/store/organizationStore';
 import { useSettingStore } from '~/store/settingStore';
 import { useUserStore } from '~/store/userStore';
+import { useToast } from 'vue-toastification';
 
 useHead({
   title: 'Создание заказа',
@@ -55,6 +56,7 @@ const settingStore = useSettingStore();
 const organizationStore = useOrganizationStore();
 const locationStore = useLocationStore();
 const title = ref('');
+const toast = useToast();
 
 // если есть заказ который находиться в статусе filling
 const fillingOrder = ref(null);
@@ -109,7 +111,9 @@ const currentHandleSubmit = computed(() => {
             countries: order.value.locations.countries.map(item => item.id),
           }, form).then(() => {
             entityStore.updateOrderStep(order.value.id, 2)
-            entityStore.fillingOrder.currentStep = 2
+            if(entityStore.fillingOrder && entityStore.fillingOrder.id){
+              entityStore.fillingOrder.currentStep = 2
+            }
             router.push('/orders/create/step4')
           })
 
@@ -129,17 +133,19 @@ const currentHandleSubmit = computed(() => {
       return (async (value, form) => {
         await entityStore.editOrder(order.value.id, {
           isSafeDeal: order.value.isSafeDeal,
+          isAgreedOrderPlacement: order.value.isAgreedOrderPlacement,
           status: 'under_moderation',
         }, form).then(res => {
           entityStore.fillingOrder = null
           entityStore.resetOrder()
+          toast.success('Заказ отправлен на модерацию');
         });
         if(settingStore.isCreateOrder) {
           router.push('/register/step1')
-          settingStore.isCreateOrder = false
+          // settingStore.isCreateOrder = false
         } else {
           router.push(`/customer/orders/show/${order.value.id}`)
-          settingStore.createEntityFinalModal = true
+          settingStore.createEntityFinalModal = true;
         }
       });
   } 
@@ -215,7 +221,6 @@ onBeforeMount(async () => {
     await entityStore.getOrganizationOrders(userStore.userData.organization_id).then((res) => {
       if (res?.data?.orders && Array.isArray(res.data.orders)) {
         const orderInProgress = res.data.orders.find((item) => item.status === 'filling');
-        console.log('регионы из бд')
         if (orderInProgress) {
           entityStore.fillingOrder = {
             id: orderInProgress.id,

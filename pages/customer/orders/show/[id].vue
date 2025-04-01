@@ -6,7 +6,7 @@
     </template>
     <template #content>
       <EntityView v-if="!isLoading" :data="orderProps" role="customer" type="order"/>
-      <CreateEntityFinalModal :text="'Заказ отправлен на модерацию'"/>
+      <CreateEntityFinalModal :text="'Заказ отправлен на модерацию'" :type="'order'"/>
     </template>
   </NuxtLayout>
 </template>
@@ -40,6 +40,7 @@ const orderProps = computed(() => {
     conditions: order.value.conditions,
     tzFiles: order.value.tz_files && order.value.tz_files.length ? order.value.tz_files.map(item => item.url) : [],
     status: order.value.status,
+    rejectReason: order.value.reject_reason || '',
     props: {
       batch: {label: "Размер партии", value: Number(order.value.batch)},
       category: { 

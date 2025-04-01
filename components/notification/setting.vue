@@ -11,6 +11,7 @@
               :isValidated="false"
               v-model="selectedSettings[notification.value]"
               :disabled="(id) => handleDisableSettings(notification.value, id)"
+              
             />
         </div>
       </template>
@@ -45,7 +46,14 @@ const userStore = useUserStore();
 const toast = useToast();
 
 // список выбранных уведомлений
-const selectedSettings = ref({});
+const selectedSettings = ref({
+  'Новые заказы': [1],
+  'Новые отзывы или ответы': [1],
+  'Новые сообщения в чате': [1],
+  'Системные уведомления': [1],
+  'Новости': [1],
+  'Сделки': [1],
+});
 
 function handleDisableSettings(type, id) {
   // Находим настройку по типу и id
@@ -65,8 +73,8 @@ const notificationsSetting = ref([
     value: 'Новые заказы',
     role: 'customer',
     settings: [
-      {id: 0, label: 'по электронной почте', value:'email'},
-      {id: 1, label: 'в личном кабинете', value: 'cabinet', disabled: true},
+      {id: 0, label: 'по электронной почте', value:'email',},
+      {id: 1, label: 'в личном кабинете', value: 'cabinet', disabled: true, },
       {id: 2, label: 'в Telegram', value: 'telegram'},
       {id: 3, label: 'в WhatsApp', value: 'whatsapp'},
     ]
@@ -155,14 +163,17 @@ const settingValues = [
 
 // изменение с id на value
 const formatSettingsToRequest = (settings) => {
-  console.log(settings)
   const result = {};
 
   for (const key in settings) {
     if (settings[key].length > 0) {
-      result[key] = settings[key].map(setting => {
-        return settingValues.find(item => item.id === setting)?.value;
-      }).filter(Boolean);
+      // Фильтруем, чтобы не отправлять личный кабинет (так как он всегда включен)
+      result[key] = settings[key]
+        .filter(id => id !== 1) // Исключаем ID личного кабинета
+        .map(setting => {
+          return settingValues.find(item => item.id === setting)?.value;
+        })
+        .filter(Boolean);
     }
   }
 
@@ -171,14 +182,25 @@ const formatSettingsToRequest = (settings) => {
 
 const formatSettingsToState = (settings) => {
   const result = {};
-
-  for (const key in settings) {
-    if (Array.isArray(settings[key])) {
-      result[key] = settings[key].map(value => {
-        return settingValues.find(item => item.value === value)?.id;
-      }).filter(id => id !== undefined); // Убираем undefined, если значение не найдено
+  
+  // Проходим по всем типам уведомлений из notificationsSetting
+  notificationsSetting.value.forEach(notification => {
+    const key = notification.value;
+    
+    // Если настройки для этого типа есть и это массив
+    if (settings[key] && Array.isArray(settings[key])) {
+      // Объединяем пришедшие настройки с обязательным личным кабинетом (id=1)
+      result[key] = [...new Set([
+        1, // Всегда добавляем личный кабинет
+        ...settings[key].map(value => {
+          return settingValues.find(item => item.value === value)?.id;
+        }).filter(id => id !== undefined)
+      ])];
+    } else {
+      // Если настройки не пришли или пустые - только личный кабинет
+      result[key] = [1];
     }
-  }
+  });
 
   return result;
 };
