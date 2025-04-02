@@ -134,7 +134,11 @@ const handleSubmit = (values, form) => {
                     router.push({ path: "/desktop" });
                 }
 
-            } 
+            } else {
+                if(router.currentRoute.value.path.startsWith('/register') || router.currentRoute.value.path === '/') {
+                    router.push({ path: "/desktop" });
+                }
+            }
 
         })
 };

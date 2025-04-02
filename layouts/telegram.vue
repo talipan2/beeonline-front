@@ -50,6 +50,7 @@ useHead({
 
 .telegram-body {
   max-width: 767px;
+  margin: 0 auto;
 }
 
 </style>
