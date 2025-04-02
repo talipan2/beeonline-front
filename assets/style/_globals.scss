@@ -803,6 +803,14 @@ font font {
   @include desktop {
     padding-inline: var(--container-padding-x);
   }
+
+  // @include high-resolution-2k {
+  //   max-width: var(--container-width-2k);
+  // }
+
+  // @include high-resolution-4k {
+  //   max-width: var(--container-width-4k);
+  // }
 }
 
 
@@ -812,6 +820,18 @@ font font {
     font-size: clamp(8px, calc((2.2vw) * .333333), 10px);
   }
 }
+
+// @include high-resolution-2k {
+//   html {
+//     font-size: clamp(8px, calc((2.2vw) * .333333), 13px);
+//   }
+// }
+
+// @include high-resolution-4k {
+//   html {
+//     font-size: clamp(13px, calc((2.2vw) * .333333), 20px);
+//   }
+// }
 
 @include mobile{
   html {
