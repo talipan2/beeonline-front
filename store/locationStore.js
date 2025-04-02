@@ -30,7 +30,7 @@ export const useLocationStore = defineStore("location", {
           if(countryIds.includes(country.id)) {
             result.push({id: country.id, countryId: country.id, name: country.name, type: 'country'});
           }
-          
+
           country.regions.forEach(region => {
 
             // Если id региона есть то возвращаем название этого региона и страны
@@ -67,6 +67,9 @@ export const useLocationStore = defineStore("location", {
       } catch (error) {
         throw error;
       }
-    }
+    },
+    async getRegisterCountries() {
+        return await Api.getRegisterCountries();
+    },
   },
 })

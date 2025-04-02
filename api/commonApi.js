@@ -61,5 +61,9 @@ export default {
 
   async getBanners(params = {}) {
     return axios.get(`banners`, { params })
-  }
+  },
+
+  async getRegisterCountries() {
+    return useApi().get(`register-countries`);
+  },
 }
