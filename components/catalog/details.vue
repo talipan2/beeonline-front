@@ -59,11 +59,11 @@
           <SvgoMessage class="svg-m" />
           Написать Заказчику
         </UiButton>
-        <PhoneNumberModal :order-id="entityData.id">
+        <PhoneNumberModal :order-id="entityData.id" v-if="type === 'order'">
           <template #button="{ open }">
             <UiButton type="button" class="orders-details__btn" variant="quinary" size="large" @click="open">
               <SvgoPhone class="svg-m" fill="#6937a5" />
-              Позвонить
+              Позвонить заказчику
             </UiButton>
           </template>
         </PhoneNumberModal>

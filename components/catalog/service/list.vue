@@ -58,7 +58,7 @@ const ordersData = computed(() => {
       location: locations,
       alias: alias,
       minLot: item.batches && item.batches.length ? item.batches[0].name : '',
-      views: 0,
+      views: item.view_count ? item.view_count : 0,
       companyName: item.pub_card && item.pub_card.name ? item.pub_card.name : '',
       data: [
         { 

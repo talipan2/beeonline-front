@@ -130,6 +130,7 @@ const props = defineProps({
   &__image {
     width: 10rem;
     height: 10rem;
+    overflow: hidden;
   }
 
   &__props {

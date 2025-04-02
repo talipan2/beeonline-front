@@ -34,9 +34,9 @@ export const useSettingStore = defineStore("setting", {
     changeUserDataModal: false,
     createEntityFinalModal: false,
     currencyList: [
-      {id: 1, name: 'Российский рубль', value: 'RUB'},
-      {id: 2, name: 'Доллар США', value: 'USD'},
-      {id: 3, name: 'Евро', value: 'EUR'},
+      {id: 2, name: 'Российский рубль', value: 'RUB'},
+      {id: 3, name: 'Доллар США', value: 'USD'},
+      {id: 4, name: 'Евро', value: 'EUR'},
     ],
     isLoadingResponse: false,
     isTelegram: false,

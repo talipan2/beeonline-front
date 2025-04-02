@@ -194,7 +194,7 @@ const currentHandleSubmit = computed(() => {
           toast.success('Услуга отправлена на модерацию');
           entityStore.fillingService = null
           router.push(`/performer/services/show/${service.value.id}`)
-          settingStore.createEntityFinalModal = true
+          // settingStore.createEntityFinalModal = true
         })
         .catch(error => console.log(error));
         entityStore.resetService()
@@ -279,10 +279,10 @@ onBeforeMount(async () => {
 });
 
 function getLocationsForPubCard() {
-  if(!service.value.locations.cities.length && userStore.userPubCard?.cities?.length) {
+  if(!service.value.locations?.cities?.length && userStore.userPubCard?.cities?.length) {
     
     // Для городов
-    if(userStore.userPubCard?.cities?.length && !service.value.locations.cities.length) {
+    if(userStore.userPubCard?.cities?.length && !service.value.locations?.cities?.length) {
       service.value.locations.cities = userStore.userPubCard.cities.map(item => ({
         id: item.id,
         name: locationFormatter(item)
