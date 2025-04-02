@@ -6,8 +6,6 @@ export const smoothScroll = (() => {
       return;
     }
 
-    console.log(targetOffset)
-
     if (lastTargetOffset !== null && lastTargetOffset === targetOffset && checkLastTargetOffset) return // Если новое значение такое же как предыдущее, то отменяем скролл
 
     lastTargetOffset = targetOffset;

@@ -60,6 +60,15 @@
             <UiCheckboxGroup :rules="{ minSelected: 1 }" name="min_lot" label="Мин. партия"
               class="entity__group form-group__value" v-model="data.minLot" :options="minPart" />
           </div>
+          <div class="entity__data-item">
+            <p class="form-group__title entity__label">Свободный склад *</p>
+            <UiRadioButtonGroup :rules="{ required: true }" name="free_stock" label="Свободный склад"
+              class="entity__group form-group__value" v-model="data.freeStock" :options="[
+                { value: 0, label: 'Нет' },
+                { value: 1, label: 'Да' },
+              ]" 
+            />
+          </div>
         </div>
       </div>
       <div class="entity__data entity__data_type_customer" v-else>
@@ -190,6 +199,7 @@
 </template>
 
 <script setup>
+import { useEntityStore } from '~/store/entityStore';
 import { getErrorsList } from '~/utils/getValidationErrors';
 
 const props = defineProps({
@@ -214,6 +224,8 @@ const props = defineProps({
     validator: (value) => ['create', 'edit'].includes(value),
   },
 });
+
+const entityStore = useEntityStore();
 
 const backLink = computed(() => {
   if(props.type === 'create') {
@@ -263,6 +275,8 @@ const minPart = [
   { id: 3, label: "от 500 до 1 000" },
   { id: 4, label: "1 000 и выше" },
 ];
+
+const freeStockOptions = computed(() => entityStore.entityData?.freeStock || []);
 
 </script>
 

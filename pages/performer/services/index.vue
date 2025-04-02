@@ -140,6 +140,7 @@ const cardData = computed(() => {
     status: entityStore.getEntityStatusByValue(item.status),
     category: item.product_categories && item.product_categories.length ? item.product_categories.map(item => item.id) : [],
     statusType: item.status,
+    alias: alias,
   }})
 })
 

@@ -43,7 +43,7 @@ export default {
     if(rawMaterials !== '') params.material = rawMaterials
     if(price !== '') params.price = price
     if(batch !== '') params.batch = batch
-    if(patterns && patterns !== '') params.pattern = Number(patterns)
+    if(patterns != null) params.pattern = Number(patterns)
     if(completionDate !== '') params.deadline_at = completionDate
     if(cities && cities.length > 0) params.cities = cities
     if(regions && regions.length > 0) params.regions = regions

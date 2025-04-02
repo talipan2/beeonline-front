@@ -28,7 +28,7 @@
         <h2 class="desktop__banner-title">Новые тарифы Премиум и Ультра!</h2>
         <div class="desktop__banner-container">
           <p class="desktop__banner-text">Выделите свое производство среди конкурентов! Используйте прямую связь с заказчиками для эффективного продвижения услуг. Не упустите шанс улучшить результаты!</p>
-          <UiButton class="desktop__banner-btn"  variant="quaternary" size="large">Узнать подробнее</UiButton>
+          <UiButton class="desktop__banner-btn" to="/tariffs"  variant="quaternary" size="large">Узнать подробнее</UiButton>
         </div>
       </div>
       <div class="desktop__banner-image">

@@ -6,20 +6,20 @@
           <NuxtLink to="/" class="welcome-footer__logo-link">
             <SvgoLogo class="svg-l " filled alt="Логотип" />
           </NuxtLink>
-          <p class="welcome-footer__copyright">© Профешн 2021. При копировании любого материала сайта ссылка на сайт обязательна</p>
+          <p class="welcome-footer__copyright">© Профешн 2025. При копировании любого материала сайта ссылка на сайт обязательна</p>
         </div>
         <div class="welcome-footer__links">
-          <NuxtLink to="/" class="welcome-footer__link">
+          <NuxtLink to="https://www.youtube.com/channel/UC2c_djW8Mf6KLrmB5TOuP_w" class="welcome-footer__link" target="_blank">
             <SvgoYoutube class="svg-l" />
           </NuxtLink>
-          <NuxtLink to="/" class="welcome-footer__link">
+          <!-- <NuxtLink to="/" class="welcome-footer__link">
             <SvgoVkontakte class="svg-l" />
           </NuxtLink>
           <NuxtLink to="/" class="welcome-footer__link">
             <SvgoTelegram class="svg-l" />
-          </NuxtLink>
+          </NuxtLink> -->
         </div>
-        <p class="welcome-footer__copyright welcome-footer__copyright_mobile">© Профешн 2021. При копировании любого материала сайта ссылка на сайт обязательна</p>
+        <p class="welcome-footer__copyright welcome-footer__copyright_mobile">© Профешн 2025. При копировании любого материала сайта ссылка на сайт обязательна</p>
       </div>
     </div>
     <div class="welcome-footer__bottom">

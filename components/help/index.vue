@@ -126,7 +126,7 @@ onMounted(() => {
 
     &:hover {
       background-color: var(--primary-color);
-      color: #fff;
+      color: #fff !important;
 
       svg {
         path {

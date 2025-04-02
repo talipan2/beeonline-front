@@ -13,7 +13,7 @@
       <div class="welcome-service-card__content">
         <div class="welcome-service-card__props">
           <div class="welcome-service-card__prop">
-            <p class="welcome-service-card__prop-name">{{data.location && data.location[0] ? data.location[0].name : 'Не указано'}}</p>
+            <p class="welcome-service-card__prop-name">{{data.location && data.location[0] ? data.location[0].split(',')[0] : 'Не указано'}}</p>
             <p class="welcome-service-card__prop-value"><i :class="`flag flag_round flag_${data.alias}`"></i></p>
           </div>
           <div class="welcome-service-card__prop">

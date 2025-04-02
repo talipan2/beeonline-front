@@ -49,7 +49,7 @@ const orderProps = computed(() => {
         ? entityStore.getEntityLabelById('categories', order.value.product_categories.map(item => item.id))
         : ''},
       rawMaterials: {label: "Сырье", value: !order.value.material ? 'Исполнителя' : 'Заказчика'},
-      pattern: {label: "Лекала", value: !order.value.pattern ? 'Есть лекала' : 'Нужен конструктор'},
+      pattern: {label: "Лекала", value: order.value.pattern ? 'Есть лекала' : 'Нужен конструктор'},
       completionDate: {label: "Срок выполнения", value: `До ${formatDate(order.value.deadline_at)}`},
       placeOfProduction: {
         label: "Предпочтительные регионы производства", 

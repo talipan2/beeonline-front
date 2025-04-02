@@ -15,8 +15,8 @@
 
 const props = defineProps({
   data: {
-    type: String,
-    default: '',
+    type: Object,
+    default: () => ({}),
   }
 })
 
@@ -59,7 +59,7 @@ const props = defineProps({
   }
 
   &__link {
-    z-index: 1;
+    z-index: 2;
     position: absolute;
     inset: 0;
   }

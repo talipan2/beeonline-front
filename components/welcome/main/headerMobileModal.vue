@@ -1,6 +1,6 @@
 <template>
   <UiModal v-model="isOpenModal" title="Выберите город" :clickToClose="false" @confirm="() => confirm()" class="header-menu header-menu-welcome"
-    :style="{ marginTop: `${headerHeight}px` }" :closeButton="false">
+    :style="{ marginTop: `${headerHeight}px` }" :closeButton="false" size="xs">
     <template #content>
       <div class="welcome-header__menu-mobile">
         <div class="welcome-header__menu-mobile-header">

@@ -95,6 +95,7 @@ const servicesData = computed(() => ({
     {id: 4, name: 'Наличие СТМ', value: data.value.availabilityStm},
     {id: 5, name: 'Бесплатные тестовые образцы', value: data.value.freeTestSamples},
     {id: 6, name: 'Сырье', value: data.value.rawMaterials},
+    {id: 8, name: 'Свободный склад', value: data.value.freeStock},
     {id: 7, name: 'Описание', value: data.value.description},
   ],
 }))
@@ -111,6 +112,7 @@ const data = computed(() => {
     freeTestSamples: entityStore.getEntityLabelById('freeTestSamples', service.value.freeTestSamples),
     minLot: entityStore.getEntityLabelById('minLot', service.value.minLot),
     rawMaterials: entityStore.getEntityLabelById('rawMaterials', service.value.rawMaterials),
+    freeStock: entityStore.getEntityLabelById('freeStock', service.value.freeStock),
     description: service.value.description,
     termsOfCooperation: service.value.termsOfCooperation
   }

@@ -3,7 +3,7 @@
     <div class="register-banner__inner">
       <div class="register-banner__content" :class="{ 'animate': isVisible }">
         <h2 class="register-banner__title">Зарегистрируйтесь и мы поможем вам с подбором исполнителей.</h2>
-        <UiButton variant="quinary" size="large" class="register-banner__btn">Зарегистрироваться</UiButton>
+        <UiButton type="button" @click="handleRegister" variant="quinary" size="large" class="register-banner__btn">Зарегистрироваться</UiButton>
       </div>
       <div class="register-banner__image-container">
         <UiImage class="register-banner__image" :src="'/assets/images/welcome/registerBanner/register-banner-img.png'" alt="Фотография швеи" :class="{ 'animate': isVisible }"/>
@@ -13,9 +13,21 @@
 </template>
 
 <script setup>
+import { useUserStore } from '~/store/userStore';
+
 
 const bannerRef = ref(null);
 const isVisible = ref(false);
+
+const userStore = useUserStore();
+const router = useRouter();
+
+const handleRegister = () => {
+  router.push({path: '/register',  query: { role: 'customer' } });
+  userStore.role = 'customer'
+  localStorage.setItem('role', 'customer');
+  settingStore.isCreateOrder = false
+}
 
 onMounted(() => {
   const observer = new IntersectionObserver(

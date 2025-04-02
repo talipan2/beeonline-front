@@ -54,7 +54,7 @@ const serviceData = ref({
 const previewCardData = computed(() => ({
   name: serviceData.value.name,
   logo: serviceData.value.gallery && serviceData.value.gallery.length ? serviceData.value.gallery[0].url : '',
-  alias: serviceData.value.alias,
+  alias: formatData.value.alias,
   data: [
     {id: 1, name: 'Категории', value: formatData.value.categories},
     {id: 2, name: 'Место производства', value: formatData.value.locations},
@@ -62,12 +62,13 @@ const previewCardData = computed(() => ({
     {id: 4, name: 'Наличие СТМ', value: formatData.value.availabilityStm},
     {id: 5, name: 'Бесплатные тестовые образцы', value: formatData.value.freeTestSamples},
     {id: 6, name: 'Сырье', value: formatData.value.rawMaterials},
+    {id: 8, name: 'Свободный склад', value: formatData.value.freeStock},
     {id: 7, name: 'Описание', value: formatData.value.description},
   ],
 }))
 
 const formatData = computed(() => {
-  const {locations, alias} = locationFormatter({cities: serviceData.value.locationsName});
+  const {locations, alias} = locationFormatter(serviceData.value.locations);
   return {
     name: serviceData.value.name,
     categories: entityStore.getEntityLabelById('categories', serviceData.value.categories),
@@ -78,7 +79,8 @@ const formatData = computed(() => {
     minLot: entityStore.getEntityLabelById('minLot', serviceData.value.minLot),
     rawMaterials: entityStore.getEntityLabelById('rawMaterials', serviceData.value.rawMaterials),
     description: serviceData.value.description,
-    termsOfCooperation: serviceData.value.termsOfCooperation
+    termsOfCooperation: serviceData.value.termsOfCooperation,
+    freeStock: entityStore.getEntityLabelById('freeStock', serviceData.value.freeStock),
   }
 })
 
@@ -177,11 +179,12 @@ await entityStore.getService(id).then(res => {
       availabilityStm: Number(res.data.is_stm),
       freeTestSamples: Number(res.data.free_samples),
       minLot: res.data.batches && res.data.batches.length ? res.data.batches.map(item => item.id) : [],
-      rawMaterials: [res.data.materials_own ? 1 : '', res.data.materials_tolling ? 0 : ''].filter(item => item !== '') || [],
+      rawMaterials: [res.data.materials_own ? 0 : '', res.data.materials_tolling ? 1 : ''].filter(item => item !== '') || [],
       description: res.data.description,
       termsOfCooperation: res.data.conditions,
       gallery: res.data.gallery || [],
-      tzFiles: res.data.tz_files || []
+      tzFiles: res.data.tz_files || [],
+      freeStock: 0,
     }
   }
 })

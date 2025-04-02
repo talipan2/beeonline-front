@@ -18,7 +18,7 @@
       </div>
     </div>
     <div class="choose-category__link">
-      <NuxtLink to="/" class="choose-category__link-button">
+      <NuxtLink to="/services" class="choose-category__link-button">
         Весь каталог услуг
         <SvgoSlideArrow class="svg-l" />
       </NuxtLink>
@@ -30,12 +30,12 @@
 <script setup>
 
 const categoryProps = [
-  {id: 1, title: 'Пошив женской одежды', url: 'Описание категории', image: '/assets/images/welcome/category/category-1.png'},
-  {id: 1, title: 'Пошив женской одежды', url: 'Описание категории', image: '/assets/images/welcome/category/category-2.png'},
-  {id: 1, title: 'Пошив женской одежды', url: 'Описание категории', image: '/assets/images/welcome/category/category-3.png'},
-  {id: 1, title: 'Пошив женской одежды', url: 'Описание категории', image: '/assets/images/welcome/category/category-4.png'},
-  {id: 1, title: 'Пошив женской одежды', url: 'Описание категории', image: '/assets/images/welcome/category/category-5.png'},
-  {id: 1, title: 'Пошив женской одежды', url: 'Описание категории', image: '/assets/images/welcome/category/category-6.png'},
+  {id: 1, title: 'Пошив женской одежды', url: '/services?categories=4', image: '/assets/images/welcome/category/category-1.png'},
+  {id: 1, title: 'Пошив мужской одежды', url: '/services?categories=6', image: '/assets/images/welcome/category/category-2.png'},
+  {id: 1, title: 'Пошив детской одежды', url: '/services?categories=3', image: '/assets/images/welcome/category/category-3.png'},
+  {id: 1, title: 'Вязанный трикотаж', url: '/services?categories=1', image: '/assets/images/welcome/category/category-4.png'},
+  {id: 1, title: 'Пошив головных уборов', url: '/services?categories=5', image: '/assets/images/welcome/category/category-5.png'},
+  {id: 1, title: 'Сумки и аксессуары', url: '/services?categories=11', image: '/assets/images/welcome/category/category-6.png'},
 
 ]
 
@@ -114,7 +114,6 @@ const categoryProps = [
     align-items: center;
     justify-content: center;
     background-color: #eeeef3;
-    padding-block: 4em;
     border-radius: 24px;
   }
 
@@ -125,6 +124,9 @@ const categoryProps = [
     display: flex;
     align-items: center;
     column-gap: .6em;
+    padding-block: 2em;
+    width: 100%;
+    justify-content: center;
   }
 }
 

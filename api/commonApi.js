@@ -51,8 +51,8 @@ export default {
     return axios.get(`faqs`)
   },
 
-  async getNewsList() {
-    return axios.get(`news`)
+  async getNewsList(params = {}) {
+    return axios.get(`news`, { params })
   },
 
   async getNews(id) {

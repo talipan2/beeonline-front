@@ -3,7 +3,7 @@
     <h3 class="news-details__title">{{ data.name }}</h3>
     <p class="news-details__date">{{ formatDate(data.created_at, 'DD.MM.YYYY') }}</p>
     <div class="news-body" v-html="data.detail_text"></div>
-    <UiButton to="/news" variant="quinary" size="large" class="news-details__btn">К списку новостей</UiButton>
+    <UiButton type="button" @click="goBack" variant="quinary" size="large" class="news-details__btn">К списку новостей</UiButton>
   </div>
 </template>
 
@@ -18,6 +18,14 @@ const router = useRouter();
 await settingStore.getNews(router.currentRoute.value.params.id).then((res) => {
   data.value = res
 })
+
+const goBack = () => {
+  if(history.state.back != null && history.state.back.includes('news')) {
+    router.back();
+  } else {
+    router.push('/news');
+  }
+}
 
 // onMounted(() => {
 //   settingStore.getNews(router.currentRoute.value.params.id).then((res) => {

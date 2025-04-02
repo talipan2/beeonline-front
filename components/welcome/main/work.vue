@@ -22,12 +22,12 @@
       </div>
       <div class="work__cards-container">
         <div class="work__cards-line work__cards-line_first">
-          <template v-for="(card, index) in cardData.slice(0, 10)" :key="index">
+          <template v-for="(card, index) in firstHalf" :key="index">
             <WelcomeMainPerformerCard class="work__card" :data="card"/>
           </template>
         </div>
         <div class="work__cards-line work__cards-line_second">
-          <template v-for="(card, index) in cardData.slice(10)" :key="index">
+          <template v-for="(card, index) in secondHalf" :key="index">
             <WelcomeMainPerformerCard class="work__card" :data="card"/>
           </template>
         </div>
@@ -79,6 +79,21 @@ const handleScroll = () => {
   }
 }
 
+const firstHalf = computed(() => {
+  return splitArray(cardData.value).firstHalf;
+});
+
+const secondHalf = computed(() => {
+  return splitArray(cardData.value).secondHalf;
+});
+
+const splitArray = (arr) => {
+  const middle = Math.ceil(arr.length / 2); // или Math.floor(), в зависимости от предпочтений
+  const firstHalf = arr.slice(0, middle);
+  const secondHalf = arr.slice(middle);
+  return {firstHalf, secondHalf};
+};
+
 onMounted(() => {
   window.addEventListener("scroll", handleScroll);
   handleScroll(); // Запускаем при загрузке страницы
@@ -96,7 +111,7 @@ const cardData = computed(() => {
     return {
       id: item.id,
       name: item.name,
-      logo: item.logo,
+      logo: item.pub_card?.logo,
       minLot: item.batches,
       companyName: item.pub_card?.name,
       location: locations,
@@ -110,7 +125,6 @@ const cardData = computed(() => {
 })
 
 onMounted(() => {
-  locationsStore.getLocations()
   entityStore.getServices({per_page: 20}).then(res => {
     if(res) {
       cardsData.value = res.data

@@ -33,7 +33,7 @@
           <div class="welcome-banner__info welcome-banner__info_type_second">
             <h1 class="welcome-banner__title">{{ item.title }}</h1>
             <p class="welcome-banner__subtitle">{{ item.subtitle }}</p>
-            <NuxtLink class="welcome-banner__link">
+            <NuxtLink type="button" @click="handleCreateOrder" class="welcome-banner__link" >
               Разместить заказ
               <div class="welcome-banner__arrow">
                 <SvgoLinkArrow class="svg-l" />
@@ -59,6 +59,8 @@
 </template>
 
 <script setup>
+import { useUserStore } from '~/store/userStore';
+
 
 const currentSlide = ref(0);
 const totalSlides = ref(0);
@@ -70,6 +72,16 @@ const onSwiper = (swiper) => {
 const onSlideChange = (swiper) => {
   currentSlide.value = swiper.realIndex;
 };
+
+const userStore = useUserStore();
+const router = useRouter();
+
+const handleCreateOrder = () => {
+  router.push({path: '/register',  query: { role: 'customer', action: 'create-order' } });
+  userStore.role = 'customer'
+  localStorage.setItem('role', 'customer');
+  settingStore.isCreateOrder = true
+}
 
 const sliderData = [
   {

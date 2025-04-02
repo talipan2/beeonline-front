@@ -39,12 +39,17 @@ const serviceProps = computed(() => {
       rawMaterials: {label: "Сырье", value: [service.value.materials_own ? 'Исполнителя' : '', service.value.materials_tolling ? 'Заказчика' : ''].filter(Boolean).join(' / ')},
       availabilityStm: {label: "Наличие СТМ", value: service.value.availabilityStm ? 'Да' : 'Нет'},
       freeSamples: {label: "Бесплатные образцы", value: formatFreeSamples(service.value.free_samples)},
-      placeOfProduction: {label: "Место производства", value: locations,}
+      placeOfProduction: {label: "Место производства", value: locations,},
+      freeStock: {label: "Свободный склад", value: service.value.free_stock ? 'Да' : 'Нет'},
     }
   }
 });
 
 const formatFreeSamples = (freeSamples) => {
+  if (freeSamples === null || freeSamples === undefined) {
+    return null;
+  }
+
     switch (Number(freeSamples)) {
       case 1:
         return 'Да'

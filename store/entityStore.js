@@ -50,6 +50,7 @@ export const useEntityStore = defineStore('entity', {
       availabilityStm: '',
       freeTestSamples: '',
       rawMaterials: [],
+      freeStock: '',
       description: '',
       termsOfCooperation: '',
       logo: {
@@ -82,6 +83,10 @@ export const useEntityStore = defineStore('entity', {
         { id: 0, label: "По запросу" },
         { id: 1, label: "Да" },
         { id: 2, label: "Нет" },
+      ],
+      freeStock: [
+        { id: 0, label: "Нет" },
+        { id: 1, label: "Да" },
       ],
       minLot: [
         {id: 1, label: 'до 100'},

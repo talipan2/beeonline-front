@@ -44,6 +44,10 @@
         <p class="prop__name">Бесплатные образцы:</p>
         <p class="prop__value">{{ data.freeSamples }}</p>
       </div>
+      <div class="prop" v-if="role === 'performer'">
+        <p class="prop__name">Свободный склад:</p>
+        <p class="prop__value">{{  }}</p>
+      </div>
     </div>
     <div class="entity-card__footer">
       <UiButton 

@@ -83,9 +83,9 @@ export const useSettingStore = defineStore("setting", {
       }
     },
 
-    async getNewsList() {
+    async getNewsList(params) {
       try {
-        const response = await commonApi.getNewsList();
+        const response = await commonApi.getNewsList(params);
         if (response.data) {
           return response.data
         }
