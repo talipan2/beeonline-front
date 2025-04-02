@@ -55,6 +55,18 @@
           name="isFreeSample"
         />
       </div>
+      <div class="filter__item" ref="tutorialRef6">
+        <h3 class="filter__title">Свободный склад</h3>
+        <UiCheckboxGroup
+          :options="[
+            { id: 0, label: 'Нет' },
+            { id: 1, label: 'Да' },
+          ]"
+          :isValidated="false"
+          v-model="searchProps.free_stock"
+          name="free_stock"
+        />
+      </div>
       <div class="filter__item" ref="tutorialRef5">
         <h3 class="filter__title">Сырье:</h3>
         <UiCheckboxGroup
@@ -93,6 +105,7 @@ const tutorialRefs = computed(() => {
     {component: tutorialRef2.value, content: 'Укажите регион, где производится продукция, которая вам интересна'},
     {component: tutorialRef3.value, content: 'Укажите наличие собственной торговой марки'},
     {component: tutorialRef4.value, content: 'Укажите наличие бесплатных тестовых образцов'},
+    {component: tutorialRef6.value, content: 'Укажите наличие свободного склада'},
     {component: tutorialRef5.value, content: 'Укажите сырье'},
     {component: tutorialRefSubmit.value, content: 'Нажмите кнопку, чтобы применить параметры фильтра'},
   ];
@@ -103,6 +116,7 @@ const tutorialRef2 = ref(null);
 const tutorialRef3 = ref(null);
 const tutorialRef4 = ref(null);
 const tutorialRef5 = ref(null);
+const tutorialRef6 = ref(null);
 const tutorialRefSubmit = ref(null);
 
 const updateTutorialRefSubmit = (value) => {
@@ -116,6 +130,7 @@ const searchProps = ref({
   location: [],
   has_stm: [],
   free_test: [],
+  free_stock: [],
   material: [],
 });
 
@@ -129,6 +144,7 @@ const resetFilter = () => {
     location: [],
     has_stm: [],
     free_test: [],
+    free_stock: [],
     material: [],
   };
   emit('updateFilter', []);
@@ -148,6 +164,7 @@ watch(() => props.filter, (newVal) => {
     location: {...newVal.location, cities: []} || [],
     has_stm: newVal.is_stm || [],
     free_test: newVal.free_samples || [],
+    free_stock: newVal.free_stock || [],
     material: [newVal.materials_own ? 0 : undefined, newVal.materials_tolling ? 1 : undefined].filter(item => item !== undefined),
   };
 }, {deep: true, once: true})

@@ -6,7 +6,8 @@ $small-mobile-breakpoint: 480px;
 
 $mobile-content-width: 540px;
 
-
+$high-resolution-breakpoint-2k: 2560px;
+$high-resolution-breakpoint-4k: 3840px;
 
 @mixin desktop {
   @media (max-width: $desktop-breakpoint) {
@@ -34,6 +35,18 @@ $mobile-content-width: 540px;
 
 @mixin small-mobile {
   @media (max-width: $small-mobile-breakpoint) {
+    @content;
+  }
+}
+
+@mixin high-resolution-2k {
+  @media (min-width: $high-resolution-breakpoint-2k) and (max-width: $high-resolution-breakpoint-4k) {
+    @content;
+  }
+}
+
+@mixin high-resolution-4k {
+  @media (min-width: $high-resolution-breakpoint-4k) {
     @content;
   }
 }

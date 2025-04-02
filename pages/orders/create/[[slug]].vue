@@ -251,6 +251,7 @@ onBeforeMount(async () => {
             },
             currentStep: orderInProgress.current_step,
             isSafeDeal: orderInProgress.is_safedeal,
+            isAgreedOrderPlacement: orderInProgress.tg_publish,
             logo:
               orderInProgress.gallery?.length > 0
                 ? orderInProgress.gallery[0]

@@ -13,7 +13,6 @@
                                 <span>{{ brand.pubCard.name }}</span>
                             </p>
                             <p class="brands__card-city">{{ brand.pubCard.country }}</p>
-                            {{ brand }}
                         </div>
                     </div>
                     <div class="brands__card-image">
