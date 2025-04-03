@@ -80,7 +80,7 @@ onUnmounted(() => {
   }
 
   &__title {
-    font-size: 3.2em;
+    font-size: 4em;
     margin: 1.25em 0 0.78em;
   }
 

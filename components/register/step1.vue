@@ -35,15 +35,14 @@
           "
         >
           <label class="form-group__title">
-            ИНН *
+            ИНН
             <UiInput
-              :rules="getSkipInnRules"
+              :rules="{}"
               name="inn"
               label="ИНН"
               class="form-group__value"
               type="number"
               placeholder="ИНН"
-              :required="!skipInn"
               v-model="data.inn"
             />
           </label>
@@ -61,15 +60,14 @@
             />
           </label>
           <label class="form-group__title">
-            Адрес регистрации *
+            Адрес регистрации
             <UiInput
-              :rules="{ required: true, min: 2 }"
+              :rules="{ }"
               name="legalAddress"
               label="Адрес регистрации"
               class="form-group__value"
               type="text"
               placeholder="Адрес регистрации"
-              :required="true"
               v-model="data.registerAddress"
             />
           </label>
@@ -83,21 +81,20 @@
           "
         >
           <label class="form-group__title">
-            ИНН организации*
+            ИНН организации
             <span
               >(Введите ИНН и нажмите на кнопку поиска, чтобы система определила
               вас)</span
             >
             <div class="form-group__value register__input-inn">
               <UiInput
-                :rules="getSkipInnRules"
+                :rules="{}"
                 name="inn"
                 label="ИНН"
                 class="register__input"
                 type="text"
                 placeholder="____________"
                 v-model="data.inn"
-                :maxLength="10"
                 inputType="number"
               >
               <template #action>
@@ -123,63 +120,55 @@
               />
             </label>
             <label class="form-group-data form-group__title">
-              КПП *
+              КПП
               <UiInput
-                :rules="getSkipInnRules"
+                :rules="{}"
                 name="kpp"
                 label="КПП"
                 class="form-group__value"
                 type="text"
                 placeholder="____________"
                 v-model="data.kpp"
-                :required="!skipInn"
-                :maxLength="9"
-                :disabled="true"
                 inputType="number"
               />
             </label>
             <label
               class="form-group-data form-group__title register__label_type_select"
             >
-              Форма организации *
+              Форма организации
               <UiSelect
-                :rules="{ required: true }"
+                :rules="{ }"
                 name="organizationForm"
                 class="form-group__value"
                 v-model="data.organizationForm"
                 :options="formOrganization"
-                :disabled="true"
               />
             </label>
             <label class="form-group-data form-group__title">
-              ОГРН *
+              ОГРН
               <UiInput
-                :rules="getSkipInnRules"
+                :rules="{}"
                 name="ogrn"
                 label="ОГРН"
                 class="form-group__value"
                 type="text"
                 inputType="number"
                 placeholder="____________"
-                :required="!skipInn"
+                :required="false"
                 v-model="data.ogrn"
-                :maxLength="13"
-                :disabled="true"
               />
             </label>
           </div>
           <label class="form-group-data form-group__title">
-            Юридический адрес *
+            Юридический адрес
             <UiInput
-              :rules="getSkipInnRules"
+              :rules="{}"
               name="legalAddress"
               label="Юридический адрес"
               class="form-group__value"
               type="text"
               placeholder=""
-              :required="!skipInn"
               v-model="data.legalAddress"
-              :disabled="true"
             />
           </label>
         </div>
@@ -189,20 +178,19 @@
           v-if="data.countryId !== 1"
         >
           <label class="form-group__title">
-            Идентификационный номер организации*
+            Идентификационный номер организации
             <span
               >(Введите номер и нажмите на кнопку поиска, чтобы система определила
               вас)</span
             >
             <div class="form-group__value register__input-inn">
               <UiInput
-                :rules="getSkipInnRules"
+                :rules="{}"
                 name="inn"
                 label="ИНН"
                 class="register__input"
                 type="text"
                 placeholder="____________"
-                :required="!skipInn"
                 v-model="data.inn"
               >
                 <template #action>
@@ -227,17 +215,15 @@
             />
           </label>
           <label class="form-group__title">
-            Юридический адрес *
+            Юридический адрес
             <UiInput
-              :rules="getSkipInnRules"
+              :rules="{}"
               name="legalAddress"
               label="Юридический адрес"
               class="form-group__value"
               type="text"
               placeholder="____________"
               v-model="data.legalAddress"
-              :required="!skipInn"
-              :disabled="true"
             />
           </label>
           <div>
@@ -252,14 +238,14 @@
       </div>
 
       <div class="register__btn-container">
-        <UiButton
+        <!-- <UiButton
           type="submit"
           class="register__btn"
           variant="quinary"
           size="large"
           @click="handleClick(true)"
           >Пропустить ввод инн</UiButton
-        >
+        > -->
         <UiButton
           type="submit"
           class="register__btn"

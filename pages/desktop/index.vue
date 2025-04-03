@@ -1,7 +1,7 @@
 <template>
     <NuxtLayout
         name="profile"
-        :title="`Кабинет ${translateRole}`"
+        :title="`Рабочий стол`"
         class="desktop-layout"
     >
         <template #header>

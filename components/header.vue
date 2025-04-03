@@ -408,8 +408,9 @@ body.vfm--scrollbar-hidden .fixed-header {
 }
 
 .header__logo-container .header__logo-img {
-  height: 3.571em;
-  width: 11.428em;
+  // height: 4.571em;
+  height: auto;
+  width: 16.428em;
 }
 
 .header__logo-button {

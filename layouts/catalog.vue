@@ -45,7 +45,7 @@ const props = defineProps({
     display: flex;
     align-items: center;
     column-gap: .5em;
-    font-size: 3.6rem;
+    font-size: 4rem;
     margin: 1.38em 0 0.78em;
     line-height: 1em;
   }

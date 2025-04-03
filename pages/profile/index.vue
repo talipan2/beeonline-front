@@ -153,6 +153,8 @@ useHead({
       text-transform: uppercase;
       color: var(--text-color-primary);
       font-weight: normal;
+      white-space: normal;
+      word-wrap: break-word;
       &:hover {
         color: #fff;
       }
