@@ -23,7 +23,7 @@
       </div>
     </div>
     <WelcomeMainHeaderMobileModal
-      :openModal="isOpenMobileModal" 
+      v-model="isOpenMobileModal" 
       :headerHeight="headerHeight" 
     />
   </header>

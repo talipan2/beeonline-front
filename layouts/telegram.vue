@@ -46,11 +46,15 @@ useHead({
   .breadcrumb-wrapper {
     display: none;
   }
+  
+  .profile__left {
+    display: none;
+  }
 }
 
-.telegram-body {
-  max-width: 767px;
-  margin: 0 auto;
-}
+// .telegram-body {
+//   max-width: 767px;
+//   margin: 0 auto;
+// }
 
 </style>

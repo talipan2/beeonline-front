@@ -1,5 +1,5 @@
 <template>
-  <UiModal v-model="isOpenModal" title="Выберите город" :clickToClose="false" @confirm="() => confirm()" class="header-menu header-menu-welcome"
+  <UiModal v-model="isOpenModal" :clickToClose="false" @update:modelValue="val => emit('update:modelValue', val)"  class="header-menu header-menu-welcome"
     :style="{ marginTop: `${headerHeight}px` }" :closeButton="false" size="xs">
     <template #content>
       <div class="welcome-header__menu-mobile">
@@ -21,17 +21,21 @@ const props = defineProps({
     type: Number,
     default: 0,
   },
-  openModal: {
+  modelValue: {
     type: Boolean,
     default: false,
   },
 });
 
-const isOpenModal = ref(props.openModal);
+const isOpenModal = ref();
 
-watch(() => props.openModal, (newVal) => {
+watch(() => props.modelValue, (newVal) => {
   isOpenModal.value = newVal;
 });
+
+const emit = defineEmits(['update:modelValue']);
+
+
 
 </script>
 
@@ -40,6 +44,11 @@ watch(() => props.openModal, (newVal) => {
 .header-menu-welcome {
   .modal-body {
     width: 290px;
+  }
+
+  .modal-content {
+    margin: 0 0 0 auto;
+    background-color: transparent;
   }
 }
 

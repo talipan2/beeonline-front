@@ -26,6 +26,7 @@
       :logo="userLogo"
       :role="role"
       :isAuth="isAuth"
+      class="telegram-bot-modal"
     />
     <TelegramBotAuthModal />
   </header>
@@ -245,6 +246,8 @@ body.vfm--scrollbar-hidden .fixed-header {
   column-gap: 2.857em;
   display: flex;
   // flex: 1 0 auto;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .header__logo-container .header__logo-img {
@@ -312,7 +315,7 @@ body.vfm--scrollbar-hidden .fixed-header {
 
 .header__login,
 .header__menu-btn {
-  display: none
+  // display: none
 }
 
 .header__auth_mobile {
@@ -351,7 +354,19 @@ body.vfm--scrollbar-hidden .fixed-header {
     padding-block: .5em;
   }
 
-  .header__menu-btn {
+  .header__login {
+    display: flex;
+    line-height: 1.66em;
+  }
+
+  .header__logo-container .header__logo-img {
+    height: auto;
+    width: 9.5em;
+  }
+}
+}
+
+.header__menu-btn {
     background-color: inherit;
     border: none;
     display: block;
@@ -366,18 +381,6 @@ body.vfm--scrollbar-hidden .fixed-header {
   .header__menu-btn i {
     font-size: 1.714em;
   }
-
-  .header__login {
-    display: flex;
-    line-height: 1.66em;
-  }
-
-  .header__logo-container .header__logo-img {
-    height: auto;
-    width: 9.5em;
-  }
-}
-}
 
 .header__menu-btn>div {
     position: absolute;

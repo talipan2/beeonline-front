@@ -1,5 +1,5 @@
 <template>
-  <section class="welcome-map" ref="mapSvg">
+  <section class="welcome-map" ref="mapSvg" :class="{ 'pin-animate_active': isVisible }">
     <div class="welcome-map__container">
       <div class="welcome-map__header">
         <h2 class="welcome-map__title">Выбирайте партнеров<br>рядом с Вами</h2>
@@ -163,60 +163,73 @@
 </template>
 
 <script setup>
-import gsap from 'gsap';
-import scrollTrigger from "gsap/ScrollTrigger";
 
-gsap.registerPlugin(scrollTrigger);
-const mapSvg = ref(null);
-const timelines = []; // Хранилище для анимаций
+const mapSvg = ref(null)
 
-const randomIntFromInterval = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
-
-
+const isVisible = ref(false);
 
 onMounted(() => {
-  if (!mapSvg.value) return; // Проверяем, что элемент загружен
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          isVisible.value = true;
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.1 }
+  );
 
-  const pins = mapSvg.value.querySelectorAll(".Pin-back path");
-  if (!pins.length) return;
-
-  pins.forEach((pin) => {
-    const tl = gsap.timeline({ 
-      repeat: -1, 
-      delay: randomIntFromInterval(2, 10), 
-      repeatDelay: randomIntFromInterval(5, 10),
-      scrollTrigger: {
-        trigger: pin,
-        start: "top 100%", // Анимация начнётся, когда верх элемента достигнет 80% окна
-        toggleActions: "play none none none", // Анимация запускается один раз
-      },
-      onComplete: () => {
-        
-      }
-    })
-    .to(pin, { 
-      duration: 3, 
-      scale: 50, 
-      transformOrigin: "center center", 
-      opacity: 0 
-    });
-
-    timelines.push(tl);
-  });
-});
-
-onUnmounted(() => {
-  timelines.forEach((tl) => tl.kill());
-  scrollTrigger.getAll().forEach((st) => st.kill());
+  if (mapSvg.value) {
+    observer.observe(mapSvg.value);
+  }
 });
 
 </script>
 
 <style lang="scss">
 
+@use "sass:math";
+
+.pin-animate_active .Pin-back path {
+  animation-name: pin-zoom-out;
+  animation-duration: 3s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+  transform-origin: center center;
+  opacity: 1;
+  transform-box: fill-box;
+}
+
+// Создаём разные задержки через nth-child
+@for $i from 1 through 50 {
+  .Pin-back path:nth-child(#{$i}) {
+    animation-delay: #{math.random(100)}s;
+    animation-duration: #{math.random(3) + 2}s; // от 2 до 5 секунд
+    animation-iteration-count: infinite;
+    animation-direction: normal;
+    animation-timing-function: ease-in-out;
+  }
+}
+
+// Ключевые кадры
+@keyframes pin-zoom-out {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(50);
+    opacity: 0;
+  }
+}
+
 .welcome-map {
   font-size: 1rem;
   background-color: #eef1f5;
+
+
   
   &__container {
     position: relative;

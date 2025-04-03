@@ -117,6 +117,16 @@ watch(() => router.currentRoute.value.path, (newVal) => {
 
 <style lang="scss">
 
+.telegram-bot-modal {
+  .modal-dialog {
+    left: auto;
+    bottom: auto;
+    right: 3%;
+  }
+
+}
+
+
 .header-menu {
 
   .modal-body {
