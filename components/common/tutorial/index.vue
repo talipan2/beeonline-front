@@ -46,8 +46,14 @@ const unlockScroll = () => {
 const scrollToCenter = (element) => {
   const rect = element.getBoundingClientRect(); // Получаем размеры и положение элемента
   const windowHeight = window.innerHeight; // Высота окна
-  const elementCenter = rect.top + window.scrollY + rect.height / 2; // Центр элемента
-  const scrollTo = elementCenter - windowHeight / 1.5 ; // Вычисляем, на сколько прокрутить
+  let scrollTo = 0;
+  if(rect.height > windowHeight) {
+    const elementTop = rect.top + window.scrollY;
+    scrollTo = elementTop - windowHeight / 1.5;
+  } else {
+    const elementCenter = rect.top + window.scrollY + rect.height / 2; // Центр элемента
+    scrollTo = elementCenter - windowHeight / 1.5 ; // Вычисляем, на сколько прокрутить
+  }
 
   window.scrollTo({
     top: scrollTo,

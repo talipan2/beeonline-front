@@ -6,7 +6,7 @@
         <HeaderLocation />
         <HeaderChooseLang class="modal-lang"/>
       </div>
-      <UiInput :placeholder="'Поиск по сайту'" class="header-menu__search" />
+      <UiInput :placeholder="'Поиск по сайту'" v-model="searchQuery" class="header-menu__search" @enter="handleSearch(searchQuery)"/>
       <template v-if="isAuth">
         <button class="header-menu__user-data" @click="() => isOpenDropDown = !isOpenDropDown">
           <div class="header-menu__user-image">
@@ -155,6 +155,7 @@ const userData = computed(() => userStore.userData);
 
 
 const isOpenDropDown = ref(false);
+const searchQuery = ref('');
 
 function getRoleName(role) {
   if(role === 'customer') {
@@ -218,7 +219,7 @@ const dropdownMenuLinks = computed(() => {
       { id: 9, label: "Партнерские сервисы", value: `/related-industry-services` },
       { id: 10, label: "Избранное", value: `/favorites` },
       { id: 11, label: "Отзывы", value: `/my-reviews` },
-      { id: 12, label: "Баланс и платные услуги", value: "/" },
+      { id: 12, label: "Баланс и платные услуги", value: "/tariffs" },
       { id: 13, label: "Уведомления", value: `/notifications` },
       { id: 14, label: "Новости", value: "/news" },
     ];
@@ -242,6 +243,10 @@ watch(isOpenModal, (newVal) => {
 watch(() => router.currentRoute.value.path, (newVal) => {
   confirm();
 })
+
+const handleSearch = (query) => {
+  router.push({ path: '/search', query: { q: query } });
+}
 
 </script>
 

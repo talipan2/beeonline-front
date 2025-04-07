@@ -45,7 +45,7 @@
         </div>
         <NuxtLink
             class="deals-card__link"
-            :to="`/deals/${1}`"
+            :to="`/deals/${data.id}`"
         />
     </div>
 </template>

@@ -4,22 +4,22 @@
       <h5 class="check-card__title">
         {{ title }}
       </h5>
-      <NuxtLink :to="changeLink" class="check-card__link link" v-if="changeLink">{{ changeLinkLabel }}</NuxtLink>
+      <UiButton :to="changeLink" variant="quinary" class="check-card__link" v-if="changeLink">{{ changeLinkLabel }}</UiButton>
       <UiButton 
         type="button" 
         @click="firstBtn" 
-        variant="default" 
-        class="check-card__link link"
+        variant="quinary" 
+        class="check-card__link"
         v-if="firstBtn"
       >
         {{ changeLinkLabel }}
       </UiButton>
-      <NuxtLink :to="secondLink" class="check-card__link link" v-if="secondLink">{{ secondLinkLabel }}</NuxtLink>
+      <UiButton :to="secondLink" class="check-card__link" variant="quinary" v-if="secondLink">{{ secondLinkLabel }}</UiButton>
       <UiButton 
         type="button" 
         @click="secondBtn" 
-        variant="default" 
-        class="check-card__link link"
+        variant="quinary" 
+        class="check-card__link"
         v-if="secondBtn"
       >
         {{ secondLinkLabel }}
@@ -111,7 +111,7 @@ const props = defineProps({
   }
 
   &__link {
-    color: var(--text-color-ternary);
+    // color: var(--text-color-ternary);
     font-size: 1.2em;
     text-transform: none;
   }

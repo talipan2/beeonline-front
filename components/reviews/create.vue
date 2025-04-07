@@ -24,7 +24,7 @@
                     type="text"
                     label="плюсы сотрудничества"
                     name="text_positive"
-                    :rules="{ required: true }"
+                    :rules="{ required: true, min: 5 }"
                     v-model="reviewData.advantagesOfCooperation"
                 />
             </label>
@@ -37,7 +37,7 @@
                     type="text"
                     label="минусы сотрудничества"
                     name="text_negative"
-                    :rules="{ required: true }"
+                    :rules="{ required: true, min: 5 }"
                     v-model="reviewData.disadvantagesOfCooperation"
                 />
             </label>

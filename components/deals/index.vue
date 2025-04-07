@@ -30,6 +30,7 @@
                 <DealsCard :data="deal" />
             </div>
         </div>
+        <CommonAlerts v-if="!deals.length && isLoaded" type="warning" alert="Сделок нет" />
         <CommonPagination
             v-if="page.last_page > 1"
             :current-page="page.current_page"
@@ -47,6 +48,7 @@ const dealStore = useDealStore();
 const deals = ref([]);
 const page = ref({});
 const loading = ref(false);
+const isLoaded = ref(false);
 const filter = ref(null);
 
 const updateActiveStatus = (value) => {
@@ -131,6 +133,7 @@ function fetchDeals(currentPage) {
         })
         .finally(() => {
             loading.value = false;
+            isLoaded.value = true;
         });
 }
 

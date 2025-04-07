@@ -71,5 +71,16 @@ export const useLocationStore = defineStore("location", {
     async getRegisterCountries() {
         return await Api.getRegisterCountries();
     },
+
+    async getCountries() {
+      try {
+        const response = await Api.getCountries();
+        if (response.data) {
+          return response.data;
+        }
+      } catch (error) {
+        throw error;
+      }
+    }
   },
 })

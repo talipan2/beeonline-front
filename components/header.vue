@@ -434,7 +434,7 @@ body.vfm--scrollbar-hidden .fixed-header {
   display: flex;
   flex: 1 1 100%;
   justify-content: center;
-  padding: 0 1rem;
+  padding: 0 2rem;
 }
 
 .header__menu-list {

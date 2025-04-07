@@ -427,8 +427,8 @@ export const useEntityStore = defineStore('entity', {
     async getSelfOrders(organizationId, params) {
       try {
         const response = await orderApi.getSelfOrders(organizationId, params);
-        if(response.data && response.data.orders && response.data.orders.data) {
-          this.organizationOrders = response.data.orders.data;
+        if(response.data && response.data.orders && response.data.orders) {
+          this.organizationOrders = response.data.orders;
           return response.data
         }
       } catch (error) {
@@ -439,8 +439,8 @@ export const useEntityStore = defineStore('entity', {
     async getSelfServices(organizationId, params) {
       try {
         const response = await serviceApi.getSelfServices(organizationId, params);
-        if(response.data && response.data.services && response.data.services.data) {
-          this.organizationServices = response.data.services.data;
+        if(response.data && response.data.services && response.data.services) {
+          this.organizationServices = response.data.services;
           return response.data
         }
       } catch (error) {

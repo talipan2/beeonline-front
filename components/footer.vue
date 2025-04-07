@@ -101,7 +101,9 @@
   align-items: center;
   -moz-column-gap: 3.2em;
   column-gap: 3.2em;
-  display: flex
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 3.2em;
 }
 
 .footer__link {

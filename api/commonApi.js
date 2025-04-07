@@ -66,4 +66,8 @@ export default {
   async getRegisterCountries() {
     return useApi().get(`register-countries`);
   },
+
+  async getCountries() {
+    return axios.get(`countries`)
+  }
 }

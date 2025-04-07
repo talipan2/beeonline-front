@@ -38,15 +38,15 @@
       </div>
       <div class="prop" v-if="role === 'performer'">
         <p class="prop__name">Наличие СТМ:</p>
-        <p class="prop__value"> {{ data.availabilityStm }}</p>
+        <p class="prop__value"> {{ data.availabilityStm || 'не указано' }}</p>
       </div>
       <div class="prop" v-if="role === 'performer'">
         <p class="prop__name">Бесплатные образцы:</p>
-        <p class="prop__value">{{ data.freeSamples }}</p>
+        <p class="prop__value">{{ data.freeSamples || 'не указано' }}</p>
       </div>
       <div class="prop" v-if="role === 'performer'">
         <p class="prop__name">Свободный склад:</p>
-        <p class="prop__value">{{  }}</p>
+        <p class="prop__value">{{ data.freeStock || 'не указано' }}</p>
       </div>
     </div>
     <div class="entity-card__footer">

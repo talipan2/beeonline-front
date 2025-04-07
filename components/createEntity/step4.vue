@@ -73,6 +73,10 @@
           />
         </p>
       </div>
+      <div class="form-group-data" v-if="entityOfRole === 'services'">
+        <p class="form-group__title">Свободный склад</p>
+        <p class="form-group__value">{{ formatData.freeStock || 'не указан' }}</p>
+      </div>
       <div class="form-group-data" v-if="entityOfRole === 'orders'">
         <p class="form-group__title">Партия</p>
         <p class="form-group__value">{{ formatData.batch || 'не указан' }}</p>

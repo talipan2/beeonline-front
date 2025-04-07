@@ -114,6 +114,9 @@ const selectInfoModalData = ({type, id}) => {
 }
 
 const formatFreeSamples = (freeSamples) => {
+    if (freeSamples === null || freeSamples === undefined) {
+      return null
+    }
     switch (Number(freeSamples)) {
       case 1:
         return 'Да'
@@ -134,8 +137,9 @@ const cardData = computed(() => {
     name: item.name,
     placeOfProduction: locations,
     rawMaterials: [item.materials_own ? 'Исполнителя' : '', item.materials_tolling ? 'Заказчика' : ''].filter(Boolean),
-    availabilityStm: item.is_stm ? 'Да' : 'Нет',
+    availabilityStm: item.is_stm != null ? item.is_stm ? 'Да' : 'Нет' : null,
     freeSamples: formatFreeSamples(item.free_samples),
+    freeStock:  item.free_stock != null ? item.free_stock ? 'Да' : 'Нет' : null,
     minLot: item.batches && item.batches.length ? item.batches.map(item => item.name) : [],
     status: entityStore.getEntityStatusByValue(item.status),
     category: item.product_categories && item.product_categories.length ? item.product_categories.map(item => item.id) : [],

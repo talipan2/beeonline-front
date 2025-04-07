@@ -53,6 +53,10 @@ const chatId = ref(null);
             height: calc(100vh - var(--header-height) - 60px);
         }
     }
+
+    .dialog-head__btn {
+        font-size: 1.6em;
+    }
 }
 
 </style>

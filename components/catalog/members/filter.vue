@@ -56,6 +56,7 @@
 
 <script setup>
 import { useEntityStore } from "~/store/entityStore";
+import { useLocationStore } from "~/store/locationStore";
 
 const props = defineProps({
   filter: {
@@ -66,6 +67,7 @@ const props = defineProps({
 
 
 const entityStore = useEntityStore();
+const locationStore = useLocationStore();
 const emit = defineEmits(['updateFilter']);
 
 const searchProps = ref({
@@ -92,32 +94,24 @@ const resetFilter = () => {
 
 const category = computed(() => entityStore.entityData.categories);
 
-const countryList = computed(() => {
-  return [
-    { id: 1, label: 'Россия' },
-    { id: 2, label: 'Белоруссия' },
-    { id: 3, label: 'Казахстан' },
-    { id: 4, label: 'Армения' },
-    { id: 5, label: 'Узбекистан' },
-    { id: 6, label: 'Киргизия' },
-    { id: 7, label: 'Испания' },
-    { id: 8, label: 'Тунис' },
-    { id: 9, label: 'Грузия' },
-    { id: 10, label: 'Австрия' },
-    { id: 11, label: 'Литва' },
-    { id: 12, label: 'Албания' },
-  ]
-})
+const countryList = ref([]);
 
 
 watch(() => props.filter, (newVal) => {
   searchProps.value = {
     type: newVal.type || 'performer',
     category: newVal.categories || [],
-    location: newVal.countries || [],
+    location: newVal.country_ids || [],
     material: [newVal.materials_own ? 0 : undefined, newVal.materials_tolling ? 1 : undefined].filter(item => item !== undefined),
   };
 }, {deep: true, once: true})
+
+onMounted(() => {
+  locationStore.getCountries().then(res => {
+    countryList.value = res
+  });
+})
+
 </script>
 
 <style lang="scss">

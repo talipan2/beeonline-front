@@ -86,8 +86,8 @@ function handleSelectOrderToMessage() {
 
 onMounted(() => {
   entityStore.getSelfOrders(userStore.userData.organization_id, {status: 'active'}).then((res) => {
-    if(res && res.orders && res.orders.data) {
-      ordersList.value = res.orders.data;
+    if(res && res.orders && res.orders) {
+      ordersList.value = res.orders;
     }
   }).finally(() => {
     isLoaded.value = true;

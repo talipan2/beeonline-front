@@ -64,6 +64,7 @@ const filter = ref({
   free_samples: null,
   materials_own: null,
   materials_tolling: null,
+  free_stock: null
 });
 
 // Фильтр
@@ -84,6 +85,7 @@ const handleUpdateFilter = (data) => {
     regions: data.location && data.location.regions ? data.location.regions?.map(item => item.id).join(',') : undefined,
     is_stm: data.has_stm && data.has_stm.length ? data.has_stm.join(',') : undefined,
     free_samples: data.free_test && data.free_test.length ? data.free_test.join(',') : undefined,
+    free_stock: data.free_stock && data.free_stock.length ? data.free_stock.join(',') : undefined,
     materials_own: data.material && data.material.length && data.material.includes(0) ? 1 : undefined,
     materials_tolling: data.material && data.material.length && data.material.includes(1) ? 1 : undefined,
   }
@@ -96,6 +98,7 @@ const handleUpdateFilter = (data) => {
     regions: Object.keys(data.location).length ? Object.values(data.location).flat().map(item => item.id) : undefined,
     is_stm: data.has_stm && data.has_stm.length ? data.has_stm : undefined,
     free_samples: data.free_test && data.free_test.length ? data.free_test : undefined,
+    free_stock: data.free_stock && data.free_stock.length ? data.free_stock : undefined,
     materials_own: data.material && data.material.length && data.material.includes(0) ? 1 : undefined,
     materials_tolling: data.material && data.material.length && data.material.includes(1) ? 1 : undefined,
   }
@@ -173,6 +176,7 @@ onMounted(() => {
       regions: [query.countries && query.countries.split(',').map(item => Number(item)), query.regions && query.regions.split(',').map(item => Number(item))].flat(),
       is_stm: query.is_stm ? query.is_stm.split(',').map(item => Number(item)) : undefined,
       free_samples: query.free_samples ? query.free_samples.split(',').map(item => Number(item)) : undefined,
+      free_stock: query.free_stock ? query.free_stock.split(',').map(item => Number(item)) : undefined,
       materials_own: query.materials_own ? Number(query.materials_own) : undefined,
       materials_tolling: query.materials_tolling ? Number(query.materials_tolling) : undefined,
     }
@@ -183,6 +187,7 @@ onMounted(() => {
       location: {countries: query.countries ? query.countries.split(',').map(item => Number(item)) : [], regions: query.regions ? query.regions.split(',').map(item => Number(item)) : [] },
       is_stm: query.is_stm ? query.is_stm.split(',').map(item => Number(item)) : [],
       free_samples: query.free_samples ? query.free_samples.split(',').map(item => Number(item)) : [],
+      free_stock: query.free_stock ? query.free_stock.split(',').map(item => Number(item)) : [],
       materials_own: query.materials_own ? Number(query.materials_own) : undefined,
       materials_tolling: query.materials_tolling ? Number(query.materials_tolling) : undefined,
     }

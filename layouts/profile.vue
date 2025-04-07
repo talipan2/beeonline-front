@@ -194,6 +194,10 @@ onUnmounted(() => {
       margin-bottom: 2em;
     }
 
+    &__right {
+      flex-basis: 40%;
+    }
+
     &__left {
       display: none;
     }

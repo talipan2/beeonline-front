@@ -26,6 +26,7 @@ export default {
       cities,
       status,
       categories,
+      freeStock
     } = data
     const params = {}
     if(name !== '') params.name = name
@@ -35,6 +36,7 @@ export default {
     if(rawMaterials && rawMaterials.length > 0) params.materials_tolling = rawMaterials.includes(1)
     if (availabilityStm != null) params.is_stm = String(availabilityStm);
     if(freeTestSamples != null) params.free_samples = String(freeTestSamples)
+    if(freeStock != null ) params.free_stock = Boolean(freeStock)
     if(step !== '' || null) params.current_step = step
     if(cities && cities.length > 0 ) params.cities = cities
     if(status) params.status = status

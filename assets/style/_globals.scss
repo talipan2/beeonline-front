@@ -801,6 +801,10 @@ font font {
   box-sizing: border-box;
 
   @include desktop {
+    padding-inline: var(--container-padding-x-desktop);
+  }
+
+  @include tablet {
     padding-inline: var(--container-padding-x);
   }
 

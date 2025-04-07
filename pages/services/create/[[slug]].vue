@@ -155,6 +155,7 @@ const currentHandleSubmit = computed(() => {
             freeTestSamples: service.value.freeTestSamples,
             minLot: service.value.minLot,
             termsOfCooperation: service.value.termsOfCooperation,
+            freeStock: service.value.freeStock
           }, form).then(() => {
             entityStore.updateServiceStep(service.value.id, 2)
             entityStore.fillingService.currentStep = 2
@@ -259,6 +260,7 @@ onBeforeMount(async () => {
             },
             availabilityStm: serviceInProgress.is_stm !== null ? Number(serviceInProgress.is_stm) : null,
             freeTestSamples: serviceInProgress.free_samples !== null ? Number(serviceInProgress.free_samples) : null,
+            freeStock: serviceInProgress.free_stock !==null ? Boolean(serviceInProgress.free_stock) : null,
             minLot: serviceInProgress.batches && Array.isArray(serviceInProgress.batches) ? serviceInProgress.batches.map(item => item.id) : [],
             termsOfCooperation: serviceInProgress.conditions,
             currentStep: serviceInProgress.current_step,

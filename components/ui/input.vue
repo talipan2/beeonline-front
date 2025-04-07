@@ -14,6 +14,7 @@
           :maxlength="maxLength"
           @focus="$emit('focus', $event)"
           @blur="$emit('blur', $event)" 
+          @keyup.enter="$emit('enter')"
         />
         <slot />
       </div>

@@ -17,18 +17,19 @@
           v-if="currentViewSetting === 'grid' || currentViewSetting === 'list'"
         >
           <button class="members__sort-btn">
-            {{ currentSortList.value }}
+            {{ currentSortType.name }}
             <SvgoDropDown class="svg-m" />
           </button>
           <template #content>
             <div class="dropdown__container">
               <button
-                @click="changeSortList(item.id)"
+                @click="changeSortList(item)"
                 class="dropdown__item"
+                :class="{'members__sort-btn_active' : currentSortType.value === item.value}"
                 v-for="item in sortList"
                 :key="item.id"
               >
-                {{ item.name }}
+                {{ item.listName }}
               </button>
             </div>
           </template>
@@ -125,6 +126,14 @@ const props = defineProps({
   isLoaded: {
     type: Boolean,
     default: false
+  },
+  sortList: {
+    type: Array,
+    default: () => []
+  },
+  currentSortType: {
+    type: Object,
+    default: () => ({})
   }
 });
 
@@ -136,17 +145,13 @@ const currentPubCard = ref(null);
 const currentListLength = computed(() => props.data.length);
 const membersCard = ref(null);
 
-const currentSortList = ref({
-  id: 1,
-  name: "По просмотрам",
-  value: "по просмотрам",
-});
+const emit = defineEmits(['sort']);
 
-const sortList = [
-  { id: 1, name: "По просмотрам", value: "по просмотрам" },
-  { id: 2, name: "По количеству услуг", value: "по количеству услуг" },
-  { id: 3, name: "По рейтингу", value: "по рейтингу" },
-];
+const changeSortList = (item) => {
+  emit('sort', item);
+}
+
+const currentSortList = ref(props.sortList[0]);
 
 const changeViewSetting = (item) => {
   switch (item) {
@@ -165,40 +170,6 @@ const changeViewSetting = (item) => {
 
       break;
   }
-};
-
-const changeSortList = (item) => {
-  switch (item) {
-    case 1:
-      currentSortList.value = {
-        id: 1,
-        name: "По просмотрам",
-        value: "по просмотрам",
-      };
-      break;
-    case 2:
-      currentSortList.value = {
-        id: 2,
-        name: "По количеству услуг",
-        value: "по количеству услуг",
-      };
-      break;
-    case 3:
-      currentSortList.value = {
-        id: 3,
-        name: "По Рейтингу",
-        value: "по рейтингу",
-      };
-      break;
-    default:
-      currentSortList.value = {
-        id: 1,
-        name: "По просмотрам",
-        value: "по просмотрам",
-      };
-      break;
-  }
-  sortDropdown.value.tippy.hide();
 };
 
 watch(() => currentPubCard.value, (newVal) => {
@@ -293,6 +264,11 @@ onMounted(() => {
     display: flex;
     align-items: center;
     column-gap: 0.5rem;
+
+    &_active {
+      background-color: var(--button-background-primary);
+      color: #FFF;
+    }
   }
 
   &__card-title {

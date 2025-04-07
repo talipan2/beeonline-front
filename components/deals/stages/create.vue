@@ -13,6 +13,7 @@
             <CommonAlerts
                 alert="Сделка подтверждена"
                 :type="'success'"
+                class="stage-create__alert"
             />
         </template>
         <template v-if="!deal.confirmed_at">
@@ -93,6 +94,10 @@ const confirmTill = "2025-03-04T05:21:10.000000Z";
             font-size: 0.25em;
             font-weight: normal;
         }
+    }
+
+    &__alert {
+        margin-top: 1em;
     }
 
     &__btn {

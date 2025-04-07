@@ -87,6 +87,7 @@ function setRating() {
   &__wrapper {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
   }
 
   &__reviews {
@@ -107,9 +108,9 @@ function setRating() {
   position: relative;
   width: 8em;
   height: 1.6em;
-  font-size: 10px;
+  font-size: 1rem;
   flex-shrink: 0;
-  margin-right: 12px;
+  margin-right: 1.2rem;
 }
 
 .rate_choice {

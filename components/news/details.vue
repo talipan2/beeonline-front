@@ -60,7 +60,7 @@ const goBack = () => {
 
   &__btn {
     font-size: .75em;
-    max-width: 20%;
+    // max-width: 20%;
     margin-top: 3em;
     text-transform: uppercase;
   }

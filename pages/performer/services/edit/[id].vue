@@ -10,6 +10,7 @@
     <template #rightSide>
       <div class="h4">Предварительный просмотр услуги</div>
       <CreateEntityPreview :data="previewCardData"/>
+      {{ previewCardData }}
     </template>
   </NuxtLayout>
 </template>
@@ -102,7 +103,8 @@ const currentHandleSubmit = computed(() => {
           availabilityStm: serviceData.value.availabilityStm,
           freeTestSamples: serviceData.value.freeTestSamples,
           minLot: serviceData.value.minLot,
-          termsOfCooperation: serviceData.value.termsOfCooperation
+          termsOfCooperation: serviceData.value.termsOfCooperation,
+          freeStock: serviceData.value.freeStock
         }, form).then(() => {currentStep.value = 3})
 
         if(serviceData.value.gallery && serviceData.value.gallery.length) {
@@ -178,13 +180,13 @@ await entityStore.getService(id).then(res => {
       locationsName: res.data.cities,
       availabilityStm: Number(res.data.is_stm),
       freeTestSamples: Number(res.data.free_samples),
+      freeStock: Number(res.data.free_stock),
       minLot: res.data.batches && res.data.batches.length ? res.data.batches.map(item => item.id) : [],
       rawMaterials: [res.data.materials_own ? 0 : '', res.data.materials_tolling ? 1 : ''].filter(item => item !== '') || [],
       description: res.data.description,
       termsOfCooperation: res.data.conditions,
       gallery: res.data.gallery || [],
       tzFiles: res.data.tz_files || [],
-      freeStock: 0,
     }
   }
 })

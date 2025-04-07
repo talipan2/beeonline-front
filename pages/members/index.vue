@@ -9,7 +9,7 @@
     </template>
     <template #content>
       <div ref="anchor" :class="{'loading': loading}">
-        <CatalogMembersList :data="data" :page="page" :isLoaded="isLoaded"/>
+        <CatalogMembersList :data="data" :page="page" :isLoaded="isLoaded" @sort="handleSort" :sortList="sortList" :currentSortType="currentSortType"/>
         <CommonPagination v-if="page.lastPage > 1" :current-page="page.currentPage" :total-pages="page.lastPage" @changePage="handleChangePage" :loading="loading"/>
       </div>
     </template>
@@ -35,6 +35,14 @@ const page = ref({
   itemsToPage: 0,
 })
 
+const sortList = [
+  { id: 1, name: "по просмотрам", value: "view_count", listName: "По просмотрам" },
+  { id: 2, name: "по количеству услуг", value: "active_services_count", listName: "По количеству услуг" },
+  { id: 3, name: "по рейтингу", value: "fill_rating", listName: "По рейтингу" },
+];
+
+const currentSortType = ref(sortList[0]) 
+
 const data = computed(() => {
   return organizationStore.pubCardsList.map(item => {
     return {
@@ -59,7 +67,7 @@ const data = computed(() => {
 const filter = ref({});
 
 // Фильтр
-const handleUpdateFilter = (data) => {
+const handleUpdateFilter = (data, sortType) => {
 
   // Если фильтры не выбраны 
   if(!data || data.length === 0) {
@@ -72,17 +80,17 @@ const handleUpdateFilter = (data) => {
   const newQuery = {
     type: data.type ? data.type : undefined,
     categories: data.category ? data.category.join(',') : undefined,
-    countries: data.location ? data.location.join(',') : undefined,
+    country_ids: data.location ? data.location.join(',') : undefined,
     materials_own: data.material && data.material.length && data.material.includes(0) ? 1 : undefined,
     materials_tolling: data.material && data.material.length && data.material.includes(1) ? 1 : undefined,
+    sort: sortType ? sortType : sortList[0].value
   }
-  console.log(newQuery)
 
   // добавление квери параметров для запроса
   filter.value = {
     type: data.type ? data.type : undefined,
     categories: data.category && data.category.length ? data.category : undefined,
-    countries: data.location && data.location.length ? data.location : undefined,
+    country_ids: data.location && data.location.length ? data.location : undefined,
     materials_own: data.material && data.material.length && data.material.includes(0) ? 1 : undefined,
     materials_tolling: data.material && data.material.length && data.material.includes(1) ? 1 : undefined,
   }
@@ -99,7 +107,7 @@ const handleUpdateFilter = (data) => {
   isLoaded.value = false
 
   // запрос на получение данных с фильтром
-  organizationStore.getPubCardsList({...filter.value}).then(res => {
+  organizationStore.getPubCardsList({...filter.value, sort: sortType}).then(res => {
     if(res) {
       page.value = {
         currentPage: res.meta.current_page,
@@ -117,6 +125,11 @@ const handleUpdateFilter = (data) => {
     loading.value = false
     isLoaded.value = true
   })
+}
+
+const handleSort = (sortType) => {
+  currentSortType.value = sortType
+  handleUpdateFilter(filter.value, sortType?.type)
 }
 
 const handleChangePage = (currentPage) => {
@@ -148,7 +161,8 @@ watch(() => page.value.currentPage, () => {
 
 onMounted(() => {
   let params = {
-    type: 'performer'
+    type: 'performer',
+    sort: sortList[0].value
   }
 
   loading.value = true
@@ -161,18 +175,22 @@ onMounted(() => {
       page: query.page ? Number(query.page) : undefined,
       type: query.type ? query.type : 'performer',
       categories: query.categories ? query.categories.split(',').map(item => Number(item)) : undefined,
-      countries: query.countries ? query.countries.split(',').map(item => Number(item)) : undefined,
+      country_ids: query.country_ids ? query.country_ids.split(',').map(item => Number(item)) : undefined,
       materials_own: query.materials_own ? Number(query.materials_own) : undefined,
       materials_tolling: query.materials_tolling ? Number(query.materials_tolling) : undefined,
+      sort: query.sort ? query.sort : sortList[0].value,
     }
 
     filter.value = {
       type: query.type ? query.type : 'performer',
       categories: query.categories ? query.categories.split(',').map(item => Number(item)) : [],
-      countries: query.countries ? query.countries.split(',').map(item => Number(item)) : [],
+      country_ids: query.country_ids ? query.country_ids.split(',').map(item => Number(item)) : [],
       materials_own: query.materials_own ? Number(query.materials_own) : undefined,
       materials_tolling: query.materials_tolling ? Number(query.materials_tolling) : undefined,
     }
+
+    currentSortType.value = query.sort ? sortList.find(item => item.value === query.sort) : sortList[0];
+    console.log(currentSortType.value)
   }
 
   organizationStore.getPubCardsList(params).then(res => {

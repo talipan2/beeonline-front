@@ -73,7 +73,7 @@ const ordersData = computed(() => {
         },
         { id: 3, name: 'Наличие СТМ', value: item.is_stm ? 'Да' : 'Нет' },
         { id: 4, name: 'Бесплатные образцы', value: entityStore.getEntityLabelById('freeTestSamples', item.free_samples) },
-        { id: 5, name: 'Свободный склад', value: '' },
+        { id: 5, name: 'Свободный склад', value: entityStore.getEntityLabelById('freeStock', item.free_stock) },
       ],
     }
   })
