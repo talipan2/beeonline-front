@@ -10,7 +10,6 @@
     <template #rightSide>
       <div class="h4">Предварительный просмотр услуги</div>
       <CreateEntityPreview :data="previewCardData"/>
-      {{ previewCardData }}
     </template>
   </NuxtLayout>
 </template>

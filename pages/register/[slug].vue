@@ -191,7 +191,7 @@ onMounted(() => {
         data.value.description = pubCard.description
         data.value.siteUrl = pubCard.site_url
         data.value.companyLogo = {url:pubCard.logo}
-        data.value.locations = { regions: [...pubCard.regions], cities: [...pubCard.cities] };
+        data.value.locations = { regions: [...pubCard.regions], cities: [...pubCard.cities], countries: [...pubCard.countries] };
       }
     }
   });

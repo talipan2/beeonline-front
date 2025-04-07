@@ -24,7 +24,7 @@
         </div>
         <div class="view-entity__view">
           <SvgoViews class="svg-l" fill="#6937a5"/>
-          <p class="view-entity__view-value">0</p>
+          <p class="view-entity__view-value">{{ data.views || 0 }}</p>
         </div>
       </div>
     </div>

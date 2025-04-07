@@ -5,7 +5,8 @@
         class="sticky" 
         title="Создание услуги" 
         adviceTitle="Для публикации услуги нужно заполнить достаточно информации об услуге" 
-        :check-list="checkList" 
+        :check-list="checkList"
+        :fill-rating="service.fillRating" 
       />
     </template>
     <template #content>
@@ -133,6 +134,7 @@ const currentHandleSubmit = computed(() => {
             }, form
           ).then((res) => {
             if(res && res.id) {
+              service.value.fillRating = res.fill_rating
               entityStore.updateServiceStep(res.id, 1)
               router.push('/services/create/step2')
             }
@@ -142,7 +144,10 @@ const currentHandleSubmit = computed(() => {
           await entityStore.editService(service.value.id, {
             name: service.value.name,
             categories: service.value.categories,
-          }, form).then(() => router.push('/services/create/step2'))
+          }, form).then((res) => {
+            service.value.fillRating = res.fill_rating
+            router.push('/services/create/step2')
+          })
           .catch(error =>  console.log(error));
         }
       });
@@ -156,8 +161,10 @@ const currentHandleSubmit = computed(() => {
             minLot: service.value.minLot,
             termsOfCooperation: service.value.termsOfCooperation,
             freeStock: service.value.freeStock
-          }, form).then(() => {
+          }, form).then((res) => {
+            console.log(res)
             entityStore.updateServiceStep(service.value.id, 2)
+            service.value.fillRating = res.fill_rating
             entityStore.fillingService.currentStep = 2
             router.push('/services/create/step3')
           })
@@ -182,7 +189,8 @@ const currentHandleSubmit = computed(() => {
         if(service.value.locations && service.value.locations.cities) {
           await entityStore.editService(service.value.id, {
             cities: service.value.locations.cities.map(item => item.id)
-          }, form).then(() => {
+          }, form).then((res) => {
+            service.value.fillRating = res.fill_rating
             entityStore.updateServiceStep(service.value.id, 3)
             router.push('/services/create/step4')
           })
@@ -265,6 +273,7 @@ onBeforeMount(async () => {
             termsOfCooperation: serviceInProgress.conditions,
             currentStep: serviceInProgress.current_step,
             tzFiles: serviceInProgress.tz_files || [],
+            fillRating: serviceInProgress.fill_rating
           };
           console.log('запись с апи')
           service.value = entityStore.fillingService;

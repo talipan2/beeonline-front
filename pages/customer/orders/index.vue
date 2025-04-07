@@ -126,7 +126,7 @@ const entityIsFilling = ref({});
 
 const cardData = computed(() => {
   return entityStore.organizationOrders.map(item => {
-    const {locations, alias} = locationFormatter({cities: item.cities, regions: item.regions});
+    const {locations, alias} = locationFormatter({cities: item.cities, regions: item.regions, countries: item.countries});
     return {
       id: item.id,
       name: item.name,
@@ -139,7 +139,8 @@ const cardData = computed(() => {
       status: entityStore.getEntityStatusByValue(item.status),
       locations: {
         cities: [...item.cities],
-        regions: [...item.regions]
+        regions: [...item.regions],
+        countries: [...item.countries],
       },
       statusType: item.status,
     }

@@ -114,6 +114,9 @@
       <p class="orders-details__details-title">Галерея</p>
       <CommonGallerySlider :images="entityData.gallery" />
     </div>
+    <div class="orders-details__views">
+      <p class="orders-details__views-text">Просмотров: {{ entityData.views || 0 }}</p>
+    </div>
     <CatalogServiceSendMessageModal v-if="type === 'service'" :performer_id="props.pubCard.organization_id" />
   </div>
 </template>
@@ -349,6 +352,12 @@ onMounted(() => {
   &__files {
     font-size: 1rem;
     max-width: 50%;
+  }
+
+  &__views {
+    font-size: 1.3rem;
+    font-weight: 400;
+    text-align: right;
   }
 
 }

@@ -31,7 +31,7 @@ const order = ref({});
 const isLoading = ref(false);
 
 const orderProps = computed(() => {
-  const {locations, alias} = locationFormatter({cities: order.value.cities, regions: order.value.regions});
+  const {locations, alias} = locationFormatter({cities: order.value.cities, regions: order.value.regions, countries: order.value.countries});
   return {
     id: order.value.id,
     name: order.value.name,
@@ -41,6 +41,7 @@ const orderProps = computed(() => {
     tzFiles: order.value.tz_files && order.value.tz_files.length ? order.value.tz_files.map(item => item.url) : [],
     status: order.value.status,
     rejectReason: order.value.reject_reason || '',
+    views: order.value.view_count,
     props: {
       batch: {label: "Размер партии", value: Number(order.value.batch)},
       category: { 

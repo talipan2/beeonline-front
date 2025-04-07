@@ -19,9 +19,11 @@
 <script setup>
 import { useOrganizationStore } from '~/store/organizationStore';
 import { useSettingStore } from '~/store/settingStore';
+import { useUserStore } from '~/store/userStore';
 
 const organizationStore = useOrganizationStore();
 const settingStore = useSettingStore();
+const userStore = useUserStore();
 
 const router = useRouter();
 const anchor = ref(null);
@@ -35,13 +37,38 @@ const page = ref({
   itemsToPage: 0,
 })
 
-const sortList = [
-  { id: 1, name: "по просмотрам", value: "view_count", listName: "По просмотрам" },
-  { id: 2, name: "по количеству услуг", value: "active_services_count", listName: "По количеству услуг" },
-  { id: 3, name: "по рейтингу", value: "fill_rating", listName: "По рейтингу" },
-];
+// const sortList = [
+//   { id: 1, name: "по просмотрам", value: "view_count", listName: "По просмотрам" },
+//   { id: 2, name: "по количеству услуг", value: "active_services_count", listName: "По количеству услуг" },
+//   { id: 3, name: "по рейтингу", value: "fill_rating", listName: "По рейтингу" },
+// ];
 
-const currentSortType = ref(sortList[0]) 
+const filter = ref({});
+
+
+const sortList = computed(() => {
+  if(filter.value?.type === 'performer') {
+    return [
+      { id: 1, name: "по просмотрам", value: "view_count", listName: "По просмотрам" },
+      { id: 2, name: "по количеству услуг", value: "active_services_count", listName: "По количеству услуг" },
+      { id: 3, name: "по рейтингу", value: "rating", listName: "По рейтингу" },
+    ]
+  } else if(filter.value?.type === 'customer') {
+    return [
+      { id: 1, name: "по просмотрам", value: "view_count", listName: "По просмотрам" },
+      { id: 2, name: "по количеству заказов", value: "active_orders_count", listName: "По количеству заказов" },
+      { id: 3, name: "по рейтингу", value: "rating", listName: "По рейтингу" },
+    ]
+  } else {
+    return [
+      { id: 1, name: "по просмотрам", value: "view_count", listName: "По просмотрам" },
+      { id: 2, name: "по количеству услуг", value: "active_services_count", listName: "По количеству услуг" },
+      { id: 3, name: "по рейтингу", value: "rating", listName: "По рейтингу" },
+    ]
+  }
+});
+
+const currentSortType = ref(sortList.value[0]) 
 
 const data = computed(() => {
   return organizationStore.pubCardsList.map(item => {
@@ -64,10 +91,12 @@ const data = computed(() => {
   })
 });
 
-const filter = ref({});
 
 // Фильтр
 const handleUpdateFilter = (data, sortType) => {
+  if(!sortType) {
+    currentSortType.value = sortList.value[0];
+  }
 
   // Если фильтры не выбраны 
   if(!data || data.length === 0) {
@@ -83,7 +112,7 @@ const handleUpdateFilter = (data, sortType) => {
     country_ids: data.location ? data.location.join(',') : undefined,
     materials_own: data.material && data.material.length && data.material.includes(0) ? 1 : undefined,
     materials_tolling: data.material && data.material.length && data.material.includes(1) ? 1 : undefined,
-    sort: sortType ? sortType : sortList[0].value
+    sort: sortType ? sortType : sortList.value[0].value
   }
 
   // добавление квери параметров для запроса
@@ -128,8 +157,11 @@ const handleUpdateFilter = (data, sortType) => {
 }
 
 const handleSort = (sortType) => {
+  if(!filter.value.type) {
+    filter.value.type = 'performer'
+  }
   currentSortType.value = sortType
-  handleUpdateFilter(filter.value, sortType?.type)
+  handleUpdateFilter(filter.value, sortType?.value)
 }
 
 const handleChangePage = (currentPage) => {
@@ -162,7 +194,7 @@ watch(() => page.value.currentPage, () => {
 onMounted(() => {
   let params = {
     type: 'performer',
-    sort: sortList[0].value
+    sort: sortList.value[0].value
   }
 
   loading.value = true
@@ -178,7 +210,7 @@ onMounted(() => {
       country_ids: query.country_ids ? query.country_ids.split(',').map(item => Number(item)) : undefined,
       materials_own: query.materials_own ? Number(query.materials_own) : undefined,
       materials_tolling: query.materials_tolling ? Number(query.materials_tolling) : undefined,
-      sort: query.sort ? query.sort : sortList[0].value,
+      sort: query.sort ? query.sort : sortList.value[0].value,
     }
 
     filter.value = {
@@ -189,7 +221,7 @@ onMounted(() => {
       materials_tolling: query.materials_tolling ? Number(query.materials_tolling) : undefined,
     }
 
-    currentSortType.value = query.sort ? sortList.find(item => item.value === query.sort) : sortList[0];
+    currentSortType.value = query.sort ? sortList.value.find(item => item.value === query.sort) : sortList.value[0];
     console.log(currentSortType.value)
   }
 

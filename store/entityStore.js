@@ -32,6 +32,7 @@ export const useEntityStore = defineStore('entity', {
         cities: [],
         countries: [],
       },
+      fillRating: 0,
     },
     fillingOrder: null,
     fillingService: null,
@@ -59,6 +60,7 @@ export const useEntityStore = defineStore('entity', {
       },
       gallery: [],
       tzFiles: [],
+      fillRating: 0,
     },
     organizationServices: [],
     organizationOrders: [],
@@ -274,6 +276,9 @@ export const useEntityStore = defineStore('entity', {
     async editService(id, data, form) {
       try {
         const response = await serviceApi.editService(this.service.id || id, data, form);
+        if(response && response.data) {
+          return response.data
+        }
       } catch (error) {
         throw error;
       }
@@ -282,6 +287,9 @@ export const useEntityStore = defineStore('entity', {
     async editOrder(id, data) {
       try {
         const response = await orderApi.editOrder(this.order.id || id, data);
+        if(response && response.data) {
+          return response.data
+        }
       } catch (error) {
         throw error;
       }

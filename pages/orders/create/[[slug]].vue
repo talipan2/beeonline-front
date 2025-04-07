@@ -4,7 +4,8 @@
       <CommonCheckList class="create__checklist" 
         title="Создание заказа" 
         adviceTitle="Для публикации заказа нужно заполнить достаточно информации о заказе" 
-        :checkList="checkList" 
+        :checkList="checkList"
+        :fill-rating="order.fillRating" 
       />
     </template>
     <template #content>
@@ -84,7 +85,8 @@ const currentHandleSubmit = computed(() => {
               status: 'filling',
             },
             form
-          ).then(() => {
+          ).then((res) => {
+            order.value.fillRating = res.fill_rating
             entityStore.updateOrderStep(order.value.id, 1)
             router.push('/orders/create/step2')
           })
@@ -94,7 +96,10 @@ const currentHandleSubmit = computed(() => {
             name: order.value.name,
             category: order.value.categories,
             completionDate: order.value.completionDate,
-          }).then(() => router.push('/orders/create/step2'))
+          }).then((res) => {
+            order.value.fillRating = res.fill_rating
+            router.push('/orders/create/step2')
+          })
         }    
       });
     case 'step2':
@@ -109,7 +114,8 @@ const currentHandleSubmit = computed(() => {
             cities: order.value.locations.cities.map(item => item.id),
             regions: order.value.locations.regions.map(item => item.id),
             countries: order.value.locations.countries.map(item => item.id),
-          }, form).then(() => {
+          }, form).then((res) => {
+            order.value.fillRating = res.fill_rating
             entityStore.updateOrderStep(order.value.id, 2)
             if(entityStore.fillingOrder && entityStore.fillingOrder.id){
               entityStore.fillingOrder.currentStep = 2
@@ -249,6 +255,7 @@ onBeforeMount(async () => {
               regions: orderInProgress.regions?.map(item => ({ id: item.id, name: locationFormatter(item) })) ?? [],
               countries: orderInProgress.countries?.map(item => ({ id: item.id, name: locationFormatter(item) })) ?? [],
             },
+            fillRating: orderInProgress.fill_rating,
             currentStep: orderInProgress.current_step,
             isSafeDeal: orderInProgress.is_safedeal,
             isAgreedOrderPlacement: orderInProgress.tg_publish,
