@@ -114,7 +114,18 @@ export const useSettingStore = defineStore("setting", {
       } catch (error) {
         console.error(error);
       }
-    }
+    },
+
+    async emailConfirm(id, hash) {
+      try {
+        const response = await commonApi.emailConfirm(id, hash);
+        if (response.data) {
+          return response.data
+        }
+      } catch (error) {
+        throw error.response?.data || error;
+      }
+    },
 
   },
 

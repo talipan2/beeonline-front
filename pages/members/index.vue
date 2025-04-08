@@ -43,7 +43,9 @@ const page = ref({
 //   { id: 3, name: "по рейтингу", value: "fill_rating", listName: "По рейтингу" },
 // ];
 
-const filter = ref({});
+const filter = ref({
+  type: 'performer',
+});
 
 
 const sortList = computed(() => {
@@ -172,7 +174,8 @@ const handleChangePage = (currentPage) => {
 watch(() => page.value.currentPage, () => {
   loading.value = true
   isLoaded.value = false
-  organizationStore.getPubCardsList({page: page.value.currentPage, ...filter.value}).then(res => {
+
+  organizationStore.getPubCardsList({page: page.value.currentPage, ...filter.value, sort: currentSortType.value.value}).then(res => {
     if(res && res.meta && res.data) {
       page.value = {
         currentPage: res.meta.current_page,

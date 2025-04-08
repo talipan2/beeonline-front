@@ -61,7 +61,7 @@
                 </p>
                 <div class="balance-card__details-sum" :class="{ 'debit': item.type === 'debit', 'credit': item.type === 'credit'}">
                   <SvgoBalanceArrow class="balance-card__details-status" />
-                  {{ formatMoney(item.amount, item.currency?.code || 'bonus') }}
+                  {{ formatMoney(item.amount, item.currency?.code) }}
                 </div>
                 <p class="balance-card__details-type">{{ item.message }}</p>
               </div>

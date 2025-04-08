@@ -90,8 +90,9 @@ const currentHandleSubmit = computed(() => {
     case 1:
       return (async (value, form) => {
         await entityStore.editService(id, {
-          // name: serviceData.value.name,
+          name: serviceData.value.name,
           categories: serviceData.value.categories,
+          status: 'under_moderation',
         }, form).then(() => currentStep.value = 2)
       });
     case 2:
@@ -103,7 +104,8 @@ const currentHandleSubmit = computed(() => {
           freeTestSamples: serviceData.value.freeTestSamples,
           minLot: serviceData.value.minLot,
           termsOfCooperation: serviceData.value.termsOfCooperation,
-          freeStock: serviceData.value.freeStock
+          freeStock: serviceData.value.freeStock,
+          status: 'under_moderation',
         }, form).then(() => {currentStep.value = 3})
 
         if(serviceData.value.gallery && serviceData.value.gallery.length) {
@@ -119,7 +121,8 @@ const currentHandleSubmit = computed(() => {
     case 3:
       return (async (value, form) => {
         await entityStore.editService(id, {
-          cities: serviceData.value.locations.cities.map(item => item.id)
+          cities: serviceData.value.locations.cities.map(item => item.id),
+          status: 'under_moderation',
         }, form)
         currentStep.value = 4
       });

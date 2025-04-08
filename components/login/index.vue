@@ -85,12 +85,12 @@
                 </div>
                 <div class="auth__soc-links">
                     <a
-                        href="https://test.bee-online.ru/auth/google?action=auth"
+                        href="javascript:;"
                     >
                         <SvgoGoogle class="svg-lx" />
                     </a>
                     <a
-                        href="https://test.bee-online.ru/auth/vkontakte?action=auth"
+                        href="javascript:;"
                     >
                         <SvgoVkontakte class="svg-lx" />
                     </a>

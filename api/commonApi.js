@@ -69,5 +69,9 @@ export default {
 
   async getCountries() {
     return axios.get(`countries`)
+  },
+
+  async emailConfirm(id, hash) {
+    return axios.post(`email-confirm`, { id, hash })
   }
 }

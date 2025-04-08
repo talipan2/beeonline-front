@@ -13,15 +13,15 @@
           label="E-mail"
         />
         <div class="auth__btn-container">
+          <UiButton to="/login" class="auth__btn" variant="tertiary" size="large"
+            >Войти с паролем</UiButton
+          >
           <UiButton
             type="submit"
             class="auth__btn"
             variant="quinary"
             size="large"
             >Отправить</UiButton
-          >
-          <UiButton to="/login" class="auth__btn" variant="tertiary" size="large"
-            >Войти с паролем</UiButton
           >
         </div>
       </Form>
@@ -39,15 +39,15 @@
           type="password"
         />
         <div class="auth__btn-container">
+          <UiButton to="/login" class="auth__btn" variant="tertiary" size="large"
+            >Войти с паролем</UiButton
+          >
           <UiButton
             type="submit"
             class="auth__btn"
             variant="quinary"
             size="large"
             >Отправить</UiButton
-          >
-          <UiButton to="/login" class="auth__btn" variant="tertiary" size="large"
-            >Войти с паролем</UiButton
           >
         </div>
       </Form>

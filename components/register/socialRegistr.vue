@@ -5,10 +5,10 @@
     </div>
     <p class="soc-reg__text">Зарегистрируйтесь через:</p>
     <div class="soc-reg__links">
-      <a href="https://test.bee-online.ru/auth/google?action=auth">
+      <a href="javascript:;">
         <SvgoGoogle class="svg-lx" />
       </a>
-      <a href="https://test.bee-online.ru/auth/vkontakte?action=auth">
+      <a href="javascript:;">
         <SvgoVkontakte class="svg-lx" />
       </a>
     </div>

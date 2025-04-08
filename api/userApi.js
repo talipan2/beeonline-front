@@ -32,7 +32,7 @@ export default {
   },
 
   async forgotPassword(values, form) {
-    return useApi().post('forgot-password', values, form)
+    return useApi().post('restore-password', values, form)
   },
 
   async resetForgotPassword(values, form) {

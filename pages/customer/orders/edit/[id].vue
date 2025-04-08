@@ -114,7 +114,8 @@ const currentHandleSubmit = computed(() => {
         await entityStore.editOrder(orderData.value.id, {
           name: orderData.value.name,
           completionDate: orderData.value.completionDate,
-          categories: orderData.value.categories
+          categories: orderData.value.categories,
+          status: 'under_moderation',
         }, form)
         .then(() => currentStep.value = 2)
         .catch(error => {
@@ -135,6 +136,7 @@ const currentHandleSubmit = computed(() => {
           regions: orderData.value.locations.regions.map(item => item.id),
           countries: orderData.value.locations.countries.map(item => item.id),
           gallery: orderData.value.gallery,
+          status: 'under_moderation',
         }, form).then(() => currentStep.value = 4)
 
         if(orderData.value.gallery && orderData.value.gallery.length) {
@@ -151,7 +153,8 @@ const currentHandleSubmit = computed(() => {
       return (async(value, form) => {
         await entityStore.editOrder(orderData.value.id, {
           isSafeDeal: orderData.value.isSafeDeal,
-          isAgreedOrderPlacement: orderData.value.isAgreedOrderPlacement
+          isAgreedOrderPlacement: orderData.value.isAgreedOrderPlacement,
+          status: 'under_moderation',
         }, form)
         router.push(`/customer/orders/show/${orderData.value.id}`)
         toast.success('Заказ отправлен на модерацию');

@@ -191,7 +191,11 @@ onMounted(() => {
         data.value.description = pubCard.description
         data.value.siteUrl = pubCard.site_url
         data.value.companyLogo = {url:pubCard.logo}
-        data.value.locations = { regions: [...pubCard.regions], cities: [...pubCard.cities], countries: [...pubCard.countries] };
+        data.value.locations = {
+          cities: pubCard.cities?.map(city => ({...city, name: locationFormatter({cities: [{...city}]}).locations[0]})) || [],
+          regions: pubCard.regions?.map(region => ({...region, name: locationFormatter({regions: [{...region}]}).locations[0]})) || [],
+          countries: pubCard.countries?.map(country => ({...country, name: locationFormatter({countries: [{...country}]}).locations[0]})) || []
+        }
       }
     }
   });

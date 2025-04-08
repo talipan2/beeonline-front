@@ -27,7 +27,8 @@ export default defineNuxtRouteMiddleware(async(to, from) => {
     '/telegram',
     '/forgot-password',
     '/reset-password',
-    '/news'
+    '/news',
+    '/email-confirm'
   ];
 
   // if(!userStore.isAuth) {

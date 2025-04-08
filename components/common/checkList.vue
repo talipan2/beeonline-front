@@ -108,7 +108,8 @@ const progressLevel = computed(() => {
   if (nullPercentage.value >= 75) return '4';
   if (nullPercentage.value >= 50) return '3';
   if (nullPercentage.value >= 25) return '2';
-  if (nullPercentage.value >= 0) return '1';
+  if (nullPercentage.value > 0) return '1';
+  if (nullPercentage.value == 0) return '0';
 
   return '';
 });

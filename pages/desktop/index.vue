@@ -85,7 +85,7 @@ async function getEntity(filter) {
         case "customer":
             try {
                 const res = await entityStore.getSelfOrders(userStore.userData.organization_id, filter);
-                console.log(res)
+                console.log(res.orders)
                 if (res && res.orders) {
                     return {data: res.orders, total: res.order_counts};
                 }

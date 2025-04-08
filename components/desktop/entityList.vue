@@ -102,8 +102,9 @@ const fetchData = async (type, filter) => {
   }
   try {
     await props.getEntity({status: type, ...activeFilters}).then((res) => {
-      if(res && res.data && res.data.data) {
-        currentEntityList.value = res.data.data;
+      if(res && res.data && res.data) {
+        console.log(res)
+        currentEntityList.value = res.data;
         page.value = {
           currentPage: res.data.current_page,
           lastPage: res.data.last_page

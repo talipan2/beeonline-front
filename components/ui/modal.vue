@@ -105,6 +105,14 @@ export default {
         },
     },
 
+    watch: {
+        // Следим за изменениями маршрута
+        '$route'() {
+            // Закрываем модалку при изменении маршрута
+            this.$emit('update:modelValue', false);
+        }
+    },
+
     methods: {
         customLockScroll(isLock) {
             const screenWidth = window.innerWidth;

@@ -37,8 +37,9 @@ const email = ref('');
 const isSendedMailToReset = ref(false);
 
 const handleSubmit = (values, form) => {
-  userStore.forgotPassword(values, form);
-  isSendedMailToReset.value = true
+  userStore.forgotPassword(values, form).then((res) => {
+    isSendedMailToReset.value = true
+  });
 }
 
 </script>
