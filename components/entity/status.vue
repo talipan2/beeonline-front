@@ -68,6 +68,26 @@ const cardStatusText = computed(() => {
       status: 'Отклонён',
       text: `Причина: ${props.rejectReason}`
     },
+    'draft-order': {
+      title: 'Текущий статус заказа:',
+      status: 'Черновик',
+      text: ''
+    },
+    'draft-service': {
+      title: 'Текущий статус услуги:',
+      status: 'Черновик',
+      text: ''
+    },
+    'archived-order': {
+      title: 'Текущий статус заказа:',
+      status: 'В архиве',
+      text: ''
+    },
+    'archived-service': {
+      title: 'Текущий статус услуги:',
+      status: 'В архиве',
+      text: ''
+    },
   };
 
   return statusMap[key] || {

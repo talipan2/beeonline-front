@@ -29,6 +29,7 @@ export const useOrganizationStore = defineStore('organization', {
       productionCountry: null,
       selfEmployed: false,
       registerAddress: null,
+      closingDocumentsEmail: '',
       selectedProductionCountries: {
         fullNameLocation: [],
         locationId: [],
@@ -293,6 +294,41 @@ export const useOrganizationStore = defineStore('organization', {
 
     async counterpartyCheck(id) {
         return await Api.counterpartyCheck(id);
+    },
+
+    // получение сотрудников
+    async getOrganizationEmployees(id) {
+      try {
+        const response = await Api.getOrganizationEmployees(id);
+        if(response.data) {
+          return response.data;
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    // создание сотрудника
+    async createOrganizationEmployee(id, data) {
+      try {
+        const response = await Api.setOrganizationEmployee(id, data);
+        if(response.data) {
+          return response.data;
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    async getEmployeePermissions() {
+      try {
+        const response = await Api.getEmployeePermissions();
+        if(response.data) {
+          return response.data;
+        }
+      } catch (error) {
+        throw error;
+      }
     },
   }
 })

@@ -59,6 +59,7 @@ const formatData = computed(() => {
       name: data.value.name,
       tzFiles: data.value.tz_files && data.value.tz_files.length && data.value.tz_files.map(item => item.url),
       views: data.value.view_count,
+      status: data.value.status,
     }
 })
 

@@ -276,6 +276,7 @@ const pubCard = computed(() => {
     rating: userStore.userPubCard.reviews_stats_about?.stars,
     reviewCount: userStore.userPubCard.reviews_about_count,
     ratingData: {...userStore.userPubCard.reviews_stats_about, reviewCount: userStore.userPubCard.reviews_about_count},
+    stars: userStore.userPubCard.reviews_stats_about?.stars,
     entityCount: userStore.userPubCard.orders_count || userStore.userPubCard.services_count,
     rawMaterials: [userStore.userPubCard.materials_own ? 'Исполнителя': '', userStore.userPubCard.materials_tolling ? 'Заказчика' : ''].filter(Boolean),
     category: userStore.userPubCard.categories && userStore.userPubCard.categories.length ? userStore.userPubCard.categories.map(item => item.name) : [],
@@ -299,7 +300,7 @@ onMounted(() => {
 
 
   reviewsLoader.value = true;
-  reviewStore.getReviewsForUs(userStore.userData.organization_id, {limit: 3}).then((res) => {
+  reviewStore.getReviewsForUs(userStore.userData.organization_id, {limit: 1}).then((res) => {
     if (res) {
       if (res.data && res.data.length) {
         reviewsAboutUsList.value = res.data.map(item => {

@@ -129,4 +129,19 @@ export default {
   async getPubCardStats(id) {
     return axios.get(`pubcards/${id}/stats`)
   },
+
+  // получение сотрудников
+  async getOrganizationEmployees(id) {
+    return axios.get(`organizations/${id}/employees`)
+  },
+
+  // создание сотрудника
+  async setOrganizationEmployee(id, data) {
+    return axios.post(`organizations/${id}/employees`, data)
+  },
+
+  // права сотрудника
+  async getEmployeePermissions() {
+    return axios.get(`permissions`)
+  },
 }

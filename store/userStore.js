@@ -386,5 +386,38 @@ export const useUserStore = defineStore("user", {
         throw error;
       }
     },
+
+    async createNewUser(data) {
+      try {
+        const response = await Api.createNewUser(data);
+        if (response.data) {
+          return response.data;
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    async getUser(id) {
+      try {
+        const response = await Api.getUser(id);
+        if (response.data) {
+          return response.data;
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    async changeUserData(id, data, form) {
+      try {
+        const response = await Api.changeUserData(id, data, form);
+        if (response.data) {
+          return response.data;
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
   },
 });

@@ -87,7 +87,7 @@ async function getEntity(filter) {
                 const res = await entityStore.getSelfOrders(userStore.userData.organization_id, filter);
                 console.log(res.orders)
                 if (res && res.orders) {
-                    return {data: res.orders, total: res.order_counts};
+                    return {data: {data: res.orders, ...res.pagination}, total: res.order_counts, };
                 }
                 return [];
             } catch (error) {
@@ -97,7 +97,7 @@ async function getEntity(filter) {
             try {
                 const res = await entityStore.getSelfServices(userStore.userData.organization_id, filter);
                 if (res) {
-                    return {data: res.services, total: res.service_counts};
+                    return {data: {data: res.services, ...res.pagination}, total: res.service_counts};
                 }
                 return [];
             } catch (error) {

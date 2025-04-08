@@ -1,11 +1,7 @@
 <template>
     <div class="deals-card">
         <div class="deals-card__header">
-            <h3 class="deals-card__title title-hidden">
-                Агентство креативных индустрий (АКИ) и медиахолдинг PROfashion
-                запускают в Москве первую совместную программу подготовки
-                сотрудников в сфере легкой промышленности.
-            </h3>
+            <h3 class="deals-card__title title-hidden">Сделка № {{ data.id }}</h3>
             <p class="deals-card__date">{{ formatDate(data.created_at, 'weekday, DD.MM.YYYY - HH:mm:ss') }}</p>
         </div>
         <div class="deals-body">
@@ -16,15 +12,15 @@
                 <div class="props">
                     <div class="prop">
                         <p class="prop__name">Название:</p>
-                        <p class="prop__value">Агентство креативных индустрий (АКИ) и медиахолдинг PROfashion</p>
+                        <p class="prop__value">не указано</p>
                     </div>
                     <div class="prop">
                         <p class="prop__name">Категории:</p>
-                        <p class="prop__value">Термобелье</p>
+                        <p class="prop__value">не указано</p>
                     </div>
                     <div class="prop">
                         <p class="prop__name">Партия:</p>
-                        <p class="prop__value">2400</p>
+                        <p class="prop__value">не указано</p>
                     </div>
                     <div class="prop">
                         <p class="prop__name">Сумма:</p>
@@ -35,11 +31,11 @@
             <div class="deals-body__contacts">
                 <div class="deals-body__contacts-item">
                     <div class="deals-body__contacts-name">Заказчик:</div>
-                    <div class="deals-body__contacts-value">Пк Организация заказчик 1</div>
+                    <div class="deals-body__contacts-value">не указано</div>
                 </div>
                 <div class="deals-body__contacts-item">
                     <div class="deals-body__contacts-name">Исполнитель:</div>
-                    <div class="deals-body__contacts-value">Пк Организация Исполнитель 1</div>
+                    <div class="deals-body__contacts-value">не указано</div>
                 </div>
             </div>
         </div>

@@ -1,19 +1,70 @@
 <template>
   <div class="staff staff-edit">
-    <StaffContent />
-    <div class="form-group staff__buttons">
-      <div class="form-group-data">
-        <UiButton type="submit" class="form-group-data__btn" variant="quinary" size="large">Создать</UiButton>
+    <UiForm :submit="handleSubmit">
+      <StaffContent v-model="employeeData"/>
+      <div class="form-group staff__buttons">
+        <div class="form-group-data">
+          <UiButton type="submit" class="form-group-data__btn" variant="quinary" size="large">Сохранить</UiButton>
+        </div>
+        <div class="form-group-data">
+          <UiButton to="/staff" class="form-group-data__btn" variant="senary" size="large">Вернуться к списку сотрудников</UiButton>
+        </div>
+        <UiButton @click="handleRejectionEmployee" type="button" class="form-group-data__btn" variant="quinary" size="large">Отвязать от компании</UiButton>
       </div>
-      <div class="form-group-data">
-        <UiButton type="submit" class="form-group-data__btn" variant="senary" size="large">Вернуться к списку сотрудников</UiButton>
-      </div>
-      <UiButton type="submit" class="form-group-data__btn" variant="quinary" size="large">Отвязать от компании</UiButton>
-    </div>
+    </UiForm>
   </div>
 </template>
 
 <script setup>
+import { useUserStore } from '~/store/userStore';
+import { useToast } from 'vue-toastification';
+
+const props = defineProps({
+  userData: {
+    type: Object,
+    default: () => ({})
+  }
+})
+
+const userStore = useUserStore();
+const toast = useToast();
+const router = useRouter();
+
+const employeeData = ref({
+  email: '',
+  name: '',
+  post: '',
+  phone: '',
+  permissions: [],
+  notifications: [],
+})
+
+watch(() => props.userData, (newVal) => {
+  employeeData.value = {...newVal, };
+}, {deep: true})
+
+const handleRejectionEmployee = () => {
+  userStore.changeUserData(props.userData.id, {
+    organization_id: null,
+  }).then(() => {
+    toast.success('Сотрудник успешно отвязан от компании');
+    router.push({ path: '/staff' });
+  })
+}
+
+const handleSubmit = (value, form) => {
+  userStore.changeUserData(props.userData.id, {
+    name: employeeData.value.name,
+    email: employeeData.value.email,
+    post: employeeData.value.post,
+    phone: employeeData.value.phone,
+    permissions: employeeData.value.permissions
+  }, form).then(() => {
+    userStore.setNotification(props.userData.id, employeeData.value.notifications);
+    toast.success('Данные сотрудника успешно обновлены');
+    router.push({ path: '/staff' });
+  })
+}
 
 </script>
 

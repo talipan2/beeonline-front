@@ -42,61 +42,63 @@
         </div>
       </div>
     </div>
-    <div class="orders-details__btn-container" v-if="userStore.isAuth">
-      <template v-if="isSelfEntity">
-        <UiButton :to="editLinkData.link" class="orders-details__btn" variant="quinary" size="large">
-          Редактировать {{ editLinkData.type }}
-        </UiButton>
-      </template>
-      <template v-else>
+    <template v-if="entityData.status === 'active' || type === 'service' ">
+      <div class="orders-details__btn-container" v-if="userStore.isAuth">
+        <template v-if="isSelfEntity">
+          <UiButton :to="editLinkData.link" class="orders-details__btn" variant="quinary" size="large">
+            Редактировать {{ editLinkData.type }}
+          </UiButton>
+        </template>
+        <template v-else>
+          <UiButton type="button" class="orders-details__btn" v-if="type === 'service'" variant="quinary" size="large"
+            @click="settingStore.sendMessageModal = true">
+            <SvgoMessage class="svg-m" />
+            Написать исполнителю
+          </UiButton>
+          <UiButton class="orders-details__btn" v-if="type === 'order'" variant="quinary" size="large"
+            :to="{path: '/chat', query: { order_id: entityData.id }}">
+            <SvgoMessage class="svg-m" />
+            Написать Заказчику
+          </UiButton>
+          <PhoneNumberModal :order-id="entityData.id" v-if="type === 'order'">
+            <template #button="{ open }">
+              <UiButton type="button" class="orders-details__btn" variant="quinary" size="large" @click="open">
+                <SvgoPhone class="svg-m" fill="#6937a5" />
+                Позвонить заказчику
+              </UiButton>
+            </template>
+          </PhoneNumberModal>
+          <UiButton type="button" class="orders-details__btn" :class="{ 'orders-details__btn_type_active': isFavorite }"
+            variant="tertiary" size="around" @click="handleAddFavorite">
+            <SvgoFavorite class="svg-m" />
+          </UiButton>
+        </template>
+      </div>
+      <div class="orders-details__btn-container" v-else>
         <UiButton type="button" class="orders-details__btn" v-if="type === 'service'" variant="quinary" size="large"
-          @click="settingStore.sendMessageModal = true">
+          @click="settingStore.authModalStatus = true">
           <SvgoMessage class="svg-m" />
           Написать исполнителю
         </UiButton>
-        <UiButton class="orders-details__btn" v-if="type === 'order'" variant="quinary" size="large"
-          :to="{path: '/chat', query: { order_id: entityData.id }}">
+        <UiButton class="orders-details__btn" type="button" v-if="type === 'order'" variant="quinary" size="large"
+          @click="settingStore.authModalStatus = true">
           <SvgoMessage class="svg-m" />
           Написать Заказчику
         </UiButton>
-        <PhoneNumberModal :order-id="entityData.id" v-if="type === 'order'">
-          <template #button="{ open }">
-            <UiButton type="button" class="orders-details__btn" variant="quinary" size="large" @click="open">
+        <PhoneNumberModal v-if="type === 'order'">
+          <template #button>
+            <UiButton type="button" class="orders-details__btn" variant="quinary" size="large" @click="settingStore.authModalStatus = true">
               <SvgoPhone class="svg-m" fill="#6937a5" />
-              Позвонить заказчику
+              Позвонить
             </UiButton>
           </template>
-        </PhoneNumberModal>
+          </PhoneNumberModal>
         <UiButton type="button" class="orders-details__btn" :class="{ 'orders-details__btn_type_active': isFavorite }"
-          variant="tertiary" size="around" @click="handleAddFavorite">
+          variant="tertiary" size="around" @click="settingStore.authModalStatus = true">
           <SvgoFavorite class="svg-m" />
         </UiButton>
-      </template>
-    </div>
-    <div class="orders-details__btn-container" v-else>
-      <UiButton type="button" class="orders-details__btn" v-if="type === 'service'" variant="quinary" size="large"
-        @click="settingStore.authModalStatus = true">
-        <SvgoMessage class="svg-m" />
-        Написать исполнителю
-      </UiButton>
-      <UiButton class="orders-details__btn" type="button" v-if="type === 'order'" variant="quinary" size="large"
-        @click="settingStore.authModalStatus = true">
-        <SvgoMessage class="svg-m" />
-        Написать Заказчику
-      </UiButton>
-      <PhoneNumberModal v-if="type === 'order'">
-        <template #button>
-          <UiButton type="button" class="orders-details__btn" variant="quinary" size="large" @click="settingStore.authModalStatus = true">
-            <SvgoPhone class="svg-m" fill="#6937a5" />
-            Позвонить
-          </UiButton>
-        </template>
-        </PhoneNumberModal>
-      <UiButton type="button" class="orders-details__btn" :class="{ 'orders-details__btn_type_active': isFavorite }"
-        variant="tertiary" size="around" @click="settingStore.authModalStatus = true">
-        <SvgoFavorite class="svg-m" />
-      </UiButton>
-    </div>
+      </div>
+    </template>
     <div class="orders-details__details">
       <p class="orders-details__details-title" v-if="entityData.description">Описание</p>
       <p class="orders-details__details-text">{{ entityData.description }}</p>

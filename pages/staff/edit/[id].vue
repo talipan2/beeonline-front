@@ -11,7 +11,7 @@
       />
     </template>
     <template #content>
-      <StaffEdit />
+      <StaffEdit :userData="userData"/>
     </template>
   </NuxtLayout>
 </template>
@@ -23,6 +23,24 @@ import { useUserStore } from '~/store/userStore';
 const userStore = useUserStore();
 
 const roleName = userStore.getRoleNameForBreadcrumbs;
+const route = useRoute();
+
+const userData = ref({});
+
+onMounted(() => {
+  if(route.params.id) {
+    userStore.getUser(route.params.id).then(res => {
+      if(res && res.data) {
+        userData.value = res.data;
+        userStore.getNotifications(route.params.id).then(res => {
+          if(res && res.notification_settings) {
+            userData.value = {...userData.value, notifications: res.notification_settings};
+          }
+        })
+      }
+    })
+  }
+})
 
 </script>
 

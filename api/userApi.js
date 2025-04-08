@@ -92,5 +92,16 @@ export default {
     return axios.get(`users/${id}/notifications/all`, {params})
   },
 
+  async createNewUser(data) {
+    return axios.post(`users`, data)
+  },
+
+  async getUser(id) {
+    return axios.get(`users/${id}`)
+  },
+
+  async changeUserData(id, data, form) {
+    return useApi().patch(`users/${id}`, data, form)
+  }
 
 }

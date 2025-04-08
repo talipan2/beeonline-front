@@ -150,7 +150,7 @@ const isDropdownVisible = ref(false);
 const menuItems = ref([
   { to: '/services', text: 'Найти исполнителя' },
   { to: '/orders', text: 'Найти заказчика' },
-  { to: '/related-industry-services', text: 'ССО' },
+  { to: '/related-industry-services', text: 'Сервисы' },
   { to: '/news', text: 'Новости' },
 ]);
 

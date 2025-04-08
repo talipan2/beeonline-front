@@ -10,6 +10,7 @@
 </template>
 
 <script setup>
+import { useSettingStore } from '~/store/settingStore';
 import { useUserStore } from '~/store/userStore';
 
 useHead({

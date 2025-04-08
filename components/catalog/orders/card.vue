@@ -61,7 +61,7 @@
                 </div>
             </div>
         </div>
-        <div class="order-card__footer" v-if="isFooter">
+        <div class="order-card__footer" v-if="isFooter && data.status === 'active'">
             <template v-if="userStore.isAuth">
                 <div class="order-card__footer-container">
                     <UiButton

@@ -235,6 +235,18 @@
             />
           </div>
         </div>
+        <!-- <label class="form-group__title">
+            Почта для закрывающих документов
+            <UiInput
+              :rules="{email: true}"
+              name="closingDocumentsEmail"
+              label="Почта для закрывающих документов"
+              class="form-group__value"
+              type="text"
+              placeholder="_____@______"
+              v-model="data.closingDocumentsEmail"
+            />
+          </label> -->
       </div>
 
       <div class="register__btn-container">

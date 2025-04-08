@@ -7,29 +7,31 @@
     <UiButton :to="`/staff/create`" class="staff__btn" variant="quinary" size="around">Добавить сотрудника</UiButton>
     <h2 class="staff__title">Все сотрудники</h2>
     <div class="staff__list">
-      <div class="staff__item" v-for="i in 3" :key="i">
+      <div class="staff__item" v-for="employee in employeeList" :key="employee.id">
         <div class="staff__col-1">
           <div class="staff__container-column">
-            <p class="staff__name">Заказчик 1 (Мастер-аккаунт)</p>
-            <p class="staff__job-title">Продюсер</p>
+            <p class="staff__name">{{ employee.name }}</p>
+            <p class="staff__job-title">{{ employee.post || '' }}</p>
           </div>
         </div>
         <div class="staff__col-2">
           <div class="staff__container-column">
-            <NuxtLink to="mailto:customer1@1rank.pro" class="staff__email link">customer1@1rank.pro</NuxtLink>
-            <NuxtLink to="tel:+8564381538761" class="staff__phone link">+8564381538761</NuxtLink>
+            <NuxtLink :to="`mailto:${employee.email}`" class="staff__email link">{{ employee.email }}</NuxtLink>
+            <NuxtLink :to="`tel:${employee.phone}`" class="staff__phone link">{{ employee.phone }}</NuxtLink>
           </div>
         </div>
         <div class="staff__col-3">
-          <div class="staff__container-row staff__status_type_full staff__status_type_limited">
-            <!-- <SvgoCheckMark class="svg-m"/>
-            <p class="staff__status ">Полный доступ</p> -->
+          <div class="staff__container-row staff__status_type_full" v-if="userStore.userData.id === employee.id">
+            <SvgoCheckMark class="svg-m"/>
+            <p class="staff__status ">Полный доступ</p>
+          </div>
+          <div class="staff__container-row staff__status_type_limited" v-else>
             <SvgoAlertIcon class="svg-m"/>
             <p class="staff__status ">Доступ в личный кабинет</p>
           </div>
         </div>
-        <div class="staff__col-4">
-          <UiButton :to="`/staff/edit/2394`" class="staff__item-btn" variant="quinary" size="large">Изменить</UiButton>
+        <div class="staff__col-4" >
+          <UiButton :to="`/staff/edit/${employee.id}`" class="staff__item-btn" variant="quinary" size="large" v-if="userStore.userData.id !== employee.id">Изменить</UiButton>
         </div>
       </div>
     </div>
@@ -37,9 +39,24 @@
 </template>
 
 <script setup>
+import { useOrganizationStore } from '~/store/organizationStore';
+import { useUserStore } from '~/store/userStore';
 
 const props = defineProps({
 
+})
+
+const organizationStore = useOrganizationStore();
+const userStore = useUserStore();
+
+const employeeList = ref([]);
+
+onMounted(() => {
+  organizationStore.getOrganizationEmployees(userStore.userData.organization_id).then(res => {
+    if(res.data) {
+      employeeList.value = res.data;
+    }
+  })
 })
 
 </script>

@@ -89,7 +89,8 @@ const data = ref({
   registerAddress: null,
   siteUrl: null,
   verificationFiles: [],
-  country: {}
+  country: {},
+  closedDocumentsEmail: '',
 });
 
 const blockTitle = computed(() => {
