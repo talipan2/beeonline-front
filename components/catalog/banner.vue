@@ -4,8 +4,18 @@
       <h2 class="catalog__banner-title">Рекомендуем</h2>
       <div class="catalog__banner-content">
         <Swiper
-          :slidesPerView="2"
-          :spaceBetween="34"
+          :slidesPerView="1"
+          :spaceBetween="32"
+          :breakpoints="{
+            768: {
+              slidesPerView: 1.5,
+              spaceBetween: 32, 
+            },
+            1200: {
+              slidesPerView: 2,
+              spaceBetween: 34, 
+            }
+          }"
           class="catalog__banner-slider"
           :modules="modules"
           :pagination="true"
@@ -46,6 +56,10 @@ const modules = [Pagination];
   padding: 3em 1.5em;
   background-color: rgba(105, 55, 165, 0.1);
   border-radius: 15px;
+
+  @include small-mobile {
+    padding-inline: 0;
+  }
 
   .catalog__banner-content {
   display: flex;

@@ -54,9 +54,11 @@
 <script setup>
 
 const managerList = [
-  {name: 'Тимур Османов Технический Директор', phone: '+7 (977) 317-84-75', email: 'mail@profashion.ru', img: '/assets/images/managers/managers-1.jpg'},
-  {name: 'Павел Гаранин Техническая поддержка', phone: '+7 (999) 721-40-87', email: 'support@profashion.ru', img: '/assets/images/nophoto_pc.png'},
+  {name: 'Тимур  Османов Технический Директор', phone: '89773178475', email: 'mail@profashion.ru', img: '/assets/images/managers/managers-1.jpg'},
   {name: 'Елена Степанова Руководитель проекта', phone: '+7 (925) 226-07-30', email: 'bkp@profashion.ru', img: '/assets/images/managers/managres-2.jpg'},
+  {name: "Лариса Литвин Менеджер", phone: "+79163915749", email: "manager2@profashion.ru", img: "/assets/images/nophoto_pc.png" },
+  {name: "Янина Герасимова Менеджер", phone: "+79771327992", email: "sales3@profashion.ru", img: "/assets/images/nophoto_pc.png"},
+  {name: "Варвара Мишина Менеджер", phone: "+79774367892", email: "adv12@profashion.ru", img: "/assets/images/nophoto_pc.png"}
 ]
 
 const onIssuesOfInteraction = [

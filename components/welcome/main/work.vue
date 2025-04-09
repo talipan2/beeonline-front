@@ -7,7 +7,7 @@
         <div class="work__text-container">
           <h2 class="work__title">Работаем нон-<br>стоп</h2>
           <h2 class="work__title work__title_second">Работаем нон-стоп</h2>
-          <p class="work__subtitle">От Калиниграда до Владивостока мы работаем в более чем в 10 часовых поясах</p>
+          <p class="work__subtitle">От Калининграда до Владивостока мы работаем в более чем в 10 часовых поясах</p>
         </div>
         <div class="work__time" ref="workSection">
           <div class="work__time-container" :style="{ transform: `translateX(${-scrollX}px)` }">
@@ -154,12 +154,12 @@ onMounted(() => {
 
   &__container {
     height: 800px;
-    max-width:  1579px;
+    max-width:  1440px;
     display: flex;
     overflow: hidden;
     column-gap: 5.3em;
     margin-inline: auto;
-    padding-left: 13.9em;
+    // padding-left: 13.9em;
   }
 
   &__text {

@@ -12,7 +12,7 @@
       <div class="service__col">
         <div class="service__col-item">
           <div class="service__col-item-icon">
-            <UiImage :src="'/assets/images/welcome/service/block-icon.svg'" class="svg-l" alt="Иконка блока"/>
+            <SvgoWelcomeAward class="svg-lx" />
           </div>
           <p class="service__col-item-title">8 лет на рынке</p>
           <p class="service__col-item-subtitle">
@@ -21,7 +21,7 @@
         </div>
         <div class="service__col-item">
           <div class="service__col-item-icon">
-            <UiImage :src="'/assets/images/welcome/service/block-icon.svg'" class="svg-l" alt="Иконка блока"/>
+            <SvgoWelocmeSew class="svg-lx" />
           </div>
           <p class="service__col-item-title">Широкий выбор фабрик и брендов</p>
           <p class="service__col-item-subtitle">
@@ -31,7 +31,7 @@
         </div>
         <div class="service__col-item">
           <div class="service__col-item-icon">
-            <UiImage :src="'/assets/images/welcome/service/block-icon.svg'" class="svg-l" alt="Иконка блока"/>
+            <SvgoWelcomeFindPartner class="svg-l" />
           </div>
           <p class="service__col-item-title">Удобный поиск партнеров</p>
           <p class="service__col-item-subtitle">
@@ -41,7 +41,7 @@
         </div>
         <div class="service__col-item">
           <div class="service__col-item-icon">
-            <UiImage :src="'/assets/images/welcome/service/block-icon.svg'" class="svg-l" alt="Иконка блока"/>
+            <SvgoWelcomePeople class="svg-l" />
           </div>
           <p class="service__col-item-title">Прямые переговоры</p>
           <p class="service__col-item-subtitle">
@@ -114,6 +114,10 @@
 
     img {
       width: 1.9em;
+    }
+
+    svg {
+      width: 4em;
     }
   }
 

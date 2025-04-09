@@ -8,12 +8,12 @@
       <CommonTutorial :data="tutorialRefs"/>
     </template>
     <template #leftSide>
-      <CatalogOrdersFilter v-model="tutorialRefs" :filter="filter" @updateFilter="handleUpdateFilter" :class="{'loading': loading}"/>
+      <CatalogOrdersFilter v-model="tutorialRefs" :filter="filter" @updateFilter="handleUpdateFilter" :class="{'loading': loading}" :maxBatchCount="maxBatchCount"/>
     </template>
     <template #content>
       <div ref="anchor">
         <p class="orders-description">Вы можете создать и разместить заказ через бота быстрых заказов.</p>
-        <CatalogOrdersList 
+        <CatalogOrdersList
         :data="ordersList" 
         @updateOrderCardRef="updateServiceCardRef" 
         :class="{'loading': loading}"
@@ -42,6 +42,8 @@ useHead({
 const entityStore = useEntityStore();
 const settingStore = useSettingStore();
 const ordersList = computed(() => entityStore.ordersList);
+
+const maxBatchCount = ref(null);
 
 const isTutorial = ref(false);
 const tutorialRefs = ref([]);
@@ -181,6 +183,9 @@ onMounted(() => {
         currentPage: res.meta.current_page,
         lastPage: res.meta.last_page,
       }
+    }
+    if(res && res.max_batch) {
+      maxBatchCount.value = parseFloat(Number(res.max_batch).toFixed(2))
     }
   }).finally(() => {
     loading.value = false

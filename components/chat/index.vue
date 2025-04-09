@@ -32,7 +32,7 @@
                             >
                                 <div class="dialog-head__img">
                                     <UiImage
-                                        v-if="org.pubcard.logo?.length"
+                                        v-if="org.pubcard?.logo?.length"
                                         :src="org.pubcard.logo"
                                         :alt="org.pubcard.name"
                                         :external="true"
@@ -40,7 +40,7 @@
                                     <UiImage
                                         v-else
                                         src="/assets/images/default.svg"
-                                        :alt="org.pubcard.name"
+                                        :alt="org.pubcard?.name"
                                     />
                                 </div>
                                 <div class="dialog-head__info">
@@ -49,7 +49,7 @@
                                         target="_blank"
                                         class="dialog-head__info-title"
                                     >
-                                        {{ org.pubcard.name }}
+                                        {{ org.pubcard?.name }}
                                     </a>
                                     <div class="dialog-head__info-status">
                                         {{ orgOnline(org) }}
