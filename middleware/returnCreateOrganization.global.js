@@ -16,12 +16,22 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
   // }
 
-  if(userStore.isAuth && userStore.userData.id && !userStore.userData?.organization_id && to.path !== '/register/step1' &&  settingStore.isCreateOrder === false && (userStore.role === 'customer' || userStore.role === 'performer')) {
+  const availableLinkListRegister = [
+    '/register',
+    '/orders/create',
+    '/support',
+    '/deals'
+  ]
+
+  if(userStore.isAuth && userStore.userData.id && !userStore.userData?.organization_id && to.path !== '/register/step1' &&  settingStore.isCreateOrder === false && !availableLinkListRegister.some((item) => to.path.startsWith(item))) {
     return navigateTo({path: '/register/step1'})
   }
 
   const availableLinkList = [
     '/register',
+    '/orders/create',
+    '/support',
+    '/deals'
   ]
 
   if (
