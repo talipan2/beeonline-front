@@ -4,11 +4,11 @@
         <div class="props">
             <div class="prop">
                 <p class="prop__name prop__name_type_grey">Заказчик:</p>
-                <p class="prop__value">{{ customer.name }}</p>
+                <p class="prop__value">{{ customer?.name || 'не указан' }}</p>
             </div>
             <div class="prop">
                 <p class="prop__name prop__name_type_grey">Исполнитель:</p>
-                <p class="prop__value">{{ performer.name }}</p>
+                <p class="prop__value">{{ performer?.name || 'не указан' }}</p>
             </div>
             <div class="prop">
                 <p class="prop__name prop__name_type_grey">Категории:</p>
