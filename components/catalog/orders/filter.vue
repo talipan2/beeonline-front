@@ -8,7 +8,6 @@
           :isDropDown="true"
           :countShowed="10"
           :typeButton="{ variant: 'default', size: 'large' }"
-          :priority-showed="[2, 4, 6, 10]"
           :isValidated="false"
           v-model="searchProps.category"
           name="category"
