@@ -31,7 +31,7 @@
       </div>
       <div class="filter__item" ref="tutorialRef3">
         <h3 class="filter__title">Объем партии:</h3>
-        <UiRangeInput :min="0" :max="10000" v-model="searchProps.batch" />
+        <UiRangeInput :min="0" :max="maxBatch" v-model="searchProps.batch" />
       </div>
       <div class="filter__item" ref="tutorialRef4">
         <h3 class="filter__title">Срочность:</h3>
@@ -56,6 +56,10 @@ const props = defineProps({
   filter: {
     type: Object,
     default: () => {},
+  },
+  maxBatchCount: {
+    type: Number,
+    default: null
   }
 })
 
@@ -63,14 +67,23 @@ const emit = defineEmits(['update:modelValue', 'updateFilter']);
 
 
 const entityStore = useEntityStore();
+const maxBatch = computed(() => props.maxBatchCount ?? 10000);
+
 
 const searchProps = ref({
   category: [],
   location: [],
-  batch: [0, 10000],
+  batch: [0, maxBatch.value],
   is_rush: false,
   use_deals: false,
 });
+
+// watch(() => props.maxBatchCount, (newVal) => {
+//   searchProps.value = {
+//     ...searchProps.value,
+//     batch: [0, newVal],
+//   };
+// }, {deep: true})
 
 const handleSubmit = () => {
   emit('updateFilter', {...searchProps.value});
@@ -80,7 +93,7 @@ const resetFilter = () => {
   searchProps.value = {
     category: [],
     location: [],
-    batch: [0, 10000],
+    batch: [0, maxBatch.value],
     is_rush: false,
     use_deals: false,
   };
@@ -112,6 +125,13 @@ const updateTutorialRefSubmit = (value) => {
   tutorialRefSubmit.value = value
 }
 
+watch(() => maxBatch.value, (newVal) => {
+  searchProps.value = {
+    ...searchProps.value,
+    batch: [0, newVal],
+  };
+}, { immediate: true });
+
 watch(() => tutorialRefs.value, (newVal) => {
   emit('update:modelValue', newVal);
 }, {deep: true})
@@ -120,7 +140,7 @@ watch(() => props.filter, (newVal) => {
   searchProps.value = {
     category: newVal.categories || [],
     location: newVal.location || [],
-    batch: newVal.batch || [0, 10000],
+    batch: newVal.batch || [0, maxBatch.value],
     is_rush: newVal.is_rush || false,
   };
 }, {deep: true, once: true})

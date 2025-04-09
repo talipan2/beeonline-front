@@ -2,22 +2,43 @@
   <div class="range-slider">
     <div class="form-group">
       <div class="form-group-data">
-        <UiInput v-model="sliderData[0]" class="form-group__value input_type_min" name="min"/>
+        <UiInput 
+          v-model="sliderMin" 
+          class="form-group__value input_type_min" 
+          name="min"
+          type="number"
+          :min="min"
+          :max="max"
+        />
       </div>
       <div class="form-group-data">
-        <UiInput v-model="sliderData[1]" class="form-group__value input_type_max" name="max" />
+        <UiInput 
+          v-model="sliderMax" 
+          class="form-group__value input_type_max" 
+          name="max"
+          type="number"
+          :min="min"
+          :max="max"
+        />
       </div>
     </div>
-    <Slider v-model="sliderData" :min="min" :max="max" :tooltips="false"  :lazy="false"/>
+    <Slider 
+      v-model="sliderData" 
+      :min="min" 
+      :max="max" 
+      :tooltips="false"  
+      :lazy="false"
+    />
   </div>
 </template>
 
 <script setup>
+import { ref, watch, computed } from 'vue';
 
 const props = defineProps({ 
   modelValue: {
     type: Array,
-    default: () => ([0, 10000]),
+    default: () => [0, 10000],
   },
   min: {
     type: Number,
@@ -29,18 +50,60 @@ const props = defineProps({
   },
 });
 
-const sliderData = ref(props.modelValue);
 const emit = defineEmits(['update:modelValue']);
 
-watch(() => sliderData.value, (newVal) => {
-  emit('update:modelValue', newVal);
+// Внутреннее состояние
+const sliderData = ref([...props.modelValue]);
+
+// Синхронизация с внешними изменениями modelValue
+watch(() => props.modelValue, (newVal) => {
+  if (JSON.stringify(newVal) !== JSON.stringify(sliderData.value)) {
+    sliderData.value = [...newVal];
+  }
+}, { deep: true });
+
+// Отслеживание изменений sliderData и вызов emit
+watch(sliderData, (newVal) => {
+  const clampedValue = [
+    Math.max(props.min, newVal[0]),
+    Math.min(props.max, newVal[1]),
+  ];
+  
+  if (
+    clampedValue[0] !== newVal[0] ||
+    clampedValue[1] !== newVal[1]
+  ) {
+    sliderData.value = clampedValue;
+    return;
+  }
+
+  emit('update:modelValue', [...newVal]);
+}, { deep: true });
+
+// Отдельные computed-свойства для инпутов (опционально)
+const sliderMin = computed({
+  get: () => sliderData.value[0],
+  set: (val) => {
+    const numVal = Math.max(props.min, Math.min(props.max, Number(val)));
+    sliderData.value = [numVal, sliderData.value[1]];
+  },
 });
 
-watch(() => props.modelValue, (newVal) => {
-  sliderData.value = newVal;
-}, {deep: true, once: true});
+const sliderMax = computed({
+  get: () => sliderData.value[1],
+  set: (val) => {
+    const numVal = Math.max(props.min, Math.min(props.max, Number(val)));
+    sliderData.value = [sliderData.value[0], numVal];
+  },
+});
 
-
+// Если min/max могут меняться, добавляем их в watch
+watch([() => props.min, () => props.max], () => {
+  sliderData.value = [
+    Math.max(props.min, sliderData.value[0]),
+    Math.min(props.max, sliderData.value[1]),
+  ];
+});
 </script>
 
 <style lang="scss">

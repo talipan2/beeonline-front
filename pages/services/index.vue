@@ -218,10 +218,10 @@ onMounted(() => {
       max-width: calc(100% - 17% - 3.5rem);
     }
 
-    @include tablet {
-    .catalog__content {
-      max-width: none;
-    }
+    @include mobile {
+      .catalog__content {
+        max-width: 100%;
+      }
   }
   }
 
