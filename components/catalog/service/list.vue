@@ -1,13 +1,13 @@
 <template>
   <div class="services">
-    <!-- <CatalogBanner :data="ordersData" v-if="banner">
+    <CatalogBanner :data="serviceSliderData" v-if="banner && serviceSliderData.length > 0">
       <template #item="{ item }">
-        <CatalogServiceCard :data="item" />
+        <CatalogServiceCard :data="item" class="highlight"/>
       </template>
-    </CatalogBanner> -->
+    </CatalogBanner>
       <div class="services__list" v-if="ordersData.length > 0">
           <div class="services__item" v-for="(data, index) in ordersData" :key="index" v-bind="setFirstCardRef(index)">
-            <CatalogServiceCard :data="data" />
+            <CatalogServiceCard :data="data" :class="{'highlight': data.isHighlight}"/>
           </div>
       </div>
     <CommonAlerts alert="Услуг нет" :type="'warning'" v-if="!ordersData.length && isLoaded" />
@@ -37,6 +37,7 @@ const props = defineProps({
 const locationStore = useLocationStore();
 const entityStore = useEntityStore();
 const firstCardRef = ref(null);
+const serviceSliderData = ref([]);
 
 const emit = defineEmits(['updateServiceCardRef']);
 
@@ -75,6 +76,42 @@ const ordersData = computed(() => {
         { id: 4, name: 'Бесплатные образцы', value: entityStore.getEntityLabelById('freeTestSamples', item.free_samples) },
         { id: 5, name: 'Свободный склад', value: entityStore.getEntityLabelById('freeStock', item.free_stock) },
       ],
+      isHighlight: item.is_hightlight
+    }
+  })
+})
+
+onMounted(() => {
+  entityStore.getServiceSlider().then((res) => {
+    if (res && res.data) {
+      serviceSliderData.value = res.data.map((item) => {
+        const { locations, alias } = locationFormatter({ cities: item.cities });
+        return {
+          id: item.id,
+          name: item.name,
+          logo: item.pub_card && item.pub_card.logo ? item.pub_card.logo : '',
+          location: locations,
+          alias: alias,
+          minLot: item.batches && item.batches.length ? item.batches[0].name : '',
+          views: item.view_count ? item.view_count : 0,
+          companyName: item.pub_card && item.pub_card.name ? item.pub_card.name : '',
+          data: [
+            {
+              id: 1,
+              name: 'Сырье',
+              value: [item.materials_own ? 'Исполнителя' : '', item.materials_tolling ? 'Заказчика' : ''].filter(Boolean).join(' / ')
+            },
+            {
+              id: 2,
+              name: 'Категории',
+              value: item.product_categories && item.product_categories.length ? item.product_categories.map(item => item.name).join(' / ') : ''
+            },
+            { id: 3, name: 'Наличие СТМ', value: item.is_stm ? 'Да' : 'Нет' },
+            { id: 4, name: 'Бесплатные образцы', value: entityStore.getEntityLabelById('freeTestSamples', item.free_samples) },
+            { id: 5, name: 'Свободный склад', value: entityStore.getEntityLabelById('freeStock', item.free_stock) },
+          ],
+        }
+      })
     }
   })
 })

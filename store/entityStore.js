@@ -459,6 +459,17 @@ export const useEntityStore = defineStore('entity', {
     async getPhoneNumber(orderId)
     {
         return await orderApi.getPhoneNumber(orderId);
+    },
+
+    async getServiceSlider() {
+      try {
+        const response = await serviceApi.getServiceSlider();
+        if(response.data) {
+          return response.data
+        }
+      } catch (error) {
+        throw error;
+      }
     }
   },
 });
