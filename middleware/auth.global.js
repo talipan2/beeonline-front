@@ -2,12 +2,17 @@ import { useUserStore } from "~/store/userStore";
 import axios from "axios";
 
 export default defineNuxtRouteMiddleware(async(to, from) => {
+    if (to.meta.ignoreAuth) {
+        return
+      }
+
   const userStore = useUserStore();
   const router = useRouter();
 
   const publicPaths = [
     '/',
     '/login',
+    '/login/token',
     '/register',
     '/services',
     '/orders',

@@ -133,70 +133,69 @@ export const useUserStore = defineStore("user", {
     },
 
     async checkAuth() {
-      try {
-        const response = await Api.checkAuth();
-        console.log(response.data.user);
-        if (response.data) {
-          this.isAuth = true;
-          this.userData = response.data.user;
-          this.userNotifications = response.data.user?.unread_log_events_count;
-          // useCookie('role').value = 'customer';
-          this.userRoles = response.data.user.roles;
-          this.role = response.data.user.role;
-          this.userOrganizationId = response.data.user.organization_id;
-          if (response.data.user && response.data.user.organization) {
-            this.userOrganization = response.data.user.organization;
-          }
-          if (
-            response.data.user &&
-            response.data.user.public_cards &&
-            response.data.user.public_cards.length > 0
-          ) {
-            if (this.role === "customer") {
-              const customerCard = response.data.user.public_cards.find(
-                (card) => card.type === "customer"
-              );
-              console.log(customerCard);
-              this.userPubCard = customerCard;
-            } else if (this.role === "performer") {
-              const performerCard = response.data.user.public_cards.find(
-                (card) => card.type === "performer"
-              );
-              console.log(performerCard);
-              this.userPubCard = performerCard;
-            } else if (this.role === "adjacent") {
-              const adjacentCard = response.data.user.public_cards.find(
-                (card) => card.type === "adjacent"
-              );
-              console.log(adjacentCard);
-              this.userPubCard = adjacentCard;
-            }
-          }
+        // const response = await Api.checkAuth();
+        return useApi().get('auth-check', null, null, true)
+        .then((response) => {
+            if (response) {
+                this.isAuth = true;
+                this.userData = response.user;
+                this.userNotifications = response.user?.unread_log_events_count;
+                // useCookie('role').value = 'customer';
+                this.userRoles = response.user.roles;
+                this.role = response.user.role;
+                this.userOrganizationId = response.user.organization_id;
+                if (response.user && response.user.organization) {
+                  this.userOrganization = response.user.organization;
+                }
+                if (
+                  response.user &&
+                  response.user.public_cards &&
+                  response.user.public_cards.length > 0
+                ) {
+                  if (this.role === "customer") {
+                    const customerCard = response.user.public_cards.find(
+                      (card) => card.type === "customer"
+                    );
+                    console.log(customerCard);
+                    this.userPubCard = customerCard;
+                  } else if (this.role === "performer") {
+                    const performerCard = response.user.public_cards.find(
+                      (card) => card.type === "performer"
+                    );
+                    console.log(performerCard);
+                    this.userPubCard = performerCard;
+                  } else if (this.role === "adjacent") {
+                    const adjacentCard = response.user.public_cards.find(
+                      (card) => card.type === "adjacent"
+                    );
+                    console.log(adjacentCard);
+                    this.userPubCard = adjacentCard;
+                  }
+                }
 
-          useChannelsStore()
-            .orgChannel.stopListening("OrganizationUpdate")
-            .listen("OrganizationUpdate", (event) => {
-              if (this.userOrganization.id === event.id) {
-                this.userOrganization = {
-                  ...this.userOrganization,
-                  ...event,
-                };
+                useChannelsStore()
+                  .orgChannel.stopListening("OrganizationUpdate")
+                  .listen("OrganizationUpdate", (event) => {
+                    if (this.userOrganization.id === event.id) {
+                      this.userOrganization = {
+                        ...this.userOrganization,
+                        ...event,
+                      };
+                    }
+                  });
+
+                useChannelsStore()
+                  .orgChannel.stopListening("UnreadNotificationCountUpdated")
+                  .listen("UnreadNotificationCountUpdated", (event) => {
+                    console.log(event);
+                    this.userNotifications = event.count_unread_noty;
+                  });
               }
-            });
-
-          useChannelsStore()
-            .orgChannel.stopListening("UnreadNotificationCountUpdated")
-            .listen("UnreadNotificationCountUpdated", (event) => {
-              console.log(event);
-              this.userNotifications = event.count_unread_noty;
-            });
-        }
-        return response.data;
-      } catch (error) {
-        this.userToken = null;
-        this.isAuth = false;
-        throw error;
-      }
+              return response;
+        })
+        .catch((error) => {
+            this.isAuth = false;
+        });
     },
 
     async logOut() {

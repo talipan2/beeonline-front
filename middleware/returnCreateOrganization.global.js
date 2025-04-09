@@ -3,6 +3,10 @@ import { useUserStore } from "~/store/userStore"
 
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
+    if (to.meta.ignoreAuth) {
+        return
+      }
+
   const nuxtApp = useNuxtApp();
   const userStore = useUserStore();
   const settingStore = useSettingStore();
