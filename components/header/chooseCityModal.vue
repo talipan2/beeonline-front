@@ -119,7 +119,9 @@ function selectCity(city) {
   selectedCity.value = city;
   emit('selectCity', city.name);
   emit('update:modelValue', false);
-  userStore.changeUserData(userStore.userData.id, { city_id: city.id })
+  if(userStore.userData?.id){
+    userStore.changeUserData(userStore.userData.id, { city_id: city.id })
+  }
 }
 
 watch(() => props.modelValue, (newVal) => {
