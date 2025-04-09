@@ -9,7 +9,7 @@
                         :alt="data.name"
                     />
                 </div>
-                <CommonTooltip class="order-card__tooltip" text="Подробнее о статусах">
+                <CommonTooltip class="order-card__tooltip" text="Подробнее о статусах" v-if="data.status === 'active'">
                     <template #trigger>
                         <a
                             href="javascript:;"
@@ -21,6 +21,14 @@
                         </a>
                     </template>
                 </CommonTooltip>
+                <a
+                    href="javascript:;"
+                    class="order-card__status"
+                    :class="`order-card__status_grey`"
+                    v-else
+                >
+                    <span>В архиве</span>
+                </a>
             </div>
             <div class="props">
                 <div
@@ -263,6 +271,9 @@ const statusModal = useModal({
         }
         &_red {
             background-color: #dc3545;
+        }
+        &_grey {
+            background-color: #6c757d;
         }
     }
 

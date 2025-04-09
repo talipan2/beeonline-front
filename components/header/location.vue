@@ -16,20 +16,24 @@
         </div>
       </template>
     </UiNewDropdown>
-    <HeaderChooseCityModal v-model="isOpen" :location="location" @selectCity="selectCity" />
+    <HeaderChooseCityModal v-model="isOpen" :location="locationId" @selectCity="selectCity" />
 </template>
 
 
 <script setup>
+import { useUserStore } from '~/store/userStore';
+
 
 const isOpen = ref(false);
 const location = ref(null);
+const locationId = ref(null);
 const tippy = ref(null);
+const userStore = useUserStore();
 
 onMounted(async () => {
   await nextTick(); // Дожидаемся, пока компонент полностью инициализируется
   if (tippy.value) {
-    showConfirmationModal()
+    // showConfirmationModal()
   } else {
     console.error('Tippy instance is not available');
   }
@@ -46,6 +50,16 @@ function hideConfirmationModal() {
 function selectCity(city) {
   location.value = city
 }
+
+onMounted(() => {
+  location.value = userStore.userData.city ? userStore.userData.city.name : ''
+  locationId.value = userStore.userData.city ? userStore.userData.city.id : ''
+})
+
+watch(() => userStore.userData.city, (newVal) => {
+  location.value = newVal ? newVal.name : ''
+  locationId.value = newVal ? newVal.id : ''
+})
 
 </script>
 

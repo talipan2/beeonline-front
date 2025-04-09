@@ -8,9 +8,12 @@
         ]" />
     </template>
     <template #title>
-      <a href="javascript:;" class="order-card__status order-card__status_details_page" :class="`order-card__status_${data.lifecycle_status}`"
+      <a href="javascript:;" v-if="data.status === 'active'" class="order-card__status order-card__status_details_page" :class="`order-card__status_${data.lifecycle_status}`"
         @click="statusModal.open()">
         <span>{{ data.lifecycle_status_name }}</span>
+      </a>
+      <a href="javascript:;" v-else class="order-card__status order-card__status_details_page" :class="`order-card__status_grey`">
+        <span>В архиве</span>
       </a>
     </template>
     <template #content>
@@ -102,6 +105,7 @@ useHead({
       display: inline;
       font-size: 1.2rem;
       padding: .5em .75em;
+      white-space: nowrap;
     }
   }
 }

@@ -54,17 +54,23 @@
 
 <script setup>
 import { useLocationStore } from '~/store/locationStore';
+import { useUserStore } from '~/store/userStore';
 
 const props = defineProps({
   modelValue: {
     type: Boolean,
     default: false,
   },
+  location: {
+    type: [String, Number],
+    default: null
+  }
 });
 
 
 const locationStore = useLocationStore();
 const locations = ref([])
+const userStore = useUserStore();
 
 const isOpenModal = ref(props.modelValue);
 const regions = ref([]);
@@ -113,6 +119,7 @@ function selectCity(city) {
   selectedCity.value = city;
   emit('selectCity', city.name);
   emit('update:modelValue', false);
+  userStore.changeUserData(userStore.userData.id, { city_id: city.id })
 }
 
 watch(() => props.modelValue, (newVal) => {
@@ -121,6 +128,7 @@ watch(() => props.modelValue, (newVal) => {
 
 watch(isOpenModal, (newVal) => {
   isOpenModal.value = newVal;
+  selectedCity.value = {... selectedCity.value, id: props.location};
   emit('update:modelValue', newVal);
 });
 

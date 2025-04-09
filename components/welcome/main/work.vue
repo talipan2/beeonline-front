@@ -180,7 +180,7 @@ onMounted(() => {
   &__title {
     font-family: 'Coolvetica', sans-serif;
     font-size: 5.6em;
-    font-weight: 700;
+    font-weight: 500;
     color: #fff;
     line-height: 1.2em;
     // text-transform: uppercase;

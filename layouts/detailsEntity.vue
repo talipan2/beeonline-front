@@ -70,6 +70,12 @@ const props = defineProps({
     max-width: 60%;
   }
 
+  &__title-container {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
   &__right-side {
     flex: 0 1 33%;
     max-width: 33%;
