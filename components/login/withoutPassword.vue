@@ -28,7 +28,7 @@
     </template>
     <template v-if="currentAuthPage === 'write-password'">
       <p class="login__subtitle">На ваш регистрационный email отправлен код. Введите его в поле ниже.</p>
-      <Form class="auth__form" @submit="handleSubmit">
+      <Form class="auth__form" @submit="handleSubmitPassword">
         <UiInput
           :rules="{ required: true, }"
           class="auth__input"
@@ -57,16 +57,32 @@
 </template>
 
 <script setup>
+import { useUserStore } from '~/store/userStore';
+
 
 const router = useRouter();
 
 const currentAuthPage = ref('write-email')
+const userStore = useUserStore();
 
 const email = ref('');
 const password = ref('');
 
 const handleSubmit = (values, form) => {
   currentAuthPage.value = 'write-password'
+  userStore.forgotPassword(values, form).then((res) => {
+    isSendedMailToReset.value = true
+    stage.value = 'password'
+  });
+}
+
+const handleSubmitPassword = (values, form) => {
+  userStore.authUser({
+    email: email.value,
+    password: password.value
+  }, form).then((res) => {
+    router.push({ path: '/desktop' });
+  })
 }
 
 </script>

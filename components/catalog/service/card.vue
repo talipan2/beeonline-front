@@ -110,6 +110,7 @@ const props = defineProps({
       font-size: 1.8rem;
       line-height: 1.2em;
       margin-bottom: 1.5em;
+      padding-right: 2em;
     }
 
   }

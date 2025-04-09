@@ -61,7 +61,7 @@ const modules = [Pagination];
   }
 
   &-slider {
-    padding: .2em 1.7em 3em;
+    padding: .5em 1.7em 3em;
     max-width: 100%;
     width: 100%;
     overflow: hidden;
