@@ -12,30 +12,30 @@
                 <div class="props">
                     <div class="prop">
                         <p class="prop__name">Название:</p>
-                        <p class="prop__value">не указано</p>
+                        <p class="prop__value">{{ data.order?.name || 'не указано' }}</p>
                     </div>
                     <div class="prop">
                         <p class="prop__name">Категории:</p>
-                        <p class="prop__value">не указано</p>
+                        <p class="prop__value">{{ data.order?.product_categories?.map(item => item.name).join(', ') || 'не указано' }}</p>
                     </div>
                     <div class="prop">
                         <p class="prop__name">Партия:</p>
-                        <p class="prop__value">не указано</p>
+                        <p class="prop__value">{{data.order && data.order.batch ? data.order?.batch.replace(/\.00$/, '') : 'не указано' }}</p>
                     </div>
                     <div class="prop">
                         <p class="prop__name">Сумма:</p>
-                        <p class="prop__value">не указано</p>
+                        <p class="prop__value">{{ data.order && data.order.price ? data.order?.price.replace(/\.00$/, '')  : 'не указано' }}</p>
                     </div>
                 </div>
             </div>
             <div class="deals-body__contacts">
                 <div class="deals-body__contacts-item">
                     <div class="deals-body__contacts-name">Заказчик:</div>
-                    <div class="deals-body__contacts-value">не указано</div>
+                    <div class="deals-body__contacts-value">{{ data.customer?.name || 'не указано' }}</div>
                 </div>
                 <div class="deals-body__contacts-item">
                     <div class="deals-body__contacts-name">Исполнитель:</div>
-                    <div class="deals-body__contacts-value">не указано</div>
+                    <div class="deals-body__contacts-value">{{ data.performer?.name || 'не указано' }}</div>
                 </div>
             </div>
         </div>
