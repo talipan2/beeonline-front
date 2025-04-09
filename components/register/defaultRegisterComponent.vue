@@ -111,13 +111,13 @@ const handleSubmit = async (values, form) => {
     })
 };
 
-watch(() => router.currentRoute.value.query, (newVal) => {
-  if(newVal && newVal.action === 'create-order') {
-    settingStore.isCreateOrder = true
-  } else {
-    settingStore.isCreateOrder = false
-  }
-})
+// watch(() => router.currentRoute.value.query, (newVal) => {
+//   if(newVal && newVal.action === 'create-order') {
+//     settingStore.isCreateOrder = true
+//   } else {
+//     settingStore.isCreateOrder = false
+//   }
+// })
 
 onMounted(() => {
   if(router.currentRoute.value.query && router.currentRoute.value.query.role === 'customer' && router.currentRoute.value.query.action === 'create-order') {
