@@ -309,6 +309,7 @@ import FileDrop from "~/components/file/drop.vue";
 import { useChatStore } from "~/store/chatStore";
 import { useChannelsStore } from "~/store/channelsStore";
 import { useUserStore } from "~/store/userStore";
+import { useToast } from "vue-toastification";
 
 export default {
     components: {
@@ -874,6 +875,12 @@ export default {
         },
 
         openReviewModal(org) {
+            if (!org.pubcard) return;
+            if (org.pubcard.can_write_review_at) {
+                const can_write_review_at = formatDate(new Date(org.pubcard.can_write_review_at), "DD.MM.YYYY");
+                useToast().info("Вы уже оставляли отзыв об этой организации в этом месяце. Следующий отзыв вы сможете оставить " + can_write_review_at);
+                return;
+            }
             this.$refs.modalReview.open(this.org_id, this.user_role, this.chat, org);
         },
 
