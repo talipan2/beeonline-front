@@ -25,13 +25,14 @@
             </td>
             <template v-for="(tariff, colIndex) in tariffs" :key="colIndex">
               <td class="tariffs-table__value">
+
                 <template v-if="serviceInTariff(service, tariff.id)">
                   <div v-if="!serviceInTariff(service, tariff.id).description">
                     <div class="tariffs-table__icon tariffs-table__icon_type_positive">
                       <SvgoChecked class="svg-m" />
                     </div>
                   </div>
-                  <span v-else>{{ serviceInTariff(service, tariff.id).description }}</span>
+                  <span v-else>{{ formatDescription(serviceInTariff(service, tariff.id)) }}</span>
                 </template>
                 <div v-else>
                   <div class="tariffs-table__icon tariffs-table__icon_type_negative">
@@ -142,6 +143,24 @@ const handlePayModal = (tariff_code, duration) => {
   const priceOption = selectedTariffForDuration.prices.find(option => option.quantity == duration);
   emit('select', {...selectedTariffForDuration, price: priceOption, currency: 'RUB'}, priceOption.amount);
   settingStore.payModalStatus = true;
+}
+
+function formatDescription({ description, quantity }, locale = 'ru-RU') {
+  if (!description) return null;
+
+  const subDuration = props.subDuration || 1;
+  quantity *= subDuration;
+
+  const parts = description.split('|');
+
+  if (parts.length === 1) {
+    return parts[0]; // без форм — просто описание
+  }
+
+  const [one, few, many] = parts;
+  const variants = { one, few, many };
+
+  return `${quantity} ${plural(quantity, variants, locale)}`;
 }
 
 </script>
