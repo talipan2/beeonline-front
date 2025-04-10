@@ -39,8 +39,8 @@
                 </template>
                 <template v-if="chatType === 'order' && ordersOptions?.length">
                     <Multiselect
-                        v-model="adjacentService"
-                        :options="adjacentOptions"
+                        v-model="order"
+                        :options="ordersOptions"
                     >
                         <!-- <template v-slot:singlelabel="{ value }">
                             <div class="multiselect-single-label">

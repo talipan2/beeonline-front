@@ -132,9 +132,11 @@ export const useUserStore = defineStore("user", {
       }
     },
 
-    async checkAuth() {
+    async checkAuth(beesync = false) {
         // const response = await Api.checkAuth();
-        return useApi().get('auth-check', null, null, true)
+        return useApi().get('auth-check', {
+            beesync: beesync,
+        }, null, true)
         .then((response) => {
             if (response) {
                 this.isAuth = true;
@@ -146,6 +148,10 @@ export const useUserStore = defineStore("user", {
                 this.userOrganizationId = response.user.organization_id;
                 if (response.user && response.user.organization) {
                   this.userOrganization = response.user.organization;
+                }
+                if (response.user?.access_token) {
+                    this.userToken = response.user.access_token;
+                    localStorage.setItem("token", this.userToken);
                 }
                 if (
                   response.user &&
@@ -199,22 +205,17 @@ export const useUserStore = defineStore("user", {
     },
 
     async logOut() {
-      try {
-        const response = await Api.logOut();
-        if (response && response.data) {
-          this.userToken = null;
-          localStorage.removeItem("token");
-          sessionStorage.removeItem("token");
-          this.isAuth = false;
-          this.userData = {};
-          this.userRoles = [];
-          this.userOrganization = {};
-          this.userPubCard = {};
-          this.userOrganizationId = null;
-        }
-      } catch (error) {
-        throw error;
-      }
+        Api.logOut().then((response) => {
+            this.userToken = null;
+            localStorage.removeItem("token");
+            sessionStorage.removeItem("token");
+            this.isAuth = false;
+            this.userData = {};
+            this.userRoles = [];
+            this.userOrganization = {};
+            this.userPubCard = {};
+            this.userOrganizationId = null;
+        });
     },
 
     // Изменение пароля
