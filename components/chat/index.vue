@@ -45,7 +45,7 @@
                                 </div>
                                 <div class="dialog-head__info">
                                     <a
-                                        :href="`/members/${org.id}/${org.pivot.role}`"
+                                        :href="`/members/${org.pubcard?.id}/${org.pivot.role}`"
                                         target="_blank"
                                         class="dialog-head__info-title"
                                     >
@@ -154,7 +154,7 @@
                                             <UiButton
                                                 class="dropdown-menu__btn"
                                                 variant="default"
-                                                :to="`/members/${org.id}/${org.pivot.role}`"
+                                                :to="`/members/${org.pubcard?.id}/${org.pivot.role}`"
                                                 >Перейти в профиль</UiButton
                                             >
                                             <UiButton
