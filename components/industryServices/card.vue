@@ -9,7 +9,7 @@
         <div class="industry-services-card__content">
             <div class="image-box">
                 <img
-                    :src="data.pubcard.logo || defaultImage"
+                    :src="data.pubcard?.logo || defaultImage"
                     alt=""
                 />
             </div>
@@ -29,9 +29,7 @@
                         <ModalsMoreCities
                             class="prop__more"
                             :list="
-                                data.categories
-                                    .map((category) => category.name)
-                                    .slice(1)
+                                data.categories.slice(1).map((item) => item.name)
                             "
                             v-if="data.categories?.length > 1"
                             title="Категории"
@@ -39,14 +37,14 @@
                     </div>
                     <div
                         class="prop"
-                        v-if="data.pubcard.url_site"
+                        v-if="data.pubcard?.url_site"
                     >
                         <p class="prop__name prop__name_type_grey">Сайт:</p>
                         <a
-                            :href="data.pubcard.url_site"
+                            :href="data.pubcard?.url_site"
                             class="prop__value link link_type_hidden"
                             target="_blank"
-                            >{{ data.pubcard.url_site }}</a
+                            >{{ data.pubcard?.url_site }}</a
                         >
                     </div>
                     <div class="prop prop_type_text">

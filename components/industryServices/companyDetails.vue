@@ -11,6 +11,7 @@
             v-if="isCabinet"
         >
             <UiSelect
+                class="company-details__filter-select"
                 name="status"
                 :options="statusList"
                 :return-value="true"
@@ -167,6 +168,10 @@ watch(() => filterList, (newValue, oldValue) => {
         @include mobile {
             grid-template-columns: repeat(1, 1fr);
         }
+    }
+
+    &__filter-select {
+        font-size: 1.4em;
     }
 }
 </style>
