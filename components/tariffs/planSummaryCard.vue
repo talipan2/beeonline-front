@@ -10,7 +10,7 @@
         Срок подписки:
         <template v-if="tariffsStore.balanceLoaded">
           <span class="plan-summary__text plan-summary__text_type_selection">
-            <template v-if="tariffsStore.tariffExpiredAt">до {{ tariffsStore.tariffExpiredAt }}</template>
+            <template v-if="tariffsStore.tariffExpiredAt">до {{ formatDate(tariffsStore.tariffExpiredAt, "DD.MM.YYYY") }}</template>
             <template v-else>неограничен</template>
           </span>
           <span class="plan-summary__text plan-summary__text_type_status">
