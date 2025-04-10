@@ -12,6 +12,11 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   const settingStore = useSettingStore();
   const router = useRouter();
 
+  if(from.path === '/telegram') {
+    settingStore.isTelegram = true
+    settingStore.isCreateOrder = true
+  }
+
   await nextTick();
 
   // try {

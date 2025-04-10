@@ -203,6 +203,8 @@ const handleSubmit = () => {
           router.push('/orders/create/step1');
         } else if (userStore.role === 'performer') {
           router.push('/services/create/step1');
+        } else if (userStore.role === 'customer' && settingStore.isCreateOrder && settingStore.isTelegram) {
+          router.push('/customer/orders');
         } else if(settingStore.isCreateOrder) {
           router.push('/desktop');
           settingStore.isCreateOrder = false

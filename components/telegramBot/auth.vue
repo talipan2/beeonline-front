@@ -70,7 +70,7 @@
     <div class="login__telegram-footer">
 			<h2 class="">Впервые на портале?</h2>
 			<p>Зарегистрируйтесь на портале и получите полный доступ к функционалу.</p>
-			<UiButton type="button" variant="quinary" size="large" @click="router.push({ path: '/register', query: { role: 'customer' } })">Регистрация заказчика</UiButton>
+			<UiButton type="button" variant="quinary" size="large" @click="handleCreateOrder">Регистрация заказчика</UiButton>
 		</div>
   </div>
 </template>
@@ -89,6 +89,13 @@ const email = ref("");
 const password = ref("");
 const isRemember = ref(false);
 const isShowPassword = ref(false);
+
+const handleCreateOrder = () => {
+  router.push({path: '/register',  query: { role: 'customer', action: 'create-order' } });
+  userStore.role = 'customer'
+  localStorage.setItem('role', 'customer');
+  settingStore.isCreateOrder = true
+}
 
 const handleSubmit = (values, form) => {
   return userStore.authUser(values, form).then((res) => {
