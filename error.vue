@@ -36,6 +36,10 @@ function goBack() {
   }
 }
 
+onMounted(() => {
+  console.error(props.error)
+})
+
 </script>
 
 <style lang="scss">

@@ -1,5 +1,5 @@
 <template>
-  <NuxtLayout name="catalog" title="Каталог услуг" class="catalog-services">
+  <!-- <NuxtLayout name="catalog" title="Каталог услуг" class="catalog-services">
     <template #header>
       <UiBreadCrumb
         :list="[{ label: 'Главная', link: '/' }, { label: 'Каталог услуг', link: '' }]" />
@@ -21,6 +21,14 @@
         />
         <CommonPagination v-if="page.lastPage > 1" :current-page="page.currentPage" :total-pages="page.lastPage" @changePage="handleChangePage" :loading="loading"/>
       </div>
+    </template>
+  </NuxtLayout> -->
+  <NuxtLayout name="info" className="catalog-services" title="Каталог услуг">
+    <template #header>
+      <UiBreadCrumb :list="[{label: 'Главная', link: '/'}, { label: 'Каталог услуг', link: '' }]" />
+    </template>
+    <template #content>
+      <CatalogNewService />
     </template>
   </NuxtLayout>
 </template>
