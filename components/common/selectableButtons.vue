@@ -194,7 +194,7 @@ onMounted(() => {
     display: flex;
     flex-wrap: wrap;
     gap: 1em;
-    margin-bottom: 1em;
+    margin-bottom: 4em;
   }
 
   &__btn {
