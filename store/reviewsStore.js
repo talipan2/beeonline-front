@@ -4,7 +4,7 @@ import { useToast } from "vue-toastification";
 
 export const useReviewsStore = defineStore("reviews", {
   state: () => ({
-    
+
   }),
   actions: {
     // получение отзывов
@@ -16,7 +16,7 @@ export const useReviewsStore = defineStore("reviews", {
         console.error(error);
       }
     },
-    
+
     // получение отзывов организации
     async getReviewsForUs(organization_id, params = {}) {
       try {
@@ -38,12 +38,7 @@ export const useReviewsStore = defineStore("reviews", {
 
     // создание отзыва
     async createReview(values, form) {
-      try {
-        const response = await Api.createReview(values, form);
-        return response;
-      } catch (error) {
-        console.error(error);
-      }
+        return await Api.createReview(values, form);
     },
 
     async replyReview(value, form) {
