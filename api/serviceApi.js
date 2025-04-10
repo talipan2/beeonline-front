@@ -65,8 +65,8 @@ export default {
     return axios.get(`organizations/${organizationId}/services`, {params})
   },
 
-  async getServiceSlider() {
-    return axios.get(`services/slider`)
+  async getServiceSlider(params = {}) {
+    return axios.get(`services/slider`, {params})
   }
 
 }

@@ -43,12 +43,13 @@ const props = defineProps({
 .more-btn {
   font-size: 1em;
   position: relative;
-  z-index: 10;
+  z-index: 2;
 }
 
 .more-modal {
   padding: 2.4rem;
   color: #000;
+  max-height: 20em;
 
   &__check-company-more {
     white-space: nowrap;

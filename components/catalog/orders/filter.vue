@@ -22,6 +22,7 @@
       <div class="filter__item" ref="tutorialRef2">
         <h3 class="filter__title">Ищу заказ в:</h3>
         <CommonLocation
+          ref="locationFilter"
           v-model="searchProps.location"
           buttonLabel="Выбрать регионы"
           class="filter__location"
@@ -65,7 +66,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue', 'updateFilter']);
 
-
+const locationFilter = ref(null);
 const entityStore = useEntityStore();
 const maxBatch = computed(() => props.maxBatchCount ?? 10000);
 
@@ -98,6 +99,7 @@ const resetFilter = () => {
     use_deals: false,
   };
   emit('updateFilter', []);
+  locationFilter.value.resetData();
 }
 
 

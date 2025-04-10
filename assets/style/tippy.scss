@@ -19,14 +19,14 @@ border: 1px solid #d1d5db;
 background: #FFF;
 }
 .tippy-box[data-placement^="top"] > .tippy-arrow {
-  bottom: 0;
+  bottom: -15px;
 }
 .tippy-box[data-placement^="top"] > .tippy-arrow:before {
-  bottom: -50px;
+  bottom: 0px;
   left: 0;
-  border-width: 0 7.5px 15px;
-  border-bottom-color: initial;
-  transform-origin: center bottom;
+  border-width: 15px 7.5px 0;
+  border-top-color: initial;
+  transform-origin: center top;
 }
 .tippy-box[data-placement^="bottom"] > .tippy-arrow {
   top: 0;

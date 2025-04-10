@@ -63,7 +63,7 @@
         >
           <SvgoList class="svg-m" />
         </UiButton>
-        <UiButton
+        <!-- <UiButton
           type="button"
           @click="changeViewSetting('map')"
           variant="tertiary"
@@ -74,7 +74,7 @@
           }"
         >
           <SvgoMap class="svg-m" />
-        </UiButton>
+        </UiButton> -->
       </div>
     </div>
     <template v-if="data.length > 0">
