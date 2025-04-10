@@ -12,6 +12,7 @@ export default defineNuxtConfig({
     ssr: false,
     runtimeConfig: {
         public: {
+            frontUrl: process.env.FRONT_URL,
             baseUrl: process.env.API_BASE_URL,
             pusher: {
                 host: process.env.PUSHER_HOST,
@@ -20,6 +21,7 @@ export default defineNuxtConfig({
                 scheme: process.env.PUSHER_SCHEME || 'http',
             },
         },
+        frontUrl: process.env.FRONT_URL,
         baseUrl: process.env.API_BASE_URL,
     },
     svgo: {
