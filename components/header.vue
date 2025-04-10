@@ -286,8 +286,8 @@ onMounted(() => {
   }
 
   settingStore.getBanners({banner_type: 'top_banner'}).then((res) => {
-    if(res && res.length > 0) {
-      banner.value = res[0];
+    if(res && res.data) {
+      banner.value = res.data[0];
     }
   });
 });
