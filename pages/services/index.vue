@@ -72,7 +72,12 @@ const handleUpdateFilter = (data) => {
   // Если фильтры не выбраны
   if(!data || data.length === 0) {
     router.replace({ query: {} });
-    entityStore.getServices()
+    entityStore.getServices().then(res => {
+      page.value = {
+        currentPage: res.meta.current_page,
+        lastPage: res.meta.last_page,
+      }
+    })
     return
   }
 

@@ -103,7 +103,16 @@ const handleUpdateFilter = (data, sortType) => {
   // Если фильтры не выбраны 
   if(!data || data.length === 0) {
     router.replace({ query: {} });
-    organizationStore.getPubCardsList({type: 'performer'});
+    organizationStore.getPubCardsList({type: 'performer'}).then(res => {
+      if(res) {
+        page.value = {
+          currentPage: res.meta.current_page,
+          lastPage: res.meta.last_page,
+          total: res.meta.total,
+          itemsToPage: res.meta.per_page,
+        }
+      }
+    });
     return
   }
 

@@ -300,7 +300,7 @@ onMounted(() => {
 
 
   reviewsLoader.value = true;
-  reviewStore.getReviewsForUs(userStore.userData.organization_id, {limit: 1}).then((res) => {
+  reviewStore.getReviewsForUs(userStore.userData.organization_id, {per_page: 2}).then((res) => {
     if (res) {
       if (res.data && res.data.length) {
         reviewsAboutUsList.value = res.data.map(item => {

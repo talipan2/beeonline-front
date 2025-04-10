@@ -21,6 +21,7 @@
       <div class="filter__item" ref="tutorialRef2">
         <h3 class="filter__title">Регионы производства:</h3>
         <CommonLocation
+          ref="locationFilter"
           v-model="searchProps.location"
           buttonLabel="Выбрать регионы"
           class="filter__location"
@@ -110,6 +111,8 @@ const tutorialRefs = computed(() => {
   ];
 });
 
+const locationFilter = ref(null);
+
 const tutorialRef1 = ref(null);
 const tutorialRef2 = ref(null);
 const tutorialRef3 = ref(null);
@@ -147,6 +150,7 @@ const resetFilter = () => {
     material: [],
   };
   emit('updateFilter', []);
+  locationFilter.value.resetData();
 }
 
 const category = computed(() => entityStore.entityData.categories);

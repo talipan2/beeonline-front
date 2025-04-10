@@ -62,7 +62,7 @@ const props = defineProps({
   modalTitle: {
     type: String,
     default: 'Выберите город'
-  }
+  },
 })
 
 const settingStore = useSettingStore();
@@ -164,6 +164,10 @@ watch((selectedCities), (newVal) => {
 
 const stopWatcher = ref(false);
 
+function resetData() {
+  selectedCities.value = {countries: [], regions: [], cities: []};
+}
+
 await nextTick();
 
 watchEffect(() => {
@@ -182,6 +186,10 @@ watchEffect(() => {
     stopWatcher.value = true;
   }
 })
+
+defineExpose({
+  resetData
+});
 
 
 </script> 

@@ -14,7 +14,7 @@
       </div>
     </div>
     <div class="list-card__col-3">
-      <CommonLocationsList class="list-card__location" :locations-list="data.countryId" :is-country="true"/>
+      <CommonLocationsList class="list-card__location" :locations-list="data.countryId"/>
     </div>
     <div class="list-card__props list-card__col-4">
       <p class="list-card__prop" v-if="data.type === 'performer'">

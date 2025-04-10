@@ -186,6 +186,8 @@ const statusModal = useModal({
     position: relative;
     transition: box-shadow 0.2s ease;
     z-index: 1;
+    display: flex;
+    flex-direction: column;
 
     &.highlight {
         position: relative;
@@ -281,6 +283,10 @@ const statusModal = useModal({
         position: absolute;
         inset: 0;
         z-index: 1;
+    }
+
+    &__footer {
+        margin-top: auto;
     }
 
     &__footer-container {
