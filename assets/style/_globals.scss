@@ -196,6 +196,10 @@ label:active {
   word-break: break-all;
 }
 
+.multiline-text {
+  white-space: pre-line;
+}
+
 // стили для обозначения стран
 .flag {
   display: inline-block;

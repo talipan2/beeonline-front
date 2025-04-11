@@ -53,7 +53,7 @@
         </div>
         <div class="form-group-data">
           <p class="form-group__title">Описание</p>
-          <p class="form-group__value">{{ pubCardData.description }}</p>
+          <p class="form-group__value multiline-text">{{ pubCardData.description }}</p>
         </div>
         <!-- <div class="form-group-data" v-if="userStore.role === 'performer'">
           <p class="form-group__title">Собственные торговые марки</p>

@@ -30,11 +30,11 @@
     </div>
     <div class="view-entity__container" v-if="data.description">
       <h3 class="view-entity__title">Описание</h3>
-      <p class="view-entity__prop-value">{{ data.description || 'Не указано' }}</p>
+      <p class="view-entity__prop-value multiline-text">{{ data.description || 'Не указано' }}</p>
     </div>
     <div class="view-entity__container" v-if="data.conditions">
       <h3 class="view-entity__title">Условия сотрудничества</h3>
-      <p class="view-entity__prop-value">{{ data.conditions || 'Не указано' }}</p>
+      <p class="view-entity__prop-value multiline-text">{{ data.conditions || 'Не указано' }}</p>
     </div>
     <div class="view-entity__container" v-if="data.gallery &&data.gallery.length > 0">
       <h3 class="view-entity__title">Галерея</h3>
