@@ -116,11 +116,16 @@ function selectRegion(region) {
 }
 
 function selectCity(city) {
-  selectedCity.value = city;
-  emit('selectCity', city.name);
-  emit('update:modelValue', false);
   if(userStore.userData?.id){
-    userStore.changeUserData(userStore.userData.id, { city_id: city.id })
+    userStore.setCity(city.id).then(() => {  
+      selectedCity.value = city;
+      emit('selectCity', city);
+      emit('update:modelValue', false);
+    })
+  } else {
+    selectedCity.value = city;
+    emit('selectCity', city);
+    emit('update:modelValue', false);
   }
 }
 
