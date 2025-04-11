@@ -239,16 +239,19 @@ watch(() => headerMainHeight.value, (newVal) => {
 const onScrollPage = () => {
   if (!headerFixed.value) {
     headerMainOffsetTop.value = headerInfo.value.offsetHeight;
+    headerFullHeight.value = header.value.offsetHeight
   }
   if (window.scrollY > headerMainOffsetTop.value) {
     if (!headerFixed.value) {
       headerFixed.value = true;
       headerFiller.value.style.height = headerMainHeight.value + 'px';
+      headerFullHeight.value = headerMainHeight.value
     }
   } else {
     if (headerFixed.value) {
       headerFixed.value = false;
       headerFiller.value.style.height = 0;
+      headerFullHeight.value = header.value.offsetHeight
     }
   }
 }
