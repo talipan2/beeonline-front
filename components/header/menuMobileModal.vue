@@ -24,7 +24,7 @@
             <NuxtLink :to="item.value" class="header-menu__link">{{ item.label }}</NuxtLink>
           </li>
           <li class="header-menu__link-item header-menu__sign-out">
-            <a href="javascript:;" class="header-menu__link">Выйти</a>
+            <button type="button" @click="logOut" class="header-menu__link">Выйти</button>
           </li>
         </ul>
         </transition>
@@ -176,6 +176,16 @@ const handleSwitchRole = async () => {
     router.push({ path: redirectPath });
   } catch (error) {
     console.error(error);
+  }
+};
+
+const logOut = async() => {
+  try {
+    await userStore.logOut();
+
+    await router.push({ path: '/', });
+  } catch (error) {
+    console.log(error);
   }
 };
 
@@ -365,6 +375,10 @@ const handleSearch = (query) => {
     font-weight: 300;
     border-bottom: 1px solid var(--text-color-ternary);
     margin-bottom: 1.25em;
+  }
+
+  &__link {
+    color: var(--text-color-octonary);
   }
 
   &__change-role {

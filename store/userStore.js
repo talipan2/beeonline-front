@@ -206,17 +206,33 @@ export const useUserStore = defineStore("user", {
     },
 
     async logOut() {
-        Api.logOut().then((response) => {
-            this.userToken = null;
-            localStorage.removeItem("token");
-            sessionStorage.removeItem("token");
-            this.isAuth = false;
-            this.userData = {};
-            this.userRoles = [];
-            this.userOrganization = {};
-            this.userPubCard = {};
-            this.userOrganizationId = null;
-        });
+      try {
+        await Api.logOut();
+        
+        this.userToken = null;
+        localStorage.removeItem("token");
+        sessionStorage.removeItem("token");
+        this.isAuth = false;
+        this.userData = {};
+        this.userRoles = [];
+        this.userOrganization = {};
+        this.userPubCard = {};
+        this.userOrganizationId = null;
+        
+        return Promise.resolve();
+      } catch (error) {
+        this.userToken = null;
+        localStorage.removeItem("token");
+        sessionStorage.removeItem("token");
+        this.isAuth = false;
+        this.userData = {};
+        this.userRoles = [];
+        this.userOrganization = {};
+        this.userPubCard = {};
+        this.userOrganizationId = null;
+        
+        return Promise.reject(error);
+      }
     },
 
     // Изменение пароля

@@ -17,7 +17,12 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     settingStore.isCreateOrder = true
   }
 
+  
   await nextTick();
+
+  if (!userStore.isAuth) {
+    return;
+  }
 
   // try {
   //   await userStore.checkAuth();

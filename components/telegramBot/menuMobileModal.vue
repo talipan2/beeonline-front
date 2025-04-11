@@ -103,11 +103,15 @@ watch(isOpenModal, (newVal) => {
   emit('update:modelValue', newVal);
 });
 
-const logOut = () => {
-  userStore.logOut().then(() => {
-    router.push({ path: '/telegram' });
-  });
-}
+const logOut = async() => {
+  try {
+    await userStore.logOut();
+
+    await router.push({ path: '/telegram', });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 watch(() => router.currentRoute.value.path, (newVal) => {
   confirm();

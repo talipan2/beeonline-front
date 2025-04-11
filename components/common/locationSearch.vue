@@ -21,7 +21,7 @@
                 <span>{{ result.city }}, {{ result.region }}, {{ result.country }}</span>
               </UiCheckbox>
               <span v-else-if="!selectOneCity" class="location-search__item">{{ result.city }}, {{ result.region }}, {{ result.country }}</span>
-              <button v-else-if="selectOneCity" class="location-search__button" @click="$emit('selectCity', {name: result.city})">{{ result.city }}, {{ result.region }}, {{ result.country }}</button>
+              <button v-else-if="selectOneCity" class="location-search__button" @click="$emit('selectCity', { id: result.id, name: result.city })">{{ result.city }}, {{ result.region }}, {{ result.country }}</button>
             </template>
           </div>
         </div>
@@ -58,7 +58,7 @@ const props = defineProps({
 })
 
 const locationStore = useLocationStore();
-const emit = defineEmits(['addCity']);
+const emit = defineEmits(['addCity', 'selectCity']);
 
 const locationSearch = ref(null);
 const locationList = locationStore.locations;

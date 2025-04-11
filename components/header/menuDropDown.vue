@@ -152,10 +152,14 @@ watch(() => router.currentRoute.value.path, (newVal) => {
   }
 })
 
-const logOut = () => {
-  userStore.logOut()
-  .then(res => router.push({ path: '/' }))
-  .catch(err => console.log(err))
+const logOut = async() => {
+  try {
+    await userStore.logOut();
+
+    await router.push({ path: '/', });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const handleSwitchRole = async () => {
