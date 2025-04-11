@@ -132,13 +132,12 @@ watch(isOpenModal, (newVal) => {
   isOpenModal.value = newVal;
   selectedCity.value = {... selectedCity.value, id: props.location};
   emit('update:modelValue', newVal);
-});
-
-onMounted(() => {
-  locationStore.getLocations().then((res) => {
+  if(newVal) {
+    locationStore.getLocations().then((res) => {
     locations.value = res
   })
-})
+  }
+});
 
 </script>
 

@@ -34,7 +34,7 @@ const emit = defineEmits(['updateOrderCardRef']);
 
 const orderData = computed(() => {
   return props.data.map(item => {
-    const {locations, alias} = locationFormatter({cities: item.cities, regions: item.regions});
+    const {locations, alias} = locationFormatter({cities: item.cities, regions: item.regions, countries: item.countries});
     return {
       id: item.id,
       name: item.name,

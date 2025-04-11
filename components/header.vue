@@ -102,7 +102,7 @@
     </div>
     <HeaderMenuMobileModal
       v-model="isOpenMobileModal"
-      :headerHeight="headerHeight"
+      :headerHeight="headerFullHeight"
       :closeButton="false"
       :userName="userName"
       :logo="userLogo"
@@ -133,6 +133,7 @@ const header = ref(null);
 const headerMain = ref(null);
 const headerMainHeight = ref(null);
 const headerHeight = ref(null);
+const headerFullHeight = ref(null);
 const headerFixed = ref(false);
 const headerMainOffsetTop = ref(0);
 const headerFiller = ref(0)
@@ -227,6 +228,7 @@ function updateHeaderHeight() {
   if (header) {
     headerHeight.value = header.value.offsetHeight;
     headerMainHeight.value = headerMain.value.offsetHeight;
+    headerFullHeight.value = header.value.offsetHeight;
   }
 }
 
@@ -237,16 +239,19 @@ watch(() => headerMainHeight.value, (newVal) => {
 const onScrollPage = () => {
   if (!headerFixed.value) {
     headerMainOffsetTop.value = headerInfo.value.offsetHeight;
+    headerFullHeight.value = header.value.offsetHeight
   }
   if (window.scrollY > headerMainOffsetTop.value) {
     if (!headerFixed.value) {
       headerFixed.value = true;
       headerFiller.value.style.height = headerMainHeight.value + 'px';
+      headerFullHeight.value = headerMainHeight.value
     }
   } else {
     if (headerFixed.value) {
       headerFixed.value = false;
       headerFiller.value.style.height = 0;
+      headerFullHeight.value = header.value.offsetHeight
     }
   }
 }
@@ -288,6 +293,9 @@ onMounted(() => {
   settingStore.getBanners({banner_type: 'top_banner'}).then((res) => {
     if(res && res.data) {
       banner.value = res.data[0];
+      setTimeout(() => {
+        updateHeaderHeight();
+      }, 100)
     }
   });
 });
