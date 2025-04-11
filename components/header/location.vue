@@ -37,6 +37,10 @@ onMounted(async () => {
   } else {
     console.error('Tippy instance is not available');
   }
+
+    userStore.getCityByIp().then((res) => {
+        console.log(res);
+    });
 });
 
 function showConfirmationModal() {

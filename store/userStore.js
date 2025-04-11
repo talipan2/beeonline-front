@@ -420,5 +420,14 @@ export const useUserStore = defineStore("user", {
         throw error;
       }
     },
+
+    async getCityByIp() {
+        return await useApi().get('get-city-by-ip');
+    },
+    async setCity(cityId) {
+        return await useApi().post('set-city', {
+            city_id: cityId,
+        });
+    }
   },
 });
