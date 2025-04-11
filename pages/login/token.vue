@@ -1,6 +1,6 @@
 <template>
   <div>
-
+    Авторизация...
   </div>
 </template>
 
@@ -12,17 +12,23 @@ definePageMeta({
 import { useUserStore } from "~/store/userStore";
 
 const userStore = useUserStore();
-
 const route = useRoute();
+const config = useRuntimeConfig();
+
+const frontUrl = config.public.frontUrl;
+let redirect = route.query.redirect;
 
 const token = route.query.token;
-const redirect = route.query.redirect;
 userStore.userToken = token;
 localStorage.setItem("token", token);
-userStore.checkAuth().then((response) => {
-  if(redirect) {
-    // TODO: добавить в конфиги front_url, проверять его наличие, и если есть - external: false
-    navigateTo(redirect, { external: true });
+
+userStore.checkAuth(true).then((response) => {
+  if(typeof redirect === 'string') {
+    const external = !redirect.startsWith(frontUrl);
+    if (!external) {
+        redirect = redirect.slice(frontUrl.length);
+    }
+    navigateTo(redirect, { external: external });
   }
 })
 </script>

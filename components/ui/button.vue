@@ -48,8 +48,8 @@ const props = defineProps({
     default: false,
   },
   download: {
-    type: Boolean,
-    default: false
+    type: String,
+    default: null
   }
 });
 
