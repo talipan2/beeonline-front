@@ -422,7 +422,7 @@ export const useUserStore = defineStore("user", {
     },
 
     async getCityByIp() {
-        return await useApi().get('get-city-by-ip');
+        return await useApi().get('get-city-by-ip', null, null, true);
     },
     async setCity(cityId) {
         return await useApi().post('set-city', {
