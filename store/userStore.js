@@ -201,6 +201,7 @@ export const useUserStore = defineStore("user", {
         })
         .catch((error) => {
             this.isAuth = false;
+            throw error;
         });
     },
 
