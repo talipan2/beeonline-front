@@ -76,7 +76,7 @@
       </UiButton>
     </UiForm>
     <template #soc-reg>
-      <RegisterSocialRegistr />
+      <RegisterSocialRegistr :role="role" />
     </template>
   </RegisterLayout>
 </template>

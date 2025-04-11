@@ -5,15 +5,24 @@
     </div>
     <p class="soc-reg__text">Зарегистрируйтесь через:</p>
     <div class="soc-reg__links">
-      <a href="javascript:;">
+      <a :href="backUrl('/auth/google', { role: role })">
         <SvgoGoogle class="svg-lx" />
       </a>
-      <a href="javascript:;">
+      <a :href="backUrl('/auth/vk', { role: role })">
         <SvgoVkontakte class="svg-lx" />
       </a>
     </div>
   </div>
 </template>
+
+<script setup>
+const props = defineProps({
+  role: {
+    type: String,
+    default: 'customer',
+  },
+});
+</script>
 
 <style lang="scss">
 
