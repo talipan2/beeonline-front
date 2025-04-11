@@ -101,11 +101,11 @@
     </template>
     <div class="orders-details__details">
       <p class="orders-details__details-title" v-if="entityData.description">Описание</p>
-      <p class="orders-details__details-text">{{ entityData.description }}</p>
+      <p class="orders-details__details-text multiline-text">{{ entityData.description }}</p>
     </div>
     <div class="orders-details__details" v-if="entityData.conditions">
       <p class="orders-details__details-title">Условия сотрудничества</p>
-      <p class="orders-details__details-text">{{ entityData.conditions }}</p>
+      <p class="orders-details__details-text multiline-text">{{ entityData.conditions }}</p>
     </div>
     <div class="orders-details__details" v-if="formatDocumentsArray && formatDocumentsArray.length">
       <p class="orders-details__details-title">Технические требования</p>

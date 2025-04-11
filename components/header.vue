@@ -230,6 +230,8 @@ function updateHeaderHeight() {
     headerMainHeight.value = headerMain.value.offsetHeight;
     headerFullHeight.value = header.value.offsetHeight;
   }
+
+  updateVisibleHeight()
 }
 
 watch(() => headerMainHeight.value, (newVal) => {
@@ -237,24 +239,43 @@ watch(() => headerMainHeight.value, (newVal) => {
 })
 
 const onScrollPage = () => {
-  if (!headerFixed.value) {
+  if (headerInfo.value) {
     headerMainOffsetTop.value = headerInfo.value.offsetHeight;
-    headerFullHeight.value = header.value.offsetHeight
   }
+
+  // 2. Логика фиксации/открепления
   if (window.scrollY > headerMainOffsetTop.value) {
     if (!headerFixed.value) {
       headerFixed.value = true;
-      headerFiller.value.style.height = headerMainHeight.value + 'px';
-      headerFullHeight.value = headerMainHeight.value
+      if (headerFiller.value) {
+        headerFiller.value.style.height = `${headerMainHeight.value}px`;
+      }
     }
   } else {
     if (headerFixed.value) {
       headerFixed.value = false;
-      headerFiller.value.style.height = 0;
-      headerFullHeight.value = header.value.offsetHeight
+      if (headerFiller.value) {
+        headerFiller.value.style.height = '0';
+      }
     }
   }
+
+  updateVisibleHeight()
 }
+
+const updateVisibleHeight = () => {
+  if (!header.value) return;
+
+  // Для фиксированного хедера - берём полную высоту
+  if (headerFixed.value) {
+    headerFullHeight.value = headerMainHeight.value;
+    return;
+  } 
+
+  // Для скроллируемого - расчёт видимой части
+  const rect = header.value.getBoundingClientRect();
+  headerFullHeight.value = Math.max(0, Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0));
+};
 
 // функция для добавления отступа header при открытии модалки
 const adjustHeaderPadding = () => {
