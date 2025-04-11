@@ -41,7 +41,7 @@ const pubCard = ref({});
 const loading = ref(false);
 const formatData = computed(() => {
   if(!data.value) return []
-  const {locations, alias} = locationFormatter({cities: data.value.cities, regions: data.value.regions});
+  const {locations, alias} = locationFormatter({cities: data.value.cities, regions: data.value.regions, countries: data.value.countries});
   return {
       id: data.value.id,
       props: [
