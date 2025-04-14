@@ -77,15 +77,9 @@ function toggleSelection(button) {
     // Удаляем id из modelValue
     const newIds = props.modelValue.filter(id => id !== buttonId);
     emit('update:modelValue', newIds);
-    
-    // Удаляем объект из selectedList
-    selectedList.value = selectedList.value.filter(item => item.id !== buttonId);
   } else {
     // Добавляем id в modelValue
     emit('update:modelValue', [...props.modelValue, buttonId]);
-    
-    // Добавляем полный объект в selectedList
-    selectedList.value = [...selectedList.value, button];
   }
 }
 
@@ -95,9 +89,6 @@ function deleteItem(item) {
     // Удаляем id из modelValue
     const newIds = props.modelValue.filter(id => id !== buttonId);
     emit('update:modelValue', newIds);
-    
-    // Удаляем объект из selectedList
-    selectedList.value = selectedList.value.filter(item => item.id !== buttonId);
   } else {
     return
   }
@@ -159,13 +150,9 @@ function calculateVisible() {
 }
 
 // Отслеживаем появление кнопок
-watch(buttons, (newVal) => {
-  if (newVal.length > 0) {
-    nextTick(() => {
-      calculateVisible()
-    })
-  }
-}, { deep: true })
+watch(() => [...buttons.value], () => {
+  nextTick(calculateVisible);
+});
 
 // Также отслеживаем изменения options
 watch(() => props.options, () => {
@@ -173,6 +160,12 @@ watch(() => props.options, () => {
     calculateVisible()
   })
 })
+
+watch(() => [...props.modelValue, ...props.options], () => {
+  selectedList.value = props.options.filter(item => 
+    props.modelValue.includes(item.id)
+  );
+}, { immediate: true });
 
 
 onMounted(() => {
@@ -190,6 +183,8 @@ onMounted(() => {
 .selectable-buttons {
   width: 100%;
   font-size: 1rem;
+  margin-bottom: 2em;
+
   &__list {
     display: flex;
     flex-wrap: wrap;

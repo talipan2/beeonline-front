@@ -28,7 +28,27 @@
       <UiBreadCrumb :list="[{label: 'Главная', link: '/'}, { label: 'Каталог услуг', link: '' }]" />
     </template>
     <template #content>
-      <CatalogNewService />
+      <div class="new-service">
+        <CommonSelectableButtons :options="categoryList" v-model="filter.categories">
+          <div class="new-service__filters">
+            <CatalogNewServiceFilter class="new-service__filter" @updateFilter="handleUpdateFilter" @resetFilter="handleResetFilter" :filter="filter"/>
+            <UiButton type="button" class="new-service__btn" variant="default" :without-padding="true" @click="handleResetFilter">Сбросить фильтры</UiButton>
+            <UiButton type="button" class="new-service__btn" variant="quinary" size="large" @click="handleUpdateFilter(filter)">Применить фильтры</UiButton>
+          </div>
+        </CommonSelectableButtons>
+        <div ref="anchor">
+          <CatalogNewService :servicesList="servicesList" :slider="true"/>
+        </div>
+        <CommonPagination 
+          v-if="page.lastPage > 1" 
+          :current-page="page.currentPage" 
+          :total-pages="page.lastPage" 
+          @changePage="handleChangePage" 
+          :loading="loading" 
+          btnType="square" 
+          position="left"
+        />
+      </div>
     </template>
   </NuxtLayout>
 </template>
@@ -55,6 +75,7 @@ const router = useRouter();
 const servicesList = computed(() => entityStore.servicesList);
 const tutorialRefs = ref([]);
 const serviceCardRef = ref([]);
+const categoryList = computed(() => entityStore.entityData.categories);
 
 const anchor = ref('anchor');
 
@@ -66,17 +87,34 @@ const page = ref({
 })
 
 const filter = ref({
-  categories: null,
-  location: null,
+  categories: [],
+  location: [],
   is_stm: null,
   free_samples: null,
   materials_own: null,
   materials_tolling: null,
-  free_stock: null
+  free_stock: null,
+  rawMaterials: null
 });
+
+
+const handleResetFilter = () => {
+  filter.value = {
+    categories: [],
+    location: [],
+    is_stm: null,
+    free_samples: null,
+    materials_own: null,
+    materials_tolling: null,
+    free_stock: null,
+    rawMaterials: null
+  }
+  handleUpdateFilter();
+}
 
 // Фильтр
 const handleUpdateFilter = (data) => {
+  console.log(data)
   // Если фильтры не выбраны
   if(!data || data.length === 0) {
     router.replace({ query: {} });
@@ -93,12 +131,12 @@ const handleUpdateFilter = (data) => {
 
   // добавление квери параметров для роутинга
   const newQuery = {
-    categories: data.category ? data.category.join(',') : undefined,
+    categories: data.categories ? data.categories.join(',') : undefined,
     countries: data.location && data.location.countries ? data.location.countries?.map(item => item.id).join(',') : undefined,
     regions: data.location && data.location.regions ? data.location.regions?.map(item => item.id).join(',') : undefined,
-    is_stm: data.has_stm && data.has_stm.length ? data.has_stm.join(',') : undefined,
+    is_stm: data.has_stm != null ? data.has_stm : undefined,
     free_samples: data.free_test && data.free_test.length ? data.free_test.join(',') : undefined,
-    free_stock: data.free_stock && data.free_stock.length ? data.free_stock.join(',') : undefined,
+    free_stock: data.free_stock != null ? data.free_stock : undefined,
     materials_own: data.material && data.material.length && data.material.includes(0) ? 1 : undefined,
     materials_tolling: data.material && data.material.length && data.material.includes(1) ? 1 : undefined,
   }
@@ -107,11 +145,11 @@ const handleUpdateFilter = (data) => {
 
   // добавление квери параметров для запроса
   filter.value = {
-    categories: data.category && data.category.length ? data.category : undefined,
-    regions: Object.keys(data.location).length ? Object.values(data.location).flat().map(item => item.id) : undefined,
-    is_stm: data.has_stm && data.has_stm.length ? data.has_stm : undefined,
+    categories: data.categories && data.categories.length ? data.categories : undefined,
+    regions: data.location && Object.keys(data.location).length ? Object.values(data.location).flat().map(item => item.id) : undefined,
+    is_stm: data.has_stm != null ? data.has_stm : undefined,
     free_samples: data.free_test && data.free_test.length ? data.free_test : undefined,
-    free_stock: data.free_stock && data.free_stock.length ? data.free_stock : undefined,
+    free_stock: data.free_stock != null ? data.free_stock : undefined,
     materials_own: data.material && data.material.length && data.material.includes(0) ? 1 : undefined,
     materials_tolling: data.material && data.material.length && data.material.includes(1) ? 1 : undefined,
   }
@@ -187,9 +225,9 @@ onMounted(() => {
       page: query.page ? Number(query.page) : undefined,
       categories: query.categories ? query.categories.split(',').map(item => Number(item)) : undefined,
       regions: [query.countries && query.countries.split(',').map(item => Number(item)), query.regions && query.regions.split(',').map(item => Number(item))].flat(),
-      is_stm: query.is_stm ? query.is_stm.split(',').map(item => Number(item)) : undefined,
+      is_stm: query.is_stm ? Number(query.is_stm) : undefined,
       free_samples: query.free_samples ? query.free_samples.split(',').map(item => Number(item)) : undefined,
-      free_stock: query.free_stock ? query.free_stock.split(',').map(item => Number(item)) : undefined,
+      free_stock: query.free_stock ? Number(query.free_stock) : undefined,
       materials_own: query.materials_own ? Number(query.materials_own) : undefined,
       materials_tolling: query.materials_tolling ? Number(query.materials_tolling) : undefined,
     }
@@ -198,9 +236,9 @@ onMounted(() => {
     filter.value = {
       categories: query.categories ? query.categories.split(',').map(item => Number(item)) : [],
       location: {countries: query.countries ? query.countries.split(',').map(item => Number(item)) : [], regions: query.regions ? query.regions.split(',').map(item => Number(item)) : [] },
-      is_stm: query.is_stm ? query.is_stm.split(',').map(item => Number(item)) : [],
+      is_stm: query.is_stm ? Number(query.is_stm) : undefined,
       free_samples: query.free_samples ? query.free_samples.split(',').map(item => Number(item)) : [],
-      free_stock: query.free_stock ? query.free_stock.split(',').map(item => Number(item)) : [],
+      free_stock: query.free_stock ? Number(query.free_stock) : undefined,
       materials_own: query.materials_own ? Number(query.materials_own) : undefined,
       materials_tolling: query.materials_tolling ? Number(query.materials_tolling) : undefined,
     }
@@ -237,8 +275,25 @@ onMounted(() => {
       }
   }
   }
+}
 
+.new-service {
+  font-size: 1rem;
 
+  &__filters {
+    display: flex;
+    column-gap: 5em;
+    margin-bottom: 2.4em;
+  }
+
+  &__filter {
+    margin-right: auto;
+  }
+
+  &__btn {
+    font-size: 1.2em;
+    text-transform: uppercase;
+  }
 }
 
 </style>

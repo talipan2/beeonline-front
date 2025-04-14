@@ -1,45 +1,55 @@
 <template>
-  <div class="new-service">
-    <CommonSelectableButtons :options="categoryList" v-model="selectedCategory">
-      <div class="new-service__filters">
-        <CatalogNewServiceFilter class="new-service__filter" />
-        <UiButton type="button" class="new-service__btn" variant="default" :without-padding="true">Сбросить фильтры</UiButton>
-        <UiButton type="button" class="new-service__btn" variant="quinary" size="large">Применить фильтры</UiButton>
-      </div>
-    </CommonSelectableButtons>
+  <div class="new-service__list">
+    <CatalogBanner :fetch-function="fetchServiceSlider">
+      <template #item="{ item }">
+        <CatalogNewServiceCard :data="item" class="highlight" :revers-color="true"/>
+      </template>
+    </CatalogBanner>
+    <template v-if="servicesList.length">
+      <template v-for="item in servicesList" :key="item.id">
+        <CatalogNewServiceCard :data="item"/>
+      </template>
+    </template>
+    <template v-else>
+      <CommonAlerts alert="Услуги не найдены" :type="'warning'" v-if="!servicesList.length" />
+    </template>
   </div>
 </template>
 
 <script setup>
-import { useEntityStore } from '~/store/entityStore';
+import { useEntityStore } from '~/store/entityStore'
 
+
+const props = defineProps({
+  servicesList: {
+    type: Array,
+    default: () => []
+  },
+  slider: {
+    type: Boolean,
+    default: false
+  }
+})
 
 const entityStore = useEntityStore();
 
-const categoryList = computed(() => entityStore.entityData.categories);
-const selectedCategory = ref([]);
-
+const fetchServiceSlider = async ( page, per_page=10) => {
+  const res = await entityStore.getServiceSlider({ page, per_page })
+  return {
+    data: res.data,
+    meta: res.meta
+  }
+}
 
 </script>
 
 <style lang="scss">
 
 .new-service {
-  font-size: 1rem;
-
-  &__filters {
+  &__list {
     display: flex;
-    column-gap: 5em;
-    margin-bottom: 2.4em;
-  }
-
-  &__filter {
-    margin-right: auto;
-  }
-
-  &__btn {
-    font-size: 1.2em;
-    text-transform: uppercase;
+    flex-direction: column;
+    row-gap: 5.6em;
   }
 }
 

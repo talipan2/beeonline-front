@@ -1,5 +1,5 @@
 <template>
-  <NuxtLayout name="details-entity" :title="formatData.name" badge="Услуга" v-if="!isLoading">
+  <!-- <NuxtLayout name="details-entity" :title="formatData.name" badge="Услуга" v-if="!isLoading">
     <template #header>
       <UiBreadCrumb
         :list="[
@@ -14,6 +14,20 @@
     </template>
     <template #rightSide>
       <CatalogOtherEntityCompany v-if="otherActiveEntity.length" :data="otherActiveEntity" type="performer"/>
+    </template>
+  </NuxtLayout> -->
+  <NuxtLayout name="info" class="new-service-details-page">
+    <template #header>
+      <UiBreadCrumb
+        :list="[
+          { label: 'Главная', link: '/' },
+          { label: 'Каталог услуг', link: '/services' },
+          { label: 'Услуга', link: '' },
+        ]"
+      />
+    </template>
+    <template #content>
+      <CatalogNewServiceDetails :data="data"/>
     </template>
   </NuxtLayout>
 </template>
@@ -101,3 +115,14 @@ useHead({
 });
 
 </script>
+
+<style lang="scss">
+
+.new-service-details-page {
+  .info__content {
+    max-width: 80%;
+    margin-inline: auto;
+  }
+}
+
+</style>

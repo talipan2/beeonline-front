@@ -48,7 +48,6 @@ watch(() => [cities.value, regions.value, countries.value, locationStore.locatio
   const {locations, alias} = locationFormatter({cities: [...cities.value], regions: [...regions.value], countries: [...countries.value]});
   data.value = locations
   aliasState.value = alias
-  console.log(alias)
 }, {deep: true, immediate: true})
 
 const firstLocation = computed(() => {

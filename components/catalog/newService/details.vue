@@ -1,0 +1,281 @@
+<template>
+  <div class="new-service-details">
+    <CommonLayoutInfoCard padding="20" class="new-service-details__pub-card">
+      <div class="new-service-details__pub-card-image image-box">
+        <UiImage :src="data.pub_card?.logo || defaultImage" :alt="data.name" :external="true"/>
+      </div>
+      <div class="new-service-details__pub-card-content">
+        <h3 class="new-service-details__pub-card-title">{{ data.name || 'не указано' }}</h3>
+        <CommonRating :rating="data.pub_card?.stars" :reviews="data.pub_card?.reviews_about_count" :is-count-rating="false" />
+        <CommonLocationsList :locationsList="{countries: [data.pub_card?.country]}" />
+        <div class="new-service-details__pub-card-site" v-if="data.pub_card?.url_site">
+          <SvgoPlanet class="svg-m" />
+          <NuxtLink :to="data.siteUrl" class="link" target="_blank" >{{ data.pub_card?.url_site || 'не указано' }}</NuxtLink>
+        </div>
+        <div class="new-service-details__pub-card-buttons">
+          <UiButton variant="quinary" size="large" class="new-service-details__pub-card-button">Написать исполнителю</UiButton>
+          <UiButton variant="tertiary" size="large" class="new-service-details__pub-card-button">Добавить в избранное</UiButton>
+        </div>
+      </div>
+    </CommonLayoutInfoCard>
+    <div class="new-service-details__specs">
+      <CatalogNewServiceDetailsBadge 
+        class="new-service-details__specs"
+        :more-btn="true"
+        :specs="{
+          name: 'Категория', 
+          value: data.product_categories?.length > 0 && data.product_categories.map(item => item.name) || [],
+        }"
+      />
+      <CatalogNewServiceDetailsBadge
+        :specs="{
+          name: 'Сырье', 
+          value: [data.materials_tolling ? 'Заказчика' : '', data.materials_own ? 'Исполнителя' : ''].filter(Boolean).join(' / ')
+        }"
+      />
+      <CatalogNewServiceDetailsBadge 
+        :specs="{
+          name: 'Наличие СТМ', 
+          value: data.is_stm != null ? data.is_stm ? 'Да' : 'Нет' : ''
+        }"
+      />
+      <CatalogNewServiceDetailsBadge 
+        :specs="{
+          name: 'Свободный склад', 
+          value: data.free_stock != null ? data.free_stock ? 'Да' : 'Нет' : '',
+        }"
+      />
+      <CatalogNewServiceDetailsBadge 
+        :specs="{
+          name: 'Верификация', 
+          value:  ''
+        }"
+      />
+      <CatalogNewServiceDetailsBadge 
+        :specs="{
+          name: 'Бесплатные образцы', 
+          value: entityStore.getEntityLabelById('freeTestSamples', data.free_samples),
+        }"
+      />
+    </div>
+    <CommonLayoutInfoCard title="Актуальные услуги компании" class="new-service-details__services">
+      <div class="new-service-details__services-list">
+        <div class="new-service-details__services-item" v-for="(item, index) in data.pub_card?.services" :key="item.id">
+          <div class="new-service-details__services-item-number"><span>{{ index + 1 }}</span></div>
+          <div class="new-service-details__services-item-content">
+            <h4 class="new-service-details__services-item-name">{{ item.name || 'не указано' }}</h4>
+            <p class="new-service-details__services-item-prop" v-if="item.batches">
+              Минимальная партия: 
+              <span>{{ item.batches.map(item => item.name).join(' / ') || 'не указано' }}</span>
+            </p>
+            <div class="new-service-details__services-item-badges">
+              <div class="new-service-details__services-item-badge">
+                <p>{{ 'Женская одежда' }}</p>
+              </div>
+              <div class="new-service-details__services-item-badge">
+                <p>{{ 'Текстиль' }}</p>
+              </div>
+              <div class="new-service-details__services-item-badge">
+                <ModalsMoreCities :list="['Женская одежда', 'Текстиль']" title="Категории" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </CommonLayoutInfoCard>
+    <CommonLayoutInfoCard title="Примеры работ" class="new-service-details__gallery" v-if="data.gallery">
+      <CatalogNewServiceImagesList :data="data.gallery" />
+    </CommonLayoutInfoCard>
+    <CommonLayoutInfoCard title="Фабрика и оборудование" class="new-service-details__gallery" v-if="data.gallery">
+      <CatalogNewServiceImagesList :data="data.gallery" />
+    </CommonLayoutInfoCard>
+  </div>
+</template>
+
+<script setup>
+
+import defaultImage from '~/assets/images/nophoto_pc.png';
+import { useEntityStore } from '~/store/entityStore';
+
+const props = defineProps({
+  data: {
+    type: Object,
+    default: () => ({}),
+  },
+})
+
+const entityStore = useEntityStore();
+
+</script>
+
+<style lang="scss">
+
+.new-service-details {
+  font-size: 1rem;
+  
+  &__pub-card {
+    display: flex;
+    padding: 3.2em;
+    margin-bottom: 3.2em;
+
+    &-image {
+      flex: 0 0 32%;
+      max-width: 32%;
+      padding-top: 19%;
+
+      img {
+        border-radius: 12px;
+        border-color: #e3e3e3;
+      }
+    }
+
+    &-content {
+      display: flex;
+      flex-direction: column;
+      row-gap: 1em;
+      font-size: 1.6em;
+    }
+
+    &-title {
+      font-size: 2em;
+      font-weight: 700;
+    }
+
+    &-site {
+      display: flex;
+      align-items: center;
+      column-gap: .5em;
+
+      svg {
+        flex: 0 0 auto;
+      }
+    }
+
+    &-buttons {
+      margin-top: 1em;
+      display: flex;
+      column-gap: 1em;
+    }
+
+    &-button {
+      font-size: .75em;
+      text-transform: uppercase;
+    }
+  }
+
+  &__specs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.6em;
+    margin-bottom: 3.2em;
+
+    .details-badge {
+      flex: 1 1 calc(25% - 1.6em);
+      max-width: 100%;
+    }
+    
+    .details-badge:first-child {
+      flex: 0 1 calc(50% - .8em);
+    }
+
+    .details-badge:nth-child(2) {
+      flex: 0 1 calc(50% - .8em);
+    }
+  }
+
+
+  &__services {
+    margin-bottom: 3.2em;
+
+    .info-card__title {
+      margin-bottom: 4rem;
+    }
+
+    &-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    &-item {
+      display: flex;
+      column-gap: 1.6em;
+      padding-bottom: 1.6em;
+      
+      &:not(:last-child) {
+        border-bottom: 1px solid #e7e7e7;
+        margin-bottom: 1.6em;
+      }
+
+      &-number {
+        font-size: 1.6em;
+        font-weight: 500;
+        background-color: #f5f4f8;
+        width: 2em;
+        height: 2em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 100%;
+        line-height: 1em;
+        flex: 0 0 auto;
+        letter-spacing: -0.02em;
+      }
+
+      &-name {
+        font-size: 1.6em;
+        font-weight: 400;
+        line-height: 1.5em;
+        letter-spacing: -0.02em;
+        color: rgba(0, 0, 0, 0.9);
+        margin-bottom: .25em;
+      }
+
+      &-prop {
+        font-family: 'fira-sans', sans-serif;
+        font-size: 1.4em;
+        display: inline-block;
+        color: rgba(110, 110, 118, 0.9);
+        margin-bottom: 1.14em;
+
+        span {
+          font-weight: 500;
+          color: #000;
+        }
+      }
+
+      &-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .8em;
+      }
+
+      &-badge {
+        font-size: 1.2em;
+        font-weight: 600;
+        line-height: 1.3em;
+        color:  #5a2c96cc;
+        border-radius: 100px;
+        padding: .4em 1em;
+        background: #f2edff; 
+      }
+    }
+  }
+
+  &__description-text {
+    font-size: 1.8em;
+    font-weight: 400;
+    line-height: 1.5em;
+    color: #040404;
+    white-space: pre-line;
+    opacity: 0.8;
+    margin-bottom: 3.2em;
+  }
+
+  &__gallery {
+    margin-bottom: 3.2em;
+  }
+
+  
+}
+
+</style>

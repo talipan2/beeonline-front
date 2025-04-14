@@ -42,7 +42,7 @@
               <p class="filter-modal__text">Регионы производства</p>
               <CommonLocation 
                 buttonLabel="Выбрать регионы" 
-                v-model="filter.locations"
+                v-model="filter.location"
                 class="filter-modal__location filter-modal__action"
                 :type="['selectCountry', 'selectRegions']"
                 :is-required="true"
@@ -54,7 +54,7 @@
               <p class="filter-modal__text">Наличие СТМ</p>
               <UiRadioButtonGroup 
                 class="filter-modal__radio filter-modal__action"
-                v-model="filter.availabilityStm"
+                v-model="filter.has_stm"
                 :options="[
                   { value: 1, label: 'Да' },
                   { value: 0, label: 'Нет' },
@@ -65,7 +65,7 @@
               <p class="filter-modal__text">Образцы</p>
               <UiCheckboxGroup
                 class="filter-modal__checkbox filter-modal__action"
-                v-model="filter.freeTestSamples"
+                v-model="filter.free_test"
                 :is-validated="false"
                 :options="[
                   { id: 0, label: 'По запросу' },
@@ -78,7 +78,7 @@
               <p class="filter-modal__text">Сырье</p>
               <UiCheckboxGroup
                 class="filter-modal__checkbox filter-modal__action"
-                v-model="filter.rawMaterials"
+                v-model="filter.material"
                 :options="[
                   { id: 0, label: 'Исполнителя' },
                   { id: 1, label: 'Заказчика' },
@@ -90,7 +90,7 @@
               <p class="filter-modal__text">Наличие склада</p>
               <UiRadioButtonGroup
                 class="filter-modal__radio filter-modal__action"
-                v-model="filter.freeStock"
+                v-model="filter.free_stock"
                 :options="[
                   { id: 1, value: 1, label: 'Да' },
                   { id: 0, value: 0, label: 'Нет' },
@@ -115,7 +115,7 @@
               class="filter-modal__btn" 
               variant="tertiary" 
               size="large"
-              @click="hideFilterModal"
+              @click="resetFilter"
             >
               Сбросить фильтры
             </UiButton>
@@ -124,7 +124,7 @@
               class="filter-modal__btn" 
               variant="quinary" 
               size="large"
-              @click="hideFilterModal"
+              @click="handleUpdateFilter"
             >
               Применить фильтры
             </UiButton>
@@ -138,16 +138,24 @@
 <script setup>
 import { ref } from 'vue';
 
+const props = defineProps({
+  filter: {
+    type: Object,
+    default: () => ({})
+  }
+});
+
+const emit = defineEmits(['updateFilter', 'resetFilter']);
 const filterModal = ref(null);
 const isVisible = ref(false);
 
 const filter = ref({
-  locations: [],
-  availabilityStm: null,
-  freeTestSamples: [],
-  rawMaterials: [],
-  freeStock: null,
-  verification: null
+  location: [],
+  has_stm: null,
+  free_test: [],
+  material: [],
+  free_stock: null,
+  verification: null,
 });
 
 const toggleFilterModal = () => {
@@ -161,6 +169,36 @@ const toggleFilterModal = () => {
 const hideFilterModal = () => {
   filterModal.value.hide();
 };
+
+const resetFilter = () => {
+  filter.value = {
+    location: [],
+    has_stm: null,
+    free_test: [],
+    material: [],
+    free_stock: null,
+    verification: null,
+  };
+  emit('resetFilter');
+  hideFilterModal();
+}
+
+const handleUpdateFilter = () => {
+  emit('updateFilter', filter.value)
+  hideFilterModal();
+};
+
+watch(() => props.filter, () => {
+  filter.value = {
+    location: props.filter.location || [],
+    has_stm: props.filter.is_stm || null,
+    free_test: props.filter.free_samples || [],
+    material: [props.filter.materials_own ? 0 : undefined, props.filter.materials_tolling ? 1 : undefined].filter(item => item !== undefined),
+    free_stock: props.filter.free_stock || null,
+    verification: props.filter.verification || null
+  }
+}, {deep: true, immediate: true})
+
 </script>
 
 <style lang="scss">
