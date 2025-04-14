@@ -226,6 +226,18 @@
               v-model="data.legalAddress"
             />
           </label>
+          <label
+              class="form-group-data form-group__title register__label_type_select"
+            >
+              Форма организации
+              <UiSelect
+                :rules="{ }"
+                name="organizationForm"
+                class="form-group__value"
+                v-model="data.organizationForm"
+                :options="formOrganization"
+              />
+            </label>
           <div>
             <CommonDocumentLoaderAndList
               :extension="['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'rtf', 'pdf', 'jpeg', 'png', 'jpg', 'gif', 'psd', 'djvu', 'fb2', 'ps', 'zip', 'rar']"
