@@ -42,7 +42,7 @@
           <NuxtLink class="header__dropdown-links" :to="item.value">{{ item.label }}</NuxtLink>
         </template>
       </div>
-      <div class="header__menu-dropdown-settings" v-if="userStore.role === 'performer' || userStore.role === 'customer'">
+      <div class="header__menu-dropdown-settings" v-if="userStore.role !== 'adjacent'">
         <UiButton type="button" variant="tertiary" size="centered" class="header__dropdown-change-role"
         @click="handleSwitchRole" v-if="userStore.role === 'performer' && userData.roles.includes('customer')">
           <SvgoEnter class="svg-m" />

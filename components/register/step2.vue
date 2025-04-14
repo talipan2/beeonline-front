@@ -5,6 +5,18 @@
     :block-title="blockTitle"
   >
     <UiForm :submit="handleSubmit">
+      <label class="form-group__title" v-if="!userStore.role">
+        Тип организации *
+        <UiSelect
+          class="form-group__value"
+          :rules="{ required: true }"
+          name="type"
+          label="Тип организации"
+          v-model="currentOrganizationType"
+          :options="organizationTypes"
+          :return-value="true"
+        /> 
+      </label>
       <label class="form-group__title" for="name"
         >Название компании *
         <UiInput
@@ -117,6 +129,13 @@ const data = computed({
   }
 });
 
+const organizationTypes = [
+  { id: 0, label: 'Выберите тип организации', value: '', disabled: true },
+  { id: 1, label: 'Исполнитель', value: 'performer' },
+  { id: 2, label: 'Заказчик', value: 'customer' },
+]
+
+const currentOrganizationType = ref('');
 
 const handleSubmit = async(value, form) => {
   if(props.submitFunc) {
@@ -129,7 +148,7 @@ const handleSubmit = async(value, form) => {
         description: data.value.description,
         siteUrl: data.value.siteUrl,
         status: 1,
-        type: userStore.role,
+        type: userStore.role || currentOrganizationType.value,
       }, form)
       .then(res => {
         if (res && res.data && res.data.id && data.value.companyLogo?.id) {

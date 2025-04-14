@@ -84,7 +84,7 @@
           variant="default"
           class="header-menu__change-role"
           @click="setRole('performer')"
-          v-if="!userRoles.includes('performer') && role === 'customer'"
+          v-if="!userRoles.includes('performer') && role !== 'adjacent'"
         >
           <SvgoAdduser class="svg-m" />
             Стать исполнителем
@@ -94,7 +94,7 @@
           variant="default"
           class="header-menu__change-role"
           @click="setRole('customer')"
-          v-if="!userRoles.includes('customer') && role === 'performer'"
+          v-if="!userRoles.includes('customer') && role !== 'adjacent'"
         >
           <SvgoAdduser class="svg-m" />
             Стать заказчиком
