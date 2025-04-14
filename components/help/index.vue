@@ -64,7 +64,7 @@ const handleClickQuestion = (id) => {
 
     // скролл на начало страницы при выборе вопроса
     if (helpContent.value) {
-      const rect = helpContent.value.getBoundingClientRect(); 
+      const rect = helpContent.value.getBoundingClientRect();
       const offset = window.scrollY + rect.top - settingStore.headerHeight;
       smoothScroll(offset);
     }
@@ -120,7 +120,7 @@ onMounted(() => {
     color: var(--primary-color);
 
     svg {
-      transform: rotate(-90deg); 
+      transform: rotate(-90deg);
       flex-shrink: 0;
     }
 
@@ -140,7 +140,7 @@ onMounted(() => {
     svg {
       transform: rotate(0);
     }
-  } 
+  }
 
   &__question-list {
     font-family: 'fira-sans', sans-serif;
@@ -163,6 +163,15 @@ onMounted(() => {
     h4 {
       font-size: 1.5em;
       margin-block: 1.25em .83em;
+    }
+
+    a {
+        display: inline;
+        color: var(--primary-color);
+
+        &:hover {
+            text-decoration: underline;
+        }
     }
   }
 
