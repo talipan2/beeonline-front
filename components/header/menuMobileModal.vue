@@ -99,6 +99,16 @@
           <SvgoAdduser class="svg-m" />
             Стать заказчиком
         </UiButton>
+        <UiButton
+          variant="default"
+          class="header-menu__change-role"
+          v-if="adminRoles.includes(userStore.role)"
+          :to="`${config.public.backUrl}/admin`"
+          target="_blank"
+        >
+          <SvgoEnter class="svg-m" />
+          Панель управления
+        </UiButton>
       </template>
       <div class="header-menu__social">
         <NuxtLink to="https://www.youtube.com/channel/UC2c_djW8Mf6KLrmB5TOuP_w" class="header-menu__social-link">
@@ -152,7 +162,9 @@ const organizationStore = useOrganizationStore();
 const isOpenModal = ref(props.modelValue);
 const userRoles = computed(() => userStore.userRoles);
 const userData = computed(() => userStore.userData);
+const config = useRuntimeConfig();
 
+const adminRoles = ['admin', 'moderator', 'support', 'to_moderator', 'deals_manager']
 
 const isOpenDropDown = ref(false);
 const searchQuery = ref('');

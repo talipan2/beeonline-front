@@ -71,6 +71,12 @@
             Стать<br>заказчиком
           </span>
         </UiButton>
+        <UiButton variant="tertiary" size="centered" class="header__dropdown-change-role" :to="`${config.public.backUrl}/admin`" target="_blank" v-if="adminRoles.includes(userStore.role)">
+          <SvgoEnter class="svg-m" />
+          <span>
+            Панель<br>управления
+          </span>
+        </UiButton>
         <!-- <UiButton type="button" variant="tertiary" size="centered" class="header__dropdown-change-role">
           <SvgoEnter class="svg-m" />
           <span>
@@ -99,6 +105,7 @@ const props = defineProps({
   }
 });
 
+const config = useRuntimeConfig();
 
 const emit = defineEmits(['update:modelValue']);
 const userData = computed(() => userStore.userData);
@@ -117,6 +124,8 @@ const logo = computed(() => {
 })
 
 const headerDropdown = ref(null);
+
+const adminRoles = ['admin', 'moderator', 'support', 'to_moderator', 'deals_manager']
 
 const dropdownMenuLinks = computed(() => {
   if(role.value === 'adjacent') {
