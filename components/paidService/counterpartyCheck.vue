@@ -63,6 +63,16 @@ const props = defineProps({
 
 const preparedData = ref(null);
 const usedData = ref(null);
+const interval = ref(null);
+const loading = ref(false);
+
+channelsStore.orgChannel
+.stopListening("CounterpartyCheckUpdate")
+.listen("CounterpartyCheckUpdate", (event) => {
+    if (event.id == usedData.value.id) {
+        counterpartyCheckUpdate();
+    }
+});
 
 const prepare = () => {
     usedData.value = null;
@@ -77,20 +87,31 @@ const use = () => {
     return counterpartyCheckStore.check(props.id)
     .then((response) => {
         usedData.value = response.data;
-        channelsStore.orgChannel.stopListening("CounterpartyCheckUpdate")
-            .listen("CounterpartyCheckUpdate", (event) => {
-                if (event.id == usedData.value.id) {
-                    counterpartyCheckStore.show(usedData.value.id)
-                    .then((response) => {
-                        usedData.value = response.data;
-                        if (usedData.value.file?.url) {
-                            window.open(usedData.value.file?.url, '_blank');
-                        }
-                    });
-                }
-            })
+
+        clearInterval(interval.value);
+        interval.value = setInterval(() => {
+            counterpartyCheckUpdate();
+        }, 5000);
     });
 };
+
+function counterpartyCheckUpdate() {
+    if (loading.value) return;
+    if (!usedData.value) return;
+    loading.value = true;
+
+    counterpartyCheckStore.show(usedData.value.id)
+    .then((response) => {
+        usedData.value = response.data;
+        if (usedData.value.file?.url) {
+            clearInterval(interval.value);
+            window.open(usedData.value.file?.url, '_blank');
+        }
+    })
+    .finally(() => {
+        loading.value = false;
+    });
+}
 </script>
 
 <style lang="scss" scoped>
