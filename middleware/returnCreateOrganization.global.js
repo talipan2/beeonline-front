@@ -109,11 +109,15 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     userStore.userData.id &&
     userStore.userData?.organization_id &&
     !availableLinkList.some((item) => to.path.startsWith(item)) &&
-    to.path !== '/' &&
-    userStore.userData?.public_cards
+    to.path !== '/' && 
+    userStore.userData?.public_cards 
   ) {
     const publicCards = userStore.userData.public_cards || []
     const firstCard = publicCards[0];
+
+    if(firstCard && !firstCard?.status_code === 'DRAFT'){
+      return
+    }
 
     if(!firstCard) {
       return navigateTo({ path: "/register/step2" });
