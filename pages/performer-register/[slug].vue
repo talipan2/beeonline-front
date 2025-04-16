@@ -10,7 +10,13 @@
     </template>
     <template #content>
       <h1 class="performer-register-layout__title">Регистрация исполнителя</h1>
-      <component :is="stepsConfig[currentStep].component" v-model="data"/>
+      <UiForm>
+        <component :is="stepsConfig[currentStep].component" v-model="data"/>
+        <div class="performer-register-layout__btn-container">
+          <UiButton class="performer-register-layout__btn" variant="quinary" size="large" >Назад</UiButton>
+          <UiButton type="submit" class="performer-register-layout__btn" variant="quinary" size="large">Далее</UiButton>
+        </div>
+      </UiForm>
     </template>
     <template #rightSide>
       <CommonNotify text="текст уведомления" type="info" />
@@ -32,14 +38,22 @@ const stepsConfig = [
 const route = useRoute();
 
 const data = ref({
+  name: '',
   logo: {
     url: 'https://i.pinimg.com/736x/59/54/f8/5954f8ba91c1c2a0ee09346a29c2c6e4.jpg'
-  }
+  },
+  url_site: '',
+  description: '',
+  is_stm: null,
+  free_samples: [],
+  free_stock: null,
+  materials: []
 })
-
 
 const currentStep = computed(() => stepsConfig.findIndex(step => route.path.includes(step.route))) // Текущий активный шаг
 const completedSteps = ref([0, 1]) // Завершенные шаги
+
+
 
 </script>
 
@@ -58,6 +72,13 @@ const completedSteps = ref([0, 1]) // Завершенные шаги
     line-height: 0.75em;
     color: #000;
     margin-bottom: 1.15em;
+  }
+
+  &__btn-container {
+    display: flex;
+    column-gap: 1em;
+    margin-top: 3em;
+    max-width: 50;
   }
 }
 
