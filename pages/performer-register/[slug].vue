@@ -40,7 +40,7 @@ const route = useRoute();
 const data = ref({
   name: '',
   logo: {
-    url: 'https://i.pinimg.com/736x/59/54/f8/5954f8ba91c1c2a0ee09346a29c2c6e4.jpg'
+    url: 'https://api.bee-online.ru/storage/33105/photo_2024-12-29_01-07-06.jpg'
   },
   url_site: '',
   description: '',
@@ -78,7 +78,13 @@ const completedSteps = ref([0, 1]) // Завершенные шаги
     display: flex;
     column-gap: 1em;
     margin-top: 3em;
-    max-width: 50;
+    justify-content: right;
+  }
+
+  &__btn {
+    width: 25%;
+    font-size: 1.2em;
+    text-transform: uppercase;
   }
 }
 

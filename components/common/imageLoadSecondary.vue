@@ -16,11 +16,12 @@
           <div class="load-image-secondary__placeholder">
             <SvgoCamera class="svg-lx load-image-secondary__camera" fill="#6937a5"/>
             <span class="load-image-secondary__title" v-if="label">{{ label }}</span>
-            <CommonProgressBar class="load-image-secondary__progress" />
+            <CommonProgressBar class="load-image-secondary__progress" :progress="progress" v-if="progress > 0 && progress < 100"/>
           </div>
         </div>
       </div>
     </div>
+    <Cropper :src="imagePreview" :stencil-component="Stencil" :stencil-props="stencilProps" @change="handleCrop"/>
   </div>
 </template>
 
@@ -28,6 +29,8 @@
 import { useUserStore } from '~/store/userStore';
 import { useSettingStore } from '~/store/settingStore';
 import { useToast } from 'vue-toastification';
+import { Cropper } from 'vue-advanced-cropper';
+import 'vue-advanced-cropper/dist/style.css';
 
 const props = defineProps({
   title: {
@@ -53,6 +56,7 @@ const settingStore = useSettingStore();
 const imagePreview = ref(props.modelValue.url || '');
 const userStore = useUserStore();
 const toast = useToast();
+const progress = ref(0);
 
 const emit = defineEmits(['update:modelValue']);
 
@@ -63,7 +67,14 @@ const onFileChange = (event) => {
     if(file.size < props.maxSize * 1024 * 1024) {
       const formData = new FormData();
       formData.append('file', file);
-      settingStore.uploadFiles(userStore.userData.id, formData)
+      const config = {
+        onUploadProgress: (progressEvent) => {
+          if(progressEvent.lengthComputable) {
+            progress.value = Math.round((progressEvent.loaded / progressEvent.total) * 100);
+          }
+        }
+      }
+      settingStore.uploadFiles(userStore.userData.id, formData, config)
       .then(res => {
         if(res && res.media_id) {
           imagePreview.value = URL.createObjectURL(file);
@@ -77,6 +88,10 @@ const onFileChange = (event) => {
     toast.error('Неверный тип файла');
   }
 };
+
+watch(() => progress.value, (newVal) => {
+  console.log(progress.value)
+})
 
 const handleDeleteImage = () => {
   imagePreview.value = '';

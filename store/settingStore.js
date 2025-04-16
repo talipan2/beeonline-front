@@ -60,9 +60,9 @@ export const useSettingStore = defineStore("setting", {
       this.alertModal.text = text;
     },
 
-    async uploadFiles(id, file) {
+    async uploadFiles(id, file, config) {
       try {
-        const response = await uploadFilesApi.uploadFiles(id, file);
+        const response = await uploadFilesApi.uploadFiles(id, file, config);
         if (response.data) {
           return response.data
         }

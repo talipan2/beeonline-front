@@ -8,22 +8,13 @@
 </template>
 
 <script setup>
-const progress = ref(0);
+const props = defineProps({
+  progress: {
+    type: Number,
+    default: 0,
+  },
+})
 
-// Имитация загрузки
-const simulateUpload = () => {
-  const interval = setInterval(() => {
-    progress.value += Math.floor(Math.random() * 5) + 1;
-    if (progress.value >= 100) {
-      progress.value = 100;
-      clearInterval(interval);
-    }
-  }, 300);
-};
-
-onMounted(() => {
-  simulateUpload();
-});
 </script>
 
 <style scoped>
