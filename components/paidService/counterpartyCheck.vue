@@ -66,14 +66,6 @@ const usedData = ref(null);
 const interval = ref(null);
 const loading = ref(false);
 
-channelsStore.orgChannel
-.stopListening("CounterpartyCheckUpdate")
-.listen("CounterpartyCheckUpdate", (event) => {
-    if (event.id == usedData.value.id) {
-        counterpartyCheckUpdate();
-    }
-});
-
 const prepare = () => {
     usedData.value = null;
     preparedData.value = null;
@@ -94,6 +86,20 @@ const use = () => {
         }, 5000);
     });
 };
+
+onMounted(() => {
+  eventBus.on('CounterpartyCheckUpdate', counterpartyCheckUpdateHandler)
+})
+
+onBeforeUnmount(() => {
+  eventBus.off('CounterpartyCheckUpdate', counterpartyCheckUpdateHandler)
+})
+
+function counterpartyCheckUpdateHandler(event) {
+    if (!usedData.value) return;
+    if (event.id !== usedData.value.id) return;
+    counterpartyCheckUpdate();
+}
 
 function counterpartyCheckUpdate() {
     if (loading.value) return;

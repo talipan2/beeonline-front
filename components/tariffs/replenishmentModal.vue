@@ -88,6 +88,8 @@ const amount = ref(1000);
 
 const loading = ref(false);
 const invoice = ref(null);
+const interval = ref(null);
+const opened = ref(false);
 
 const confirm = () => {
     settingStore.replenishmentModalStatus = false;
@@ -102,19 +104,11 @@ function handleSubmit(values, form) {
         redirect_url: router.currentRoute.value.fullPath,
 	};
 
-    channelsStore
-    .orgChannel.stopListening("InvoiceUpdate")
-    .listen("InvoiceUpdate", (event) => {
-        console.log("InvoiceUpdate", event);
-        if (invoice.value?.id === event.id) {
-            invoice.value = event;
-            payInvoice();
-        }
-    });
-
 	invoiceStore.makeInvoice(data)
 	.then((response) => {
         invoice.value = response.data;
+        opened.value = false;
+        startInvoiceInterval(5000);
 	}).finally(() => {
 		loading.value = false;
 	});
@@ -122,18 +116,62 @@ function handleSubmit(values, form) {
 
 function payInvoice() {
     if (!invoice.value) return;
-    if (invoice.value.status != 'generated') return;
+    if (invoice.value.status != 'generated') {
+        clearInterval(interval.value);
+        return;
+    }
+    if (opened.value) return; // предотвращаем повторное открытие
     if (invoice.value.type === 'external') {
+        opened.value = true;
         window.open(invoice.value.payment_url, '_blank');
+        // перезапускаем с большим интервалом
+        startInvoiceInterval(10000);
     } else if (invoice.value.type === 'invoice') {
+        opened.value = true;
         window.open(invoice.value.pdf_url, '_blank');
+        clearInterval(interval.value);
     }
 }
 
 watch(() => settingStore.replenishmentModalStatus, (newVal) => {
+    if (newVal) {
+        eventBus.on('InvoiceUpdate', invoiceUpdateHandler);
+    } else {
+        eventBus.off('InvoiceUpdate', invoiceUpdateHandler);
+    }
+    clearInterval(interval.value);
     loading.value = false;
     invoice.value = null;
 });
+
+function startInvoiceInterval(delay = 5000) {
+    clearInterval(interval.value);
+    interval.value = setInterval(() => {
+        invoiceUpdate('interval');
+    }, delay);
+}
+
+function invoiceUpdateHandler(event) {
+    if (!invoice.value) return;
+    if (event.id !== invoice.value.id) return;
+    invoiceUpdate('handler');
+}
+
+function invoiceUpdate(from) {
+    if (loading.value) return;
+    if (!invoice.value) return;
+    loading.value = true;
+    console.log(`from: ${from}`);
+
+    invoiceStore.show(invoice.value.id)
+    .then((response) => {
+        invoice.value = response.data;
+        payInvoice();
+    })
+    .finally(() => {
+        loading.value = false;
+    });
+}
 </script>
 
 <style lang="scss">
