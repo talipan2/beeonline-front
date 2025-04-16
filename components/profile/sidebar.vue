@@ -15,7 +15,7 @@
     </template>
     <template #bottom>
       <nav class="sidebar__bottom">
-        <template v-if="userStore.role === 'customer' || userStore.role === 'performer'">
+        <template v-if="userStore.role !== 'adjacent'">
           <button v-if="userStore.role === 'customer' && userData.roles?.includes('performer')" @click="handleChangeRole('performer')" class="sidebar__bottom-link">
             <SvgoAdduser class="svg-m" fill="#6937a5" />
             Кабинет исполнителя
