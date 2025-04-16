@@ -17,6 +17,7 @@ export default {
       url_site: data.urlSite,
       is_foreigner: data.selfEmployed,
       country_id: data.countryId,
+      email_docs: data.email_docs
     }, form)
   },
 
@@ -32,6 +33,7 @@ export default {
       url_site: data.urlSite,
       is_foreigner: data.selfEmployed,
       country_id: data.countryId,
+      email_docs: data.email_docs
     }, form)
   },
 

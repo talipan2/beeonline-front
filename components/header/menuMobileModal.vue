@@ -85,7 +85,7 @@
           class="header-menu__change-role"
           @click="setRole('performer')"
           v-if="!userRoles.includes('performer') && role !== 'adjacent'"
-          :disabled="router.currentRoute.value.path.startsWith('/register') && !absenceDefaultRole"
+          :disabled="userCurrentPubCard.id === null && !absenceDefaultRole"
         >
           <SvgoAdduser class="svg-m" />
             Стать исполнителем
@@ -96,7 +96,7 @@
           class="header-menu__change-role"
           @click="setRole('customer')"
           v-if="!userRoles.includes('customer') && role !== 'adjacent'"
-          :disabled="router.currentRoute.value.path.startsWith('/register') && !absenceDefaultRole"
+          :disabled="userCurrentPubCard.id === null && !absenceDefaultRole"
         >
           <SvgoAdduser class="svg-m" />
             Стать заказчиком
@@ -170,6 +170,8 @@ const adminRoles = ['admin', 'moderator', 'support', 'to_moderator', 'deals_mana
 
 const absenceDefaultRole = computed(() => !userRoles.value.includes('customer') && !userRoles.value.includes('performer')); // переменная для проверки наличия ролей customer и performer
 
+const userCurrentPubCard = computed(() => userStore.userPubCard);
+
 const isOpenDropDown = ref(false);
 const searchQuery = ref('');
 
@@ -206,7 +208,7 @@ const logOut = async() => {
 };
 
 const setRole = (role) => {
-  if(!userStore.userPubCard?.id && absenceDefaultRole.value) {
+  if(!userStore.userPubCard?.id || absenceDefaultRole.value) {
     userStore.setUserData({ role: role }, userData.value.id).then(res => {
       userStore.role = role;
       userStore.userRoles = res.data.roles;

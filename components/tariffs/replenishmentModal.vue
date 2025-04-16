@@ -181,26 +181,26 @@ watch(() => settingStore.replenishmentModalStatus, (newVal) => {
     }
 
     @include desktop {
-        .modal-dialog {
-            width: 30%;
+        .modal-content {
+            max-width: 30%;
         }
     }
 
     @include tablet {
-        .modal-dialog {
-            width: 40%;
+        .modal-content {
+            max-width: 40%;
         }
     }
 
     @include mobile {
-        .modal-dialog {
-            width: 70%;
+        .modal-content {
+            max-width: 70%;
         }
     }
 
     @include small-mobile {
-        .modal-dialog {
-            width: 95%;
+        .modal-content {
+            max-width: 95%;
         }
     }
 }

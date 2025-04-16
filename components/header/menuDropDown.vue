@@ -58,14 +58,14 @@
           </span>
         </UiButton>
         <UiButton type="button" variant="tertiary" size="centered" class="header__dropdown-change-role"
-        @click="setRole('performer')" v-if="!userRoles.includes('performer')" :disabled="router.currentRoute.value.path.startsWith('/register') && !absenceDefaultRole" >
+        @click="setRole('performer')" v-if="!userRoles.includes('performer')" :disabled="userCurrentPubCard.id === null && !absenceDefaultRole">
           <SvgoEnter class="svg-m" />
           <span>
             Стать<br>исполнителем
           </span>
         </UiButton>
         <UiButton type="button" variant="tertiary" size="centered" class="header__dropdown-change-role"
-        @click="setRole('customer')" v-if="!userRoles.includes('customer')" :disabled="router.currentRoute.value.path.startsWith('/register') && !absenceDefaultRole">
+        @click="setRole('customer')" v-if="!userRoles.includes('customer')" :disabled="userCurrentPubCard.id === null && !absenceDefaultRole">
           <SvgoEnter class="svg-m" />
           <span>
             Стать<br>заказчиком
@@ -187,7 +187,7 @@ const handleSwitchRole = async () => {
 };
 
 const setRole = (role) => {
-  if(!userStore.userPubCard?.id && absenceDefaultRole.value) {
+  if(!userStore.userPubCard?.id || absenceDefaultRole.value) {
     userStore.setUserData({ role: role }, userData.value.id).then(res => {
       userStore.role = role;
       userStore.userRoles = res.data.roles;

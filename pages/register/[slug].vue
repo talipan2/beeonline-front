@@ -42,6 +42,7 @@
         </div>
       </div>
     </div>
+    <ModalsReturnRegister />
   </section>
 </template>
 
@@ -139,6 +140,7 @@ const onScrollPage = () => {
 onMounted(() => {
   onScrollPage();
   window.addEventListener("scroll", onScrollPage)
+  settingStore.registerRedirectConfirm = false
 });
 
 onUnmounted(() => {
@@ -184,6 +186,7 @@ onMounted(() => {
         data.value.organizationForm = userOrganization.org_form,
         data.value.legalAddress = userOrganization.legal_address
         data.value.registerAddress = userOrganization.legal_address
+        data.value.closedDocumentsEmail = userOrganization.email_docs
       }
 
       if(res.user.public_cards && res.user.public_cards && res.user.public_cards.length > 0) {
