@@ -58,14 +58,14 @@
           </span>
         </UiButton>
         <UiButton type="button" variant="tertiary" size="centered" class="header__dropdown-change-role"
-        @click="setRole('performer')" v-if="!userRoles.includes('performer')" :disabled="router.currentRoute.value.path.startsWith('/register')">
+        @click="setRole('performer')" v-if="!userRoles.includes('performer')" :disabled="router.currentRoute.value.path.startsWith('/register') && !absenceDefaultRole" >
           <SvgoEnter class="svg-m" />
           <span>
             Стать<br>исполнителем
           </span>
         </UiButton>
         <UiButton type="button" variant="tertiary" size="centered" class="header__dropdown-change-role"
-        @click="setRole('customer')" v-if="!userRoles.includes('customer')" :disabled="router.currentRoute.value.path.startsWith('/register')">
+        @click="setRole('customer')" v-if="!userRoles.includes('customer')" :disabled="router.currentRoute.value.path.startsWith('/register') && !absenceDefaultRole">
           <SvgoEnter class="svg-m" />
           <span>
             Стать<br>заказчиком
@@ -113,6 +113,7 @@ const organizationStore = useOrganizationStore();
 const router = useRouter();
 const role = computed(() => userStore.role)
 const userRoles = computed(() => userStore.userRoles);
+const absenceDefaultRole = computed(() => !userRoles.value.includes('customer') && !userRoles.value.includes('performer')); // переменная для проверки наличия ролей customer и performer
 
 const userCurrentPubCard = computed(() => userStore.userPubCard);
 
@@ -186,25 +187,32 @@ const handleSwitchRole = async () => {
 };
 
 const setRole = (role) => {
-  if(!userStore.userPubCard?.id) return  
-  userStore.setUserData({ role: role }, userData.value.id)
-    .then(res => {
+  if(!userStore.userPubCard?.id && absenceDefaultRole.value) {
+    userStore.setUserData({ role: role }, userData.value.id).then(res => {
       userStore.role = role;
       userStore.userRoles = res.data.roles;
       localStorage.setItem('role', role);
-      organizationStore.setPubCard({
-        id: userStore.userData.organization_id,
-        name: userStore.userData.public_cards[0].name,
-        status: 1,
-        type: role
-      }).then( res => {
-        if(res && res.data && res.data.id) {
-          userStore.userPubCard = res.data
-          router.push({ path: `/pubcards/edit/${res.data.id}` });
-          toast.success('Вы успешно стали ' + formatLangRole.value);
-        }
-      })
     });
+  } else {
+    userStore.setUserData({ role: role }, userData.value.id)
+      .then(res => {
+        userStore.role = role;
+        userStore.userRoles = res.data.roles;
+        localStorage.setItem('role', role);
+        organizationStore.setPubCard({
+          id: userStore.userData.organization_id,
+          name: userStore.userData.public_cards[0].name,
+          status: 1,
+          type: role
+        }).then( res => {
+          if(res && res.data && res.data.id) {
+            userStore.userPubCard = res.data
+            router.push({ path: `/pubcards/edit/${res.data.id}` });
+            toast.success('Вы успешно стали ' + formatLangRole.value);
+          }
+        })
+      });
+  }
 }
 
 const formatLangRole = computed(() => {
