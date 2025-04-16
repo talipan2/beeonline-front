@@ -102,18 +102,19 @@ function handleSubmit(values, form) {
         redirect_url: router.currentRoute.value.fullPath,
 	};
 
+    channelsStore
+    .orgChannel.stopListening("InvoiceUpdate")
+    .listen("InvoiceUpdate", (event) => {
+        console.log("InvoiceUpdate", event);
+        if (invoice.value?.id === event.id) {
+            invoice.value = event;
+            payInvoice();
+        }
+    });
+
 	invoiceStore.makeInvoice(data)
 	.then((response) => {
         invoice.value = response.data;
-        channelsStore
-        .orgChannel.stopListening("InvoiceUpdate")
-        .listen("InvoiceUpdate", (event) => {
-            console.log("InvoiceUpdate", event);
-            if (invoice.value?.id === event.id) {
-                invoice.value = event;
-                payInvoice();
-            }
-        });
 	}).finally(() => {
 		loading.value = false;
 	});
