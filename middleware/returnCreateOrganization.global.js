@@ -115,7 +115,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     const publicCards = userStore.userData.public_cards || []
     const firstCard = publicCards[0];
 
-    if(firstCard && !firstCard?.status_code === 'DRAFT'){
+    if(firstCard && firstCard?.status_code !== 'DRAFT'){
       return
     }
 
