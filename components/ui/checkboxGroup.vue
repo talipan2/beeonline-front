@@ -59,7 +59,7 @@ const props = defineProps({
   variant: {
     type: String,
     default: "square",
-    validator: (value) => ["square", "round"].includes(value),
+    validator: (value) => ["square", "round", "rounded"].includes(value),
   },
   required: {
     type: Boolean,

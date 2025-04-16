@@ -42,7 +42,7 @@ const props = defineProps({
     variant: {
         type: String,
         default: "square",
-        validator: (value) => ["square", "round"].includes(value),
+        validator: (value) => ["square", "round", "rounded"].includes(value),
     },
     disabled: {
         type: Boolean,
@@ -84,6 +84,9 @@ const className = computed(() => {
     }
     if (props.variant === "square") {
         classList.push("checkbox_type_square");
+    }
+    if (props.variant === "rounded") {
+        classList.push("checkbox_type_rounded");
     }
     if (props.disabled) {
         classList.push("checkbox_disabled");
@@ -173,6 +176,14 @@ const className = computed(() => {
 
 .checkbox_type_round .checkbox__icon::before {
     border-radius: 50%;
+}
+
+.checkbox_type_rounded .checkbox__input:checked + .checkbox__icon::before {
+    background-image: url("@/assets/svg/checked.svg");
+}
+
+.checkbox_type_rounded .checkbox__icon::before {
+    border-radius: 4px;
 }
 
 .checkbox_disabled,

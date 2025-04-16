@@ -233,6 +233,54 @@ label:active {
   @include small-mobile {
     flex-direction: column;
   }
+
+  &_type_secondary {
+    margin-bottom: 1.5em;
+
+    .form-group__title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1em;
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #000;
+      margin-bottom: .6em;
+    }
+
+    .form-group__value {
+      margin-top: 0;
+    }
+
+    .input-container {
+      border-radius: 8px;
+      border: 1px solid #d9dae1;
+      flex-direction: row-reverse;
+  
+      svg {
+        margin-right: 8px;
+      }
+    }
+
+    .checkbox-group {
+      flex-direction: column;
+      row-gap: 1.2rem;
+    }
+
+    .radio-buttons {
+      flex-direction: row;
+      column-gap: 3.2rem;
+
+      span {
+        font-size: 1.6rem;
+      }
+    }
+
+    .text-area__input {
+      border-radius: 8px;
+      border: 1px solid #d9dae1;
+    }
+  }
 }
 
 .form-group-data {
@@ -270,6 +318,13 @@ label:active {
   line-height: 1.53em;
   margin-bottom: 1em;
   width: 100%;
+
+  &_service {
+    display: flex;
+    align-items: center;
+    column-gap: .5em;
+    justify-content: space-between;
+  }
 
   @include small-mobile {
     margin-bottom: .5em;

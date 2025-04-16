@@ -1,5 +1,5 @@
 <template>
-  <div class="catalog__banner">
+  <div class="catalog__banner" v-if="items.length > 0">
     <div class="catalog__banner-wrapper">
       <h2 class="catalog__banner-title">{{ title }}</h2>
       <div class="catalog__banner-content">

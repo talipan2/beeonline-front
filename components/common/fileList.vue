@@ -11,7 +11,7 @@
                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
             </g>
           </svg>
-          <a class="file__name" :href="item.url" download>{{ item.name }}<span v-if="downloadText"
+          <a class="file__name" :href="item.url" download>{{ item.name || item.url }}<span v-if="downloadText"
               class="file__download"><br />Скачать</span></a>
         </div>
         <button v-if="changed" class="file__remove link" type="button" @click="removeFile(item.id)"></button>

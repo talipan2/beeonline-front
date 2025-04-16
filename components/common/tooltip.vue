@@ -1,6 +1,6 @@
 <template>
   <div class="tooltip">
-    <UiNewDropdown placement="top" trigger="mouseenter focus">
+    <UiNewDropdown placement="top" trigger="mouseenter focus" :arrow="false">
       <div class="tooltip__wrapper" v-if="!$slots.trigger">
         ?
       </div>

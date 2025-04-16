@@ -1,20 +1,24 @@
 <template>
   <div class="rating">
     <div class="rating__wrapper">
-      <div class="rate" v-if="isSelected" :class="{ 'rate_selected': hoverRating }"
-        :style="{ '--rating': (hoverRating !== null ? hoverRating : selectedRating || 0) / 5 * 100 + '%' }"
-        @mouseleave="clearHoverRating"
-        @mousemove="setHoverRating"
-        @click="setRating">
+      <div v-if="singleStar" class="rate rate_single" :style="{'--rating': '100%'}">
       </div>
-      <div class="rate" v-else
-        :style="{ '--rating': (rating / 5) * 100 + '%' }">
-      </div>
+      <template v-else>
+        <div class="rate" v-if="isSelected" :class="{ 'rate_selected': hoverRating }"
+          :style="{ '--rating': (hoverRating !== null ? hoverRating : selectedRating || 0) / 5 * 100 + '%' }"
+          @mouseleave="clearHoverRating"
+          @mousemove="setHoverRating"
+          @click="setRating">
+        </div>
+        <div class="rate" v-else
+          :style="{ '--rating': (rating / 5) * 100 + '%' }">
+        </div>
+      </template>
       <p v-if="isSelected && selectedRating > 0" class="rate__choice">{{ `${selectedRating}/5` }}</p>
+      <p class="rating__count" v-if="isCountRating">{{ rating }}</p>
       <p class="rating__reviews" v-if="isCountReviews">
         ({{ reviews }}<span v-if="isReviewText">{{" " + plural(reviews, { one: "отзыв", few: "отзыва", many: "отзывов" })}}</span>)
       </p>
-      <p class="rating__count" v-if="isCountRating">({{ rating }})</p>
     </div>
     <UiInput
       v-if="isSelected"
@@ -58,6 +62,10 @@ const props = defineProps({
   modelValue: {
     type: Number,
     default: 0,
+  },
+  singleStar: {
+    type: Boolean,
+    default: false,
   }
 });
 
@@ -96,6 +104,7 @@ function setRating() {
 
   &__count {
     font-size: 1.6rem;
+    margin-right: .5em;
   }
 
   &__input {
@@ -111,6 +120,10 @@ function setRating() {
   font-size: 1rem;
   flex-shrink: 0;
   margin-right: 1.2rem;
+
+  &_single {
+    width: 1.5em;
+  }
 }
 
 .rate_choice {

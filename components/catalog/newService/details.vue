@@ -6,7 +6,7 @@
       </div>
       <div class="new-service-details__pub-card-content">
         <h3 class="new-service-details__pub-card-title">{{ data.name || 'не указано' }}</h3>
-        <CommonRating :rating="data.pub_card?.stars" :reviews="data.pub_card?.reviews_about_count" :is-count-rating="false" />
+        <CommonRating :rating="data.pub_card?.reviews_stats_about?.stars" :reviews="data.pub_card?.reviews_about_count" :is-count-rating="false" />
         <CommonLocationsList :locationsList="{countries: [data.pub_card?.country]}" />
         <div class="new-service-details__pub-card-site" v-if="data.pub_card?.url_site">
           <SvgoPlanet class="svg-m" />
@@ -20,7 +20,6 @@
     </CommonLayoutInfoCard>
     <div class="new-service-details__specs">
       <CatalogNewServiceDetailsBadge 
-        class="new-service-details__specs"
         :more-btn="true"
         :specs="{
           name: 'Категория', 
@@ -58,7 +57,7 @@
         }"
       />
     </div>
-    <CommonLayoutInfoCard title="Актуальные услуги компании" class="new-service-details__services">
+    <CommonLayoutInfoCard title="Актуальные услуги компании" class="new-service-details__services" v-if="data.pub_card?.services && data.pub_card?.services.length">
       <div class="new-service-details__services-list">
         <div class="new-service-details__services-item" v-for="(item, index) in data.pub_card?.services" :key="item.id">
           <div class="new-service-details__services-item-number"><span>{{ index + 1 }}</span></div>
@@ -83,11 +82,18 @@
         </div>
       </div>
     </CommonLayoutInfoCard>
-    <CommonLayoutInfoCard title="Примеры работ" class="new-service-details__gallery" v-if="data.gallery">
-      <CatalogNewServiceImagesList :data="data.gallery" />
+    <CommonLayoutInfoCard title="Описание" class="new-service-details__description">
+      <p class="new-service-details__description-text">{{ data.description || 'не указано' }}</p>
     </CommonLayoutInfoCard>
-    <CommonLayoutInfoCard title="Фабрика и оборудование" class="new-service-details__gallery" v-if="data.gallery">
-      <CatalogNewServiceImagesList :data="data.gallery" />
+    <CommonLayoutInfoCard title="Примеры работ" class="new-service-details__gallery" v-if="data.gallery && data.gallery.length">
+      <CatalogNewServiceImagesList :data="data.gallery" :show-more="true" :show-fancybox="true" />
+    </CommonLayoutInfoCard>
+    <CommonLayoutInfoCard title="Фабрика и оборудование" class="new-service-details__gallery" v-if="data.gallery && data.gallery.length">
+      <CatalogNewServiceImagesList :data="data.gallery" :show-more="true" :show-fancybox="true" />
+    </CommonLayoutInfoCard>
+    <CommonLayoutInfoCard title="Отзывы" class="new-service-details__reviews" v-if="reviewList.length">
+      <CatalogNewServiceReviewList :reviewList="reviewList" :pub_card="data.pub_card" />
+      <CommonPagination  v-if="reviewsPage.last_page > 1" :current-page="reviewsPage.page" :total-pages="reviewsPage.last_page" @change-page="handleChangeReviewsPage" btn-type="square" position="left"/>
     </CommonLayoutInfoCard>
   </div>
 </template>
@@ -96,6 +102,7 @@
 
 import defaultImage from '~/assets/images/nophoto_pc.png';
 import { useEntityStore } from '~/store/entityStore';
+import { useReviewsStore } from '~/store/reviewsStore';
 
 const props = defineProps({
   data: {
@@ -105,6 +112,35 @@ const props = defineProps({
 })
 
 const entityStore = useEntityStore();
+
+const reviewStore = useReviewsStore();
+
+const reviewsPage = ref({
+  page: 1,
+  last_page: 2
+})
+
+const reviewList = ref([]);
+
+const handleChangeReviewsPage = (page) => {
+  if(!page) return
+  fetchReviews(page)
+}
+
+const fetchReviews = async(page = 1) => {
+  await nextTick()
+  reviewStore.getOrganizationReviews(props.data.organization_id, {page}).then((res) => {
+    reviewList.value = res.data
+    reviewsPage.value = {
+      page: res.pagination.current_page,
+      last_page: res.pagination.last_page
+    }
+  })
+}
+
+onMounted(() => {
+  fetchReviews()
+})
 
 </script>
 
@@ -117,6 +153,25 @@ const entityStore = useEntityStore();
     display: flex;
     padding: 3.2em;
     margin-bottom: 3.2em;
+
+    .rate {
+      font-size: 1.6rem;
+    }
+
+    .rating__reviews {
+      font-size: 1.6rem;
+    }
+
+    .location-container {
+      font-size: 1.6rem;
+      font-family: 'fira-sans', sans-serif;
+
+      .flag {
+        width: 2.8rem;
+        height: 2.8rem;
+        font-size: 2.8rem;
+      }
+    }
 
     &-image {
       flex: 0 0 32%;
@@ -261,6 +316,10 @@ const entityStore = useEntityStore();
     }
   }
 
+  &__description {
+    margin-bottom: 3.2em;
+  }
+
   &__description-text {
     font-size: 1.8em;
     font-weight: 400;
@@ -268,13 +327,11 @@ const entityStore = useEntityStore();
     color: #040404;
     white-space: pre-line;
     opacity: 0.8;
-    margin-bottom: 3.2em;
   }
 
   &__gallery {
     margin-bottom: 3.2em;
   }
-
   
 }
 

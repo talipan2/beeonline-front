@@ -37,11 +37,13 @@
 import { useEntityStore } from '~/store/entityStore';
 import { useLocationStore } from '~/store/locationStore';
 import { useOrganizationStore } from '~/store/organizationStore';
+import { useReviewsStore } from '~/store/reviewsStore';
 
 const router = useRouter();
 const entityStore = useEntityStore();
 const organizationStore = useOrganizationStore();
 const locationStore = useLocationStore();
+const reviewStore = useReviewsStore();
 const data = ref({});
 const pubCard = ref({});
 const isLoading = ref(false);
@@ -93,6 +95,7 @@ onMounted(async() => {
     if(serviceResponse && serviceResponse.data && serviceResponse.data.pub_card) {
       pubCard.value = serviceResponse.data.pub_card
     }
+
   } catch (err) {
     console.error(err);
   } finally {
