@@ -9,5 +9,8 @@ export const useInvoiceStore = defineStore("invoice", {
         async makeInvoice(data) {
             return await Api.makeInvoice(data);
         },
+        async show(id) {
+            return await Api.show(id);
+        },
     },
 });

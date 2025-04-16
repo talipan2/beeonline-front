@@ -196,6 +196,19 @@ export const useUserStore = defineStore("user", {
                     console.log(event);
                     this.userNotifications = event.count_unread_noty;
                   });
+
+                useChannelsStore()
+                    .orgChannel
+                    .stopListening("CounterpartyCheckUpdate")
+                    .listen("CounterpartyCheckUpdate", (event) => {
+                        eventBus.emit('CounterpartyCheckUpdate', event);
+                    });
+
+                useChannelsStore()
+                    .orgChannel.stopListening("InvoiceUpdate")
+                    .listen("InvoiceUpdate", (event) => {
+                        eventBus.emit('InvoiceUpdate', event);
+                    });
               }
               return response;
         })
@@ -208,7 +221,7 @@ export const useUserStore = defineStore("user", {
     async logOut() {
       try {
         await Api.logOut();
-        
+
         this.userToken = null;
         localStorage.removeItem("token");
         sessionStorage.removeItem("token");
@@ -218,7 +231,7 @@ export const useUserStore = defineStore("user", {
         this.userOrganization = {};
         this.userPubCard = {};
         this.userOrganizationId = null;
-        
+
         return Promise.resolve();
       } catch (error) {
         this.userToken = null;
@@ -230,7 +243,7 @@ export const useUserStore = defineStore("user", {
         this.userOrganization = {};
         this.userPubCard = {};
         this.userOrganizationId = null;
-        
+
         return Promise.reject(error);
       }
     },
