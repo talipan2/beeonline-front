@@ -8,6 +8,7 @@ export default defineNuxtConfig({
       "vue-yandex-maps/nuxt",
       "@nuxt/devtools",
       "@primevue/nuxt-module",
+      "yandex-metrika-module-nuxt3",
     ],
     ssr: false,
     runtimeConfig: {
@@ -90,5 +91,11 @@ export default defineNuxtConfig({
                 },
             },
         },
+    },
+    yandexMetrika: {
+        clickmap: true,
+        trackLinks: true,
+        accurateTrackBounce: true,
+        webvisor: true,
     },
 });
