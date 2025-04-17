@@ -37,6 +37,10 @@ useHead({
     ],
 });
 
+definePageMeta({
+    disableMetrika: true,
+});
+
 const entityStore = useEntityStore();
 const userStore = useUserStore();
 

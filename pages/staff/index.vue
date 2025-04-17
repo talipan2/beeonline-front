@@ -23,6 +23,10 @@ useHead({
   ],
 });
 
+definePageMeta({
+    disableMetrika: true,
+});
+
 const userStore = useUserStore();
 const roleName = userStore.getRoleNameForBreadcrumbs;
 

@@ -23,6 +23,10 @@
 import { useAdjacentStore } from '~/store/adjacentStore';
 import { useEntityStore } from '~/store/entityStore';
 
+definePageMeta({
+    disableMetrika: true,
+});
+
 const entityStore = useEntityStore();
 const adjacentStore = useAdjacentStore();
 

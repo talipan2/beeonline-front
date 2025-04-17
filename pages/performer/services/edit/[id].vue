@@ -6,7 +6,7 @@
     </template>
     <template #content>
       <component :is="currentComponent" :title="title" role="performer" :formatData="formatData"  :handleSubmit="handleSubmit" :handleBack="previousStep" :data="serviceData" type="edit"/>
-    </template> 
+    </template>
     <template #rightSide>
       <div class="h4">Предварительный просмотр услуги</div>
       <CreateEntityPreview :data="previewCardData"/>
@@ -22,6 +22,10 @@ import Step4 from '~/components/createEntity/step4.vue';
 import { useEntityStore } from '~/store/entityStore';
 import { useLocationStore } from '~/store/locationStore';
 import {useToast} from "vue-toastification";
+
+definePageMeta({
+    disableMetrika: true,
+});
 
 const router = useRouter();
 const entityStore = useEntityStore();

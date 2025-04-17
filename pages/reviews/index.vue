@@ -12,6 +12,10 @@
 <script setup>
 import { useUserStore } from '~/store/userStore';
 
+definePageMeta({
+    disableMetrika: true,
+});
+
 const currentReviewsState = ref('my-reviews');
 const pageTitle = ref('Мои отзывы');
 

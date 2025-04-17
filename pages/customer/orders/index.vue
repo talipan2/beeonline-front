@@ -19,7 +19,7 @@
         @selectInfoModal="selectInfoModalData"
         @setFilters="setFilters"
       />
-      <CommonPagination 
+      <CommonPagination
         :class="{'loading': isLoading}"
         v-if="page.lastPage > 1"
         :currentPage="page.currentPage"
@@ -45,7 +45,8 @@ import { useSettingStore } from '~/store/settingStore';
 import { useUserStore } from '~/store/userStore';
 
 definePageMeta({
-  middleware: 'telegram' 
+  middleware: 'telegram',
+  disableMetrika: true,
 });
 
 const entityStore = useEntityStore();
@@ -170,7 +171,7 @@ function getOrders(params) {
 onMounted(() => {
   if(userStore.userData.organization_id) {
     getOrders();
-  }  
+  }
 });
 
 </script>

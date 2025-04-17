@@ -17,6 +17,10 @@ useHead({
   ],
 });
 
+definePageMeta({
+    disableMetrika: true,
+});
+
 </script>
 
 <style lang="scss">

@@ -6,7 +6,8 @@
 
 <script setup>
 definePageMeta({
-  ignoreAuth: true
+  ignoreAuth: true,
+  disableMetrika: true,
 })
 
 import { useUserStore } from "~/store/userStore";

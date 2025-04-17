@@ -18,6 +18,10 @@ useHead({
   ],
 });
 
+definePageMeta({
+    disableMetrika: true,
+});
+
 const router = useRouter();
 
 const currentAuthPage = ref('')

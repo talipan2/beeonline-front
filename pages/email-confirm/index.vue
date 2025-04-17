@@ -8,8 +8,9 @@
 
 <script setup>
 definePageMeta({
-  ignoreAuth: true
-})
+  ignoreAuth: true,
+  disableMetrika: true,
+});
 
 import { useSettingStore } from '~/store/settingStore';
 import { useUserStore } from '~/store/userStore';
