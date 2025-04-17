@@ -8,7 +8,6 @@ export default defineNuxtConfig({
       "vue-yandex-maps/nuxt",
       "@nuxt/devtools",
       "@primevue/nuxt-module",
-      "yandex-metrika-module-nuxt3",
     ],
     ssr: false,
     runtimeConfig: {
@@ -21,6 +20,15 @@ export default defineNuxtConfig({
                 key: process.env.PUSHER_APP_KEY,
                 port: process.env.PUSHER_PORT,
                 scheme: process.env.PUSHER_SCHEME || 'http',
+            },
+            yandexMetrika: {
+                id: Number(process.env.YANDEX_METRIKA_ID),
+                options: {
+                    clickmap: true,
+                    trackLinks: true,
+                    accurateTrackBounce: true,
+                    webvisor: true
+                },
             },
         },
         frontUrl: process.env.FRONT_URL,
@@ -91,11 +99,5 @@ export default defineNuxtConfig({
                 },
             },
         },
-    },
-    yandexMetrika: {
-        clickmap: true,
-        trackLinks: true,
-        accurateTrackBounce: true,
-        webvisor: true,
     },
 });

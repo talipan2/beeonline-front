@@ -39,8 +39,7 @@
     "vue-flatpickr-component": "^11.0.5",
     "vue-tippy": "^6.6.0",
     "vue-toastification": "^2.0.0-rc.5",
-    "vue-yandex-maps": "^2.1.7",
-    "yandex-metrika-module-nuxt3": "^1.5.3"
+    "vue-yandex-maps": "^2.1.7"
   },
   "devDependencies": {
     "@nuxt/devtools": "^2.3.0",

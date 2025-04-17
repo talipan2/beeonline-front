@@ -7,7 +7,7 @@
         <ProfileSidebar class="sticky" ref="leftSide" :role="role" />
       </div>
       <div class="profile__content" :class="{ 'profile__content_type_full': !$slots.rightSide }">
-        <slot name="content"/> 
+        <slot name="content"/>
       </div>
       <div class="profile__right" v-if="$slots.rightSide">
         <div ref="rightSide" :class="{ 'sticky': rightSideSticky }">
@@ -21,6 +21,10 @@
 <script setup>
 import { useSettingStore } from '~/store/settingStore';
 import { useUserStore } from '~/store/userStore';
+
+definePageMeta({
+  disableMetrika: true,
+});
 
 const props = defineProps({
   title: {
@@ -105,7 +109,7 @@ onUnmounted(() => {
 }
 
 .entity-edit {
-  
+
   .profile__content {
     flex: 0 1 50%;
 
