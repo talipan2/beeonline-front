@@ -35,9 +35,9 @@
           "
         >
           <label class="form-group__title">
-            ИНН
+            ИНН {{ innRequired ? '*' : '' }}
             <UiInput
-              :rules="{}"
+              :rules="{required: innRequired}"
               name="inn"
               label="ИНН"
               class="form-group__value"
@@ -84,11 +84,11 @@
             ИНН организации
             <span
               >(Введите ИНН и нажмите на кнопку поиска, чтобы система определила
-              вас)</span
+              вас){{ innRequired ? '*' : '' }}</span
             >
             <div class="form-group__value register__input-inn">
               <UiInput
-                :rules="{}"
+                :rules="{required: innRequired}"
                 name="inn"
                 label="ИНН"
                 class="register__input"
@@ -181,11 +181,11 @@
             Идентификационный номер организации
             <span
               >(Введите номер и нажмите на кнопку поиска, чтобы система определила
-              вас)</span
+              вас){{ innRequired ? '*' : '' }}</span
             >
             <div class="form-group__value register__input-inn">
               <UiInput
-                :rules="{}"
+                :rules="{required: innRequired}"
                 name="inn"
                 label="ИНН"
                 class="register__input"
@@ -317,6 +317,10 @@ const getSkipInnRules = computed(() => {
 const handleClick = async(innSkip) => {
   skipInn.value = innSkip;
 }
+
+const innRequired = computed(() => {
+  return userStore.role == 'performer'
+})
 
 const data = computed({
   get() {
