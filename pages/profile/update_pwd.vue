@@ -1,13 +1,13 @@
 <template>
   <NuxtLayout name="profile" title="Профиль" class="update-password-layout">
     <template #header>
-      <UiBreadCrumb 
+      <UiBreadCrumb
         :list="[
-          {label: 'Главная', link: '/'}, 
+          {label: 'Главная', link: '/'},
           { label: `Кабинет ${roleName}`, link: '/desktop' },
           { label: 'Профиль', link: '/profile' },
           { label: 'Смена пароля', link: '' }
-        ]" 
+        ]"
       />
     </template>
     <template #content>
@@ -19,7 +19,6 @@
 <script setup>
 import { useUserStore } from '~/store/userStore';
 
-
 useHead({
   title: 'Профиль',
   meta: [
@@ -28,6 +27,10 @@ useHead({
       content: '',
     },
   ],
+});
+
+definePageMeta({
+    disableMetrika: true,
 });
 
 const userStore = useUserStore();

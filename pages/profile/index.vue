@@ -29,6 +29,10 @@
 <script setup>
 import { useUserStore } from '~/store/userStore';
 
+definePageMeta({
+    disableMetrika: true,
+});
+
 const pubCard = computed(() => userStore.userPubCard);
 const organization = computed(() => userStore.userOrganization);
 const userStore = useUserStore();

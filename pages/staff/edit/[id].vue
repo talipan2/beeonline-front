@@ -19,6 +19,9 @@
 <script setup>
 import { useUserStore } from '~/store/userStore';
 
+definePageMeta({
+    disableMetrika: true,
+});
 
 const userStore = useUserStore();
 
@@ -56,7 +59,7 @@ onMounted(() => {
     .profile__content {
       flex: 0 1 70%;
     }
-  }  
+  }
 }
 
 @include mobile {
@@ -64,6 +67,6 @@ onMounted(() => {
     .profile__content {
       flex: 0 1 100%;
     }
-  }  
+  }
 }
 </style>

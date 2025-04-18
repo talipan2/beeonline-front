@@ -21,4 +21,8 @@ useHead({
   ],
 });
 
+definePageMeta({
+    disableMetrika: true,
+});
+
 </script>

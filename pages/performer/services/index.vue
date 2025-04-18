@@ -11,14 +11,14 @@
         title="Все услуги"
         subtitle="Размещайте список своих услуг в каталоге исполнителей и ищите заказчиков в кратчайшие сроки с учетом именно ваших потребностей."
         btnLabel="Создать услугу"
-        btnLink="/services/create" 
+        btnLink="/services/create"
         :data="cardData"
         :isLoaded="isLoaded"
         emptyAlertText="Услуг нет"
         @selectInfoModal="selectInfoModalData"
         @setFilters="setFilters"
       />
-      <CommonPagination 
+      <CommonPagination
         :class="{'loading': isLoading}"
         v-if="page.lastPage > 1"
         :currentPage="page.currentPage"
@@ -40,6 +40,10 @@ import { useEntityStore } from '~/store/entityStore';
 import { useLocationStore } from '~/store/locationStore';
 import { useSettingStore } from '~/store/settingStore';
 import { useUserStore } from '~/store/userStore';
+
+definePageMeta({
+    disableMetrika: true,
+});
 
 const entityStore = useEntityStore();
 const userStore = useUserStore();

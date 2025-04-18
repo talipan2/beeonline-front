@@ -25,6 +25,10 @@
 </template>
 
 <script setup>
+definePageMeta({
+    disableMetrika: true,
+});
+
 const route = useRoute();
 </script>
 

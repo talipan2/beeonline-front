@@ -30,6 +30,9 @@
 </template>
 
 <script setup>
+definePageMeta({
+    disableMetrika: true,
+});
 
 const router = useRouter();
 

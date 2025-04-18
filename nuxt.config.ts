@@ -21,6 +21,15 @@ export default defineNuxtConfig({
                 port: process.env.PUSHER_PORT,
                 scheme: process.env.PUSHER_SCHEME || 'http',
             },
+            yandexMetrika: {
+                id: Number(process.env.YANDEX_METRIKA_ID),
+                options: {
+                    clickmap: true,
+                    trackLinks: true,
+                    accurateTrackBounce: true,
+                    webvisor: true
+                },
+            },
         },
         frontUrl: process.env.FRONT_URL,
         backUrl: process.env.BACK_URL,

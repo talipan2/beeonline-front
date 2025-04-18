@@ -24,6 +24,9 @@ import { useOrganizationStore } from '~/store/organizationStore';
 import { useReviewsStore } from '~/store/reviewsStore';
 import { useUserStore } from '~/store/userStore';
 
+definePageMeta({
+    disableMetrika: true,
+});
 
 const userStore = useUserStore();
 

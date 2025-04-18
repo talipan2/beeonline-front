@@ -19,7 +19,6 @@
 <script setup>
 import { useUserStore } from '~/store/userStore';
 
-
 useHead({
   title: 'Создание нового сотрудника',
   meta: [
@@ -28,6 +27,10 @@ useHead({
       content: '',
     },
   ],
+});
+
+definePageMeta({
+    disableMetrika: true,
 });
 
 const userStore = useUserStore();
@@ -48,7 +51,7 @@ const roleName = userStore.getRoleNameForBreadcrumbs;
     .profile__content {
       flex: 0 1 70%;
     }
-  }  
+  }
 }
 
 @include mobile {
@@ -56,6 +59,6 @@ const roleName = userStore.getRoleNameForBreadcrumbs;
     .profile__content {
       flex: 0 1 100%;
     }
-  }  
+  }
 }
 </style>
