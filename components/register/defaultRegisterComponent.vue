@@ -100,8 +100,9 @@ const userData = ref({
 const isCreateOrder = computed(() => settingStore.isCreateOrder);
 
 const handleSubmit = async (values, form) => {
+  const utm = localStorage.getItem('utm_params')
   await userStore
-    .registerUser({...values, role: userData.value.role}, form)
+    .registerUser({...values, role: userData.value.role, utm: utm}, form)
     .then((res) => {
         if (isCreateOrder.value) {
           router.push({ path: "/orders/create/step1" });

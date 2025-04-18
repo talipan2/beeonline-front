@@ -16,4 +16,22 @@ useHead({
   ],
 });
 
+const route = useRoute()
+
+const saveUtmParams = () => {
+  const utmParams = {
+    source: route.query.utm_source,
+    medium: route.query.utm_medium,
+    campaign: route.query.utm_campaign,
+    term: route.query.utm_term,
+    content: route.query.utm_content
+  }
+
+  localStorage.setItem('utm_params', JSON.stringify(utmParams))
+}
+
+onMounted(() => {
+  saveUtmParams()
+})
+
 </script>
