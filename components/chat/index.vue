@@ -866,13 +866,13 @@ export default {
             this.$emit("change:deal-stage", stage);
         },
 
-        showFileTooltip(e) {
-            $(e.target).tooltip("show");
-        },
+        // showFileTooltip(e) {
+        //     $(e.target).tooltip("show");
+        // },
 
-        hideFileTooltip(e) {
-            $(e.target).tooltip("hide");
-        },
+        // hideFileTooltip(e) {
+        //     $(e.target).tooltip("hide");
+        // },
 
         openReviewModal(org) {
             if (!org.pubcard) return;
