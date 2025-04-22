@@ -42,85 +42,19 @@
 </template>
 
 <script setup>
-import SvgoRuIcon from "~/assets/svg/ru-icon.svg";
-import SvgoEnIcon from "~/assets/svg/en-icon.svg";
-import SvgoDeIcon from "~/assets/svg/de-icon.svg";
-import SvgoItIcon from "~/assets/svg/it-icon.svg";
+import { useTranslateStore } from "~/store/translateStore";
 
-const dropdownOptions = [
-  { label: "RU", value: "ru", img: markRaw(SvgoRuIcon) },
-  { label: "EN", value: "en", img: markRaw(SvgoEnIcon) },
-  { label: "DE", value: "de", img: markRaw(SvgoDeIcon) },
-  { label: "IT", value: "it", img: markRaw(SvgoItIcon) },
-];
+const translateStore = useTranslateStore();
 
-const selectedOption = ref(dropdownOptions[0]);
+const dropdownOptions = computed(() => translateStore.options);
+const selectedOption = computed(() => translateStore.getSelectedOption());
 
 const handleChangeLang = (lang) => {
-  selectedOption.value = dropdownOptions.find(
-    (item) => item.value === lang.value
-  );
-
-  if (lang.value === config.langDefault) {
-    clearTranslateCookies();
-    location.reload();
-  } else {
-    clearTranslateCookies();
-    setTranslateCookie(lang.value);
-    location.reload();
-    if(!document.querySelector('script[src*="translate.google.com"]')) {
-      initGoogleTranslate();
-    }
-  }
-
+    translateStore.setLang(lang.value);
 };
-
-const config = {
-  lang: "ru",
-  langDefault: "ru",
-};
-
-function setTranslateCookie(lang) {
-  const cookieValue = `/${config.langDefault}/${lang}`;
-  document.cookie = `googtrans=${cookieValue}; path=/; domain=${location.hostname};`;
-  document.cookie = `googtrans2=${cookieValue}; path=/; domain=${location.hostname};`;
-}
-
-function clearTranslateCookies() {
-  const cookieValue = `/${config.langDefault}/${config.lang}`;
-  document.cookie = `googtrans=${cookieValue}; max-age=-1; path=/; domain=` + location.hostname;
-  document.cookie = `googtrans2=${cookieValue}; max-age=-1; path=/; domain=` + location.hostname;
-}
-
-function initGoogleTranslate() {
-  if (!document.querySelector('script[src*="translate.google.com"]')) {
-    const script = document.createElement("script");
-    script.src =
-      "https://translate.google.com/translate_a/element.js?cb=googleTranslateCallback";
-    script.async = true;
-    document.head.appendChild(script);
-  }
-}
-
-window.googleTranslateCallback = function () {
-  new google.translate.TranslateElement({
-    pageLanguage: config.langDefault,
-    includedLanguages: "ru,en,de,it",
-  });
-};
-
-function getCookie(name) {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop().split(";").shift();
-}
 
 onMounted(() => {
-  const cookie = getCookie("googtrans");
-  if (cookie) {
-    selectedOption.value = dropdownOptions.find((item) => item.value === cookie.split('/').pop());
-    initGoogleTranslate();
-  } 
+    translateStore.initGoogleTranslate();
 });
 
 </script>

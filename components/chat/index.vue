@@ -297,11 +297,7 @@
 </template>
 
 <script>
-window.googleTranslateConfig = {
-    lang: "auto",
-    langDefault: "ru",
-};
-
+import { useTranslateStore } from "~/store/translateStore";
 import ChatMessage from "./message.vue";
 import ChatModalFiles from "./modal/files.vue";
 import ChatModalReview from "./modal/review.vue";
@@ -731,9 +727,11 @@ export default {
                         localStorage.getItem("translate_chat_" + response.id) ==
                         "true";
                     if (this.translate) {
-                        this.translate = window.TranslateGetCode(
-                            window.googleTranslateConfig
-                        );
+                        useTranslateStore().initGoogleTranslate(true);
+                        this.translate = useTranslateStore().lang;
+                        // this.translate = window.TranslateGetCode(
+                        //     window.googleTranslateConfig
+                        // );
                     }
 
                     this.channel.listen("NewChatMessageEvent", (event) => {
