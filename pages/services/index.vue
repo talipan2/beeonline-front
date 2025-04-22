@@ -100,7 +100,8 @@ const handleUpdateFilter = (data) => {
   // добавление квери параметров для запроса
   filter.value = {
     categories: data.category && data.category.length ? data.category : undefined,
-    regions: Object.keys(data.location).length ? Object.values(data.location).flat().map(item => item.id) : undefined,
+    regions: data.location && data.location.regions ? data.location.regions.map(item => item.id) : undefined,
+    countries: data.location && data.location.countries ? data.location.countries.map(item => item.id) : undefined,
     is_stm: data.has_stm && data.has_stm.length ? data.has_stm : undefined,
     free_samples: data.free_test && data.free_test.length ? data.free_test : undefined,
     free_stock: data.free_stock && data.free_stock.length ? data.free_stock : undefined,
@@ -136,7 +137,6 @@ const handleUpdateFilter = (data) => {
     loading.value = false
     isLoaded.value = true
   })
-
 }
 
 const updateServiceCardRef = (newVal) => {
@@ -178,7 +178,8 @@ onMounted(() => {
     params = {
       page: query.page ? Number(query.page) : undefined,
       categories: query.categories ? query.categories.split(',').map(item => Number(item)) : undefined,
-      regions: [query.countries && query.countries.split(',').map(item => Number(item)), query.regions && query.regions.split(',').map(item => Number(item))].flat(),
+      regions: query.regions ? query.regions.split(',').map(item => Number(item)) : undefined,
+      countries: query.countries ? query.countries.split(',').map(item => Number(item)) : undefined,
       is_stm: query.is_stm ? query.is_stm.split(',').map(item => Number(item)) : undefined,
       free_samples: query.free_samples ? query.free_samples.split(',').map(item => Number(item)) : undefined,
       free_stock: query.free_stock ? query.free_stock.split(',').map(item => Number(item)) : undefined,

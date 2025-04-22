@@ -78,18 +78,22 @@ const handleUpdateFilter = (data) => {
   // добавление квери параметров для роутинга
   const newQuery = {
     categories: data.category ? data.category.join(',') : undefined,
-    countries: data.location && data.location.countries ? data.location.countries.join(',') : undefined,
-    regions: data.location && data.location.regions ? data.location.regions.join(',') : undefined,
-    cities: data.location && data.location.cities ? data.location.cities.join(',') : undefined,
+    countries: data.location && data.location.countries ? data.location.countries?.map(item => item.id).join(',') : undefined,
+    regions: data.location && data.location.regions ? data.location.regions?.map(item => item.id).join(',') : undefined,
+    cities: data.location && data.location.cities ? data.location.cities?.map(item => item.id).join(',') : undefined,
     batch_size_min: data.batch && data.batch.length > 1 ? data.batch[0] : undefined,
     batch_size_max: data.batch && data.batch.length > 1 ? data.batch[1] : undefined,
     urgent: data.is_rush ? data.is_rush : undefined,
   }
 
+  console.log(data.location.regions)
+
   // добавление квери параметров для запроса
   filter.value = {
     categories: data.category && data.category.length ? data.category : undefined,
-    regions: Object.keys(data.location).length ? Object.values(data.location).flat().map(item => item.id) : undefined,
+    regions: data.location && data.location.regions ? data.location.regions.map(item => item.id) : undefined,
+    countries: data.location && data.location.countries ? data.location.countries.map(item => item.id) : undefined,
+    cities: data.location && data.location.cities ? data.location.cities.map(item => item.id) : undefined,
     batch_size_min: data.batch && data.batch.length > 1 ? data.batch[0] : undefined,
     batch_size_max: data.batch && data.batch.length > 1 ? data.batch[1] : undefined,
     urgent: data.is_rush ? data.is_rush : undefined,
@@ -145,7 +149,7 @@ watch(() => page.value.currentPage, () => {
       const rect = anchor.value.getBoundingClientRect(); 
       const offset = window.scrollY + rect.top - settingStore.headerHeight;
       smoothScroll(offset, false);
-      router.replace({ query: { page: res.meta.current_page } });
+      router.replace({ query: { page: res.meta.current_page, ...filter.value } });
     }
   }).finally(() => {
     loading.value = false
@@ -161,11 +165,9 @@ onMounted(() => {
     params = {
       page: query.page ? Number(query.page) : undefined,
       categories: query.categories ? query.categories.split(',').map(item => Number(item)) : undefined,
-      regions: [
-        query.countries && query.countries.split(',').map(item => Number(item)), 
-        query.regions && query.regions.split(',').map(item => Number(item)),
-        query.cities && query.cities.split(',').map(item => Number(item))
-      ].flat(),
+      countries: query.countries ? query.countries.split(',').map(item => Number(item)) : undefined,
+      cities: query.cities ? query.cities.split(',').map(item => Number(item)) : undefined,
+      regions: query.regions ? query.regions.split(',').map(item => Number(item)) : undefined,
       batch_size_min: query.batch_size_min ? Number(query.batch_size_min) : undefined,
       batch_size_max: query.batch_size_max ? Number(query.batch_size_max) : undefined,
       urgent: query.urgent ? query.urgent : undefined,
