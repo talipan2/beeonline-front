@@ -32,7 +32,9 @@ export const useTranslateStore = defineStore("translateStore", {
         },
 
         getSelectedOption() {
-            return this.options.find((option) => option.value === this.lang);
+            let option = this.options.find((option) => option.value === this.lang);
+            if (!option) option = this.options[0];
+            return option;
         },
 
         clearTranslateCookies() {
