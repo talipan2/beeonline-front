@@ -180,7 +180,7 @@ export default {
     }),
 
     mounted() {
-        this.loadChats();
+        this.loadChats(true);
 		useChatStore().getOrders();
 		useChatStore().getAdjacentServices();
 
