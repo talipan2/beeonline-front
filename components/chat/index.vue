@@ -297,11 +297,7 @@
 </template>
 
 <script>
-window.googleTranslateConfig = {
-    lang: "auto",
-    langDefault: "ru",
-};
-
+import { useTranslateStore } from "~/store/translateStore";
 import ChatMessage from "./message.vue";
 import ChatModalFiles from "./modal/files.vue";
 import ChatModalReview from "./modal/review.vue";
@@ -370,6 +366,8 @@ export default {
         firstLoaded: false,
         previousScrollHeight: 0,
         previousScrollTop: 0,
+
+        refreshFlag: false,
     }),
 
     mounted() {
@@ -620,7 +618,9 @@ export default {
                 const container = this.$refs.chatContainer;
                 if (needScroll) {
                     this.$nextTick(() => {
-                        container.scrollTop = container.scrollHeight;
+                        if (container) {
+                            container.scrollTop = container.scrollHeight;
+                        }
                     });
                 }
             }
@@ -731,9 +731,11 @@ export default {
                         localStorage.getItem("translate_chat_" + response.id) ==
                         "true";
                     if (this.translate) {
-                        this.translate = window.TranslateGetCode(
-                            window.googleTranslateConfig
-                        );
+                        useTranslateStore().initGoogleTranslate(true);
+                        this.translate = useTranslateStore().lang;
+                        // this.translate = window.TranslateGetCode(
+                        //     window.googleTranslateConfig
+                        // );
                     }
 
                     this.channel.listen("NewChatMessageEvent", (event) => {
@@ -749,7 +751,7 @@ export default {
                                 event.message.created_at;
                         }
 
-                        this.lastLoaded = false;
+                        // this.lastLoaded = false;
                         this.addMessage(event.message, scrollEnd, true);
                     });
                     this.channel.listen("ChatMessageReadedEvent", (event) => {
@@ -824,8 +826,11 @@ export default {
                     })
                     .then((response) => {
                         if (this.lastLoaded) {
-                            this.addMessage(response, false);
+                            // message = response;
                             message.id = response.id;
+                            message.is_sent = response.is_sent;
+                            this.refreshFlag = !this.refreshFlag;
+                            this.addMessage(response, false);
                             this.clearMessages("down");
                         } else {
                             this.loadMessages("center", response.id);
@@ -943,6 +948,8 @@ export default {
                 month: "long",
                 day: "numeric",
             };
+
+            this.refreshFlag;
 
             this.messages.forEach((message) => {
                 this.prepareMessage(message);

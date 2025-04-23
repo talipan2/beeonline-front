@@ -320,7 +320,7 @@ export default {
 					if (clear) {
 						this.dialogs = [];
 					}
-					if (data.length < 20) {
+					if (!data.length) {
 						this.noMoreChats = true;
 					}
 					if (data.length > 0) {
@@ -342,7 +342,7 @@ export default {
 					lifecycle_status: this.lifecycle_status,
 				})
 				.then((data) => {
-					if (data.length < 20) {
+					if (!data.length) {
 						this.noMoreChats = true;
 					}
 					if (data.length > 0) {
@@ -366,7 +366,7 @@ export default {
         onScroll() {
             const container = this.$refs.dialogs;
             if (
-                container.scrollTop + container.clientHeight >=
+                container.scrollTop + container.clientHeight + 10 >=
                 container.scrollHeight
             ) {
                 this.loadChats();
@@ -374,6 +374,7 @@ export default {
         },
         checkIfScrollable() {
             const container = this.$refs.dialogs;
+            console.log(container.scrollHeight, container.clientHeight, container.scrollHeight <= container.clientHeight, !this.noMoreChats)
             if (
                 container.scrollHeight <= container.clientHeight &&
                 !this.noMoreChats

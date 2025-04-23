@@ -1,6 +1,7 @@
 <template>
     <div class="message" :class="messageClass" ref="message"
 		:translate="needTranslate ? 'yes' : 'no'"
+        lang="auto"
 	>
         <div class="message__left">
             <div
@@ -18,7 +19,12 @@
 				{{ message.user.name }}
 			</div>
             <div class="message__text">
-                {{ message.text }}
+                <div>{{ message.text }}</div>
+                <template v-if="false && hasTranslate">
+                    {{ needTranslate ? 'Перевод' : 'Оригинал' }}
+                    {{ withoutTranslate ? '1' : '0' }}
+                    <a href="javascript:;" @click="withoutTranslate = !withoutTranslate">Переключить</a>
+                </template>
             </div>
 			<div class="message__buttons" v-if="message?.buttons?.length">
 				<template v-for="button in message.buttons">
@@ -43,6 +49,7 @@
 </template>
 
 <script>
+import { useTranslateStore } from '~/store/translateStore';
 // import FileListNew from "@/chat/components/file/list-new.vue";
 
 export default {
@@ -74,6 +81,7 @@ export default {
     emits: ["change:chat"],
     data: () => ({
         scrollToAnimate: false,
+        withoutTranslate: false,
     }),
 
     mounted() {
@@ -95,11 +103,15 @@ export default {
     watch: {},
 
     computed: {
-		needTranslate() {
-			if (!this.translate) return false;
+        hasTranslate() {
+            if (!this.translate) return false;
 			if (this.message.type == 'system' && this.message.own == true) return true;
 			if (this.message.own) return false;
-			return true;
+			return useTranslateStore().googleTranslateInitEnded;
+        },
+		needTranslate() {
+            if (this.withoutTranslate) return false;
+            return this.hasTranslate;
 		},
         time() {
             return this.message.date.toLocaleTimeString(navigator.language, {
