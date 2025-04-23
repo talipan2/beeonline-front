@@ -88,7 +88,9 @@ const handleChangeRole = async () => {
   const redirectPath = '/desktop';
 
   try {
-    await userStore.setUserData({ role: newRole }, userStore.userData.id)
+    await userStore.setUserData({ role: newRole }, userStore.userData.id).then(res => {
+      userStore.checkAuth();
+    })
     userStore.role = newRole;
     localStorage.setItem('role', newRole);
     router.push({ path: redirectPath });

@@ -10,7 +10,7 @@
             Старый пароль*
             <UiInput
               v-model="passwordData.old_password"
-              :rules="{ required: true, min: 6 }"
+              :rules="{ required: true, min: 4 }"
               class="form-group__value" 
               name="old_password" 
               label="Старый пароль" 
@@ -26,12 +26,12 @@
             Новый пароль*
             <UiInput
               v-model="passwordData.new_password"
-              :rules="{ required: true, min: 6 }"
+              :rules="{ required: true, min: 4 }"
               class="form-group__value" 
               name="new_password" 
               label="Новый пароль" 
               :type="showNewPassword ? 'text' : 'password'" 
-              placeholder="Не менее 6 символов"
+              placeholder="Не менее 4 символов"
             >
               <template #action>
                 <button
@@ -50,12 +50,12 @@
             Подтвердите пароль
             <UiInput
               v-model="passwordData.confirmPassword"
-              :rules="{ required: true, min: 6, confirmed: passwordData.new_password }"
+              :rules="{ required: true, min: 4, confirmed: passwordData.new_password }"
               class="form-group__value" 
               name="confirmPassword" 
               label="Подтвердите пароль" 
               :type="showConfirmPassword ? 'text' : 'password'" 
-              placeholder="Не менее 6 символов"
+              placeholder="Не менее 4 символов"
             >
               <template #action>
                 <button
