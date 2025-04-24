@@ -7,7 +7,8 @@
       <slot name="trigger"></slot>
       <template #content>
         <div class="tooltip__content">
-          <p class="tooltip__text">{{ text }}</p>
+          <div class="tooltip__text" v-if="!isHtml">{{ text }}</div>
+          <div class="tooltip__text" v-else v-html="text"></div>
         </div>
       </template>
     </UiNewDropdown>
@@ -20,7 +21,11 @@ const props = defineProps({
   text: {
     type: String,
     default: '',
-  }
+  },
+  isHtml: {
+    type: Boolean,
+    default: false
+  },
 })
 
 </script>
