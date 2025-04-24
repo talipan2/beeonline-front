@@ -185,10 +185,10 @@ export default {
 		useChatStore().getAdjacentServices();
 
         useChannelsStore()
-            .orgChannel.stopListening("NewChatMessage")
-            .listen("NewChatMessage", (event) => {
+            .orgChannel.stopListening("NewChatMessageEvent")
+            .listen("NewChatMessageEvent", (event) => {
                 this.newMessage(event.message);
-            }).listen("ChatMessageReaded", (event) => {
+            }).listen("ChatMessageReadedEvent", (event) => {
 				 let index = this.dialogs.findIndex(
 					(dialog) => dialog.id == event.chat_id
 				);
