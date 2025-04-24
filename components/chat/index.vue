@@ -1190,6 +1190,7 @@ export default {
             font-size: var(--font-size-14);
             height: 2.8em;
             border-radius: 0.8em;
+            padding: 0 .5em;
         }
 
         &-file {
