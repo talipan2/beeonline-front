@@ -48,6 +48,7 @@ export const useUserStore = defineStore("user", {
     userBonuses: 100000,
     userInvoicing: null,
     userNotifications: null,
+    unreadChatsCount: 0,
   }),
   getters: {
     getRole: (state) => state.role,
@@ -208,6 +209,22 @@ export const useUserStore = defineStore("user", {
                     .orgChannel.stopListening("InvoiceUpdate")
                     .listen("InvoiceUpdate", (event) => {
                         eventBus.emit('InvoiceUpdate', event);
+                    });
+
+                useChannelsStore()
+                    .orgChannel.stopListening("NewChatMessageEvent")
+                    .listen("NewChatMessageEvent", (event) => {
+                        eventBus.emit('NewChatMessageEvent', event);
+                    });
+                useChannelsStore()
+                    .orgChannel.stopListening("ChatMessageReadedEvent")
+                    .listen("ChatMessageReadedEvent", (event) => {
+                        eventBus.emit('ChatMessageReadedEvent', event);
+                    });
+                useChannelsStore()
+                    .orgChannel.stopListening("UnreadChatsCountEvent")
+                    .listen("UnreadChatsCountEvent", (event) => {
+                        eventBus.emit('UnreadChatsCountEvent', event);
                     });
               }
               return response;
@@ -457,6 +474,9 @@ export const useUserStore = defineStore("user", {
         return await useApi().post('set-city', {
             city_id: cityId,
         });
-    }
+    },
+    async sendUnreadChatsCount() {
+        return await useApi().post('send-unread-chats-count', null, null, true);
+    },
   },
 });

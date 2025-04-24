@@ -303,7 +303,7 @@ import ChatModalFiles from "./modal/files.vue";
 import ChatModalReview from "./modal/review.vue";
 import FileDrop from "~/components/file/drop.vue";
 import { useChatStore } from "~/store/chatStore";
-import { useChannelsStore } from "~/store/channelsStore";
+// import { useChannelsStore } from "~/store/channelsStore";
 import { useUserStore } from "~/store/userStore";
 import { useToast } from "vue-toastification";
 
@@ -351,7 +351,7 @@ export default {
         chat: null,
         init_org: null,
         messages: [],
-        channel: null,
+        // channel: null,
         translate: false,
 
         user_id: null,
@@ -386,11 +386,18 @@ export default {
         } else if (this.init_org_id && this.init_org_type?.length) {
             this.initChatByProps();
         }
+
+        eventBus.on('NewChatMessageEvent', this.NewChatMessageEvent);
+        eventBus.on('ChatMessageReadedEvent', this.ChatMessageReadedEvent);
+    },
+
+    beforeUnmount() {
+        eventBus.off('NewChatMessageEvent', this.NewChatMessageEvent);
+        eventBus.off('ChatMessageReadedEvent', this.ChatMessageReadedEvent);
     },
 
     methods: {
         toggleTranslate() {
-            console.log("toggleTranslate");
             this.translate = !this.translate;
 
             localStorage.setItem(
@@ -701,9 +708,9 @@ export default {
                 .getChat(init_chat_id)
                 .then((response) => {
                     // this.groupedMessages = {};
-                    if (this.channel) {
-                        useChannelsStore().leave(this.channel.name);
-                    }
+                    // if (this.channel) {
+                    //     useChannelsStore().leave(this.channel.name);
+                    // }
 
                     this.chat = response;
                     useChatStore().setIsManager(this.chat.is_manager);
@@ -722,10 +729,9 @@ export default {
                     }
                     this.loadMessages("center", message_id);
 
-                    this.channel = useChannelsStore().private(
-                        `chat.${response.id}`
-                    );
-                    const container = this.$refs.chatContainer;
+                    // this.channel = useChannelsStore().private(
+                    //     `chat.${response.id}`
+                    // );
 
                     this.translate =
                         localStorage.getItem("translate_chat_" + response.id) ==
@@ -737,34 +743,40 @@ export default {
                         //     window.googleTranslateConfig
                         // );
                     }
-
-                    this.channel.listen("NewChatMessageEvent", (event) => {
-                        const scrollEnd =
-                            container.scrollHeight - container.scrollTop ===
-                            container.clientHeight;
-
-                        let organization = this.chat.organizations.find(
-                            (org) => org.id == event.message.org_id
-                        );
-                        if (organization) {
-                            organization.last_active_at =
-                                event.message.created_at;
-                        }
-
-                        // this.lastLoaded = false;
-                        this.addMessage(event.message, scrollEnd, true);
-                    });
-                    this.channel.listen("ChatMessageReadedEvent", (event) => {
-                        let organization = this.chat.organizations.find(
-                            (org) => org.id == event.organization_id
-                        );
-                        if (!organization) return;
-                        organization.pivot.read_message_id = event.message_id;
-                    });
-
                     // this.loading = false;
                 });
         },
+
+        NewChatMessageEvent(event) {
+            console.log("NewChatMessageEvent1", event);
+            if (event.message.chat_id !== this.chat.id) return;
+            const container = this.$refs.chatContainer;
+            const scrollEnd =
+                container.scrollHeight - container.scrollTop ===
+                container.clientHeight;
+
+            let organization = this.chat.organizations.find(
+                (org) => org.id == event.message.organization_id
+            );
+            if (organization) {
+                organization.last_active_at =
+                    event.message.created_at;
+            }
+
+            // this.lastLoaded = false;
+            this.addMessage(event.message, scrollEnd, true);
+        },
+
+        ChatMessageReadedEvent(event) {
+            console.log("ChatMessageReadedEvent1", event);
+            if (event.chat_id !== this.chat.id) return;
+            let organization = this.chat.organizations.find(
+                (org) => org.id == event.organization_id
+            );
+            if (!organization) return;
+            organization.pivot.read_message_id = event.message_id;
+        },
+
         initChatByProps() {
             this.loading = true;
             this.messages = [];

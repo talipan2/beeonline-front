@@ -69,14 +69,7 @@
                 >
                     <SvgoFavorite class="svg-m" />
                 </UiButton>
-                <UiButton
-                    class="header__page-link"
-                    to="/chat"
-                    variant="secondary"
-                    size="around"
-                >
-                    <SvgoMessage class="svg-m" />
-                </UiButton>
+                <HeaderChatButton/>
                 <UiButton
                     v-if="role !== 'adjacent'"
                     class="header__page-link"
@@ -270,7 +263,7 @@ const updateVisibleHeight = () => {
   if (headerFixed.value) {
     headerFullHeight.value = headerMainHeight.value;
     return;
-  } 
+  }
 
   // Для скроллируемого - расчёт видимой части
   const rect = header.value.getBoundingClientRect();
