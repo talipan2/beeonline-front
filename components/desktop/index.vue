@@ -1,6 +1,6 @@
 <template>
   <div class="desktop">
-    <div class="desktop__notify" v-if="!emailVerified || pubCard.status == 1 || pubCard.status == 3">
+    <div class="desktop__notify" v-if="!emailVerified || pubCard.status == 1 || pubCard.status == 3 || pubCard.status == 0">
       <h2 class="desktop__notify-title">Уведомления</h2>
       <CommonNotify
         v-if="!emailVerified"
@@ -19,6 +19,13 @@
         type="danger"
         title="Карточка компании отклонена."
         :text="`Причина: ${pubCard.statusComment}`"
+        btnText="Изменить"
+        :btn-function="() => $router.push('/pubcards/edit/' + pubCard.id)"
+      />
+      <CommonNotify
+        v-if="pubCard.status == 0"
+        type="warning"
+        title="Карточка компании находится в статусе заполнения."
         btnText="Изменить"
         :btn-function="() => $router.push('/pubcards/edit/' + pubCard.id)"
       />

@@ -10,7 +10,7 @@
             Старый пароль*
             <UiInput
               v-model="passwordData.old_password"
-              :rules="{ required: true, min: 6 }"
+              :rules="{ required: true, min: 4 }"
               class="form-group__value" 
               name="old_password" 
               label="Старый пароль" 
