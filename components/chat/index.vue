@@ -749,6 +749,7 @@ export default {
 
         NewChatMessageEvent(event) {
             console.log("NewChatMessageEvent1", event);
+            if (!this.chat) return;
             if (event.message.chat_id !== this.chat.id) return;
             const container = this.$refs.chatContainer;
             const scrollEnd =
@@ -769,6 +770,7 @@ export default {
 
         ChatMessageReadedEvent(event) {
             console.log("ChatMessageReadedEvent1", event);
+            if (!this.chat) return;
             if (event.chat_id !== this.chat.id) return;
             let organization = this.chat.organizations.find(
                 (org) => org.id == event.organization_id
