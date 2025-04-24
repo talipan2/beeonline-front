@@ -245,23 +245,23 @@
                     @submit="submitMessage"
                     class="dialog__form"
                 >
-                    <a
-                        href="javascript:;"
-                        class="dialog__form-btn"
-                        @click="$refs.fileDrop.$refs.input.click"
-                        data-toggle="tooltip"
-                        data-placement="top"
-                        data-html="true"
-                        :title="
-                            $refs.fileDrop.maxSizeMessage +
-                            '<br>' +
-                            $refs.fileDrop.allowedExtensionsMessage
-                        "
-                        @mouseenter="showFileTooltip"
-                        @mouseleave="hideFileTooltip"
-                    >
-                        <i class="icon-file-drop"></i>
-                    </a>
+                <CommonTooltip
+                    :is-html="true"
+                    :text="
+                        $refs.fileDrop.maxSizeMessage +
+                        '<br>' +
+                        $refs.fileDrop.allowedExtensionsMessage
+                ">
+                        <template #trigger>
+                            <a
+                            href="javascript:;"
+                            class="dialog__form-btn"
+                            @click="$refs.fileDrop.$refs.input.click"
+                        >
+                            <SvgoFileDrop class="svg-m"/>
+                        </a>
+                    </template>
+                </CommonTooltip>
 
                     <input
                         class="dialog__form-message"
@@ -870,14 +870,6 @@ export default {
             }
             this.$emit("change:deal-stage", stage);
         },
-
-        // showFileTooltip(e) {
-        //     $(e.target).tooltip("show");
-        // },
-
-        // hideFileTooltip(e) {
-        //     $(e.target).tooltip("hide");
-        // },
 
         openReviewModal(org) {
             if (!org.pubcard) return;
