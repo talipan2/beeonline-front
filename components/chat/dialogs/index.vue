@@ -25,7 +25,7 @@
                         <label :class="{
                             active: chatType === 'adjacent'
                         }">
-                            <span>ССО</span>
+                            <span>Сервисы</span>
                             <input type="radio" value="adjacent" v-model="chatType" />
                         </label>
                     </div>
