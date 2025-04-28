@@ -20,9 +20,9 @@
       />
       <CommonPagination
         :class="{'loading': isLoading}"
-        v-if="page.lastPage > 1"
-        :currentPage="page.currentPage"
-        :totalPages="page.lastPage"
+        v-if="page?.last_page > 1"
+        :currentPage="page.current_page"
+        :totalPages="page.last_page"
         @changePage="handlePageChange"
       />
       <InfoModal :text="infoModal.text" :title="infoModal.title">
@@ -58,10 +58,7 @@ const infoModal = ref({
   action: () => {}
 })
 
-const page = ref({
-  currentPage: 1,
-  lastPage: 1,
-})
+const page = ref(null)
 
 const activeFilter = ref({})
 
@@ -162,8 +159,7 @@ function getServices(params) {
   entityStore.getSelfServices(userStore.userData.organization_id, params)
   .then(res => {
     if(res && res.services) {
-      page.value.currentPage = res.services.current_page;
-      page.value.lastPage = res.services.last_page;
+      page.value = res.pagination;
     }
   })
   .finally(() => {
