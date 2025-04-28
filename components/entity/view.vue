@@ -21,6 +21,17 @@
         <div class="view-entity__btn">
           <UiButton :to="`/performer/services/edit/${data.id}`" variant="senary" size="large" v-if="role === 'performer'">Изменить</UiButton>
           <UiButton :to="`/customer/orders/edit/${data.id}`" variant="senary" size="large" v-if="role === 'customer'">Изменить</UiButton>
+          <!-- <template v-if="type === 'service'">
+            <PaidServiceRaisingService
+                :id="data.id"
+            >
+                <template #button="{ open }">
+                    <UiButton variant="quinary" size="large" type="button" @click="open">
+                        ПОДНЯТЬ УСЛУГУ
+                    </UiButton>
+                </template>
+            </PaidServiceRaisingService>
+        </template> -->
         </div>
         <div class="view-entity__view">
           <SvgoViews class="svg-l" fill="#6937a5"/>
@@ -127,6 +138,9 @@ const formatDocumentsArray = computed(() => {
   &__btn {
     font-size: 1.2rem;
     text-transform: uppercase;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
   }
 
   &__view {
