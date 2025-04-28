@@ -1,7 +1,7 @@
 <template>
   <div class="notification-card" :class="{ 'notification-card_type_not-readad': !data.readed }">
     <div class="notification-card__image">
-      <SvgoSetting class="svg-lx" v-if="data.group === 'system'"/>
+      <SvgoSetting class="svg-lx" v-if="data.group === 'system' || data.group === 'login'"/>
       <SvgoSewingMachine class="svg-lx" v-if="data.group === 'orders' || data.group === 'services'" />
       <SvgoReview class="svg-lx" v-if="data.group === 'reviews'" />
       <SvgoNotifyMessage class="svg-lx" v-if="data.group === 'chat'" />
