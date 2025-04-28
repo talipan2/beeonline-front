@@ -28,7 +28,7 @@ const props = defineProps({
   resetFilters: {
     type: Boolean,
     default: false,
-  }, 
+  },
   filterMapping: {
     type: Object,
     default: () => ({}),
@@ -97,7 +97,7 @@ const entityStatusOptions = [
   { id: 0, label: 'Все статусы', value: 'all' },
   { id: 1, label: 'Активные', value: 'active' },
   { id: 2, label: 'Черновики', value: 'draft' },
-  { id: 3, label: 'В архиве', value: 'archive' },
+  { id: 3, label: 'В архиве', value: 'archived' },
   { id: 4, label: 'Заполняется', value: 'filling' },
   { id: 5, label: 'На модерации', value: 'under_moderation' },
   { id: 6, label: 'Отклонен', value: 'rejected' },
@@ -106,7 +106,7 @@ const entityStatusOptions = [
 // Сброс фильтров
 const resetFilters = () => {
   Object.keys(selectedFilters.value).forEach((key) => {
-    selectedFilters.value[key] = 'all'; 
+    selectedFilters.value[key] = 'all';
   });
 }
 
@@ -169,7 +169,7 @@ onMounted(async() => {
 
 @include mobile {
   .entity-filter {
-    
+
     &__select {
       flex: 0 1 100%;
       max-width: 100%;

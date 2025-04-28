@@ -21,9 +21,9 @@
       />
       <CommonPagination
         :class="{'loading': isLoading}"
-        v-if="page.lastPage > 1"
-        :currentPage="page.currentPage"
-        :totalPages="page.lastPage"
+        v-if="page?.last_page > 1"
+        :currentPage="page.current_page"
+        :totalPages="page.last_page"
         :activeFilters="activeFilter"
         @changePage="handlePageChange"
       />
@@ -65,10 +65,7 @@ const infoModal = ref({
   action: () => {}
 })
 
-const page = ref({
-  currentPage: 1,
-  lastPage: 1,
-})
+const page = ref(null)
 
 const activeFilter = ref({})
 
@@ -158,8 +155,7 @@ function getOrders(params) {
   entityStore.getSelfOrders(userStore.userData.organization_id, params)
   .then(res => {
     if(res && res.orders) {
-      page.value.currentPage = res.orders.current_page;
-      page.value.lastPage = res.orders.last_page;
+      page.value = res.pagination;
     }
   })
   .finally(() => {
