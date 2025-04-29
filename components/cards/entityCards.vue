@@ -205,13 +205,15 @@ const entityCategories = computed(() => {
 
   &__footer {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    column-gap: .83em;
+    gap: .83em;
     font-size: 1.2em;
     margin-top: 1.66em;
 
     @include small-mobile {
       flex-direction: column;
+      flex-wrap: nowrap;
       row-gap: 1em;
       align-items: normal;
     }
@@ -223,7 +225,7 @@ const entityCategories = computed(() => {
     z-index: 1;
 
     @include small-mobile {
-      flex-basis: 100%;
+    //   flex-basis: 100%;
     }
   }
 
