@@ -9,16 +9,17 @@
           :breakpoints="{
             768: {
               slidesPerView: 1.5,
-              spaceBetween: 32, 
+              spaceBetween: 32,
             },
             1200: {
               slidesPerView: 2,
-              spaceBetween: 34, 
+              spaceBetween: 34,
             }
           }"
           class="catalog__banner-slider"
           :modules="modules"
           :pagination="true"
+          :navigation="true"
         >
           <template v-if="data && data.length > 0">
             <SwiperSlide v-for="(item, index) in data" :key="index">
@@ -32,7 +33,7 @@
 </template>
 
 <script setup>
-import {Pagination} from 'swiper/modules';
+import {Pagination, Navigation} from 'swiper/modules';
 
 const props = defineProps({
   data: {
@@ -42,7 +43,7 @@ const props = defineProps({
 })
 
 
-const modules = [Pagination];
+const modules = [Pagination, Navigation];
 
 </script>
 
@@ -103,6 +104,22 @@ const modules = [Pagination];
     flex-direction: column;
     justify-content: stretch;
     height: auto;
+  }
+
+  --swiper-navigation-sides-offset: 0px;
+  .swiper-button-prev, .swiper-button-next {
+    background-color: #FFF;
+    font-size: 3.8rem;
+    width: 1em;
+    height: 1em;
+    border-radius: 1em;
+    box-shadow: inset 0 0 0 2px #6937a5;
+
+    &::after {
+        font-size: .5em;
+        font-weight: bold;
+        color: #6937a5;
+    }
   }
 }
 
