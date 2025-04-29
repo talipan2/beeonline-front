@@ -49,7 +49,7 @@ const entityStore = useEntityStore();
 const selectorButtons = [
   { id: 1, label: 'Активные', value: 'active', count: computed(() => statusCounts.value.active), },
   { id: 2, label: 'Черновики', value: 'draft', count: computed(() => statusCounts.value.draft), },
-  { id: 3, label: 'В архиве', value: 'archive', count: computed(() => statusCounts.value.archive), },
+  { id: 3, label: 'В архиве', value: 'archived', count: computed(() => statusCounts.value.archived), },
 ];
 
 const currentButton = ref(selectorButtons[0].value); // Текущая кнопка
@@ -61,7 +61,7 @@ const currentEmptyList = computed(() => {
     case('performer'):
       return 'Нет услуг с данными параметрами'
   }
-}) 
+})
 
 const page = ref({
   currentPage: 1,
@@ -76,7 +76,7 @@ const currentEntityType = (type) => {
 const statusCounts = ref({
   active: 0,
   draft: 0,
-  archive: 0
+  archived: 0
 });
 
 const fetchData = async (type, filter) => {
@@ -111,7 +111,7 @@ const fetchData = async (type, filter) => {
         statusCounts.value = {
           active: res.total?.active || 0,
           draft: res.total?.draft || 0,
-          archive: res.total?.archive || 0
+          archived: res.total?.archived || 0
         }
       }
     })
@@ -131,7 +131,7 @@ const fetchData = async (type, filter) => {
   } catch (error) {
     console.error("Ошибка при загрузке данных:", error);
   } finally {
-    isLoading.value = false; 
+    isLoading.value = false;
   }
 };
 
@@ -168,7 +168,7 @@ watch(() => props.role, (newVal) => {
 
 // onMounted(() => {
 //   const query = router.currentRoute.value.query;
-  
+
 //   if (Object.keys(query).length > 0) {
 //     activeFilter.value = { ...activeFilter.value, ...query };
 //   }
@@ -189,7 +189,7 @@ onMounted(() => {
     justify-content: space-between;
     gap: 2em;
   }
-  
+
   .loading {
     opacity: .6;
     pointer-events: none;
