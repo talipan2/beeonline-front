@@ -14,7 +14,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
   if(from.path === '/telegram') {
     settingStore.isTelegram = true
-    settingStore.isCreateOrder = true
   }
 
   
@@ -50,7 +49,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     '/welcome',
     '/search',
     '/related-industry-services',
-    '/telegram',
     '/news',
   ]
 
