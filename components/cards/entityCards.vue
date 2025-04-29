@@ -154,14 +154,14 @@ const entityCategories = computed(() => {
   position: relative;
   display: flex;
   flex-direction: column;
-  flex: 1 0 45%;
+//   flex: 1 0 45%;
   padding: 2em;
   box-shadow: var(--box-shadow-secondary);
   transition: box-shadow .2s ease-in-out;
   background-color: #fff;
 
   @include mobile {
-    flex-basis: 100%;
+    // flex-basis: 100%;
     font-size: .9rem;
   }
 

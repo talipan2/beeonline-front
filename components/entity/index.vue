@@ -154,12 +154,16 @@ const handleCreateEntity = () => {
   }
 
   &__cards {
-    display: flex;
+    display: grid;
     gap: 3em;
-    flex-wrap: wrap;
+    grid-template-columns: 1fr 1fr;
 
     @include tablet {
       gap: 1rem;
+    }
+
+    @include mobile {
+        grid-template-columns: 1fr;
     }
   }
 }
