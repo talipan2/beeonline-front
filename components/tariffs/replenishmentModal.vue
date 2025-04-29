@@ -10,7 +10,7 @@
                 <div class="invoice">
                     <ul class="invoice__list">
                         <li>Номер: {{ invoice.number }}</li>
-                        <li>Сумма: {{ invoice.amount }}</li>
+                        <li>Сумма: {{ invoice.amount / 100 }}</li>
                         <li>Статус: {{ invoice.status_name }}</li>
                     </ul>
                     <UiButton

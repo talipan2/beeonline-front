@@ -21,7 +21,7 @@
         <div class="view-entity__btn">
           <UiButton :to="`/performer/services/edit/${data.id}`" variant="senary" size="large" v-if="role === 'performer'">Изменить</UiButton>
           <UiButton :to="`/customer/orders/edit/${data.id}`" variant="senary" size="large" v-if="role === 'customer'">Изменить</UiButton>
-          <!-- <template v-if="type === 'service'">
+          <template v-if="type === 'service'">
             <PaidServiceRaisingService
                 :id="data.id"
             >
@@ -31,7 +31,7 @@
                     </UiButton>
                 </template>
             </PaidServiceRaisingService>
-        </template> -->
+        </template>
         </div>
         <div class="view-entity__view">
           <SvgoViews class="svg-l" fill="#6937a5"/>
