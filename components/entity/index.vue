@@ -13,7 +13,7 @@
     </div>
     <div class="entitys__cards" v-if="isLoaded">
       <template v-if="data.length > 0">
-        <CardsEntityCards v-for="(service, index) in data" :key="index" :data="service" :role="role" @selectInfoModal="$emit('selectInfoModal', $event)"/>
+        <CardsEntityCards v-for="(service, index) in data" :key="index" :data="service" :type="type" :role="role" @selectInfoModal="$emit('selectInfoModal', $event)"/>
       </template>
       <CommonAlerts v-if="data.length === 0" type="warning" :alert="emptyAlertText"/>
     </div>
@@ -26,6 +26,11 @@ import { useEntityStore } from '~/store/entityStore'
 
 const props = defineProps({
   role: {
+    type: String,
+    default: '',
+    required: true,
+  },
+  type: {
     type: String,
     default: '',
     required: true,

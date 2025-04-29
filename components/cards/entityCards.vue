@@ -5,10 +5,10 @@
       <div class="entity-card__details" v-if="data.placeOfProduction && data.placeOfProduction.length > 0">
         <div class="entity-card__region">
           {{ data.placeOfProduction[0] ? data.placeOfProduction[0] : 'Не указано' }}
-            <ModalsMoreCities 
-              :list="data.placeOfProduction.slice(1)" 
-              title="Регионы" 
-              placement="bottom-end" 
+            <ModalsMoreCities
+              :list="data.placeOfProduction.slice(1)"
+              title="Регионы"
+              placement="bottom-end"
               v-if="Array.isArray(data.placeOfProduction) && data.placeOfProduction.length >= 1"
             />
         </div>
@@ -50,36 +50,50 @@
       </div>
     </div>
     <div class="entity-card__footer">
-      <UiButton 
-        :to="`${role === 'performer' ? `/performer/services/edit/${data.id}` : `/customer/orders/edit/${data.id}`}`" 
-        class="entity-card__btn" 
-        variant="quinary" 
+      <UiButton
+        :to="`${role === 'performer' ? `/performer/services/edit/${data.id}` : `/customer/orders/edit/${data.id}`}`"
+        class="entity-card__btn"
+        variant="quinary"
         size="large"
-      > 
+      >
         Изменить
       </UiButton>
 
-      <UiButton 
-        type="button" 
+      <UiButton
+        type="button"
         class="entity-card__btn"
-        variant="quinary" 
-        size="large" 
+        variant="quinary"
+        size="large"
         v-if="data.statusType === 'archived' || data.statusType === 'rejected'"
         @click="handleClickActions('published', data.id)"
       >
         Опубликовать
       </UiButton>
 
-      <UiButton 
-        type="button" 
-        class="entity-card__btn" 
-        variant="quinary" 
-        size="large" 
-        v-if="data.statusType === 'active'"
-        @click="handleClickActions('unpublished', data.id)"
-      >
-        Снять с публикации
-      </UiButton>
+      <template v-if="data.statusType === 'active'">
+        <UiButton
+            type="button"
+            class="entity-card__btn"
+            variant="quinary"
+            size="large"
+            @click="handleClickActions('unpublished', data.id)"
+        >
+            Снять с публикации
+        </UiButton>
+
+        <template v-if="type === 'service'">
+            <PaidServiceRaisingService
+                :id="data.id"
+            >
+                <template #button="{ open }">
+                    <UiButton variant="quinary" size="large" type="button" @click="open" class="entity-card__btn">
+                        ПОДНЯТЬ УСЛУГУ
+                    </UiButton>
+                </template>
+            </PaidServiceRaisingService>
+        </template>
+      </template>
+
       <p class="entity-card__status">{{ data.status }}</p>
     </div>
     <NuxtLink class="entity-card__link" :to="`/performer/services/show/${data.id}`" v-if="role === 'performer'"></NuxtLink>
@@ -96,6 +110,11 @@ import { useSettingStore } from '~/store/settingStore';
 
 const props = defineProps({
   role: {
+    type: String,
+    default: '',
+    required: true,
+  },
+  type: {
     type: String,
     default: '',
     required: true,
@@ -135,7 +154,7 @@ const entityCategories = computed(() => {
   position: relative;
   display: flex;
   flex-direction: column;
-  flex: 0 1 45%;
+  flex: 1 0 45%;
   padding: 2em;
   box-shadow: var(--box-shadow-secondary);
   transition: box-shadow .2s ease-in-out;
