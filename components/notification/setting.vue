@@ -57,7 +57,7 @@ const selectedSettings = ref({
   'Новые сообщения в чате': [1],
   'Системные уведомления': [1],
   'Новости': [1],
-  'Сделки': [1],
+  // 'Сделки': [1],
 });
 
 function handleDisableSettings(type, id) {
@@ -76,7 +76,7 @@ const notificationsSetting = ref([
     id: 0, 
     label: 'Хочу получать уведомления о новых заказах',
     value: 'Новые заказы',
-    role: 'customer',
+    role: 'performer',
     settings: [
       {id: 0, label: 'по электронной почте', value:'email',},
       {id: 1, label: 'в личном кабинете', value: 'cabinet', disabled: true, },
@@ -132,18 +132,18 @@ const notificationsSetting = ref([
       {id: 3, label: 'в WhatsApp', value: 'whatsapp'},
     ]
   },
-  {
-    id: 4, 
-    label: 'Хочу получать уведомления о сделках',
-    value: 'Сделки',
-    role: 'customer/performer',
-    settings: [
-      {id: 0, label: 'по электронной почте', value:'email'},
-      {id: 1, label: 'в личном кабинете', value: 'cabinet', disabled: true},
-      {id: 2, label: 'в Telegram', value: 'telegram'},
-      {id: 3, label: 'в WhatsApp', value: 'whatsapp'},
-    ]
-  },
+  // {
+  //   id: 4, 
+  //   label: 'Хочу получать уведомления о сделках',
+  //   value: 'Сделки',
+  //   role: 'customer/performer',
+  //   settings: [
+  //     {id: 0, label: 'по электронной почте', value:'email'},
+  //     {id: 1, label: 'в личном кабинете', value: 'cabinet', disabled: true},
+  //     {id: 2, label: 'в Telegram', value: 'telegram'},
+  //     {id: 3, label: 'в WhatsApp', value: 'whatsapp'},
+  //   ]
+  // },
 ])
 
 // список значений
