@@ -231,7 +231,7 @@ const handleOpenTelegram = () => {
     if (res && res.telegram_chat_code) {
       const telegramLink = `https://t.me/beeonline_notify_bot?start=${res.telegram_chat_code}`;
       window.open(telegramLink, '_blank');
-      userStore.checkAuth();
+      // userStore.checkAuth();
     }
   }).catch(err => { console.log(err) })
 }
