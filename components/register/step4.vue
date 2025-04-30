@@ -15,8 +15,16 @@
           <div class="form-group__value">{{ userStore.userData.phone || '-' }}</div>
         </div>
       </div>
-      <UiButton class="register__btn register__btn_type_tg" variant="telegram" size="large">Включить уведомления в
-        Telegram</UiButton>
+      <UiButton 
+        v-if="!isTelegramChatId"
+        class="register__btn register__btn_type_tg" 
+        variant="telegram" 
+        size="large"
+        type="button"
+        @click="handleOpenTelegram"
+      >
+        Включить уведомления в Telegram
+      </UiButton>
     </CommonProfileCheckCard>
     <CommonProfileCheckCard title="Карточка компании" text="Указанные данные будут видны другим участникам портала"
       changeLink="/register/step2" changeLinkLabel="Изменить">
@@ -95,6 +103,7 @@ import { useUserStore } from '~/store/userStore';
 import { useOrganizationStore } from '~/store/organizationStore';
 import { useLocationStore } from '~/store/locationStore';
 import { useSettingStore } from '~/store/settingStore';
+import telegram from '~/middleware/telegram';
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -129,6 +138,22 @@ const organization = computed(() => {
   }
 });
 const registerData = computed(() => organizationStore.registerOrg);
+
+const isTelegramChatId = computed(() => userStore.userData.telegram_chat_id)
+
+const handleOpenTelegram = () => {
+  if(!userStore.userData.id) return
+
+  settingStore.telegramNotify(userStore.userData.id).then(res => {
+    if (res && res.telegram_chat_code) {
+      const telegramLink = `https://t.me/beeonline_notify_bot?start=${res.telegram_chat_code}`;
+      window.open(telegramLink, '_blank');
+      setTimeout(() => {
+        userStore.checkAuth();
+      }, 60000)
+    }
+  }).catch(err => { console.log(err) })
+}
 
 // const handleSubmit = () => {
 //   organizationStore.setOrganization({

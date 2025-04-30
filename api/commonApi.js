@@ -73,5 +73,9 @@ export default {
 
   async emailConfirm(id, hash) {
     return axios.post(`email-confirm`, { id, hash })
+  },
+
+  async telegramNotify(id) {
+    return axios.get(`/users/${id}/tg-chat-code`)
   }
 }
