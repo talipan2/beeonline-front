@@ -5,7 +5,7 @@
       <p class="tariff-card__duration">{{ duration }}</p>
     </div>
     <p class="tariff-card__price tariff-card__price_type_full" v-if="discount && tariff.code !== 'free'">Итого: {{ formatMoney(price * 100 / (100 - discount), currency, 0) }}</p>
-    <p class="tariff-card__discount" v-if="discount && tariff.code !== 'free'">Скидка: {{ `(-${discount}%)`}}</p>
+    <p class="tariff-card__discount" v-if="discount && tariff.code !== 'free'">Скидка: {{ `-${discount}% (-${getDiscount(price, discount)})`}}</p>
     <p class="tariff-card__price">Итого к оплате: {{ formatMoney(price, currency, 0) }}</p>
     <ul class="tariff-card__list">
       <li class="tariff-card__item" v-for="item in feature" :key="item">
@@ -52,6 +52,12 @@ const props = defineProps({
     default: 0,
   }
 });
+
+function getDiscount(price, discount) {
+  const originalAmount = price / (1 - discount / 100);
+  const discountAmount = originalAmount * (discount / 100)
+  return formatMoney(discountAmount, props.currency, 0);
+}
 
 </script>
 
