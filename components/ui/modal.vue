@@ -15,12 +15,13 @@
         <div class="modal-dialog"
             @click.self="() => $emit('update:modelValue', false)"
         >
-            <div :class="contentClass">
+            <div :class="[contentClass, {'modal-content_type_full' : fixedHeader}]">
                 <button
                     href="javascript:;"
                     class="modal-close"
                     @click="$emit('update:modelValue', false)"
                     v-if="closeButton"
+                    :class="{'modal-close_type_desktop' : fixedHeader}"
                 >
                     <SvgoClose class="svg-l" />
                 </button>
@@ -36,12 +37,35 @@
                 <div
                     class="modal-header"
                     v-else-if="title?.length"
+                    :class="{'modal-header_type_fixed' : fixedHeader}"
+                    ref="modalHeader"
                 >
                     <h5 class="modal-title">
                         {{ title }}
                     </h5>
+                    <div class="modal-header__container">
+                        <button
+                            href="javascript:;"
+                            class="modal-fixed-header__btn modal-fixed-header__btn_type_left"
+                            @click="$emit('update:modelValue', false)"
+                            v-if="closeButton"
+                        >
+                            <SvgoBtnArrow class="svg-l" />
+                        </button>
+                        <h5 class="modal-fixed-header__title">
+                            {{ title }}
+                        </h5>
+                        <button
+                            href="javascript:;"
+                            class="modal-fixed-header__btn modal-fixed-header__btn_type_right"
+                            @click="$emit('update:modelValue', false)"
+                            v-if="closeButton"
+                        >
+                            <SvgoClose class="svg-l" />
+                        </button>
+                    </div>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" ref="modalBody">
                     <slot name="content" />
                 </div>
                 <div
@@ -55,22 +79,17 @@
     </VueFinalModal>
 </template>
 
-<script>
-import { VueFinalModal } from "vue-final-modal";
+<script setup>
+    import { VueFinalModal } from 'vue-final-modal'
 
-export default {
-    emits: ["update:modelValue"],
-    components: {
-        VueFinalModal,
-    },
-    props: {
+    const props = defineProps({
         title: {
             type: String,
-            default: "",
+            default: '',
         },
         colClass: {
             type: String,
-            default: "",
+            default: '',
         },
         clickToClose: {
             type: Boolean,
@@ -86,7 +105,7 @@ export default {
         },
         background: {
             type: String,
-            default: "non-interactive",
+            default: 'non-interactive',
         },
         lockScroll: {
             type: Boolean,
@@ -94,51 +113,66 @@ export default {
         },
         size: {
             type: String,
-            default: "md",
-            validator: (value) =>
-                ["xs", "sm", "md", "lg", "xl"].includes(value),
+            default: 'md',
+            validator: (value) => ['xs', 'sm', 'md', 'lg', 'xl'].includes(value),
         },
-    },
-    computed: {
-        contentClass: function () {
-            return `modal-content modal-content-${this.size} ${this.colClass}`;
-        },
-    },
-
-    watch: {
-        // Следим за изменениями маршрута
-        '$route'() {
-            // Закрываем модалку при изменении маршрута
-            this.$emit('update:modelValue', false);
+        fixedHeader: {
+            type: Boolean,
+            default: false,
         }
-    },
+    })
 
-    methods: {
-        customLockScroll(isLock) {
-            const screenWidth = window.innerWidth;
-            const headerFixed = document.querySelector(".header");
+    const emit = defineEmits(['update:modelValue'])
 
-            if (isLock) {
-                // Блокируем прокрутку
-                document.body.style.overflow = "hidden";
+    const modalHeader = ref(null)
+    const modalBody = ref(null)
+    const headerHeight = ref(0)
 
-                // Компенсируем padding-right только на десктопах
-                if (screenWidth > 768) {
-                    const scrollbarWidth =
-                        window.innerWidth -
-                        document.documentElement.clientWidth;
-                    document.body.style.paddingRight = `${scrollbarWidth}px`;
-                    headerFixed.style.paddingRight = `${scrollbarWidth}px`;
-                    console.log(scrollbarWidth);
-                }
-            } else {
-                // Сбрасываем прокрутку и padding
-                document.body.style.overflow = "";
-                document.body.style.paddingRight = "";
-            }
-        },
-    },
-};
+    // Вычисляемый класс для контента модалки
+    const contentClass = computed(() => {
+        return `modal-content modal-content-${props.size} ${props.colClass}`
+    })
+
+    // Закрытие модалки при изменении маршрута
+    watch(() => props.$route, () => {
+        emit('update:modelValue', false)
+    })
+
+    // Расчёт высоты хидера и применение отступа
+    const calculateHeaderHeight = () => {
+        if (props.fixedHeader && modalHeader.value) {
+            headerHeight.value = modalHeader.value.getBoundingClientRect().height
+            applyContentPadding()
+        }
+    }
+
+    // Установка padding-top для контента
+    const applyContentPadding = () => {
+        if (modalBody.value) {
+            modalBody.value.style.paddingTop = `${headerHeight.value}px`
+        }
+    }
+
+    // Обработчик ресайза
+    const handleResize = () => {
+        calculateHeaderHeight()
+    }
+
+    watch(() => modalHeader.value, () => {
+        calculateHeaderHeight()
+    })
+
+    onMounted(async() => {
+        if (props.fixedHeader) {
+            window.addEventListener('resize', handleResize)
+        }
+    })
+
+    onBeforeUnmount(() => {
+        if (props.fixedHeader) {
+            window.removeEventListener('resize', handleResize)
+        }
+    })
 </script>
 
 <style lang="scss">
@@ -168,6 +202,13 @@ export default {
     right: 0.75em;
     top: 0.75em;
     background-color: rgba(0, 0, 0, 0);
+
+    @include mobile {
+        &_type_desktop {
+            display: none;
+        }
+
+    }
 }
 
 .modal-title {
@@ -204,6 +245,25 @@ export default {
         padding: 2em;
         max-width: 110em;
     }
+
+    &_type_full {
+
+
+        @include mobile {
+            min-height: 100%;
+            max-width: 100%;
+            display: flex;
+            flex-direction: column;
+
+            .modal-body {
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                flex: 1;
+            }
+        }
+    }
 }
 
 .modal {
@@ -224,6 +284,40 @@ export default {
 
     .custom-overlay {
         background-color: rgba(0, 0, 0, 0.6);
+    }
+
+    .modal-header {
+        &__container {
+            display: none;
+            justify-content: space-between;
+            padding-inline: var(--container-padding-x);
+            padding-block: 1rem;
+            box-shadow: 0 2px 20px 0 rgba(121, 121, 121, 0.1);
+        }
+
+        @include mobile {
+            &_type_fixed {
+                position: fixed;
+                z-index: 2;
+                left: 0;
+                right: 0;
+                top: 0;
+                background-color: #fff;
+
+                .modal-header__container {
+                    display: flex;
+                }
+
+                .modal-title {
+                    display: none;
+                }
+            }
+        }
+
+
+        .modal-fixed-header__btn_type_left {
+            transform: rotate(180deg);
+        }
     }
 }
 

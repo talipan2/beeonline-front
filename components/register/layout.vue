@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="register-container">
     <h1 class="register__title" v-if="blockTitle">{{ blockTitle }}</h1>
     <h2 class="register__subtitle" v-if="title">{{ title }}</h2>
     <p class="register__text" v-if="description">{{ description }}</p>

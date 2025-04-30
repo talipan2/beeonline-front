@@ -1,6 +1,9 @@
 <template>
   <div class="info-card">
-    <h2 class="info-card__title" v-if="title">{{ title }}</h2>
+    <div class="info-card__header" v-if="title">
+      <h2 class="info-card__title">{{ title }}</h2>
+      <slot name="action" />
+    </div>
     <slot></slot>
   </div>
 </template>
@@ -30,7 +33,28 @@ const props = defineProps({
     line-height: 1em;
     letter-spacing: -0.02em;
     color: rgba(0, 0, 0, 0.9);
-    margin-bottom: .5em;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 3.2em;
+  }
+
+  @include mobile {
+    padding-inline: 2em;
+    &__header {
+      margin-bottom: 2em;
+      flex-wrap: wrap;
+      row-gap: 2em;
+      align-items: normal;
+    }
+
+    &__title {
+      font-size: 2em;
+
+    }
   }
 }
 

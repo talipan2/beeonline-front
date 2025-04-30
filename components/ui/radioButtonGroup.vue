@@ -5,23 +5,25 @@
     :name="name"
   >
     <div class="radio-buttons" :class="$attrs.class">
-      <label
-        v-for="option in options"
-        :key="option.value"
-        class="radio-buttons__label"
-      >
-        <input
-          type="radio"
-          :name="name"
-          :value="option.value"
-          v-model="field.value"
-          @input="handleChange(returnNumber ? Number($event.target.value) : $event.target.value)"
-          :checked="field.value === option.value"
-          class="radio-buttons__input"
-        />
-        <div class="radio-buttons__icon"></div>
-        <span>{{ option.label }}</span>
-      </label>
+      <div class="radio-buttons__list">
+        <label
+          v-for="option in options"
+          :key="option.value"
+          class="radio-buttons__label"
+        >
+          <input
+            type="radio"
+            :name="name"
+            :value="option.value"
+            v-model="field.value"
+            @input="handleChange(returnNumber ? Number($event.target.value) : $event.target.value)"
+            :checked="field.value === option.value"
+            class="radio-buttons__input"
+          />
+          <div class="radio-buttons__icon"></div>
+          <span>{{ option.label }}</span>
+        </label>
+      </div>
       <div class="invalid-error" v-if="rules">
         <span
           v-if="errors.length && meta.touched"
@@ -59,7 +61,13 @@ const props = defineProps({
 .radio-buttons {
   display: flex;
   flex-direction: column;
-  gap: 1.6rem;
+  gap: .2rem;
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+  }
 }
 
 .radio-buttons__label {

@@ -1,55 +1,63 @@
-import { ref } from "vue";
+import { ref, type Component, h } from 'vue';
+import confirmModal from '~/components/common/confirmModal.vue';
 
-interface DialogProps {
+interface ConfirmOptions {
   title: string;
   message: string;
-  onConfirm: () => void;
-  onCancel: (() => void) | undefined;
-  confirmText: string;
-  cancelText: string;
+  onConfirm: () => void | Promise<void>;
+  onCancel?: () => void;
+  confirmText?: string;
+  cancelText?: string;
+  modalProps?: Record<string, any>;
 }
 
-export default function useConfirm() {
-  const isOpen = ref<boolean>(false);
-  const dialogProps = ref<DialogProps>({
-    title: "",
-    message: "",
+export default function useConfirm(modalComponent?: Component) {
+  const isOpen = ref(false);
+  const options = ref<ConfirmOptions>({
+    title: '',
+    message: '',
     onConfirm: () => {},
-    onCancel: undefined,
-    confirmText: "",
-    cancelText: "",
+    confirmText: 'Да',
+    cancelText: 'Нет',
+    modalProps: {}
   });
 
-  const confirm = (
-    title: string,
-    message: string,
-    onConfirm: () => void,
-    onCancel?: () => void,
-    confirmText?: string,
-    cancelText?: string
-  ): void => {
-    dialogProps.value = {
-      title,
-      message,
-      onConfirm: () => {
-        onConfirm();
+  // Используем переданный компонент или дефолтный
+  const componentToRender = modalComponent || confirmModal;
+
+  const ConfirmModal = () => h(componentToRender, {
+    modelValue: isOpen.value,
+    'onUpdate:modelValue': (val: boolean) => isOpen.value = val,
+    title: options.value.title,
+    message: options.value.message,
+    confirmText: options.value.confirmText,
+    cancelText: options.value.cancelText,
+    onConfirm: () => {
+      Promise.resolve(options.value.onConfirm()).finally(() => {
         isOpen.value = false;
-      },
-      onCancel: onCancel
-        ? () => {
-            onCancel();
-            isOpen.value = false;
-          }
-        : undefined,
-      confirmText: confirmText || "Да",
-      cancelText: cancelText || "Нет",
+      });
+    },
+    onCancel: options.value.onCancel 
+      ? () => {
+          options.value.onCancel?.();
+          isOpen.value = false;
+        }
+      : undefined,
+    ...options.value.modalProps
+  });
+
+  const confirm = (userOptions: ConfirmOptions) => {
+    options.value = {
+      confirmText: 'Да',
+      cancelText: 'Нет',
+      ...userOptions,
+      modalProps: userOptions.modalProps || {}
     };
     isOpen.value = true;
   };
 
   return {
-    isOpen,
-    dialogProps,
     confirm,
+    ConfirmModal
   };
 }

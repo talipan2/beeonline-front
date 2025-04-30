@@ -7,8 +7,11 @@
       <div class="load-image-secondary__container">
         <template v-if="imagePreview">
           <img :src="imagePreview" :alt="imagePreview">
-          <UiButton class="load-image-secondary__del" type="button" variant="default" :without-padding="true" @click="handleDeleteImage">
-            <SvgoDelete class="svg-l" fill="#6937a5"/>
+          <UiButton class="load-image-secondary__btn load-image-secondary__btn_type_delete" type="button" variant="default" :without-padding="true" @click="handleDeleteImage">
+            <SvgoClose class="svg-l"/>
+          </UiButton>
+          <UiButton class="load-image-secondary__btn load-image-secondary__btn_type_setting" type="button" variant="default" :without-padding="true" @click="settingModal = true">
+            <SvgoSetting class="svg-l"/>
           </UiButton>
         </template>
         <div v-else class="load-image-secondary__loader">
@@ -21,7 +24,19 @@
         </div>
       </div>
     </div>
-    <Cropper :src="imagePreview" :stencil-component="Stencil" :stencil-props="stencilProps" @change="handleCrop"/>
+    <ModalsRoundBorder :is-open="settingModal" title="Выберите область" @close="settingModal = false">
+      <Cropper 
+        ref="cropper"
+        :src="imagePreview" 
+        :stencil-component="RectangleStencil" 
+        :stencil-props="stencilProps"
+        :stencil-size="{
+          width: 300,
+        }"
+        :cross-origin="'anonymous'"
+      />
+      <UiButton type="button" variant="quinary" size="large" @click="handleCrop">Выбрать область</UiButton>
+    </ModalsRoundBorder>
   </div>
 </template>
 
@@ -29,7 +44,7 @@
 import { useUserStore } from '~/store/userStore';
 import { useSettingStore } from '~/store/settingStore';
 import { useToast } from 'vue-toastification';
-import { Cropper } from 'vue-advanced-cropper';
+import { Cropper, RectangleStencil } from 'vue-advanced-cropper';
 import 'vue-advanced-cropper/dist/style.css';
 
 const props = defineProps({
@@ -57,6 +72,28 @@ const imagePreview = ref(props.modelValue.url || '');
 const userStore = useUserStore();
 const toast = useToast();
 const progress = ref(0);
+const cropper = ref(null);
+const settingModal = ref(false);
+
+const stencilProps = {
+  aspectRatio: 1 / .7,
+  resizable: false,
+  handlers: {}, 
+}
+
+const handleCrop = (data) => {
+  if(cropper.value) {
+    const { canvas } = cropper.value.getResult();
+    canvas.toBlob((blob) => {
+      imagePreview.value = URL.createObjectURL(blob)
+    })
+    settingModal.value = false
+  }
+}
+
+const handleCloseSettingModal = () => {
+  settingModal.value = false
+}
 
 const emit = defineEmits(['update:modelValue']);
 
@@ -99,12 +136,10 @@ const handleDeleteImage = () => {
 }
 
 watch(() => props.modelValue, (newVal) => {
-  try {
-    if (newVal && newVal.url) {
-      imagePreview.value = newVal.url;
+    if (newVal) {
+      imagePreview.value = newVal;
     }
-  } catch (err) {}
-}, {deep: true});
+}, {deep: true, immediate: true});
 
 
 </script>
@@ -118,7 +153,7 @@ watch(() => props.modelValue, (newVal) => {
   &__container {
     border: 1px dashed #e1e3f1;
     background-color: #f9f9f9;
-    flex: 0 0 26%;
+    flex: 0 0 32%;
     aspect-ratio: 1 / .7;
     position: relative;
     overflow: hidden;
@@ -161,16 +196,65 @@ watch(() => props.modelValue, (newVal) => {
     width: auto !important;
   }
 
+  &__btn {
+    position: absolute;
+    width: 2.4em;
+    height: 2.4em;
+    box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.1);
+    background: #fff;
+
+    svg {
+      width: 100%;
+    }
+
+    &_type_delete {
+      top: 1em;
+      right: 1em;
+
+      svg {
+        width: 55%;
+        path {
+          fill: #000;
+        }
+      }
+
+      &:hover {
+        path {
+          fill: #6937a5;
+        }
+      }
+    }
+
+    &_type_setting {
+      top: 1em;
+      left: 1em;
+
+      svg {
+        path {
+          stroke: #000;
+        }
+      }
+
+      &:hover {
+        path {
+          stroke: #6937a5;
+        }
+      }
+    }
+  }
+
   &__del {
     position: absolute;
     top: 1em;
     right: 1em;
     background-color: transparent;
+  }
 
-    &:hover {
-      path {
-        fill: #6937a5;
-      }
+  @include mobile {
+    &__container {
+      aspect-ratio: 1;
+      flex-basis: 50%;
+      max-width: 50%;
     }
   }
 

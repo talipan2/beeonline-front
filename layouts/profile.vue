@@ -1,5 +1,5 @@
 <template>
-  <section class="profile container" :class="className">
+  <section class="profile container" :class="[className, { 'profile_type_performer': role === 'performer' }]">
     <slot name="header" />
     <h1 class="profile__title">{{ title }}</h1>
     <div class="profile__container" :class="{ 'profile__container_type_second': !$slots.rightSide }">
@@ -69,6 +69,7 @@ onUnmounted(() => {
 <style lang="scss">
 
 .profile {
+  
   &__container {
     display: flex;
     column-gap: 10em;
@@ -101,6 +102,21 @@ onUnmounted(() => {
   &__right {
     flex: 0 0 33%;
     // border: 1px solid red;
+  }
+
+  &_type_performer {
+    .profile__right{
+      flex: 0 0 17%;
+    }
+
+    .profile__content_type_full {
+      flex: 0 1 65%;
+
+      @include tablet {
+        flex: 1;
+      }
+    }
+    
   }
 }
 

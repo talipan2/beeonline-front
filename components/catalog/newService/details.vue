@@ -1,7 +1,7 @@
 <template>
   <div class="new-service-details">
     <CommonLayoutInfoCard padding="20" class="new-service-details__pub-card">
-      <div class="new-service-details__pub-card-image image-box">
+      <div class="new-service-details__pub-card-image">
         <UiImage :src="data.pub_card?.logo || defaultImage" :alt="data.name" :external="true"/>
       </div>
       <div class="new-service-details__pub-card-content">
@@ -153,34 +153,38 @@ onMounted(() => {
     display: flex;
     padding: 3.2em;
     margin-bottom: 3.2em;
+    column-gap: 5.6em;
+    align-items: flex-start;
 
     .rate {
-      font-size: 1.6rem;
+      font-size: 1em;
     }
 
     .rating__reviews {
-      font-size: 1.6rem;
+      font-size: 1em;
     }
 
     .location-container {
-      font-size: 1.6rem;
+      font-size: 1em;
       font-family: 'fira-sans', sans-serif;
 
       .flag {
-        width: 2.8rem;
-        height: 2.8rem;
-        font-size: 2.8rem;
+        width: 1em;
+        height: 1em;
+        font-size: 1.75em;
       }
     }
 
     &-image {
       flex: 0 0 32%;
-      max-width: 32%;
-      padding-top: 19%;
+      aspect-ratio: 1 / .6;
+      overflow: hidden;
+      border: 1px solid #e3e3e3;
+      border-radius: 12px;
 
       img {
-        border-radius: 12px;
-        border-color: #e3e3e3;
+        object-fit: contain;
+        height: 100%;
       }
     }
 
@@ -194,6 +198,8 @@ onMounted(() => {
     &-title {
       font-size: 2em;
       font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.02em;
     }
 
     &-site {
@@ -202,6 +208,8 @@ onMounted(() => {
       column-gap: .5em;
 
       svg {
+        width: 1.75em;
+        height: 1.75em;
         flex: 0 0 auto;
       }
     }
@@ -215,6 +223,39 @@ onMounted(() => {
     &-button {
       font-size: .75em;
       text-transform: uppercase;
+    }
+
+    @include tablet {
+      font-size: .9rem;
+    }
+
+    @include small-tablet {
+      font-size: .7rem;
+    }
+
+    @include mobile {
+      font-size: .8em;
+      flex-direction: column;
+      row-gap: 2em;
+
+      &-image {
+        max-width: 38em;
+      }
+
+      &-title {
+        line-height: 1.3em;
+      }
+
+      &-buttons {
+        flex-wrap: wrap;
+        row-gap: 1em;
+      }
+
+      &-button {
+        width: 100%;
+      }
+
+    
     }
   }
 
@@ -235,6 +276,15 @@ onMounted(() => {
 
     .details-badge:nth-child(2) {
       flex: 0 1 calc(50% - .8em);
+    }
+
+    @include mobile {
+      flex-direction: column;
+      
+      .details-badge {
+        font-size: .9em;
+        
+      }
     }
   }
 
@@ -311,8 +361,19 @@ onMounted(() => {
         color:  #5a2c96cc;
         border-radius: 100px;
         padding: .4em 1em;
-        background: #f2edff; 
+        background: #f2edff;
+        height: 2.3em;
+        display: flex;
+        align-items: center;
       }
+    }
+
+    @include mobile {
+      &-item {
+        flex-direction: column;
+        row-gap: 1.6em;
+      }
+
     }
   }
 

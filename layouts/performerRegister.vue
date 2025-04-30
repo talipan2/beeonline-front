@@ -51,13 +51,11 @@ const props = defineProps ({
   }
 
   &__left {
-    flex: 0 0 17%;
-    // border: 1px solid red;
+    flex: 0 0 25%;
   }
 
   &__content {
-    flex: 1 1 33%;
-    // border: 1px solid red;
+    flex: 1 1 46%;
   }
 
   &__content_type_full {
@@ -65,8 +63,36 @@ const props = defineProps ({
   }
 
   &__right {
-    flex: 0 0 17%;
-    // border: 1px solid red;
+    flex: 0 0 25%;
+  }
+
+  @include desktop {
+    &__container {
+      column-gap: 3em;
+    }
+  }
+
+  @include tablet {
+    max-width: 960px;
+
+    &__content {
+      flex: 1 1 auto;
+    }
+
+    &__right {
+      display: none;
+    }
+  }
+
+  @include small-tablet {
+    max-width: var(--tablet-content-width);
+  }
+
+  @include mobile {
+    max-width: var(--mobile-content-width);
+    &__container {
+      flex-direction: column;
+    }
   }
 }
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="images-list">
+  <div class="images-list images-list_type_desktop">
     <div class="images-list__container">
       <div 
         class="images-list__item" 
@@ -27,6 +27,26 @@
     >
       {{ showAll ? 'Скрыть' : 'Показать все' }}
     </UiButton>
+  </div>
+  <div class="images-list images-list_type_mobile">
+    <Swiper
+      :slidesPerView="1.7"
+      :loopAddBlankSlides="true"
+      :spaceBetween="20"
+      class="images-list__slider"
+      :modules="modules"
+      :breakpoints="{
+        512: {
+          slidesPerView: 2.5,
+        }
+      }"
+    >
+      <SwiperSlide v-for="(image, index) in data" :key="index" class="images-list__slide">
+        <a :href="image.url" class="" data-fancybox="gallery">
+          <img :src="image.url" class="images-list__item-image" :alt="image" />
+        </a>
+      </SwiperSlide>
+    </Swiper>
   </div>
 </template>
 
@@ -84,6 +104,26 @@ const showAllImages = () => {
 .images-list {
   font-size: 1rem;
 
+  &_type_mobile {
+    display: none;
+  }
+
+  &__slide {
+    aspect-ratio: 1 / 1.18;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    
+    a {
+      position: absolute;
+      inset: 0;
+    }
+
+    img {
+      height: 100%;
+      object-fit: cover;
+    }
+  }
 
   &__container {
     display: flex;
@@ -140,6 +180,15 @@ const showAllImages = () => {
     text-transform: uppercase;
   }
 
+  @include mobile {
+    &_type_mobile {
+      display: block;
+    }
+
+    &_type_desktop {
+      display: none;
+    }
+  }
 }
 
 </style>

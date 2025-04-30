@@ -55,6 +55,8 @@ const reviewsDocFormat = (file) => {
 <style lang="scss">
 
 .new-service-reviews {
+  font-size: 1rem;
+
     .rating {
       margin-bottom: 3.2rem;
       font-family: 'fira-sans', sans-serif;
@@ -96,7 +98,7 @@ const reviewsDocFormat = (file) => {
   }
 
   &__item-title {
-    font-size: 2rem;
+    font-size: 2em;
     font-weight: 400;
     line-height: 1.2em;
     color: #000;
@@ -105,7 +107,7 @@ const reviewsDocFormat = (file) => {
 
   &__item-text {
     font-family: 'Inter', sans-serif;
-    font-size: 1.8rem;
+    font-size: 1.8em;
     font-weight: 400;
     line-height: 1.5em;
     color: #26222c;
@@ -127,7 +129,7 @@ const reviewsDocFormat = (file) => {
 
     span {
       display: inline-block;
-      font-size: 1.4rem;
+      font-size: 1.4em;
       margin-bottom: 1em;
     }
   }
@@ -138,9 +140,13 @@ const reviewsDocFormat = (file) => {
 
     span {
       display: inline-block;
-      font-size: 1.4rem;
+      font-size: 1.4em;
       margin-bottom: 1em;
     }
+  }
+
+  @include mobile {
+    font-size: .9rem;
   }
 }
 

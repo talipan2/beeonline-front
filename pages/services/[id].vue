@@ -125,6 +125,10 @@ useHead({
   .info__content {
     max-width: 80%;
     margin-inline: auto;
+
+    @include mobile {
+      max-width: 100%;
+    }
   }
 }
 

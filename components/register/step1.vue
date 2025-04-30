@@ -1,11 +1,15 @@
 <template>
   <RegisterLayout
     :blockTitle="blockTitle"
-    title="Данные организации"
+    :title="title"
     description="Указанные данные не разглашаются третьим лицам и необходимы для успешной работы на сервисе."
   >
     <UiForm :submit="handleSubmit">
-      <div :class="{'animation-loading': isSearchInn}">
+      <div :class="{'animation-loading': isSearchInn}" class="register__step-one">
+        <template v-if="router.currentRoute.value.path.includes('performer-register')">
+          <h2 class="register__subtitle register__subtitle_type_performer">Данные организации</h2>
+          <p class="register__text register__text_type_performer">Указанные данные не разглашаются третьим лицам и необходимы для успешной работы на сервисе.</p>
+        </template>
         <div class="form-group__data register__label_type_location">
           <label class="form-group__title">
             Выберите вашу страну*
@@ -288,6 +292,10 @@ const props = defineProps({
     type: Object,
     default: () => ({}),
     required: true,
+  },
+  title: {
+    type: String,
+    default: "Данные организации",
   }
 });
 

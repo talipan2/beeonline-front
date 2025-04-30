@@ -235,7 +235,7 @@ label:active {
   }
 
   &_type_secondary {
-    margin-bottom: 1.5em;
+    margin-bottom: 3.2em;
 
     .form-group__title {
       display: flex;
@@ -250,12 +250,16 @@ label:active {
 
     .form-group__value {
       margin-top: 0;
+      input {
+        color: var(--text-color-primary);
+      }
     }
 
     .input-container {
       border-radius: 8px;
       border: 1px solid #d9dae1;
       flex-direction: row-reverse;
+      padding: 1.4rem;
   
       svg {
         margin-right: 8px;
@@ -268,17 +272,31 @@ label:active {
     }
 
     .radio-buttons {
-      flex-direction: row;
-      column-gap: 3.2rem;
+      .radio-buttons__list {
+        flex-direction: row;
 
-      span {
-        font-size: 1.6rem;
+        span {
+          font-size: 1.6rem;
+        }
       }
+
     }
 
     .text-area__input {
       border-radius: 8px;
       border: 1px solid #d9dae1;
+    }
+
+    @include mobile {
+      margin-bottom: 1.5em;
+      
+      .form-group-data:not(:last-child) {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-group-data:last-child {
+        margin-bottom: 0;
+      }
     }
   }
 }
@@ -347,6 +365,19 @@ label:active {
 .form-group__inline {
   display: inline;
   vertical-align: middle;
+}
+
+.form-value {
+  width: 100%;
+  font-size: 1.6rem;
+  padding: .875em;
+  border-radius: 8px;
+  border: 1px solid #d9dae1;
+  min-height: 3.25em;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  column-gap: .5em;
 }
 
 
