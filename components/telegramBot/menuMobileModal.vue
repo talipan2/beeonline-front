@@ -9,7 +9,6 @@
           </div>
           <div class="header-menu__user-info">
             <div class="header-menu__user-name">{{ userName }}</div>
-            <div class="header-menu__user-role">{{ getRoleName(role) }}</div>
           </div>
         </button>
         <ul class="header-menu__link-list header-menu__link-list_type_dropdown">

@@ -43,10 +43,25 @@
             </template>
           </tr>
           <tr>
-            <td class="tariffs-table__price">Цена</td>
+            <td class="tariffs-table__price">Итого</td>
             <template v-for="(tariff, colIndex) in tariffs" :key="colIndex">
               <td v-if="tariff.prices !== null" class="tariffs-table__price-value">
-                <span v-if="discount !== null && tariff.code !== 'free'">{{ `(-${discount}%)`}}<br /></span>
+                {{ formatMoney(getPrice(tariff) * 100 / (100 - discount), 'RUB', 0) }}
+              </td>
+            </template>
+          </tr>
+          <tr>
+            <td class="tariffs-table__price">Скидка {{ discount }}%</td>
+            <template v-for="(tariff, colIndex) in tariffs" :key="colIndex">
+              <td v-if="tariff.prices !== null" class="tariffs-table__price-value">
+                <span v-if="discount !== null && tariff.code !== 'free'">{{ `-${getDiscount(getPrice(tariff), discount, 'RUB')}`}}<br /></span>
+              </td>
+            </template>
+          </tr>
+          <tr>
+            <td class="tariffs-table__price">Итого к оплате</td>
+            <template v-for="(tariff, colIndex) in tariffs" :key="colIndex">
+              <td v-if="tariff.prices !== null" class="tariffs-table__price-value">
                 {{ formatMoney(getPrice(tariff), 'RUB', 0) }}
               </td>
             </template>
@@ -101,6 +116,12 @@ const tariffsStore = useTariffsStore();
 
 const tariffs = computed(() => tariffsStore.tariffs);
 const services = computed(() => tariffsStore.services?.filter(service => service.tariffs.length));
+
+function getDiscount(price, discount, currency = 'RUB') {
+  const originalAmount = price / (1 - discount / 100);
+  const discountAmount = originalAmount * (discount / 100)
+  return formatMoney(discountAmount, currency, 0);
+}
 
 const getMobileTariffsFeatures = (tariff) => {
   const features = [];

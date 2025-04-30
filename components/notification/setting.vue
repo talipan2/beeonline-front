@@ -18,9 +18,12 @@
     </div>
     <div class="notification-setting__buttons">
       <UiButton
+        v-if="!isTelegramChatId"
         class="notification-setting__button"
         variant="telegram"
         size="small"
+        @click="handleOpenTelegram"
+        type="button"
         >Включить уведомления в telegram
       </UiButton>
       <UiButton
@@ -40,9 +43,11 @@
 <script setup>
 import { useUserStore } from '~/store/userStore';
 import {useToast} from "vue-toastification";
+import { useSettingStore } from '~/store/settingStore';
 
 
 const userStore = useUserStore();
+const settingStore = useSettingStore();
 const toast = useToast();
 
 // список выбранных уведомлений
@@ -52,7 +57,7 @@ const selectedSettings = ref({
   'Новые сообщения в чате': [1],
   'Системные уведомления': [1],
   'Новости': [1],
-  'Сделки': [1],
+  // 'Сделки': [1],
 });
 
 function handleDisableSettings(type, id) {
@@ -71,7 +76,7 @@ const notificationsSetting = ref([
     id: 0, 
     label: 'Хочу получать уведомления о новых заказах',
     value: 'Новые заказы',
-    role: 'customer',
+    role: 'performer',
     settings: [
       {id: 0, label: 'по электронной почте', value:'email',},
       {id: 1, label: 'в личном кабинете', value: 'cabinet', disabled: true, },
@@ -127,18 +132,18 @@ const notificationsSetting = ref([
       {id: 3, label: 'в WhatsApp', value: 'whatsapp'},
     ]
   },
-  {
-    id: 4, 
-    label: 'Хочу получать уведомления о сделках',
-    value: 'Сделки',
-    role: 'customer/performer',
-    settings: [
-      {id: 0, label: 'по электронной почте', value:'email'},
-      {id: 1, label: 'в личном кабинете', value: 'cabinet', disabled: true},
-      {id: 2, label: 'в Telegram', value: 'telegram'},
-      {id: 3, label: 'в WhatsApp', value: 'whatsapp'},
-    ]
-  },
+  // {
+  //   id: 4, 
+  //   label: 'Хочу получать уведомления о сделках',
+  //   value: 'Сделки',
+  //   role: 'customer/performer',
+  //   settings: [
+  //     {id: 0, label: 'по электронной почте', value:'email'},
+  //     {id: 1, label: 'в личном кабинете', value: 'cabinet', disabled: true},
+  //     {id: 2, label: 'в Telegram', value: 'telegram'},
+  //     {id: 3, label: 'в WhatsApp', value: 'whatsapp'},
+  //   ]
+  // },
 ])
 
 // список значений
@@ -215,6 +220,20 @@ const handleSelectSettings = () => {
       }
     })
   }
+}
+
+const isTelegramChatId = computed(() => userStore.userData.telegram_chat_id !== null)
+
+const handleOpenTelegram = () => {
+  if(!userStore.userData.id) return
+
+  settingStore.telegramNotify(userStore.userData.id).then(res => {
+    if (res && res.telegram_chat_code) {
+      const telegramLink = `https://t.me/beeonline_notify_bot?start=${res.telegram_chat_code}`;
+      window.open(telegramLink, '_blank');
+      // userStore.checkAuth();
+    }
+  }).catch(err => { console.log(err) })
 }
 
 onMounted(() => {

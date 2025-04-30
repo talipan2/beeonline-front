@@ -6,6 +6,10 @@
 </template>
 
 <script setup>
+import { useSettingStore } from '~/store/settingStore';
+
+
+const settingStore = useSettingStore();
 
 definePageMeta({
   layout: '',

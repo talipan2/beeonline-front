@@ -176,5 +176,14 @@ getInvoices(1, false);
       font-size: 1.2em;
     }
   }
+
+  @media screen and (max-width: 500px) {
+    font-size: .8rem;
+  }
+
+  @include small-mobile {
+    font-size: .7rem;
+  }
+
 }
 </style>

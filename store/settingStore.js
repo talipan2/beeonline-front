@@ -130,6 +130,17 @@ export const useSettingStore = defineStore("setting", {
       }
     },
 
+    async telegramNotify(id) {
+      try {
+        const response = await commonApi.telegramNotify(id);
+        if (response.data) {
+          return response.data
+        }
+      } catch (error) {
+        throw error.response?.data || error;
+      }
+    }
+
   },
 
 
