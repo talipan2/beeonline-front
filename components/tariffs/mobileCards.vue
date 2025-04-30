@@ -4,8 +4,9 @@
       <h3 class="tariff-card__title">{{ tariff.name }}</h3>
       <p class="tariff-card__duration">{{ duration }}</p>
     </div>
-    <p class="tariff-card__discount" v-if="discount && tariff.value !== 'free'">{{ `(-${discount}%)`}}</p>
-    <p class="tariff-card__price">{{ formatMoney(price, currency, 0) }}</p>
+    <p class="tariff-card__price tariff-card__price_type_full" v-if="discount && tariff.code !== 'free'">Итого: {{ formatMoney(price * 100 / (100 - discount), currency, 0) }}</p>
+    <p class="tariff-card__discount" v-if="discount && tariff.code !== 'free'">Скидка: {{ `(-${discount}%)`}}</p>
+    <p class="tariff-card__price">Итого к оплате: {{ formatMoney(price, currency, 0) }}</p>
     <ul class="tariff-card__list">
       <li class="tariff-card__item" v-for="item in feature" :key="item">
         <div class="tariff-card__item-icon">
@@ -88,6 +89,10 @@ const props = defineProps({
     line-height: 1.4em;
     color: #6937a5;
     margin-bottom: 1.6em;
+
+    &_type_full {
+      margin-bottom: .3em;
+    }
   }
 
   &__discount {

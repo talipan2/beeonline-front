@@ -43,10 +43,25 @@
             </template>
           </tr>
           <tr>
-            <td class="tariffs-table__price">Цена</td>
+            <td class="tariffs-table__price">Итого</td>
+            <template v-for="(tariff, colIndex) in tariffs" :key="colIndex">
+              <td v-if="tariff.prices !== null" class="tariffs-table__price-value">
+                {{ formatMoney(getPrice(tariff) * 100 / (100 - discount), 'RUB', 0) }}
+              </td>
+            </template>
+          </tr>
+          <tr>
+            <td class="tariffs-table__price">Скидка</td>
             <template v-for="(tariff, colIndex) in tariffs" :key="colIndex">
               <td v-if="tariff.prices !== null" class="tariffs-table__price-value">
                 <span v-if="discount !== null && tariff.code !== 'free'">{{ `(-${discount}%)`}}<br /></span>
+              </td>
+            </template>
+          </tr>
+          <tr>
+            <td class="tariffs-table__price">Итого к оплате</td>
+            <template v-for="(tariff, colIndex) in tariffs" :key="colIndex">
+              <td v-if="tariff.prices !== null" class="tariffs-table__price-value">
                 {{ formatMoney(getPrice(tariff), 'RUB', 0) }}
               </td>
             </template>
