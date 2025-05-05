@@ -55,7 +55,7 @@ const userBalance = computed(() => formatMoney(tariffsStore.userBalance, current
 const userBonuses = computed(() => tariffsStore.userBonuses);
 
 // переменная для определения международного тарифа
-const isInternational = computed(() => tariffsStore.isForeigner);
+const isInternational = computed(() => tariffsStore.isForeigner && currentCurrency.value !== 'RUB');
 
 
 const currentCurrency = computed(() => {
