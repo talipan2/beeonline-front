@@ -10,10 +10,10 @@
         <NuxtLink class="link" to="/contacts">Контакты</NuxtLink>
         <NuxtLink class="link" to="/page-policy">Политика конфиденциальности</NuxtLink>
         <NuxtLink class="link" to="/page-oferta">Оферта</NuxtLink>
-        <NuxtLink class="link" to="/page-terms-of-use">Пользовательское соглашение</NuxtLink>
+        <!-- <NuxtLink class="link" to="/page-terms-of-use">Пользовательское соглашение</NuxtLink> -->
         <NuxtLink class="link" to="/page-requisites">Реквизиты</NuxtLink>
-        <NuxtLink class="link" to="/page-oferta-st">Оферта</NuxtLink>
-        <NuxtLink class="link" to="/page-oferta-ct">Оферта</NuxtLink>
+        <!-- <NuxtLink class="link" to="/page-oferta-st">Оферта</NuxtLink>
+        <NuxtLink class="link" to="/page-oferta-ct">Оферта</NuxtLink> -->
 
       </div>
     </template>

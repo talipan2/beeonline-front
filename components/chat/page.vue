@@ -118,6 +118,10 @@ export default {
 	@media (max-width: 575px) {
 		padding-bottom: 15px;
 	}
+
+	@include mobile {
+		padding-bottom: 0;
+	}
 }
 
 .chat-page {
