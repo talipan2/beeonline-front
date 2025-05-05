@@ -11,7 +11,7 @@
               :isValidated="false"
               v-model="selectedSettings[notification.value]"
               :disabled="(id) => handleDisableSettings(notification.value, id)"
-              
+
             />
         </div>
       </template>
@@ -25,6 +25,15 @@
         @click="handleOpenTelegram"
         type="button"
         >Включить уведомления в telegram
+      </UiButton>
+      <UiButton
+        v-else
+        class="notification-setting__button"
+        variant="telegram"
+        size="small"
+        @click="handleResetTelegram"
+        type="button"
+        >Отключить уведомления в telegram
       </UiButton>
       <UiButton
         type="button"
@@ -45,10 +54,11 @@ import { useUserStore } from '~/store/userStore';
 import {useToast} from "vue-toastification";
 import { useSettingStore } from '~/store/settingStore';
 
-
 const userStore = useUserStore();
 const settingStore = useSettingStore();
 const toast = useToast();
+
+const loading = ref(false);
 
 // список выбранных уведомлений
 const selectedSettings = ref({
@@ -73,7 +83,7 @@ function handleDisableSettings(type, id) {
 // список уведомлений
 const notificationsSetting = ref([
   {
-    id: 0, 
+    id: 0,
     label: 'Хочу получать уведомления о новых заказах',
     value: 'Новые заказы',
     role: 'performer',
@@ -97,7 +107,7 @@ const notificationsSetting = ref([
     ]
   },
   {
-    id: 1, 
+    id: 1,
     label: 'Хочу получать уведомления о новых сообщениях в чате',
     value: 'Новые сообщения в чате',
     role: 'customer/performer',
@@ -109,7 +119,7 @@ const notificationsSetting = ref([
     ]
   },
   {
-    id: 2, 
+    id: 2,
     label: 'Хочу получать системные уведомления',
     value: 'Системные уведомления',
     role: 'customer/performer',
@@ -121,7 +131,7 @@ const notificationsSetting = ref([
     ]
   },
   {
-    id: 3, 
+    id: 3,
     label: 'Хочу получать уведомления о новостях',
     value: 'Новости',
     role: 'customer/performer',
@@ -133,7 +143,7 @@ const notificationsSetting = ref([
     ]
   },
   // {
-  //   id: 4, 
+  //   id: 4,
   //   label: 'Хочу получать уведомления о сделках',
   //   value: 'Сделки',
   //   role: 'customer/performer',
@@ -187,11 +197,11 @@ const formatSettingsToRequest = (settings) => {
 
 const formatSettingsToState = (settings) => {
   const result = {};
-  
+
   // Проходим по всем типам уведомлений из notificationsSetting
   notificationsSetting.value.forEach(notification => {
     const key = notification.value;
-    
+
     // Если настройки для этого типа есть и это массив
     if (settings[key] && Array.isArray(settings[key])) {
       // Объединяем пришедшие настройки с обязательным личным кабинетом (id=1)
@@ -225,22 +235,45 @@ const handleSelectSettings = () => {
 const isTelegramChatId = computed(() => userStore.userData.telegram_chat_id !== null)
 
 const handleOpenTelegram = () => {
-  if(!userStore.userData.id) return
+  if(!userStore.userData.id) return;
+  if (loading.value) return;
 
+  loading.value = true;
   settingStore.telegramNotify(userStore.userData.id).then(res => {
-    if (res && res.telegram_chat_code) {
-      const telegramLink = `https://t.me/beeonline_notify_bot?start=${res.telegram_chat_code}`;
-      window.open(telegramLink, '_blank');
-      // userStore.checkAuth();
-    }
-  }).catch(err => { console.log(err) })
+        if (res && res.telegram_chat_link) {
+            window.open(res.telegram_chat_link, '_blank');
+            // userStore.checkAuth();
+        }
+    }).catch(err => {
+        console.log(err)
+    })
+    .finally(() => {
+        loading.value = false;
+    });
+}
+
+const handleResetTelegram = () => {
+    if(!userStore.userData.id) return
+    if (loading.value) return;
+
+    loading.value = true;
+    settingStore.resetTelegramNotify(userStore.userData.id)
+    .then(res => {
+        userStore.userData.telegram_chat_id = null;
+    })
+    .finally(() => {
+        loading.value = false;
+    })
 }
 
 onMounted(() => {
   if(userStore.userData.id) {
-    userStore.getNotifications(userStore.userData.id).then(res => {
+    loading.value = true;
+    userStore.getNotifications(userStore.userData.id)
+    .then(res => {
       if(res && res.notification_settings) {
         selectedSettings.value = formatSettingsToState(res.notification_settings);
+        loading.value = false;
       }
     })
   }

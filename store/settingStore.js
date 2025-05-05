@@ -74,7 +74,7 @@ export const useSettingStore = defineStore("setting", {
         useToast().error('Ошибка при загрузке файла');
       }
     },
-    
+
     async getHelps() {
       try {
         const response = await commonApi.getFaqs();
@@ -139,7 +139,10 @@ export const useSettingStore = defineStore("setting", {
       } catch (error) {
         throw error.response?.data || error;
       }
-    }
+    },
+    async resetTelegramNotify(id) {
+        return await useApi().post(`/users/${id}/reset-tg-chat`);
+    },
 
   },
 

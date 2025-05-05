@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import Api from "@/api/userApi";
 import { useSettingStore } from "./settingStore";
 import { useChannelsStore } from "./channelsStore";
+import { TYPE, useToast } from "vue-toastification";
 
 export const useUserStore = defineStore("user", {
   state: () => ({
@@ -180,14 +181,36 @@ export const useUserStore = defineStore("user", {
                   }
                 }
 
+                const toast = useToast();
+
                 useChannelsStore()
                   .orgChannel.stopListening("OrganizationUpdate")
                   .listen("OrganizationUpdate", (event) => {
+                    eventBus.emit('OrganizationUpdate', event);
                     if (this.userOrganization.id === event.id) {
                       this.userOrganization = {
                         ...this.userOrganization,
                         ...event,
                       };
+                    }
+                  });
+
+                useChannelsStore()
+                  .orgChannel.stopListening("UserUpdate")
+                  .listen("UserUpdate", (event) => {
+                    eventBus.emit('UserUpdate', event);
+                    if (this.userData.id === event.id) {
+                        if (event.data.updated_at > this.userData.updated_at) {
+                            this.userData = {
+                                ...this.userData,
+                                ...event.data,
+                            };
+                            if (event.toast) {
+                                toast(event.toast, {
+                                    type: event.toast_type || TYPE.DEFAULT,
+                                });
+                            }
+                        }
                     }
                   });
 
