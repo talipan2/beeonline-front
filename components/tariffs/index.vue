@@ -82,6 +82,7 @@ const tabsList = ref([
 const currentTab = ref(tabsList.value[0].value);
 
 function selectTariff(tariff, total, currency) {
+    console.log(tariff, total, currency);
   currentPaymentData.value = {data: tariff, sum: total, currency: currency};
   settingStore.payModalStatus = true;
 }

@@ -2,7 +2,7 @@
   <div class="tariff-card">
     <div class="tariff-card__header">
       <h3 class="tariff-card__title">{{ tariff.name }}</h3>
-      <p class="tariff-card__duration">{{ duration }}</p>
+      <p class="tariff-card__duration">{{ duration }} {{ plural(duration, {one: 'месяц', few: 'месяца', many: 'месяцев'}) }}</p>
     </div>
     <p class="tariff-card__price tariff-card__price_type_full" v-if="discount && tariff.code !== 'free'">Итого: {{ formatMoney(price * 100 / (100 - discount), currency, 0) }}</p>
     <p class="tariff-card__discount" v-if="discount && tariff.code !== 'free'">Скидка: {{ `-${discount}% (-${getDiscount(price, discount)})`}}</p>
@@ -13,9 +13,9 @@
           <SvgoChecked class="svg-m"/>
         </div>
         <p class="tariff-card__item-text">
-          {{ item.feature }}<br>
-          <span v-if="typeof item.value === 'string'" class="tariff-card__item-value">
-            {{ item.value }}
+          {{ item.name }}<br>
+          <span class="tariff-card__item-value">
+            {{ formatDescription(serviceInTariff(item, tariff.id)) }}
           </span>
         </p>
       </li>
@@ -44,7 +44,7 @@ const props = defineProps({
     required: true
   },
   duration: {
-    type: String,
+    type: Number,
     default: '',
   },
   discount: {
@@ -57,6 +57,28 @@ function getDiscount(price, discount) {
   const originalAmount = price / (1 - discount / 100);
   const discountAmount = originalAmount * (discount / 100)
   return formatMoney(discountAmount, props.currency, 0);
+}
+
+function formatDescription({ description, quantity }, locale = 'ru-RU') {
+  if (!description) return null;
+
+  const subDuration = props.duration || 1;
+  quantity *= subDuration;
+
+  const parts = description.split('|');
+
+  if (parts.length === 1) {
+    return parts[0]; // без форм — просто описание
+  }
+
+  const [one, few, many] = parts;
+  const variants = { one, few, many };
+
+  return `${quantity} ${plural(quantity, variants, locale)}`;
+}
+
+function serviceInTariff(service, tariff_id) {
+	return service.tariffs.find(tariff => tariff.id === tariff_id);
 }
 
 </script>

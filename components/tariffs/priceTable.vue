@@ -130,7 +130,7 @@ const getMobileTariffsFeatures = (tariff) => {
 
   services.value.forEach(service => {
     const tariffValue = service.tariffs.find(item => item.id === tariff);
-    if(tariffValue) features.push({feature: service.name, value: tariffValue.description});
+    if(tariffValue) features.push(service);
   })
   return features;
 }

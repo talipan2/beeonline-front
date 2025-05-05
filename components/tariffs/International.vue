@@ -4,25 +4,22 @@
       <div class="international-tariffs__body">
         <div class="international-tariffs__header">
           <h3 class="international-tariffs__title">{{tariff.name}}</h3>
-          <p class="international-tariffs__month">{{ price.quantity }} месяцев</p>
+          <p class="international-tariffs__month">{{ price.quantity }} {{ plural(price.quantity, {one: 'месяц', few: 'месяца', many: 'месяцев'}) }}</p>
           <p class="international-tariffs__price">{{ formatMoney(price.amount, price.currency, 0) }}</p>
         </div>
         <div class="international-tariffs__possibilities">
           <ul class="international-tariffs__list">
-            <li class="international-tariffs__item" v-for="item in possibilitiesList[0]" :key="item">
-              <div class="international-tariffs__item-icon">
-                <SvgoChecked class="svg-m"/>
-              </div>
-              <p class="international-tariffs__item-text">{{ item }}</p>
-            </li>
-          </ul>
-          <ul class="international-tariffs__list">
-            <li class="international-tariffs__item" v-for="item in possibilitiesList[1]" :key="item">
-              <div class="international-tariffs__item-icon">
-                <SvgoChecked class="svg-m"/>
-              </div>
-              <p class="international-tariffs__item-text">{{ item }}</p>
-            </li>
+            <template v-for="service in services">
+                <li class="international-tariffs__item" v-if="serviceInTariff(service, tariff.id)" :key="service">
+                <div class="international-tariffs__item-icon">
+                    <SvgoChecked class="svg-m"/>
+                </div>
+                <div>
+                    <p class="international-tariffs__item-text">{{ service.name }}</p>
+                    <p class="international-tariffs__item-value">{{ formatDescription(serviceInTariff(service, tariff.id), price.quantity) }}</p>
+                </div>
+                </li>
+            </template>
           </ul>
         </div>
         <UiButton type="button" class="international-tariffs__btn" variant="quinary" size="large" @click="handleOpenPayModal(tariff, price)">Подключить</UiButton>
@@ -33,10 +30,10 @@
 				class="international-card"
 				:tariff="tariff"
 				:price="price.amount"
-				:feature="possibilitiesListMobile"
+				:feature="getMobileTariffsFeatures(tariff.id)"
 				:currency="price.currency"
-				:duration="`${price.quantity} месяцев`"
-				@handlePay="handleOpenPayModal(tariff.code, price.quantity)"
+				:duration="price.quantity"
+				@handlePay="handleOpenPayModal(tariff, price)"
 			/>
 		</template>
   </template>
@@ -48,100 +45,48 @@ import { useTariffsStore } from '~/store/tariffsStore';
 
 
 const settingStore = useSettingStore();
-const tariffStore = useTariffsStore();
+const tariffsStore = useTariffsStore();
 const emit = defineEmits(['select']);
 
-const tariffs = computed(() => tariffStore.tariffs);
-
-const internationalTariff = {
-  title: 'Международный',
-  value: 'international',
-  price: 2500,
-}
-
-const possibilitiesList = [
-  [
-    'Мониторинг заказов',
-    'Персональный менеджер (проф. оформление публичной карты и создание услуг)',
-    'Доступ к контактам заказчика',
-    'Приоритетная отправка уведомлений о новых заказах в личный кабинет на сайте, почта\телеграм',
-    'Приоритетная отправка откликов',
-    'Выделение отклика исполнителя в чате заказчика',
-    'Размещение в начале диалогов заказчика',
-  ],
-  [
-    'Закрепление интересующих чатов',
-    'Проверенный исполнитель галочка, заказчик может бесплатно посмотреть отчет о компании',
-    'Выделение карточки исполнителя в каталоге исполнителей',
-    'Размещение карточки в слайдере на первой странице каталога услуг',
-    'Поднятие карточки исполнителя в топ (не более 1 услуги в день)',
-    'Сервис проверки контрагента'
-  ]
-]
-
-const possibilitiesListMobile = [
-    {
-      feature: 'Мониторинг заказов',
-      value: true,
-    },
-    {
-      feature: 'Персональный менеджер (проф. оформление публичной карты и создание услуг)',
-      value: true,
-    },
-    {
-      feature: 'Доступ к контактам заказчика',
-      value: true,
-    },
-    {
-      feature: 'Приоритетная отправка уведомлений о новых заказах в личный кабинет на сайте, почта\телеграм',
-      value: 'Мгновенно',
-    },
-    {
-      feature: 'Приоритетная отправка откликов',
-      value: 'Мгновенно',
-    },
-    {
-      feature: 'Трекинг производства (Вы сможете уведомлять заказчика об этапах производства, аналог отслеживания заказа)',
-      value: true,
-    },
-    {
-      feature: 'Выделение отклика исполнителя в чате заказчика',
-      value: true,
-    },
-    {
-      feature: 'Размещение в начале диалогов заказчика',
-      value: true,
-    },
-    {
-      feature: 'Закрепление интересующих чатов',
-      value: true,
-    },
-    {
-      feature: "Проверенный исполнитель галочка, заказчик может бесплатно посмотреть отчет о компании",
-      value: true,
-    },
-    {
-      feature: 'Выделение карточки исполнителя в каталоге исполнителей',
-      value: true,
-    },
-    {
-      feature: 'Размещение карточки в слайдере на первой странице каталога услуг',
-      value: true,
-    },
-    {
-      feature: 'Поднятие карточки исполнителя в топ (не более 1 услуги в день)',
-      value: '7 раз'
-    },
-    {
-      feature: 'Сервис проверки контрагента',
-      value: '7 проверок'
-    }
-]
-
+const tariffs = computed(() => tariffsStore.tariffs);
+const services = computed(() => tariffsStore.services?.filter(service => service.tariffs.length));
 
 const handleOpenPayModal = (tariff, price) => {
-	emit('select', {...tariff, price: price, currency: price.currency}, price.amount);
+    emit('select', {...tariff, price: price, currency: price.currency}, price.amount);
   settingStore.payModalStatus = true;
+}
+
+function serviceInTariff(service, tariff_id) {
+	return service.tariffs.find(tariff => tariff.id === tariff_id);
+}
+
+const getMobileTariffsFeatures = (tariff) => {
+  const features = [];
+
+  if(services.value.length === 0) return
+
+  services.value.forEach(service => {
+    const tariffValue = service.tariffs.find(item => item.id === tariff);
+    if(tariffValue) features.push(service);
+  })
+  return features;
+}
+
+function formatDescription({ description, quantity }, subDuration) {
+  if (!description) return null;
+
+  quantity *= subDuration;
+
+  const parts = description.split('|');
+
+  if (parts.length === 1) {
+    return parts[0]; // без форм — просто описание
+  }
+
+  const [one, few, many] = parts;
+  const variants = { one, few, many };
+
+  return `${quantity} ${plural(quantity, variants, 'ru-RU')}`;
 }
 
 </script>
@@ -150,7 +95,8 @@ const handleOpenPayModal = (tariff, price) => {
 
 .international-tariffs {
   font-size: 1rem;
-  
+  margin-bottom: 3em;
+
   &__body {
     display: flex;
     column-gap: 6.4em;
@@ -186,15 +132,20 @@ const handleOpenPayModal = (tariff, price) => {
   &__list {
     font-size: 1.6em;
     line-height: 1.3em;
-    display: flex;
-    flex-direction: column;
-    row-gap: 1em;
+    display: block;
+    columns: 2;
+    gap: 1em;
   }
 
   &__item {
     display: flex;
     align-items: flex-start;
     gap: 1rem;
+    margin-bottom: 1em;
+
+    &-value {
+        color: #989898;
+    }
   }
 
   &__item-icon {
