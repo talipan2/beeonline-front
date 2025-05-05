@@ -31,7 +31,7 @@
             </ul>
           </nav>
         </div>
-        <p class="footer__copyright">© Профешн 2020-2025. При копировании любого материала сайта ссылка на сайт
+        <p class="footer__copyright">© Бизнес Технологии 2020-2025. <br>При копировании любого материала сайта ссылка на сайт
           обязательна.</p>
         <UiImage class="footer__pattern" src="/assets/images/footer/map.png"/>
       </div>
