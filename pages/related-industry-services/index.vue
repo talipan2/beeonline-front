@@ -2,13 +2,13 @@
     <NuxtLayout
         name="catalog"
         className="industry-services"
-        title="Сервисы смежных отраслей"
+        title="Сервисы"
     >
         <template #header>
             <UiBreadCrumb
                 :list="[
                     { label: 'Главная', link: '/' },
-                    {label: 'Партнерские сервисы', link: ''}
+                    {label: 'Сервисы', link: ''}
                 ]"
             />
         </template>
