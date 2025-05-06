@@ -186,7 +186,6 @@ const handleUpdateFilter = (data) => {
     loading.value = false
     isLoaded.value = true
   })
-
 }
 
 const updateServiceCardRef = (newVal) => {

@@ -25,13 +25,14 @@
             </td>
             <template v-for="(tariff, colIndex) in tariffs" :key="colIndex">
               <td class="tariffs-table__value">
+
                 <template v-if="serviceInTariff(service, tariff.id)">
                   <div v-if="!serviceInTariff(service, tariff.id).description">
                     <div class="tariffs-table__icon tariffs-table__icon_type_positive">
                       <SvgoChecked class="svg-m" />
                     </div>
                   </div>
-                  <span v-else>{{ serviceInTariff(service, tariff.id).description }}</span>
+                  <span v-else>{{ formatDescription(serviceInTariff(service, tariff.id)) }}</span>
                 </template>
                 <div v-else>
                   <div class="tariffs-table__icon tariffs-table__icon_type_negative">
@@ -42,10 +43,25 @@
             </template>
           </tr>
           <tr>
-            <td class="tariffs-table__price">Цена</td>
+            <td class="tariffs-table__price">Итого</td>
             <template v-for="(tariff, colIndex) in tariffs" :key="colIndex">
               <td v-if="tariff.prices !== null" class="tariffs-table__price-value">
-                <span v-if="discount !== null && tariff.code !== 'free'">{{ `(-${discount}%)`}}<br /></span>
+                {{ formatMoney(getPrice(tariff) * 100 / (100 - discount), 'RUB', 0) }}
+              </td>
+            </template>
+          </tr>
+          <tr>
+            <td class="tariffs-table__price">Скидка {{ discount }}%</td>
+            <template v-for="(tariff, colIndex) in tariffs" :key="colIndex">
+              <td v-if="tariff.prices !== null" class="tariffs-table__price-value">
+                <span v-if="discount !== null && tariff.code !== 'free'">{{ `-${getDiscount(getPrice(tariff), discount, 'RUB')}`}}<br /></span>
+              </td>
+            </template>
+          </tr>
+          <tr>
+            <td class="tariffs-table__price">Итого к оплате</td>
+            <template v-for="(tariff, colIndex) in tariffs" :key="colIndex">
+              <td v-if="tariff.prices !== null" class="tariffs-table__price-value">
                 {{ formatMoney(getPrice(tariff), 'RUB', 0) }}
               </td>
             </template>
@@ -101,6 +117,12 @@ const tariffsStore = useTariffsStore();
 const tariffs = computed(() => tariffsStore.tariffs);
 const services = computed(() => tariffsStore.services?.filter(service => service.tariffs.length));
 
+function getDiscount(price, discount, currency = 'RUB') {
+  const originalAmount = price / (1 - discount / 100);
+  const discountAmount = originalAmount * (discount / 100)
+  return formatMoney(discountAmount, currency, 0);
+}
+
 const getMobileTariffsFeatures = (tariff) => {
   const features = [];
 
@@ -108,7 +130,7 @@ const getMobileTariffsFeatures = (tariff) => {
 
   services.value.forEach(service => {
     const tariffValue = service.tariffs.find(item => item.id === tariff);
-    if(tariffValue) features.push({feature: service.name, value: tariffValue.description});
+    if(tariffValue) features.push(service);
   })
   return features;
 }
@@ -142,6 +164,24 @@ const handlePayModal = (tariff_code, duration) => {
   const priceOption = selectedTariffForDuration.prices.find(option => option.quantity == duration);
   emit('select', {...selectedTariffForDuration, price: priceOption, currency: 'RUB'}, priceOption.amount);
   settingStore.payModalStatus = true;
+}
+
+function formatDescription({ description, quantity }, locale = 'ru-RU') {
+  if (!description) return null;
+
+  const subDuration = props.subDuration || 1;
+  quantity *= subDuration;
+
+  const parts = description.split('|');
+
+  if (parts.length === 1) {
+    return parts[0]; // без форм — просто описание
+  }
+
+  const [one, few, many] = parts;
+  const variants = { one, few, many };
+
+  return `${quantity} ${plural(quantity, variants, locale)}`;
 }
 
 </script>

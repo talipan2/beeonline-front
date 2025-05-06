@@ -55,7 +55,7 @@ const userBalance = computed(() => formatMoney(tariffsStore.userBalance, current
 const userBonuses = computed(() => tariffsStore.userBonuses);
 
 // переменная для определения международного тарифа
-const isInternational = computed(() => tariffsStore.isForeigner);
+const isInternational = computed(() => tariffsStore.isForeigner && currentCurrency.value !== 'RUB');
 
 
 const currentCurrency = computed(() => {
@@ -73,7 +73,7 @@ const currentPaymentData = ref({
 });
 
 const tabsList = ref([
-  {id: 1, label: '1 месяц', value: '1'},
+  //{id: 1, label: '1 месяц', value: '1'},
   {id: 2, label: '3 месяца', value: '3'},
   {id: 3, label: '6 месяцев', value: '6'},
   {id: 4, label: '12 месяцев', value: '12'}
@@ -82,6 +82,7 @@ const tabsList = ref([
 const currentTab = ref(tabsList.value[0].value);
 
 function selectTariff(tariff, total, currency) {
+    console.log(tariff, total, currency);
   currentPaymentData.value = {data: tariff, sum: total, currency: currency};
   settingStore.payModalStatus = true;
 }

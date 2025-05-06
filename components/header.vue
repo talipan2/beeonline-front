@@ -69,14 +69,7 @@
                 >
                     <SvgoFavorite class="svg-m" />
                 </UiButton>
-                <UiButton
-                    class="header__page-link"
-                    to="/chat"
-                    variant="secondary"
-                    size="around"
-                >
-                    <SvgoMessage class="svg-m" />
-                </UiButton>
+                <HeaderChatButton/>
                 <UiButton
                     v-if="role !== 'adjacent'"
                     class="header__page-link"
@@ -102,7 +95,7 @@
     </div>
     <HeaderMenuMobileModal
       v-model="isOpenMobileModal"
-      :headerHeight="headerHeight"
+      :headerHeight="headerFullHeight"
       :closeButton="false"
       :userName="userName"
       :logo="userLogo"
@@ -133,6 +126,7 @@ const header = ref(null);
 const headerMain = ref(null);
 const headerMainHeight = ref(null);
 const headerHeight = ref(null);
+const headerFullHeight = ref(null);
 const headerFixed = ref(false);
 const headerMainOffsetTop = ref(0);
 const headerFiller = ref(0)
@@ -227,7 +221,10 @@ function updateHeaderHeight() {
   if (header) {
     headerHeight.value = header.value.offsetHeight;
     headerMainHeight.value = headerMain.value.offsetHeight;
+    headerFullHeight.value = header.value.offsetHeight;
   }
+
+  updateVisibleHeight()
 }
 
 watch(() => headerMainHeight.value, (newVal) => {
@@ -235,21 +232,43 @@ watch(() => headerMainHeight.value, (newVal) => {
 })
 
 const onScrollPage = () => {
-  if (!headerFixed.value) {
+  if (headerInfo.value) {
     headerMainOffsetTop.value = headerInfo.value.offsetHeight;
   }
+
+  // 2. Логика фиксации/открепления
   if (window.scrollY > headerMainOffsetTop.value) {
     if (!headerFixed.value) {
       headerFixed.value = true;
-      headerFiller.value.style.height = headerMainHeight.value + 'px';
+      if (headerFiller.value) {
+        headerFiller.value.style.height = `${headerMainHeight.value}px`;
+      }
     }
   } else {
     if (headerFixed.value) {
       headerFixed.value = false;
-      headerFiller.value.style.height = 0;
+      if (headerFiller.value) {
+        headerFiller.value.style.height = '0';
+      }
     }
   }
+
+  updateVisibleHeight()
 }
+
+const updateVisibleHeight = () => {
+  if (!header.value) return;
+
+  // Для фиксированного хедера - берём полную высоту
+  if (headerFixed.value) {
+    headerFullHeight.value = headerMainHeight.value;
+    return;
+  }
+
+  // Для скроллируемого - расчёт видимой части
+  const rect = header.value.getBoundingClientRect();
+  headerFullHeight.value = Math.max(0, Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0));
+};
 
 // функция для добавления отступа header при открытии модалки
 const adjustHeaderPadding = () => {
@@ -286,8 +305,11 @@ onMounted(() => {
   }
 
   settingStore.getBanners({banner_type: 'top_banner'}).then((res) => {
-    if(res && res.length > 0) {
-      banner.value = res[0];
+    if(res && res.data) {
+      banner.value = res.data[0];
+      setTimeout(() => {
+        updateHeaderHeight();
+      }, 100)
     }
   });
 });

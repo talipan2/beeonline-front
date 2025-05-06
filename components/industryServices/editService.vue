@@ -93,7 +93,11 @@ onMounted(() => {
 });
 
 function handleSubmit(values, form) {
-    adjacentStore.updateService(props.data.id, values)
+    adjacentStore.updateService(props.data.id, {
+        name: values.name,
+        categories: values.categories,
+        description: values.description,
+    })
     .then((response) => {
         router.push({ path: `/profile` });
         toast.success("Услуга успешно обновлена");

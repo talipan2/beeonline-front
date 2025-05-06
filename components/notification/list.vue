@@ -7,7 +7,7 @@
       </template>
     </div>
     <CommonAlerts :alert="'Уведомлений не найдено'" :type="'warning'" v-if="!data.length && isLoaded"/>
-    <CommonPagination v-if="page.lastPage > 1" :current-page="page.currentPage" :total-pages="page.lastPage" @change-page="handlePageChange"/>
+    <CommonPagination v-if="page?.last_page > 1" :current-page="page.current_page" :total-pages="page.last_page" @change-page="handlePageChange"/>
   </div>
 </template>
 
@@ -23,8 +23,7 @@ const settingStore = useSettingStore();
 
 const data = ref([])
 const page = ref({
-  currentPage: 1,
-  lastPage: 1
+    current_page: 1,
 })
 
 const isLoading = ref(false)
@@ -35,10 +34,10 @@ const notificationsList = ref(null)
 const filterOptions = [
   { id: 1, label: 'Все уведомления', value: 'all' },
   { id: 2, label: 'Системные', value: 'system' },
-  { id: 3, label: 'Заказы/Услуги', value: 'services/orders' },
+  { id: 3, label: 'Заказы/Услуги', value: 'product' },
   { id: 4, label: 'Сообщения', value: 'chat' },
-  { id: 5, label: 'Отзывы', value: 'reviews' },
-  { id: 6, label: 'Сделки', value: 'deals' },
+  { id: 5, label: 'Отзывы', value: 'reply' },
+  { id: 6, label: 'Сделки', value: 'deal' },
 ]
 
 watch(() => selectedFilter.value, (newVal) => {
@@ -60,8 +59,7 @@ const getData = (filter) => {
   userStore.getNotificationsList(userStore.userData.id, filter)
   .then((res) => {
     data.value = res.data
-    page.value.currentPage = res.current_page;
-    page.value.lastPage = res.last_page;
+    page.value = res.meta;
   }).finally(() => {
     isLoading.value = false
     isLoaded.value = true
@@ -73,8 +71,8 @@ const handlePageChange = (page) => {
   getData({page, group: filter?.label})
 }
 
-watch(() => page.value.currentPage, () => {
-  const rect = notificationsList.value.getBoundingClientRect(); 
+watch(() => page.value.current_page, () => {
+  const rect = notificationsList.value.getBoundingClientRect();
   const offset = window.scrollY + rect.top - settingStore.headerHeight - (window.innerHeight / 2);
   smoothScroll(offset, false);
 }, {deep: true})
@@ -99,7 +97,7 @@ onMounted(() => {
     font-size: 1em;
     margin-bottom: 1.875em;
     max-width: 33%;
-    
+
     .select__select {
       color: #667085;
     }
@@ -115,7 +113,7 @@ onMounted(() => {
       max-width: 100%;
     }
   }
-  
+
   &__list {
     display: flex;
     flex-direction: column;

@@ -185,7 +185,7 @@ const statusModal = useModal({
     background-color: #fff;
     position: relative;
     transition: box-shadow 0.2s ease;
-    z-index: 1;
+    // z-index: 1;
     display: flex;
     flex-direction: column;
 

@@ -9,7 +9,6 @@
           </div>
           <div class="header-menu__user-info">
             <div class="header-menu__user-name">{{ userName }}</div>
-            <div class="header-menu__user-role">{{ getRoleName(role) }}</div>
           </div>
         </button>
         <ul class="header-menu__link-list header-menu__link-list_type_dropdown">
@@ -103,11 +102,15 @@ watch(isOpenModal, (newVal) => {
   emit('update:modelValue', newVal);
 });
 
-const logOut = () => {
-  userStore.logOut().then(() => {
-    router.push({ path: '/telegram' });
-  });
-}
+const logOut = async() => {
+  try {
+    await userStore.logOut();
+
+    await router.push({ path: '/telegram', });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 watch(() => router.currentRoute.value.path, (newVal) => {
   confirm();

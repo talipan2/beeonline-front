@@ -15,7 +15,7 @@
     </template>
     <template #bottom>
       <nav class="sidebar__bottom">
-        <template v-if="userStore.role === 'customer' || userStore.role === 'performer'">
+        <template v-if="userStore.role !== 'adjacent'">
           <button v-if="userStore.role === 'customer' && userData.roles?.includes('performer')" @click="handleChangeRole('performer')" class="sidebar__bottom-link">
             <SvgoAdduser class="svg-m" fill="#6937a5" />
             Кабинет исполнителя
@@ -88,7 +88,9 @@ const handleChangeRole = async () => {
   const redirectPath = '/desktop';
 
   try {
-    await userStore.setUserData({ role: newRole }, userStore.userData.id)
+    await userStore.setUserData({ role: newRole }, userStore.userData.id).then(res => {
+      userStore.checkAuth();
+    })
     userStore.role = newRole;
     localStorage.setItem('role', newRole);
     router.push({ path: redirectPath });

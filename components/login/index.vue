@@ -85,12 +85,12 @@
                 </div>
                 <div class="auth__soc-links">
                     <a
-                        href="javascript:;"
+                        :href="backUrl('/auth/google', { redirect: $route.fullPath })"
                     >
                         <SvgoGoogle class="svg-lx" />
                     </a>
                     <a
-                        href="javascript:;"
+                        :href="backUrl('/auth/vk', { redirect: $route.fullPath })"
                     >
                         <SvgoVkontakte class="svg-lx" />
                     </a>
@@ -106,6 +106,7 @@
 import { useUserStore } from "~/store/userStore";
 import { useSettingStore } from "~/store/settingStore";
 import { useToast } from "vue-toastification";
+import backUrl from "~/utils/backUrl";
 
 const role = computed(() => userStore.role);
 

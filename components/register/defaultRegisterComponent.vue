@@ -76,7 +76,7 @@
       </UiButton>
     </UiForm>
     <template #soc-reg>
-      <RegisterSocialRegistr />
+      <RegisterSocialRegistr :role="role" />
     </template>
   </RegisterLayout>
 </template>
@@ -100,8 +100,9 @@ const userData = ref({
 const isCreateOrder = computed(() => settingStore.isCreateOrder);
 
 const handleSubmit = async (values, form) => {
+  const utm = localStorage.getItem('utm_params')
   await userStore
-    .registerUser({...values, role: userData.value.role}, form)
+    .registerUser({...values, role: userData.value.role, utm: utm}, form)
     .then((res) => {
       if(userData.value.role === 'customer') {
         if (isCreateOrder.value) {

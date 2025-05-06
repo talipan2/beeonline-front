@@ -41,7 +41,10 @@ export const useSettingStore = defineStore("setting", {
     isLoadingResponse: false,
     isTelegram: false,
     confirmModal: false,
-    sendMessageModal: false
+    sendMessageModal: false,
+    returnRegisterModal: false,
+    registerRedirectPath: '',
+    registerRedirectConfirm: false,
   }),
   getters: {
     getCurrencyNameById: (state) => (id) => {
@@ -71,7 +74,7 @@ export const useSettingStore = defineStore("setting", {
         useToast().error('Ошибка при загрузке файла');
       }
     },
-    
+
     async getHelps() {
       try {
         const response = await commonApi.getFaqs();
@@ -125,6 +128,20 @@ export const useSettingStore = defineStore("setting", {
       } catch (error) {
         throw error.response?.data || error;
       }
+    },
+
+    async telegramNotify(id) {
+      try {
+        const response = await commonApi.telegramNotify(id);
+        if (response.data) {
+          return response.data
+        }
+      } catch (error) {
+        throw error.response?.data || error;
+      }
+    },
+    async resetTelegramNotify(id) {
+        return await useApi().post(`/users/${id}/reset-tg-chat`);
     },
 
   },

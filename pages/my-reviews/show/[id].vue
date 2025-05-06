@@ -22,6 +22,9 @@
 <script setup>
 import { useUserStore } from '~/store/userStore';
 
+definePageMeta({
+    disableMetrika: true,
+});
 
 const userStore = useUserStore();
 

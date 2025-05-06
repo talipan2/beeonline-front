@@ -24,7 +24,7 @@
             <NuxtLink :to="item.value" class="header-menu__link">{{ item.label }}</NuxtLink>
           </li>
           <li class="header-menu__link-item header-menu__sign-out">
-            <a href="javascript:;" class="header-menu__link">Выйти</a>
+            <button type="button" @click="logOut" class="header-menu__link">Выйти</button>
           </li>
         </ul>
         </transition>
@@ -84,7 +84,8 @@
           variant="default"
           class="header-menu__change-role"
           @click="setRole('performer')"
-          v-if="!userRoles.includes('performer') && role === 'customer'"
+          v-if="!userRoles.includes('performer') && role !== 'adjacent'"
+          :disabled="userCurrentPubCard.id === null && !absenceDefaultRole"
         >
           <SvgoAdduser class="svg-m" />
             Стать исполнителем
@@ -94,10 +95,21 @@
           variant="default"
           class="header-menu__change-role"
           @click="setRole('customer')"
-          v-if="!userRoles.includes('customer') && role === 'performer'"
+          v-if="!userRoles.includes('customer') && role !== 'adjacent'"
+          :disabled="userCurrentPubCard.id === null && !absenceDefaultRole"
         >
           <SvgoAdduser class="svg-m" />
             Стать заказчиком
+        </UiButton>
+        <UiButton
+          variant="default"
+          class="header-menu__change-role"
+          v-if="adminRoles.includes(userStore.role)"
+          :to="`${config.public.backUrl}/admin`"
+          target="_blank"
+        >
+          <SvgoEnter class="svg-m" />
+          Панель управления
         </UiButton>
       </template>
       <div class="header-menu__social">
@@ -152,7 +164,13 @@ const organizationStore = useOrganizationStore();
 const isOpenModal = ref(props.modelValue);
 const userRoles = computed(() => userStore.userRoles);
 const userData = computed(() => userStore.userData);
+const config = useRuntimeConfig();
 
+const adminRoles = ['admin', 'moderator', 'support', 'to_moderator', 'deals_manager']
+
+const absenceDefaultRole = computed(() => !userRoles.value.includes('customer') && !userRoles.value.includes('performer')); // переменная для проверки наличия ролей customer и performer
+
+const userCurrentPubCard = computed(() => userStore.userPubCard);
 
 const isOpenDropDown = ref(false);
 const searchQuery = ref('');
@@ -171,7 +189,9 @@ const handleSwitchRole = async () => {
   const redirectPath = '/desktop';
 
   try {
-    await userStore.setUserData({ role: newRole }, userData.value.id);
+    await userStore.setUserData({ role: newRole }, userData.value.id).then(res => {
+      userStore.checkAuth();
+    });
     localStorage.setItem('role', newRole);
     router.push({ path: redirectPath });
   } catch (error) {
@@ -179,24 +199,42 @@ const handleSwitchRole = async () => {
   }
 };
 
+const logOut = async() => {
+  try {
+    await userStore.logOut();
+
+    await router.push({ path: '/', });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const setRole = (role) => {
-  userStore.setUserData({ role: role }, userData.value.id)
-    .then(res => {
+  if(!userStore.userPubCard?.id || absenceDefaultRole.value) {
+    userStore.setUserData({ role: role }, userData.value.id).then(res => {
       userStore.role = role;
+      userStore.userRoles = res.data.roles;
       localStorage.setItem('role', role);
-      organizationStore.setPubCard({
-        id: userStore.userData.organization_id,
-        name: userStore.userData.public_cards[0].name,
-        status: 1,
-        type: role
-      }).then(res => {
-        if(res && res.data && res.data.id) {
-          userStore.userPubCard = res.data;
-          router.push({ path: `/pubcards/edit/${res.data.id}` });
-          toast.success('Вы успешно стали ' + formatLangRole.value);
-        }
-      })
     });
+  } else {
+    userStore.setUserData({ role: role }, userData.value.id)
+      .then(res => {
+        userStore.role = role;
+        localStorage.setItem('role', role);
+        organizationStore.setPubCard({
+          id: userStore.userData.organization_id,
+          name: userStore.userData.public_cards[0].name,
+          status: 1,
+          type: role
+        }).then(res => {
+          if(res && res.data && res.data.id) {
+            userStore.userPubCard = res.data;
+            router.push({ path: `/pubcards/edit/${res.data.id}` });
+            toast.success('Вы успешно стали ' + formatLangRole.value);
+          }
+        })
+      });
+  }
 }
 
 const dropdownMenuLinks = computed(() => {
@@ -365,6 +403,10 @@ const handleSearch = (query) => {
     font-weight: 300;
     border-bottom: 1px solid var(--text-color-ternary);
     margin-bottom: 1.25em;
+  }
+
+  &__link {
+    color: var(--text-color-octonary);
   }
 
   &__change-role {

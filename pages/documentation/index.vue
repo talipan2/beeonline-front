@@ -2,8 +2,8 @@
   <NuxtLayout name="profile" title="Документы организации" class="document-layout">
     <template #header>
       <UiBreadCrumb :list="[
-        {label: 'Главная', link: '/'}, 
-        { label: `Кабинет ${translateRole}`, link: '/desktop' }, 
+        {label: 'Главная', link: '/'},
+        { label: `Кабинет ${translateRole}`, link: '/desktop' },
         { label: 'Документы организации', link: '' }
       ]" />
     </template>
@@ -25,6 +25,10 @@ useHead({
       content: '',
     },
   ],
+});
+
+definePageMeta({
+    disableMetrika: true,
 });
 
 const organizationStore = useOrganizationStore();

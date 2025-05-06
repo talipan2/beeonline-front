@@ -39,9 +39,9 @@
           "
         >
           <label class="form-group__title">
-            ИНН
+            ИНН {{ innRequired ? '*' : '' }}
             <UiInput
-              :rules="{}"
+              :rules="{required: innRequired}"
               name="inn"
               label="ИНН"
               class="form-group__value"
@@ -88,11 +88,11 @@
             ИНН организации
             <span
               >(Введите ИНН и нажмите на кнопку поиска, чтобы система определила
-              вас)</span
+              вас){{ innRequired ? '*' : '' }}</span
             >
             <div class="form-group__value register__input-inn">
               <UiInput
-                :rules="{}"
+                :rules="{required: innRequired}"
                 name="inn"
                 label="ИНН"
                 class="register__input"
@@ -185,11 +185,11 @@
             Идентификационный номер организации
             <span
               >(Введите номер и нажмите на кнопку поиска, чтобы система определила
-              вас)</span
+              вас){{ innRequired ? '*' : '' }}</span
             >
             <div class="form-group__value register__input-inn">
               <UiInput
-                :rules="{}"
+                :rules="{required: innRequired}"
                 name="inn"
                 label="ИНН"
                 class="register__input"
@@ -230,6 +230,18 @@
               v-model="data.legalAddress"
             />
           </label>
+          <label
+              class="form-group-data form-group__title register__label_type_select"
+            >
+              Форма организации
+              <UiSelect
+                :rules="{ }"
+                name="organizationForm"
+                class="form-group__value"
+                v-model="data.organizationForm"
+                :options="formOrganization"
+              />
+            </label>
           <div>
             <CommonDocumentLoaderAndList
               :extension="['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'rtf', 'pdf', 'jpeg', 'png', 'jpg', 'gif', 'psd', 'djvu', 'fb2', 'ps', 'zip', 'rar']"
@@ -239,18 +251,18 @@
             />
           </div>
         </div>
-        <!-- <label class="form-group__title">
-            Почта для закрывающих документов
-            <UiInput
-              :rules="{email: true}"
-              name="closingDocumentsEmail"
-              label="Почта для закрывающих документов"
-              class="form-group__value"
-              type="text"
-              placeholder="_____@______"
-              v-model="data.closingDocumentsEmail"
-            />
-          </label> -->
+        <label class="form-group__title">
+          Почта для закрывающих документов
+          <UiInput
+            :rules="{email: true}"
+            name="email_docs"
+            label="Почта для закрывающих документов"
+            class="form-group__value"
+            type="text"
+            placeholder=""
+            v-model="data.closedDocumentsEmail"
+          />
+        </label>
       </div>
 
       <div class="register__btn-container">
@@ -313,6 +325,10 @@ const getSkipInnRules = computed(() => {
 const handleClick = async(innSkip) => {
   skipInn.value = innSkip;
 }
+
+const innRequired = computed(() => {
+  return userStore.role == 'performer'
+})
 
 const data = computed({
   get() {

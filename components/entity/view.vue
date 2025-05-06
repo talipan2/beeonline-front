@@ -21,6 +21,19 @@
         <div class="view-entity__btn">
           <UiButton :to="`/performer/services/edit/${data.id}`" variant="senary" size="large" v-if="role === 'performer'">Изменить</UiButton>
           <UiButton :to="`/customer/orders/edit/${data.id}`" variant="senary" size="large" v-if="role === 'customer'">Изменить</UiButton>
+          <template v-if="data.status === 'active'">
+            <template v-if="type === 'service'">
+                <PaidServiceRaisingService
+                    :id="data.id"
+                >
+                    <template #button="{ open }">
+                        <UiButton variant="quinary" size="large" type="button" @click="open">
+                            ПОДНЯТЬ УСЛУГУ
+                        </UiButton>
+                    </template>
+                </PaidServiceRaisingService>
+            </template>
+          </template>
         </div>
         <div class="view-entity__view">
           <SvgoViews class="svg-l" fill="#6937a5"/>
@@ -30,11 +43,11 @@
     </div>
     <div class="view-entity__container" v-if="data.description">
       <h3 class="view-entity__title">Описание</h3>
-      <p class="view-entity__prop-value">{{ data.description || 'Не указано' }}</p>
+      <p class="view-entity__prop-value multiline-text">{{ data.description || 'Не указано' }}</p>
     </div>
     <div class="view-entity__container" v-if="data.conditions">
       <h3 class="view-entity__title">Условия сотрудничества</h3>
-      <p class="view-entity__prop-value">{{ data.conditions || 'Не указано' }}</p>
+      <p class="view-entity__prop-value multiline-text">{{ data.conditions || 'Не указано' }}</p>
     </div>
     <div class="view-entity__container" v-if="data.gallery &&data.gallery.length > 0">
       <h3 class="view-entity__title">Галерея</h3>
@@ -127,6 +140,9 @@ const formatDocumentsArray = computed(() => {
   &__btn {
     font-size: 1.2rem;
     text-transform: uppercase;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
   }
 
   &__view {

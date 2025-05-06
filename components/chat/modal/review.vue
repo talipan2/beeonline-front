@@ -8,19 +8,19 @@
         <div class="review-modal__content">
           <UiForm class="review-modal__form" :submit="submit">
             <div class="form-group">
-              <label class="form-group-data form-group__title"> 
-                Выберите оценку 
+              <label class="form-group-data form-group__title">
+                Выберите оценку
                 <CommonRating class="review-modal__rating"
-                  :isSelected="true" 
-                  :isCountRating="false" 
-                  :isReviewText="false" 
+                  :isSelected="true"
+                  :isCountRating="false"
+                  :isReviewText="false"
                   :isCountReviews="false"
                   v-model="rate"
                 />
               </label>
             </div>
             <div class="form-group">
-              <label class="form-group-data form-group__title"> 
+              <label class="form-group-data form-group__title">
                 Плюсы сотрудничества:
                 <UiTextArea
                   class="form-group__value review-modal__textarea"
@@ -33,7 +33,7 @@
               </label>
             </div>
             <div class="form-group">
-              <label class="form-group-data form-group__title"> 
+              <label class="form-group-data form-group__title">
                 Минусы сотрудничества:
                 <UiTextArea
                   class="form-group__value review-modal__textarea"
@@ -157,7 +157,8 @@ export default {
         about_org_type: this.role,
         text_positive: values.positive,
         text_negative: values.negative,
-        rate: this.rate
+        rate: this.rate,
+        chat_id: this.chat_id,
       }, form)
         .then((data) => {
           console.log(data);
@@ -183,7 +184,7 @@ export default {
 
 .review-modal {
   font-size: 1rem;
-  
+
   .modal-content {
     width: 28vw;
   }

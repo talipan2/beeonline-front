@@ -2,9 +2,9 @@
   <NuxtLayout name="profile" title="Файлы организации" class="document-layout">
     <template #header>
       <UiBreadCrumb :list="[
-        {label: 'Главная', link: '/'}, 
+        {label: 'Главная', link: '/'},
         { label: `Кабинет ${translateRole}`, link: '/desktop' },
-        { label: 'Документы организации', link: '/documentation' }, 
+        { label: 'Документы организации', link: '/documentation' },
         { label: 'Файлы организации', link: '' }
       ]" />
     </template>
@@ -26,6 +26,10 @@ useHead({
       content: '',
     },
   ],
+});
+
+definePageMeta({
+    disableMetrika: true,
 });
 
 const userStore = useUserStore();

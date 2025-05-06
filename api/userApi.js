@@ -20,7 +20,7 @@ export default {
 
   // выход пользователя
    async logOut() {
-    return axios.post('logout', {})
+    return useApi().post('logout');
   },
 
   async getUser(id) {
@@ -62,7 +62,7 @@ export default {
     console.log(id, entityId, type)
     return axios.delete(`users/${id}/favorites`, {
       data: {
-        favoritable_id: entityId, 
+        favoritable_id: entityId,
         favoritable_type: type.charAt(0).toUpperCase() + type.slice(1)
       }
     })

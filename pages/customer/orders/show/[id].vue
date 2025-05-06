@@ -17,7 +17,8 @@ import { useLocationStore } from '~/store/locationStore';
 import { useUserStore } from '~/store/userStore';
 
 definePageMeta({
-  middleware: 'telegram' 
+  middleware: 'telegram',
+  disableMetrika: true,
 });
 
 const router = useRouter();
@@ -44,8 +45,8 @@ const orderProps = computed(() => {
     views: order.value.view_count,
     props: {
       batch: {label: "Размер партии", value: Number(order.value.batch)},
-      category: { 
-        label: "Категория", 
+      category: {
+        label: "Категория",
         value: order.value.product_categories && order.value.product_categories.length
         ? entityStore.getEntityLabelById('categories', order.value.product_categories.map(item => item.id))
         : ''},
@@ -53,7 +54,7 @@ const orderProps = computed(() => {
       pattern: {label: "Лекала", value: order.value.pattern ? 'Есть лекала' : 'Нужен конструктор'},
       completionDate: {label: "Срок выполнения", value: `До ${formatDate(order.value.deadline_at)}`},
       placeOfProduction: {
-        label: "Предпочтительные регионы производства", 
+        label: "Предпочтительные регионы производства",
         value: locations
       },
     }

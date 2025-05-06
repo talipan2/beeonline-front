@@ -11,17 +11,29 @@
               :isValidated="false"
               v-model="selectedSettings[notification.value]"
               :disabled="(id) => handleDisableSettings(notification.value, id)"
-              
+
             />
         </div>
       </template>
     </div>
     <div class="notification-setting__buttons">
       <UiButton
+        v-if="!isTelegramChatId"
         class="notification-setting__button"
         variant="telegram"
         size="small"
+        @click="handleOpenTelegram"
+        type="button"
         >Включить уведомления в telegram
+      </UiButton>
+      <UiButton
+        v-else
+        class="notification-setting__button"
+        variant="telegram"
+        size="small"
+        @click="handleResetTelegram"
+        type="button"
+        >Отключить уведомления в telegram
       </UiButton>
       <UiButton
         type="button"
@@ -40,10 +52,13 @@
 <script setup>
 import { useUserStore } from '~/store/userStore';
 import {useToast} from "vue-toastification";
-
+import { useSettingStore } from '~/store/settingStore';
 
 const userStore = useUserStore();
+const settingStore = useSettingStore();
 const toast = useToast();
+
+const loading = ref(false);
 
 // список выбранных уведомлений
 const selectedSettings = ref({
@@ -52,7 +67,7 @@ const selectedSettings = ref({
   'Новые сообщения в чате': [1],
   'Системные уведомления': [1],
   'Новости': [1],
-  'Сделки': [1],
+  // 'Сделки': [1],
 });
 
 function handleDisableSettings(type, id) {
@@ -68,10 +83,10 @@ function handleDisableSettings(type, id) {
 // список уведомлений
 const notificationsSetting = ref([
   {
-    id: 0, 
+    id: 0,
     label: 'Хочу получать уведомления о новых заказах',
     value: 'Новые заказы',
-    role: 'customer',
+    role: 'performer',
     settings: [
       {id: 0, label: 'по электронной почте', value:'email',},
       {id: 1, label: 'в личном кабинете', value: 'cabinet', disabled: true, },
@@ -92,7 +107,7 @@ const notificationsSetting = ref([
     ]
   },
   {
-    id: 1, 
+    id: 1,
     label: 'Хочу получать уведомления о новых сообщениях в чате',
     value: 'Новые сообщения в чате',
     role: 'customer/performer',
@@ -104,7 +119,7 @@ const notificationsSetting = ref([
     ]
   },
   {
-    id: 2, 
+    id: 2,
     label: 'Хочу получать системные уведомления',
     value: 'Системные уведомления',
     role: 'customer/performer',
@@ -116,7 +131,7 @@ const notificationsSetting = ref([
     ]
   },
   {
-    id: 3, 
+    id: 3,
     label: 'Хочу получать уведомления о новостях',
     value: 'Новости',
     role: 'customer/performer',
@@ -127,18 +142,18 @@ const notificationsSetting = ref([
       {id: 3, label: 'в WhatsApp', value: 'whatsapp'},
     ]
   },
-  {
-    id: 4, 
-    label: 'Хочу получать уведомления о сделках',
-    value: 'Сделки',
-    role: 'customer/performer',
-    settings: [
-      {id: 0, label: 'по электронной почте', value:'email'},
-      {id: 1, label: 'в личном кабинете', value: 'cabinet', disabled: true},
-      {id: 2, label: 'в Telegram', value: 'telegram'},
-      {id: 3, label: 'в WhatsApp', value: 'whatsapp'},
-    ]
-  },
+  // {
+  //   id: 4,
+  //   label: 'Хочу получать уведомления о сделках',
+  //   value: 'Сделки',
+  //   role: 'customer/performer',
+  //   settings: [
+  //     {id: 0, label: 'по электронной почте', value:'email'},
+  //     {id: 1, label: 'в личном кабинете', value: 'cabinet', disabled: true},
+  //     {id: 2, label: 'в Telegram', value: 'telegram'},
+  //     {id: 3, label: 'в WhatsApp', value: 'whatsapp'},
+  //   ]
+  // },
 ])
 
 // список значений
@@ -182,11 +197,11 @@ const formatSettingsToRequest = (settings) => {
 
 const formatSettingsToState = (settings) => {
   const result = {};
-  
+
   // Проходим по всем типам уведомлений из notificationsSetting
   notificationsSetting.value.forEach(notification => {
     const key = notification.value;
-    
+
     // Если настройки для этого типа есть и это массив
     if (settings[key] && Array.isArray(settings[key])) {
       // Объединяем пришедшие настройки с обязательным личным кабинетом (id=1)
@@ -217,11 +232,48 @@ const handleSelectSettings = () => {
   }
 }
 
+const isTelegramChatId = computed(() => userStore.userData.telegram_chat_id !== null)
+
+const handleOpenTelegram = () => {
+  if(!userStore.userData.id) return;
+  if (loading.value) return;
+
+  loading.value = true;
+  settingStore.telegramNotify(userStore.userData.id).then(res => {
+        if (res && res.telegram_chat_link) {
+            window.open(res.telegram_chat_link, '_blank');
+            // userStore.checkAuth();
+        }
+    }).catch(err => {
+        console.log(err)
+    })
+    .finally(() => {
+        loading.value = false;
+    });
+}
+
+const handleResetTelegram = () => {
+    if(!userStore.userData.id) return
+    if (loading.value) return;
+
+    loading.value = true;
+    settingStore.resetTelegramNotify(userStore.userData.id)
+    .then(res => {
+        userStore.userData.telegram_chat_id = null;
+    })
+    .finally(() => {
+        loading.value = false;
+    })
+}
+
 onMounted(() => {
   if(userStore.userData.id) {
-    userStore.getNotifications(userStore.userData.id).then(res => {
+    loading.value = true;
+    userStore.getNotifications(userStore.userData.id)
+    .then(res => {
       if(res && res.notification_settings) {
         selectedSettings.value = formatSettingsToState(res.notification_settings);
+        loading.value = false;
       }
     })
   }

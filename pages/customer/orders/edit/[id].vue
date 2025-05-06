@@ -3,20 +3,20 @@
     <template #header>
       <UiBreadCrumb
         :list="[
-          { label: 'Главная', link: '/' }, 
-          { label: `Кабинет ${roleName}`, link: '/desktop' }, 
-          { label: 'Список заказов', link: '/customer/orders' }, 
+          { label: 'Главная', link: '/' },
+          { label: `Кабинет ${roleName}`, link: '/desktop' },
+          { label: 'Список заказов', link: '/customer/orders' },
           { label: 'Редактирование заказа', link: '' }
-        ]" 
+        ]"
       />
     </template>
     <template #content>
-      <component 
-        :is="currentComponent" 
-        :title="title" role="customer" 
-        :formatData="formatData"  
-        :handleSubmit="handleSubmit" 
-        :handleBack="previousStep" 
+      <component
+        :is="currentComponent"
+        :title="title" role="customer"
+        :formatData="formatData"
+        :handleSubmit="handleSubmit"
+        :handleBack="previousStep"
         :data="orderData"
         type="edit"
       />
@@ -24,7 +24,7 @@
     <template #rightSide>
       <div class="h4">Предварительный просмотр заказа</div>
       <CreateEntityPreview :data="previewCardData"/>
-    </template>    
+    </template>
   </NuxtLayout>
 </template>
 
@@ -39,7 +39,8 @@ import { useUserStore } from '~/store/userStore';
 import {useToast} from "vue-toastification";
 
 definePageMeta({
-  middleware: 'telegram' 
+  middleware: 'telegram',
+  disableMetrika: true,
 });
 
 const router = useRouter();
@@ -143,7 +144,7 @@ const currentHandleSubmit = computed(() => {
           const galleryIds = orderData.value.gallery.map(item => item.id)
           entityStore.uploadOrderGallery(orderData.value.id, galleryIds)
         }
-        
+
         if(orderData.value.tzFiles && orderData.value.tzFiles.length) {
           const tzFilesIds = orderData.value.tzFiles.map(item => item.id)
           entityStore.uploadOrderFiles(orderData.value.id, tzFilesIds)
@@ -217,8 +218,8 @@ await entityStore.getOrder(id).then(res => {
       price: Number(res.data.price),
       completionDate: res.data.deadline_at,
       locations: {
-        cities: [], 
-        regions: res.data.regions?.map(region => ({...region, name: locationFormatter({regions: [{...region}]}).locations[0]})) || [], 
+        cities: [],
+        regions: res.data.regions?.map(region => ({...region, name: locationFormatter({regions: [{...region}]}).locations[0]})) || [],
         countries: res.data.countries?.map(country => ({...country, name: locationFormatter({countries: [{...country}]}).locations[0]})) || []},
       isSafeDeal: Boolean(res.data.is_safedeal),
       isAgreedOrderPlacement: Boolean(res.data.tg_publish)

@@ -8,21 +8,22 @@
       <Entity
         :class="{'loading': isLoading}"
         role="performer"
+        type="service"
         title="Все услуги"
         subtitle="Размещайте список своих услуг в каталоге исполнителей и ищите заказчиков в кратчайшие сроки с учетом именно ваших потребностей."
         btnLabel="Создать услугу"
-        btnLink="/services/create" 
+        btnLink="/services/create"
         :data="cardData"
         :isLoaded="isLoaded"
         emptyAlertText="Услуг нет"
         @selectInfoModal="selectInfoModalData"
         @setFilters="setFilters"
       />
-      <CommonPagination 
+      <CommonPagination
         :class="{'loading': isLoading}"
-        v-if="page.lastPage > 1"
-        :currentPage="page.currentPage"
-        :totalPages="page.lastPage"
+        v-if="page?.last_page > 1"
+        :currentPage="page.current_page"
+        :totalPages="page.last_page"
         @changePage="handlePageChange"
       />
       <InfoModal :text="infoModal.text" :title="infoModal.title">
@@ -41,6 +42,10 @@ import { useLocationStore } from '~/store/locationStore';
 import { useSettingStore } from '~/store/settingStore';
 import { useUserStore } from '~/store/userStore';
 
+definePageMeta({
+    disableMetrika: true,
+});
+
 const entityStore = useEntityStore();
 const userStore = useUserStore();
 const locationStore = useLocationStore();
@@ -54,10 +59,7 @@ const infoModal = ref({
   action: () => {}
 })
 
-const page = ref({
-  currentPage: 1,
-  lastPage: 1,
-})
+const page = ref(null)
 
 const activeFilter = ref({})
 
@@ -158,8 +160,7 @@ function getServices(params) {
   entityStore.getSelfServices(userStore.userData.organization_id, params)
   .then(res => {
     if(res && res.services) {
-      page.value.currentPage = res.services.current_page;
-      page.value.lastPage = res.services.last_page;
+      page.value = res.pagination;
     }
   })
   .finally(() => {

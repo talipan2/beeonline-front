@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import Api from "@/api/userApi";
 import { useSettingStore } from "./settingStore";
 import { useChannelsStore } from "./channelsStore";
+import { TYPE, useToast } from "vue-toastification";
 
 export const useUserStore = defineStore("user", {
   state: () => ({
@@ -48,6 +49,7 @@ export const useUserStore = defineStore("user", {
     userBonuses: 100000,
     userInvoicing: null,
     userNotifications: null,
+    unreadChatsCount: 0,
   }),
   getters: {
     getRole: (state) => state.role,
@@ -132,9 +134,11 @@ export const useUserStore = defineStore("user", {
       }
     },
 
-    async checkAuth() {
+    async checkAuth(beesync = false) {
         // const response = await Api.checkAuth();
-        return useApi().get('auth-check', null, null, true)
+        return useApi().get('auth-check', {
+            beesync: beesync,
+        }, null, true)
         .then((response) => {
             if (response) {
                 this.isAuth = true;
@@ -146,6 +150,10 @@ export const useUserStore = defineStore("user", {
                 this.userOrganizationId = response.user.organization_id;
                 if (response.user && response.user.organization) {
                   this.userOrganization = response.user.organization;
+                }
+                if (response.user?.access_token) {
+                    this.userToken = response.user.access_token;
+                    localStorage.setItem("token", this.userToken);
                 }
                 if (
                   response.user &&
@@ -173,9 +181,12 @@ export const useUserStore = defineStore("user", {
                   }
                 }
 
+                const toast = useToast();
+
                 useChannelsStore()
                   .orgChannel.stopListening("OrganizationUpdate")
                   .listen("OrganizationUpdate", (event) => {
+                    eventBus.emit('OrganizationUpdate', event);
                     if (this.userOrganization.id === event.id) {
                       this.userOrganization = {
                         ...this.userOrganization,
@@ -185,35 +196,95 @@ export const useUserStore = defineStore("user", {
                   });
 
                 useChannelsStore()
+                  .orgChannel.stopListening("UserUpdate")
+                  .listen("UserUpdate", (event) => {
+                    eventBus.emit('UserUpdate', event);
+                    if (this.userData.id === event.id) {
+                        if (event.data.updated_at > this.userData.updated_at) {
+                            this.userData = {
+                                ...this.userData,
+                                ...event.data,
+                            };
+                            if (event.toast) {
+                                toast(event.toast, {
+                                    type: event.toast_type || TYPE.DEFAULT,
+                                });
+                            }
+                        }
+                    }
+                  });
+
+                useChannelsStore()
                   .orgChannel.stopListening("UnreadNotificationCountUpdated")
                   .listen("UnreadNotificationCountUpdated", (event) => {
                     console.log(event);
                     this.userNotifications = event.count_unread_noty;
                   });
+
+                useChannelsStore()
+                    .orgChannel
+                    .stopListening("CounterpartyCheckUpdate")
+                    .listen("CounterpartyCheckUpdate", (event) => {
+                        eventBus.emit('CounterpartyCheckUpdate', event);
+                    });
+
+                useChannelsStore()
+                    .orgChannel.stopListening("InvoiceUpdate")
+                    .listen("InvoiceUpdate", (event) => {
+                        eventBus.emit('InvoiceUpdate', event);
+                    });
+
+                useChannelsStore()
+                    .orgChannel.stopListening("NewChatMessageEvent")
+                    .listen("NewChatMessageEvent", (event) => {
+                        eventBus.emit('NewChatMessageEvent', event);
+                    });
+                useChannelsStore()
+                    .orgChannel.stopListening("ChatMessageReadedEvent")
+                    .listen("ChatMessageReadedEvent", (event) => {
+                        eventBus.emit('ChatMessageReadedEvent', event);
+                    });
+                useChannelsStore()
+                    .orgChannel.stopListening("UnreadChatsCountEvent")
+                    .listen("UnreadChatsCountEvent", (event) => {
+                        eventBus.emit('UnreadChatsCountEvent', event);
+                    });
               }
               return response;
         })
         .catch((error) => {
             this.isAuth = false;
+            throw error;
         });
     },
 
     async logOut() {
       try {
-        const response = await Api.logOut();
-        if (response && response.data) {
-          this.userToken = null;
-          localStorage.removeItem("token");
-          sessionStorage.removeItem("token");
-          this.isAuth = false;
-          this.userData = {};
-          this.userRoles = [];
-          this.userOrganization = {};
-          this.userPubCard = {};
-          this.userOrganizationId = null;
-        }
+        await Api.logOut();
+
+        this.userToken = null;
+        localStorage.removeItem("token");
+        sessionStorage.removeItem("token");
+        this.isAuth = false;
+        this.userData = {};
+        this.userRoles = [];
+        this.userOrganization = {};
+        this.userPubCard = {};
+        this.userOrganizationId = null;
+
+        return Promise.resolve();
       } catch (error) {
-        throw error;
+        this.userToken = null;
+        localStorage.removeItem("token");
+        sessionStorage.removeItem("token");
+        this.isAuth = false;
+        this.userData = {};
+        this.userRoles = [];
+        this.userOrganization = {};
+        this.userPubCard = {};
+        this.userOrganizationId = null;
+
+        return Promise.reject(error);
       }
     },
 
@@ -417,6 +488,18 @@ export const useUserStore = defineStore("user", {
       } catch (error) {
         throw error;
       }
+    },
+
+    async getCityByIp() {
+        return await useApi().get('get-city-by-ip', null, null, true);
+    },
+    async setCity(cityId) {
+        return await useApi().post('set-city', {
+            city_id: cityId,
+        });
+    },
+    async sendUnreadChatsCount() {
+        return await useApi().post('send-unread-chats-count', null, null, true);
     },
   },
 });

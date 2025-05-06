@@ -13,6 +13,10 @@
 
 import { useSupportStore } from "~/store/supportStore";
 
+definePageMeta({
+    disableMetrika: true,
+});
+
 const supportStore = useSupportStore();
 
 const route = useRoute();

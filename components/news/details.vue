@@ -66,4 +66,15 @@ const goBack = () => {
   }
 }
 
+.news-body {
+    a {
+        display: inline;
+        color: var(--primary-color);
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
 </style>

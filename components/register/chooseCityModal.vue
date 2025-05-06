@@ -27,7 +27,7 @@
               :class="{ 'selected': country.id === selectedCountry?.id }" :key="country.id">
               <UiCheckbox :isValidated="false" ref="countryCheckbox" :indeterminate="updateCountryIndeterminate(country)"
                 v-if="locationTypes.selectCountry" class="choose-city__checkbox" variant="square"
-                v-model="country.selected" :id="country.id" @change="selectAllRegions(country)" :name="`country-${country.id}`">
+                v-model="country.selected" :id="country.id" @change="selectAllRegions(country), selectCountry(country)" :name="`country-${country.id}`">
               </UiCheckbox>
               <button @click="selectCountry(country)">{{ country.name }}</button>
             </li>
@@ -59,7 +59,7 @@
                 variant="square"
                 v-model="region.selected" 
                 :id="region.id" 
-                @change="selectAllCities(region)" 
+                @change="selectAllCities(region), selectRegion(region)" 
                 :name="`region-${region.id}`"
               >
               </UiCheckbox>
@@ -373,6 +373,7 @@ function selectAllCities(region) {
 
 }
 function selectAllRegions(country) {
+
   // если страна выбрана
   if (country.selected) {
     // добавляем страну если есть пропс с выбором стран
@@ -564,10 +565,10 @@ watch(() => settingStore.chooseLocationModal, (newVal) => {
 
   .modal-content {
     max-height: 80em;
-    min-height: 60em;
+    min-height: 80em;
     height: 100%;
     // padding-bottom: 6em;
-    // overflow: hidden;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
   }
@@ -775,6 +776,7 @@ watch(() => settingStore.chooseLocationModal, (newVal) => {
   .choose-city-modal .modal-content {
     width: calc(100% - 3em);
     max-height: 70em;
+    min-height: 60em;
   }
 
   .choose-city-modal .modal-header {
@@ -802,7 +804,7 @@ watch(() => settingStore.chooseLocationModal, (newVal) => {
 
   .choose-city {
     .choose-city__list {
-      max-height: 38em;
+      // max-height: 38em;
       height: 100%;
     }
 

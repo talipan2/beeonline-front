@@ -3,10 +3,10 @@
     <template #header>
       <UiBreadCrumb
         :list="[
-          { label: 'Главная', link: '/' }, 
-          { label: `Профиль`, link: '/profile' }, 
+          { label: 'Главная', link: '/' },
+          { label: `Профиль`, link: '/profile' },
           { label: 'Редактирование компании', link: '' }
-        ]" 
+        ]"
       />
     </template>
     <template #content>
@@ -15,12 +15,16 @@
     <template #rightSide>
       <div class="h4 mb-1">Предварительный просмотр</div>
       <IndustryServicesCompanyCard :data="previewCardData" isPreview/>
-    </template>    
+    </template>
   </NuxtLayout>
 </template>
 
 <script setup>
 import { useEntityStore } from '~/store/entityStore';
+
+definePageMeta({
+    disableMetrika: true,
+});
 
 const entityStore = useEntityStore();
 
@@ -59,7 +63,7 @@ const previewCardData = computed(() => ({
     .profile__right {
       flex-basis: 40%;
     }
-    
+
   }
 }
 

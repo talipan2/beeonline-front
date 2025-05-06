@@ -7,6 +7,11 @@
 </template>
 
 <script setup>
+definePageMeta({
+  ignoreAuth: true,
+  disableMetrika: true,
+});
+
 import { useSettingStore } from '~/store/settingStore';
 import { useUserStore } from '~/store/userStore';
 
@@ -25,7 +30,7 @@ const handleConfirmEmail = async () => {
         router.currentRoute.value.query.id,
         router.currentRoute.value.query.hash
       );
-      
+
       message.value = res.message;
       alertStatus.value = 'info';
 

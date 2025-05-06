@@ -15,7 +15,6 @@
 <script setup>
 import { useUserStore } from '~/store/userStore';
 
-
 useHead({
   title: 'Уведомления',
   meta: [
@@ -24,6 +23,10 @@ useHead({
       content: '',
     },
   ],
+});
+
+definePageMeta({
+    disableMetrika: true,
 });
 
 const userStore = useUserStore();

@@ -87,7 +87,7 @@
     </div>
     <div class="member-details__content-container">
       <h3 class="member-details__content-title">Описание</h3>
-      <p>{{ data.description || '' }}</p>
+      <p class="multiline-text">{{ data.description || '' }}</p>
     </div>
     <div class="member-details__content-container" v-if="data.gallery.length || data.videos.length">
       <h3 class="member-details__content-title">Галерея</h3>

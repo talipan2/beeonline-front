@@ -12,6 +12,8 @@ export default defineNuxtConfig({
     ssr: false,
     runtimeConfig: {
         public: {
+            frontUrl: process.env.FRONT_URL,
+            backUrl: process.env.BACK_URL,
             baseUrl: process.env.API_BASE_URL,
             pusher: {
                 host: process.env.PUSHER_HOST,
@@ -19,7 +21,18 @@ export default defineNuxtConfig({
                 port: process.env.PUSHER_PORT,
                 scheme: process.env.PUSHER_SCHEME || 'http',
             },
+            yandexMetrika: {
+                id: Number(process.env.YANDEX_METRIKA_ID),
+                options: {
+                    clickmap: true,
+                    trackLinks: true,
+                    accurateTrackBounce: true,
+                    webvisor: true
+                },
+            },
         },
+        frontUrl: process.env.FRONT_URL,
+        backUrl: process.env.BACK_URL,
         baseUrl: process.env.API_BASE_URL,
     },
     svgo: {

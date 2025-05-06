@@ -106,6 +106,7 @@ export const useApi = () => {
                 baseURL: baseUrl,
                 server: false,
                 responseType: isBlob ? "blob" : "json",
+                credentials: 'include',
             });
 
             if (form) {

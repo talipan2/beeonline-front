@@ -46,7 +46,7 @@ useHead({
   .breadcrumb-wrapper {
     display: none;
   }
-  
+
   .profile__left {
     display: none;
   }

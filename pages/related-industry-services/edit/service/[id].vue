@@ -14,7 +14,7 @@
     </template>
     <template #rightSide>
       <div class="h4 mb-1">Предварительный просмотр услуги</div>
-      <IndustryServicesCard v-if="service" :data="service" :isPreview="true"/>
+      <IndustryServicesCard v-if="service" :data="formattedService" :isPreview="true"/>
     </template>
   </NuxtLayout>
 </template>
@@ -23,17 +23,31 @@
 import { useAdjacentStore } from '~/store/adjacentStore';
 import { useEntityStore } from '~/store/entityStore';
 
+definePageMeta({
+    disableMetrika: true,
+});
+
 const entityStore = useEntityStore();
 const adjacentStore = useAdjacentStore();
 
 const router = useRoute();
 
-const service = ref(null);
+const service = ref({});
+
+const formattedService = computed(() => {
+  return {
+    ...service.value,
+    categories: entityStore.getEntityLabelById('adjacentCategories', service.value?.categories, true),
+  }
+});
 
 onMounted(() => {
     adjacentStore.getService(router.params.id)
     .then((response) => {
-        service.value = response.data;
+        service.value = {
+            ...response.data,
+            categories: response.data.categories.map((item) => item.id),
+          };
     });
 });
 

@@ -25,6 +25,11 @@
 </template>
 
 <script setup>
+definePageMeta({
+    disableMetrika: true,
+    layout: 'chat',
+});
+
 const route = useRoute();
 </script>
 
@@ -37,6 +42,13 @@ const route = useRoute();
     @include tablet {
         .profile__content {
             max-width: 100%;
+        }
+    }
+
+    @include mobile {
+        .profile__container {
+            margin-inline: -13px;
+            margin-bottom: 0;
         }
     }
 }

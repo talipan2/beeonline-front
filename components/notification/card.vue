@@ -1,14 +1,14 @@
 <template>
   <div class="notification-card" :class="{ 'notification-card_type_not-readad': !data.readed }">
     <div class="notification-card__image">
-      <SvgoSetting class="svg-lx" v-if="data.group === 'system'"/>
-      <SvgoSewingMachine class="svg-lx" v-if="data.group === 'orders' || data.group === 'services'" />
+      <SvgoSetting class="svg-lx" v-if="data.group === 'system' || data.group === 'login'"/>
+      <SvgoSewingMachine class="svg-lx" v-if="data.group === 'orders' || data.group === 'services' || data.group === 'product'" />
       <SvgoReview class="svg-lx" v-if="data.group === 'reviews'" />
       <SvgoNotifyMessage class="svg-lx" v-if="data.group === 'chat'" />
       <SvgoNotifyDeal class="svg-lx" v-if="data.group === 'deals'" />
     </div>
     <p class="notification-card__text">
-      {{ data.message }}.
+      {{ data.message }}
       <NuxtLink class="notification-card__link" :to="data.link">{{ data.link_text }}</NuxtLink>
     </p>
     <p class="notification-card__date">{{ data.date }}</p>
@@ -60,7 +60,7 @@ const props = defineProps({
 
   &__link {
     display: inline;
-    
+
     &:hover {
       color: var(--text-color-hover-primary);
       text-decoration: underline;

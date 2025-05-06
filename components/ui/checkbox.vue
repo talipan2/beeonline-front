@@ -119,6 +119,7 @@ const className = computed(() => {
     align-items: center;
     flex-wrap: nowrap;
     width: fit-content;
+    position: relative;
 }
 
 .checkbox__input {
@@ -139,8 +140,6 @@ const className = computed(() => {
     width: 1.8rem;
     height: 1.8rem;
     box-sizing: border-box;
-    flex-shrink: 0;
-    flex-grow: 0;
     border: 1px solid #adb5bd;
     margin-right: 0.5rem;
     background-repeat: no-repeat;

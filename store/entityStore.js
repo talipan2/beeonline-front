@@ -118,7 +118,7 @@ export const useEntityStore = defineStore('entity', {
   }),
   getters: {
     // Универсальный геттер для получения массива label по массиву id или одиночному id
-    getEntityLabelById: (state) => (type, ids) => {
+    getEntityLabelById: (state) => (type, ids, returnObject = false) => {
       const data = state.entityData[type]; // Берём массив по типу
       if (!data) return 'Тип данных не найден';
 
@@ -127,12 +127,14 @@ export const useEntityStore = defineStore('entity', {
         return ids.map(id => {
           const entity = data.find(item => item.id == id);
           // return entity ? entity.label : `${type} с id ${id} не найдено`;
+          if(returnObject) return entity ? entity : {};
           return entity ? entity.label || entity.name : null;
         });
       } else {
         // Если это одиночный id, возвращаем один label
         const entity = data.find(item => item.id == ids);
         // return entity ? entity.label : `${type} с id ${ids} не найден`;
+        if(returnObject) return entity ? entity : {};
         return entity ? entity.label || entity.name : null;
       }
     },
@@ -212,6 +214,13 @@ export const useEntityStore = defineStore('entity', {
       } catch (error) {
         throw error;
       }
+    },
+
+    async prepareRaiseService(id) {
+        return await useApi().get(`/services/${id}/raise`);
+    },
+    async raiseService(id) {
+        return await useApi().post(`/services/${id}/raise`);
     },
 
     async getOrganizationServices(id) {

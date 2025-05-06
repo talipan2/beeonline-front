@@ -25,7 +25,7 @@
                         <label :class="{
                             active: chatType === 'adjacent'
                         }">
-                            <span>ССО</span>
+                            <span>Сервисы</span>
                             <input type="radio" value="adjacent" v-model="chatType" />
                         </label>
                     </div>
@@ -39,8 +39,8 @@
                 </template>
                 <template v-if="chatType === 'order' && ordersOptions?.length">
                     <Multiselect
-                        v-model="adjacentService"
-                        :options="adjacentOptions"
+                        v-model="order"
+                        :options="ordersOptions"
                     >
                         <!-- <template v-slot:singlelabel="{ value }">
                             <div class="multiselect-single-label">
@@ -180,40 +180,39 @@ export default {
     }),
 
     mounted() {
-        this.loadChats();
+        this.loadChats(true);
 		useChatStore().getOrders();
 		useChatStore().getAdjacentServices();
 
-        useChannelsStore()
-            .orgChannel.stopListening("NewChatMessage")
-            .listen("NewChatMessage", (event) => {
-                this.newMessage(event.message);
-            }).listen("ChatMessageReaded", (event) => {
-				 let index = this.dialogs.findIndex(
-					(dialog) => dialog.id == event.chat_id
-				);
-				if (index === -1) return;
-				let dialog = this.dialogs[index];
+        eventBus.on('NewChatMessageEvent', this.NewChatMessageEvent);
 
-				if (event.organization_id == useChatStore().org_id) {
-					if (dialog.read_message_id < event.message_id) {
-						dialog.read_message_id = event.message_id;
-					}
-				} else {
-					let organization = dialog.organizations.find(
-						(org) => org.id == event.organization_id
-					);
-					if (!organization) return;
-					if (organization.pivot.read_message_id < event.message_id) {
-						organization.pivot.read_message_id = event.message_id;
-					}
-				}
-			});
+        eventBus.on('ChatMessageReadedEvent', this.ChatMessageReadedEvent);
+    },
+
+    beforeUnmount() {
+        eventBus.off('NewChatMessageEvent', this.NewChatMessageEvent);
+        eventBus.off('ChatMessageReadedEvent', this.ChatMessageReadedEvent);
     },
 
     methods: {
+        NewChatMessageEvent(event) {
+            this.newMessage(event.message);
+        },
+        ChatMessageReadedEvent(event) {
+                let index = this.dialogs.findIndex(
+                (dialog) => dialog.id == event.chat_id
+            );
+            if (index === -1) return;
+            let dialog = this.dialogs[index];
+
+            if (event.organization_id == useUserStore().userData.organization_id) {
+                if (dialog.read_message_id < event.message_id) {
+                    dialog.read_message_id = event.message_id;
+                }
+            }
+        },
+
 		changePinned(chat_id, is_pinned) {
-			console.log('changePinned');
 			let index = this.dialogs.findIndex(
 				(dialog) => dialog.id == chat_id
 			);
@@ -286,11 +285,15 @@ export default {
             let dialog = this.dialogs.splice(index, 1)[0];
             this.dialogs.unshift(dialog);
 
-			if (message.organization_id == useChatStore().org_id) {
+			if (message.organization_id == useUserStore().userData.organization_id) {
 				if (dialog.read_message_id < message.id) {
 					dialog.read_message_id = message.id;
 				}
 			}
+
+            if (dialog.last_message_id < message.id) {
+                dialog.last_message_id = message.id;
+            }
         },
 
         loadChats(clear = false) {
@@ -305,7 +308,6 @@ export default {
                 ? this.dialogs[this.dialogs.length - 1].last_message_at
                 : null;
 
-				console.log(lastMessageAt);
 			if (this.searchType === 'dialogs') {
 				const response = useChatStore()
 				.getChats({
@@ -320,7 +322,7 @@ export default {
 					if (clear) {
 						this.dialogs = [];
 					}
-					if (data.length < 20) {
+					if (!data.length) {
 						this.noMoreChats = true;
 					}
 					if (data.length > 0) {
@@ -342,7 +344,7 @@ export default {
 					lifecycle_status: this.lifecycle_status,
 				})
 				.then((data) => {
-					if (data.length < 20) {
+					if (!data.length) {
 						this.noMoreChats = true;
 					}
 					if (data.length > 0) {
@@ -366,7 +368,7 @@ export default {
         onScroll() {
             const container = this.$refs.dialogs;
             if (
-                container.scrollTop + container.clientHeight >=
+                container.scrollTop + container.clientHeight + 10 >=
                 container.scrollHeight
             ) {
                 this.loadChats();

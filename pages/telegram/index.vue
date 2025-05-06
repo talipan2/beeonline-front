@@ -6,10 +6,30 @@
 </template>
 
 <script setup>
+import { useSettingStore } from '~/store/settingStore';
+
+
+const settingStore = useSettingStore();
 
 definePageMeta({
   layout: '',
 });
+
+useHead({
+  script: [
+    {
+      src: 'https://telegram.org/js/telegram-web-app.js',
+      defer: true,
+      onload: () => {
+        if(window.Telegram.WebApp?.initData) {
+          settingStore.isTelegram = true
+        }  else {
+          settingStore.isTelegram = false
+        }
+      }
+    }
+  ]
+})
 
 
 const router = useRouter();
@@ -17,7 +37,6 @@ const router = useRouter();
 const currentAuthPage = ref('')
 
 watch(() => router.currentRoute.value.query, (newVal) => {
-  console.log(newVal)
   if(newVal && newVal.type) {
     currentAuthPage.value = newVal.type
   } else {

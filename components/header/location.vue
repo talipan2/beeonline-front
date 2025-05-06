@@ -3,7 +3,7 @@
       <button class="header__location" @click="isOpen = true">
         <SvgoMapPin class="svg-m" filled />
         <span class="header__location-value">
-          {{ location ? location : 'Город не задан' }}
+          {{ location?.name ? location.name : 'Город не задан' }}
         </span>
       </button>
       <template #content>
@@ -11,12 +11,12 @@
           <p class="confirmation-city__title">Это ваш город?</p>
           <div class="confirmation-city__container">
             <UiButton type="button" class="confirmation-city__btn" variant="quinary" size="large" @click="hideConfirmationModal">Да</UiButton>
-            <UiButton type="button" class="confirmation-city__btn" variant="tertiary" size="large" @click="hideConfirmationModal">Нет</UiButton>
+            <UiButton type="button" class="confirmation-city__btn" variant="tertiary" size="large" @click="isOpen = true">Нет</UiButton>
           </div>
         </div>
       </template>
     </UiNewDropdown>
-    <HeaderChooseCityModal v-model="isOpen" :location="locationId" @selectCity="selectCity" />
+    <HeaderChooseCityModal v-model="isOpen" :location="location?.id" @selectCity="selectCity" />
 </template>
 
 
@@ -25,17 +25,36 @@ import { useUserStore } from '~/store/userStore';
 
 
 const isOpen = ref(false);
-const location = ref(null);
+const location = ref({});
 const locationId = ref(null);
 const tippy = ref(null);
 const userStore = useUserStore();
 
 onMounted(async () => {
   await nextTick(); // Дожидаемся, пока компонент полностью инициализируется
-  if (tippy.value) {
-    // showConfirmationModal()
+
+  if(userStore.userData.id) {
+    if(userStore.userData.city) {
+      location.value = userStore.userData.city
+    } else {
+      userStore.getCityByIp().then((res) => {
+        if(res.data) {
+          location.value = res.data;
+          setTimeout(() => {
+            if(tippy.value) showConfirmationModal();
+          }, 1000);
+        }
+      })
+    }
   } else {
-    console.error('Tippy instance is not available');
+    userStore.getCityByIp().then((res) => {
+      if(res.data) {
+        location.value = res.data
+        setTimeout(() => {
+          if(tippy.value) showConfirmationModal();
+        }, 1000);
+      }
+    })
   }
 });
 
@@ -51,15 +70,10 @@ function selectCity(city) {
   location.value = city
 }
 
-onMounted(() => {
-  location.value = userStore.userData.city ? userStore.userData.city.name : ''
-  locationId.value = userStore.userData.city ? userStore.userData.city.id : ''
-})
-
-watch(() => userStore.userData.city, (newVal) => {
-  location.value = newVal ? newVal.name : ''
-  locationId.value = newVal ? newVal.id : ''
-})
+// watch(() => userStore.userData.city, (newVal) => {
+//   location.value = newVal ? newVal.name : ''
+//   locationId.value = newVal ? newVal.id : ''
+// })
 
 </script>
 
