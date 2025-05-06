@@ -16,24 +16,7 @@
         </template>
     </div>
     <div class="notification-setting__buttons">
-      <UiButton
-        v-if="!isTelegramChatId"
-        class="notification-setting__button"
-        variant="telegram"
-        size="small"
-        @click="handleOpenTelegram"
-        type="button"
-        >Включить уведомления в telegram
-      </UiButton>
-      <UiButton
-        v-else
-        class="notification-setting__button"
-        variant="telegram"
-        size="small"
-        @click="handleResetTelegram"
-        type="button"
-        >Отключить уведомления в telegram
-      </UiButton>
+      <NotificationTelegram class="notification-setting__button"/>
       <UiButton
         type="button"
         class="notification-setting__button"
@@ -58,40 +41,6 @@ const settingStore = useSettingStore();
 const toast = useToast();
 
 const loading = ref(false);
-
-const isTelegramChatId = computed(() => userStore.userData.telegram_chat_id !== null)
-
-const handleOpenTelegram = () => {
-  if(!userStore.userData.id) return;
-  if (loading.value) return;
-
-  loading.value = true;
-  settingStore.telegramNotify(userStore.userData.id).then(res => {
-        if (res && res.telegram_chat_link) {
-            window.open(res.telegram_chat_link, '_blank');
-            // userStore.checkAuth();
-        }
-    }).catch(err => {
-        console.log(err)
-    })
-    .finally(() => {
-        loading.value = false;
-    });
-}
-
-const handleResetTelegram = () => {
-    if(!userStore.userData.id) return
-    if (loading.value) return;
-
-    loading.value = true;
-    settingStore.resetTelegramNotify(userStore.userData.id)
-    .then(res => {
-        userStore.userData.telegram_chat_id = null;
-    })
-    .finally(() => {
-        loading.value = false;
-    })
-}
 
 const notificationTypes = ref(null);
 const notificationChannels = ref(null);
