@@ -19,10 +19,11 @@
           <p class="performer-register-step-three__gallery-text">Фотографии сделают вашу карточку более привлекательной для заказчика</p>
           <p class="performer-register-step-three__gallery-text">Рекомендуемый размер 300 x 340 px.</p>
         </template>
-        <CommonGalleryLoadSecondary v-model="gallery" class="performer-register-step-three__gallery" :isPreview="isPreview"/>
+        <CommonGalleryLoadSecondary v-if="gallery.length > 0" v-model="gallery" class="performer-register-step-three__gallery" :isPreview="isPreview"/>
+        <CommonAlerts v-else alert="Нет примеров работ" type="warning"/>
       </div>
     </CommonLayoutInfoCard>
-    <CommonLayoutInfoCard title="Фабрика и оборудование" class="performer-register-step-three__layout">
+    <CommonLayoutInfoCard title="Оборудование" class="performer-register-step-three__layout">
       <template #action>
         <UiButton
           v-if="isPreview"
@@ -41,10 +42,11 @@
           <p class="performer-register-step-three__gallery-text">Фотографии сделают вашу карточку более привлекательной для заказчика</p>
           <p class="performer-register-step-three__gallery-text">Рекомендуемый размер 300 x 340 px.</p>
         </template>
-        <CommonGalleryLoadSecondary v-model="workGallery" class="performer-register-step-three__gallery" :isPreview="isPreview"/>
+        <CommonGalleryLoadSecondary v-if="workGallery.length > 0" v-model="workGallery" class="performer-register-step-three__gallery" :isPreview="isPreview"/>
+        <CommonAlerts v-else alert="Нет оборудования" type="warning"/>
       </div>
     </CommonLayoutInfoCard>
-    <ModalsRoundBorder :is-open="editGalleryModal" title="Карточка" @close="editGalleryModal = false" size="lg">
+    <ModalsRoundBorder :is-open="editGalleryModal" title="Редактирование: Примеры работ" @close="editGalleryModal = false" size="lg">
       <CommonGalleryLoadSecondary v-model="gallery" class="performer-register-step-three__gallery"/>
       <div class="performer-register-step-three__btn-container">
           <UiButton 
@@ -68,7 +70,7 @@
           
         </div>
     </ModalsRoundBorder>
-    <ModalsRoundBorder :is-open="editWorkGalleryModal" title="Карточка" @close="editWorkGalleryModal = false" size="lg">
+    <ModalsRoundBorder :is-open="editWorkGalleryModal" title="Редактирование: Оборудование" @close="editWorkGalleryModal = false" size="lg">
       <CommonGalleryLoadSecondary v-model="workGallery" class="performer-register-step-three__gallery"/>
       <div class="performer-register-step-three__btn-container">
           <UiButton 
@@ -107,38 +109,34 @@ const props = defineProps({
   }
 })
 
+
+
 const editGalleryModal = ref(false);
 const editWorkGalleryModal = ref(false);
 
-const gallery = ref([
-  {
-    id: 2,
-    url: "https://i.pinimg.com/736x/95/94/6b/95946bb1360de15e7d3ef2a8587a3c8f.jpg"
-  },
-  {
-    id: 1,
-    url: "https://i.pinimg.com/736x/95/94/6b/95946bb1360de15e7d3ef2a8587a3c8f.jpg"
-  },
-  {
-    id: 3,
-    url: "https://i.pinimg.com/736x/95/94/6b/95946bb1360de15e7d3ef2a8587a3c8f.jpg"
-  },
-  {
-    id: 4,
-    url: "https://api.test-v2.bee-online.ru/storage/32851/1.jpg"
-  },
-  {
-    id: 5,
-    url: "https://i.pinimg.com/736x/c4/3d/b1/c43db129f98f2e6fcd6028a1cb31bff9.jpg"
-  }
-])
+const emit = defineEmits(['update:modelValue'])
 
-const workGallery = ref([
-  {
-    id: 2,
-    url: "https://api.test-v2.bee-online.ru/storage/32851/1.jpg"
-  },
-]);
+const gallery = computed({
+  get: () => props.modelValue.gallery,
+  set: (value) => {
+    emit('update:modelValue', {
+      ...props.modelValue,
+      gallery: value
+    })
+  }
+})
+
+const workGallery = computed({
+  get: () => props.modelValue.gallery,
+  set: (value) => {
+    emit('update:modelValue', {
+      ...props.modelValue,
+      gallery: value
+    })
+  }
+})
+
+
 
 </script>
 

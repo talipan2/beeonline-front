@@ -18,23 +18,29 @@
           </div>
         </div>
       </div>
-      <p class="new-service-card__description prop_type_hidden">{{ data.description + data.description }}</p>
+      <p class="new-service-card__description prop_type_hidden">{{ data.description }}</p>
       <UiButton class="new-service-card__btn" variant="quinary" size="large" :to="`/services/${data.id}`">Подробнее</UiButton>
     </div>
     <div class="new-service-card__specs">
-      <CatalogNewServiceDetailsBadge 
+      <CatalogNewServiceDetailsBadge
+        class="new-service-card__specs-item new-service-card__specs-item_type_desktop" 
         :specs="[
         {name: 'Категория', value: data.product_categories.map(item => item.name).join(' / ')},
         {name: 'Сырье', value: [data.materials_tolling ? 'Заказчика' : '', data.materials_own ? 'Исполнителя' : ''].filter(Boolean).join(' / ')},
         ]"
       />
-      <CatalogNewServiceDetailsBadge :specs="{name: 'Мин.партия', value: data.batches.map(item => item.name).join(' / ')}" />
+      <CatalogNewServiceDetailsBadge
+        class="new-service-card__specs-item new-service-card__specs-item_type_mobile" 
+        :specs="{name: 'Категория', value: data.product_categories.map(item => item.name).join(' / ')}"
+      />
+      <CatalogNewServiceDetailsBadge :specs="{name: 'Размер партии', value: data.batches.map(item => item.name).join(' / ')}" />
       <CatalogNewServiceDetailsBadge :specs="{name: 'Свободный склад', value: data.free_stock != null ? data.free_stock ? 'Да' : 'Нет' : ''}" />
     </div>
     <div class="new-service-card__images" v-if="data.gallery && data.gallery.length">
       <p class="new-service-card__images-title">Примеры работ</p>
       <CatalogNewServiceImagesList :data="data.gallery" />
     </div>
+    <UiButton class="new-service-card__btn new-service-card__btn_type_mobile" variant="quinary" size="large" :to="`/services/${data.id}`">Подробнее</UiButton>
   </div>
 </template>
 
@@ -116,6 +122,7 @@ const props = defineProps({
       line-height: 1em;
       font-weight: 700;
       color: var(--text-color-monodecimal);
+      word-break: break-word;
     }
 
     &-locations {
@@ -150,6 +157,10 @@ const props = defineProps({
     color: var(--text-color-hover-secondary);
     max-width: 20em;
     width: 100%;
+
+    &_type_mobile {
+      display: none;
+    }
   }
 
   &__specs {
@@ -165,6 +176,30 @@ const props = defineProps({
       flex: 0 1 25%;
     }
     
+    &-item {
+      &_type_mobile {
+        display: none;
+      }
+    }
+
+    @include mobile {
+      flex-direction: column;
+      gap: 2em;
+
+      .details-badge:first-child {
+        flex: 0 1 100%;
+      }
+
+      &-item {
+        &_type_mobile {
+          display: block;
+        }
+
+        &_type_desktop {
+          display: none;
+        }
+      }
+    }
   }
 
   &__images-title {
@@ -174,7 +209,60 @@ const props = defineProps({
     color: var(--text-color-gray);
     margin-bottom: 1em;
   }
-  
+
+
+  @include tablet {
+    font-size: .8rem;
+
+    .details-badge {
+      font-size: .8rem;
+    }
+
+    &__pubcard {
+      flex-basis: 35%;
+    }
+  }
+
+  @include small-tablet {
+    &__pubcard {
+      flex-basis: 30%;
+    }
+  }
+
+  @include mobile {
+    &__pubcard {
+      flex-basis: 100%;
+    }
+
+    &__description {
+      display: none;
+    }
+
+    &__btn {
+      display: none;
+
+      &_type_mobile {
+        display: flex;
+        max-width: none;
+      }
+    }
+
+    &__header {
+      order: 0;
+    }
+
+    &__specs {
+      order: 2;
+    }
+
+    &__images {
+      order: 1;
+    }
+
+    &__btn {
+      order: 3;
+    }
+  }
 }
 
 </style>

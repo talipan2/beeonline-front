@@ -64,6 +64,11 @@ const normalizedSpecs = computed(() =>
         max-width: 100%;
       }
     }
+
+    @include mobile {
+      flex-direction: column;
+      row-gap: .5em;
+    }
   }
 
   &__item {
@@ -95,6 +100,14 @@ const normalizedSpecs = computed(() =>
       overflow: hidden;
       text-overflow: ellipsis;
       overflow-wrap: anywhere;
+
+      @include mobile {
+        overflow: visible;
+        text-overflow: unset;
+        -webkit-line-clamp: unset;
+        -webkit-box-orient: unset;
+        display: block;
+      }
     }
   }
 }

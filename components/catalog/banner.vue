@@ -144,13 +144,13 @@ onMounted(() => {
     padding-inline: 0;
   }
 
-  .catalog__banner-content {
+  &-content {
   display: flex;
   flex-wrap: wrap;
   max-width: 100%;
   overflow: hidden;
   margin-inline: 12.5em;
-}
+  }
 
   &-title {
     font-size: 3.2em;
@@ -209,6 +209,33 @@ onMounted(() => {
     flex-direction: column;
     justify-content: stretch;
     height: auto;
+  }
+
+  @include desktop {
+    &-content {
+      margin-inline: 6em;
+    }
+
+    &-navigation {
+      left: 2em;
+      right: 2em;
+    }
+  }
+
+  @include mobile {
+    &-content {
+      margin-inline: 2.4em;
+    }
+
+    &-navigation {
+      left: 3em;
+      right: 3em;
+    }
+
+    &-btn {
+      background-color: #fff;
+      box-shadow: 0 2px 10px 0 rgba(193, 193, 193, 0.25);
+    }
   }
 }
 

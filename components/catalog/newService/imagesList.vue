@@ -29,29 +29,67 @@
     </UiButton>
   </div>
   <div class="images-list images-list_type_mobile">
-    <Swiper
-      :slidesPerView="1.7"
-      :loopAddBlankSlides="true"
-      :spaceBetween="20"
-      class="images-list__slider"
-      :modules="modules"
-      :breakpoints="{
-        512: {
-          slidesPerView: 2.5,
-        }
-      }"
-    >
-      <SwiperSlide v-for="(image, index) in data" :key="index" class="images-list__slide">
-        <a :href="image.url" class="" data-fancybox="gallery">
-          <img :src="image.url" class="images-list__item-image" :alt="image" />
+    <template v-if="mobileSlider">
+      <Swiper
+        :slidesPerView="1"
+        :spaceBetween="20"
+        class="images-list__slider"
+        :modules="modules"
+        :breakpoints="{
+          512: {
+            slidesPerView: 1.5,
+          }
+        }"
+        @swiper="setSwiperInstance"
+        @slideChange="onSlideChange"
+      >
+        <SwiperSlide v-for="(image, index) in data" :key="index" class="images-list__slide">
+          <a :href="image.url" class="" data-fancybox="gallery">
+            <img :src="image.url" class="images-list__item-image" :alt="image.url" />
+          </a>
+        </SwiperSlide>
+      </Swiper>
+      <div class="images-list__slider-navigation">
+        <UiButton
+          type="button"
+          class="images-list__slider-btn images-list__slider-btn_type_prev"
+          variant="secondary"
+          @click="slidePrev"
+        >
+          <SvgoSlideArrow class="svg-l" />
+        </UiButton>
+        <UiButton
+          type="button"
+          class="images-list__slider-btn images-list__slider-btn_type_next"
+          variant="secondary"
+          @click="slideNext"
+        >
+          <SvgoSlideArrow class="svg-l" />
+        </UiButton>
+      </div>
+    </template>
+    <div class="images-list__container" v-if="!mobileSlider">
+      <div 
+        class="images-list__item" 
+        v-for="(image, index) in visibleImages.slice(0, 2)" 
+        :key="image.id"
+        :class="{ 'has-more': showMoreOverlay && index === visibleImages.length - 1 }"
+      >
+        <a :href="image.url" class="images-list__link" data-fancybox="service-gallery" v-if="showFancybox">
+          <UiImage class="images-list__item-image" :src="image.url" :alt="image.url" :external="true" />
         </a>
-      </SwiperSlide>
-    </Swiper>
+        <UiImage v-else class="images-list__item-image" :src="image.url" :alt="image.url" :external="true" />
+        <div v-if="showMoreOverlay && index === visibleImages.length - 1" class="images-list__more-overlay">
+          + {{ hiddenImagesCount }}
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
+import { Navigation } from 'swiper/modules'
 
 const props = defineProps({
   data: {
@@ -69,10 +107,27 @@ const props = defineProps({
   showFancybox: {
     type: Boolean,
     default: false
+  },
+  mobileSlider: {
+    type: Boolean,
+    default: false
+  },
+  overlay: {
+    type: Boolean,
+    default: false
+  },
+  type: {
+    type: String,
+    default: ''
   }
 })
 
+const emit = defineEmits(['updateSlide'])
+
 const showAll = ref(false)
+const swiperInstance = ref(null)
+const modules = [Navigation]
+const currentSlideIndex = ref(0)
 
 // Вычисляемые свойства
 const visibleImages = computed(() => {
@@ -90,12 +145,33 @@ const hiddenImagesCount = computed(() => {
 })
 
 const showMoreOverlay = computed(() => {
-  return !showAll.value && props.data.length > props.limit
+  return !showAll.value && props.overlay && props.data.length > props.limit
 })
 
 // Методы
 const showAllImages = () => {
   showAll.value = !showAll.value
+}
+
+const setSwiperInstance = (swiper) => {
+  swiperInstance.value = swiper
+}
+
+const slidePrev = () => {
+  if (swiperInstance.value) {
+    swiperInstance.value.slidePrev()
+  }
+}
+
+const slideNext = () => {
+  if (swiperInstance.value) {
+    swiperInstance.value.slideNext()
+  }
+}
+
+const onSlideChange = (swiper) => {
+  currentSlideIndex.value = swiper.activeIndex
+  emit('updateSlide', swiper.activeIndex, props.type)
 }
 </script>
 
@@ -157,6 +233,12 @@ const showAllImages = () => {
       height: 100%;
       object-fit: cover;
     }
+
+    @include mobile {
+      flex: 0 1 calc(50% - 1em);
+      max-width: 100%;
+      aspect-ratio: 1 / 1.45;
+    }
   }
 
   &__more-overlay {
@@ -180,9 +262,31 @@ const showAllImages = () => {
     text-transform: uppercase;
   }
 
+  &__slider-navigation {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: -10px;
+    left: -10px;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__slider-btn {
+    box-shadow: 0 2px 10px 0 rgba(89, 89, 89, 0.25);
+    background: #fff;
+
+    &_type_prev {
+      transform: rotate(180deg);
+    }
+  }
+
   @include mobile {
     &_type_mobile {
       display: block;
+      position: relative;
     }
 
     &_type_desktop {

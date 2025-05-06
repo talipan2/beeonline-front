@@ -53,7 +53,6 @@ const props = defineProps({
 
     &__title {
       font-size: 2em;
-
     }
   }
 }

@@ -3,7 +3,7 @@
     <label class="form-group__title" v-if="title">
       {{ title }}
     </label>
-    <div class="form-group">
+    <div class="load-image-secondary__wrapper">
       <div class="load-image-secondary__container">
         <template v-if="imagePreview">
           <img :src="imagePreview" :alt="imagePreview">
@@ -28,12 +28,11 @@
       <Cropper 
         ref="cropper"
         :src="imagePreview" 
-        :stencil-component="RectangleStencil" 
+        :stencil-component="RectangleStencil"
         :stencil-props="stencilProps"
-        :stencil-size="{
-          width: 300,
-        }"
-        :cross-origin="'anonymous'"
+
+        :cross-origin="'anonymous'"     
+        class="cropper-container"
       />
       <UiButton type="button" variant="quinary" size="large" @click="handleCrop">Выбрать область</UiButton>
     </ModalsRoundBorder>
@@ -77,8 +76,6 @@ const settingModal = ref(false);
 
 const stencilProps = {
   aspectRatio: 1 / .7,
-  resizable: false,
-  handlers: {}, 
 }
 
 const handleCrop = (data) => {
@@ -132,12 +129,16 @@ watch(() => progress.value, (newVal) => {
 
 const handleDeleteImage = () => {
   imagePreview.value = '';
-  emit('update:modelValue', {});
+  emit('update:modelValue', null);
 }
 
 watch(() => props.modelValue, (newVal) => {
     if (newVal) {
-      imagePreview.value = newVal;
+      if (newVal.url) {
+        imagePreview.value = newVal.url;
+      } else {
+        imagePreview.value = newVal;
+      }
     }
 }, {deep: true, immediate: true});
 
@@ -146,9 +147,17 @@ watch(() => props.modelValue, (newVal) => {
 
 <style lang="scss">
 
+.cropper-container {
+  min-height: 200px;
+  max-height: 500px;
+}
 
 .load-image-secondary {
   font-size: 1rem;
+
+  &__wrapper {
+    display: flex;
+  }
   
   &__container {
     border: 1px dashed #e1e3f1;
@@ -186,6 +195,7 @@ watch(() => props.modelValue, (newVal) => {
     font-weight: 600;
     line-height: 1.4em;
     color: #8387a3;
+    text-align: center;
   }
 
   &__progress {
@@ -252,7 +262,7 @@ watch(() => props.modelValue, (newVal) => {
 
   @include mobile {
     &__container {
-      aspect-ratio: 1;
+      aspect-ratio: 1/.7;
       flex-basis: 50%;
       max-width: 50%;
     }

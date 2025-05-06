@@ -103,11 +103,15 @@ const handleSubmit = async (values, form) => {
   await userStore
     .registerUser({...values, role: userData.value.role}, form)
     .then((res) => {
+      if(userData.value.role === 'customer') {
         if (isCreateOrder.value) {
           router.push({ path: "/orders/create/step1" });
         } else {
           router.push({ path: "/register/step1" });
         }
+      } else if (userData.value.role === 'performer') {
+        router.push({ path: "/performer-register/step1" });
+      }
     })
 };
 

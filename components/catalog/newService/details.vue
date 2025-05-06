@@ -1,6 +1,6 @@
 <template>
   <div class="new-service-details">
-    <CommonLayoutInfoCard padding="20" class="new-service-details__pub-card">
+    <CommonLayoutInfoCard class="new-service-details__pub-card new-service-details__pub-card_type_desktop">
       <div class="new-service-details__pub-card-image">
         <UiImage :src="data.pub_card?.logo || defaultImage" :alt="data.name" :external="true"/>
       </div>
@@ -14,7 +14,29 @@
         </div>
         <div class="new-service-details__pub-card-buttons">
           <UiButton variant="quinary" size="large" class="new-service-details__pub-card-button">Написать исполнителю</UiButton>
-          <UiButton variant="tertiary" size="large" class="new-service-details__pub-card-button">Добавить в избранное</UiButton>
+          <UiButton variant="quinary" size="large" class="new-service-details__pub-card-button">Проверить контрагента</UiButton>
+          <UiButton variant="tertiary" size="around" class="new-service-details__pub-card-button"><SvgoFavorite class="svg-m" fill="#6937A5" /></UiButton>
+        </div>
+      </div>
+    </CommonLayoutInfoCard>
+    <CommonLayoutInfoCard class="new-service-details__pub-card new-service-details__pub-card_type_mobile">
+      <div class="new-service-details__pub-card-image">
+        <UiImage :src="data.pub_card?.logo || defaultImage" :alt="data.name" :external="true"/>
+      </div>
+      <div class="new-service-details__pub-card-content">
+        <CommonRating :rating="data.pub_card?.reviews_stats_about?.stars" :reviews="data.pub_card?.reviews_about_count" :is-count-rating="false" />
+        <CommonLocationsList :locationsList="{countries: [data.pub_card?.country]}" />
+        <div class="new-service-details__pub-card-site" v-if="data.pub_card?.url_site">
+          <SvgoPlanet class="svg-m" />
+          <NuxtLink :to="data.siteUrl" class="link" target="_blank" >{{ data.pub_card?.url_site || 'не указано' }}</NuxtLink>
+        </div>
+      </div>
+      <div class="new-service-details__pub-card-content">
+        <h3 class="new-service-details__pub-card-title">{{ data.name || 'не указано' }}</h3>
+        <div class="new-service-details__pub-card-buttons">
+          <UiButton variant="quinary" size="large" class="new-service-details__pub-card-button">Написать исполнителю</UiButton>
+          <UiButton variant="quinary" size="large" class="new-service-details__pub-card-button">Проверить контрагента</UiButton>
+          <UiButton variant="tertiary" size="large" class="new-service-details__pub-card-button"><SvgoFavorite class="svg-m" fill="#6937A5" />Добавить в избранное</UiButton>
         </div>
       </div>
     </CommonLayoutInfoCard>
@@ -46,25 +68,19 @@
       />
       <CatalogNewServiceDetailsBadge 
         :specs="{
-          name: 'Верификация', 
-          value:  ''
-        }"
-      />
-      <CatalogNewServiceDetailsBadge 
-        :specs="{
           name: 'Бесплатные образцы', 
           value: entityStore.getEntityLabelById('freeTestSamples', data.free_samples),
         }"
       />
     </div>
-    <CommonLayoutInfoCard title="Актуальные услуги компании" class="new-service-details__services" v-if="data.pub_card?.services && data.pub_card?.services.length">
+    <CommonLayoutInfoCard title="Услуги" class="new-service-details__services" v-if="data.pub_card?.services && data.pub_card?.services.length">
       <div class="new-service-details__services-list">
         <div class="new-service-details__services-item" v-for="(item, index) in data.pub_card?.services" :key="item.id">
           <div class="new-service-details__services-item-number"><span>{{ index + 1 }}</span></div>
           <div class="new-service-details__services-item-content">
             <h4 class="new-service-details__services-item-name">{{ item.name || 'не указано' }}</h4>
             <p class="new-service-details__services-item-prop" v-if="item.batches">
-              Минимальная партия: 
+              Размер партии: 
               <span>{{ item.batches.map(item => item.name).join(' / ') || 'не указано' }}</span>
             </p>
             <div class="new-service-details__services-item-badges">
@@ -86,10 +102,30 @@
       <p class="new-service-details__description-text">{{ data.description || 'не указано' }}</p>
     </CommonLayoutInfoCard>
     <CommonLayoutInfoCard title="Примеры работ" class="new-service-details__gallery" v-if="data.gallery && data.gallery.length">
-      <CatalogNewServiceImagesList :data="data.gallery" :show-more="true" :show-fancybox="true" />
+      <CatalogNewServiceImagesList 
+        :data="data.gallery" 
+        :show-more="true" 
+        :show-fancybox="true" 
+        mobile-slider
+        @updateSlide="handleUpdatePhotoIndex"
+        type="gallery"
+      />
+      <template #action>
+        <p class="new-service-details__gallery-count">{{ `${currentGalleryIndex + 1}/${data.gallery.length}` }}</p>
+      </template>
     </CommonLayoutInfoCard>
-    <CommonLayoutInfoCard title="Фабрика и оборудование" class="new-service-details__gallery" v-if="data.gallery && data.gallery.length">
-      <CatalogNewServiceImagesList :data="data.gallery" :show-more="true" :show-fancybox="true" />
+    <CommonLayoutInfoCard title="Оборудование" class="new-service-details__gallery" v-if="data.gallery && data.gallery.length">
+      <CatalogNewServiceImagesList 
+        :data="data.gallery" 
+        :show-more="true" 
+        :show-fancybox="true" 
+        mobile-slider 
+        @updateSlide="handleUpdatePhotoIndex"
+        type="equipment"
+      />
+      <template #action>
+        <p class="new-service-details__gallery-count">{{ `${currentEquipmentIndex + 1}/${data.gallery.length}` }}</p>
+      </template>
     </CommonLayoutInfoCard>
     <CommonLayoutInfoCard title="Отзывы" class="new-service-details__reviews" v-if="reviewList.length">
       <CatalogNewServiceReviewList :reviewList="reviewList" :pub_card="data.pub_card" />
@@ -121,6 +157,20 @@ const reviewsPage = ref({
 })
 
 const reviewList = ref([]);
+
+const currentGalleryIndex = ref(0);
+const currentEquipmentIndex = ref(0);
+
+const handleUpdatePhotoIndex = (index, type) => {
+  switch(type) {
+    case 'gallery':
+      currentGalleryIndex.value = index;
+      break;
+    case 'equipment':
+      currentEquipmentIndex.value = index;
+      break;
+  }
+}
 
 const handleChangeReviewsPage = (page) => {
   if(!page) return
@@ -155,6 +205,10 @@ onMounted(() => {
     margin-bottom: 3.2em;
     column-gap: 5.6em;
     align-items: flex-start;
+
+    &_type_mobile {
+      display: none;
+    }
 
     .rate {
       font-size: 1em;
@@ -221,8 +275,18 @@ onMounted(() => {
     }
 
     &-button {
+      width: 100%;
       font-size: .75em;
       text-transform: uppercase;
+
+      &:last-child {
+        width: auto;
+
+        @include mobile {
+          width: 100%;
+          column-gap: 1em;
+        }
+      }
     }
 
     @include tablet {
@@ -235,11 +299,11 @@ onMounted(() => {
 
     @include mobile {
       font-size: .8em;
-      flex-direction: column;
       row-gap: 2em;
 
       &-image {
         max-width: 38em;
+        aspect-ratio: 1;
       }
 
       &-title {
@@ -255,6 +319,24 @@ onMounted(() => {
         width: 100%;
       }
 
+      &_type_mobile {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 1.6em;
+      }
+
+      &-image {
+        flex: 0 0 32%;
+      }
+
+      &-content {
+        flex: 1 1 calc(59% - 1.6em);
+      }
+
+      &_type_desktop {
+        display: none;
+      }
     
     }
   }
@@ -291,10 +373,6 @@ onMounted(() => {
 
   &__services {
     margin-bottom: 3.2em;
-
-    .info-card__title {
-      margin-bottom: 4rem;
-    }
 
     &-list {
       display: flex;
@@ -392,6 +470,19 @@ onMounted(() => {
 
   &__gallery {
     margin-bottom: 3.2em;
+  }
+
+  &__gallery-count {
+    display: none;
+    font-family: 'fira-sans', sans-serif;
+    font-size: 1.4em;
+    font-weight: 500;
+    line-height: 1.4em;
+    color: #000;
+
+    @include mobile {
+      display: block;
+    }
   }
   
 }

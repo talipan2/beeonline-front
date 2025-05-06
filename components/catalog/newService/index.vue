@@ -1,6 +1,6 @@
 <template>
   <div class="new-service__list">
-    <CatalogBanner :fetch-function="fetchServiceSlider">
+    <CatalogBanner :fetch-function="fetchServiceSlider" class="new-service__banner">
       <template #item="{ item }">
         <CatalogNewServiceCard :data="item" class="highlight" :revers-color="true"/>
       </template>
@@ -50,6 +50,13 @@ const fetchServiceSlider = async ( page, per_page=10) => {
     display: flex;
     flex-direction: column;
     row-gap: 5.6em;
+  }
+
+  @include mobile {
+    &__banner {
+      margin-inline: -13px;
+      max-width: none;
+    }
   }
 }
 

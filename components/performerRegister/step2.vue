@@ -1,40 +1,46 @@
 <template>
-  <CommonLayoutInfoCard title="Актуальные услуги" class="new-service-card-layout">
+  <CommonLayoutInfoCard title="Услуги" class="new-service-card-layout">
     <template v-if="modelValue.services?.length > 0">
-      <div class="new-service-card-layout__service" v-for="item in modelValue.services" :key="item">
-        <UiButton
-          type="button"
-          class="new-service-card-layout__edit-service"
-          variant="default"
-          :without-padding="true"
-          @click="handleEditService(item)"
-        >
-          <SvgoPencil class="svg-l" />
-          Редактировать услугу
-        </UiButton>
-        <div class="form-group form-group_type_secondary">
-          <label class="form-group__title">
-            Название услуги
-            <CommonTooltip text="Допустимы изображения размером до 5Мб" />
-          </label>
-          <div class="form-value">{{ item.name }}</div>
-        </div>
-        <div class="form-group form-group_type_secondary new-service-card-layout__category">
-          <label class="form-group__title">
-            Выбор категории
-          </label>
-          <div class="form-value">{{ item.product_categories ? item.product_categories.map(i => i.name).join(' / ') : '' }}</div>
-        </div>
-        <div class="form-group form-group_type_secondary">
-          <label class="form-group__title">
-            Партия
-          </label>
-          <div class="form-group form-group__value">
+      <div class="new-service-card-layout__service-list">
+        <div class="new-service-card-layout__service" v-for="item in modelValue.services" :key="item">
+          <UiButton
+            type="button"
+            class="new-service-card-layout__edit-service"
+            variant="default"
+            :without-padding="true"
+            @click="handleEditService(item)"
+          >
+            <SvgoPencil class="svg-l" />
+            Редактировать услугу
+          </UiButton>
+          <div class="form-group form-group_type_secondary">
             <div class="form-group-data">
-              <div class="form-value">{{ item.batch_min }}</div>
+              <label class="form-group__title">
+                Название услуги
+              </label>
+              <div class="form-value">{{ item.name }}</div>
             </div>
+          </div>
+          <div class="form-group form-group_type_secondary new-service-card-layout__category">
             <div class="form-group-data">
-              <div class="form-value">{{ item.batch_max }}</div>
+              <label class="form-group__title">
+                Категории
+              </label>
+              <div class="new-service-card-layout__category-badge-list">
+                <div class="new-service-card-layout__category-badge" v-for="badge in item.product_categories" :key="badge">
+                  {{ badge.name }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group form-group_type_secondary">
+            <div class="form-group-data">
+              <label class="form-group__title">
+                Партия
+              </label>
+              <div class="form-group__value">
+                <div class="form-value">{{ entityStore.getEntityLabelById('serviceBatch', item.batch) || '-' }}</div>
+              </div>
             </div>
           </div>
         </div>
@@ -91,7 +97,7 @@
       </UiButton>
     </template>
 
-    <ModalsRoundBorder :is-open="editServiceModal" title="Актуальные услуги" @close="editServiceModal = false" size="lg" class="service-modal">
+    <ModalsRoundBorder :is-open="editServiceModal" title="Редактирование услуги" @close="editServiceModal = false" size="lg" class="service-modal">
       <UiForm :submit="(values, form) => handleUpdateService(values, form, editServiceData)" class="service-modal__form">
         <PerformerRegisterServiceForm :service="editServiceData" />
         <UiButton class="new-service-card-layout__remove-service" type="button" variant="default" without-padding @click="handleDeleteService(editServiceData.id)">
@@ -104,7 +110,7 @@
         </div>
       </UiForm>
     </ModalsRoundBorder>
-    <ModalsRoundBorder :is-open="addNewServiceModal" title="Актуальные услуги" @close="addNewServiceModal = false" size="lg" class="service-modal">
+    <ModalsRoundBorder :is-open="addNewServiceModal" title="Добавление услуги" @close="addNewServiceModal = false" size="lg" class="service-modal">
       <UiForm :submit="handleCreateService" class="service-modal__form">
         <PerformerRegisterServiceForm />
         <div class="new-service-card-layout__edit-service-buttons">
@@ -172,8 +178,7 @@ const handleCreateService = (value, form) => {
   emit('update:modelValue', {...props.modelValue, services: [...props.modelValue.services, {
     id: props.modelValue.services.length + 1,
     name: value.name,
-    batch_min: value.batch_min,
-    batch_max: value.batch_max,
+    batch: value.batch,
     product_categories: value.category.map(id => ({id: id, name:entityStore.getEntityLabelById('categories', id)}))
   }]});
   addNewServiceModal.value = false;
@@ -202,8 +207,13 @@ const handleUpdateService = (value, form, item) => {
   console.log(value, form, item)
   const index = props.modelValue.services.findIndex(i => i.id === item.id);
   const services = [...props.modelValue.services];
-  services[index] = {...item, name: value.name, batch_min: value.batch_min, batch_max: value.batch_max, product_categories: value.category.map(id => ({id: id, name:entityStore.getEntityLabelById('categories', id)}))};
-  emit('update:modelValue', {...props.modelValue, services: services});
+  services[index] = {
+    ...item,
+    name: value.name,
+    batch: value.batch,
+    product_categories: value.category.map(id => ({ id: id, name: entityStore.getEntityLabelById('categories', id) }))
+  };
+  emit('update:modelValue', { ...props.modelValue, services: services });
   editServiceModal.value = false;
   toast.success('Услуга отправлена на модерацию');
   form.resetForm();
@@ -239,11 +249,19 @@ const handleUpdateService = (value, form, item) => {
 
     @include mobile {
       margin-left: 0;
+      order: 1;
     }
   }
 
   &__service {
     margin-bottom: 3.2em;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid #e7e7e7;
+    }
   }
 
   &__add-service {
@@ -303,6 +321,24 @@ const handleUpdateService = (value, form, item) => {
   &__edit-service-button {
     font-size: 1.2em;
     text-transform: uppercase;
+  }
+
+  &__category {
+    &-badge-list {
+      display: flex;
+      gap: .8em;
+      flex-wrap: wrap;
+    }
+
+    &-badge {
+      font-size: 1.2em;
+      font-weight: 600;
+      line-height: 1.3em;
+      color: #5a2b96;
+      padding: .4em 1em;
+      border-radius: 100px;
+      background-color: #f2edff;
+    }
   }
 }
 

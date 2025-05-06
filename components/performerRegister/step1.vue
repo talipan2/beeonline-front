@@ -1,57 +1,30 @@
 <template>
   <CommonLayoutInfoCard title="Карточка компании" class="new-service-card-layout">
     <template #action>
-      <UiButton
-        type="button"
-        class="new-service-card-layout__edit-btn"
-        variant="default"
-        :without-padding="true"
-        @click="editPubCardModal = true"
-      >
+      <UiButton type="button" class="new-service-card-layout__edit-btn" variant="default" :without-padding="true"
+        @click="editPubCardModal = true" v-if="isPreview">
         <SvgoPencil class="svg-l" />
         Редактировать
       </UiButton>
     </template>
 
     <template v-if="!isPreview">
-     <PerformerRegisterPubCardForm v-model="data"/>
+      <PerformerRegisterPubCardForm v-model="data" />
     </template>
     <template v-else>
-      <div class="new-service-card-layout__logo-preview">
-        <UiImage :src="formattedData.logo || defaultImage" :alt="modelValue.name" :external="true"/>
-      </div>
-      <div class="form-group form-group_type_secondary">
-        <label class="form-group__title">
-          Название компании
-          <CommonTooltip text="Допустимы изображения размером до 5Мб" />
-        </label>
-        <div class="form-value">{{ formattedData.name }}</div>
-      </div>
-      <div class="form-group form-group_type_secondary">
-        <label class="form-group__title">
-          Ссылка на сайт
-          <CommonTooltip text="Допустимы изображения размером до 5Мб" />
-        </label>
-        <div class="form-value">
-          <SvgoPlanet class="svg-m" />
-          {{ formattedData.site_url || "-" }}
+      <div class="new-service-card-layout__pubcard">
+        <div class="new-service-card-layout__logo-preview">
+          <UiImage :src="formattedData.logo || defaultImage" :alt="modelValue.name" :external="true" />
         </div>
-      </div>
-      <div class="form-group form-group_type_secondary">
-        <label class="form-group__title">
-          Описание
-          <CommonTooltip text="Допустимы изображения размером до 5Мб" />
-        </label>
-        <div class="form-value">
-          {{ formattedData.description || "-" }}
+        <div class="new-service-card-layout__pubcard-content">
+          <h3>{{ formattedData.name }}</h3>
+          <CommonLocationsList class="new-service-card-layout__pubcard-locations" :locations-list="formattedData.locations" />
+          <div class="new-service-card-layout__pubcard-site">
+              <SvgoPlanet class="svg-m" />
+              <a v-if="formattedData.site_url" class="link" :href="formattedData.site_url" target="_blank">{{formattedData.site_url}}</a>
+              <p v-else>-</p>
+          </div>
         </div>
-      </div>
-      <div class="form-group form-group_type_secondary">
-        <label class="form-group__title">
-          Города фактического производства
-          <CommonTooltip text="Допустимы изображения размером до 5Мб" />
-        </label>
-        <div class="form-value">{{ formattedData.locations }}</div>
       </div>
       <div class="form-group form-group_type_secondary">
         <div class="form-group form-group__value">
@@ -85,12 +58,24 @@
           </div>
         </div>
       </div>
-      <ModalsRoundBorder :is-open="editPubCardModal" title="Карточка" @close="editPubCardModal = false" size="lg" class="pubcard-edit-modal">
+      <div class="form-group form-group_type_secondary">
+        <div class="form-group-data">
+          <label class="form-group__title">
+            Описание
+          </label>
+          <div class="form-value">
+            {{ formattedData.description || "-" }}
+          </div>
+        </div>
+      </div>
+      <ModalsRoundBorder :is-open="editPubCardModal" title="Редактирование карточки" @close="editPubCardModal = false" size="lg"
+        class="pubcard-edit-modal">
         <UiForm :submit="handleUpdatePubCard()">
-          <PerformerRegisterPubCardForm v-model="data"/>
+          <PerformerRegisterPubCardForm v-model="data" />
           <div class="pubcard-edit-modal__buttons">
-            <UiButton class="pubcard-edit-modal__button" type="button" variant="tertiary" size="large" >Отмена</UiButton>
-            <UiButton class="pubcard-edit-modal__button" type="submit" variant="quinary" size="large" >Сохранить изменения</UiButton>
+            <UiButton class="pubcard-edit-modal__button" type="button" variant="tertiary" size="large">Отмена</UiButton>
+            <UiButton class="pubcard-edit-modal__button" type="submit" variant="quinary" size="large">Сохранить
+              изменения</UiButton>
           </div>
         </UiForm>
       </ModalsRoundBorder>
@@ -113,7 +98,8 @@ const props = defineProps({
   formattedData: {
     type: Object,
     default: () => ({})
-  }
+  },
+
 })
 
 const data = computed({
@@ -148,10 +134,6 @@ const handleUpdatePubCard = () => {
     font-size: 1rem;
   }
 
-  .form-group__value {
-
-  }
-
   &__container {
     max-width: 70%;
   }
@@ -169,6 +151,7 @@ const handleUpdatePubCard = () => {
   }
 
   &__logo-preview {
+    flex: 0 0 30%;
     border: 1px dashed #e1e3f1;
     background-color: #f9f9f9;
     max-width: 32%;
@@ -181,6 +164,73 @@ const handleUpdatePubCard = () => {
     border-radius: 8px;
     margin-bottom: 2em;
   }
+
+  &__pubcard {
+    display: flex;
+    column-gap: 3em;
+
+    &-content {
+      display: flex;
+      flex-direction: column;
+      gap: 1.6em;
+
+      h3 {
+        font-size: 3.2em;
+      }
+    }
+
+    &-locations {
+      font-size: 1.6em;
+      font-weight: 400;
+
+      .flag {
+        font-size: 1.75em;
+        width: 1em;
+        height: 1em;
+      }
+    }
+
+    &-site {
+      display: flex;
+      align-items: center;
+      gap: .5em;
+      font-size: 1.6em;
+      font-weight: 300;
+      font-family: 'fira-sans', sans-serif;
+
+      svg {
+        width: 1.75em;
+        height: 1.75em;
+      }
+    }
+
+    @include mobile {
+      h3 {
+        font-size: 1.8em;
+      }
+
+      &-locations {
+        font-size: 1.4em;
+
+        .flag {
+          font-size: 1.42em;
+          width: 1em;
+          height: 1em;
+        }
+      }
+
+      &-site {
+        font-size: 1.4em;
+
+        svg {
+          width: 1.42em;
+          height: 1.42em;
+        }
+      }
+    }
+  }
+
+
 
   &__edit-btn {
     color: var(--text-color-ternary);

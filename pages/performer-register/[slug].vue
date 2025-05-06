@@ -20,7 +20,8 @@
         <component :is="stepsConfig[currentStep].component" v-model="data" :title="stepsConfig[currentStep].title" :submitFunc="handleSubmit"/>
         <div class="performer-register-layout__btn-container" v-if="stepsConfig[currentStep]?.type === 'pubCard'" >
           <UiButton v-if="stepsConfig[currentStep - 1]?.route" class="performer-register-layout__btn" variant="senary" size="large" :to="`/performer-register${stepsConfig[currentStep - 1].route}`">Назад</UiButton>
-          <UiButton type="submit" class="performer-register-layout__btn" variant="quinary" size="large">Далее</UiButton>
+          <UiButton v-if="stepsConfig.length === currentStep + 1" type="submit" class="performer-register-layout__btn" variant="quinary" size="large">Сохранить данные</UiButton>
+          <UiButton v-else type="submit" class="performer-register-layout__btn" variant="quinary" size="large">Сохранить и продолжить</UiButton>
         </div>
       </UiForm>
     </template>
@@ -35,14 +36,12 @@ import step1 from '~/components/register/step1.vue'
 import step2 from '~/components/performerRegister/step1.vue';
 import step3 from '~/components/performerRegister/step2.vue';
 import step4 from '~/components/performerRegister/step3.vue';
-import step5 from '~/components/register/step4.vue';
 
 const stepsConfig = [
   {id: 1, title: 'Данные организации', route: '/step1', component: step1},
-  { id: 2, title: 'Карточка организации', route: '/step2', component: step2, type: 'pubCard' },
-  { id: 3, title: 'Актуальные услуги', route: '/step3', component: step3, type: 'pubCard' },
+  { id: 2, title: 'Карточка', route: '/step2', component: step2, type: 'pubCard' },
+  { id: 3, title: 'Услуги', route: '/step3', component: step3, type: 'pubCard' },
   { id: 4, title: 'Галерея', route: '/step4', component: step4, type: 'pubCard' },
-  { id: 5, title: 'Проверка вашего профиля', route: '/step5', component: step5 },
 ]
 
 
@@ -158,7 +157,7 @@ const handleSubmit = (value, form) => {
   }
 
   &__btn {
-    width: 25%;
+    width: auto;
     font-size: 1.2em;
     text-transform: uppercase;
   }

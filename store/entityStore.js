@@ -96,6 +96,11 @@ export const useEntityStore = defineStore('entity', {
         {id: 3, label: 'от 500 до 1 000'},
         {id: 4, label: '1 000 и выше'}
       ],
+      serviceBatch: [
+        {id: 1, label: 'до 100'},
+        {id: 2, label: 'от 100 до 1000'},
+        {id: 3, label: 'от 1000'},
+      ],
       status: [
         {id: 1, label: 'Активный', value: 'active'},
         {id: 2, label: 'Черновик', value: 'draft'},

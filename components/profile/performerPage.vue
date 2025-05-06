@@ -90,10 +90,12 @@
       </template>
       <p class="performer-profile__card-description">Указанные данные не разглашаются третьим лицам, и необходимы для успешной работы на портале</p>
       <div class="form-group form-group_type_secondary">
-        <label class="form-group__title">
-          Юридическое названии организации
-        </label>
-        <div class="form-value">{{ userOrganization.name }}</div>
+        <div class="form-group-data">
+          <label class="form-group__title">
+            Юридическое названии организации
+          </label>
+          <div class="form-value">{{ userOrganization.name }}</div>
+        </div>
       </div>
       <div class="form-group form-group_type_secondary">
         <div class="form-group form-group__value">
@@ -146,10 +148,12 @@
         </div>
       </div>
       <div class="form-group form-group_type_secondary">
-        <label class="form-group__title">
-          Юридический адрес
-        </label>
-        <div class="form-value">{{ userOrganization.legal_address || '-' }}</div>
+        <div class="form-group-data">
+          <label class="form-group__title">
+            Юридический адрес
+          </label>
+          <div class="form-value">{{ userOrganization.legal_address || '-' }}</div>
+        </div>
       </div>
     </CommonLayoutInfoCard>
     <ProfileChageUserDataModal />
@@ -183,11 +187,9 @@ const userOrganization = computed(() => {
 });
 
 const formattedData = computed(() => {
-  const {locations, alias} = locationFormatter({cities: data.value?.cities, regions: data.value?.regions, countries: data.value?.countries});
   return {
     ...data.value,
-    locations: locations && locations.length > 0 && locations.join(' / ') || '',
-    alias: alias,
+    locations: {cities: data.value?.cities, regions: data.value?.regions, countries: data.value?.countries},
     materials: [data.value.materials_own ? 'Исполнителя': '', data.value.materials_customer ? 'Заказчика': ''].filter(Boolean).join(', '),
   }
 });

@@ -1,5 +1,5 @@
 <template>
-  <div class="filter-modal">
+  <div class="filter-modal filter-modal_type_desktop">
     <!-- Кнопка для открытия Tippy -->
     <UiButton 
       type="button" 
@@ -37,78 +37,7 @@
             <SvgoClose class="svg-l" />
           </UiButton>
           <h3 class="filter-modal__title">Еще фильтры</h3>
-          <div class="filter-modal__content">
-            <div class="filter-modal__item">
-              <p class="filter-modal__text">Регионы производства</p>
-              <CommonLocation 
-                buttonLabel="Выбрать регионы" 
-                v-model="filter.location"
-                class="filter-modal__location filter-modal__action"
-                :type="['selectCountry', 'selectRegions']"
-                :is-required="true"
-                errorLabel="Регионы производства"
-                name="location"
-              />
-            </div>
-            <div class="filter-modal__item">
-              <p class="filter-modal__text">Наличие СТМ</p>
-              <UiRadioButtonGroup 
-                class="filter-modal__radio filter-modal__action"
-                v-model="filter.has_stm"
-                :options="[
-                  { value: 1, label: 'Да' },
-                  { value: 0, label: 'Нет' },
-                ]"
-              />
-            </div>
-            <div class="filter-modal__item">
-              <p class="filter-modal__text">Образцы</p>
-              <UiCheckboxGroup
-                class="filter-modal__checkbox filter-modal__action"
-                v-model="filter.free_test"
-                :is-validated="false"
-                :options="[
-                  { id: 0, label: 'По запросу' },
-                  { id: 1, label: 'Да' },
-                  { id: 2, label: 'Нет' },
-                ]"
-              />
-            </div>
-            <div class="filter-modal__item">
-              <p class="filter-modal__text">Сырье</p>
-              <UiCheckboxGroup
-                class="filter-modal__checkbox filter-modal__action"
-                v-model="filter.material"
-                :options="[
-                  { id: 0, label: 'Исполнителя' },
-                  { id: 1, label: 'Заказчика' },
-                ]"
-                :is-validated="false"
-              />
-            </div>
-            <div class="filter-modal__item">
-              <p class="filter-modal__text">Наличие склада</p>
-              <UiRadioButtonGroup
-                class="filter-modal__radio filter-modal__action"
-                v-model="filter.free_stock"
-                :options="[
-                  { id: 1, value: 1, label: 'Да' },
-                  { id: 0, value: 0, label: 'Нет' },
-                ]"
-              />
-            </div>
-            <div class="filter-modal__item">
-              <p class="filter-modal__text">Верификация</p>
-              <UiRadioButtonGroup
-                class="filter-modal__radio filter-modal__action"
-                v-model="filter.verification"
-                :options="[
-                  { id: 1, value: 1, label: 'Да' },
-                  { id: 0, value: 0, label: 'Нет' },
-                ]"
-              />
-            </div>
-          </div>
+          <CatalogNewServiceFilterForm v-model="filter" />
           <div class="filter-modal__footer">
             <UiButton 
               type="button" 
@@ -133,6 +62,41 @@
       </template>
     </Tippy>
   </div>
+  <div class="filter-modal filter-modal_type_mobile">
+    <UiButton 
+      type="button" 
+      class="filter-modal__action-btn filter-modal__action-btn_type_mobile" 
+      variant="default" 
+      size="large"
+      @click="mobileModal = true"
+    >
+      Еще фильтры
+      <SvgoFilter class="svg-m" />
+    </UiButton>
+    <ModalsRoundBorder v-model="mobileModal" title="Еще фильтры" class="filter-modal__mobile-modal">
+      <CatalogNewServiceFilterForm v-model="filter" />
+      <template #footer>
+        <UiButton 
+          type="button" 
+          class="filter-modal__btn" 
+          variant="tertiary" 
+          size="large"
+          @click="resetFilter"
+        >
+          Сбросить фильтры
+        </UiButton>
+        <UiButton 
+          type="button" 
+          class="filter-modal__btn" 
+          variant="quinary" 
+          size="large"
+          @click="handleUpdateFilter"
+        >
+          Применить фильтры
+        </UiButton>
+      </template>
+    </ModalsRoundBorder>
+  </div>
 </template>
 
 <script setup>
@@ -148,6 +112,7 @@ const props = defineProps({
 const emit = defineEmits(['updateFilter', 'resetFilter']);
 const filterModal = ref(null);
 const isVisible = ref(false);
+const mobileModal = ref(false);
 
 const filter = ref({
   location: [],
@@ -208,6 +173,11 @@ watch(() => props.filter, () => {
   font-size: 1rem;
   font-family: 'lato', sans-serif;
 
+  &_type_mobile {
+    display: none;
+  }
+  
+
   .tippy-box {
     width: 74rem;
     font-size: 1rem;
@@ -222,6 +192,14 @@ watch(() => props.filter, () => {
     color: var(--text-color-primary);
     column-gap: .5em;
     border-radius: 8px;
+
+    &_type_mobile {
+      box-shadow: none;
+      background-color: transparent;
+      flex-direction: row-reverse;
+
+      
+    }
   }
   
   &__title {
@@ -251,12 +229,29 @@ watch(() => props.filter, () => {
     padding-bottom: 2.4em;
     margin-bottom: 2.4em;
     border-bottom: 1px solid #d9dae1;
+    
+    @include mobile {
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+  }
+
+  &__mobile-modal {
+    .filter-modal__btn {
+      text-transform: uppercase;
+    }
   }
 
   &__item {
     display: flex;
     align-items: center;
     column-gap: 1em;
+
+    @include mobile {
+      flex-direction: column;
+      align-items: flex-start;
+      row-gap: 1em;
+    }
   }
 
   &__text {
@@ -301,6 +296,16 @@ watch(() => props.filter, () => {
   .filter-modal__btn {
     font-size: 1.2rem;
     text-transform: uppercase;
+  }
+
+  @include mobile {
+    &_type_desktop {
+      display: none;
+    }
+
+    &_type_mobile {
+      display: block;
+    }
   }
 
 }

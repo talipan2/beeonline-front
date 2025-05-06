@@ -2,6 +2,9 @@
   <UiModal class="round-modal modal" v-model="isOpenModal" :title="title" :size="size" :fixedHeader="fixedHeader">
     <template #content>
       <slot />
+      <div class="round-modal__footer" v-if="$slots.footer">
+        <slot name="footer"></slot>
+      </div>
     </template>
   </UiModal>
 </template>
@@ -51,6 +54,19 @@ watch(isOpenModal, (newVal) => {
     border-radius: 20px;
     box-shadow: none;
     padding: 2.4em 3.2em;
+  }
+
+  &__footer {
+    @include mobile {
+      display: flex;
+      flex-direction: column;
+      row-gap: .8em;
+      padding: .8em 1.6em;
+      border-top: 1px solid #eff0f5;
+      box-shadow: 0 -2px 12px 0 rgba(0, 0, 0, 0.02);
+      margin-top: 2.2em;
+      margin-inline: -3.2em;
+    }
   }
 
   @include mobile {

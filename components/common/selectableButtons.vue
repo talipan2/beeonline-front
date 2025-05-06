@@ -1,7 +1,6 @@
 <template>
   <div ref="container" class="selectable-buttons">
     <div class="selectable-buttons__list" ref="listRef">
-      <!-- Все кнопки рендерятся, но часть скрывается CSS -->
       <template v-for="(item, index) in options" :key="index">
         <UiButton
           ref="buttons"
@@ -26,6 +25,10 @@
         {{ isExpanded ? 'Свернуть' : 'Еще' }}
       </UiButton>
     </div>
+    <UiButton type="button" class="selectable-buttons__btn selectable-buttons__open-btn" variant="secondary" size="small" @click="mobileModal = true">
+      <component :is="iconButton" class="svg-m"/>
+      {{ mobileButtonText }}
+    </UiButton>
     <slot />
     <div class="selectable-buttons__select-list">
       <template v-for="(item, index) in selectedList" :key="index">
@@ -41,6 +44,27 @@
         </UiButton>
       </template>
     </div>
+    <ModalsRoundBorder v-model="mobileModal" fixed-header title="Выбрать категорию">
+      <div class="selectable-buttons__mobile-list">
+        <template v-for="(item, index) in options" :key="index">
+          <UiButton
+            ref="buttons"
+            type="button"
+            class="selectable-buttons__btn"
+            :class="{ 'is-active': modelValue.includes(item.id) }"
+            variant="secondary"
+            size="small"
+            @click="toggleSelection(item)"
+          >
+            {{ item.name }}
+          </UiButton>
+        </template>
+      </div>
+      <template #footer>
+        <UiButton type="button" variant="default" @click="mobileModal = false">Сбросить</UiButton>
+        <UiButton type="button" variant="quinary" @click="mobileModal = false">Применить</UiButton>
+      </template>
+    </ModalsRoundBorder>
   </div>
 </template>
 
@@ -54,6 +78,14 @@ const props = defineProps({
     type: Array, 
     default: () => [] 
   },
+  mobileButtonText: {
+    type: String,
+    default: ''
+  }, 
+  iconButton: {
+    type: [Object, Function],
+    default: null
+  }
 })
 
 const container = ref(null)
@@ -63,6 +95,7 @@ const isExpanded = ref(false)
 const visibleCount = ref(0)
 const resizeObserver = ref(null)
 const selectedList = ref([])
+const mobileModal = ref(false)
 
 const showMoreButton = computed(() => {
   return buttons.value.length > visibleCount.value
@@ -101,7 +134,6 @@ function toggleExpand() {
 function getComputedGap(element) {
   const styles = window.getComputedStyle(element)
   
-  // Пробуем современное свойство и префиксные варианты
   const gap = styles.gap || 
               styles.columnGap || 
               styles.rowGap || 
@@ -109,9 +141,9 @@ function getComputedGap(element) {
               styles['-moz-gap'] || 
               '0 0'
   
-  // Разбираем значение (может быть "8px 12px" для row/column раздельно)
+
   const gaps = gap.split(/\s+/).map(g => {
-    if (g.endsWith('rem')) return parseFloat(g) * 16
+    if (g.endsWith('rem')) return parseFloat(g) * 10
     if (g.endsWith('em')) return parseFloat(g) * parseFloat(styles.fontSize)
     return parseFloat(g)
   })
@@ -124,10 +156,11 @@ function calculateVisible() {
   if (!container.value || buttons.value.length === 0) return
 
   const gap = getComputedGap(listRef.value)
+  console.log(gap)
   const containerWidth = container.value.offsetWidth
   let totalWidth = 0
   let count = 0
-  const moreBtnWidth = showMoreButton.value ? 80 : 0
+  const moreBtnWidth = showMoreButton.value ? 140 : 0
 
   for (const [index, btn] of buttons.value.entries()) {
     if (!btn?.$el) continue
@@ -150,13 +183,13 @@ function calculateVisible() {
 }
 
 // Отслеживаем появление кнопок
-watch(() => [...buttons.value], () => {
-  nextTick(calculateVisible);
+watch(() => [...buttons.value], async() => {
+  await nextTick(calculateVisible);
 });
 
 // Также отслеживаем изменения options
-watch(() => props.options, () => {
-  nextTick(() => {
+watch(() => props.options, async() => {
+  await nextTick(() => {
     calculateVisible()
   })
 })
@@ -219,6 +252,11 @@ onMounted(() => {
         }
       }
     }
+
+    @include mobile {
+      text-wrap: auto;
+      text-align: left;
+    }
   }
 
   &__more {
@@ -232,6 +270,33 @@ onMounted(() => {
     display: flex;
     flex-wrap: wrap;
     gap: 1em;
+  }
+
+  &__open-btn {
+    display: none;
+    font-size: 1.4em;
+    column-gap: .5em;
+
+    svg {
+      width: 1.4em;
+      height: 1.4em;
+    }
+  }
+
+  @include mobile {
+    &__list {
+      display: none;
+    }
+
+    &__open-btn {
+      display: flex;
+    }
+
+    &__mobile-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1em;
+    }
   }
 }
 </style>

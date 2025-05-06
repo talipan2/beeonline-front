@@ -17,16 +17,16 @@
       </div>
       <div class="gallery-load-secondary__slider-wrapper">
         <Swiper
-          :slidesPerView="1.7"
-          :loopAddBlankSlides="true"
+          :slidesPerView="1"
           :spaceBetween="20"
           class="gallery-load-secondary__slider"
           :modules="modules"
           :breakpoints="{
             512: {
-              slidesPerView: 2.5,
+              slidesPerView: 1.5,
             }
           }"
+          @swiper="setSwiperInstance"
         >
           <SwiperSlide v-for="(image, index) in localModelValue" :key="index" class="gallery-load-secondary__slide">
             <a :href="image.url" class="" data-fancybox="gallery">
@@ -34,21 +34,39 @@
             </a>
           </SwiperSlide>
         </Swiper>
+        <div class="gallery-load-secondary__slider-navigation">
+            <UiButton
+              type="button"
+              class="gallery-load-secondary__slider-btn gallery-load-secondary__slider-btn_type_prev"
+              variant="secondary"
+              @click="slidePrev"
+            >
+              <SvgoSlideArrow class="svg-l" />
+            </UiButton>
+            <UiButton
+              type="button"
+              class="gallery-load-secondary__slider-btn gallery-load-secondary__slider-btn_type_next"
+              variant="secondary"
+              @click="slideNext"
+            >
+              <SvgoSlideArrow class="svg-l" />
+            </UiButton>
+          </div>
       </div>
     </template>
     <template v-else>
       <Draggable
-      v-model="localModelValue"
-      class="gallery-load-secondary__wrapper"
-      item-key="id"
-      :forceFallback="true"
-      :animation="300"
-      ghost-class="sortable-ghost"
-      chosen-class="sortable-chosen"
-      drag-class="sortable-drag"
-      :fallbackTolerance="5" 
-      :fallbackOnBody="true"
-    >
+        v-model="localModelValue"
+        class="gallery-load-secondary__wrapper"
+        item-key="id"
+        :forceFallback="true"
+        :animation="300"
+        ghost-class="sortable-ghost"
+        chosen-class="sortable-chosen"
+        drag-class="sortable-drag"
+        :fallbackTolerance="5" 
+        :fallbackOnBody="true"
+      >
       <template #header>
         <div class="gallery-load-secondary__container">
           <div class="gallery-load-secondary__loader">
@@ -115,6 +133,7 @@ import { useSettingStore } from '~/store/settingStore';
 import { useUserStore } from '~/store/userStore';
 import { Cropper, RectangleStencil } from 'vue-advanced-cropper';
 import 'vue-advanced-cropper/dist/style.css';
+import { Navigation } from 'swiper/modules'
 
 
 const props = defineProps({
@@ -160,6 +179,9 @@ const settingStore = useSettingStore();
 const settingModal = ref(false);
 const imagePreview = ref('');
 const cropper = ref(null);
+
+const modules = [Navigation];
+const swiperInstance = ref(null);
 
 const handleCrop = (data) => {
   if (cropper.value) {
@@ -214,6 +236,22 @@ const handleDeleteImage = (id) => {
 const handleOpenSettingModal = (id) => {
   imagePreview.value = props.modelValue.find(item => item.id === id);
   settingModal.value = true;
+}
+
+const setSwiperInstance = (swiper) => {
+  swiperInstance.value = swiper
+}
+
+const slidePrev = () => {
+  if (swiperInstance.value) {
+    swiperInstance.value.slidePrev()
+  }
+}
+
+const slideNext = () => {
+  if (swiperInstance.value) {
+    swiperInstance.value.slideNext()
+  }
 }
 
 </script>
@@ -407,7 +445,7 @@ const handleOpenSettingModal = (id) => {
   }
 
   &__slide {
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 1 / 1.2;
     overflow: hidden;
     position: relative;
     background-color: transparent;
@@ -433,6 +471,7 @@ const handleOpenSettingModal = (id) => {
 
     &__slider-wrapper {
       display: block;
+      position: relative;
     }
 
     &__item-container {
@@ -444,6 +483,26 @@ const handleOpenSettingModal = (id) => {
 
     &__title {
       font-size: 1em;
+    }
+
+    &__slider-navigation {
+      position: absolute;
+      z-index: 2;
+      left: -15px;
+      right: -15px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    &__slider-btn {
+      box-shadow: 0 2px 10px 0 rgba(89, 89, 89, 0.25);
+      background: #fff;
+
+      &_type_prev {
+        transform: rotate(-180deg);
+      }
     }
   }
 

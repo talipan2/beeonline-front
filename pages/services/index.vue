@@ -29,18 +29,21 @@
     </template>
     <template #content>
       <div class="new-service">
-        <CommonSelectableButtons :options="categoryList" v-model="filter.categories">
-          <div class="new-service__filters">
+        <CommonSelectableButtons :options="categoryList" v-model="filter.categories" mobileButtonText="Категории" :iconButton="clothes">
+          <div class="new-service__filters new-service__filter_type_desktop">
             <CatalogNewServiceFilter class="new-service__filter" @updateFilter="handleUpdateFilter" @resetFilter="handleResetFilter" :filter="filter"/>
             <UiButton type="button" class="new-service__btn" variant="default" :without-padding="true" @click="handleResetFilter">Сбросить фильтры</UiButton>
             <UiButton type="button" class="new-service__btn" variant="quinary" size="large" @click="handleUpdateFilter(filter)">Применить фильтры</UiButton>
+          </div>
+          <div class="new-service__filters new-service__filter_type_mobile">
+            <CatalogNewServiceFilter class="new-service__filter" @updateFilter="handleUpdateFilter" @resetFilter="handleResetFilter" :filter="filter"/>
           </div>
         </CommonSelectableButtons>
         <div ref="anchor">
           <CatalogNewService :servicesList="servicesList" :slider="true"/>
         </div>
         <CommonPagination 
-          v-if="page.lastPage > 1" 
+          v-if="page.lastPage > 1"
           :current-page="page.currentPage" 
           :total-pages="page.lastPage" 
           @changePage="handleChangePage" 
@@ -56,6 +59,7 @@
 <script setup>
 import { useEntityStore } from '~/store/entityStore';
 import { useSettingStore } from '~/store/settingStore';
+import clothes from '~/assets/svg/clothes.svg';
 
 useHead({
   title: 'Каталог услуг',
@@ -288,11 +292,40 @@ onMounted(() => {
 
   &__filter {
     margin-right: auto;
+
+    &_type_mobile {
+      display: none;
+    }
+
+    @include mobile {
+      &_type_mobile {
+        display: flex;
+        margin-bottom: 1.2em;
+      }
+
+      &_type_desktop {
+        display: none;
+      }
+    }
   }
 
   &__btn {
     font-size: 1.2em;
     text-transform: uppercase;
+    
+  }
+
+  @include mobile {
+    .selectable-buttons {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+
+      &__select-list {
+        flex: 1 1 100%;
+      }
+    }
   }
 }
 

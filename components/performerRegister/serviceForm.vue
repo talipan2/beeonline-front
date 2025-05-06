@@ -28,32 +28,28 @@
         :is-drop-down="true"
       />
     </div>
-    <div class="form-group form-group_type_secondary">
+    <div class="form-group form-group_type_secondary service-form__radio">
       <label class="form-group__title"> Партия </label>
-      <div class="form-group form-group__value">
-        <div class="form-group-data">
-          <UiInput
-            :rules="{ required: true }"
-            name="batch_max"
-            label="Партия"
-            v-model="service.batch_max"
-            class="form-group__value"
-            placeholder="От"
-            type="number"
-          />
-        </div>
-        <div class="form-group-data">
-          <UiInput
-            :rules="{ required: true }"
-            name="batch_min"
-            label="Партия"
-            v-model="service.batch_min"
-            class="form-group__value"
-            placeholder="До"
-            type="number"
-          />
-        </div>
-      </div>
+      <UiRadioButtonGroup 
+        class="form-group__value"
+        name="batch"
+        v-model="service.batch"
+        label="Партия"
+        :options="[
+          {
+            label: 'до 100',
+            value: 1,
+          },
+          {
+            label: 'от 100 до 1000',
+            value: 2,
+          },
+          {
+            label: 'от 1000',
+            value: 3,
+          },
+        ]"
+      />
     </div>
   </div>
 </template>
@@ -81,6 +77,7 @@ const category = computed(() => entityStore.entityData.categories);
 
 .service-form {
   &__category {
+    margin-bottom: 3.2em;
 
     .checkbox-group {
       display: flex;
@@ -93,6 +90,16 @@ const category = computed(() => entityStore.entityData.categories);
       font-weight: 500;
     }
   }
+
+  &__radio {
+    .form-group__value {
+      .radio-buttons__list {
+        flex-direction: column;
+      }
+    }
+  }
+
+
 
   @include mobile {
     .checkbox-group {
