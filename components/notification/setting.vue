@@ -3,7 +3,7 @@
     <h2 class="notification-setting__title">Настройка уведомлений</h2>
     <div class="notification-setting__list" v-if="notificationPreferences">
         <template v-for="type in notificationTypes">
-            <div class="notification-setting__container" v-if="!type.roles?.length || type.roles.includes(userStore.role)">
+            <div class="notification-setting__container" v-if="(!type.roles?.length || type.roles.includes(userStore.role)) && type.is_active">
                 <p class="notification-setting__text">{{ type.description }}</p>
                 <UiCheckboxGroup
                     class="notification-setting__checkbox"
@@ -34,10 +34,8 @@
 <script setup>
 import { useUserStore } from '~/store/userStore';
 import {useToast} from "vue-toastification";
-import { useSettingStore } from '~/store/settingStore';
 
 const userStore = useUserStore();
-const settingStore = useSettingStore();
 const toast = useToast();
 
 const loading = ref(false);
