@@ -17,13 +17,19 @@
         :completed-steps="completedSteps"
       />
       <UiForm :submit="handleSubmit">
-        <component :is="stepsConfig[currentStep].component" v-model="data" :title="stepsConfig[currentStep].title" :submitFunc="handleSubmit"/>
+        <component 
+          :is="stepsConfig[currentStep].component" 
+          v-model="stepsConfig[currentStep].props" 
+          :title="stepsConfig[currentStep].title"
+          :submitBtnText="stepsConfig[currentStep]?.submitBtnText"
+        />
         <div class="performer-register-layout__btn-container" v-if="stepsConfig[currentStep]?.type === 'pubCard'" >
           <UiButton v-if="stepsConfig[currentStep - 1]?.route" class="performer-register-layout__btn" variant="senary" size="large" :to="`/performer-register${stepsConfig[currentStep - 1].route}`">Назад</UiButton>
           <UiButton v-if="stepsConfig.length === currentStep + 1" type="submit" class="performer-register-layout__btn" variant="quinary" size="large">Сохранить данные</UiButton>
           <UiButton v-else type="submit" class="performer-register-layout__btn" variant="quinary" size="large">Сохранить и продолжить</UiButton>
         </div>
       </UiForm>
+    <ModalsReturnRegister />
     </template>
     <template #rightSide>
       <!-- <CommonNotify class="performer-register-layout__notify performer-register-layout__notify_type_desktop" text="текст уведомления" type="info" /> -->
@@ -36,17 +42,50 @@ import step1 from '~/components/register/step1.vue'
 import step2 from '~/components/performerRegister/step1.vue';
 import step3 from '~/components/performerRegister/step2.vue';
 import step4 from '~/components/performerRegister/step3.vue';
-
-const stepsConfig = [
-  {id: 1, title: 'Данные организации', route: '/step1', component: step1},
-  { id: 2, title: 'Карточка', route: '/step2', component: step2, type: 'pubCard' },
-  { id: 3, title: 'Услуги', route: '/step3', component: step3, type: 'pubCard' },
-  { id: 4, title: 'Галерея', route: '/step4', component: step4, type: 'pubCard' },
-]
-
+import { useSettingStore } from '~/store/settingStore';
+import { useUserStore } from '~/store/userStore';
+import { useOrganizationStore } from '~/store/organizationStore';
 
 const route = useRoute();
 const router = useRouter();
+const settingStore = useSettingStore();
+const userStore = useUserStore();
+const organizationStore = useOrganizationStore();
+
+const organizationData = ref({
+  countryId: 1,
+  selfEmployed: false,
+  inn: '',
+  kpp: '',
+  organizationForm: 3,
+  ogrn: '',
+  legalAddress: '',
+  registerAddress: '',
+  organizationName: '',
+  closedDocumentsEmail: '',
+  verificationFiles: [],
+});
+
+const pubCardData = ref({
+  name: '',
+  logo: '',
+  url_site: '',
+  description: '',
+  is_stm: null,
+  free_samples: [],
+  free_stock: null,
+  materials: [],
+  gallery: [],
+  workSpaces: [],
+  services: []
+})
+
+const stepsConfig = ref([
+  {id: 1, title: 'Данные организации', route: '/step1', component: step1, props: organizationData, submitBtnText: 'Сохранить и продолжить'},
+  { id: 2, title: 'Карточка', route: '/step2', component: step2, type: 'pubCard', props: pubCardData },
+  { id: 3, title: 'Услуги', route: '/step3', component: step3, type: 'pubCard', props: pubCardData },
+  { id: 4, title: 'Галерея', route: '/step4', component: step4, type: 'pubCard', props: pubCardData },
+])
 
 const data = ref({
   countryId: 1,
@@ -57,57 +96,65 @@ const data = ref({
   legalAddress: '',
   organizationName: '',
   name: '',
-  logo: {
-    url: 'https://api.bee-online.ru/storage/33105/photo_2024-12-29_01-07-06.jpg'
-  },
+  logo: '',
   url_site: '',
   description: '',
   is_stm: null,
   free_samples: [],
   free_stock: null,
   materials: [],
-  services: [
-    {
-      id: 11,
-      name: 'Пошив изделий',
-      product_categories: [
-        {
-          id: 2,
-          name: "\u0412\u0435\u0440\u0445\u043d\u044f\u044f \u043e\u0434\u0435\u0436\u0434\u0430"
-        },
-        {
-          id: 4,
-          name: "\u0411\u043b\u0443\u0437\u044b, \u043f\u043b\u0430\u0442\u044c\u044f, \u044e\u0431\u043a\u0438, \u0431\u0440\u044e\u043a\u0438, \u0438 \u0442.\u0434. \u0416\u0435\u043d."
-        },
-        {
-          id: 6,
-          name: "\u041a\u043e\u0441\u0442\u044e\u043c\u044b,  \u0440\u0443\u0431\u0430\u0448\u043a\u0438,  \u0441\u0432\u0438\u0442\u0435\u0440\u0430  \u0438 \u0434\u0440. \u041c\u0443\u0436."
-        },
-        {
-          id: 10,
-          name: "\u0421\u043f\u0435\u0446\u043e\u0434\u0435\u0436\u0434\u0430"
-        }
-      ],
-      batch_min: 10,
-      batch_max: 20
-    }
-  ]
+  gallery: [],
+  workSpaces: [],
+  services: []
 })
 
-const currentStep = computed(() => stepsConfig.findIndex(step => route.path.includes(step.route))) // Текущий активный шаг
+const currentStep = computed(() => stepsConfig.value.findIndex(step => route.path.includes(step.route))) // Текущий активный шаг
 const completedSteps = computed(() => [...Array(currentStep.value).keys()]); // Завершенные шаги
 
 const handleSubmit = (value, form) => {
-  console.log(value)
   switch (currentStep.value) {
-    case 0:
-      router.push('/performer-register/step2')
+    case 1:
+      organizationStore.createPerformerPubCard({
+        name: value.name,
+        description: value.description,
+        logo_media_id: "33533",
+        url_site: value.url_site,
+        free_samples: value.free_samples && value.free_samples || [],
+        materials_own: value.materials.includes(0) ? true : false,
+        materials_tolling: value.materials.includes(1) ? true : false,
+        is_stm: value.is_stm,
+        free_stock: value.free_stock,
+        cities: Array.isArray(value.selectedLocations?.cities) ? userStore.selectedLocations?.cities?.map(item => item.id) : [],
+      }, form).then(res => {
+        console.log(res)
+      })
       break;
     case 1:
-      router.push('/performer-register/step3')
+      // router.push('/performer-register/step4')
       break;
   }
 }
+
+onMounted(() => {
+  userStore.checkAuth().then(res => {
+    if(res && res.user) {
+      if(res.user.organization && res.user.organization.id) {
+        const userOrganization = res.user.organization;
+        organizationData.value.countryId = userOrganization.country_id
+        organizationData.value.selfEmployed = Boolean(userOrganization.is_foreigner)
+        organizationData.value.inn = userOrganization.inn
+        organizationData.value.organizationName = userOrganization.name
+        organizationData.value.companyName = userOrganization.name
+        organizationData.value.kpp = userOrganization.kpp
+        organizationData.value.ogrn = userOrganization.ogrn
+        organizationData.value.organizationForm = userOrganization.org_form,
+        organizationData.value.legalAddress = userOrganization.legal_address
+        organizationData.value.registerAddress = userOrganization.legal_address
+        organizationData.value.closedDocumentsEmail = userOrganization.email_docs
+      }
+    }
+  })
+})
 
 </script>
 
@@ -241,7 +288,7 @@ const handleSubmit = (value, form) => {
     }
 
     .form-group {
-      margin-bottom: 1.5em;
+      margin-bottom: 0;
       color: var(--text-color-primary);
 
 

@@ -19,8 +19,13 @@
           <p class="performer-register-step-three__gallery-text">Фотографии сделают вашу карточку более привлекательной для заказчика</p>
           <p class="performer-register-step-three__gallery-text">Рекомендуемый размер 300 x 340 px.</p>
         </template>
-        <CommonGalleryLoadSecondary v-if="gallery.length > 0" v-model="gallery" class="performer-register-step-three__gallery" :isPreview="isPreview"/>
-        <CommonAlerts v-else alert="Нет примеров работ" type="warning"/>
+        <CommonGalleryLoadSecondary 
+          v-model="gallery" 
+          class="performer-register-step-three__gallery" 
+          :isPreview="isPreview" 
+          @movingImage="(item) => handleMovingImage(item, 'workGallery')" 
+          moving-text='Переместить изображение в "Оборудование"'
+        />
       </div>
     </CommonLayoutInfoCard>
     <CommonLayoutInfoCard title="Оборудование" class="performer-register-step-three__layout">
@@ -42,12 +47,28 @@
           <p class="performer-register-step-three__gallery-text">Фотографии сделают вашу карточку более привлекательной для заказчика</p>
           <p class="performer-register-step-three__gallery-text">Рекомендуемый размер 300 x 340 px.</p>
         </template>
-        <CommonGalleryLoadSecondary v-if="workGallery.length > 0" v-model="workGallery" class="performer-register-step-three__gallery" :isPreview="isPreview"/>
-        <CommonAlerts v-else alert="Нет оборудования" type="warning"/>
+        <CommonGalleryLoadSecondary 
+          v-model="workGallery" 
+          class="performer-register-step-three__gallery" 
+          :isPreview="isPreview" 
+          @movingImage="(item) => handleMovingImage(item, 'gallery')"
+          moving-text='Переместить изображение в "Примеры работ"'
+        />
       </div>
     </CommonLayoutInfoCard>
     <ModalsRoundBorder :is-open="editGalleryModal" title="Редактирование: Примеры работ" @close="editGalleryModal = false" size="lg">
-      <CommonGalleryLoadSecondary v-model="gallery" class="performer-register-step-three__gallery"/>
+      <CommonGalleryLoadSecondary v-model="galleryDataFormModal" class="performer-register-step-three__gallery" @movingImage="(item) => handleMovingImageModal(item, 'workGallery')" />
+      <div class="performer-register-step-three__forward-container" v-if="forwardStatusWorkGalleryList.length > 0">
+        <h3>Изображения, перемещённые в раздел «Оборудование»</h3>
+        <div class="performer-register-step-three__forward-list">
+          <div class="performer-register-step-three__forward-item" v-for="item in forwardStatusWorkGalleryList" :key="item?.id">
+            <img :src="item.url" :alt="item.url">
+            <UiButton class="gallery-load-secondary__btn gallery-load-secondary__btn_type_delete" type="button" variant="default" :without-padding="true" @click="handleReturnImage(item, 'gallery')">
+                <SvgoClose class="svg-l"/>
+              </UiButton>
+          </div>
+        </div>
+    </div>
       <div class="performer-register-step-three__btn-container">
           <UiButton 
             class="performer-register-step-three__btn" 
@@ -64,6 +85,7 @@
             variant="quinary"
             size="large"
             class="performer-register-step-three__btn"
+            @click="handleSaveGalleryModal"
           >
             Сохранить изменения
           </UiButton>
@@ -71,7 +93,18 @@
         </div>
     </ModalsRoundBorder>
     <ModalsRoundBorder :is-open="editWorkGalleryModal" title="Редактирование: Оборудование" @close="editWorkGalleryModal = false" size="lg">
-      <CommonGalleryLoadSecondary v-model="workGallery" class="performer-register-step-three__gallery"/>
+      <CommonGalleryLoadSecondary v-model="workGalleryDataFormModal" class="performer-register-step-three__gallery" @movingImage="(item) => handleMovingImageModal(item, 'gallery')" />
+      <div class="performer-register-step-three__forward-container" v-if="forwardStatusGalleryList.length > 0">
+        <h3>Изображения перемещенные в "Примеры работ"</h3>
+        <div class="performer-register-step-three__forward-list">
+          <div class="performer-register-step-three__forward-item" v-for="item in forwardStatusGalleryList" :key="item?.id">
+            <img :src="item.url" :alt="item.url">
+            <UiButton class="gallery-load-secondary__btn gallery-load-secondary__btn_type_delete" type="button" variant="default" :without-padding="true" @click="handleReturnImage(item, 'workGallery')">
+              <SvgoClose class="svg-l"/>
+            </UiButton>
+          </div>
+        </div>
+      </div>
       <div class="performer-register-step-three__btn-container">
           <UiButton 
             class="performer-register-step-three__btn" 
@@ -89,6 +122,7 @@
             variant="quinary"
             size="large"
             class="performer-register-step-three__btn"
+            @click="handleSaveWorkGalleryModal"
           >
             Сохранить изменения
           </UiButton>
@@ -121,22 +155,89 @@ const gallery = computed({
   set: (value) => {
     emit('update:modelValue', {
       ...props.modelValue,
-      gallery: value
+      gallery: [...value],
     })
   }
 })
 
 const workGallery = computed({
-  get: () => props.modelValue.gallery,
+  get: () => props.modelValue.workSpaces,
   set: (value) => {
     emit('update:modelValue', {
       ...props.modelValue,
-      gallery: value
+      workSpaces: [...value]
     })
   }
 })
 
 
+const galleryDataFormModal = ref([]);
+const workGalleryDataFormModal = ref([]);
+
+const forwardStatusGalleryList = ref([]);
+const forwardStatusWorkGalleryList = ref([]);
+
+const handleMovingImage = (item, type) => {
+  if (!item?.id || !type) return;
+  
+  switch (type) {
+    case 'gallery':
+      gallery.value.push(item);
+      workGallery.value = workGallery.value.filter(el => Number(el.id) !== item?.id);
+      break;
+
+    case 'workGallery':     
+      workGallery.value.push(item);
+      gallery.value = gallery.value.filter(el => el.id !== item?.id);
+      break;
+  }
+};
+
+const handleMovingImageModal = (item, type) => {
+  if (!item?.id || !type) return;
+  
+  switch (type) {
+    case 'gallery':
+      forwardStatusGalleryList.value.push(item);
+      workGalleryDataFormModal.value = workGalleryDataFormModal.value.filter(el => Number(el.id) !== item?.id);
+      break;
+    case 'workGallery':
+      forwardStatusWorkGalleryList.value.push(item);
+      galleryDataFormModal.value = galleryDataFormModal.value.filter(el => el.id !== item?.id);
+      break;
+  }
+};
+
+const handleSaveGalleryModal = () => {
+  gallery.value = [...galleryDataFormModal.value];
+  editGalleryModal.value = false;
+}
+
+const handleSaveWorkGalleryModal = () => {
+  workGallery.value = [...workGalleryDataFormModal.value];
+  editWorkGalleryModal.value = false;
+}
+
+const handleReturnImage = (item, type) => {
+  switch (type) {
+    case 'gallery':
+      galleryDataFormModal.value.push(item);
+      forwardStatusWorkGalleryList.value = forwardStatusWorkGalleryList.value.filter(el => el.id !== item?.id);
+      break;
+
+    case 'workGallery':
+      workGalleryDataFormModal.value.push(item);
+      forwardStatusGalleryList.value = forwardStatusGalleryList.value.filter(el => el.id !== item?.id);
+  }
+}
+
+watch(() => gallery.value, (value) => {
+  galleryDataFormModal.value = [...value];
+}, { deep: true })
+
+watch(workGallery, (value) => {
+  workGalleryDataFormModal.value = [...value];
+}, { deep: true })
 
 </script>
 
@@ -206,6 +307,37 @@ const workGallery = computed({
           fill: var(--text-color-gray);
         }
       }
+    }
+  }
+
+  &__forward-container {
+    margin-top: 3.2em;
+
+    h3 {
+      font-size: 2em;
+      margin-bottom: .5em;
+    }
+  }
+
+  &__forward-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+  }
+
+  &__forward-item {
+    flex: 0 1 calc(18% - 1.6em);
+    aspect-ratio: 1 / 1;
+    position: relative;
+    background-color: transparent;
+    border-radius: 8px;
+    background-color: #F0F0F2;
+
+    img {
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+      object-fit: contain;
     }
   }
 }

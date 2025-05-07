@@ -10,9 +10,9 @@
           <UiButton class="load-image-secondary__btn load-image-secondary__btn_type_delete" type="button" variant="default" :without-padding="true" @click="handleDeleteImage">
             <SvgoClose class="svg-l"/>
           </UiButton>
-          <UiButton class="load-image-secondary__btn load-image-secondary__btn_type_setting" type="button" variant="default" :without-padding="true" @click="settingModal = true">
+          <!-- <UiButton class="load-image-secondary__btn load-image-secondary__btn_type_setting" type="button" variant="default" :without-padding="true" @click="settingModal = true">
             <SvgoSetting class="svg-l"/>
-          </UiButton>
+          </UiButton> -->
         </template>
         <div v-else class="load-image-secondary__loader">
           <input type="file" name="logo" accept=".jpeg, .png, .jpg, .gif" @change="onFileChange">
@@ -180,6 +180,10 @@ watch(() => props.modelValue, (newVal) => {
       cursor: pointer;
     }
 
+    img {
+      height: 100%;
+      object-fit: contain;
+    }
     
   }
 

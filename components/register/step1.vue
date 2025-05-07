@@ -251,18 +251,20 @@
             />
           </div>
         </div>
-        <label class="form-group__title">
-          Почта для закрывающих документов
-          <UiInput
-            :rules="{email: true}"
-            name="email_docs"
-            label="Почта для закрывающих документов"
-            class="form-group__value"
-            type="text"
-            placeholder=""
-            v-model="data.closedDocumentsEmail"
-          />
-        </label>
+        <div class="form-group">
+          <label class="form-group__title">
+            Почта для закрывающих документов
+            <UiInput
+              :rules="{email: true}"
+              name="email_docs"
+              label="Почта для закрывающих документов"
+              class="form-group__value"
+              type="text"
+              placeholder=""
+              v-model="data.closedDocumentsEmail"
+            />
+          </label>
+        </div>
       </div>
 
       <div class="register__btn-container">
@@ -280,7 +282,7 @@
           variant="quinary"
           size="large"
           @click="handleClick(false)"
-          >Далее
+          >{{submitBtnText || 'Далее'}}
           <SvgoBtnArrow class="svg-lx" />
         </UiButton>
       </div>
@@ -308,6 +310,10 @@ const props = defineProps({
   title: {
     type: String,
     default: "Данные организации",
+  },
+  submitBtnText: {
+    type: String,
+    default: '',
   }
 });
 
@@ -402,10 +408,16 @@ const handleSubmit = async (value, form) => {
     }, form).then((res) => {
       if(res.data) {
         userStore.userOrganization = res.data;
+
         if(userStore.userData && userStore.userData.organization) {
           userStore.userData.organization = res.data;
         }
-        router.push("/register/step2");
+
+        if(userStore.role == 'performer') {
+          router.push("/performer-register/step2");
+        } else {
+          router.push("/register/step2");
+        }
       }
     })
 
@@ -421,14 +433,22 @@ const handleSubmit = async (value, form) => {
     .then((res) => {
       if (res.data && res.data.id) {
         userStore.userData.organization_id = res.data.id;
+
         if(data.value.verificationFiles && data.value.verificationFiles.length > 0) {
           organizationStore.setVerificationDocuments(res.data.id, data.value.verificationFiles)
         }
+
         userStore.userOrganization = res.data;
+
         if(userStore.userData && userStore.userData.organization) {
           userStore.userData.organization = res.data;
         }
-        router.push("/register/step2");
+        
+        if(userStore.role == 'performer') {
+          router.push("/performer-register/step2");
+        } else {
+          router.push("/register/step2");
+        }
       }
     })
   }

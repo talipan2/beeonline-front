@@ -330,5 +330,16 @@ export const useOrganizationStore = defineStore('organization', {
         throw error;
       }
     },
+
+    async createPerformerPubCard(data, form) {
+      try {
+        const response = await Api.createPerformerPubCard(data, form);
+        if(response.data) {
+          return response.data;
+        }
+      } catch (error) {
+        throw error;
+      }
+    }
   }
 })

@@ -33,12 +33,17 @@ const props = defineProps({
     type: String,
     default: 'primary',
     validator: value => ['primary', 'error', 'success', 'warning'].includes(value),
+  },
+  borderRadius: {
+    type: Boolean,
+    default: false
   }
 })
 
 const alertClass = computed(() => {
   return [
     `alerts-${props.type}`,
+    {'alerts-rounded': props.borderRadius}
   ];
 });
 
@@ -59,6 +64,10 @@ const alertClass = computed(() => {
   &__text {
     font-size: 1.6em;
     margin-bottom: 0;
+  }
+
+  &-rounded {
+    border-radius: 8px;
   }
 }
 

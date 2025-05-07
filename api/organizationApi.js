@@ -146,4 +146,10 @@ export default {
   async getEmployeePermissions() {
     return axios.get(`permissions`)
   },
+
+
+  // создание пубкарты исполнителя
+  async createPerformerPubCard(data, form) {
+    return useApi().post(`pubcards/performer`, data, form)
+  }
 }

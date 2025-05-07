@@ -31,6 +31,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
   const availableLinkList = [
     '/register',
+    '/performer-register',
     '/orders/create',
     '/support',
     '/deals',
@@ -52,8 +53,10 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     '/news',
   ]
 
+  // переход к созданию организации у заказчика
   if(userStore.isAuth && 
-    userStore.userData.id && 
+    userStore.userData.id &&
+    userStore.role === 'customer' &&
     !userStore.userData?.organization_id && 
     to.path !== '/register/step1' &&  
     settingStore.isCreateOrder === false && 
@@ -63,6 +66,20 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     return navigateTo({path: '/register/step1'})
   }
 
+  // переход к созданию организации у исполнителя
+  if(
+    userStore.isAuth &&
+    userStore.userData.id &&
+    userStore.role === 'performer' &&
+    !userStore.userData?.organization_id &&
+    to.path !== '/performer-register/step1' &&
+    !availableLinkList.some((item) => to.path.startsWith(item)) &&
+    to.path !== '/'
+  ) {
+    return navigateTo({path: '/performer-register/step1'})
+  }
+
+  // Список ссылок которые не должны быть закрытым, но на которых есть модальное окно с запросом подтверждения
   const showModalLinks = [
     '/support',
     '/services',
@@ -89,7 +106,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   ]
 
   // подтверждение перехода
-  if(from.path.startsWith('/register/step') && 
+  if((from.path.startsWith('/register/step') || from.path.startsWith('/performer-register/step')) && 
     to.path !== from.path && 
     (showModalLinks.some((item) => to.path.startsWith(item)) || to.path === '/') &&
     !settingStore.registerRedirectConfirm
@@ -100,10 +117,10 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     return abortNavigation()
   }
 
+  // переход к созданию публичной карты у заказчика
   if (
     userStore.isAuth &&
-    (userStore.role === 'customer' ||
-    userStore.role === 'performer') &&
+    userStore.role === 'customer' &&
     userStore.userData.id &&
     userStore.userData?.organization_id &&
     !availableLinkList.some((item) => to.path.startsWith(item)) &&
@@ -125,4 +142,26 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       return navigateTo({ path: "/register/step4" });
     }
   }
+
+    // переход к созданию публичной карты у исполнителя
+    if (
+      userStore.isAuth &&
+      userStore.role === 'performer' &&
+      userStore.userData.id &&
+      userStore.userData?.organization_id &&
+      !availableLinkList.some((item) => to.path.startsWith(item)) &&
+      to.path !== '/' && 
+      userStore.userData?.public_cards 
+    ) {
+      const publicCards = userStore.userData.public_cards || []
+      const firstCard = publicCards[0];
+  
+      if(firstCard && firstCard?.status_code !== 'DRAFT'){
+        return
+      }
+  
+      if(!firstCard) {
+        return navigateTo({ path: "/performer-register/step2" });
+      }
+    }
 })

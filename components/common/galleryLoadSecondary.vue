@@ -2,56 +2,62 @@
   <div class="gallery-load-secondary">
     <template v-if="isPreview">
       <div class="gallery-load-secondary__wrapper gallery-load-secondary__wrapper_type_preview">
-        <div class="gallery-load-secondary__item-container" v-for="element in localModelValue" :key="element.id">
-              <div class="gallery-load-secondary__item" :key="element.id">
-                <a :href="element.url" data-fancybox="gallery">
-                  <UiImage 
-                    :src="element.croppedUrl || element.url" 
-                    alt="Фотография" 
-                    class="gallery-load-secondary__image" 
-                    :external="true"
-                  />
-                </a>
+        <template v-if="localModelValue.length > 0">
+          <div class="gallery-load-secondary__item-container" v-for="element in localModelValue" :key="element.id">
+                <div class="gallery-load-secondary__item" :key="element.id">
+                  <a :href="element.url" data-fancybox="gallery">
+                    <UiImage 
+                      :src="element.croppedUrl || element.url" 
+                      alt="Фотография" 
+                      class="gallery-load-secondary__image" 
+                      :external="true"
+                    />
+                  </a>
+              </div>
             </div>
-          </div>
+        </template>
+        <CommonAlerts v-else alert="Нет загруженных изображений" type="warning" border-radius/>
       </div>
       <div class="gallery-load-secondary__slider-wrapper">
-        <Swiper
-          :slidesPerView="1"
-          :spaceBetween="20"
-          class="gallery-load-secondary__slider"
-          :modules="modules"
-          :breakpoints="{
-            512: {
-              slidesPerView: 1.5,
-            }
-          }"
-          @swiper="setSwiperInstance"
-        >
-          <SwiperSlide v-for="(image, index) in localModelValue" :key="index" class="gallery-load-secondary__slide">
-            <a :href="image.url" class="" data-fancybox="gallery">
-              <img :src="image.url" class="gallery-load-secondary__image" :alt="image" />
-            </a>
-          </SwiperSlide>
-        </Swiper>
-        <div class="gallery-load-secondary__slider-navigation">
-            <UiButton
-              type="button"
-              class="gallery-load-secondary__slider-btn gallery-load-secondary__slider-btn_type_prev"
-              variant="secondary"
-              @click="slidePrev"
-            >
-              <SvgoSlideArrow class="svg-l" />
-            </UiButton>
-            <UiButton
-              type="button"
-              class="gallery-load-secondary__slider-btn gallery-load-secondary__slider-btn_type_next"
-              variant="secondary"
-              @click="slideNext"
-            >
-              <SvgoSlideArrow class="svg-l" />
-            </UiButton>
-          </div>
+        <template v-if="localModelValue.length > 0">
+          <Swiper
+            :slidesPerView="1"
+            :spaceBetween="20"
+            class="gallery-load-secondary__slider"
+            :modules="modules"
+            :breakpoints="{
+              512: {
+                slidesPerView: 1.5,
+              }
+            }"
+            @swiper="setSwiperInstance"
+          >
+            <SwiperSlide v-for="(image, index) in localModelValue" :key="index" class="gallery-load-secondary__slide">
+              <a :href="image.url" class="" data-fancybox="gallery">
+                <img :src="image.url" class="gallery-load-secondary__image" :alt="image" />
+              </a>
+            </SwiperSlide>
+          </Swiper>
+          <div class="gallery-load-secondary__slider-navigation">
+              <UiButton
+                type="button"
+                class="gallery-load-secondary__slider-btn gallery-load-secondary__slider-btn_type_prev"
+                variant="secondary"
+                @click="slidePrev"
+              >
+                <SvgoSlideArrow class="svg-l" />
+              </UiButton>
+              <UiButton
+                type="button"
+                class="gallery-load-secondary__slider-btn gallery-load-secondary__slider-btn_type_next"
+                variant="secondary"
+                @click="slideNext"
+              >
+                <SvgoSlideArrow class="svg-l" />
+              </UiButton>
+            </div>
+        </template>
+        <CommonAlerts v-else alert="Нет загруженных изображений" type="warning" border-radius/>
       </div>
     </template>
     <template v-else>
@@ -91,9 +97,17 @@
               <UiButton class="gallery-load-secondary__btn gallery-load-secondary__btn_type_delete" type="button" variant="default" :without-padding="true" @click="handleDeleteImage(element.id)">
                 <SvgoClose class="svg-l"/>
               </UiButton>
-              <UiButton class="gallery-load-secondary__btn gallery-load-secondary__btn_type_setting" type="button" variant="default" :without-padding="true" @click="handleOpenSettingModal(element.id)">
-                <SvgoSetting class="svg-l"/>
-              </UiButton>
+              <UiNewDropdown placement="top" :arrow="false" class="gallery-load-secondary__btn gallery-load-secondary__btn_type_setting" :offset="[0, 10]">
+                <UiButton class="gallery-load-secondary__tippy-btn" type="button" variant="default" :without-padding="true">
+                  <SvgoSetting class="svg-l"/>
+                </UiButton>
+                <template #content>
+                  <div class="gallery-load-secondary__tippy-container">
+                    <UiButton class="gallery-load-secondary__tippy-item" type="button" variant="default" :without-padding="true" @click="handleOpenSettingModal(element.id)">Изменить размер изображения</UiButton>
+                    <UiButton class="gallery-load-secondary__tippy-item" type="button" variant="default" :without-padding="true" @click="handleMovingForGroup(element)">{{ movingText }}</UiButton>
+                  </div>
+                </template>
+              </UiNewDropdown>
             </div>
           </div>
         </template>
@@ -152,6 +166,10 @@ const props = defineProps({
   isPreview: {
     type: Boolean,
     default: false
+  },
+  movingText: {
+    type: String,
+    default: 'Переместить',
   }
 })
 
@@ -172,7 +190,7 @@ const stencilProps = {
 }
 
 const userStore = useUserStore();
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue', 'movingImage']);
 const progress = ref(0);
 
 const settingStore = useSettingStore();
@@ -238,6 +256,10 @@ const handleOpenSettingModal = (id) => {
   settingModal.value = true;
 }
 
+const handleMovingForGroup = (item) => {
+  emit('movingImage', item)
+}
+
 const setSwiperInstance = (swiper) => {
   swiperInstance.value = swiper
 }
@@ -273,7 +295,7 @@ const slideNext = () => {
     flex: 0 1 calc(25% - 1.6em);
     aspect-ratio: 1 / 1;
     position: relative;
-    overflow: hidden;
+    // overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -312,6 +334,13 @@ const slideNext = () => {
     width: auto !important;
   }
 
+  &__tippy-btn {
+    width: 2.4em;
+    height: 2.4em;
+    box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.1);
+    background: #fff;
+  }
+
   &__btn {
     position: absolute;
     width: 2.4em;
@@ -345,6 +374,7 @@ const slideNext = () => {
     &_type_setting {
       top: 1em;
       left: 1em;
+      background-color: transparent;
 
       svg {
         path {
@@ -374,13 +404,26 @@ const slideNext = () => {
     background-color: transparent;
   }
 
+  &__tippy-item {
+    font-size: 1em;
+    text-transform: none;
+  }
+
+  &__tippy-container {
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    row-gap: .5em;
+    align-items: flex-start;
+  }
+
   &__item-container {
     flex: 0 1 calc(25% - 1.6em);
     aspect-ratio: 1 / 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
+    // overflow: hidden;
     position: relative;
     // background: #f0f0f2;
     background-color: transparent;
@@ -412,12 +455,13 @@ const slideNext = () => {
 
   &__item {
     position: relative;
-    overflow: hidden;
+    // overflow: hidden;
     max-height: 100%;
     aspect-ratio: 1;
     cursor: pointer;
     width: 100%;
     height: 100%;
+    border-radius: 8px;
 
     a {
       position: absolute;
@@ -437,6 +481,7 @@ const slideNext = () => {
     img {
       height: 100%;
       object-fit: cover;
+      border-radius: 8px;
     }
   }
 
@@ -516,62 +561,9 @@ const slideNext = () => {
   }
 }
 
-
-/* Состояние при перетаскивании */
-.gallery-load-secondary__item.sortable-chosen {
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(105, 55, 165, 0.2);
-  z-index: 10;
-  opacity: 0.9;
-}
-
-/* Место, куда можно поместить элемент */
-.gallery-load-secondary__item.sortable-ghost {
-  background: rgba(105, 55, 165, 0.1);
-  border: 2px dashed #6937a5;
-  opacity: 0.6;
-}
-
-.gallery-load-secondary__item{
+.gallery-load-secondary__item {
   transition: transform .3s cubic-bezier(.65,-0.04,.41,.77), box-shadow .3s cubic-bezier(.65,-0.04,.41,.77);
-
 }
 
-
-/* Анимация кнопок */
-.gallery-load-secondary__btn {
-  transition: all 0.2s ease;
-  opacity: 0.8;
-}
-
-.gallery-load-secondary__item:hover .gallery-load-secondary__btn {
-  opacity: 1;
-  transform: scale(1.1);
-}
-
-@keyframes subtlePulse {
-  0%, 100% { opacity: 0.95; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.02); }
-}
-
-/* Плавное появление новых элементов */
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.gallery-load-secondary__item-enter {
-  animation: fadeInUp 0.4s ease-out;
-}
-
-/* Плавное исчезновение элементов */
-@keyframes fadeOut {
-  from { opacity: 1; }
-  to { opacity: 0; }
-}
-
-.gallery-load-secondary__item-leave {
-  animation: fadeOut 0.3s ease-in;
-}
 
 </style>

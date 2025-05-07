@@ -239,7 +239,11 @@ label:active {
   }
 
   &_type_secondary {
-    margin-bottom: 3.2em;
+    margin-bottom: 1.5em;
+
+    &-value {
+      margin-bottom: 3.2em;
+    }
 
     .form-group__title {
       display: flex;

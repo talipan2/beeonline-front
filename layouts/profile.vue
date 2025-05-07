@@ -1,5 +1,5 @@
 <template>
-  <section class="profile container" :class="[className, { 'profile_type_performer': role === 'performer' }]">
+  <section class="profile container" :class="[className]">
     <slot name="header" />
     <h1 class="profile__title">{{ title }}</h1>
     <div class="profile__container" :class="{ 'profile__container_type_second': !$slots.rightSide }">

@@ -74,7 +74,7 @@
       </UiButton>
     </template>
     <template v-if="isPreview">
-      <CommonAlerts :alert="'Услуг нет'" type="warning" v-if="!modelValue.services?.length" />
+      <CommonAlerts :alert="'Услуг нет'" type="warning" v-if="!modelValue.services?.length" border-radius/>
       <UiButton
         v-if="modelValue.services?.length === 0"
         type="button"

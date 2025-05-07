@@ -56,6 +56,10 @@ watch(isOpenModal, (newVal) => {
     padding: 2.4em 3.2em;
   }
 
+  .modal-body {
+    padding-top: 0 !important;
+  }
+
   &__footer {
     @include mobile {
       display: flex;

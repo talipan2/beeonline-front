@@ -22,7 +22,7 @@
       <CommonTooltip text="Допустимы изображения размером до 5Мб" />
     </label>
     <UiInput
-      :rules="{ required: true, url: true }"
+      :rules="{ url: true }"
       name="site_url"
       label="Ссылка на сайт"
       v-model="modelValue.site_url"
