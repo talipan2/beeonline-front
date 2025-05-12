@@ -151,5 +151,18 @@ export default {
   // создание пубкарты исполнителя
   async createPerformerPubCard(data, form) {
     return useApi().post(`pubcards/performer`, data, form)
+  },
+  
+  // редактирование пубкарты исполнителя
+  async editPerformerPubCard(data, form) {
+    return useApi().patch(`pubcards/performer`, data, form)
+  },
+
+  async deletePubCardLogo(id) {
+    return axios.delete(`pubcards/${id}/delete-logo`)
+  },
+
+  async setPubCardsGallery (data) {
+    return axios.patch('pubcards/performer/galleries', data)
   }
 }

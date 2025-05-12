@@ -1,5 +1,5 @@
 <template>
-  <div class="service-form">
+  <div class="service-form" :class="{'loading': !isLoaded}">
     <div class="form-group form-group_type_secondary">
       <label class="form-group__title">
         Название компании
@@ -35,20 +35,9 @@
         name="batch"
         v-model="service.batch"
         label="Партия"
-        :options="[
-          {
-            label: 'до 100',
-            value: 1,
-          },
-          {
-            label: 'от 100 до 1000',
-            value: 2,
-          },
-          {
-            label: 'от 1000',
-            value: 3,
-          },
-        ]"
+        :options="batchList"
+        return-number
+        :rules="{ required: true }"
       />
     </div>
   </div>
@@ -62,6 +51,7 @@ const props = defineProps({
   service: {
     type: Object,
     default: () => ({}),
+    modelValue: {},
   },
 });
 
@@ -69,7 +59,16 @@ const entityStore = useEntityStore();
 
 const category = computed(() => entityStore.entityData.categories);
 
+const batchList = computed(() => entityStore.entityData.serviceBatch)
 
+const isLoaded = ref(true)
+
+onMounted(() => {
+  if(entityStore.entityData.serviceBatch.length === 0) {
+    isLoaded.value = false
+    entityStore.getBatches().then(() => {}).finally(() => isLoaded.value = true)
+  }
+})
 </script>
 
 

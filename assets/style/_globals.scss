@@ -296,11 +296,14 @@ label:active {
     }
 
     .form-group-data {
-      margin: 0;
       .form-group__title {
         font-size: 1.4rem;
         font-weight: 400;
         color: #868695;
+      }
+
+      &_type_value {
+        margin-bottom: 0;
       }
     }
 

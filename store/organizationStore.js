@@ -331,9 +331,45 @@ export const useOrganizationStore = defineStore('organization', {
       }
     },
 
+    // создание пубкарты исполнителя
     async createPerformerPubCard(data, form) {
       try {
         const response = await Api.createPerformerPubCard(data, form);
+        if(response.data) {
+          return response.data;
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    // редактирование пубкарты исполнителя
+    async editPerformerPubCard(data, form) {
+      try {
+        const response = await Api.editPerformerPubCard(data, form);
+        if(response.data) {
+          return response.data;
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    async deletePubCardLogo(id) {
+      try {
+        const response = await Api.deletePubCardLogo(id);
+        if(response.data) {
+          return response.data;
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    async setPubCardsGallery(data) {
+      console.log(data)
+      try {
+        const response = await Api.setPubCardsGallery(data);
         if(response.data) {
           return response.data;
         }

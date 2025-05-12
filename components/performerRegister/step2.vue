@@ -1,5 +1,5 @@
 <template>
-  <CommonLayoutInfoCard title="Услуги" class="new-service-card-layout">
+  <CommonLayoutInfoCard title="Услуги" class="new-service-card-layout" :class="{'loading' : !isLoaded}">
     <template v-if="modelValue.services?.length > 0">
       <div class="new-service-card-layout__service-list">
         <div class="new-service-card-layout__service" v-for="item in modelValue.services" :key="item">
@@ -39,12 +39,13 @@
                 Партия
               </label>
               <div class="form-group__value">
-                <div class="form-value">{{ entityStore.getEntityLabelById('serviceBatch', item.batch) || '-' }}</div>
+                <div class="form-value">{{ item.batch?.map(batch => batch.name).join(' / ') || '' }}</div>
               </div>
             </div>
           </div>
         </div>
       </div>
+      <CommonPagination v-if="page.last_page > 1" :current-page="page.current_page" :total-pages="page.last_page" btn-type="square"/>
     </template>
     <template v-if="!isPreview">
       <UiForm :submit="handleCreateService">
@@ -96,11 +97,10 @@
         Добавить еще услугу
       </UiButton>
     </template>
-
     <ModalsRoundBorder :is-open="editServiceModal" title="Редактирование услуги" @close="editServiceModal = false" size="lg" class="service-modal">
       <UiForm :submit="(values, form) => handleUpdateService(values, form, editServiceData)" class="service-modal__form">
         <PerformerRegisterServiceForm :service="editServiceData" />
-        <UiButton class="new-service-card-layout__remove-service" type="button" variant="default" without-padding @click="handleDeleteService(editServiceData.id)">
+        <UiButton class="new-service-card-layout__remove-service" type="button" variant="default" without-padding @click="handleDeleteService(editServiceData)">
           <SvgoDelete class="svg-m" />
           Удалить услугу
         </UiButton>
@@ -133,7 +133,7 @@
             Добавить услугу
           </UiButton>
         </div>
-    </UiForm>
+      </UiForm>
     </ModalsRoundBorder>
     <ConfirmModal />
   </CommonLayoutInfoCard>
@@ -142,6 +142,7 @@
 <script setup>
 import { useEntityStore } from '~/store/entityStore';
 import { useToast } from 'vue-toastification';
+import { useUserStore } from '~/store/userStore';
 
 const props = defineProps({
   modelValue: {
@@ -153,9 +154,15 @@ const props = defineProps({
   }
 });
 
+const page = ref({
+  current_page: 1,
+  last_page: 1
+})
+
 const emit = defineEmits(['update:modelValue']);
 const {ConfirmModal, confirm} = useConfirmModal();
 const toast = useToast();
+const userStore = useUserStore();
 
 const entityStore = useEntityStore();
 const isCreateService = ref(false);
@@ -168,35 +175,73 @@ const handleOpenAddService = () => {
 }
 
 const handleEditService = (item) => {
-  editServiceData.value = {...item, category: item.product_categories ? item.product_categories.map(i => i.id) : []};
+  editServiceData.value = {...item, category: item.product_categories ? item.product_categories.map(i => i.id) : [], batch: item.batch[0].id ? item.batch[0].id : ''};
   editServiceModal.value = true;
 }
 
+const generateTempId = () => {
+  return 'temp_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+};
 
 // Создание услуги
 const handleCreateService = (value, form) => {
-  emit('update:modelValue', {...props.modelValue, services: [...props.modelValue.services, {
-    id: props.modelValue.services.length + 1,
-    name: value.name,
-    batch: value.batch,
-    product_categories: value.category.map(id => ({id: id, name:entityStore.getEntityLabelById('categories', id)}))
-  }]});
-  addNewServiceModal.value = false;
-  toast.success('Услуга отправлена на модерацию');
-  form.resetForm();
+  console.log(value)
+  // Создание услуги через модалку на странице профиля, нужен пропс isPreview=true!!!!!!!
+  if(props.isPreview) {
+    entityStore.editPerformerService({
+      services: [{
+        name: value.name,
+        batch_id: value.batch,
+        product_category_ids: value.category
+      }]
+    }, form).then(res => {
+        if(res && res.services) {
+
+          emit('update:modelValue', {...props.modelValue, services: [{
+            name: value.name,
+            batch: [{id: value.batch, name:entityStore.getEntityLabelById('serviceBatch', value.batch)}],
+            product_categories: value.category.map(id => ({id: id, name:entityStore.getEntityLabelById('categories', id)})),
+          }, ...props.modelValue.services]})
+
+          addNewServiceModal.value = false;
+          toast.success('Услуга отправлена на модерацию');
+          form.resetForm();
+        }
+      })
+  } else {
+    // Создание услуги при регистрации
+    emit('update:modelValue', {...props.modelValue, services: [...props.modelValue.services, {
+      id: generateTempId(),
+      name: value.name,
+      batch: [{id: value.batch, name:entityStore.getEntityLabelById('serviceBatch', value.batch)}],
+      product_categories: value.category.map(id => ({id: id, name:entityStore.getEntityLabelById('categories', id)})),
+      isLocal: true,
+    }]});
+    addNewServiceModal.value = false;
+    toast.success('Услуга отправлена на модерацию');
+    form.resetForm();
+  }
 }
 
 // Удаление услуги
-const handleDeleteService = (id) => {
+const handleDeleteService = (service) => {
   confirm({
     title: 'Удаление услуги',
     message: 'Вы уверены, что хотите удалить услугу? Данные этой  услуги не сохранятся',
     confirmText: 'Удалить',
     cancelText: 'Отменить',
     onConfirm: () => {
-      emit('update:modelValue', {...props.modelValue, services: props.modelValue.services.filter(item => item.id !== id)});
-      editServiceModal.value = false;
-      toast.warning('Услуга удалена');
+      if(service.isLocal) {
+        emit('update:modelValue', {...props.modelValue, services: props.modelValue.services.filter(item => item.id !== service.id)});
+        editServiceModal.value = false;
+        toast.warning('Услуга удалена');
+      } else {
+        entityStore.deleteService(service.id).then(res => {
+          emit('update:modelValue', {...props.modelValue, services: props.modelValue.services.filter(item => item.id !== service.id)});
+          toast.warning('Услуга удалена');
+          editServiceModal.value = false;
+        })
+      }
     },
     onCancel: () => {
     }
@@ -210,7 +255,7 @@ const handleUpdateService = (value, form, item) => {
   services[index] = {
     ...item,
     name: value.name,
-    batch: value.batch,
+    batch: [{id: value.batch, name:entityStore.getEntityLabelById('serviceBatch', value.batch)}],
     product_categories: value.category.map(id => ({ id: id, name: entityStore.getEntityLabelById('categories', id) }))
   };
   emit('update:modelValue', { ...props.modelValue, services: services });
@@ -219,6 +264,23 @@ const handleUpdateService = (value, form, item) => {
   form.resetForm();
 }
 
+const isLoaded = ref(false);
+
+onMounted(async () => {
+  try {
+    const res = await entityStore.getSelfServices(userStore.userData?.organization_id);
+    if (res?.services) {
+      emit('update:modelValue', {...props.modelValue, services: [...res.services.map(item => ({...item, batch: item.batches}))]});
+    }
+    if(res?.pagination) {
+      page.value = res.pagination;
+    }
+  } catch (error) {
+    console.error(error);
+  } finally {
+    isLoaded.value = true;
+  }
+});
 </script>
 
 <style lang="scss">
@@ -291,7 +353,6 @@ const handleUpdateService = (value, form, item) => {
     column-gap: .5em;
     margin-bottom: 2em;
     line-height: 2em;
-    margin-top: -3em;
     margin-right: auto;
 
     svg {

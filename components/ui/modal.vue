@@ -127,6 +127,7 @@
     const modalHeader = ref(null)
     const modalBody = ref(null)
     const headerHeight = ref(0)
+    const isMobile = ref(false)
 
     // Вычисляемый класс для контента модалки
     const contentClass = computed(() => {
@@ -143,13 +144,20 @@
         if (props.fixedHeader && modalHeader.value) {
             headerHeight.value = modalHeader.value.getBoundingClientRect().height
             applyContentPadding()
+            if(window.innerWidth < 768) {
+                isMobile.value = true;
+            } else {
+                isMobile.value = false;
+            }
         }
     }
 
     // Установка padding-top для контента
     const applyContentPadding = () => {
-        if (modalBody.value) {
+        if (modalBody.value && props.fixedHeader && isMobile.value) {
             modalBody.value.style.paddingTop = `${headerHeight.value}px`
+        }else {
+            modalBody.value.style.paddingTop = '0px'
         }
     }
 
@@ -165,6 +173,7 @@
     onMounted(async() => {
         if (props.fixedHeader) {
             window.addEventListener('resize', handleResize)
+            handleResize();
         }
     })
 

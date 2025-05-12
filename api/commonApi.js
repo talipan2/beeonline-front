@@ -13,6 +13,10 @@ export default {
     return axios.get(`product-categories`)
   },
 
+  async getBatchSizes() {
+    return axios.get(`batches`)
+  },
+
   async getBonuses(organizationId, { type }) {
     const params = {
       ...(type ? { type } : {}),
