@@ -24,6 +24,7 @@
           class="catalog__banner-btn catalog__banner-btn_type_prev"
           variant="secondary"
           @click="slidePrev"
+          :disabled="isBeginning"
         >
           <SvgoSlideArrow class="svg-l" />
         </UiButton>
@@ -32,6 +33,7 @@
           class="catalog__banner-btn catalog__banner-btn_type_next"
           variant="secondary"
           @click="slideNext"
+          :disabled="isEnd"
         >
           <SvgoSlideArrow class="svg-l" />
         </UiButton>
@@ -68,6 +70,9 @@ const breakpoints = ref({
   1200: { slidesPerView: 1, spaceBetween: 34 }
 })
 
+const isBeginning = ref(true);
+const isEnd = ref(false);
+
 const setSwiperInstance = (swiper) => {
   swiperInstance.value = swiper
 }
@@ -96,7 +101,7 @@ const loadData = async () => {
   }
 }
 
-const handleSlideChange = () => {
+const handleSlideChange = (swiper) => {
   if (!swiperInstance.value || !paginationMeta.value) return
   
   const currentIndex = swiperInstance.value.activeIndex
@@ -108,7 +113,14 @@ const handleSlideChange = () => {
       paginationMeta.value.current_page < paginationMeta.value.last_page) {
     loadData()
   }
+
+  updateNavigationState(swiper);
 }
+
+const updateNavigationState = (swiper) => {
+  isBeginning.value = swiper.isBeginning;
+  isEnd.value = swiper.isEnd;
+};
 
 const slidePrev = () => {
   if (swiperInstance.value) {

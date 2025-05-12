@@ -30,14 +30,24 @@
     <template #content>
       <div class="new-service">
         <CommonSelectableButtons :options="categoryList" v-model="filter.categories" mobileButtonText="Категории" :iconButton="clothes">
-          <div class="new-service__filters new-service__filter_type_desktop">
+          <div class="new-service__filters" :class="isMobile ? 'new-service__filter_type_mobile' : 'new-service__filter_type_desktop'">
             <CatalogNewServiceFilter class="new-service__filter" @updateFilter="handleUpdateFilter" @resetFilter="handleResetFilter" :filter="filter"/>
-            <UiButton type="button" class="new-service__btn" variant="default" :without-padding="true" @click="handleResetFilter">Сбросить фильтры</UiButton>
-            <UiButton type="button" class="new-service__btn" variant="quinary" size="large" @click="handleUpdateFilter(filter)">Применить фильтры</UiButton>
+            <template v-if="!isMobile">
+              <UiButton type="button" class="new-service__btn" variant="default" :without-padding="true" @click="handleResetFilter">Сбросить фильтры</UiButton>
+              <UiButton type="button" class="new-service__btn" variant="quinary" size="large" @click="handleUpdateFilter(filter)">Применить фильтры</UiButton>
+            </template>
           </div>
-          <div class="new-service__filters new-service__filter_type_mobile">
-            <CatalogNewServiceFilter class="new-service__filter" @updateFilter="handleUpdateFilter" @resetFilter="handleResetFilter" :filter="filter"/>
-          </div>
+          <template v-if="isMobile">
+            <UiButton 
+              type="button" 
+              class="new-service__btn new-service__reset-filter-btn" 
+              variant="tertiary" 
+              size="large" 
+              @click="handleResetFilter"
+            >
+              Сбросить фильтры
+            </UiButton>
+          </template>
         </CommonSelectableButtons>
         <div ref="anchor">
           <CatalogNewService :servicesList="servicesList" :slider="true"/>
@@ -80,6 +90,7 @@ const servicesList = computed(() => entityStore.servicesList);
 const tutorialRefs = ref([]);
 const serviceCardRef = ref([]);
 const categoryList = computed(() => entityStore.entityData.categories);
+const isMobile = ref(false);
 
 const anchor = ref('anchor');
 
@@ -218,6 +229,11 @@ watch(() => page.value.currentPage, () => {
   })
 })
 
+const updateIsMobile = () => {
+  isMobile.value = window.innerWidth < 768;
+};
+
+
 onMounted(() => {
   let params = {}
   loading.value = true
@@ -258,7 +274,14 @@ onMounted(() => {
     loading.value = false
     isLoaded.value = true
   })
+
+  updateIsMobile();
+  window.addEventListener('resize', updateIsMobile);
 })
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', updateIsMobile);
+});
 
 </script>
 
@@ -311,7 +334,11 @@ onMounted(() => {
   &__btn {
     font-size: 1.2em;
     text-transform: uppercase;
-    
+  }
+
+  &__reset-filter-btn {
+    flex: 1 1 100%;
+    order: 1;
   }
 
   @include mobile {
@@ -320,6 +347,7 @@ onMounted(() => {
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
+      row-gap: 2em;
 
       &__select-list {
         flex: 1 1 100%;

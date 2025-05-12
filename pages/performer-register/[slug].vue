@@ -24,7 +24,6 @@
           :submitBtnText="stepsConfig[currentStep]?.submitBtnText"
           :errorsList="errorList"
         />
-        {{ pubCardData }}
         <div class="performer-register-layout__btn-container" v-if="stepsConfig[currentStep]?.type === 'pubCard'" >
           <UiButton v-if="stepsConfig[currentStep - 1]?.route" class="performer-register-layout__btn" variant="senary" size="large" :to="`/performer-register${stepsConfig[currentStep - 1].route}`">Назад</UiButton>
           <UiButton v-if="stepsConfig.length === currentStep + 1" type="submit" class="performer-register-layout__btn" variant="quinary" size="large">Сохранить данные</UiButton>
@@ -48,6 +47,7 @@ import { useSettingStore } from '~/store/settingStore';
 import { useUserStore } from '~/store/userStore';
 import { useOrganizationStore } from '~/store/organizationStore';
 import { useEntityStore } from '~/store/entityStore';
+import { useToast } from 'vue-toastification';
 
 const route = useRoute();
 const router = useRouter();
@@ -55,6 +55,7 @@ const settingStore = useSettingStore();
 const userStore = useUserStore();
 const organizationStore = useOrganizationStore();
 const entityStore = useEntityStore();
+const toast = useToast();
 
 const organizationData = ref({
   id: '',
@@ -177,7 +178,10 @@ const handleSubmit = (value, form) => {
         }
       ]).then((res) => {
         if(res) {
-          router.push('/profile')
+          userStore.checkAuth().then(res => {
+            toast.success('Публичная карта отправлена на модерацию')
+            router.push('/profile')
+          })
         }
       })
   }

@@ -1,3 +1,4 @@
+import { useEntityStore } from "~/store/entityStore";
 import { useSettingStore } from "~/store/settingStore";
 import { useUserStore } from "~/store/userStore"
 
@@ -10,6 +11,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   const nuxtApp = useNuxtApp();
   const userStore = useUserStore();
   const settingStore = useSettingStore();
+  const entityStore = useEntityStore();
   const router = useRouter();
 
   if(from.path === '/telegram') {
@@ -154,14 +156,27 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       userStore.userData?.public_cards 
     ) {
       const publicCards = userStore.userData.public_cards || []
-      const firstCard = publicCards[0];
+      const firstCard = userStore.userPubCard;
+      let performerServices = null;
+      if(userStore.userData?.organization_id){
+        const response = await entityStore.getSelfServices(userStore.userData?.organization_id)
+        if(response) {
+          performerServices = response
+        }
+      }
+
+      console.log(performerServices)
   
       if(firstCard && firstCard?.status_code !== 'DRAFT'){
         return
       }
   
-      if(!firstCard) {
+      if(!firstCard && !firstCard?.id) {
         return navigateTo({ path: "/performer-register/step2" });
+      } else if (firstCard && firstCard.id && performerServices?.services?.length === 0 ) {
+        return navigateTo({ path: "/performer-register/step3" });
+      } else if (performerServices && performerServices?.services?.length > 0) {
+        return navigateTo({ path: "/performer-register/step4" });
       }
     }
 })

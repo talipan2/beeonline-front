@@ -7,7 +7,6 @@
         v-model="modelValue.location"
         class="filter-modal__location filter-modal__action"
         :type="['selectCountry', 'selectRegions']"
-        :is-required="true"
         errorLabel="Регионы производства"
         name="location"
       />
@@ -59,17 +58,6 @@
         ]"
       />
     </div>
-    <div class="filter-modal__item">
-      <p class="filter-modal__text">Верификация</p>
-      <UiRadioButtonGroup
-        class="filter-modal__radio filter-modal__action"
-        v-model="modelValue.verification"
-        :options="[
-          { id: 1, value: 1, label: 'Да' },
-          { id: 0, value: 0, label: 'Нет' },
-        ]"
-      />
-    </div>
   </div>
 </template>
 
@@ -83,3 +71,7 @@ const props = defineProps({
 })
 
 </script>
+
+<style lang="scss">
+
+</style>

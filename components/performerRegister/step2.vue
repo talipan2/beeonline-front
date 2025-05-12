@@ -218,7 +218,7 @@ const handleCreateService = (value, form) => {
       isLocal: true,
     }]});
     addNewServiceModal.value = false;
-    toast.success('Услуга отправлена на модерацию');
+    toast.success('Услуга добавлена');
     form.resetForm();
   }
 }
@@ -260,7 +260,11 @@ const handleUpdateService = (value, form, item) => {
   };
   emit('update:modelValue', { ...props.modelValue, services: services });
   editServiceModal.value = false;
-  toast.success('Услуга отправлена на модерацию');
+  if(props.isPreview) {
+    toast.success('Услуга отправлена на модерацию');
+  } else {
+    toast.success('Услуга успешно обновлена');
+  }
   form.resetForm();
 }
 

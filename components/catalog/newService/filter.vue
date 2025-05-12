@@ -1,5 +1,5 @@
 <template>
-  <div class="filter-modal filter-modal_type_desktop">
+  <div class="filter-modal filter-modal_type_desktop" v-if="!isMobile">
     <!-- Кнопка для открытия Tippy -->
     <UiButton 
       type="button" 
@@ -11,7 +11,6 @@
       Еще фильтры
       <SvgoFilter class="svg-m" />
     </UiButton>
-
     <Tippy
       ref="filterModal"
       class="filter-modal__tippy"
@@ -62,12 +61,12 @@
       </template>
     </Tippy>
   </div>
-  <div class="filter-modal filter-modal_type_mobile">
+  <div class="filter-modal filter-modal_type_mobile" v-else>
     <UiButton 
       type="button" 
       class="filter-modal__action-btn filter-modal__action-btn_type_mobile" 
       variant="default" 
-      size="large"
+      size="small"
       @click="mobileModal = true"
     >
       Еще фильтры
@@ -113,6 +112,7 @@ const emit = defineEmits(['updateFilter', 'resetFilter']);
 const filterModal = ref(null);
 const isVisible = ref(false);
 const mobileModal = ref(false);
+const isMobile = ref(false);
 
 const filter = ref({
   location: [],
@@ -153,6 +153,10 @@ const handleUpdateFilter = () => {
   hideFilterModal();
 };
 
+const updateIsMobile = () => {
+  isMobile.value = window.innerWidth < 768;
+};
+
 watch(() => props.filter, () => {
   filter.value = {
     location: props.filter.location || [],
@@ -163,6 +167,16 @@ watch(() => props.filter, () => {
     verification: props.filter.verification || null
   }
 }, {deep: true, immediate: true})
+
+
+onMounted(() => {
+  updateIsMobile();
+  window.addEventListener('resize', updateIsMobile);
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', updateIsMobile);
+});
 
 </script>
 
@@ -224,7 +238,7 @@ watch(() => props.filter, () => {
   &__content {
     display: flex;
     flex-direction: column;
-    row-gap: 2.4em;
+    row-gap: 3.2em;
     // max-width: 43.6em;
     padding-bottom: 2.4em;
     margin-bottom: 2.4em;
@@ -234,6 +248,10 @@ watch(() => props.filter, () => {
       border-bottom: none;
       margin-bottom: 0;
     }
+  }
+
+  .radio-buttons__list {
+    flex-direction: row;
   }
 
   &__mobile-modal {
@@ -246,6 +264,10 @@ watch(() => props.filter, () => {
     display: flex;
     align-items: center;
     column-gap: 1em;
+
+    &:not(:first-child) {
+      align-items: flex-start;
+    }
 
     @include mobile {
       flex-direction: column;
