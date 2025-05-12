@@ -129,7 +129,7 @@
       </div>
       <div class="entity__data" v-if="role === 'performer'">
         <CommonDocumentLoaderAndList v-model="data.tzFiles" 
-          text="Готовое техническое задание (ТЗ) и фото изделия можно прикрепить сюда."
+          text="Фото изделия можно прикрепить сюда."
           :extension="['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'rtf', 'pdf', 'jpeg', 'png', 'jpg', 'gif', 'psd', 'djvu', 'fb2', 'ps', 'zip', 'rar']"
         />
       </div>

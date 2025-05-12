@@ -24,7 +24,7 @@ const router = useRouter();
 const pubcard = ref(null);
 
 const breadcrumb = computed(() => {
-    let bc = [{label: 'Главная', link: '/'}, {label: 'Партнерские сервисы', link: '/related-industry-services'}];
+    let bc = [{label: 'Главная', link: '/'}, {label: 'Сервисы', link: '/related-industry-services'}];
     if (pubcard.value) {
         bc.push({label: pubcard.value.name, link: ``});
     }

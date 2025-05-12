@@ -1,5 +1,5 @@
 <template>
-  <NuxtLayout name="info" className="page-policy" title="Политика конфиденциальности">
+  <NuxtLayout name="info" className="page-policy" title="Политика обработки персональных данных">
     <template #header>
       <UiBreadCrumb :list="[{label: 'Главная', link: '/'}, { label: 'Политика конфиденциальности', link: '' }]" />
     </template>

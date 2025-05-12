@@ -20,7 +20,7 @@ const service = ref(null);
 const breadcrumb = computed(() => {
     let bc = [
         { label: 'Главная', link: '/' },
-        { label: 'Партнерские сервисы', link: '/related-industry-services' },
+        { label: 'Сервисы', link: '/related-industry-services' },
     ];
     if (service.value) {
         if (service.value.pubcard) {
