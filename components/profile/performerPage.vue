@@ -162,6 +162,7 @@
 </template>
 
 <script setup>
+import { useEntityStore } from '~/store/entityStore';
 import { useOrganizationStore } from '~/store/organizationStore';
 import { useSettingStore } from '~/store/settingStore';
 import { useUserStore } from '~/store/userStore';
@@ -169,6 +170,7 @@ import { useUserStore } from '~/store/userStore';
 const userStore = useUserStore();
 const organizationStore = useOrganizationStore();
 const settingStore = useSettingStore();
+const entityStore = useEntityStore();
 
 const data = ref({});
 const userData = ref({});
@@ -189,8 +191,11 @@ const userOrganization = computed(() => {
 const formattedData = computed(() => {
   return {
     ...data.value,
+    freeSamples: entityStore.getEntityLabelById('freeTestSamples', data.value?.free_samples)?.join(' / ') || '',
+    isStm: data.value?.is_stm ? 'Да' : 'Нет',
+    freeStock: data.value?.free_stock ? 'Да' : 'Нет',
     locations: {cities: data.value?.cities, regions: data.value?.regions, countries: data.value?.countries},
-    materials: [data.value.materials_own ? 'Исполнителя': '', data.value.materials_customer ? 'Заказчика': ''].filter(Boolean).join(', '),
+    materials: [data.value.materials_own ? 'Исполнителя': '', data.value.materials_tolling ? 'Заказчика': ''].filter(Boolean).join(' / '),
   }
 });
 
@@ -203,7 +208,18 @@ const handleOpenChangeDataModal = () => {
 }
 
 onMounted(() => {
-  data.value = userStore.userPubCard;
+  data.value = {
+    ...userStore.userPubCard, 
+    gallery: [],
+    workSpaces: [],
+    materials: [userStore.userPubCard?.materials_own ? 0: '', userStore.userPubCard?.materials_tolling ? 1: ''].filter(item => item !== ''),
+    free_stock: userStore.userPubCard?.free_stock ? 1 : 0,
+    locations: {
+      cities: userStore.userPubCard.cities?.map(city => ({...city, name: locationFormatter({cities: [{...city}]}).locations[0]})) || [],
+      regions: userStore.userPubCard.regions?.map(region => ({...region, name: locationFormatter({regions: [{...region}]}).locations[0]})) || [],
+      countries: userStore.userPubCard.countries?.map(country => ({...country, name: locationFormatter({countries: [{...country}]}).locations[0]})) || []
+    },
+  };
   userData.value = userStore.userData
 })
 </script>

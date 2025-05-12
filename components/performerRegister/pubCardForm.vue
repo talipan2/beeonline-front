@@ -23,9 +23,9 @@
     </label>
     <UiInput
       :rules="{ url: true }"
-      name="site_url"
+      name="url_site"
       label="Ссылка на сайт"
-      v-model="modelValue.site_url"
+      v-model="modelValue.url_site"
       class="form-group__value"
     >
       <SvgoPlanet class="svg-m" />
@@ -41,20 +41,22 @@
       v-model="modelValue.description"
       name="description"
       label="Описание"
+      :rules="{required: true, min: 5}"
+    />
+  </div>
+  <CommonAlerts v-if="errorsList.selectedLocations && !skipLocationError" :alert="errorsList.selectedLocations" alertType="validation" />
+  <div class="form-group form-group_type_secondary">
+    <label class="form-group__title">Выбрать город</label>
+    <CommonLocation
+      buttonLabel="Выбрать город"
+      v-model="modelValue.locations"
+      class="new-service-card-layout__location"
+      :is-required="true"
+      :button-label="'Выбрать город'"
+      :type="['selectCities']"
     />
   </div>
   <div class="new-service-card-layout__container">
-    <div class="form-group form-group_type_secondary">
-      <label class="form-group__title">Выбрать город</label>
-      <CommonLocation
-        buttonLabel="Выбрать город"
-        v-model="modelValue.locations"
-        class="new-service-card-layout__location"
-        :is-required="true"
-        :button-label="'Выбрать город'"
-        :type="['selectCities']"
-      />
-    </div>
     <div class="form-group form-group_type_secondary">
       <div class="form-group-data">
         <label class="form-group__title">Сырье</label>
@@ -125,8 +127,22 @@ const props = defineProps({
   modelValue: {
     type: Object,
     required: () => ({}),
+  },
+  errorsList: {
+    type: Object,
+    default: () => ({})
   }
 })
+
+const skipLocationError = ref(false);
+
+watch(() => props.modelValue.locations, (newValue) => {
+  if(newValue?.cities.length == 0) {
+    skipLocationError.value = false;
+  } else {
+    skipLocationError.value = true
+  }
+}, {deep: true})
 
 </script>
 

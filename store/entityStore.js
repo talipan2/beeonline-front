@@ -96,11 +96,7 @@ export const useEntityStore = defineStore('entity', {
         {id: 3, label: 'от 500 до 1 000'},
         {id: 4, label: '1 000 и выше'}
       ],
-      serviceBatch: [
-        {id: 1, label: 'до 100'},
-        {id: 2, label: 'от 100 до 1000'},
-        {id: 3, label: 'от 1000'},
-      ],
+      serviceBatch: [],
       status: [
         {id: 1, label: 'Активный', value: 'active'},
         {id: 2, label: 'Черновик', value: 'draft'},
@@ -483,6 +479,43 @@ export const useEntityStore = defineStore('entity', {
         }
       } catch (error) {
         throw error;
+      }
+    },
+
+    // НОВЫЕ ЗАПРОСЫ ДЛЯ УСЛУГ
+
+    async editPerformerService(value, form) {
+      try {
+        const response = await serviceApi.editPerformerService(value, form);
+        if(response) {
+          return response
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    async getBatches() {
+      try {
+        const response = await commonApi.getBatchSizes();
+        if(response.data) {
+          console.log(response)
+          this.entityData.serviceBatch = response.data.map(item => ({id: item?.id, label: item?.name, value: item?.id}));
+          return response.data
+        }
+      } catch (error) {
+       throw error;
+      }
+    },
+
+    async deleteService(id) {
+      try {
+        const response = await serviceApi.deleteService(id);
+        if(response.data) {
+          return response.data
+        }
+      } catch (error) {
+       throw error;
       }
     }
   },

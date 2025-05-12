@@ -57,7 +57,7 @@ watch(isOpenModal, (newVal) => {
   }
 
   .modal-body {
-    padding-top: 0 !important;
+    
   }
 
   &__footer {

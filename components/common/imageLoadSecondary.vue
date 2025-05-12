@@ -133,13 +133,13 @@ const handleDeleteImage = () => {
 }
 
 watch(() => props.modelValue, (newVal) => {
-    if (newVal) {
-      if (newVal.url) {
-        imagePreview.value = newVal.url;
-      } else {
-        imagePreview.value = newVal;
-      }
+  if (newVal && typeof newVal === 'object' && newVal !== null) {
+    if (newVal.url) {
+      imagePreview.value = newVal.url;
     }
+  } else {
+    imagePreview.value = newVal;
+  }
 }, {deep: true, immediate: true});
 
 

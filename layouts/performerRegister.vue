@@ -51,7 +51,7 @@ const props = defineProps ({
   }
 
   &__left {
-    flex: 0 0 25%;
+    flex: 0 0 20%;
   }
 
   &__content {
@@ -63,7 +63,7 @@ const props = defineProps ({
   }
 
   &__right {
-    flex: 0 0 25%;
+    flex: 0 0 20%;
   }
 
   @include desktop {

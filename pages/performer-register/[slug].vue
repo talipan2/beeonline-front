@@ -3,7 +3,7 @@
     <template #leftSide>
       <CommonCheckListStep
       class="performer-register-layout__steps performer-register-layout__steps_type_desktop"
-      :steps="stepsConfig"
+      :steps="stepCheckList"
       :current-step="currentStep"
       :completed-steps="completedSteps"
       />
@@ -12,16 +12,17 @@
       <h1 class="performer-register-layout__title">Регистрация исполнителя</h1>
       <CommonCheckListStep
         class="performer-register-layout__steps performer-register-layout__steps_type_mobile"
-        :steps="stepsConfig"
+        :steps="stepCheckList"
         :current-step="currentStep"
         :completed-steps="completedSteps"
       />
-      <UiForm :submit="handleSubmit">
+      <UiForm :submit="handleSubmit" @setError="getErrorList">
         <component 
           :is="stepsConfig[currentStep].component" 
           v-model="stepsConfig[currentStep].props" 
           :title="stepsConfig[currentStep].title"
           :submitBtnText="stepsConfig[currentStep]?.submitBtnText"
+          :errorsList="errorList"
         />
         <div class="performer-register-layout__btn-container" v-if="stepsConfig[currentStep]?.type === 'pubCard'" >
           <UiButton v-if="stepsConfig[currentStep - 1]?.route" class="performer-register-layout__btn" variant="senary" size="large" :to="`/performer-register${stepsConfig[currentStep - 1].route}`">Назад</UiButton>
@@ -45,14 +46,19 @@ import step4 from '~/components/performerRegister/step3.vue';
 import { useSettingStore } from '~/store/settingStore';
 import { useUserStore } from '~/store/userStore';
 import { useOrganizationStore } from '~/store/organizationStore';
+import { useEntityStore } from '~/store/entityStore';
+import { useToast } from 'vue-toastification';
 
 const route = useRoute();
 const router = useRouter();
 const settingStore = useSettingStore();
 const userStore = useUserStore();
 const organizationStore = useOrganizationStore();
+const entityStore = useEntityStore();
+const toast = useToast();
 
 const organizationData = ref({
+  id: '',
   countryId: 1,
   selfEmployed: false,
   inn: '',
@@ -67,8 +73,9 @@ const organizationData = ref({
 });
 
 const pubCardData = ref({
+  id: '',
   name: '',
-  logo: '',
+  logo: {},
   url_site: '',
   description: '',
   is_stm: null,
@@ -77,61 +84,106 @@ const pubCardData = ref({
   materials: [],
   gallery: [],
   workSpaces: [],
-  services: []
+  services: [],
+  locations: [],
 })
 
 const stepsConfig = ref([
-  {id: 1, title: 'Данные организации', route: '/step1', component: step1, props: organizationData, submitBtnText: 'Сохранить и продолжить'},
-  { id: 2, title: 'Карточка', route: '/step2', component: step2, type: 'pubCard', props: pubCardData },
-  { id: 3, title: 'Услуги', route: '/step3', component: step3, type: 'pubCard', props: pubCardData },
-  { id: 4, title: 'Галерея', route: '/step4', component: step4, type: 'pubCard', props: pubCardData },
+  {id: 1, title: 'Данные организации', route: '/step1', component: markRaw(step1), props: organizationData, submitBtnText: 'Сохранить и продолжить'},
+  { id: 2, title: 'Карточка', route: '/step2', component: markRaw(step2), type: 'pubCard', props: pubCardData },
+  { id: 3, title: 'Услуги', route: '/step3', component: markRaw(step3), type: 'pubCard', props: pubCardData },
+  { id: 4, route: '/step4', component: markRaw(step4), type: 'pubCard', props: pubCardData },
 ])
 
-const data = ref({
-  countryId: 1,
-  inn: '',
-  kpp: '',
-  organizationForm: 3,
-  ogrn: '',
-  legalAddress: '',
-  organizationName: '',
-  name: '',
-  logo: '',
-  url_site: '',
-  description: '',
-  is_stm: null,
-  free_samples: [],
-  free_stock: null,
-  materials: [],
-  gallery: [],
-  workSpaces: [],
-  services: []
-})
+const stepCheckList = ref([
+  { id: 1, title: 'Шаг 1 из 4', route: '/step1', },
+  { id: 2, title: 'Шаг 2 из 4', route: '/step2', },
+  { id: 3, title: 'Шаг 3 из 4', route: '/step3', },
+  { id: 4, title: 'Шаг 4 из 4', route: '/step4', }
+])
 
 const currentStep = computed(() => stepsConfig.value.findIndex(step => route.path.includes(step.route))) // Текущий активный шаг
 const completedSteps = computed(() => [...Array(currentStep.value).keys()]); // Завершенные шаги
 
+const errorList = ref({});
+
+const getErrorList = (errors) => {
+  errorList.value = errors
+}
+
 const handleSubmit = (value, form) => {
   switch (currentStep.value) {
-    case 1:
-      organizationStore.createPerformerPubCard({
-        name: value.name,
-        description: value.description,
-        logo_media_id: "33533",
-        url_site: value.url_site,
-        free_samples: value.free_samples && value.free_samples || [],
-        materials_own: value.materials.includes(0) ? true : false,
-        materials_tolling: value.materials.includes(1) ? true : false,
-        is_stm: value.is_stm,
-        free_stock: value.free_stock,
-        cities: Array.isArray(value.selectedLocations?.cities) ? userStore.selectedLocations?.cities?.map(item => item.id) : [],
+    case 1:   
+      if(userStore.userPubCard?.id === pubCardData.value.id) {
+        organizationStore.editPerformerPubCard({
+          name: value.name,
+          description: value.description,
+          logo_media_id: pubCardData.value.logo?.id ? pubCardData.value.logo.id.toString() : '',
+          url_site: value.url_site,
+          free_samples: value.free_samples && value.free_samples || [],
+          materials_own: value.materials.includes(0) ? true : false,
+          materials_tolling: value.materials.includes(1) ? true : false,
+          is_stm: value.is_stm,
+          free_stock: value.free_stock,
+          cities: Array.isArray(value.selectedLocations?.cities) ? value.selectedLocations?.cities?.map(item => item.id) : [],
+        }, form).then(res => {
+          if(res) {
+            router.push('/performer-register/step3')
+          }
+        })
+      } else {
+        organizationStore.createPerformerPubCard({
+          name: value.name,
+          description: value.description,
+          logo_media_id: pubCardData.value.logo?.id ? pubCardData.value.logo.id.toString() : '',
+          url_site: value.url_site,
+          free_samples: value.free_samples && value.free_samples || [],
+          materials_own: value.materials.includes(0) ? true : false,
+          materials_tolling: value.materials.includes(1) ? true : false,
+          is_stm: value.is_stm,
+          free_stock: value.free_stock,
+          cities: Array.isArray(value.selectedLocations?.cities) ? value.selectedLocations?.cities?.map(item => item.id) : [],
+        }, form).then(res => {
+          if(res) {
+            router.push('/performer-register/step3')
+          }
+        })
+      }
+
+      break;
+    case 2:
+      entityStore.editPerformerService({
+        services: pubCardData.value.services.map(item => {
+          return {
+            name: item.name,
+            product_category_ids: item.product_categories.map(category => category.id),
+            batch_id: item.batch[0]?.id,
+          }
+        }),
       }, form).then(res => {
-        console.log(res)
+        if(res) {
+          router.push('/performer-register/step4')
+        }
       })
       break;
-    case 1:
-      // router.push('/performer-register/step4')
-      break;
+    case 3: 
+      organizationStore.setPubCardsGallery([
+        {
+          collection_name: 'gallery',
+          items: pubCardData.value.gallery.map(item => ({id: item.id})),
+        },
+        {
+          collection_name: 'equipment',
+          items: pubCardData.value.workSpaces.map(item => ({id: item.id})),
+        }
+      ]).then((res) => {
+        if(res) {
+          userStore.checkAuth().then(res => {
+            toast.success('Публичная карта отправлена на модерацию')
+            router.push('/profile')
+          })
+        }
+      })
   }
 }
 
@@ -151,6 +203,32 @@ onMounted(() => {
         organizationData.value.legalAddress = userOrganization.legal_address
         organizationData.value.registerAddress = userOrganization.legal_address
         organizationData.value.closedDocumentsEmail = userOrganization.email_docs
+      }
+
+      if(res.user.public_cards && res.user.public_cards && res.user.public_cards.length > 0) {
+        const pubCard = res.user.public_cards.find(item => item.type === userStore.role)
+        pubCardData.value = {
+          id: pubCard.id,
+          name: pubCard.name,
+          logo: pubCard.logo,
+          url_site: pubCard.url_site,
+          description: pubCard.description,
+          is_stm: pubCard.is_stm,
+          free_samples: [pubCard.free_samples ? 0 : undefined].filter(item => item !== undefined),
+          free_stock: pubCard.free_stock ? 1 : 0,
+          materials: [
+            pubCard.materials_own ? 1 : undefined,
+            pubCard.materials_tolling ? 0 : undefined
+          ].filter(item => item !== undefined),
+          gallery: pubCard.gallery || [],
+          workSpaces: pubCard.equipment || [],
+          services: pubCard.services,
+          locations: {
+            cities: pubCard.cities?.map(city => ({...city, name: locationFormatter({cities: [{...city}]}).locations[0]})) || [],
+            regions: pubCard.regions?.map(region => ({...region, name: locationFormatter({regions: [{...region}]}).locations[0]})) || [],
+            countries: pubCard.countries?.map(country => ({...country, name: locationFormatter({countries: [{...country}]}).locations[0]})) || []
+          }
+        }
       }
     }
   })
@@ -236,6 +314,8 @@ onMounted(() => {
     .register__btn {
       flex: 0 1 25%;
       text-transform: uppercase;
+      font-size: 1.2em;
+      padding: 0.83em;
 
       svg {
         display: none;

@@ -67,6 +67,16 @@ export default {
 
   async getServiceSlider(params = {}) {
     return axios.get(`services/slider`, {params})
+  },
+
+  // НОВЫЕ ЗАПРОСЫ ДЛЯ УСЛУГ
+  
+  async editPerformerService(value, form) {
+    return useApi().patch('/pubcards/performer/services', value, form )
+  },
+
+  async deleteService(id) {
+    return axios.delete(`services/${id}`)
   }
 
 }

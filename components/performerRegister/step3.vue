@@ -136,14 +136,13 @@
 const props = defineProps({
   modelValue: {
     type: Object,
+    default: () => ({})
   },
   isPreview: {
     type: Boolean,
     default: false
   }
 })
-
-
 
 const editGalleryModal = ref(false);
 const editWorkGalleryModal = ref(false);

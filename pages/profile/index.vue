@@ -1,6 +1,6 @@
 <template>
   <div>
-    <NuxtLayout name="profile" class="profile_type_performer" :title='contentWithRoles.title'  :rightSideSticky="false">
+    <NuxtLayout name="profile" :class="{'profile_type_performer' : role === performer}" :title='contentWithRoles.title'  :rightSideSticky="false">
       <template #header>
         <UiBreadCrumb :list="contentWithRoles.breadcrumbs" />
       </template>

@@ -157,7 +157,7 @@ const props = defineProps({
   },
   modelValue: {
     type: Array,
-    default: () => [],
+    default: () => ([]),
   },
   maxSize: {
     type: Number,
@@ -205,6 +205,11 @@ const handleCrop = (data) => {
   if (cropper.value) {
     const { canvas, coordinates } = cropper.value.getResult();
     canvas.toBlob((blob) => {
+      const formData = new FormData();
+      formData.append('file', blob);
+
+      settingStore.uploadFiles(userStore.userData.id, formData)
+
       emit('update:modelValue', props.modelValue.map(item => {
         if (item.id === data.id) {
           return { ...item, croppedUrl: URL.createObjectURL(blob), coordinates };
