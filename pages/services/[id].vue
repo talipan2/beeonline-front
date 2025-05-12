@@ -85,17 +85,13 @@ const otherActiveEntity = computed(() => {
   } else return [];
 });
 
-const serviceResponse = await entityStore.getService(router.currentRoute.value.params.id);
+const serviceResponse = await organizationStore.getPubCard(router.currentRoute.value.params.id);
 
 onMounted(async() => {
   isLoading.value = true;
   try {
     // const {...serviceResponse} = await entityStore.getService(router.currentRoute.value.params.id);
-    data.value = serviceResponse.data;
-    if(serviceResponse && serviceResponse.data && serviceResponse.data.pub_card) {
-      pubCard.value = serviceResponse.data.pub_card
-    }
-
+    data.value = serviceResponse;
   } catch (err) {
     console.error(err);
   } finally {

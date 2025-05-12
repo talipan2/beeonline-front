@@ -11,13 +11,14 @@
       </template>
     </template>
     <template v-else>
-      <CommonAlerts alert="Услуги не найдены" :type="'warning'" v-if="!servicesList.length" />
+      <CommonAlerts alert="Исполнители не найдены" :type="'warning'" v-if="!servicesList.length" />
     </template>
   </div>
 </template>
 
 <script setup>
 import { useEntityStore } from '~/store/entityStore'
+import { useOrganizationStore } from '~/store/organizationStore';
 
 
 const props = defineProps({
@@ -32,9 +33,10 @@ const props = defineProps({
 })
 
 const entityStore = useEntityStore();
+const organizationStore = useOrganizationStore();
 
 const fetchServiceSlider = async ( page, per_page=10) => {
-  const res = await entityStore.getServiceSlider({ page, per_page })
+  const res = await organizationStore.getPubCardSlider({ page, per_page })
   return {
     data: res.data,
     meta: res.meta

@@ -132,6 +132,8 @@
 </template>
 
 <script setup>
+import { useOrganizationStore } from '~/store/organizationStore';
+
 
 const props = defineProps({
   modelValue: {
@@ -146,6 +148,7 @@ const props = defineProps({
 
 const editGalleryModal = ref(false);
 const editWorkGalleryModal = ref(false);
+const organizationStore = useOrganizationStore();
 
 const emit = defineEmits(['update:modelValue'])
 
@@ -207,14 +210,70 @@ const handleMovingImageModal = (item, type) => {
   }
 };
 
+
 const handleSaveGalleryModal = () => {
+  const basePayload = [
+    {
+      collection_name: 'gallery',
+      items: galleryDataFormModal.value.map(item => ({ id: item.id })),
+    }
+  ];
+
+  if (forwardStatusWorkGalleryList.value.length > 0) {
+    const item = [
+      ...forwardStatusWorkGalleryList.value.map(item => ({ id: item.id })),
+      ...workGallery.value.map(item => ({ id: item.id }))
+    ]
+    basePayload.push({
+      collection_name: 'equipment',
+      items: item,
+    });
+    
+    forwardStatusWorkGalleryList.value.map(item => {
+      workGallery.value.push(item);
+    })
+  }
+
+  handleUpdateGallery(basePayload);
   gallery.value = [...galleryDataFormModal.value];
   editGalleryModal.value = false;
-}
+};
 
 const handleSaveWorkGalleryModal = () => {
+  const basePayload = [
+    {
+      collection_name: 'equipment',
+      items: workGalleryDataFormModal.value.map(item => ({ id: item.id })),
+    }
+  ];
+
+  if (forwardStatusGalleryList.value.length > 0) {
+    const item = [
+      ...forwardStatusGalleryList.value.map(item => ({ id: item.id })),
+      ...gallery.value.map(item => ({ id: item.id }))
+    ];
+    basePayload.push({
+      collection_name: 'gallery',
+      items: item,
+    });
+
+    forwardStatusGalleryList.value.map(item => {
+      gallery.value.push(item)
+    })
+
+  }
+
+  handleUpdateGallery(basePayload);
   workGallery.value = [...workGalleryDataFormModal.value];
   editWorkGalleryModal.value = false;
+}
+
+const handleUpdateGallery = (data, type) => {
+  if(!data.length) return;
+  organizationStore.setPubCardsGallery(data).then((res) => {
+    forwardStatusGalleryList.value = [];
+    forwardStatusWorkGalleryList.value = [];
+  })
 }
 
 const handleReturnImage = (item, type) => {

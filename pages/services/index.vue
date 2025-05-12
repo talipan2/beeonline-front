@@ -23,9 +23,9 @@
       </div>
     </template>
   </NuxtLayout> -->
-  <NuxtLayout name="info" className="catalog-services" title="Каталог услуг">
+  <NuxtLayout name="info" className="catalog-services" title="Каталог исполнителей">
     <template #header>
-      <UiBreadCrumb :list="[{label: 'Главная', link: '/'}, { label: 'Каталог услуг', link: '' }]" />
+      <UiBreadCrumb :list="[{label: 'Главная', link: '/'}, { label: 'Каталог исполнителей', link: '' }]" />
     </template>
     <template #content>
       <div class="new-service">
@@ -51,6 +51,7 @@
         </CommonSelectableButtons>
         <div ref="anchor">
           <CatalogNewService :servicesList="servicesList" :slider="true"/>
+          <!-- {{ servicesList }} -->
         </div>
         <CommonPagination 
           v-if="page.lastPage > 1"
@@ -70,6 +71,7 @@
 import { useEntityStore } from '~/store/entityStore';
 import { useSettingStore } from '~/store/settingStore';
 import clothes from '~/assets/svg/clothes.svg';
+import { useOrganizationStore } from '~/store/organizationStore';
 
 useHead({
   title: 'Каталог услуг',
@@ -83,10 +85,11 @@ useHead({
 
 const entityStore = useEntityStore();
 const settingStore = useSettingStore();
+const organizationStore = useOrganizationStore();
 
 const router = useRouter();
 
-const servicesList = computed(() => entityStore.servicesList);
+const servicesList = computed(() => organizationStore.pubCardsList);
 const tutorialRefs = ref([]);
 const serviceCardRef = ref([]);
 const categoryList = computed(() => entityStore.entityData.categories);
@@ -102,6 +105,7 @@ const page = ref({
 })
 
 const filter = ref({
+  type: 'performer',
   categories: [],
   location: [],
   is_stm: null,
@@ -115,6 +119,7 @@ const filter = ref({
 
 const handleResetFilter = () => {
   filter.value = {
+    type: 'performer',
     categories: [],
     location: [],
     is_stm: null,
@@ -132,8 +137,8 @@ const handleUpdateFilter = (data) => {
   console.log(data)
   // Если фильтры не выбраны
   if(!data || data.length === 0) {
-    router.replace({ query: {} });
-    entityStore.getServices().then(res => {
+    router.replace({});
+    organizationStore.getPubCardsList({type: 'performer'}).then(res => {
       page.value = {
         currentPage: res.meta.current_page,
         lastPage: res.meta.last_page,
@@ -146,6 +151,7 @@ const handleUpdateFilter = (data) => {
 
   // добавление квери параметров для роутинга
   const newQuery = {
+    type: 'performer',
     categories: data.categories ? data.categories.join(',') : undefined,
     countries: data.location && data.location.countries ? data.location.countries?.map(item => item.id).join(',') : undefined,
     regions: data.location && data.location.regions ? data.location.regions?.map(item => item.id).join(',') : undefined,
@@ -160,6 +166,7 @@ const handleUpdateFilter = (data) => {
 
   // добавление квери параметров для запроса
   filter.value = {
+    type: 'performer',
     categories: data.categories && data.categories.length ? data.categories : undefined,
     regions: data.location && Object.keys(data.location).length ? Object.values(data.location).flat().map(item => item.id) : undefined,
     is_stm: data.has_stm != null ? data.has_stm : undefined,
@@ -179,7 +186,7 @@ const handleUpdateFilter = (data) => {
   loading.value = true
   isLoaded.value = false
   // обновление услуг с новыми параметрами
-  entityStore.getServices({...filter.value}).then(res => {
+  organizationStore.getPubCardsList({...filter.value}).then(res => {
     if(res) {
       page.value = {
         currentPage: res.meta.current_page,
@@ -213,7 +220,7 @@ const handleChangePage = (currentPage) => {
 
 watch(() => page.value.currentPage, () => {
   loading.value = true
-  entityStore.getServices({page: page.value.currentPage, ...filter.value}).then(res => {
+  organizationStore.getPubCardsList({page: page.value.currentPage, ...filter.value}).then(res => {
     if(res && res.meta && res.data) {
       page.value = {
         currentPage: res.meta.current_page,
@@ -241,6 +248,7 @@ onMounted(() => {
   if(Object.keys(router.currentRoute.value.query).length > 0) {
     const query = router.currentRoute.value.query
     params = {
+      type: 'performer',
       page: query.page ? Number(query.page) : undefined,
       categories: query.categories ? query.categories.split(',').map(item => Number(item)) : undefined,
       regions: [query.countries && query.countries.split(',').map(item => Number(item)), query.regions && query.regions.split(',').map(item => Number(item))].flat(),
@@ -253,6 +261,7 @@ onMounted(() => {
     console.log(params)
     
     filter.value = {
+      type: 'performer',
       categories: query.categories ? query.categories.split(',').map(item => Number(item)) : [],
       location: {countries: query.countries ? query.countries.split(',').map(item => Number(item)) : [], regions: query.regions ? query.regions.split(',').map(item => Number(item)) : [] },
       is_stm: query.is_stm ? Number(query.is_stm) : undefined,
@@ -263,8 +272,9 @@ onMounted(() => {
     }
   }
 
-  entityStore.getServices(params).then(res => {
-    if(res && res.meta) {
+  organizationStore.getPubCardsList({...params, type: 'performer'}).then(res => {
+    if(res) {
+      console.log(res)
       page.value = {
         currentPage: res.meta.current_page,
         lastPage: res.meta.last_page,

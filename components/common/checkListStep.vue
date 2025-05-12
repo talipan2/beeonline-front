@@ -143,6 +143,18 @@ onBeforeUnmount(() => {
     }
   }
 
+  &__item.active {
+    .step-checklist__number {
+      background-color: #6937a5;
+      color: #fff;
+      border-color: #6937a5;
+    }
+    
+    .step-checklist__content {
+      color: #6937a5;
+    }
+  }
+
   &__mobile {
     display: flex;
     align-items: center;

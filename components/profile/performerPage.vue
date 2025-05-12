@@ -209,9 +209,8 @@ const handleOpenChangeDataModal = () => {
 
 onMounted(() => {
   data.value = {
-    ...userStore.userPubCard, 
-    gallery: [],
-    workSpaces: [],
+    ...userStore.userPubCard,
+    workSpaces: userStore.userPubCard?.equipment,
     materials: [userStore.userPubCard?.materials_own ? 0: '', userStore.userPubCard?.materials_tolling ? 1: ''].filter(item => item !== ''),
     free_stock: userStore.userPubCard?.free_stock ? 1 : 0,
     locations: {
