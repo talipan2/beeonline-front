@@ -2,20 +2,31 @@
   <div class="new-service-details">
     <CommonLayoutInfoCard class="new-service-details__pub-card new-service-details__pub-card_type_desktop">
       <div class="new-service-details__pub-card-image">
-        <UiImage :src="data.pub_card?.logo || defaultImage" :alt="data.name" :external="true"/>
+        <UiImage :src="data.logo || defaultImage" :alt="data.name" :external="true"/>
       </div>
       <div class="new-service-details__pub-card-content">
         <h3 class="new-service-details__pub-card-title">{{ data.name || 'не указано' }}</h3>
-        <CommonRating :rating="data.pub_card?.reviews_stats_about?.stars" :reviews="data.pub_card?.reviews_about_count" :is-count-rating="false" />
-        <CommonLocationsList :locationsList="{countries: [data.pub_card?.country]}" />
+        <CommonRating :rating="data.reviews_stats_about?.stars" :reviews="data.reviews_about_count" :is-count-rating="false" />
+        <CommonLocationsList :locationsList="{countries: [data.country]}" />
         <div class="new-service-details__pub-card-site" v-if="data.pub_card?.url_site">
           <SvgoPlanet class="svg-m" />
           <NuxtLink :to="data.siteUrl" class="link" target="_blank" >{{ data.pub_card?.url_site || 'не указано' }}</NuxtLink>
         </div>
         <div class="new-service-details__pub-card-buttons">
-          <UiButton variant="quinary" size="large" class="new-service-details__pub-card-button">Написать исполнителю</UiButton>
-          <UiButton variant="quinary" size="large" class="new-service-details__pub-card-button">Проверить контрагента</UiButton>
-          <UiButton variant="tertiary" size="around" class="new-service-details__pub-card-button"><SvgoFavorite class="svg-m" fill="#6937A5" /></UiButton>
+          <UiButton type="button" variant="quinary" size="large" class="new-service-details__pub-card-button" @click="settingStore.sendMessageModal = true">Написать исполнителю</UiButton>
+          <PaidServiceCounterpartyCheck
+            :id="data.organization_id"
+          >
+            <template #button="{ open }">
+                <UiButton class="new-service-details__pub-card-button" variant="quinary" size="large" type="button" @click="open">
+                    <SvgoSearch class="svg-m" fill="#6937a5" />
+                    Проверить контрагента
+                </UiButton>
+            </template>
+          </PaidServiceCounterpartyCheck>
+          <UiButton type="button" variant="tertiary" size="around" class="new-service-details__pub-card-button" :class="{ 'new-service-details__pub-card-button_type_active': isFavorite }" @click="handleAddFavorite">
+            <SvgoFavorite class="svg-m" fill="#6937A5" />
+          </UiButton>
         </div>
       </div>
     </CommonLayoutInfoCard>
@@ -34,9 +45,23 @@
       <div class="new-service-details__pub-card-content">
         <h3 class="new-service-details__pub-card-title">{{ data.name || 'не указано' }}</h3>
         <div class="new-service-details__pub-card-buttons">
-          <UiButton variant="quinary" size="large" class="new-service-details__pub-card-button">Написать исполнителю</UiButton>
-          <UiButton variant="quinary" size="large" class="new-service-details__pub-card-button">Проверить контрагента</UiButton>
-          <UiButton variant="tertiary" size="large" class="new-service-details__pub-card-button"><SvgoFavorite class="svg-m" fill="#6937A5" />Добавить в избранное</UiButton>
+          <UiButton type="button" variant="quinary" size="large" class="new-service-details__pub-card-button" @click="settingStore.sendMessageModal = true">
+            Написать исполнителю
+          </UiButton>
+          <PaidServiceCounterpartyCheck
+            :id="data.organization_id"
+          >
+            <template #button="{ open }">
+                <UiButton class="new-service-details__pub-card-button" variant="quinary" size="large" type="button" @click="open">
+                    <SvgoSearch class="svg-m" fill="#6937a5" />
+                    Проверить контрагента
+                </UiButton>
+            </template>
+          </PaidServiceCounterpartyCheck>
+          <UiButton type="button" variant="tertiary" size="large" class="new-service-details__pub-card-button" @click="handleAddFavorite">
+            <SvgoFavorite class="svg-m" fill="#6937A5" />
+            Добавить в избранное
+          </UiButton>
         </div>
       </div>
     </CommonLayoutInfoCard>
@@ -45,7 +70,7 @@
         :more-btn="true"
         :specs="{
           name: 'Категория', 
-          value: data.product_categories?.length > 0 && data.product_categories.map(item => item.name) || [],
+          value: data.categories?.length > 0 && data.categories.map(item => item.name) || [],
         }"
       />
       <CatalogNewServiceDetailsBadge
@@ -73,9 +98,9 @@
         }"
       />
     </div>
-    <CommonLayoutInfoCard title="Услуги" class="new-service-details__services" v-if="data.pub_card?.services && data.pub_card?.services.length">
+    <CommonLayoutInfoCard title="Услуги" class="new-service-details__services" v-if="data.services && data.services.length">
       <div class="new-service-details__services-list">
-        <div class="new-service-details__services-item" v-for="(item, index) in data.pub_card?.services" :key="item.id">
+        <div class="new-service-details__services-item" v-for="(item, index) in data.services" :key="item.id">
           <div class="new-service-details__services-item-number"><span>{{ index + 1 }}</span></div>
           <div class="new-service-details__services-item-content">
             <h4 class="new-service-details__services-item-name">{{ item.name || 'не указано' }}</h4>
@@ -83,15 +108,9 @@
               Размер партии: 
               <span>{{ item.batches.map(item => item.name).join(' / ') || 'не указано' }}</span>
             </p>
-            <div class="new-service-details__services-item-badges">
-              <div class="new-service-details__services-item-badge">
-                <p>{{ 'Женская одежда' }}</p>
-              </div>
-              <div class="new-service-details__services-item-badge">
-                <p>{{ 'Текстиль' }}</p>
-              </div>
-              <div class="new-service-details__services-item-badge">
-                <ModalsMoreCities :list="['Женская одежда', 'Текстиль']" title="Категории" />
+            <div class="new-service-details__services-item-badges" v-if="item.product_categories">
+              <div class="new-service-details__services-item-badge" v-for="category in item.product_categories" :key="category.id">
+                <p>{{ category.name }}</p>
               </div>
             </div>
           </div>
@@ -114,9 +133,9 @@
         <p class="new-service-details__gallery-count">{{ `${currentGalleryIndex + 1}/${data.gallery.length}` }}</p>
       </template>
     </CommonLayoutInfoCard>
-    <CommonLayoutInfoCard title="Оборудование" class="new-service-details__gallery" v-if="data.gallery && data.gallery.length">
+    <CommonLayoutInfoCard title="Оборудование" class="new-service-details__gallery" v-if="data.equipment && data.equipment.length">
       <CatalogNewServiceImagesList 
-        :data="data.gallery" 
+        :data="data.equipment" 
         :show-more="true" 
         :show-fancybox="true" 
         mobile-slider 
@@ -131,6 +150,7 @@
       <CatalogNewServiceReviewList :reviewList="reviewList" :pub_card="data.pub_card" />
       <CommonPagination  v-if="reviewsPage.last_page > 1" :current-page="reviewsPage.page" :total-pages="reviewsPage.last_page" @change-page="handleChangeReviewsPage" btn-type="square" position="left"/>
     </CommonLayoutInfoCard>
+    <CatalogServiceSendMessageModal :performer_id="data.organization_id" />
   </div>
 </template>
 
@@ -139,6 +159,9 @@
 import defaultImage from '~/assets/images/nophoto_pc.png';
 import { useEntityStore } from '~/store/entityStore';
 import { useReviewsStore } from '~/store/reviewsStore';
+import { useSettingStore } from '~/store/settingStore';
+import { useUserStore } from '~/store/userStore';
+import { useToast } from 'vue-toastification';
 
 const props = defineProps({
   data: {
@@ -148,8 +171,9 @@ const props = defineProps({
 })
 
 const entityStore = useEntityStore();
-
+const settingStore = useSettingStore();
 const reviewStore = useReviewsStore();
+const userStore = useUserStore();
 
 const reviewsPage = ref({
   page: 1,
@@ -160,6 +184,9 @@ const reviewList = ref([]);
 
 const currentGalleryIndex = ref(0);
 const currentEquipmentIndex = ref(0);
+const isLoading = ref(false);
+const isFavorite = ref(false);
+const toast = useToast();
 
 const handleUpdatePhotoIndex = (index, type) => {
   switch(type) {
@@ -188,8 +215,37 @@ const fetchReviews = async(page = 1) => {
   })
 }
 
+function handleAddFavorite() {
+  if(isLoading.value) return;
+  isLoading.value = true;
+
+  if(isFavorite.value) {
+    userStore.removeFavorite( userStore.userData.id, props.data.id, 'pubCard').then(res => {
+      isFavorite.value = false;
+      toast.info('Удалено из избранных');
+    }).finally(() => isLoading.value = false)
+  } else {
+    userStore.addFavorite( userStore.userData.id, props.data.id, 'pubCard').then(res => {
+      isFavorite.value = true;
+      toast.success('Добавлено в избранные');
+    }).finally(() => isLoading.value = false)
+  }
+}
+
+
 onMounted(() => {
   fetchReviews()
+
+  userStore.getFavorites(userStore.userData.id).then(res => {
+    console.log(res)
+    if(res && res.pubCards && res.pubCards.data) {
+      res.pubCards.data.forEach(item => {
+        if(item.id === props.data.id) {
+          isFavorite.value = true;
+        }
+      })
+    }
+  })
 })
 
 </script>
@@ -278,6 +334,16 @@ onMounted(() => {
       width: 100%;
       font-size: .75em;
       text-transform: uppercase;
+      column-gap: .5em;
+
+      &_type_active {
+        background-color: var(--border-color-quaternary);
+        color: var(--text-color-octonary);
+
+        svg {
+          fill: var(--text-color-octonary);
+        }
+      }
 
       &:last-child {
         width: auto;

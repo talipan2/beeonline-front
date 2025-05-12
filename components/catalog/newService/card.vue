@@ -5,12 +5,12 @@
         <p class="new-service-card__pubcard-title">Название компании</p>
         <div class="new-service-card__pubcard-content">
           <div class="image-box new-service-card__pubcard-logo image-box_type_not-border">
-            <img :src="data.pub_card?.logo || defaultImage" :alt="data.pub_card?.name">
+            <img :src="data.logo || defaultImage" :alt="data?.name">
           </div>
           <div class="new-service-card__pubcard-info">
-            <h3 class="new-service-card__pubcard-name">{{ data.pub_card?.name }}</h3>
+            <h3 class="new-service-card__pubcard-name">{{ data?.name }}</h3>
             <CommonLocationsList class="new-service-card__pubcard-locations"
-              :locationsList="{countries: [data.pub_card?.country]}" />
+              :locationsList="{countries: [data.country]}" />
             <div class="new-service-card__pubcard-views">
               <SvgoViewsNew class="svg-m" />
               <p>{{ data.view_count }} просмотров</p>
@@ -25,16 +25,16 @@
       <CatalogNewServiceDetailsBadge
         class="new-service-card__specs-item new-service-card__specs-item_type_desktop" 
         :specs="[
-        {name: 'Категория', value: data.product_categories.map(item => item.name).join(' / ')},
+        {name: 'Категория', value: data?.categories?.length ? data.categories.map(item => item.name).join(' / ') : ''},
         {name: 'Сырье', value: [data.materials_tolling ? 'Заказчика' : '', data.materials_own ? 'Исполнителя' : ''].filter(Boolean).join(' / ')},
         ]"
       />
       <CatalogNewServiceDetailsBadge
         class="new-service-card__specs-item new-service-card__specs-item_type_mobile" 
-        :specs="{name: 'Категория', value: data.product_categories.map(item => item.name).join(' / ')}"
+        :specs="{name: 'Категория', value: data?.categories?.length ? data.categories.map(item => item.name).join(' / ') : ''}"
       />
-      <CatalogNewServiceDetailsBadge :specs="{name: 'Размер партии', value: data.batches.map(item => item.name).join(' / ')}" />
-      <CatalogNewServiceDetailsBadge :specs="{name: 'Свободный склад', value: data.free_stock != null ? data.free_stock ? 'Да' : 'Нет' : ''}" />
+      <CatalogNewServiceDetailsBadge :specs="{name: 'Размер партии', value: data?.batches?.length ? data.batches.map(item => item.name).join(' / ') : '-'}" />
+      <CatalogNewServiceDetailsBadge :specs="{name: 'Свободный склад', value: data?.free_stock != null ? data.free_stock ? 'Да' : 'Нет' : ''}" />
     </div>
     <div class="new-service-card__images" v-if="data.gallery && data.gallery.length">
       <p class="new-service-card__images-title">Примеры работ</p>

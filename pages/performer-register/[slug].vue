@@ -96,10 +96,10 @@ const stepsConfig = ref([
 ])
 
 const stepCheckList = ref([
-  { id: 1, title: 'Шаг 1 из 4', route: '/step1', },
-  { id: 2, title: 'Шаг 2 из 4', route: '/step2', },
-  { id: 3, title: 'Шаг 3 из 4', route: '/step3', },
-  { id: 4, title: 'Шаг 4 из 4', route: '/step4', }
+  { id: 1, title: 'Данные организации', route: '/step1', },
+  { id: 2, title: 'Карточка', route: '/step2', },
+  { id: 3, title: 'Услуги', route: '/step3', },
+  { id: 4, title: 'Галерея', route: '/step4', },
 ])
 
 const currentStep = computed(() => stepsConfig.value.findIndex(step => route.path.includes(step.route))) // Текущий активный шаг

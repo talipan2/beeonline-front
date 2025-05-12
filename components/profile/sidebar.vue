@@ -142,7 +142,10 @@ const getSidebarLinks = (role) => [
   { id: 1, label: "Рабочий стол", value: `/desktop` },
   { id: 2, label: "Bee-online Gifts", value: `/bonus` },
   { id: 3, label: "Профиль", value: `/profile` },
-  { id: 4, label: role === "performer" ? "Услуги" : "Заказы", value: role === "performer" ? "/performer/services" : "/customer/orders", },
+  ...(role === 'customer' 
+      ? [{id: 4, label: 'Заказы', value: '/customer/orders' }] 
+      : []),
+  // { id: 4, label: role === "performer" ? "Услуги" : "Заказы", value: role === "performer" ? "/performer/services" : "/customer/orders", },
   { id: 5, label: "Проверка контрагентов", value: `/org_check` },
   { id: 6, label: "Сообщения", value: "/chat" },
   { id: 7, label: "Сделки", value: "/deals" },

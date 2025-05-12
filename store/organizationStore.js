@@ -376,6 +376,17 @@ export const useOrganizationStore = defineStore('organization', {
       } catch (error) {
         throw error;
       }
+    },
+
+    async getPubCardSlider() {
+      try {
+        const response = await Api.getPubCardSlider();
+        if(response.data) {
+          return response.data;
+        }
+      } catch (error) {
+        throw error;
+      } 
     }
   }
 })

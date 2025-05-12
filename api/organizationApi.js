@@ -164,5 +164,9 @@ export default {
 
   async setPubCardsGallery (data) {
     return axios.patch('pubcards/performer/galleries', data)
+  },
+
+  async getPubCardSlider() {
+    return axios.get('/pubcards/slider')
   }
 }

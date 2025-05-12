@@ -140,10 +140,9 @@ const dropdownMenuLinks = computed(() => {
       { label: 'Рабочий стол', value: `/desktop` },
       { label: 'Bee-online Gifts', value: `/bonus` },
       { label: 'Профиль', value: `/profile` },
-      {
-        label: `${role.value === 'customer' ? 'Заказы' : 'Услуги'}`,
-        value: `/${role.value}/${role.value === 'customer' ? 'orders' : 'services'}`
-      },
+      ...(role.value === 'customer' 
+      ? [{ label: 'Заказы', value: '/customer/orders' }] 
+      : []),
       { label: 'Сообщения', value: '/chat' },
       { label: 'Сделки', value: '/deals' },
       { label: 'Избранное', value: `/favorites` },
