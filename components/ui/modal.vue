@@ -156,7 +156,7 @@
     const applyContentPadding = () => {
         if (modalBody.value && props.fixedHeader && isMobile.value) {
             modalBody.value.style.paddingTop = `${headerHeight.value}px`
-        }else {
+        } else if (modalBody.value) {
             modalBody.value.style.paddingTop = '0px'
         }
     }

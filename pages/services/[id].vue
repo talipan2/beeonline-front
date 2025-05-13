@@ -21,8 +21,8 @@
       <UiBreadCrumb
         :list="[
           { label: 'Главная', link: '/' },
-          { label: 'Каталог услуг', link: '/services' },
-          { label: 'Услуга', link: '' },
+          { label: 'Каталог исполнителей', link: '/services' },
+          { label: `${data?.name || 'Исполнитель'} `, link: ''},
         ]"
       />
     </template>

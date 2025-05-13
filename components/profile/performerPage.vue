@@ -213,6 +213,7 @@ onMounted(() => {
     workSpaces: userStore.userPubCard?.equipment,
     materials: [userStore.userPubCard?.materials_own ? 0: '', userStore.userPubCard?.materials_tolling ? 1: ''].filter(item => item !== ''),
     free_stock: userStore.userPubCard?.free_stock ? 1 : 0,
+    free_samples: userStore.userPubCard?.free_samples?.length ? userStore.userPubCard.free_samples : [],
     locations: {
       cities: userStore.userPubCard.cities?.map(city => ({...city, name: locationFormatter({cities: [{...city}]}).locations[0]})) || [],
       regions: userStore.userPubCard.regions?.map(region => ({...region, name: locationFormatter({regions: [{...region}]}).locations[0]})) || [],

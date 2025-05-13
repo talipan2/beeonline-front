@@ -7,7 +7,7 @@
         :key="image.id"
         :class="{ 'has-more': showMoreOverlay && index === visibleImages.length - 1 }"
       >
-        <a :href="image.url" class="images-list__link" data-fancybox="service-gallery" v-if="showFancybox">
+        <a :href="image.url" class="images-list__link" :data-fancybox="`service-gallery-${type}`" v-if="showFancybox">
           <UiImage class="images-list__item-image" :src="image.url" :alt="image.url" :external="true" />
         </a>
         <UiImage v-else class="images-list__item-image" :src="image.url" :alt="image.url" :external="true" />
@@ -44,17 +44,18 @@
         @slideChange="onSlideChange"
       >
         <SwiperSlide v-for="(image, index) in data" :key="index" class="images-list__slide">
-          <a :href="image.url" class="" data-fancybox="gallery">
+          <a :href="image.url" class="" :data-fancybox="`gallery-${type}`">
             <img :src="image.url" class="images-list__item-image" :alt="image.url" />
           </a>
         </SwiperSlide>
       </Swiper>
-      <div class="images-list__slider-navigation">
+      <div class="images-list__slider-navigation" v-if="data.length > 1">
         <UiButton
           type="button"
           class="images-list__slider-btn images-list__slider-btn_type_prev"
           variant="secondary"
           @click="slidePrev"
+          :disabled="isBeginning"
         >
           <SvgoSlideArrow class="svg-l" />
         </UiButton>
@@ -63,6 +64,7 @@
           class="images-list__slider-btn images-list__slider-btn_type_next"
           variant="secondary"
           @click="slideNext"
+          :disabled="isEnd"
         >
           <SvgoSlideArrow class="svg-l" />
         </UiButton>
@@ -129,6 +131,9 @@ const swiperInstance = ref(null)
 const modules = [Navigation]
 const currentSlideIndex = ref(0)
 
+const isBeginning = ref(true);
+const isEnd = ref(false);
+
 // Вычисляемые свойства
 const visibleImages = computed(() => {
   return showAll.value || (props.showMore && showAll.value) 
@@ -172,7 +177,13 @@ const slideNext = () => {
 const onSlideChange = (swiper) => {
   currentSlideIndex.value = swiper.activeIndex
   emit('updateSlide', swiper.activeIndex, props.type)
+  updateNavigationState(swiper);
 }
+
+const updateNavigationState = (swiper) => {
+  isBeginning.value = swiper.isBeginning;
+  isEnd.value = swiper.isEnd;
+};
 </script>
 
 <style lang="scss">

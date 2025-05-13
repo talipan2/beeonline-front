@@ -2,7 +2,7 @@
   <div class="service-form" :class="{'loading': !isLoaded}">
     <div class="form-group form-group_type_secondary">
       <label class="form-group__title">
-        Название компании
+        Название услуги
         <CommonTooltip text="Допустимы изображения размером до 5Мб" />
       </label>
       <UiInput
@@ -17,6 +17,7 @@
       class="form-group form-group_type_secondary service-form__category"
     >
       <label class="form-group__title"> Выбор категории </label>
+      <p class="service-form__description">Выберите до 4 категории</p>
       <UiCheckboxGroup
         class="form-group__value"
         variant="rounded"
@@ -24,16 +25,17 @@
         v-model="service.category"
         name="category"
         label="Категория"
-        :rules="{ required: true }"
+        :rules="{ minSelected: 1 }"
         :is-drop-down="true"
+        :disabled="categoryDisabled"
       />
     </div>
     <div class="form-group form-group_type_secondary service-form__radio">
       <label class="form-group__title"> Партия </label>
       <UiRadioButtonGroup 
         class="form-group__value"
-        name="batch"
-        v-model="service.batch"
+        name="batches"
+        v-model="service.batches"
         label="Партия"
         :options="batchList"
         return-number
@@ -62,6 +64,12 @@ const category = computed(() => entityStore.entityData.categories);
 const batchList = computed(() => entityStore.entityData.serviceBatch)
 
 const isLoaded = ref(true)
+
+const categoryDisabled = (id) => {
+  return (
+    props.service?.category?.length >= 4 && !props.service?.category?.includes(id)
+  );
+};
 
 onMounted(() => {
   if(entityStore.entityData.serviceBatch.length === 0) {
@@ -96,6 +104,12 @@ onMounted(() => {
         flex-direction: column;
       }
     }
+  }
+
+  &__description {
+    font-size: 1.3em;
+    margin-bottom: 1em;
+    margin-top: -.3em;
   }
 
 

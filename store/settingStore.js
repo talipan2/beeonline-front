@@ -75,6 +75,18 @@ export const useSettingStore = defineStore("setting", {
       }
     },
 
+    async changeFiles(id, formData) {
+      try {
+        const response = await uploadFilesApi.changeFiles(id, formData);
+        if (response.data) {
+          return response.data
+        }
+      } catch (error) {
+        console.error(error);
+        
+      }
+    },
+
     async getHelps() {
       try {
         const response = await commonApi.getFaqs();

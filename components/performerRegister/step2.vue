@@ -39,7 +39,7 @@
                 Партия
               </label>
               <div class="form-group__value">
-                <div class="form-value">{{ item.batch?.map(batch => batch.name).join(' / ') || '' }}</div>
+                <div class="form-value">{{ item.batches?.map(batches => batches.name).join(' / ') || '' }}</div>
               </div>
             </div>
           </div>
@@ -175,7 +175,7 @@ const handleOpenAddService = () => {
 }
 
 const handleEditService = (item) => {
-  editServiceData.value = {...item, category: item.product_categories ? item.product_categories.map(i => i.id) : [], batch: item.batch[0].id ? item.batch[0].id : ''};
+  editServiceData.value = {...item, category: item.product_categories ? item.product_categories.map(i => i.id) : [], batches: item.batches[0].id ? item.batches[0].id : ''};
   editServiceModal.value = true;
 }
 
@@ -191,7 +191,7 @@ const handleCreateService = (value, form) => {
     entityStore.editPerformerService({
       services: [{
         name: value.name,
-        batch_id: value.batch,
+        batch_id: value.batches,
         product_category_ids: value.category
       }]
     }, form).then(res => {
@@ -199,7 +199,7 @@ const handleCreateService = (value, form) => {
 
           emit('update:modelValue', {...props.modelValue, services: [{
             name: value.name,
-            batch: [{id: value.batch, name:entityStore.getEntityLabelById('serviceBatch', value.batch)}],
+            batches: [{id: value.batches, name:entityStore.getEntityLabelById('serviceBatch', value.batches)}],
             product_categories: value.category.map(id => ({id: id, name:entityStore.getEntityLabelById('categories', id)})),
           }, ...props.modelValue.services]})
 
@@ -213,7 +213,7 @@ const handleCreateService = (value, form) => {
     emit('update:modelValue', {...props.modelValue, services: [...props.modelValue.services, {
       id: generateTempId(),
       name: value.name,
-      batch: [{id: value.batch, name:entityStore.getEntityLabelById('serviceBatch', value.batch)}],
+      batches: [{id: value.batches, name:entityStore.getEntityLabelById('serviceBatch', value.batches)}],
       product_categories: value.category.map(id => ({id: id, name:entityStore.getEntityLabelById('categories', id)})),
       isLocal: true,
     }]});
@@ -255,7 +255,7 @@ const handleUpdateService = (value, form, item) => {
   services[index] = {
     ...item,
     name: value.name,
-    batch: [{id: value.batch, name:entityStore.getEntityLabelById('serviceBatch', value.batch)}],
+    batches: [{id: value.batches, name:entityStore.getEntityLabelById('serviceBatch', value.batches)}],
     product_categories: value.category.map(id => ({ id: id, name: entityStore.getEntityLabelById('categories', id) }))
   };
   emit('update:modelValue', { ...props.modelValue, services: services });
@@ -270,11 +270,12 @@ const handleUpdateService = (value, form, item) => {
 
 const isLoaded = ref(false);
 
+
 onMounted(async () => {
   try {
     const res = await entityStore.getSelfServices(userStore.userData?.organization_id);
     if (res?.services) {
-      emit('update:modelValue', {...props.modelValue, services: [...res.services.map(item => ({...item, batch: item.batches}))]});
+      emit('update:modelValue', {...props.modelValue, services: [...res.services]});
     }
     if(res?.pagination) {
       page.value = res.pagination;
