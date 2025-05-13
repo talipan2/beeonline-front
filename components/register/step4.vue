@@ -15,16 +15,7 @@
           <div class="form-group__value">{{ userStore.userData.phone || '-' }}</div>
         </div>
       </div>
-      <UiButton 
-        v-if="!isTelegramChatId"
-        class="register__btn register__btn_type_tg" 
-        variant="telegram" 
-        size="large"
-        type="button"
-        @click="handleOpenTelegram"
-      >
-        Включить уведомления в Telegram
-      </UiButton>
+      <NotificationTelegram class="register__btn register__btn_type_tg"/>
     </CommonProfileCheckCard>
     <CommonProfileCheckCard title="Карточка компании" text="Указанные данные будут видны другим участникам портала"
       changeLink="/register/step2" changeLinkLabel="Изменить">
@@ -181,7 +172,7 @@ const handleOpenTelegram = () => {
 //         status: 1,
 //       }).then((res) => {
 //         userStore.checkAuth()
-        
+
 //         if(res.data && res.data.id) {
 //           router.push('/')
 //         }
