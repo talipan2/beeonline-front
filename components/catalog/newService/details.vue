@@ -32,14 +32,14 @@
     </CommonLayoutInfoCard>
     <CommonLayoutInfoCard class="new-service-details__pub-card new-service-details__pub-card_type_mobile">
       <div class="new-service-details__pub-card-image">
-        <UiImage :src="data.pub_card?.logo || defaultImage" :alt="data.name" :external="true"/>
+        <UiImage :src="data.logo || defaultImage" :alt="data.name" :external="true"/>
       </div>
       <div class="new-service-details__pub-card-content">
-        <CommonRating :rating="data.pub_card?.reviews_stats_about?.stars" :reviews="data.pub_card?.reviews_about_count" :is-count-rating="false" />
-        <CommonLocationsList :locationsList="{countries: [data.pub_card?.country]}" />
-        <div class="new-service-details__pub-card-site" v-if="data.pub_card?.url_site">
+        <CommonRating :rating="data.reviews_stats_about?.stars" :reviews="data.reviews_about_count" :is-count-rating="false" />
+        <CommonLocationsList :locationsList="{countries: [data.country]}" />
+        <div class="new-service-details__pub-card-site" v-if="data.url_site">
           <SvgoPlanet class="svg-m" />
-          <NuxtLink :to="data.siteUrl" class="link" target="_blank" >{{ data.pub_card?.url_site || 'не указано' }}</NuxtLink>
+          <NuxtLink :to="data.siteUrl" class="link" target="_blank" >{{ data.url_site || 'не указано' }}</NuxtLink>
         </div>
       </div>
       <div class="new-service-details__pub-card-content">
@@ -94,7 +94,7 @@
       <CatalogNewServiceDetailsBadge 
         :specs="{
           name: 'Бесплатные образцы', 
-          value: entityStore.getEntityLabelById('freeTestSamples', data.free_samples),
+          value: data.free_samples?.length ? entityStore.getEntityLabelById('freeTestSamples', data.free_samples).join(' / ') : '',
         }"
       />
     </div>
@@ -128,6 +128,7 @@
         mobile-slider
         @updateSlide="handleUpdatePhotoIndex"
         type="gallery"
+        :overlay="true"
       />
       <template #action>
         <p class="new-service-details__gallery-count">{{ `${currentGalleryIndex + 1}/${data.gallery.length}` }}</p>
@@ -141,9 +142,10 @@
         mobile-slider 
         @updateSlide="handleUpdatePhotoIndex"
         type="equipment"
+        :overlay="true"
       />
       <template #action>
-        <p class="new-service-details__gallery-count">{{ `${currentEquipmentIndex + 1}/${data.gallery.length}` }}</p>
+        <p class="new-service-details__gallery-count">{{ `${currentEquipmentIndex + 1}/${data.equipment.length}` }}</p>
       </template>
     </CommonLayoutInfoCard>
     <CommonLayoutInfoCard title="Отзывы" class="new-service-details__reviews" v-if="reviewList.length">

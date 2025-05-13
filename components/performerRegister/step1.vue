@@ -32,7 +32,7 @@
             <label class="form-group__title">
               Сырье
             </label>
-            <div class="form-value">{{ formattedData.materials }}</div>
+            <div class="form-value">{{ formattedData.materials || '-' }}</div>
           </div>
           <div class="form-group-data">
             <label class="form-group__title">
@@ -121,7 +121,7 @@ const data = computed({
 
 const emit = defineEmits(['update:modelValue'])
 
-const dataCopyForModal = ref({})
+const dataCopyForModal = ref({...data.value})
 
 
 const editPubCardModal = ref(false);

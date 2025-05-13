@@ -157,7 +157,7 @@ const handleSubmit = (value, form) => {
           return {
             name: item.name,
             product_category_ids: item.product_categories.map(category => category.id),
-            batch_id: item.batch[0]?.id,
+            batch_id: item?.batches[0]?.id,
           }
         }),
       }, form).then(res => {
@@ -203,6 +203,7 @@ onMounted(() => {
         organizationData.value.legalAddress = userOrganization.legal_address
         organizationData.value.registerAddress = userOrganization.legal_address
         organizationData.value.closedDocumentsEmail = userOrganization.email_docs
+        pubCardData.value.name = pubCardData.value.name ? pubCardData.value.name : userOrganization.name
       }
 
       if(res.user.public_cards && res.user.public_cards && res.user.public_cards.length > 0) {
@@ -214,7 +215,7 @@ onMounted(() => {
           url_site: pubCard.url_site,
           description: pubCard.description,
           is_stm: pubCard.is_stm,
-          free_samples: [pubCard.free_samples ? 0 : undefined].filter(item => item !== undefined),
+          free_samples: pubCard.free_samples?.length ? pubCard.free_samples : [],
           free_stock: pubCard.free_stock ? 1 : 0,
           materials: [
             pubCard.materials_own ? 1 : undefined,

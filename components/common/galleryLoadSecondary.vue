@@ -31,6 +31,7 @@
               }
             }"
             @swiper="setSwiperInstance"
+            @slideChange="handleSlideChange"
           >
             <SwiperSlide v-for="(image, index) in localModelValue" :key="index" class="gallery-load-secondary__slide">
               <a :href="image.url" class="" data-fancybox="gallery">
@@ -38,12 +39,13 @@
               </a>
             </SwiperSlide>
           </Swiper>
-          <div class="gallery-load-secondary__slider-navigation">
+          <div class="gallery-load-secondary__slider-navigation" v-if="localModelValue.length > 1" >
               <UiButton
                 type="button"
                 class="gallery-load-secondary__slider-btn gallery-load-secondary__slider-btn_type_prev"
                 variant="secondary"
                 @click="slidePrev"
+                :disabled="isBeginning"
               >
                 <SvgoSlideArrow class="svg-l" />
               </UiButton>
@@ -52,6 +54,7 @@
                 class="gallery-load-secondary__slider-btn gallery-load-secondary__slider-btn_type_next"
                 variant="secondary"
                 @click="slideNext"
+                :disabled="isEnd"
               >
                 <SvgoSlideArrow class="svg-l" />
               </UiButton>
@@ -201,14 +204,18 @@ const cropper = ref(null);
 const modules = [Navigation];
 const swiperInstance = ref(null);
 
+const isBeginning = ref(true);
+const isEnd = ref(false);
+
 const handleCrop = (data) => {
   if (cropper.value) {
     const { canvas, coordinates } = cropper.value.getResult();
     canvas.toBlob((blob) => {
       const formData = new FormData();
       formData.append('file', blob);
+      console.log(formData.get('file'))
 
-      settingStore.uploadFiles(userStore.userData.id, formData)
+      settingStore.changeFiles(data.id, formData)
 
       emit('update:modelValue', props.modelValue.map(item => {
         if (item.id === data.id) {
@@ -280,6 +287,16 @@ const slideNext = () => {
     swiperInstance.value.slideNext()
   }
 }
+
+
+const handleSlideChange = (swiper) => {
+  updateNavigationState(swiper);
+}
+
+const updateNavigationState = (swiper) => {
+  isBeginning.value = swiper.isBeginning;
+  isEnd.value = swiper.isEnd;
+};
 
 </script>
 

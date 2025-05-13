@@ -50,7 +50,7 @@
           </template>
         </CommonSelectableButtons>
         <div ref="anchor">
-          <CatalogNewService :servicesList="servicesList" :slider="true"/>
+          <CatalogNewService :servicesList="servicesList" :slider="true" :class="{'loading': loading}"/>
           <!-- {{ servicesList }} -->
         </div>
         <CommonPagination 
@@ -134,16 +134,16 @@ const handleResetFilter = () => {
 
 // Фильтр
 const handleUpdateFilter = (data) => {
-  console.log(data)
   // Если фильтры не выбраны
   if(!data || data.length === 0) {
     router.replace({});
+    loading.value = true;
     organizationStore.getPubCardsList({type: 'performer'}).then(res => {
       page.value = {
         currentPage: res.meta.current_page,
         lastPage: res.meta.last_page,
       }
-    })
+    }).finally(() => {loading.value = false});
     return
   }
 
