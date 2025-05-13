@@ -177,6 +177,8 @@ export default {
 		newResponses: 0,
 
         chatType: 'order',
+
+        requestCount: 0,
     }),
 
     mounted() {
@@ -309,6 +311,8 @@ export default {
                 : null;
 
 			if (this.searchType === 'dialogs') {
+                let requestCount = ++this.requestCount;
+
 				const response = useChatStore()
 				.getChats({
 					last_message_at: lastMessageAt,
@@ -317,8 +321,13 @@ export default {
 					adjacent_service_id: this.adjacentService?.id,
 					lifecycle_status: this.lifecycle_status,
                     chat_type: this.chatType,
+                    clear: clear,
+                    letRequestCount: requestCount,
+                    requestCount: this.requestCount,
 				})
 				.then((data) => {
+                    if (requestCount < this.requestCount) return;
+                    console.log(clear ? "clear" : "not", data.length);
 					if (clear) {
 						this.dialogs = [];
 					}
