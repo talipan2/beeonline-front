@@ -53,7 +53,7 @@ const props = defineProps({
   },
   label: {
     type: String,
-    default: 'Загрузить фотографию (до 5Мб. Допустимый формат .jpeg, .png, .jpg, .gif)',
+    default: 'Загрузить Logo, или фотографию (до 5Мб. Допустимый формат .jpeg, .png, .jpg, .gif)',
   },
   modelValue: {
     type: [String, Object],

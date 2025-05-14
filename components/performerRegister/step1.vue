@@ -154,6 +154,7 @@ const handleUpdatePubCard = (value, form) => {
     is_stm: value.is_stm,
     free_stock: value.free_stock,
     cities: Array.isArray(value.selectedLocations?.cities) ? value.selectedLocations?.cities?.map(item => item.id) : [],
+    workers_count: value.workers_count,
   }, form).then(res => {
     if(res) {
       emit('update:modelValue', {

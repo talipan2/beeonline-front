@@ -15,7 +15,7 @@
       <p class="filter-modal__text">Наличие СТМ</p>
       <UiRadioButtonGroup
         class="filter-modal__radio filter-modal__action"
-        v-model="modelValue.has_stm"
+        v-model="modelValue.is_stm"
         :options="[
           { value: 1, label: 'Да' },
           { value: 0, label: 'Нет' },
@@ -58,14 +58,14 @@
         ]"
       />
     </div>
-    <!-- <div class="filter-modal__item filter-modal__item_type_column">
+    <div class="filter-modal__item filter-modal__item_type_column">
       <p class="filter-modal__text">Размер партии</p>
       <UiRadioButtonGroup
         class="filter-modal__radio filter-modal__action"
         v-model="modelValue.batch_id"
         :options="batchList"
       />
-    </div> -->
+    </div>
   </div>
 </template>
 

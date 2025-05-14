@@ -2,7 +2,7 @@
   <div class="new-service-card" :class="{'new-service-card_type_revers': reversColor}">
     <div class="new-service-card__header">
       <div class="new-service-card__pubcard">
-        <p class="new-service-card__pubcard-title">Название компании</p>
+        <!-- <p class="new-service-card__pubcard-title">Название компании</p> -->
         <div class="new-service-card__pubcard-content">
           <div class="image-box new-service-card__pubcard-logo image-box_type_not-border">
             <img :src="data.logo || defaultImage" :alt="data?.name">

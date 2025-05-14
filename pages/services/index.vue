@@ -108,7 +108,7 @@ const filter = ref({
   type: 'performer',
   categories: [],
   location: [],
-  has_stm: null,
+  is_stm: null,
   free_test: [],
   material: [],
   free_stock: null,
@@ -162,25 +162,25 @@ const handleUpdateFilter = (data) => {
     categories: data.categories ? data.categories.join(',') : undefined,
     countries: data.location && data.location.countries ? data.location.countries?.map(item => item.id).join(',') : undefined,
     regions: data.location && data.location.regions ? data.location.regions?.map(item => item.id).join(',') : undefined,
-    has_stm: data.has_stm != null ? data.has_stm : undefined,
+    is_stm: data.is_stm != null ? data.is_stm : undefined,
     free_samples: data.free_samples && data.free_samples.length ? data.free_samples.join(',') : undefined,
     free_stock: data.free_stock != null ? data.free_stock : undefined,
     materials_own: data.material && data.material.length && data.material.includes(0) ? 1 : undefined,
     materials_tolling: data.material && data.material.length && data.material.includes(1) ? 1 : undefined,
+    batch_id: data.batch_id != null ? data.batch_id : undefined,
   }
 
-  console.log(newQuery, 1)
-
   // добавление квери параметров для запроса
-  filter.value = {
+  const filterQuery = {
     type: 'performer',
     categories: data.categories && data.categories.length ? data.categories : undefined,
     regions: data.location && Object.keys(data.location).length ? Object.values(data.location).flat().map(item => item.id) : undefined,
-    has_stm: data.has_stm != null ? data.has_stm : undefined,
+    is_stm: data.is_stm != null ? Boolean(data.is_stm) : undefined,
     free_samples: data.free_samples && data.free_samples.length ? data.free_samples : undefined,
-    free_stock: data.free_stock != null ? data.free_stock : undefined,
+    free_stock: data.free_stock != null ? Boolean(data.free_stock) : undefined,
     materials_own: data.material && data.material.length && data.material.includes(0) ? 1 : undefined,
     materials_tolling: data.material && data.material.length && data.material.includes(1) ? 1 : undefined,
+    batch_ids: data.batch_id != null ? [data.batch_id] : undefined,
   }
 
   // удаление пустых параметров
@@ -188,13 +188,10 @@ const handleUpdateFilter = (data) => {
     if (newQuery[key] === undefined) delete newQuery[key];
   });
 
-  console.log(newQuery, 2)
-
-
   loading.value = true
   isLoaded.value = false
   // обновление услуг с новыми параметрами
-  organizationStore.getPubCardsList({...filter.value}).then(res => {
+  organizationStore.getPubCardsList({...filterQuery}).then(res => {
     if(res) {
       page.value = {
         currentPage: res.meta.current_page,
@@ -260,11 +257,12 @@ onMounted(() => {
       page: query.page ? Number(query.page) : undefined,
       categories: query.categories ? query.categories.split(',').map(item => Number(item)) : undefined,
       regions: [query.countries && query.countries.split(',').map(item => Number(item)), query.regions && query.regions.split(',').map(item => Number(item))].flat(),
-      has_stm: query.has_stm ? Number(query.has_stm) : undefined,
+      is_stm: query.is_stm ? Number(query.is_stm) : undefined,
       free_samples: query.free_samples ? query.free_samples.split(',').map(item => Number(item)) : undefined,
       free_stock: query.free_stock ? Number(query.free_stock) : undefined,
       materials_own: query.materials_own ? Number(query.materials_own) : undefined,
       materials_tolling: query.materials_tolling ? Number(query.materials_tolling) : undefined,
+      batch_ids: query.batch_id ? [Number(query.batch_id)] : undefined
     }
     console.log(params)
     
@@ -272,11 +270,12 @@ onMounted(() => {
       type: 'performer',
       categories: query.categories ? query.categories.split(',').map(item => Number(item)) : [],
       location: {countries: query.countries ? query.countries.split(',').map(item => Number(item)) : [], regions: query.regions ? query.regions.split(',').map(item => Number(item)) : [] },
-      has_stm: query.has_stm ? Number(query.has_stm) : undefined,
+      is_stm: query.is_stm ? Number(query.is_stm) : undefined,
       free_samples: query.free_samples ? query.free_samples.split(',').map(item => Number(item)) : [],
       free_stock: query.free_stock ? Number(query.free_stock) : undefined,
       materials_own: query.materials_own ? Number(query.materials_own) : undefined,
       materials_tolling: query.materials_tolling ? Number(query.materials_tolling) : undefined,
+      batch_id: query.batch_id ? Number(query.batch_id) : undefined
     }
   }
 
