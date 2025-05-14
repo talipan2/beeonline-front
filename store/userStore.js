@@ -400,6 +400,13 @@ export const useUserStore = defineStore("user", {
       }
     },
 
+    async getNotificationPreferences(id) {
+        return await useApi().get(`users/${id}/notification-preferences`)
+    },
+    async setNotificationPreferences(id, data) {
+        return await useApi().post(`users/${id}/notification-preferences`, data)
+    },
+
     // получение уведомления
     async getNotifications(id) {
       try {

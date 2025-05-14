@@ -1,46 +1,28 @@
 <template>
   <div class="notification-setting">
     <h2 class="notification-setting__title">Настройка уведомлений</h2>
-    <div class="notification-setting__list">
-      <template v-for="notification in notificationsSetting" :key="notification.id">
-        <div class="notification-setting__container" v-if="notification.role.includes(userStore.role)">
-            <p class="notification-setting__text">{{ notification.label }}</p>
-            <UiCheckboxGroup
-              class="notification-setting__checkbox"
-              :options="notification.settings"
-              :isValidated="false"
-              v-model="selectedSettings[notification.value]"
-              :disabled="(id) => handleDisableSettings(notification.value, id)"
-
-            />
-        </div>
-      </template>
+    <div class="notification-setting__list" v-if="notificationPreferences">
+        <template v-for="type in notificationTypes">
+            <div class="notification-setting__container" v-if="(!type.roles?.length || type.roles.includes(userStore.role)) && type.is_active">
+                <p class="notification-setting__text">{{ type.description }}</p>
+                <UiCheckboxGroup
+                    class="notification-setting__checkbox"
+                    :options="channels"
+                    :isValidated="false"
+                    v-model="preferencesByType[type.id]"
+                    :disabled="(id) => handleDisableChannel(id)"
+                />
+            </div>
+        </template>
     </div>
     <div class="notification-setting__buttons">
-      <UiButton
-        v-if="!isTelegramChatId"
-        class="notification-setting__button"
-        variant="telegram"
-        size="small"
-        @click="handleOpenTelegram"
-        type="button"
-        >Включить уведомления в telegram
-      </UiButton>
-      <UiButton
-        v-else
-        class="notification-setting__button"
-        variant="telegram"
-        size="small"
-        @click="handleResetTelegram"
-        type="button"
-        >Отключить уведомления в telegram
-      </UiButton>
+      <NotificationTelegram class="notification-setting__button"/>
       <UiButton
         type="button"
         class="notification-setting__button"
         variant="tertiary"
         size="small"
-        @click="handleSelectSettings"
+        @click="handleSave"
       >
         Сохранить
         <SvgoBtnArrow class="svg-lx" />
@@ -52,232 +34,87 @@
 <script setup>
 import { useUserStore } from '~/store/userStore';
 import {useToast} from "vue-toastification";
-import { useSettingStore } from '~/store/settingStore';
 
 const userStore = useUserStore();
-const settingStore = useSettingStore();
 const toast = useToast();
 
 const loading = ref(false);
 
-// список выбранных уведомлений
-const selectedSettings = ref({
-  'Новые заказы': [1],
-  'Новые отзывы или ответы': [1],
-  'Новые сообщения в чате': [1],
-  'Системные уведомления': [1],
-  'Новости': [1],
-  // 'Сделки': [1],
+const notificationTypes = ref(null);
+const notificationChannels = ref(null);
+const notificationPreferences = ref(null);
+const preferencesByType = ref(null);
+
+const initPreferencesByType = () => {
+    let preferences = {};
+    notificationPreferences.value.forEach(({ type, channel, is_active }) => {
+        if (is_active) {
+            if (!preferences[type]) {
+                preferences[type] = [];
+            }
+            preferences[type].push(channel);
+        }
+    });
+    return preferences;
+}
+
+const channels = computed(() => {
+    return notificationChannels.value.map((channel) => {
+        return {
+            id: channel.id,
+            label: channel.title,
+        };
+    });
 });
 
-function handleDisableSettings(type, id) {
-  // Находим настройку по типу и id
-  const notification = notificationsSetting.value.find(n => n.value === type);
-  if (notification) {
-    const setting = notification.settings.find(s => s.id === id);
-    return setting ? setting.disabled : false; // Возвращаем значение disabled
-  }
-  return false; // Если настройка не найдена, возвращаем false
-}
-
-// список уведомлений
-const notificationsSetting = ref([
-  {
-    id: 0,
-    label: 'Хочу получать уведомления о новых заказах',
-    value: 'Новые заказы',
-    role: 'performer',
-    settings: [
-      {id: 0, label: 'по электронной почте', value:'email',},
-      {id: 1, label: 'в личном кабинете', value: 'cabinet', disabled: true, },
-      {id: 2, label: 'в Telegram', value: 'telegram'},
-      {id: 3, label: 'в WhatsApp', value: 'whatsapp'},
-    ]
-  },
-  {
-    id: 1,
-    label: 'Хочу получать уведомления о новых отзывах или ответах на мои отзывы',
-    value: 'Новые отзывы или ответы',
-    role: 'customer/performer',
-    settings: [
-      {id: 0, label: 'по электронной почте', value:'email'},
-      {id: 1, label: 'в личном кабинете', value: 'cabinet', disabled: true},
-      {id: 2, label: 'в Telegram', value: 'telegram'},
-      {id: 3, label: 'в WhatsApp', value: 'whatsapp'},
-    ]
-  },
-  {
-    id: 1,
-    label: 'Хочу получать уведомления о новых сообщениях в чате',
-    value: 'Новые сообщения в чате',
-    role: 'customer/performer',
-    settings: [
-      {id: 0, label: 'по электронной почте', value:'email'},
-      {id: 1, label: 'в личном кабинете', value: 'cabinet', disabled: true},
-      {id: 2, label: 'в Telegram', value: 'telegram'},
-      {id: 3, label: 'в WhatsApp', value: 'whatsapp'},
-    ]
-  },
-  {
-    id: 2,
-    label: 'Хочу получать системные уведомления',
-    value: 'Системные уведомления',
-    role: 'customer/performer',
-    settings: [
-      {id: 0, label: 'по электронной почте', value:'email'},
-      {id: 1, label: 'в личном кабинете', value: 'cabinet', disabled: true},
-      {id: 2, label: 'в Telegram', value: 'telegram'},
-      {id: 3, label: 'в WhatsApp', value: 'whatsapp'},
-    ]
-  },
-  {
-    id: 3,
-    label: 'Хочу получать уведомления о новостях',
-    value: 'Новости',
-    role: 'customer/performer',
-    settings: [
-      {id: 0, label: 'по электронной почте', value:'email'},
-      {id: 1, label: 'в личном кабинете', value: 'cabinet', disabled: true},
-      {id: 2, label: 'в Telegram', value: 'telegram'},
-      {id: 3, label: 'в WhatsApp', value: 'whatsapp'},
-    ]
-  },
-  // {
-  //   id: 4,
-  //   label: 'Хочу получать уведомления о сделках',
-  //   value: 'Сделки',
-  //   role: 'customer/performer',
-  //   settings: [
-  //     {id: 0, label: 'по электронной почте', value:'email'},
-  //     {id: 1, label: 'в личном кабинете', value: 'cabinet', disabled: true},
-  //     {id: 2, label: 'в Telegram', value: 'telegram'},
-  //     {id: 3, label: 'в WhatsApp', value: 'whatsapp'},
-  //   ]
-  // },
-])
-
-// список значений
-const settingValues = [
-  {
-    id: 0,
-    value: 'email'
-  },
-  {
-    id: 1,
-    value: 'cabinet'
-  },
-  {
-    id: 2,
-    value: 'telegram'
-  },
-  {
-    id: 3,
-    value: 'whatsapp'
-  },
-]
-
-// изменение с id на value
-const formatSettingsToRequest = (settings) => {
-  const result = {};
-
-  for (const key in settings) {
-    if (settings[key].length > 0) {
-      // Фильтруем, чтобы не отправлять личный кабинет (так как он всегда включен)
-      result[key] = settings[key]
-        .filter(id => id !== 1) // Исключаем ID личного кабинета
-        .map(setting => {
-          return settingValues.find(item => item.id === setting)?.value;
-        })
-        .filter(Boolean);
-    }
-  }
-
-  return result;
-};
-
-const formatSettingsToState = (settings) => {
-  const result = {};
-
-  // Проходим по всем типам уведомлений из notificationsSetting
-  notificationsSetting.value.forEach(notification => {
-    const key = notification.value;
-
-    // Если настройки для этого типа есть и это массив
-    if (settings[key] && Array.isArray(settings[key])) {
-      // Объединяем пришедшие настройки с обязательным личным кабинетом (id=1)
-      result[key] = [...new Set([
-        1, // Всегда добавляем личный кабинет
-        ...settings[key].map(value => {
-          return settingValues.find(item => item.value === value)?.id;
-        }).filter(id => id !== undefined)
-      ])];
-    } else {
-      // Если настройки не пришли или пустые - только личный кабинет
-      result[key] = [1];
-    }
-  });
-
-  return result;
-};
-
-const handleSelectSettings = () => {
-  let formattedSettings = formatSettingsToRequest(selectedSettings.value)
-  console.log(formattedSettings)
-  if(userStore.userData.id) {
-    userStore.setNotification(userStore.userData.id, formattedSettings).then(res => {
-      if(res) {
-        toast.success(res.message);
-      }
-    })
-  }
-}
-
-const isTelegramChatId = computed(() => userStore.userData.telegram_chat_id !== null)
-
-const handleOpenTelegram = () => {
-  if(!userStore.userData.id) return;
-  if (loading.value) return;
-
-  loading.value = true;
-  settingStore.telegramNotify(userStore.userData.id).then(res => {
-        if (res && res.telegram_chat_link) {
-            window.open(res.telegram_chat_link, '_blank');
-            // userStore.checkAuth();
-        }
-    }).catch(err => {
-        console.log(err)
-    })
-    .finally(() => {
-        loading.value = false;
+const formatPreferencesToRequest = () => {
+    let result = [];
+    notificationTypes.value.forEach((type) => {
+        let channelsByType = preferencesByType.value[type.id] || [];
+        notificationChannels.value.forEach((channel) => {
+            result.push({
+                type: type.id,
+                channel: channel.id,
+                is_active: channelsByType.includes(channel.id)
+            });
+        });
     });
-}
+    return result;
+};
 
-const handleResetTelegram = () => {
-    if(!userStore.userData.id) return
+const handleSave = () => {
     if (loading.value) return;
-
+    let request = {
+        preferences: formatPreferencesToRequest()
+    };
     loading.value = true;
-    settingStore.resetTelegramNotify(userStore.userData.id)
-    .then(res => {
-        userStore.userData.telegram_chat_id = null;
+    userStore.setNotificationPreferences(userStore.userData.id, request)
+    .then((res) => {
+        toast.success("Настройки сохранены");
     })
     .finally(() => {
         loading.value = false;
     })
+};
+
+const handleDisableChannel = (channel_id) => {
+    let channel = notificationChannels.value.find(({id}) => id === channel_id);
+    return channel.is_disabled;
 }
 
 onMounted(() => {
   if(userStore.userData.id) {
     loading.value = true;
-    userStore.getNotifications(userStore.userData.id)
+    userStore.getNotificationPreferences(userStore.userData.id)
     .then(res => {
-      if(res && res.notification_settings) {
-        selectedSettings.value = formatSettingsToState(res.notification_settings);
+        notificationTypes.value = res.notification_types;
+        notificationChannels.value = res.notification_channels;
+        notificationPreferences.value = res.notification_preferences;
+        preferencesByType.value = initPreferencesByType();
         loading.value = false;
-      }
-    })
+    });
   }
-})
+});
 
 </script>
 
