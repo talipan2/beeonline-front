@@ -254,6 +254,10 @@
         <p class="new-service-details__gallery-count">{{ `${currentGalleryIndex + 1}/${data.gallery.length}` }}</p>
       </template>
     </CommonLayoutInfoCard>
+    <CommonLayoutInfoCard title="Описание оборудования" class="new-service-details__description" v-if="data.equipment && data.equipment.length">
+      <p class="new-service-details__description-text">{{ data.equipment_description || 'не указано' }}</p>
+    </CommonLayoutInfoCard>
+      
     <CommonLayoutInfoCard title="Оборудование" class="new-service-details__gallery" v-if="data.equipment && data.equipment.length">
       <CatalogNewServiceImagesList 
         :data="data.equipment" 
@@ -269,7 +273,7 @@
       </template>
     </CommonLayoutInfoCard>
     <CommonLayoutInfoCard title="Отзывы" class="new-service-details__reviews" v-if="reviewList.length">
-      <CatalogNewServiceReviewList :reviewList="reviewList" :pub_card="data.pub_card" />
+      <CatalogNewServiceReviewList :reviewList="reviewList" :pub_card="data" />
       <CommonPagination  v-if="reviewsPage.last_page > 1" :current-page="reviewsPage.page" :total-pages="reviewsPage.last_page" @change-page="handleChangeReviewsPage" btn-type="square" position="left"/>
     </CommonLayoutInfoCard>
     <CatalogServiceSendMessageModal :performer_id="data.organization_id" />

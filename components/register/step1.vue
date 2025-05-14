@@ -197,6 +197,7 @@
                 type="text"
                 placeholder="____________"
                 v-model="data.inn"
+                inputType="number"
               >
                 <template #action>
                   <UiButton type="button" class="register__search-btn" variant="tertiary" @click="handleSearchOrgByInn(data.inn)">

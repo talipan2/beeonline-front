@@ -29,7 +29,7 @@
           </div>
           <div class="prop" v-if="data.siteUrl">
             <p class="prop__name prop__name_type_grey">Сайт:</p>
-            <a :href="data.siteUrl" class="prop__value link" target="_blank">{{ data.siteUrl }}</a>
+            <a :href="ensureHttps(data.siteUrl)" class="prop__value link" target="_blank">{{ data.siteUrl }}</a>
           </div>
         </div>
       </div>

@@ -61,7 +61,7 @@
         </div> -->
         <div class="form-group-data">
           <p class="form-group__title">Сайт</p>
-          <a v-if="pubCardData.siteUrl" :href="pubCardData.siteUrl" target="_blank" class="form-group__value link text-wrap">{{ pubCardData.siteUrl}}</a>
+          <a v-if="pubCardData.siteUrl" :href="ensureHttps(pubCardData.siteUrl)" target="_blank" class="form-group__value link text-wrap">{{ pubCardData.siteUrl}}</a>
           <p v-else class="form-group__value text-wrap">-</p>
         </div>
         <div class="form-group-data" v-if="pubCardsVideo.length || pubCardGallery.length">
