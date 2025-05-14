@@ -1,7 +1,7 @@
 <template>
   <CommonLayoutInfoCard title="Услуги" class="new-service-card-layout" :class="{'loading' : !isLoaded}">
     <template v-if="modelValue.services?.length > 0">
-      <div class="new-service-card-layout__service-list">
+      <div class="new-service-card-layout__service-list" ref="serviceList">
         <div class="new-service-card-layout__service" v-for="item in modelValue.services" :key="item">
           <UiButton
             type="button"
@@ -45,7 +45,6 @@
           </div>
         </div>
       </div>
-      <CommonPagination v-if="page.last_page > 1" :current-page="page.current_page" :total-pages="page.last_page" btn-type="square"/>
     </template>
     <template v-if="!isPreview">
       <UiForm :submit="handleCreateService">
@@ -96,6 +95,15 @@
       >
         Добавить еще услугу
       </UiButton>
+            <CommonPagination 
+        class="new-service-card-layout__pagination" 
+        v-if="page.last_page > 1" 
+        :current-page="page.current_page" 
+        :total-pages="page.last_page" 
+        btn-type="square" 
+        :position="'center'" 
+        @change-page="handleChangePage"
+      />
     </template>
     <ModalsRoundBorder :is-open="editServiceModal" title="Редактирование услуги" @close="editServiceModal = false" size="lg" class="service-modal">
       <UiForm :submit="(values, form) => handleUpdateService(values, form, editServiceData)" class="service-modal__form">
@@ -112,7 +120,7 @@
     </ModalsRoundBorder>
     <ModalsRoundBorder :is-open="addNewServiceModal" title="Добавление услуги" @close="addNewServiceModal = false" size="lg" class="service-modal">
       <UiForm :submit="handleCreateService" class="service-modal__form">
-        <PerformerRegisterServiceForm />
+        <PerformerRegisterServiceForm :service="serviceData" />
         <div class="new-service-card-layout__edit-service-buttons">
           <UiButton 
             class="new-service-card-layout__edit-service-button" 
@@ -143,6 +151,7 @@
 import { useEntityStore } from '~/store/entityStore';
 import { useToast } from 'vue-toastification';
 import { useUserStore } from '~/store/userStore';
+import { useSettingStore } from '~/store/settingStore';
 
 const props = defineProps({
   modelValue: {
@@ -163,12 +172,20 @@ const emit = defineEmits(['update:modelValue']);
 const {ConfirmModal, confirm} = useConfirmModal();
 const toast = useToast();
 const userStore = useUserStore();
+const settingStore = useSettingStore();
 
 const entityStore = useEntityStore();
 const isCreateService = ref(false);
 const editServiceModal = ref(false)
 const editServiceData = ref({});
 const addNewServiceModal = ref(false);
+const serviceList = ref(null);
+
+const serviceData = ref({
+  name: '',
+  batches: [],
+  product_categories: [],
+})
 
 const handleOpenAddService = () => {
   addNewServiceModal.value = true;
@@ -206,6 +223,11 @@ const handleCreateService = (value, form) => {
           addNewServiceModal.value = false;
           toast.success('Услуга отправлена на модерацию');
           form.resetForm();
+          serviceData.value = {
+            name: '',
+            batches: [],
+            product_categories: [],
+          };
         }
       })
   } else {
@@ -217,10 +239,24 @@ const handleCreateService = (value, form) => {
       product_categories: value.category.map(id => ({id: id, name:entityStore.getEntityLabelById('categories', id)})),
       isLocal: true,
     }]});
+
+    if(serviceList.value) {
+      // скролл на новую услугу
+      const rect = serviceList.value.getBoundingClientRect();
+      console.log(rect)
+      const offset = window.scrollY + rect.top - settingStore.headerHeight;
+      smoothScroll(offset, false);
+    }
+
     addNewServiceModal.value = false;
     toast.success('Услуга добавлена');
     form.resetForm();
-  }
+    serviceData.value = {
+      name: '',
+      batches: [],
+      product_categories: [],
+    };
+}
 }
 
 // Удаление услуги
@@ -270,10 +306,30 @@ const handleUpdateService = (value, form, item) => {
 
 const isLoaded = ref(false);
 
+const loading = ref(false);
+
+const handleChangePage = (currentPage) => {
+  if (loading.value) return;
+  loading.value = true;
+  entityStore.getSelfServices(userStore.userData?.organization_id, {page: currentPage, per_page: 5})
+  .then(res => {
+    if (res?.services) {
+      emit('update:modelValue', {...props.modelValue, services: [...res.services]});
+    }
+    if(res?.pagination) {
+      page.value = res.pagination;
+    }
+
+    const rect = serviceList.value.getBoundingClientRect();
+    const offset = window.scrollY + rect.top - settingStore.headerHeight;
+    smoothScroll(offset, false);
+
+  }).finally(() => {loading.value = false})
+}
 
 onMounted(async () => {
   try {
-    const res = await entityStore.getSelfServices(userStore.userData?.organization_id);
+    const res = await entityStore.getSelfServices(userStore.userData?.organization_id, {per_page: 5});
     if (res?.services) {
       emit('update:modelValue', {...props.modelValue, services: [...res.services]});
     }
@@ -351,6 +407,10 @@ onMounted(async () => {
       margin-bottom: -2.4em;
       padding: 1.6em;
     }
+  }
+
+  &__pagination {
+    margin-bottom: 1em;
   }
 
   &__remove-service {

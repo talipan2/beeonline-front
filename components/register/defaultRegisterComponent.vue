@@ -7,63 +7,69 @@
     description="Указанные данные не разглашаются третьим лицам и необходимы для успешной работы на портале."
   >
     <UiForm :submit="handleSubmit">
-      <div class="form-group">
-        <label class="form-group-data form-group__title">
-          Ваше имя *
-          <UiInput
-            :rules="{ required: true, min: 2 }"
-            name="name"
-            label="Ваше имя"
-            class="form-group__value"
-            type="text"
-            placeholder="Ваше имя"
-            v-model="userData.name"
-          />
-        </label>
-        <label class="form-group-data form-group__title">
-          Ваша должность
-          <UiInput
-            :rules="{min: 2}"
-            name="post"
-            label="Ваша должность"
-            class="form-group__value"
-            type="text"
-            placeholder="Ваша должность"
-            v-model="userData.jobTitle"
-          />
-        </label>
-        <label class="form-group-data form-group__title">
-          E-mail *
-          <UiInput
-            :rules="{ required: true, min: 6, email: true }"
-            name="email"
-            label="E-mail"
-            class="form-group__value"
-            type="email"
-            placeholder="____@_____"
-            v-model="userData.email"
-          />
-        </label>
-        <label class="form-group-data form-group__title">
-          Ваш телефон *
-          <UiInput
-            :rules="{ required: true, max: 16 }"
-            name="phone"
-            label="Телефон"
-            class="form-group__value"
-            type="tel"
-            placeholder="Телефон"
-            v-model="userData.phone"
-            :phonePlus="true"
-            :max-length="16"
-          />
-        </label>
+      <div class="register__form-container">
+        <div class="register__performer-header" v-if="userStore.role === 'performer'">
+        <h2>Контактные данные</h2>
+        <p>Указанные данные не разглашаются третьим лицам и необходимы для успешной работы на портале.</p>
       </div>
-      <div class="register__checkbox">
-        <UiCheckbox name="Политика конфиденциальности" :rules="{ required: true }" v-model="userData.privacyPolicy">
-          Я согласен(а) с&nbsp;
-          <NuxtLink to="/page-policy" target="_blank">политикой конфиденциальности.</NuxtLink>
-        </UiCheckbox>
+        <div class="form-group">
+          <label class="form-group-data form-group__title">
+            Ваше имя *
+            <UiInput
+              :rules="{ required: true, min: 2 }"
+              name="name"
+              label="Ваше имя"
+              class="form-group__value"
+              type="text"
+              placeholder="Ваше имя"
+              v-model="userData.name"
+            />
+          </label>
+          <label class="form-group-data form-group__title">
+            Ваша должность
+            <UiInput
+              :rules="{min: 2}"
+              name="post"
+              label="Ваша должность"
+              class="form-group__value"
+              type="text"
+              placeholder="Ваша должность"
+              v-model="userData.jobTitle"
+            />
+          </label>
+          <label class="form-group-data form-group__title">
+            E-mail *
+            <UiInput
+              :rules="{ required: true, min: 6, email: true }"
+              name="email"
+              label="E-mail"
+              class="form-group__value"
+              type="email"
+              placeholder="____@_____"
+              v-model="userData.email"
+            />
+          </label>
+          <label class="form-group-data form-group__title">
+            Ваш телефон *
+            <UiInput
+              :rules="{ required: true, max: 16 }"
+              name="phone"
+              label="Телефон"
+              class="form-group__value"
+              type="tel"
+              placeholder="Телефон"
+              v-model="userData.phone"
+              :phonePlus="true"
+              :max-length="16"
+            />
+          </label>
+        </div>
+        <div class="register__checkbox">
+          <UiCheckbox name="Политика конфиденциальности" :rules="{ required: true }" v-model="userData.privacyPolicy">
+            Я согласен(а) с&nbsp;
+            <NuxtLink to="/page-policy" target="_blank">политикой конфиденциальности.</NuxtLink>
+          </UiCheckbox>
+        </div>
       </div>
       <UiButton
         type="submit"
@@ -137,4 +143,22 @@ onMounted(() => {
 })
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+
+.register {
+  &__performer-header {
+    h2 {
+      font-size: 2.6em;
+      margin-bottom: 0.3em;
+    }
+
+    p {
+      font-size: 1.2em;
+      margin-bottom: 1.46em;
+    }
+
+  }
+  
+}
+
+</style>

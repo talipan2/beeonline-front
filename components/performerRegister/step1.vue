@@ -59,6 +59,16 @@
         </div>
       </div>
       <div class="form-group form-group_type_secondary">
+        <div class="form-group form-group__value">
+          <div class="form-group-data">
+            <label class="form-group__title">
+              Количество работников
+            </label>
+            <div class="form-value">{{ formattedData.workers_count || '-' }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group form-group_type_secondary">
         <div class="form-group-data">
           <label class="form-group__title">
             Описание
@@ -148,8 +158,8 @@ const handleUpdatePubCard = (value, form) => {
     if(res) {
       emit('update:modelValue', {
         ...res,
-        gallery: [],
-        workSpaces: [],
+        gallery: res.gallery,
+        workSpaces: res.equipment,
         materials: [res?.materials_own ? 0: '', res?.materials_tolling ? 1: ''].filter(item => item !== ''),
         free_stock: res?.free_stock ? 1 : 0,
         locations: {

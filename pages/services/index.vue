@@ -49,8 +49,8 @@
             </UiButton>
           </template>
         </CommonSelectableButtons>
-        <div ref="anchor">
-          <CatalogNewService :servicesList="servicesList" :slider="true" :class="{'loading': loading}"/>
+        <div ref="anchor" :class="{'loading': loading}">
+          <CatalogNewService :servicesList="servicesList" :slider="true"/>
           <!-- {{ servicesList }} -->
         </div>
         <CommonPagination 
@@ -108,12 +108,12 @@ const filter = ref({
   type: 'performer',
   categories: [],
   location: [],
-  is_stm: null,
-  free_samples: null,
-  materials_own: null,
-  materials_tolling: null,
+  has_stm: null,
+  free_test: [],
+  material: [],
   free_stock: null,
-  rawMaterials: null
+  verification: null,
+  batch_id: null,
 });
 
 
@@ -127,10 +127,15 @@ const handleResetFilter = () => {
     materials_own: null,
     materials_tolling: null,
     free_stock: null,
-    rawMaterials: null
+    rawMaterials: null,
+    batch_id: null,
   }
   handleUpdateFilter();
 }
+
+watch(() => filter.value.categories, (newValue) => {
+  handleUpdateFilter(filter.value);
+})
 
 // Фильтр
 const handleUpdateFilter = (data) => {
@@ -149,39 +154,42 @@ const handleUpdateFilter = (data) => {
 
   if(loading.value) return
 
+  console.log(data)
+
   // добавление квери параметров для роутинга
   const newQuery = {
     type: 'performer',
     categories: data.categories ? data.categories.join(',') : undefined,
     countries: data.location && data.location.countries ? data.location.countries?.map(item => item.id).join(',') : undefined,
     regions: data.location && data.location.regions ? data.location.regions?.map(item => item.id).join(',') : undefined,
-    is_stm: data.has_stm != null ? data.has_stm : undefined,
-    free_samples: data.free_test && data.free_test.length ? data.free_test.join(',') : undefined,
+    has_stm: data.has_stm != null ? data.has_stm : undefined,
+    free_samples: data.free_samples && data.free_samples.length ? data.free_samples.join(',') : undefined,
     free_stock: data.free_stock != null ? data.free_stock : undefined,
     materials_own: data.material && data.material.length && data.material.includes(0) ? 1 : undefined,
     materials_tolling: data.material && data.material.length && data.material.includes(1) ? 1 : undefined,
   }
 
-  console.log(newQuery)
+  console.log(newQuery, 1)
 
   // добавление квери параметров для запроса
   filter.value = {
     type: 'performer',
     categories: data.categories && data.categories.length ? data.categories : undefined,
     regions: data.location && Object.keys(data.location).length ? Object.values(data.location).flat().map(item => item.id) : undefined,
-    is_stm: data.has_stm != null ? data.has_stm : undefined,
-    free_samples: data.free_test && data.free_test.length ? data.free_test : undefined,
+    has_stm: data.has_stm != null ? data.has_stm : undefined,
+    free_samples: data.free_samples && data.free_samples.length ? data.free_samples : undefined,
     free_stock: data.free_stock != null ? data.free_stock : undefined,
     materials_own: data.material && data.material.length && data.material.includes(0) ? 1 : undefined,
     materials_tolling: data.material && data.material.length && data.material.includes(1) ? 1 : undefined,
   }
 
-  console.log(filter.value)
-
   // удаление пустых параметров
   Object.keys(newQuery).forEach((key) => {
-    if (!newQuery[key]) delete newQuery[key];
+    if (newQuery[key] === undefined) delete newQuery[key];
   });
+
+  console.log(newQuery, 2)
+
 
   loading.value = true
   isLoaded.value = false
@@ -192,11 +200,11 @@ const handleUpdateFilter = (data) => {
         currentPage: res.meta.current_page,
         lastPage: res.meta.last_page,
       }
-
+      
       // скрол
-      const rect = anchor.value.getBoundingClientRect(); 
-      const offset = window.scrollY + rect.top - settingStore.headerHeight;
-      smoothScroll(offset, false);
+      // const rect = anchor.value.getBoundingClientRect(); 
+      // const offset = window.scrollY + rect.top - settingStore.headerHeight;
+      // smoothScroll(offset, false);
 
       router.replace({ query: { ...newQuery } });
     }
@@ -252,7 +260,7 @@ onMounted(() => {
       page: query.page ? Number(query.page) : undefined,
       categories: query.categories ? query.categories.split(',').map(item => Number(item)) : undefined,
       regions: [query.countries && query.countries.split(',').map(item => Number(item)), query.regions && query.regions.split(',').map(item => Number(item))].flat(),
-      is_stm: query.is_stm ? Number(query.is_stm) : undefined,
+      has_stm: query.has_stm ? Number(query.has_stm) : undefined,
       free_samples: query.free_samples ? query.free_samples.split(',').map(item => Number(item)) : undefined,
       free_stock: query.free_stock ? Number(query.free_stock) : undefined,
       materials_own: query.materials_own ? Number(query.materials_own) : undefined,
@@ -264,7 +272,7 @@ onMounted(() => {
       type: 'performer',
       categories: query.categories ? query.categories.split(',').map(item => Number(item)) : [],
       location: {countries: query.countries ? query.countries.split(',').map(item => Number(item)) : [], regions: query.regions ? query.regions.split(',').map(item => Number(item)) : [] },
-      is_stm: query.is_stm ? Number(query.is_stm) : undefined,
+      has_stm: query.has_stm ? Number(query.has_stm) : undefined,
       free_samples: query.free_samples ? query.free_samples.split(',').map(item => Number(item)) : [],
       free_stock: query.free_stock ? Number(query.free_stock) : undefined,
       materials_own: query.materials_own ? Number(query.materials_own) : undefined,

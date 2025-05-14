@@ -6,7 +6,6 @@
   <div class="form-group form-group_type_secondary">
     <label class="form-group__title">
       Название компании
-      <CommonTooltip text="Допустимы изображения размером до 5Мб" />
     </label>
     <UiInput
       :rules="{ required: true, min: 2 }"
@@ -19,10 +18,9 @@
   <div class="form-group form-group_type_secondary">
     <label class="form-group__title">
       Ссылка на сайт
-      <CommonTooltip text="Допустимы изображения размером до 5Мб" />
     </label>
     <UiInput
-      :rules="{ url: true }"
+      :rules="{  }"
       name="url_site"
       label="Ссылка на сайт"
       v-model="modelValue.url_site"
@@ -34,7 +32,6 @@
   <div class="form-group form-group_type_secondary">
     <label class="form-group__title">
       Описание
-      <CommonTooltip text="" />
     </label>
     <UiTextArea
       class="form-group__value"
@@ -54,6 +51,7 @@
       :is-required="true"
       :button-label="'Выбрать город'"
       :type="['selectCities']"
+      :max-selected="5"
     />
   </div>
   <div class="new-service-card-layout__container">
@@ -118,6 +116,20 @@
         />
       </div>
     </div>
+  </div>
+  <div class="form-group form-group_type_secondary">
+    <label class="form-group__title">
+      Количество работников
+    </label>
+    <UiInput
+      :rules="{ required: true }"
+      name="workers_count"
+      v-model="modelValue.workers_count"
+      label="Количество работников"
+      class="form-group__value"
+      type="number"
+      inputType="number"
+    />
   </div>
 </template>
 

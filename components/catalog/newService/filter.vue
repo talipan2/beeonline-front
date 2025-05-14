@@ -117,10 +117,11 @@ const isMobile = ref(false);
 const filter = ref({
   location: [],
   has_stm: null,
-  free_test: [],
+  free_samples: [],
   material: [],
   free_stock: null,
   verification: null,
+  batch_id: null,
 });
 
 const toggleFilterModal = () => {
@@ -139,17 +140,18 @@ const resetFilter = () => {
   filter.value = {
     location: [],
     has_stm: null,
-    free_test: [],
+    free_samples: [],
     material: [],
     free_stock: null,
     verification: null,
+    batch_id: null,
   };
   emit('resetFilter');
   hideFilterModal();
 }
 
 const handleUpdateFilter = () => {
-  emit('updateFilter', filter.value)
+  emit('updateFilter', {...filter.value})
   hideFilterModal();
 };
 
@@ -160,11 +162,12 @@ const updateIsMobile = () => {
 watch(() => props.filter, () => {
   filter.value = {
     location: props.filter.location || [],
-    has_stm: props.filter.is_stm || null,
-    free_test: props.filter.free_samples || [],
+    has_stm: props.filter.has_stm != null ? props.filter.has_stm : null,
+    free_samples: props.filter.free_samples || [],
     material: [props.filter.materials_own ? 0 : undefined, props.filter.materials_tolling ? 1 : undefined].filter(item => item !== undefined),
-    free_stock: props.filter.free_stock || null,
-    verification: props.filter.verification || null
+    free_stock: props.filter.free_stock != null ? props.filter.free_stock : null,
+    verification: props.filter.verification || null,
+    batch_id: props.filter.batch_id || null,
   }
 }, {deep: true, immediate: true})
 
@@ -267,6 +270,12 @@ onBeforeUnmount(() => {
 
     &:not(:first-child) {
       align-items: flex-start;
+    }
+
+    &_type_column {
+      .radio-buttons__list {
+        flex-direction: column;
+      }
     }
 
     @include mobile {

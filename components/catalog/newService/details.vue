@@ -8,12 +8,31 @@
         <h3 class="new-service-details__pub-card-title">{{ data.name || 'не указано' }}</h3>
         <CommonRating :rating="data.reviews_stats_about?.stars" :reviews="data.reviews_about_count" :is-count-rating="false" />
         <CommonLocationsList :locationsList="{countries: [data.country]}" />
-        <div class="new-service-details__pub-card-site" v-if="data.pub_card?.url_site">
+        <div class="new-service-details__pub-card-site" v-if="data?.url_site">
           <SvgoPlanet class="svg-m" />
-          <NuxtLink :to="data.siteUrl" class="link" target="_blank" >{{ data.pub_card?.url_site || 'не указано' }}</NuxtLink>
+          <NuxtLink :to="test-v2.bee-online.ru" class="link" target="_blank" >{{ 'test-v2.bee-online.ru' || 'не указано' }}</NuxtLink>
         </div>
-        <div class="new-service-details__pub-card-buttons">
-          <UiButton type="button" variant="quinary" size="large" class="new-service-details__pub-card-button" @click="settingStore.sendMessageModal = true">Написать исполнителю</UiButton>
+        <!-- КНОПКИ ДЛЯ ДЕСКТОПА -->
+        <div class="new-service-details__pub-card-buttons" v-if="userStore.isAuth">
+          <UiButton 
+            v-if="userStore.userPubCard.id === data.id" 
+            variant="quinary" 
+            size="large" 
+            class="new-service-details__pub-card-button" 
+            to="/profile"
+          >
+            Редактировать
+          </UiButton>
+          <UiButton 
+            v-if="userStore.role === 'customer' " 
+            type="button" 
+            variant="quinary" 
+            size="large" 
+            class="new-service-details__pub-card-button" 
+            @click="settingStore.sendMessageModal = true"
+          >
+            Написать исполнителю
+          </UiButton>
           <PaidServiceCounterpartyCheck
             :id="data.organization_id"
           >
@@ -24,7 +43,46 @@
                 </UiButton>
             </template>
           </PaidServiceCounterpartyCheck>
-          <UiButton type="button" variant="tertiary" size="around" class="new-service-details__pub-card-button" :class="{ 'new-service-details__pub-card-button_type_active': isFavorite }" @click="handleAddFavorite">
+          <UiButton 
+            type="button" 
+            variant="tertiary" 
+            size="around" 
+            class="new-service-details__pub-card-button" 
+            :class="{ 'new-service-details__pub-card-button_type_active': isFavorite }" 
+            @click="handleAddFavorite"
+          >
+            <SvgoFavorite class="svg-m" fill="#6937A5" />
+          </UiButton>
+        </div>
+        <!-- КНОПКИ ДЛЯ ДЕСКТОПА ЕСЛИ НЕ АВТОРИЗОВАН -->
+        <div class="new-service-details__pub-card-buttons" v-else>
+          <UiButton 
+            type="button" 
+            variant="quinary" 
+            size="large" 
+            class="new-service-details__pub-card-button" 
+            @click="settingStore.authModalStatus = true"
+          >
+            Написать исполнителю
+          </UiButton>
+          <PaidServiceCounterpartyCheck
+            :id="data.organization_id"
+          >
+            <template #button>
+                <UiButton class="new-service-details__pub-card-button" variant="quinary" size="large" type="button" @click="settingStore.authModalStatus = true">
+                    <SvgoSearch class="svg-m" fill="#6937a5" />
+                    Проверить контрагента
+                </UiButton>
+            </template>
+          </PaidServiceCounterpartyCheck>
+          <UiButton 
+            type="button" 
+            variant="tertiary" 
+            size="around" 
+            class="new-service-details__pub-card-button" 
+            :class="{ 'new-service-details__pub-card-button_type_active': isFavorite }" 
+            @click="settingStore.authModalStatus = true"
+          >
             <SvgoFavorite class="svg-m" fill="#6937A5" />
           </UiButton>
         </div>
@@ -44,8 +102,25 @@
       </div>
       <div class="new-service-details__pub-card-content">
         <h3 class="new-service-details__pub-card-title">{{ data.name || 'не указано' }}</h3>
-        <div class="new-service-details__pub-card-buttons">
-          <UiButton type="button" variant="quinary" size="large" class="new-service-details__pub-card-button" @click="settingStore.sendMessageModal = true">
+        <!-- КНОПКИ ДЛЯ МОБИЛКИ -->
+        <div class="new-service-details__pub-card-buttons" v-if="userStore.isAuth">
+          <UiButton 
+            v-if="userStore.userPubCard.id === data.id" 
+            variant="quinary" 
+            size="large" 
+            class="new-service-details__pub-card-button" 
+            to="/profile"
+          >
+            Редактировать
+          </UiButton>
+          <UiButton 
+            v-if="userStore.role === 'customer'"
+            type="button" 
+            variant="quinary" 
+            size="large" 
+            class="new-service-details__pub-card-button" 
+            @click="settingStore.sendMessageModal = true"
+          >
             Написать исполнителю
           </UiButton>
           <PaidServiceCounterpartyCheck
@@ -58,7 +133,46 @@
                 </UiButton>
             </template>
           </PaidServiceCounterpartyCheck>
-          <UiButton type="button" variant="tertiary" size="large" class="new-service-details__pub-card-button" @click="handleAddFavorite">
+          <UiButton 
+            type="button" 
+            variant="tertiary" 
+            size="large" 
+            class="new-service-details__pub-card-button" 
+            :class="{ 'new-service-details__pub-card-button_type_active': isFavorite }" 
+            @click="handleAddFavorite"
+          >
+            <SvgoFavorite class="svg-m" fill="#6937A5" />
+            Добавить в избранное
+          </UiButton>
+        </div>
+        <!-- КНОПКИ ДЛЯ МОБИЛКИ ЕСЛИ НЕ АВТОРИЗОВАН -->
+        <div class="new-service-details__pub-card-buttons" v-else>
+          <UiButton 
+            type="button" 
+            variant="quinary" 
+            size="large" 
+            class="new-service-details__pub-card-button" 
+            @click="settingStore.authModalStatus = true"
+          >
+            Написать исполнителю
+          </UiButton>
+          <PaidServiceCounterpartyCheck
+            :id="data.organization_id"
+          >
+            <template #button>
+                <UiButton class="new-service-details__pub-card-button" variant="quinary" size="large" type="button" @click="settingStore.authModalStatus = true">
+                    <SvgoSearch class="svg-m" fill="#6937a5" />
+                    Проверить контрагента
+                </UiButton>
+            </template>
+          </PaidServiceCounterpartyCheck>
+          <UiButton 
+            type="button" 
+            variant="tertiary" 
+            size="large" 
+            class="new-service-details__pub-card-button" 
+            @click="settingStore.authModalStatus = true"
+          >
             <SvgoFavorite class="svg-m" fill="#6937A5" />
             Добавить в избранное
           </UiButton>
@@ -77,6 +191,12 @@
         :specs="{
           name: 'Сырье', 
           value: [data.materials_tolling ? 'Заказчика' : '', data.materials_own ? 'Исполнителя' : ''].filter(Boolean).join(' / ')
+        }"
+      />
+      <CatalogNewServiceDetailsBadge 
+        :specs="{
+          name: 'Количество работников', 
+          value: data.workers_count,
         }"
       />
       <CatalogNewServiceDetailsBadge 

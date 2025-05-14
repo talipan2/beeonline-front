@@ -1,10 +1,10 @@
 <template>
+  <CatalogBanner :fetch-function="fetchServiceSlider" class="new-service__banner">
+    <template #item="{ item }">
+      <CatalogNewServiceCard :data="item" class="highlight" :revers-color="true"/>
+    </template>
+  </CatalogBanner>
   <div class="new-service__list">
-    <CatalogBanner :fetch-function="fetchServiceSlider" class="new-service__banner">
-      <template #item="{ item }">
-        <CatalogNewServiceCard :data="item" class="highlight" :revers-color="true"/>
-      </template>
-    </CatalogBanner>
     <template v-if="servicesList.length">
       <template v-for="item in servicesList" :key="item.id">
         <CatalogNewServiceCard :data="item"/>

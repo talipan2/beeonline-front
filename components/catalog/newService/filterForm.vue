@@ -26,7 +26,7 @@
       <p class="filter-modal__text">Образцы</p>
       <UiCheckboxGroup
         class="filter-modal__checkbox filter-modal__action"
-        v-model="modelValue.free_test"
+        v-model="modelValue.free_samples"
         :is-validated="false"
         :options="[
           { id: 0, label: 'По запросу' },
@@ -58,16 +58,34 @@
         ]"
       />
     </div>
+    <!-- <div class="filter-modal__item filter-modal__item_type_column">
+      <p class="filter-modal__text">Размер партии</p>
+      <UiRadioButtonGroup
+        class="filter-modal__radio filter-modal__action"
+        v-model="modelValue.batch_id"
+        :options="batchList"
+      />
+    </div> -->
   </div>
 </template>
 
 <script setup>
+import { useEntityStore } from '~/store/entityStore';
+
 
 const props = defineProps({
   modelValue: {
     type: Object,
     default: () => ({})
   }
+})
+
+const entityStore = useEntityStore();
+
+const batchList = computed(() => entityStore.entityData.serviceBatch)
+
+onMounted(() => {
+  entityStore.getBatches()
 })
 
 </script>

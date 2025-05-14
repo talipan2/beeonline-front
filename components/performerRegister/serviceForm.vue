@@ -3,7 +3,6 @@
     <div class="form-group form-group_type_secondary">
       <label class="form-group__title">
         Название услуги
-        <CommonTooltip text="Допустимы изображения размером до 5Мб" />
       </label>
       <UiInput
         :rules="{ required: true, min: 2 }"
@@ -53,7 +52,6 @@ const props = defineProps({
   service: {
     type: Object,
     default: () => ({}),
-    modelValue: {},
   },
 });
 

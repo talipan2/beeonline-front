@@ -12,6 +12,11 @@
           :pagination="{ clickable: true, dynamicBullets: true, dynamicMainBullets: 2,  }"
           @slideChange="handleSlideChange"
           @swiper="setSwiperInstance"
+          :autoplay="{
+            delay: 10000,
+            disableOnInteraction: false,
+            pauseOnMouseEnter: true,
+          }"
         >
           <SwiperSlide v-for="(item, index) in items" :key="item.id || index">
             <slot name="item" :item="item" />
@@ -43,7 +48,7 @@
 </template>
 
 <script setup>
-import { Pagination, Navigation } from 'swiper/modules'
+import { Pagination, Navigation, Autoplay } from 'swiper/modules'
 
 const props = defineProps({
   fetchFunction: {
@@ -64,7 +69,7 @@ const items = ref([])
 const paginationMeta = ref(null)
 const isLoading = ref(false)
 const swiperInstance = ref(null)
-const modules = [Pagination, Navigation]
+const modules = [Pagination, Navigation, Autoplay]
 const breakpoints = ref({
   768: { slidesPerView: 1, spaceBetween: 32 },
   1200: { slidesPerView: 1, spaceBetween: 34 }

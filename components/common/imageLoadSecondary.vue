@@ -53,7 +53,7 @@ const props = defineProps({
   },
   label: {
     type: String,
-    default: 'Загрузить фотографию',
+    default: 'Загрузить фотографию (до 5Мб. Допустимый формат .jpeg, .png, .jpg, .gif)',
   },
   modelValue: {
     type: [String, Object],
@@ -208,6 +208,10 @@ watch(() => props.modelValue, (newVal) => {
     left: 2.5em;
     right: 2.5em;
     width: auto !important;
+    background-color: rgb(255, 255, 255);
+    border-radius: 8px;
+    padding: .2em 1em; 
+    border: 1px solid var(--text-color-ternary);
   }
 
   &__btn {
@@ -269,6 +273,11 @@ watch(() => props.modelValue, (newVal) => {
       aspect-ratio: 1/.7;
       flex-basis: 50%;
       max-width: 50%;
+    }
+
+    &__title {
+      font-size: 1em;
+      margin-inline: .2em;
     }
   }
 

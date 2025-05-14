@@ -45,9 +45,10 @@
               name="inn"
               label="ИНН"
               class="form-group__value"
-              type="number"
+              type="text"
               placeholder="ИНН"
               v-model="data.inn"
+              inputType="number"
             />
           </label>
           <label class="form-group__title">
@@ -60,7 +61,7 @@
               type="text"
               placeholder="Название компании или ФИО"
               :required="true"
-              v-model="data.companyName"
+              v-model="data.organizationName"
             />
           </label>
           <label class="form-group__title">
@@ -149,7 +150,7 @@
               />
             </label>
             <label class="form-group-data form-group__title">
-              ОГРН
+              ОГРН / ОГРНИП
               <UiInput
                 :rules="{}"
                 name="ogrn"
@@ -429,6 +430,7 @@ const handleSubmit = async (value, form) => {
       ...value,
       userId: userStore.userData.id,
       name: data.value.organizationName,
+      organizationForm: data.value.organizationForm,
     }, form)
     .then((res) => {
       if (res.data && res.data.id) {
