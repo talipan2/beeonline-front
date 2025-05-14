@@ -116,7 +116,7 @@ const getErrorList = (errors) => {
 
 const handleSubmit = (value, form) => {
   switch (currentStep.value) {
-    case 1:   
+    case 2:   
       if(userStore.userPubCard?.id === pubCardData.value.id) {
         organizationStore.editPerformerPubCard({
           name: value.name,
@@ -156,7 +156,7 @@ const handleSubmit = (value, form) => {
       }
 
       break;
-    case 2:
+    case 3:
       entityStore.editPerformerService({
         services: pubCardData.value.services.map(item => {
           return {
@@ -171,7 +171,7 @@ const handleSubmit = (value, form) => {
         }
       })
       break;
-    case 3: 
+    case 4: 
       organizationStore.setPubCardsGallery([
         {
           collection_name: 'gallery',
