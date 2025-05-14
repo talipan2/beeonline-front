@@ -10,7 +10,7 @@
         <CommonLocationsList :locationsList="{countries: [data.country]}" />
         <div class="new-service-details__pub-card-site" v-if="data?.url_site">
           <SvgoPlanet class="svg-m" />
-          <NuxtLink :to="data.url_site" class="link" target="_blank" >{{ data.url_site || 'не указано' }}</NuxtLink>
+          <NuxtLink :to="ensureHttps(data.url_site)" class="link" target="_blank" >{{ data.url_site || 'не указано' }}</NuxtLink>
         </div>
         <!-- КНОПКИ ДЛЯ ДЕСКТОПА -->
         <div class="new-service-details__pub-card-buttons" v-if="userStore.isAuth">
