@@ -5,7 +5,7 @@
         <p class="details-badge__name">{{ spec.name }}</p>
         <template v-if="moreBtn">
           <p class="details-badge__value">
-            {{ spec.value && spec.value.length > 1 ? spec.value[0] : '-' }}
+            {{ spec.value && spec.value.length > 0 ? spec.value[0] : '-' }}
             <ModalsMoreCities
               class="details-badge__more-props"
               :list="spec.value"

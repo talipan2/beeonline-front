@@ -155,6 +155,14 @@
           <div class="form-value">{{ userOrganization.legal_address || '-' }}</div>
         </div>
       </div>
+      <div class="form-group form-group_type_secondary">
+        <div class="form-group-data">
+          <label class="form-group__title">
+            Почта для закрывающих документов
+          </label>
+          <div class="form-value">{{ userOrganization.email_docs || '-' }}</div>
+        </div>
+      </div>
     </CommonLayoutInfoCard>
     <ProfileChageUserDataModal />
     <ProfileChangeDataModal />

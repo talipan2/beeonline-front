@@ -126,6 +126,10 @@
         <p class="form-group__title">Юридический адрес</p>
         <p class="form-group__value">{{ organizationData.legalAddress }}</p>
       </div>
+      <div class="form-group-data">
+        <p class="form-group__title">Почта для закрывающих документов</p>
+        <p class="form-group__value">{{ organizationData.email_docs || '-' }}</p>
+      </div>
     </CommonProfileCheckCard>
     <ProfileChageUserDataModal />
     <ProfileChangeDataModal />
@@ -173,6 +177,7 @@ const organizationData = computed(() => ({
   legalAddress: userStore.userOrganization?.legal_address || '-',
   country: userStore.userOrganization.country || {},
   currency: userStore.userOrganization?.currency_id || null,
+  email_docs: userStore.userOrganization?.email_docs || '-',
 }));
 
 const pubCardData = computed(() => ({

@@ -36,9 +36,11 @@ import { useEntityStore } from '~/store/entityStore';
 import { useLocationStore } from '~/store/locationStore';
 
 import defaultImage from '~/assets/images/nophoto_pc.png'
+import { useOrganizationStore } from '~/store/organizationStore';
 
 const entityStore = useEntityStore();
 const locationStore = useLocationStore();
+const organizationStore = useOrganizationStore();
 
 const breakpoints = { 
     375: { 
@@ -71,20 +73,20 @@ const breakpoints = {
 const ordersList = ref([]);
 
 onMounted(() => {
-    entityStore.getServices()
+    organizationStore.getPubCardsList()
         .then(res => {
             if(res && res.data) {
                 ordersList.value = res.data.map(item => {
                     return {
                         id: item.id,
                         pubCard: {
-                            logo: item.pub_card && item.pub_card.logo ? item.pub_card.logo : '',
-                            name: item.pub_card && item.pub_card.name ? item.pub_card.name : '',
-                            country: item.pub_card && item.pub_card.country ? item.pub_card.country.name : '',
+                            logo: item.logo ? item.logo : '',
+                            name: item.name ? item.name : '',
+                            country: item.country ? item.country.name : '',
                         },
-                        name: item.name,
+                        name: item.services && item.services.length ? item.services[0].name : '',
                         gallery: item.gallery && item.gallery.length ? item.gallery[0].url : undefined,
-                        product_categories: item.product_categories && item.product_categories.length ? item.product_categories.map(item => item.name).join(' , ') : '',
+                        product_categories: item.categories && item.categories.length ? item.categories.map(item => item.name).join(' , ') : '',
                     }
                 });
             }

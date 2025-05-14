@@ -143,12 +143,12 @@
     const calculateHeaderHeight = () => {
         if (props.fixedHeader && modalHeader.value) {
             headerHeight.value = modalHeader.value.getBoundingClientRect().height
-            applyContentPadding()
             if(window.innerWidth < 768) {
                 isMobile.value = true;
             } else {
                 isMobile.value = false;
             }
+            applyContentPadding()
         }
     }
 

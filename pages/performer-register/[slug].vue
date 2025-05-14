@@ -2,10 +2,10 @@
   <NuxtLayout name="performer-register" title="Регистрация исполнителя" class="performer-register-layout">
     <template #leftSide>
       <CommonCheckListStep
-      class="performer-register-layout__steps performer-register-layout__steps_type_desktop"
-      :steps="stepCheckList"
-      :current-step="currentStep"
-      :completed-steps="completedSteps"
+        class="performer-register-layout__steps performer-register-layout__steps_type_desktop"
+        :steps="stepCheckList"
+        :current-step="currentStep"
+        :completed-steps="completedSteps"
       />
     </template>
     <template #content>
@@ -86,16 +86,19 @@ const pubCardData = ref({
   workSpaces: [],
   services: [],
   locations: [],
+  workers_count: null
 })
 
 const stepsConfig = ref([
-  {id: 1, title: 'Данные организации', route: '/step1', component: markRaw(step1), props: organizationData, submitBtnText: 'Сохранить и продолжить'},
+  { id: 0, title: 'Регистрационные данные', route: '/register'},
+  { id: 1, title: 'Данные организации', route: '/step1', component: markRaw(step1), props: organizationData, submitBtnText: 'Сохранить и продолжить'},
   { id: 2, title: 'Карточка', route: '/step2', component: markRaw(step2), type: 'pubCard', props: pubCardData },
   { id: 3, title: 'Услуги', route: '/step3', component: markRaw(step3), type: 'pubCard', props: pubCardData },
   { id: 4, route: '/step4', component: markRaw(step4), type: 'pubCard', props: pubCardData },
 ])
 
 const stepCheckList = ref([
+  { id: 0, title: 'Регистрационные данные', route: '/register' },
   { id: 1, title: 'Данные организации', route: '/step1', },
   { id: 2, title: 'Карточка', route: '/step2', },
   { id: 3, title: 'Услуги', route: '/step3', },
@@ -126,6 +129,7 @@ const handleSubmit = (value, form) => {
           is_stm: value.is_stm,
           free_stock: value.free_stock,
           cities: Array.isArray(value.selectedLocations?.cities) ? value.selectedLocations?.cities?.map(item => item.id) : [],
+          workers_count: value.workers_count,
         }, form).then(res => {
           if(res) {
             router.push('/performer-register/step3')
@@ -143,6 +147,7 @@ const handleSubmit = (value, form) => {
           is_stm: value.is_stm,
           free_stock: value.free_stock,
           cities: Array.isArray(value.selectedLocations?.cities) ? value.selectedLocations?.cities?.map(item => item.id) : [],
+          workers_count: value.workers_count,
         }, form).then(res => {
           if(res) {
             router.push('/performer-register/step3')

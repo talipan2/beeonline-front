@@ -156,7 +156,7 @@ import { Navigation } from 'swiper/modules'
 const props = defineProps({
   label: {
     type: String,
-    default: 'Загрузить фотографию',
+    default: 'Загрузить фотографию (до 5Мб. Допустимый формат .jpeg, .png, .jpg, .gif)',
   },
   modelValue: {
     type: Array,
@@ -337,15 +337,16 @@ const updateNavigationState = (swiper) => {
     display: flex;
     flex-direction: column;
     align-items: center;
-    row-gap: 1.6em;
+    row-gap: 1em;
   }
 
   &__title {
-    font-size: 1.4em;
+    font-size: 1.3em;
     font-weight: 600;
     line-height: 1.4em;
     color: #8387a3;
     text-align: center;
+    padding-inline: .2em;
   }
 
   &__progress {
@@ -354,6 +355,15 @@ const updateNavigationState = (swiper) => {
     left: 2.5em;
     right: 2.5em;
     width: auto !important;
+    background-color: rgb(255, 255, 255);
+    border-radius: 8px;
+    padding: .2em 1em; 
+    border: 1px solid var(--text-color-ternary);
+
+    @include mobile {
+      left: .5em;
+      right: .5em;
+    }
   }
 
   &__tippy-btn {
