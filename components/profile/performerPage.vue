@@ -215,9 +215,8 @@ const handleOpenChangeDataModal = () => {
   settingStore.changeDataModal = true;
 }
 
-onMounted(() => {
-  console.log('mount pubcard', userStore.userPubCard)
-  data.value = {
+watch(() => userStore.userPubCard, (newVal) => {
+    data.value = {
     ...userStore.userPubCard,
     workSpaces: userStore.userPubCard?.equipment,
     materials: [userStore.userPubCard?.materials_own ? 0: '', userStore.userPubCard?.materials_tolling ? 1: ''].filter(item => item !== ''),
@@ -229,6 +228,9 @@ onMounted(() => {
       countries: userStore.userPubCard.countries?.map(country => ({...country, name: locationFormatter({countries: [{...country}]}).locations[0]})) || []
     },
   };
+}, {deep: true, immediate: true})
+
+onMounted(() => {
   userData.value = {
     ...userStore.userData,
     email: userStore.userData.email && userStore.userData.email.replace(/(.{0,3})(?=@)/, (match) => '*'.repeat(match.length)) || '-',

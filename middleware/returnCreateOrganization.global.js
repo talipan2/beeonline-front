@@ -167,11 +167,11 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
       console.log(performerServices)
   
-      if(firstCard && firstCard?.status_code !== 'DRAFT'){
+      if(firstCard?.id && firstCard?.status_code !== 'DRAFT'){
         return
       }
   
-      if(!firstCard && !firstCard?.id) {
+      if(!firstCard?.id) {
         return navigateTo({ path: "/performer-register/step2" });
       } else if (firstCard && firstCard.id && performerServices?.services?.length === 0 ) {
         return navigateTo({ path: "/performer-register/step3" });

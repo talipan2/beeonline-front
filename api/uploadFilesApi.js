@@ -7,6 +7,7 @@ export default {
   },
 
   changeFiles(id, data) {
-    return axios.put(`media/${id}`, data, {headers: {'Content-Type': 'multipart/form-data'}})
+    console.log(data, '12312312')
+    return axios.post(`media/${id}`, data, {headers: {'Content-Type': 'multipart/form-data'}})
   }
 }

@@ -101,6 +101,7 @@ const onFileChange = (event) => {
     if(file.size < props.maxSize * 1024 * 1024) {
       const formData = new FormData();
       formData.append('file', file);
+      console.log(formData.get('file'));
       const config = {
         onUploadProgress: (progressEvent) => {
           if(progressEvent.lengthComputable) {

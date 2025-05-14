@@ -28,6 +28,36 @@
         />
       </div>
     </CommonLayoutInfoCard>
+    <CommonLayoutInfoCard title="Описание оборудования" class="performer-register-step-three__layout">
+      <template #action>
+        <UiButton
+          v-if="isPreview"
+          type="button"
+          class="performer-register-step-three__edit-btn"
+          variant="default"
+          :without-padding="true"
+          @click="editEquipmentDescriptionModal = true"
+        >
+          <SvgoPencil class="svg-l" />
+          Редактировать
+        </UiButton>
+      </template>
+      <div class="form-group form-group_type_secondary" v-if="!isPreview">
+        <UiTextArea
+          class="form-group__value"
+          v-model="equipmentDescription"
+          name="equipment_description"
+          label="Описание оборудования"
+        />
+      </div>
+      <div class="form-group form-group_type_secondary" v-else>
+        <div class="form-group-data">
+          <div class="form-value multiline-text">
+            {{ equipmentDescription || "-" }}
+          </div>
+        </div>
+      </div>
+    </CommonLayoutInfoCard>
     <CommonLayoutInfoCard title="Оборудование" class="performer-register-step-three__layout">
       <template #action>
         <UiButton
@@ -92,6 +122,38 @@
           
         </div>
     </ModalsRoundBorder>
+    <ModalsRoundBorder :is-open="editEquipmentDescriptionModal" title="Редактирование: Описание оборудования" @close="editEquipmentDescriptionModal = false" size="lg">
+      <div class="form-group form-group_type_secondary">
+        <UiTextArea
+          class="form-group__value"
+          v-model="equipmentDescriptionFormModal"
+          name="equipment_description"
+          label="Описание оборудования"
+        />
+      </div>
+      <div class="performer-register-step-three__btn-container">
+          <UiButton 
+            class="performer-register-step-three__btn" 
+            type="button" 
+            variant="tertiary" 
+            size="large"
+            @click="editEquipmentDescriptionModal = false"
+          >
+            Отменить
+          </UiButton>
+
+          <UiButton
+            type="button"
+            variant="quinary"
+            size="large"
+            class="performer-register-step-three__btn"
+            @click="handleUpdateEquipmentDescription"
+          >
+            Сохранить изменения
+          </UiButton>
+          
+        </div>
+    </ModalsRoundBorder>
     <ModalsRoundBorder :is-open="editWorkGalleryModal" title="Редактирование: Оборудование" @close="editWorkGalleryModal = false" size="lg">
       <CommonGalleryLoadSecondary v-model="workGalleryDataFormModal" class="performer-register-step-three__gallery" @movingImage="(item) => handleMovingImageModal(item, 'gallery')" />
       <div class="performer-register-step-three__forward-container" v-if="forwardStatusGalleryList.length > 0">
@@ -148,6 +210,7 @@ const props = defineProps({
 
 const editGalleryModal = ref(false);
 const editWorkGalleryModal = ref(false);
+const editEquipmentDescriptionModal = ref(false);
 const organizationStore = useOrganizationStore();
 
 const emit = defineEmits(['update:modelValue'])
@@ -172,9 +235,20 @@ const workGallery = computed({
   }
 })
 
+const equipmentDescription = computed({
+  get: () => props.modelValue.equipment_description,
+  set: (value) => {
+    emit('update:modelValue', {
+      ...props.modelValue,
+      equipment_description: value,
+    })
+  }
+});
+
 
 const galleryDataFormModal = ref([]);
 const workGalleryDataFormModal = ref([]);
+const equipmentDescriptionFormModal = ref('');
 
 const forwardStatusGalleryList = ref([]);
 const forwardStatusWorkGalleryList = ref([]);
@@ -289,6 +363,16 @@ const handleReturnImage = (item, type) => {
   }
 }
 
+const handleUpdateEquipmentDescription = () => {
+  console.log(equipmentDescriptionFormModal.value);
+  organizationStore.editPerformerPubCard({
+    equipment_description: equipmentDescriptionFormModal.value
+  }).then(res => {
+    equipmentDescription.value = equipmentDescriptionFormModal.value
+    editEquipmentDescriptionModal.value = false
+  })
+}
+
 watch(() => gallery.value, (value) => {
   if(value) {
     galleryDataFormModal.value = [...value];
@@ -304,6 +388,10 @@ watch(workGallery, (value) => {
     return [];
   }
 }, { deep: true })
+
+watch(() => equipmentDescription.value, (value) => {
+  equipmentDescriptionFormModal.value = equipmentDescription.value;
+}, {deep: true, immediate: true})
 
 </script>
 

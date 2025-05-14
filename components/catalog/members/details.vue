@@ -10,7 +10,7 @@
         <CommonLocationsList class="member-details__locations" :locationsList="data.location"/>
         <div class="member-details__props" v-if="data.siteUrl">
           <SvgoWeb class="svg-m" fill="#a9abac"/>
-          <a :href="data.siteUrl" _target="_blank">{{ data.siteUrl }}</a>
+          <a :href="ensureHttps(data.siteUrl)" _target="_blank">{{ data.siteUrl }}</a>
         </div>
         <div class="member-details__props">
           <SvgoCase class="svg-m" fill="#a9abac" />

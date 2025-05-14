@@ -21,7 +21,7 @@
           <CommonLocationsList class="new-service-card-layout__pubcard-locations" :locations-list="formattedData.locations" />
           <div class="new-service-card-layout__pubcard-site">
               <SvgoPlanet class="svg-m" />
-              <a v-if="formattedData.url_site" class="link link_type_hidden" :href="formattedData.url_site" target="_blank">{{formattedData.url_site}}</a>
+              <a v-if="formattedData.url_site" class="link link_type_hidden" :href="ensureHttps(formattedData.url_site)" target="_blank">{{formattedData.url_site}}</a>
               <p v-else>-</p>
           </div>
         </div>

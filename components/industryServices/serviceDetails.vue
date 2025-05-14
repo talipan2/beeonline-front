@@ -12,7 +12,7 @@
       </div>
       <div class="service-details__prop">
         <p class="service-details__prop-name" v-if="service.pubcard.site">Сайт:
-          <a :href="service.pubcard.site" class="link" target="_blank">{{ service.pubcard.site }}</a>
+          <a :href="ensureHttps(service.pubcard.site)" class="link" target="_blank">{{ service.pubcard.site }}</a>
         </p>
       </div>
     </div>

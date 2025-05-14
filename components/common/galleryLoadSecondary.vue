@@ -106,7 +106,7 @@
                 </UiButton>
                 <template #content>
                   <div class="gallery-load-secondary__tippy-container">
-                    <UiButton class="gallery-load-secondary__tippy-item" type="button" variant="default" :without-padding="true" @click="handleOpenSettingModal(element.id)">Изменить размер изображения</UiButton>
+                    <!-- <UiButton class="gallery-load-secondary__tippy-item" type="button" variant="default" :without-padding="true" @click="handleOpenSettingModal(element.id)">Изменить размер изображения</UiButton> -->
                     <UiButton class="gallery-load-secondary__tippy-item" type="button" variant="default" :without-padding="true" @click="handleMovingForGroup(element)">{{ movingText }}</UiButton>
                   </div>
                 </template>
@@ -212,10 +212,11 @@ const handleCrop = (data) => {
     const { canvas, coordinates } = cropper.value.getResult();
     canvas.toBlob((blob) => {
       const formData = new FormData();
-      formData.append('file', blob);
+      formData.append('file', blob, data?.url.split('/').pop());
       console.log(formData.get('file'))
 
       settingStore.changeFiles(data.id, formData)
+      // settingStore.uploadFiles(userStore.userData.id, formData)
 
       emit('update:modelValue', props.modelValue.map(item => {
         if (item.id === data.id) {

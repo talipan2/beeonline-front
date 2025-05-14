@@ -86,7 +86,8 @@ const pubCardData = ref({
   workSpaces: [],
   services: [],
   locations: [],
-  workers_count: null
+  workers_count: null,
+  equipment_description: '',
 })
 
 const stepsConfig = ref([
@@ -172,6 +173,11 @@ const handleSubmit = (value, form) => {
       })
       break;
     case 4: 
+      if(pubCardData.value.equipment_description) {
+        organizationStore.editPerformerPubCard({
+          equipment_description: pubCardData.value.equipment_description
+        })
+      }
       organizationStore.setPubCardsGallery([
         {
           collection_name: 'gallery',
@@ -233,7 +239,9 @@ onMounted(() => {
             cities: pubCard.cities?.map(city => ({...city, name: locationFormatter({cities: [{...city}]}).locations[0]})) || [],
             regions: pubCard.regions?.map(region => ({...region, name: locationFormatter({regions: [{...region}]}).locations[0]})) || [],
             countries: pubCard.countries?.map(country => ({...country, name: locationFormatter({countries: [{...country}]}).locations[0]})) || []
-          }
+          },
+          equipment_description: pubCard?.equipment_description || '',
+          workers_count: pubCard.workers_count,
         }
       }
     }
