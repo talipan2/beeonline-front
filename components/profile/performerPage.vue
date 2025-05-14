@@ -216,6 +216,7 @@ const handleOpenChangeDataModal = () => {
 }
 
 onMounted(() => {
+  console.log('mount pubcard', userStore.userPubCard)
   data.value = {
     ...userStore.userPubCard,
     workSpaces: userStore.userPubCard?.equipment,
@@ -228,8 +229,13 @@ onMounted(() => {
       countries: userStore.userPubCard.countries?.map(country => ({...country, name: locationFormatter({countries: [{...country}]}).locations[0]})) || []
     },
   };
-  userData.value = userStore.userData
+  userData.value = {
+    ...userStore.userData,
+    email: userStore.userData.email && userStore.userData.email.replace(/(.{0,3})(?=@)/, (match) => '*'.repeat(match.length)) || '-',
+    phone: userStore.userData.phone && userStore.userData.phone.replace(/(\d{4})$/, '****') || '-',
+  }
 })
+
 </script>
 
 <style lang="scss">

@@ -2,7 +2,7 @@
   <div class="gallery-load-secondary">
     <template v-if="isPreview">
       <div class="gallery-load-secondary__wrapper gallery-load-secondary__wrapper_type_preview">
-        <template v-if="localModelValue.length > 0">
+        <template v-if="localModelValue?.length > 0">
           <div class="gallery-load-secondary__item-container" v-for="element in localModelValue" :key="element.id">
                 <div class="gallery-load-secondary__item" :key="element.id">
                   <a :href="element.url" data-fancybox="gallery">
@@ -19,7 +19,7 @@
         <CommonAlerts v-else alert="Нет загруженных изображений" type="warning" border-radius/>
       </div>
       <div class="gallery-load-secondary__slider-wrapper">
-        <template v-if="localModelValue.length > 0">
+        <template v-if="localModelValue?.length > 0">
           <Swiper
             :slidesPerView="1"
             :spaceBetween="20"
@@ -106,7 +106,7 @@
                 </UiButton>
                 <template #content>
                   <div class="gallery-load-secondary__tippy-container">
-                    <!-- <UiButton class="gallery-load-secondary__tippy-item" type="button" variant="default" :without-padding="true" @click="handleOpenSettingModal(element.id)">Изменить размер изображения</UiButton> -->
+                    <UiButton class="gallery-load-secondary__tippy-item" type="button" variant="default" :without-padding="true" @click="handleOpenSettingModal(element.id)">Изменить размер изображения</UiButton>
                     <UiButton class="gallery-load-secondary__tippy-item" type="button" variant="default" :without-padding="true" @click="handleMovingForGroup(element)">{{ movingText }}</UiButton>
                   </div>
                 </template>

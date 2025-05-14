@@ -32,7 +32,7 @@ const props = defineProps({
 });
 
 watch(() => router.currentRoute.value.path, (newVal) => {
-  if(headerDropdown.value.tippy) {
+  if(headerDropdown.value?.tippy) {
     headerDropdown.value.tippy.hide();
   }
 })

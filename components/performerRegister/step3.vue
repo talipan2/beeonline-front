@@ -290,11 +290,19 @@ const handleReturnImage = (item, type) => {
 }
 
 watch(() => gallery.value, (value) => {
-  galleryDataFormModal.value = [...value];
+  if(value) {
+    galleryDataFormModal.value = [...value];
+  } else {
+    return []
+  }
 }, { deep: true })
 
 watch(workGallery, (value) => {
-  workGalleryDataFormModal.value = [...value];
+  if(value) {
+    workGalleryDataFormModal.value = [...value];
+  } else {
+    return [];
+  }
 }, { deep: true })
 
 </script>
