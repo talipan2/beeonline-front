@@ -106,7 +106,7 @@
                 </UiButton>
                 <template #content>
                   <div class="gallery-load-secondary__tippy-container">
-                    <UiButton class="gallery-load-secondary__tippy-item" type="button" variant="default" :without-padding="true" @click="handleOpenSettingModal(element.id)">Изменить размер изображения</UiButton>
+                    <!-- <UiButton class="gallery-load-secondary__tippy-item" type="button" variant="default" :without-padding="true" @click="handleOpenSettingModal(element.id)">Изменить размер изображения</UiButton> -->
                     <UiButton class="gallery-load-secondary__tippy-item" type="button" variant="default" :without-padding="true" @click="handleMovingForGroup(element)">{{ movingText }}</UiButton>
                   </div>
                 </template>

@@ -20,7 +20,7 @@
       Ссылка на сайт
     </label>
     <UiInput
-      :rules="{  }"
+      :rules="{ url: true }"
       name="url_site"
       label="Ссылка на сайт"
       v-model="modelValue.url_site"
