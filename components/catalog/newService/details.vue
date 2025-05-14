@@ -34,6 +34,7 @@
             Написать исполнителю
           </UiButton>
           <PaidServiceCounterpartyCheck
+            v-if="userStore.userPubCard.id != data.id"
             :id="data.organization_id"
           >
             <template #button="{ open }">
@@ -124,6 +125,7 @@
             Написать исполнителю
           </UiButton>
           <PaidServiceCounterpartyCheck
+            v-if="userStore.userPubCard.id != data.id"
             :id="data.organization_id"
           >
             <template #button="{ open }">
