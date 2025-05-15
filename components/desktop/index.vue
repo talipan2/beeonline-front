@@ -44,9 +44,24 @@
       <NuxtLink class="desktop__banner-link" to="/tariffs"></NuxtLink>
     </div>
     <div class="desktop__card-container">
-      <DesktopCard title="Карточка организации" :link="{ url: `/pubcards/edit/${pubCard.id}`, text: 'Изменить'}">
+      <DesktopCard 
+        title="Карточка организации" 
+        :link="userStore.role === 'customer' ? { url: `/pubcards/edit/${pubCard.id}`, text: 'Изменить'} : undefined" 
+        :action="userStore.role === 'performer' ? { function: () => editPubCardModal = true, text: 'Изменить'} : undefined"
+      >
         <template #body>
           <CardsPublic class="desktop__pub-card" :is-props-visible="true" :is-description="true" :data="pubCard" :class="{'loading' : pubCardLoader}"/>
+          <ModalsRoundBorder :is-open="editPubCardModal" title="Редактирование карточки" @close="editPubCardModal = false" size="lg"
+            class="pubcard-edit-modal">
+            <UiForm :submit="handleUpdatePerformerPubCard" @setError="getErrorList">
+              <PerformerRegisterPubCardForm v-model="dataCopyForModal" :errorsList="errorsList"/>
+              <div class="pubcard-edit-modal__buttons">
+                <UiButton class="pubcard-edit-modal__button" type="button" variant="tertiary" size="large" @click="editPubCardModal = false">Отмена</UiButton>
+                <UiButton class="pubcard-edit-modal__button" type="submit" variant="quinary" size="large">Сохранить
+                  изменения</UiButton>
+              </div>
+            </UiForm>
+          </ModalsRoundBorder>
         </template>
       </DesktopCard>
       <DesktopCard title="Баланс" :link="{ url: '/tariffs', text: 'Пополнить баланс'}">
@@ -188,7 +203,7 @@
           </template>
         </DesktopCard>
       </div>
-      <DesktopEntityList :getEntity="getEntity" :role="role" :filterList="filterList"/>
+      <DesktopEntityList v-if="role === 'customer'" :getEntity="getEntity" :role="role" :filterList="filterList"/>
   </div>
 </template>
 
@@ -198,6 +213,7 @@ import { useReviewsStore } from '~/store/reviewsStore';
 import { useTariffsStore } from '~/store/tariffsStore';
 import { useUserStore } from '~/store/userStore';
 import { useChatStore } from '~/store/chatStore';
+import { useToast } from 'vue-toastification';
 
 const props = defineProps({
   getEntity: {
@@ -217,6 +233,7 @@ const props = defineProps({
 
 const tariffsStore = useTariffsStore();
 const reviewStore = useReviewsStore();
+const toast = useToast();
 
 const userStore = useUserStore();
 const organizationStore = useOrganizationStore();
@@ -244,6 +261,43 @@ const allChatsList = ref(null);
 const unreadChatsList = ref(null);
 const allChatsListTotal = ref(0);
 const unreadChatsListTotal = ref(0);
+
+const editPubCardModal = ref(false);
+const dataCopyForModal = ref({});
+const errorsList = ref([]);
+
+const getErrorList = (errors) => {
+  errorsList.value = errors
+}
+
+const handleUpdatePerformerPubCard = (value, form) => {
+  organizationStore.editPerformerPubCard({
+    name: value.name,
+    description: value.description,
+    logo_media_id: dataCopyForModal.value?.logo?.id ? dataCopyForModal.value.logo.id.toString() : undefined,
+    url_site: value.url_site,
+    free_samples: value.free_samples && value.free_samples || [],
+    materials_own: value.materials.includes(0) ? true : false,
+    materials_tolling: value.materials.includes(1) ? true : false,
+    is_stm: value.is_stm,
+    free_stock: value.free_stock,
+    cities: Array.isArray(value.selectedLocations?.cities) ? value.selectedLocations?.cities?.map(item => item.id) : [],
+    workers_count: value.workers_count,
+  }, form).then(res => {
+    if(res) {
+      if(!dataCopyForModal.value.logo) {
+        organizationStore.deletePubCardLogo(res.id)
+      }
+
+      if(res && res.id) {
+        userStore.userPubCard = res
+      }
+      toast.success('Публичная карточка отправлена на модерацию!');
+      editPubCardModal.value = false;
+    }
+  })
+}
+
 // const allChatsList = ref([
 //   {
 //     id: 1,
@@ -291,6 +345,25 @@ const pubCard = computed(() => {
     statusComment: userStore.userPubCard.status_comment
   }
 });
+
+watch(() => userStore.userPubCard, () => {
+  dataCopyForModal.value = {
+    ...userStore.userPubCard,
+    is_stm: userStore.userPubCard.is_stm,
+    free_samples: userStore.userPubCard.free_samples?.length ? userStore.userPubCard.free_samples : [],
+    free_stock: userStore.userPubCard.free_stock ? 1 : 0,
+    materials: [
+      userStore.userPubCard.materials_own ? 0 : undefined,
+      userStore.userPubCard.materials_tolling ? 1 : undefined
+    ].filter(item => item !== undefined),
+    locations: {
+      cities: userStore.userPubCard.cities?.map(city => ({...city, name: locationFormatter({cities: [{...city}]}).locations[0]})) || [],
+      regions: userStore.userPubCard.regions?.map(region => ({...region, name: locationFormatter({regions: [{...region}]}).locations[0]})) || [],
+      countries: userStore.userPubCard.countries?.map(country => ({...country, name: locationFormatter({countries: [{...country}]}).locations[0]})) || []
+    },
+    workers_count: userStore.userPubCard.workers_count,
+  };
+}, {deep: true, immediate: true});
 
 onMounted(() => {
   if(userStore.userData && userStore.userData.id) {

@@ -156,7 +156,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       userStore.userData?.public_cards 
     ) {
       const publicCards = userStore.userData.public_cards || []
-      const firstCard = userStore.userPubCard;
+      const firstCard = publicCards.find(card => card.type === 'performer');
       let performerServices = null;
       if(userStore.userData?.organization_id){
         const response = await entityStore.getSelfServices(userStore.userData?.organization_id)
@@ -165,17 +165,17 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         }
       }
 
-      console.log(performerServices)
+      console.log(firstCard)
   
-      if(firstCard?.id && firstCard?.status_code !== 'DRAFT'){
+      if(firstCard?.id && firstCard?.status_code != 'DRAFT'){
         return
       }
   
       if(!firstCard?.id) {
         return navigateTo({ path: "/performer-register/step2" });
-      } else if (firstCard && firstCard.id && performerServices?.services?.length === 0 ) {
+      } else if (firstCard && firstCard.id && firstCard.current_step === 2 ) {
         return navigateTo({ path: "/performer-register/step3" });
-      } else if (performerServices && performerServices?.services?.length > 0) {
+      } else if (firstCard && firstCard.id && firstCard.current_step === 3) {
         return navigateTo({ path: "/performer-register/step4" });
       }
     }

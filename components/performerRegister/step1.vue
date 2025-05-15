@@ -80,8 +80,8 @@
       </div>
       <ModalsRoundBorder :is-open="editPubCardModal" title="Редактирование карточки" @close="editPubCardModal = false" size="lg"
         class="pubcard-edit-modal">
-        <UiForm :submit="handleUpdatePubCard">
-          <PerformerRegisterPubCardForm v-model="dataCopyForModal" />
+        <UiForm :submit="handleUpdatePubCard" @setError="getErrorList">
+          <PerformerRegisterPubCardForm v-model="dataCopyForModal" :errorsList="errorsListForModal"/>
           <div class="pubcard-edit-modal__buttons">
             <UiButton class="pubcard-edit-modal__button" type="button" variant="tertiary" size="large">Отмена</UiButton>
             <UiButton class="pubcard-edit-modal__button" type="submit" variant="quinary" size="large">Сохранить
@@ -135,6 +135,11 @@ const dataCopyForModal = ref({...data.value})
 
 
 const editPubCardModal = ref(false);
+const errorsListForModal = ref([]);
+
+const getErrorList = (errors) => {
+  errorsListForModal.value = errors;
+}
 
 watch(() => editPubCardModal.value, (newValue) => {
   if(newValue) {

@@ -27,7 +27,7 @@
         <div class="performer-register-layout__btn-container" v-if="stepsConfig[currentStep]?.type === 'pubCard'" >
           <UiButton v-if="stepsConfig[currentStep - 1]?.route" class="performer-register-layout__btn" variant="senary" size="large" :to="`/performer-register${stepsConfig[currentStep - 1].route}`">Назад</UiButton>
           <UiButton v-if="stepsConfig.length === currentStep + 1" type="submit" class="performer-register-layout__btn" variant="quinary" size="large">Сохранить данные</UiButton>
-          <UiButton v-else type="submit" class="performer-register-layout__btn" variant="quinary" size="large">Сохранить и продолжить</UiButton>
+          <UiButton v-else type="submit" class="performer-register-layout__btn" variant="quinary" size="large" :disabled="saveButtonDisabled">Сохранить и продолжить</UiButton>
         </div>
       </UiForm>
     <ModalsReturnRegister />
@@ -56,6 +56,14 @@ const userStore = useUserStore();
 const organizationStore = useOrganizationStore();
 const entityStore = useEntityStore();
 const toast = useToast();
+
+const saveButtonDisabled = computed(() => {
+  if(currentStep.value === 3 && pubCardData.value.services?.length < 1) {
+    return true
+  } else {
+    return false
+  }
+})
 
 const organizationData = ref({
   id: '',
@@ -158,43 +166,36 @@ const handleSubmit = (value, form) => {
 
       break;
     case 3:
-      entityStore.editPerformerService({
-        services: pubCardData.value.services.map(item => {
-          return {
-            name: item.name,
-            product_category_ids: item.product_categories.map(category => category.id),
-            batch_id: item?.batches[0]?.id,
-          }
-        }),
-      }, form).then(res => {
+      entityStore.editPerformerService().then(res => {
         if(res) {
           router.push('/performer-register/step4')
         }
       })
       break;
     case 4: 
-      if(pubCardData.value.equipment_description) {
-        organizationStore.editPerformerPubCard({
+        organizationStore.editEquipmentDescription({
           equipment_description: pubCardData.value.equipment_description
+        }).then((res) => {
+          if(res) {
+            organizationStore.setPubCardsGallery([
+              {
+                collection_name: 'gallery',
+                items: pubCardData.value.gallery.map(item => ({id: item.id})),
+              },
+              {
+                collection_name: 'equipment',
+                items: pubCardData.value.workSpaces.map(item => ({id: item.id})),
+              }
+            ]).then((res) => {
+              if(res) {
+                userStore.checkAuth().then(res => {
+                  toast.success('Публичная карта отправлена на модерацию')
+                  router.push('/profile')
+                })
+              }
+            })
+          }
         })
-      }
-      organizationStore.setPubCardsGallery([
-        {
-          collection_name: 'gallery',
-          items: pubCardData.value.gallery.map(item => ({id: item.id})),
-        },
-        {
-          collection_name: 'equipment',
-          items: pubCardData.value.workSpaces.map(item => ({id: item.id})),
-        }
-      ]).then((res) => {
-        if(res) {
-          userStore.checkAuth().then(res => {
-            toast.success('Публичная карта отправлена на модерацию')
-            router.push('/profile')
-          })
-        }
-      })
   }
 }
 
@@ -220,6 +221,7 @@ onMounted(() => {
       if(res.user.public_cards && res.user.public_cards && res.user.public_cards.length > 0) {
         const pubCard = res.user.public_cards.find(item => item.type === userStore.role)
         pubCardData.value = {
+          ...pubCardData.value,
           id: pubCard.id,
           name: pubCard.name,
           logo: pubCard.logo,
@@ -229,12 +231,11 @@ onMounted(() => {
           free_samples: pubCard.free_samples?.length ? pubCard.free_samples : [],
           free_stock: pubCard.free_stock ? 1 : 0,
           materials: [
-            pubCard.materials_own ? 1 : undefined,
-            pubCard.materials_tolling ? 0 : undefined
+            pubCard.materials_own ? 0 : undefined,
+            pubCard.materials_tolling ? 1 : undefined
           ].filter(item => item !== undefined),
           gallery: pubCard.gallery || [],
           workSpaces: pubCard.equipment || [],
-          services: pubCard.services,
           locations: {
             cities: pubCard.cities?.map(city => ({...city, name: locationFormatter({cities: [{...city}]}).locations[0]})) || [],
             regions: pubCard.regions?.map(region => ({...region, name: locationFormatter({regions: [{...region}]}).locations[0]})) || [],
@@ -246,6 +247,8 @@ onMounted(() => {
       }
     }
   })
+
+  settingStore.registerRedirectConfirm = false
 })
 
 </script>

@@ -213,6 +213,8 @@ const setRole = (role) => {
               toast.success('Вы успешно стали ' + formatLangRole.value);
             }
           })
+        } else if (role === 'performer') {
+          router.push({ path: `/performer-register/step2` });
         }
       });
   }

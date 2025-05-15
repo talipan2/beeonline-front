@@ -228,7 +228,7 @@ watch(() => userStore.userPubCard, (newVal) => {
       countries: userStore.userPubCard.countries?.map(country => ({...country, name: locationFormatter({countries: [{...country}]}).locations[0]})) || []
     },
   };
-}, {deep: true, immediate: true})
+}, {deep: true, immediate: true, once: true})
 
 onMounted(() => {
   userData.value = {

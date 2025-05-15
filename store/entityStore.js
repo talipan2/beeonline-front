@@ -508,6 +508,28 @@ export const useEntityStore = defineStore('entity', {
       }
     },
 
+    async createService(data, form) {
+      try {
+        const response = await serviceApi.createService(data, form);
+        if(response.data) {
+          return response.data
+        }
+      } catch (error) {
+       throw error;
+      }
+    },
+
+    async changeService(data, form) {
+      try {
+        const response = await serviceApi.changeService(data, form);
+        if(response.data) {
+          return response.data
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
+
     async deleteService(id) {
       try {
         const response = await serviceApi.deleteService(id);

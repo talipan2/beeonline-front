@@ -221,18 +221,23 @@ const setRole = (role) => {
       .then(res => {
         userStore.role = role;
         localStorage.setItem('role', role);
-        organizationStore.setPubCard({
-          id: userStore.userData.organization_id,
-          name: userStore.userData.public_cards[0].name,
-          status: 1,
-          type: role
-        }).then(res => {
-          if(res && res.data && res.data.id) {
-            userStore.userPubCard = res.data;
-            router.push({ path: `/pubcards/edit/${res.data.id}` });
-            toast.success('Вы успешно стали ' + formatLangRole.value);
-          }
-        })
+
+        if(role === 'customer') {
+          organizationStore.setPubCard({
+            id: userStore.userData.organization_id,
+            name: userStore.userData.public_cards[0].name,
+            status: 1,
+            type: role
+          }).then(res => {
+            if(res && res.data && res.data.id) {
+              userStore.userPubCard = res.data;
+              router.push({ path: `/pubcards/edit/${res.data.id}` });
+              toast.success('Вы успешно стали ' + formatLangRole.value);
+            }
+          })
+        } else if (role === 'performer') {
+          router.push({ path: `/performer-register/step2` });
+        }
       });
   }
 }

@@ -75,6 +75,14 @@ export default {
     return useApi().patch('/pubcards/performer/services', value, form )
   },
 
+  async createService(data, form) {
+    return useApi().post('services', data, form )
+  },
+
+  async changeService(id, data) {
+    return useApi().patch(`services/${id}`, data)
+  },
+
   async deleteService(id) {
     return axios.delete(`services/${id}`)
   }

@@ -39,13 +39,15 @@
                 Партия
               </label>
               <div class="form-group__value">
-                <div class="form-value">{{ item.batches?.map(batches => batches.name).join(' / ') || '' }}</div>
+                <div class="form-value">{{ item.batch?.name || '' }}</div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </template>
+
+    <!-- Кнопки с isPreview === false и отображение формы, если добавлено 0 услуг -->
     <template v-if="!isPreview">
       <UiForm :submit="handleCreateService">
         <template v-if="!modelValue.services?.length">
@@ -54,14 +56,13 @@
         <UiButton
           v-if="modelValue.services?.length === 0"
           type="submit"
-          variant="tertiary"
+          variant="quinary"
           size="large"
-          class="new-service-card-layout__add-service"
+          class="new-service-card-layout__add-service new-service-card-layout__add-service_type_strong"
         >
           Добавить услугу
         </UiButton>
       </UiForm>
-
       <UiButton
         v-if="modelValue.services?.length > 0"
         type="button"
@@ -72,7 +73,18 @@
       >
         Добавить еще услугу
       </UiButton>
+      <CommonPagination 
+        class="new-service-card-layout__pagination" 
+        v-if="page.last_page > 1" 
+        :current-page="page.current_page" 
+        :total-pages="page.last_page" 
+        btn-type="square" 
+        :position="'center'" 
+        @change-page="handleChangePage"
+      />
     </template>
+
+    <!-- Кнопки с isPreview === true -->
     <template v-if="isPreview">
       <CommonAlerts :alert="'Услуг нет'" type="warning" v-if="!modelValue.services?.length" border-radius/>
       <UiButton
@@ -95,7 +107,7 @@
       >
         Добавить еще услугу
       </UiButton>
-            <CommonPagination 
+      <CommonPagination 
         class="new-service-card-layout__pagination" 
         v-if="page.last_page > 1" 
         :current-page="page.current_page" 
@@ -105,6 +117,8 @@
         @change-page="handleChangePage"
       />
     </template>
+
+    <!-- Модалка редактирования услуги -->
     <ModalsRoundBorder :is-open="editServiceModal" title="Редактирование услуги" @close="editServiceModal = false" size="lg" class="service-modal">
       <UiForm :submit="(values, form) => handleUpdateService(values, form, editServiceData)" class="service-modal__form">
         <PerformerRegisterServiceForm :service="editServiceData" />
@@ -118,6 +132,8 @@
         </div>
       </UiForm>
     </ModalsRoundBorder>
+
+    <!-- Модалка создания услуги -->
     <ModalsRoundBorder :is-open="addNewServiceModal" title="Добавление услуги" @close="addNewServiceModal = false" size="lg" class="service-modal">
       <UiForm :submit="handleCreateService" class="service-modal__form">
         <PerformerRegisterServiceForm :service="serviceData" />
@@ -143,6 +159,8 @@
         </div>
       </UiForm>
     </ModalsRoundBorder>
+
+    <!-- Модалка подтверждения удаления услуги -->
     <ConfirmModal />
   </CommonLayoutInfoCard>
 </template>
@@ -192,7 +210,7 @@ const handleOpenAddService = () => {
 }
 
 const handleEditService = (item) => {
-  editServiceData.value = {...item, category: item.product_categories ? item.product_categories.map(i => i.id) : [], batches: item.batches[0].id ? item.batches[0].id : ''};
+  editServiceData.value = {...item, category: item.product_categories ? item.product_categories.map(i => i.id) : [], batches: item.batch?.id ? item.batch?.id : ''};
   editServiceModal.value = true;
 }
 
@@ -202,61 +220,36 @@ const generateTempId = () => {
 
 // Создание услуги
 const handleCreateService = (value, form) => {
-  console.log(value)
-  // Создание услуги через модалку на странице профиля, нужен пропс isPreview=true!!!!!!!
-  if(props.isPreview) {
-    entityStore.editPerformerService({
-      services: [{
-        name: value.name,
-        batch_id: value.batches,
-        product_category_ids: value.category
-      }]
-    }, form).then(res => {
-        if(res && res.services) {
+  entityStore.createService({
+    name: value.name,
+    batch_id: value.batches,
+    product_category_ids: value.category
+  }, form).then(res => {
+      if(res) {
+        emit('update:modelValue', {...props.modelValue, services: [{
+          id: res.id,
+          name: value.name,
+          batch: {id: value.batches, name:entityStore.getEntityLabelById('serviceBatch', value.batches)},
+          product_categories: value.category.map(id => ({id: id, name:entityStore.getEntityLabelById('categories', id)})),
+        }, ...props.modelValue.services]})
 
-          emit('update:modelValue', {...props.modelValue, services: [{
-            name: value.name,
-            batches: [{id: value.batches, name:entityStore.getEntityLabelById('serviceBatch', value.batches)}],
-            product_categories: value.category.map(id => ({id: id, name:entityStore.getEntityLabelById('categories', id)})),
-          }, ...props.modelValue.services]})
+        addNewServiceModal.value = false;
+        toast.success('Услуга добавлена');
+        form.resetForm();
+        serviceData.value = {
+          name: '',
+          batches: [],
+          product_categories: [],
+        };
+      }
+    })
 
-          addNewServiceModal.value = false;
-          toast.success('Услуга отправлена на модерацию');
-          form.resetForm();
-          serviceData.value = {
-            name: '',
-            batches: [],
-            product_categories: [],
-          };
-        }
-      })
-  } else {
-    // Создание услуги при регистрации
-    emit('update:modelValue', {...props.modelValue, services: [...props.modelValue.services, {
-      id: generateTempId(),
-      name: value.name,
-      batches: [{id: value.batches, name:entityStore.getEntityLabelById('serviceBatch', value.batches)}],
-      product_categories: value.category.map(id => ({id: id, name:entityStore.getEntityLabelById('categories', id)})),
-      isLocal: true,
-    }]});
-
-    if(serviceList.value) {
-      // скролл на новую услугу
-      const rect = serviceList.value.getBoundingClientRect();
-      console.log(rect)
-      const offset = window.scrollY + rect.top - settingStore.headerHeight;
-      smoothScroll(offset, false);
-    }
-
-    addNewServiceModal.value = false;
-    toast.success('Услуга добавлена');
-    form.resetForm();
-    serviceData.value = {
-      name: '',
-      batches: [],
-      product_categories: [],
-    };
-}
+  if(serviceList.value) {
+    // скролл на новую услугу
+    const rect = serviceList.value.getBoundingClientRect();
+    const offset = window.scrollY + rect.top - settingStore.headerHeight;
+    smoothScroll(offset, false);
+  }
 }
 
 // Удаление услуги
@@ -285,23 +278,33 @@ const handleDeleteService = (service) => {
 }
 
 const handleUpdateService = (value, form, item) => {
-  console.log(value, form, item)
-  const index = props.modelValue.services.findIndex(i => i.id === item.id);
-  const services = [...props.modelValue.services];
-  services[index] = {
-    ...item,
-    name: value.name,
-    batches: [{id: value.batches, name:entityStore.getEntityLabelById('serviceBatch', value.batches)}],
-    product_categories: value.category.map(id => ({ id: id, name: entityStore.getEntityLabelById('categories', id) }))
-  };
-  emit('update:modelValue', { ...props.modelValue, services: services });
-  editServiceModal.value = false;
-  if(props.isPreview) {
-    toast.success('Услуга отправлена на модерацию');
-  } else {
-    toast.success('Услуга успешно обновлена');
-  }
-  form.resetForm();
+  entityStore.changeService(item.id,
+    {
+      name: value.name,
+      batch_id: value.batches,
+      product_category_ids: value.category
+    }
+  ).then(res => {
+    if(res) {
+      const index = props.modelValue.services.findIndex(i => i.id === item.id);
+      const services = [...props.modelValue.services];
+      services[index] = {
+        ...item,
+        name: value.name,
+        batch: {id: value.batches, name:entityStore.getEntityLabelById('serviceBatch', value.batches)},
+        product_categories: value.category.map(id => ({ id: id, name: entityStore.getEntityLabelById('categories', id) }))
+      };
+      emit('update:modelValue', { ...props.modelValue, services: services });
+      editServiceModal.value = false;
+      if(props.isPreview) {
+        toast.success('Услуга успешно обновлена');
+      } else {
+        toast.success('Услуга успешно обновлена');
+      }
+      form.resetForm();
+    }
+  })
+  
 }
 
 const isLoaded = ref(false);
@@ -328,19 +331,30 @@ const handleChangePage = (currentPage) => {
 }
 
 onMounted(async () => {
-  try {
-    const res = await entityStore.getSelfServices(userStore.userData?.organization_id, {per_page: 5});
+  // try {
+  //   const res = await entityStore.getSelfServices(userStore.userData?.organization_id, {per_page: 5});
+  //   if (res?.services) {
+  //     emit('update:modelValue', {...props.modelValue, services: [...res.services]});
+  //   }
+  //   if(res?.pagination) {
+  //     page.value = res.pagination;
+  //   }
+  // } catch (error) {
+  //   console.error(error);
+  // } finally {
+  //   isLoaded.value = true;
+  // }
+
+  await nextTick(() => {});
+
+  entityStore.getSelfServices(userStore.userData?.organization_id, {per_page: 5}).then(res => {
     if (res?.services) {
       emit('update:modelValue', {...props.modelValue, services: [...res.services]});
     }
     if(res?.pagination) {
       page.value = res.pagination;
     }
-  } catch (error) {
-    console.error(error);
-  } finally {
-    isLoaded.value = true;
-  }
+  }).finally(() => isLoaded.value = true)
 });
 </script>
 
@@ -390,6 +404,11 @@ onMounted(async () => {
   &__add-service {
     text-transform: uppercase;
     color: var(--text-color-ternary);
+
+    &_type_strong {
+      font-size: 1.3em;
+      color: #fff;
+    }
   }
 
   &__edit-service-buttons {

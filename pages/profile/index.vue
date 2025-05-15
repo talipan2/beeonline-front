@@ -14,7 +14,7 @@
         <CommonAlerts type="warning" class="right-side__alert" v-if="!userData.organization_id">
               <p>У вас не заполнена карточка компании.
                 Заказы/услуги не будут доступны в каталоге без карточки компании.
-                <NuxtLink class="link" to="/pubcards/edit/1">Заполнить карточку компании</NuxtLink>
+                <NuxtLink class="link" :to="`/pubcards/edit/${pubCard.id}`">Заполнить карточку компании</NuxtLink>
               </p>
           </CommonAlerts>
         <template v-if="cardsData.name && role === 'customer'">

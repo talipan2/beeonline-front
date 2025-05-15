@@ -226,9 +226,9 @@
           <div class="new-service-details__services-item-number"><span>{{ index + 1 }}</span></div>
           <div class="new-service-details__services-item-content">
             <h4 class="new-service-details__services-item-name">{{ item.name || 'не указано' }}</h4>
-            <p class="new-service-details__services-item-prop" v-if="item.batches">
+            <p class="new-service-details__services-item-prop" v-if="item.batch">
               Размер партии: 
-              <span>{{ item.batches.map(item => item.name).join(' / ') || 'не указано' }}</span>
+              <span>{{ item.batch?.name || 'не указано' }}</span>
             </p>
             <div class="new-service-details__services-item-badges" v-if="item.product_categories">
               <div class="new-service-details__services-item-badge" v-for="category in item.product_categories" :key="category.id">
