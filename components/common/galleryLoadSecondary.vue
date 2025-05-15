@@ -100,14 +100,14 @@
               <UiButton class="gallery-load-secondary__btn gallery-load-secondary__btn_type_delete" type="button" variant="default" :without-padding="true" @click="handleDeleteImage(element.id)">
                 <SvgoClose class="svg-l"/>
               </UiButton>
-              <UiNewDropdown placement="top" :arrow="false" class="gallery-load-secondary__btn gallery-load-secondary__btn_type_setting" :offset="[0, 10]">
+              <UiNewDropdown placement="top" :arrow="true" class="gallery-load-secondary__btn gallery-load-secondary__btn_type_setting" :offset="[100, 20]">
                 <UiButton class="gallery-load-secondary__tippy-btn" type="button" variant="default" :without-padding="true">
                   <SvgoSetting class="svg-l"/>
                 </UiButton>
                 <template #content>
                   <div class="gallery-load-secondary__tippy-container">
                     <!-- <UiButton class="gallery-load-secondary__tippy-item" type="button" variant="default" :without-padding="true" @click="handleOpenSettingModal(element.id)">Изменить размер изображения</UiButton> -->
-                    <UiButton class="gallery-load-secondary__tippy-item" type="button" variant="default" :without-padding="true" @click="handleMovingForGroup(element)">{{ movingText }}</UiButton>
+                    <UiButton class="gallery-load-secondary__tippy-item" type="button" variant="quinary" size="large"  @click="handleMovingForGroup(element)">{{ movingText }}</UiButton>
                   </div>
                 </template>
               </UiNewDropdown>

@@ -158,6 +158,10 @@ export default {
     return useApi().patch(`pubcards/performer`, data, form)
   },
 
+  async editEquipmentDescription(data, form) {
+    return useApi().patch(`/pubcards/performer/extended`, data, form)
+  },
+
   async deletePubCardLogo(id) {
     return axios.delete(`pubcards/${id}/delete-logo`)
   },

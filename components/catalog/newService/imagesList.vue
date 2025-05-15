@@ -8,9 +8,9 @@
         :class="{ 'has-more': showMoreOverlay && index === visibleImages.length - 1 }"
       >
         <a :href="image.url" class="images-list__link" :data-fancybox="`service-gallery-${type}`" v-if="showFancybox">
-          <UiImage class="images-list__item-image" :src="image.url" :alt="image.url" :external="true" />
+          <UiImage class="images-list__item-image" :src="image.thumb" :alt="image.thumb" :external="true" />
         </a>
-        <UiImage v-else class="images-list__item-image" :src="image.url" :alt="image.url" :external="true" />
+        <UiImage v-else class="images-list__item-image" :src="image.thumb" :alt="image.thumb" :external="true" />
         <div v-if="showMoreOverlay && index === visibleImages.length - 1" class="images-list__more-overlay">
           + {{ hiddenImagesCount }}
         </div>

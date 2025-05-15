@@ -355,6 +355,17 @@ export const useOrganizationStore = defineStore('organization', {
       }
     },
 
+    async editEquipmentDescription(data, form) {
+      try {
+        const response = await Api.editEquipmentDescription(data, form);
+        if(response.data) {
+          return response.data;
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
+
     async deletePubCardLogo(id) {
       try {
         const response = await Api.deletePubCardLogo(id);

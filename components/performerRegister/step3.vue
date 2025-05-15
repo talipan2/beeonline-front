@@ -87,7 +87,7 @@
       </div>
     </CommonLayoutInfoCard>
     <ModalsRoundBorder :is-open="editGalleryModal" title="Редактирование: Примеры работ" @close="editGalleryModal = false" size="lg">
-      <CommonGalleryLoadSecondary v-model="galleryDataFormModal" class="performer-register-step-three__gallery" @movingImage="(item) => handleMovingImageModal(item, 'workGallery')" />
+      <CommonGalleryLoadSecondary v-model="galleryDataFormModal" class="performer-register-step-three__gallery" @movingImage="(item) => handleMovingImageModal(item, 'workGallery')" :moving-text="'Переместить в галерею «Оборудование»'" />
       <div class="performer-register-step-three__forward-container" v-if="forwardStatusWorkGalleryList.length > 0">
         <h3>Изображения, перемещённые в раздел «Оборудование»</h3>
         <div class="performer-register-step-three__forward-list">
@@ -155,7 +155,7 @@
         </div>
     </ModalsRoundBorder>
     <ModalsRoundBorder :is-open="editWorkGalleryModal" title="Редактирование: Оборудование" @close="editWorkGalleryModal = false" size="lg">
-      <CommonGalleryLoadSecondary v-model="workGalleryDataFormModal" class="performer-register-step-three__gallery" @movingImage="(item) => handleMovingImageModal(item, 'gallery')" />
+      <CommonGalleryLoadSecondary v-model="workGalleryDataFormModal" class="performer-register-step-three__gallery" @movingImage="(item) => handleMovingImageModal(item, 'gallery')" :moving-text="'Переместить в галерею «Примеры работ»'"/>
       <div class="performer-register-step-three__forward-container" v-if="forwardStatusGalleryList.length > 0">
         <h3>Изображения перемещенные в "Примеры работ"</h3>
         <div class="performer-register-step-three__forward-list">
@@ -364,8 +364,7 @@ const handleReturnImage = (item, type) => {
 }
 
 const handleUpdateEquipmentDescription = () => {
-  console.log(equipmentDescriptionFormModal.value);
-  organizationStore.editPerformerPubCard({
+  organizationStore.editEquipmentDescription({
     equipment_description: equipmentDescriptionFormModal.value
   }).then(res => {
     equipmentDescription.value = equipmentDescriptionFormModal.value
@@ -374,20 +373,20 @@ const handleUpdateEquipmentDescription = () => {
 }
 
 watch(() => gallery.value, (value) => {
-  if(value) {
-    galleryDataFormModal.value = [...value];
+  if(gallery.value) {
+    galleryDataFormModal.value = [...gallery.value];
   } else {
     return []
   }
-}, { deep: true })
+}, { deep: true, immediate: true })
 
-watch(workGallery, (value) => {
-  if(value) {
-    workGalleryDataFormModal.value = [...value];
+watch(() => workGallery.value, (value) => {
+  if(workGallery.value) {
+    workGalleryDataFormModal.value = [...workGallery.value];
   } else {
     return [];
   }
-}, { deep: true })
+}, { deep: true, immediate: true })
 
 watch(() => equipmentDescription.value, (value) => {
   equipmentDescriptionFormModal.value = equipmentDescription.value;

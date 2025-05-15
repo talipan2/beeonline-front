@@ -44,7 +44,7 @@ const page = ref({
 // ];
 
 const filter = ref({
-  type: 'performer',
+  type: 'customer',
 });
 
 
@@ -169,7 +169,7 @@ const handleUpdateFilter = (data, sortType) => {
 
 const handleSort = (sortType) => {
   if(!filter.value.type) {
-    filter.value.type = 'performer'
+    filter.value.type = 'customer'
   }
   currentSortType.value = sortType
   handleUpdateFilter(filter.value, sortType?.value)
@@ -205,7 +205,7 @@ watch(() => page.value.currentPage, () => {
 
 onMounted(() => {
   let params = {
-    type: 'performer',
+    type: 'customer',
     sort: sortList.value[0].value
   }
 
@@ -217,7 +217,7 @@ onMounted(() => {
 
     params = {
       page: query.page ? Number(query.page) : undefined,
-      type: query.type ? query.type : 'performer',
+      type: 'customer',
       categories: query.categories ? query.categories.split(',').map(item => Number(item)) : undefined,
       country_ids: query.country_ids ? query.country_ids.split(',').map(item => Number(item)) : undefined,
       materials_own: query.materials_own ? Number(query.materials_own) : undefined,
@@ -226,7 +226,7 @@ onMounted(() => {
     }
 
     filter.value = {
-      type: query.type ? query.type : 'performer',
+      type: 'customer',
       categories: query.categories ? query.categories.split(',').map(item => Number(item)) : [],
       country_ids: query.country_ids ? query.country_ids.split(',').map(item => Number(item)) : [],
       materials_own: query.materials_own ? Number(query.materials_own) : undefined,
@@ -234,7 +234,6 @@ onMounted(() => {
     }
 
     currentSortType.value = query.sort ? sortList.value.find(item => item.value === query.sort) : sortList.value[0];
-    console.log(currentSortType.value)
   }
 
   organizationStore.getPubCardsList(params).then(res => {

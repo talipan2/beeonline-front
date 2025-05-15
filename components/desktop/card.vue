@@ -2,7 +2,8 @@
   <div class="desktop-card">
     <div class="desktop-card__header">
       <h2 class="desktop-card__title">{{ title }}</h2>
-      <UiButton v-if="link" :to="link.url" class="desktop-card__btn link" variant="default" without-padding>{{ link.text }}</UiButton>
+      <UiButton v-if="link?.url" :to="link.url" class="desktop-card__btn link" variant="default" without-padding>{{ link.text }}</UiButton>
+      <UiButton  v-if="action?.function" type="button" @click="action.function" class="desktop-card__btn link" variant="default" without-padding>{{ action.text }}</UiButton>
     </div>
     <div class="desktop-card__body">
       <slot name="body" />  
@@ -18,6 +19,10 @@ const props = defineProps({
     default: '',
   },
   link: {
+    type: Object,
+    default: () => ({}),
+  },
+  action: {
     type: Object,
     default: () => ({}),
   },

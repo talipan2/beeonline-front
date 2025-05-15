@@ -1,10 +1,10 @@
 <template>
   <CommonFilter :submit-function="handleSubmit" :reset-function="resetFilter">
     <template #body>
-      <div class="filter__item">
+      <!-- <div class="filter__item">
         <h3 class="filter__title">Тип участника:</h3>
         <UiRadioButtonGroup class="filter__radio" v-model="searchProps.type" :options="[{ label: 'Исполнитель', value: 'performer' }, { label: 'Заказчик', value: 'customer' }]" name="type" :return-number="false"/>
-      </div>
+      </div> -->
       <div class="filter__item">
         <h3 class="filter__title">Категории продукции:</h3>
         <UiCheckboxGroup
@@ -70,7 +70,7 @@ const locationStore = useLocationStore();
 const emit = defineEmits(['updateFilter']);
 
 const searchProps = ref({
-  type: 'performer',
+  type: 'customer',
   category: [],
   location: [],
   material: [],
@@ -82,7 +82,7 @@ const handleSubmit = () => {
 
 const resetFilter = () => {
   searchProps.value = {
-    type: 'performer',
+    type: 'customer',
     category: [],
     location: [],
     material: [],
@@ -98,7 +98,7 @@ const countryList = ref([]);
 
 watch(() => props.filter, (newVal) => {
   searchProps.value = {
-    type: newVal.type || 'performer',
+    type: newVal.type || 'customer',
     category: newVal.categories || [],
     location: newVal.country_ids || [],
     material: [newVal.materials_own ? 0 : undefined, newVal.materials_tolling ? 1 : undefined].filter(item => item !== undefined),
