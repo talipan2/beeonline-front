@@ -33,7 +33,20 @@
     <ModalsReturnRegister />
     </template>
     <template #rightSide>
-      <!-- <CommonNotify class="performer-register-layout__notify performer-register-layout__notify_type_desktop" text="текст уведомления" type="info" /> -->
+    <CommonAdvice
+      class="register__advice"
+      v-if="userStore.role === 'performer' && adviceList.length > 0"
+      >
+      <ul class="advice__list advice__list_type_performer">
+        <li v-for="(item, index) in adviceList" :key="index" >
+          <p>{{ item?.title }}</p>
+          <span>
+            <span>{{ item?.description }}</span>
+            <span class="advice__text-selection">{{ item?.selection }}</span>
+          </span>
+        </li>
+      </ul>
+      </CommonAdvice>
     </template>
   </NuxtLayout>
 </template>
@@ -118,6 +131,73 @@ const currentStep = computed(() => stepsConfig.value.findIndex(step => route.pat
 const completedSteps = computed(() => [...Array(currentStep.value).keys()]); // Завершенные шаги
 
 const errorList = ref({});
+
+const adviceList = computed(() => {
+  switch (currentStep.value) {
+    case 1: {
+      return [
+        {
+          title: 'Выберите вашу страну',
+          description: 'Укажите страну, в которой зарегистрирована ваша компания. Если страны нет в списке, обратитесь в техническую поддержку. Это обязательное поле.'
+        },
+        {
+          title: 'Я самозанятый',
+          description: 'Отметьте пункт, если вы ведете бизнес в рамках специального налогового режима «Налог на профессиональный доход» и зарегистрированы в Федеральной налоговой службе РФ как самозанятый.'
+        },
+        {
+          title: 'ИНН',
+          description: 'Введите ИНН и нажмите кнопку поиска. Система автоматически найдет вас в базе и заполнит форму.',
+          selection: 'Это обязательное поле.'
+        },
+        {
+          title: 'Юридическое название организации',
+          description: 'Система автоматически определяет название организации на основе ИНН. Если название отображается неверно, вы можете изменить его вручную.',
+          selection: 'Это обязательное поле. Используйте действительное юридическое название организации.'
+        },
+      ]
+    }
+    case 2: {
+      return [
+        {
+          title: 'Название компании',
+          description: 'Юридическое название компании портал подставляет автоматически по ИНН. Вместо него вы можете указать маркетинговое название компании, название бренда или торговой марки.',
+          selection: 'Это обязательное поле.'
+        },
+        {
+          title: 'Сайт',
+          description: 'Укажите адрес сайта в формате: www.site-name.com.',
+          selection: 'Это необязательное поле, но адрес сайта поможет заказчикам лучше познакомиться со спецификой вашей компании.'
+        },
+        {
+          title: 'Описание',
+          description: 'В нескольких предложениях расскажите о специфике компании. Вы можете отметить основные направления деятельности, производственные возможности, ассортимент товаров и материалов, дополнительные оказываемые услуги.',
+          selection: `Это обязательное поле. Рекомендуем добавить текст объемом не более 1 500 знаков и воздержаться от рекламных приемов. 
+            Объективно расскажите о своих товарах и услугах, чтобы привлечь внимание заказчиков, помочь вам найти надежных клиентов.Запрещено добавлять контактные данные!`,
+        },
+      ] 
+    }
+    case 3: {
+      return [
+        {
+          title: 'Введите заголовок заказа',
+          description: 'Кратко обозначьте товар или услугу, которую вы предлагаете.',
+          selection: 'Это обязательное поле. Не перегружайте заголовок.',
+        },
+        {
+          title: 'Выберете категории',
+          description: 'В соответствие с указанными категориями, прикрепленными к услуге вам будут приходить уведомления о новых заказах.',
+        },
+        {
+          title: 'Объем продукции',
+          description: 'Объем продукции, который вы можете реализовать будет влиять на то какие заказы вы будете получать.',
+        },
+      ]
+    }
+    default: {
+      return []
+    }
+  }
+});
 
 const getErrorList = (errors) => {
   errorList.value = errors
@@ -448,6 +528,27 @@ onMounted(() => {
       line-height: 1.5em;
       color: #8387a3;
     }
+  }
+}
+
+.advice {
+  margin-top: 6.4em;
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    margin-top: 1em;
+
+    p {
+      font-weight: 700;
+      margin-bottom: .5em;
+    }
+  }
+
+  &__text-selection {
+    font-style: italic;
+    display: block;
   }
 }
 
