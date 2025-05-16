@@ -150,8 +150,8 @@ const currentHandleSubmit = computed(() => {
           router.push('/register/step1')
           // settingStore.isCreateOrder = false
         } else {
+          settingStore.createEntityFinalModal = true;
           router.push(`/customer/orders/show/${order.value.id}`)
-          // settingStore.createEntityFinalModal = true;
         }
       });
   } 
