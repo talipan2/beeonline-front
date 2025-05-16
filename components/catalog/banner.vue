@@ -4,6 +4,7 @@
       <h2 class="catalog__banner-title">{{ title }}</h2>
       <div class="catalog__banner-content">
         <Swiper
+          :autoHeight="true"
           :slidesPerView="1"
           :spaceBetween="32"
           :breakpoints="breakpoints"
