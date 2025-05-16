@@ -18,7 +18,7 @@
       </template>
       <template v-if="currentEntityType === 'services'">
         <template v-if="searchResultServiceList.length">
-          <CatalogServiceList :data="searchResultServiceList" :isPagination="false" />
+          <CatalogMembersListDefault :data="searchResultServiceList" :isPagination="false" />
         </template>
         <template v-else>
           <CommonAlerts type="warning" alert="Подходящих услуг не найдено"/>
@@ -96,10 +96,34 @@ const handleSearch = (searchQuery, page) => {
       searchResultOrderList.value = res.data;
     }
     if(res.type === 'services') {
-      searchResultServiceList.value = res.data;
+      searchResultServiceList.value = res.data.map(item => {
+        return {
+          ...item,
+          category: item?.categories?.map(item => item?.name),
+          rawMaterials: [item.materials_own ? 'Исполнителя' : '', item.materials_tolling ? 'Заказчика' : ''].filter(Boolean),
+          countryId: {countries: [item.country]},
+          illRating: item.fill_rating,
+          reviewCount: item.reviews_about_count,
+          stars: item.reviews_stats_about?.stars,
+          rating: item.reviews_about_count,
+          entityCount: item?.services_count,
+        }
+      })
     }
     if(res.type === 'members') {
-      searchResultMemberList.value = res.data;
+      searchResultMemberList.value = res.data.map(item => {
+        return {
+          ...item,
+          category: item?.categories?.map(item => item?.name),
+          rawMaterials: [item.materials_own ? 'Исполнителя' : '', item.materials_tolling ? 'Заказчика' : ''].filter(Boolean),
+          countryId: {countries: [item.country]},
+          illRating: item.fill_rating,
+          reviewCount: item.reviews_about_count,
+          stars: item.reviews_stats_about?.stars,
+          rating: item.reviews_about_count,
+          entityCount: item.type === 'performer' ? item.services_count : item.orders_count,
+        }
+      })
     }
     searchResultPage.value = res.meta;
     searchResultTotal.value = res.total;

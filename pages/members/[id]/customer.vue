@@ -4,7 +4,7 @@
       <UiBreadCrumb
         :list="[
           { label: 'Главная', link: '/' },
-          { label: 'Участники портала', link: '/orders' },
+          { label: 'Каталог заказчиков', link: '/members' },
           { label: `${pubCard.name || ''}`, link: '' },
         ]"
       />

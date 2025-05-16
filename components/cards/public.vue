@@ -51,7 +51,20 @@
       <p class="form-group__value prop_type_hidden">{{ data.description || '-' }}</p>
     </div>
     <slot name="favorite-delete" />
-    <NuxtLink class="card-pub__link" :to="`/members/${data.id}/${data.type}`" v-if="isList" :target="linkBlank ? '_blank' : ''"></NuxtLink>
+    <NuxtLink 
+      class="card-pub__link" 
+      :to="`/members/${data.id}/${data.type}`" 
+      v-if="isList && data.type === 'customer'" 
+      :target="linkBlank ? '_blank' : ''"
+    >
+    </NuxtLink>
+       <NuxtLink 
+      class="card-pub__link" 
+      :to="`/services/${data.id}`" 
+      v-if="isList && data.type === 'performer'" 
+      :target="linkBlank ? '_blank' : ''"
+    >
+    </NuxtLink>
   </div>
 </template>
 

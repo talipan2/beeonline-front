@@ -1,5 +1,5 @@
 <template>
-  <NuxtLayout name="catalog" title="Участники портала" :className="'members'">
+  <NuxtLayout name="catalog" title="Каталог заказчиков" :className="'members'">
     <template #header>
       <UiBreadCrumb
         :list="[{ label: 'Главная', link: '/' }, { label: 'Участники портала', link: '' }]" />
