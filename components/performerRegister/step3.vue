@@ -16,7 +16,7 @@
       </template>
       <div class="performer-register-step-three__gallery">
         <template v-if="!isPreview">
-          <p class="performer-register-step-three__gallery-text">Фотографии сделают вашу карточку более привлекательной для заказчика</p>
+          <p class="performer-register-step-three__gallery-text">Фотографии сделают вашу карточку более привлекательной для заказчика. Первые 4 фотографии будут отображаться в примерах работ в каталоге исполнителей.</p>
           <p class="performer-register-step-three__gallery-text">Рекомендуемый размер 300 x 340 px.</p>
         </template>
         <CommonGalleryLoadSecondary 
@@ -41,6 +41,9 @@
           <SvgoPencil class="svg-l" />
           Редактировать
         </UiButton>
+      </template>
+      <template v-if="!isPreview">
+      <p class="performer-register-step-three__gallery-text">В нескольких предложениях расскажите об имеющимся оборудовании. Это даст более детальную информацию об ваших производственных возможностях.</p>
       </template>
       <div class="form-group form-group_type_secondary" v-if="!isPreview">
         <UiTextArea
@@ -74,7 +77,7 @@
       </template>
       <div class="performer-register-step-three__gallery">
         <template v-if="!isPreview">
-          <p class="performer-register-step-three__gallery-text">Фотографии сделают вашу карточку более привлекательной для заказчика</p>
+          <p class="performer-register-step-three__gallery-text">Прикрепите несколько фотографий оборудования, которым обладаете.</p>
           <p class="performer-register-step-three__gallery-text">Рекомендуемый размер 300 x 340 px.</p>
         </template>
         <CommonGalleryLoadSecondary 

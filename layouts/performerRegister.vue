@@ -2,8 +2,10 @@
   <section class="performer-register container" :class="className">
     <slot name="header" />
     <div class="performer-register__container" :class="{ 'performer-register__container_type_second': !$slots.rightSide }">
-      <div class="performer-register__left">
-        <slot name="leftSide"/>
+      <div class="performer-register__left" >
+        <div ref="leftSide" :class="{ 'sticky': leftSideSticky }">
+          <slot name="leftSide"/>
+        </div>
       </div>
       <div class="performer-register__content" :class="{ 'performer-register__content_type_full': !$slots.rightSide }">
         <slot name="content"/> 
@@ -18,6 +20,7 @@
 </template>
 
 <script setup>
+import { useSettingStore } from '~/store/settingStore';
 
 const props = defineProps ({
   title: {
@@ -31,8 +34,40 @@ const props = defineProps ({
   rightSideSticky: {
     type: Boolean,
     default: true,
+  },
+  leftSideSticky: {
+    type: Boolean,
+    default: true,
   }
 })
+
+const settingStore = useSettingStore();
+
+const rightSide = ref(null);
+const leftSide = ref(null);
+
+const onScrollPage = () => {
+  if (rightSide.value) {
+    rightSide.value.style.top = `${settingStore.headerHeight + 70}px`;
+  } else {
+    console.log("Element not found");
+  }
+
+  if(leftSide.value) {
+    leftSide.value.style.top = `${settingStore.headerHeight + 70}px`;
+  } else {
+    console.log("Element not found");
+  }
+};
+
+onMounted(() => {
+  onScrollPage();
+  window.addEventListener("scroll", onScrollPage);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("scroll", onScrollPage);
+});
 
 </script>
 
@@ -75,12 +110,16 @@ const props = defineProps ({
   @include tablet {
     max-width: 960px;
 
+    &__container {
+      flex-wrap: wrap;
+    }
+
     &__content {
-      flex: 1 1 auto;
+      flex: 0 1 70;
     }
 
     &__right {
-      display: none;
+      flex: 0 1 50%;
     }
   }
 
@@ -92,6 +131,10 @@ const props = defineProps ({
     max-width: var(--mobile-content-width);
     &__container {
       flex-direction: column;
+    }
+
+    &__right {
+      flex: 1 1 100%;
     }
   }
 }
