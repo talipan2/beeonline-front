@@ -13,7 +13,7 @@
         @closed="$emit('update:modelValue', false)"
     >
         <div class="modal-dialog"
-            @click.self="() => $emit('update:modelValue', false)"
+            @mousedown.self="() => $emit('update:modelValue', false)"
         >
             <div :class="[contentClass, {'modal-content_type_full' : fixedHeader}]">
                 <button
