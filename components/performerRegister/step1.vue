@@ -90,6 +90,7 @@
         </UiForm>
       </ModalsRoundBorder>
     </template>
+    <CreateEntityFinalModal text="Публичная карта отправлена на модерацию" />
   </CommonLayoutInfoCard>
 </template>
 
@@ -97,6 +98,7 @@
 import defaultImage from "~/assets/images/nophoto_pc.png";
 import { useOrganizationStore } from "~/store/organizationStore";
 import { useToast } from "vue-toastification";
+import { useSettingStore } from "~/store/settingStore";
 
 const props = defineProps({
   modelValue: {
@@ -118,6 +120,7 @@ const props = defineProps({
 })
 
 const organizationStore = useOrganizationStore();
+const settingStore = useSettingStore();
 const toast = useToast();
 
 const data = computed({
@@ -188,6 +191,7 @@ const handleUpdatePubCard = (value, form) => {
 
       toast.success('Публичная карточка отправлена на модерацию!');
       editPubCardModal.value = false;
+      settingStore.createEntityFinalModal = true
     }
   })
 }

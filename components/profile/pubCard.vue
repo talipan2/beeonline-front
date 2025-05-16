@@ -29,9 +29,11 @@ import Gallery from '~/components/common/gallery.vue';
 import trademarksAndExhibition from '~/components/common/trademarksAndExhibition.vue';
 import addSocials from '~/components/common/addSocials.vue';
 import { useUserStore } from '~/store/userStore';
+import { useSettingStore } from '~/store/settingStore';
 
 const router = useRouter();
 const organizationStore = useOrganizationStore();
+const settingStore = useSettingStore();
 const userStore = useUserStore();
 const currentStep = ref(1);
 const title = ref('');
@@ -120,16 +122,21 @@ async function handleSubmit(values, form) {
       url_yt: data.value.urlYt,
       videos: data.value.videos,
       currentStep: 3
-    }, form);
-    if(data.value.companyLogo.id) {
-      organizationStore.setPubCardLogo(data.value.id, data.value.companyLogo.id);
-    }
+    }, form).then(res => {
+      if(res) {
+        if(data.value.companyLogo.id) {
+          organizationStore.setPubCardLogo(data.value.id, data.value.companyLogo.id);
+        }
 
-    if(data.value.gallery && data.value.gallery.length) {
-      organizationStore.setPubCardGallery(data.value.id, data.value.gallery.map(item => item.id));
-    }
-    userStore.checkAuth();
-    router.push(`/desktop`);
+        if(data.value.gallery && data.value.gallery.length) {
+          organizationStore.setPubCardGallery(data.value.id, data.value.gallery.map(item => item.id));
+        }
+
+        userStore.checkAuth();
+        settingStore.createEntityFinalModal = true
+        router.push(`/profile`);
+      }
+    })
   }
 }
 

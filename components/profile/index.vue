@@ -133,6 +133,7 @@
     </CommonProfileCheckCard>
     <ProfileChageUserDataModal />
     <ProfileChangeDataModal />
+    <CreateEntityFinalModal text="Публичная карта отправлена на модерацию" />
   </div>
 </template>
 

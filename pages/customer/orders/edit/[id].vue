@@ -37,6 +37,7 @@ import { useEntityStore } from '~/store/entityStore';
 import { useLocationStore } from '~/store/locationStore';
 import { useUserStore } from '~/store/userStore';
 import {useToast} from "vue-toastification";
+import { useSettingStore } from '~/store/settingStore';
 
 definePageMeta({
   middleware: 'telegram',
@@ -46,6 +47,7 @@ definePageMeta({
 const router = useRouter();
 const entityStore = useEntityStore();
 const locationStore = useLocationStore();
+const settingStore = useSettingStore();
 const userStore = useUserStore();
 const toast = useToast();
 
@@ -157,7 +159,8 @@ const currentHandleSubmit = computed(() => {
           isAgreedOrderPlacement: orderData.value.isAgreedOrderPlacement,
           status: 'under_moderation',
         }, form)
-        router.push(`/customer/orders/show/${orderData.value.id}`)
+        settingStore.createEntityFinalModal = true;
+        router.push(`/customer/orders/show/${orderData.value.id}`);
         toast.success('Заказ отправлен на модерацию');
       });
     default:

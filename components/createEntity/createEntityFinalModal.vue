@@ -2,12 +2,12 @@
   <UiModal 
     class="create-entity-final-modal modal"
     v-model="settingStore.createEntityFinalModal"
-    @confirm="confirm"
-    :closeButton="false"
+    @confirm="() => confirm()"
+    :closeButton="true"
     size="md"
   >
   <template #content>
-    <!-- <p>{{ text }}</p> -->
+    <p>{{ text }}</p>
     <Banners :banner="banner" />
   </template>
   </UiModal>
@@ -24,6 +24,10 @@ const props = defineProps({
   type: {
     type: String,
     default: 'order',
+  },
+  isBanner: {
+    type: Boolean,
+    default: false,
   }
 })
 
@@ -37,26 +41,28 @@ const confirm = () => {
 }
 
 onMounted(() => {
-  settingStore.getBanners({banner_type: 'banner'}).then((res) => {
-    if(res && res.length > 0) {
-      if(props.type === 'order') {
-        banner.value = res.find(item => item.type === 'order_created_popup');
-      } else if (props.type === 'service') {
-        banner.value = res.find(item => item.type === 'service_created_popup');
+  if(props.isBanner) {
+    settingStore.getBanners({banner_type: 'banner'}).then((res) => {
+      if(res && res.length > 0) {
+        if(props.type === 'order') {
+          banner.value = res.find(item => item.type === 'order_created_popup');
+        } else if (props.type === 'service') {
+          banner.value = res.find(item => item.type === 'service_created_popup');
+        }
       }
-    }
-  })
+    })
+  }
 })
 
 watch(() => modalState.value, (newVal) => {
   if(newVal === true) {
-    if(banner.value.length === 0) {
+    if(banner.value.length === 0 && props.isBanner) {
       settingStore.createEntityFinalModal = false;
       return
     }
     setTimeout(() => {
       settingStore.createEntityFinalModal = false;
-    }, 4000);
+    }, 5000);
   }
 }, {immediate: true});
 
