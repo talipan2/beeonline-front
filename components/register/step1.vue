@@ -45,7 +45,7 @@
               name="inn"
               label="ИНН"
               class="form-group__value"
-              type="text"
+              type="number"
               placeholder="ИНН"
               v-model="data.inn"
               inputType="number"
@@ -97,7 +97,7 @@
                 name="inn"
                 label="ИНН"
                 class="register__input"
-                type="text"
+                type="number"
                 placeholder="____________"
                 v-model="data.inn"
                 inputType="number"
@@ -197,7 +197,7 @@
                 type="text"
                 placeholder="____________"
                 v-model="data.inn"
-                inputType="number"
+                inputType="text"
               >
                 <template #action>
                   <UiButton type="button" class="register__search-btn" variant="tertiary" @click="handleSearchOrgByInn(data.inn)">
@@ -407,6 +407,7 @@ const handleSubmit = async (value, form) => {
       ...value,
       id: userStore.userData.organization_id,
       name: data.value.organizationName,
+      inn: String(data.value.inn),
     }, form).then((res) => {
       if(res.data) {
         userStore.userOrganization = res.data;
@@ -432,6 +433,7 @@ const handleSubmit = async (value, form) => {
       userId: userStore.userData.id,
       name: data.value.organizationName,
       organizationForm: data.value.organizationForm,
+      inn: String(data.value.inn),
     }, form)
     .then((res) => {
       if (res.data && res.data.id) {
