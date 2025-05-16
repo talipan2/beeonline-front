@@ -156,7 +156,7 @@ const loading = ref(false);
 
 const selectorButtons = [
   { id: 1, label: 'Заказы', value: 'orders', count: computed(() => pageOrders.value.total), },
-  { id: 2, label: 'Услуги', value: 'services', count: computed(() => pageServices.value.total), },
+  // { id: 2, label: 'Услуги', value: 'services', count: computed(() => pageServices.value.total), },
   { id: 3, label: 'Участники портала', value: 'members', count: computed(() => pageMembers.value.total) },
 ];
 
