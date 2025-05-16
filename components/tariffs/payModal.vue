@@ -7,7 +7,7 @@
           <UiButton type="button" class="pay-modal__header-btn" variant="default" @click="handleOpenReplenishmentModal">Пополнить</UiButton>
         </div>
         <div class="pay-modal__body" v-if="currentCurrency === 'RUB'">
-          <p class="pay-modal__text">Можно оплатить баллами не более 50% от услуги</p>
+          <p class="pay-modal__text">Можно оплатить баллами не более 25% от услуги</p>
           <p class="pay-modal__balance">Ваш баланс: <span>{{ formatMoney(userBonuses, 'bonuses') }} баллов</span></p>
           <UiCheckbox :is-validated="false" v-model="isPaymentWithBonuses" name="bonuses">Оплата баллами</UiCheckbox>
         </div>
@@ -114,7 +114,7 @@ const confirm = () => {
 }
 
 const paymentWithBonuses = (amount, bonuses) => {
-  const maxBonusesToUse = amount / 2 / 100;
+  const maxBonusesToUse = amount / 4 / 100;
   const bonusesToUse = Math.min(bonuses, maxBonusesToUse);
   const finalAmount = amount - bonusesToUse * 100;
   return {
