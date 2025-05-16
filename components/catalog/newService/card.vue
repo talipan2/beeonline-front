@@ -27,7 +27,7 @@
         :specs="[
         {name: 'Категория', value: data?.categories?.length ? data.categories.map(item => item.name).join(' / ') : ''},
         // {name: 'Сырье', value: [data.materials_tolling ? 'Заказчика' : '', data.materials_own ? 'Исполнителя' : ''].filter(Boolean).join(' / ')},
-        {name: 'Количество швей', value: `${data.workers_count}` },
+        {name: 'Количество швей', value: data.workers_count },
         ]"
       />
       <CatalogNewServiceDetailsBadge
