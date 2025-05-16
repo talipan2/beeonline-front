@@ -120,13 +120,13 @@
   </div>
   <div class="form-group form-group_type_secondary">
     <label class="form-group__title">
-      Количество работников
+      Количество швей
     </label>
     <UiInput
       :rules="{ required: true }"
       name="workers_count"
       v-model="modelValue.workers_count"
-      label="Количество работников"
+      label="Количество швей"
       class="form-group__value"
       type="number"
       inputType="number"

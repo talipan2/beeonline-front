@@ -14,21 +14,21 @@
         </div>
         <!-- КНОПКИ ДЛЯ ДЕСКТОПА -->
         <div class="new-service-details__pub-card-buttons" v-if="userStore.isAuth">
-          <UiButton 
-            v-if="userStore.userPubCard.id === data.id" 
-            variant="quinary" 
-            size="large" 
-            class="new-service-details__pub-card-button" 
+          <UiButton
+            v-if="userStore.userPubCard.id === data.id"
+            variant="quinary"
+            size="large"
+            class="new-service-details__pub-card-button"
             to="/profile"
           >
             Редактировать
           </UiButton>
-          <UiButton 
-            v-if="userStore.role === 'customer' " 
-            type="button" 
-            variant="quinary" 
-            size="large" 
-            class="new-service-details__pub-card-button" 
+          <UiButton
+            v-if="userStore.role === 'customer' "
+            type="button"
+            variant="quinary"
+            size="large"
+            class="new-service-details__pub-card-button"
             @click="settingStore.sendMessageModal = true"
           >
             Написать исполнителю
@@ -44,12 +44,12 @@
                 </UiButton>
             </template>
           </PaidServiceCounterpartyCheck>
-          <UiButton 
-            type="button" 
-            variant="tertiary" 
-            size="around" 
-            class="new-service-details__pub-card-button" 
-            :class="{ 'new-service-details__pub-card-button_type_active': isFavorite }" 
+          <UiButton
+            type="button"
+            variant="tertiary"
+            size="around"
+            class="new-service-details__pub-card-button"
+            :class="{ 'new-service-details__pub-card-button_type_active': isFavorite }"
             @click="handleAddFavorite"
           >
             <SvgoFavorite class="svg-m" fill="#6937A5" />
@@ -57,11 +57,11 @@
         </div>
         <!-- КНОПКИ ДЛЯ ДЕСКТОПА ЕСЛИ НЕ АВТОРИЗОВАН -->
         <div class="new-service-details__pub-card-buttons" v-else>
-          <UiButton 
-            type="button" 
-            variant="quinary" 
-            size="large" 
-            class="new-service-details__pub-card-button" 
+          <UiButton
+            type="button"
+            variant="quinary"
+            size="large"
+            class="new-service-details__pub-card-button"
             @click="settingStore.authModalStatus = true"
           >
             Написать исполнителю
@@ -76,12 +76,12 @@
                 </UiButton>
             </template>
           </PaidServiceCounterpartyCheck>
-          <UiButton 
-            type="button" 
-            variant="tertiary" 
-            size="around" 
-            class="new-service-details__pub-card-button" 
-            :class="{ 'new-service-details__pub-card-button_type_active': isFavorite }" 
+          <UiButton
+            type="button"
+            variant="tertiary"
+            size="around"
+            class="new-service-details__pub-card-button"
+            :class="{ 'new-service-details__pub-card-button_type_active': isFavorite }"
             @click="settingStore.authModalStatus = true"
           >
             <SvgoFavorite class="svg-m" fill="#6937A5" />
@@ -105,21 +105,21 @@
         <h3 class="new-service-details__pub-card-title">{{ data.name || 'не указано' }}</h3>
         <!-- КНОПКИ ДЛЯ МОБИЛКИ -->
         <div class="new-service-details__pub-card-buttons" v-if="userStore.isAuth">
-          <UiButton 
-            v-if="userStore.userPubCard.id === data.id" 
-            variant="quinary" 
-            size="large" 
-            class="new-service-details__pub-card-button" 
+          <UiButton
+            v-if="userStore.userPubCard.id === data.id"
+            variant="quinary"
+            size="large"
+            class="new-service-details__pub-card-button"
             to="/profile"
           >
             Редактировать
           </UiButton>
-          <UiButton 
+          <UiButton
             v-if="userStore.role === 'customer'"
-            type="button" 
-            variant="quinary" 
-            size="large" 
-            class="new-service-details__pub-card-button" 
+            type="button"
+            variant="quinary"
+            size="large"
+            class="new-service-details__pub-card-button"
             @click="settingStore.sendMessageModal = true"
           >
             Написать исполнителю
@@ -135,12 +135,12 @@
                 </UiButton>
             </template>
           </PaidServiceCounterpartyCheck>
-          <UiButton 
-            type="button" 
-            variant="tertiary" 
-            size="large" 
-            class="new-service-details__pub-card-button" 
-            :class="{ 'new-service-details__pub-card-button_type_active': isFavorite }" 
+          <UiButton
+            type="button"
+            variant="tertiary"
+            size="large"
+            class="new-service-details__pub-card-button"
+            :class="{ 'new-service-details__pub-card-button_type_active': isFavorite }"
             @click="handleAddFavorite"
           >
             <SvgoFavorite class="svg-m" fill="#6937A5" />
@@ -149,11 +149,11 @@
         </div>
         <!-- КНОПКИ ДЛЯ МОБИЛКИ ЕСЛИ НЕ АВТОРИЗОВАН -->
         <div class="new-service-details__pub-card-buttons" v-else>
-          <UiButton 
-            type="button" 
-            variant="quinary" 
-            size="large" 
-            class="new-service-details__pub-card-button" 
+          <UiButton
+            type="button"
+            variant="quinary"
+            size="large"
+            class="new-service-details__pub-card-button"
             @click="settingStore.authModalStatus = true"
           >
             Написать исполнителю
@@ -168,11 +168,11 @@
                 </UiButton>
             </template>
           </PaidServiceCounterpartyCheck>
-          <UiButton 
-            type="button" 
-            variant="tertiary" 
-            size="large" 
-            class="new-service-details__pub-card-button" 
+          <UiButton
+            type="button"
+            variant="tertiary"
+            size="large"
+            class="new-service-details__pub-card-button"
             @click="settingStore.authModalStatus = true"
           >
             <SvgoFavorite class="svg-m" fill="#6937A5" />
@@ -182,40 +182,40 @@
       </div>
     </CommonLayoutInfoCard>
     <div class="new-service-details__specs">
-      <CatalogNewServiceDetailsBadge 
+      <CatalogNewServiceDetailsBadge
         :more-btn="true"
         :specs="{
-          name: 'Категория', 
+          name: 'Категория',
           value: data.categories?.length > 0 && data.categories.map(item => item.name) || [],
         }"
       />
       <CatalogNewServiceDetailsBadge
         :specs="{
-          name: 'Сырье', 
+          name: 'Сырье',
           value: [data.materials_tolling ? 'Заказчика' : '', data.materials_own ? 'Исполнителя' : ''].filter(Boolean).join(' / ')
         }"
       />
-      <CatalogNewServiceDetailsBadge 
+      <CatalogNewServiceDetailsBadge
         :specs="{
-          name: 'Количество работников', 
+          name: 'Количество швей',
           value: data.workers_count,
         }"
       />
-      <CatalogNewServiceDetailsBadge 
+      <CatalogNewServiceDetailsBadge
         :specs="{
-          name: 'Наличие СТМ', 
+          name: 'Наличие СТМ',
           value: data.is_stm != null ? data.is_stm ? 'Да' : 'Нет' : ''
         }"
       />
-      <CatalogNewServiceDetailsBadge 
+      <CatalogNewServiceDetailsBadge
         :specs="{
-          name: 'Свободный склад', 
+          name: 'Свободный склад',
           value: data.free_stock != null ? data.free_stock ? 'Да' : 'Нет' : '',
         }"
       />
-      <CatalogNewServiceDetailsBadge 
+      <CatalogNewServiceDetailsBadge
         :specs="{
-          name: 'Бесплатные образцы', 
+          name: 'Бесплатные образцы',
           value: data.free_samples?.length ? entityStore.getEntityLabelById('freeTestSamples', data.free_samples).join(' / ') : '',
         }"
       />
@@ -227,7 +227,7 @@
           <div class="new-service-details__services-item-content">
             <h4 class="new-service-details__services-item-name">{{ item.name || 'не указано' }}</h4>
             <p class="new-service-details__services-item-prop" v-if="item.batch">
-              Размер партии: 
+              Размер партии:
               <span>{{ item.batch?.name || 'не указано' }}</span>
             </p>
             <div class="new-service-details__services-item-badges" v-if="item.product_categories">
@@ -243,10 +243,10 @@
       <p class="new-service-details__description-text">{{ data.description || 'не указано' }}</p>
     </CommonLayoutInfoCard>
     <CommonLayoutInfoCard title="Примеры работ" class="new-service-details__gallery" v-if="data.gallery && data.gallery.length">
-      <CatalogNewServiceImagesList 
-        :data="data.gallery" 
-        :show-more="true" 
-        :show-fancybox="true" 
+      <CatalogNewServiceImagesList
+        :data="data.gallery"
+        :show-more="true"
+        :show-fancybox="true"
         mobile-slider
         @updateSlide="handleUpdatePhotoIndex"
         type="gallery"
@@ -259,13 +259,13 @@
     <CommonLayoutInfoCard title="Описание оборудования" class="new-service-details__description" v-if="data.equipment && data.equipment.length">
       <p class="new-service-details__description-text">{{ data.equipment_description || 'не указано' }}</p>
     </CommonLayoutInfoCard>
-      
+
     <CommonLayoutInfoCard title="Оборудование" class="new-service-details__gallery" v-if="data.equipment && data.equipment.length">
-      <CatalogNewServiceImagesList 
-        :data="data.equipment" 
-        :show-more="true" 
-        :show-fancybox="true" 
-        mobile-slider 
+      <CatalogNewServiceImagesList
+        :data="data.equipment"
+        :show-more="true"
+        :show-fancybox="true"
+        mobile-slider
         @updateSlide="handleUpdatePhotoIndex"
         type="equipment"
         :overlay="true"
@@ -382,7 +382,7 @@ onMounted(() => {
 
 .new-service-details {
   font-size: 1rem;
-  
+
   &__pub-card {
     display: flex;
     padding: 3.2em;
@@ -531,7 +531,7 @@ onMounted(() => {
       &_type_desktop {
         display: none;
       }
-    
+
     }
   }
 
@@ -545,7 +545,7 @@ onMounted(() => {
       flex: 1 1 calc(25% - 1.6em);
       max-width: 100%;
     }
-    
+
     .details-badge:first-child {
       flex: 0 1 calc(50% - .8em);
     }
@@ -556,10 +556,10 @@ onMounted(() => {
 
     @include mobile {
       flex-direction: column;
-      
+
       .details-badge {
         font-size: .9em;
-        
+
       }
     }
   }
@@ -577,7 +577,7 @@ onMounted(() => {
       display: flex;
       column-gap: 1.6em;
       padding-bottom: 1.6em;
-      
+
       &:not(:last-child) {
         border-bottom: 1px solid #e7e7e7;
         margin-bottom: 1.6em;
@@ -678,7 +678,7 @@ onMounted(() => {
       display: block;
     }
   }
-  
+
 }
 
 </style>

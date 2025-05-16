@@ -23,14 +23,15 @@
     </div>
     <div class="new-service-card__specs">
       <CatalogNewServiceDetailsBadge
-        class="new-service-card__specs-item new-service-card__specs-item_type_desktop" 
+        class="new-service-card__specs-item new-service-card__specs-item_type_desktop"
         :specs="[
         {name: 'Категория', value: data?.categories?.length ? data.categories.map(item => item.name).join(' / ') : ''},
-        {name: 'Сырье', value: [data.materials_tolling ? 'Заказчика' : '', data.materials_own ? 'Исполнителя' : ''].filter(Boolean).join(' / ')},
+        // {name: 'Сырье', value: [data.materials_tolling ? 'Заказчика' : '', data.materials_own ? 'Исполнителя' : ''].filter(Boolean).join(' / ')},
+        {name: 'Количество швей', value: `${data.workers_count}` },
         ]"
       />
       <CatalogNewServiceDetailsBadge
-        class="new-service-card__specs-item new-service-card__specs-item_type_mobile" 
+        class="new-service-card__specs-item new-service-card__specs-item_type_mobile"
         :specs="{name: 'Категория', value: data?.categories?.length ? data.categories.map(item => item.name).join(' / ') : ''}"
       />
       <CatalogNewServiceDetailsBadge :specs="{name: 'Размер партии', value: data?.batches?.length ? data.batches.map(item => item.name).join(' / ') : '-'}" />
@@ -99,7 +100,7 @@ const props = defineProps({
       color: var(--text-color-gray);
       margin-bottom: .66em;
     }
-    
+
     &-content {
       display: flex;
       align-items: center;
@@ -148,6 +149,7 @@ const props = defineProps({
     line-height: 1.5em;
     color: var(--text-color-gray);
     max-width: 40em;
+    flex-grow: 1;
   }
 
   &__btn {
@@ -175,7 +177,7 @@ const props = defineProps({
     .details-badge {
       flex: 0 1 25%;
     }
-    
+
     &-item {
       &_type_mobile {
         display: none;

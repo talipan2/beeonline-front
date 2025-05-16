@@ -62,7 +62,7 @@
         <div class="form-group form-group__value">
           <div class="form-group-data">
             <label class="form-group__title">
-              Количество работников
+              Количество швей
             </label>
             <div class="form-value">{{ formattedData.workers_count || '-' }}</div>
           </div>
