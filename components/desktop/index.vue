@@ -20,7 +20,7 @@
         title="Карточка компании отклонена."
         :text="`Причина: ${pubCard.statusComment || 'не указана'}`"
         btnText="Изменить"
-        :btn-function="() => $router.push('/pubcards/edit/' + pubCard.id)"
+        :btn-function="() => editPubCardModal = true"
       />
       <CommonNotify
         v-if="pubCard.status == 0"
