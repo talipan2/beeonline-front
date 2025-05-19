@@ -20,14 +20,14 @@
         title="Карточка компании отклонена."
         :text="`Причина: ${pubCard.statusComment}`"
         btnText="Изменить"
-        :btn-function="() => $router.push('/pubcards/edit/' + pubCard.id)"
+        :btn-function="() => btnEditPubCard(pubCard?.type)"
       />
       <CommonNotify
         v-if="pubCard.status == 0"
         type="warning"
         title="Карточка компании находится в статусе заполнения."
         btnText="Изменить"
-        :btn-function="() => $router.push('/pubcards/edit/' + pubCard.id)"
+        :btn-function="() => btnEditPubCard(pubCard?.type)"
       />
     </div>
     <div class="desktop__banner" v-if="role === 'performer'">
@@ -234,6 +234,7 @@ const props = defineProps({
 const tariffsStore = useTariffsStore();
 const reviewStore = useReviewsStore();
 const toast = useToast();
+const router = useRouter();
 
 const userStore = useUserStore();
 const organizationStore = useOrganizationStore();
@@ -345,6 +346,15 @@ const pubCard = computed(() => {
     statusComment: userStore.userPubCard.status_comment
   }
 });
+
+const btnEditPubCard = (type) => {
+console.log(type)
+  if(type === 'customer') {
+    router.push({ path: `/pubcards/edit/${pubCard.value.id}` });
+  } else if (type === 'performer') {
+    editPubCardModal.value = true
+  }
+}
 
 watch(() => userStore.userPubCard, () => {
   dataCopyForModal.value = {
