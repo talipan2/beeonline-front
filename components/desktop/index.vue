@@ -616,6 +616,7 @@ chatStore.getChatList().then((res) => {
   &__details-sum {
     flex: 0 1 25%;
     display: flex;
+    align-items: center;
   }
 
   &__details-type {
