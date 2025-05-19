@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import Api from "@/api/userApi";
+import { useTariffsStore } from "./tariffsStore";
 import { useSettingStore } from "./settingStore";
 import { useChannelsStore } from "./channelsStore";
 import { TYPE, useToast } from "vue-toastification";
@@ -192,6 +193,12 @@ export const useUserStore = defineStore("user", {
                         ...this.userOrganization,
                         ...event,
                       };
+                      if (typeof event.bonuses !== "undefined") {
+                          useTariffsStore().userBonuses = event.bonuses;
+                      }
+                      if (typeof event.balance !== "undefined") {
+                          useTariffsStore().userBalance = event.balance;
+                      }
                     }
                   });
 
