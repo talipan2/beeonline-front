@@ -294,6 +294,7 @@
     />
 
     <chat-modal-review ref="modalReview" />
+    <ConfirmModal />
 </template>
 
 <script>
@@ -306,6 +307,8 @@ import { useChatStore } from "~/store/chatStore";
 // import { useChannelsStore } from "~/store/channelsStore";
 import { useUserStore } from "~/store/userStore";
 import { useToast } from "vue-toastification";
+
+const {ConfirmModal, confirm} = useConfirmModal();
 
 export default {
     components: {
@@ -866,6 +869,20 @@ export default {
                     })
                     .then((response) => {
                         this.$emit("change:chat", response);
+                    })
+                    .catch((error) => {
+                        if (error.data?.error_key === "cant_respond") {
+                              confirm({
+                                title: 'Ошибка',
+                                message: error.message,
+                                confirmText: 'Ок',
+                                cancelText: 'Отменить',
+                                onConfirm: () => {
+                                },
+                                onCancel: () => {
+                                }
+                            });
+                        }
                     })
                     .finally(() => {
                         this.message = "";
