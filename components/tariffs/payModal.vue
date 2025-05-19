@@ -7,9 +7,10 @@
           <UiButton type="button" class="pay-modal__header-btn" variant="default" @click="handleOpenReplenishmentModal">Пополнить</UiButton>
         </div>
         <div class="pay-modal__body" v-if="currentCurrency === 'RUB'">
-          <p class="pay-modal__text">Можно оплатить баллами не более 25% от услуги</p>
+          <p class="pay-modal__text" v-if="amount >= 1000">Можно оплатить баллами не более 25% от услуги</p>
+          <p  class="pay-modal__text" v-else>Бонусами можно оплатить, если стоимость услуг составляет 1000₽ и более.</p>
           <p class="pay-modal__balance">Ваш баланс: <span>{{ formatMoney(userBonuses, 'bonuses') }} баллов</span></p>
-          <UiCheckbox :is-validated="false" v-model="isPaymentWithBonuses" name="bonuses">Оплата баллами</UiCheckbox>
+          <UiCheckbox :is-validated="false" v-model="isPaymentWithBonuses" name="bonuses" :disabled="amount < 1000">Оплата баллами</UiCheckbox>
         </div>
         <div class="pay-modal__total" v-if="data.isServices && data.data?.length > 0">
           <table>
@@ -43,7 +44,7 @@
               <p class="pay-modal__bonuses-value">{{ paymentWithBonuses(data.sum, userBonuses).bonusesToUse }}</p>
             </div>
           </div>
-          <UiButton type="button" @click="handlePayment" class="pay-modal__footer-btn" variant="quinary" size="large">Оплатить</UiButton>
+          <UiButton type="button" @click="handlePayment" class="pay-modal__footer-btn" variant="quinary" size="large" :disabled="data?.data.length < 1">Оплатить</UiButton>
         </div>
       </div>
     </template>
@@ -108,6 +109,8 @@ const finalBonusesAmount = computed(() => {
   return 0
 })
 
+const amount = computed(() => props.data.sum / 100)
+
 const confirm = () => {
   settingStore.payModalStatus = false;
   isPaymentWithBonuses.value = false;
@@ -163,6 +166,12 @@ const handlePayment = () => {
     });
   }
 }
+
+watch(() => settingStore.payModalStatus, (newVal) => {
+  if(newVal && amount.value < 1000) {
+    isPaymentWithBonuses.value = false;
+  }
+});
 
 </script>
 
