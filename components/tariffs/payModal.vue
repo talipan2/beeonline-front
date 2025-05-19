@@ -7,7 +7,7 @@
           <UiButton type="button" class="pay-modal__header-btn" variant="default" @click="handleOpenReplenishmentModal">Пополнить</UiButton>
         </div>
         <div class="pay-modal__body" v-if="currentCurrency === 'RUB'">
-          <p class="pay-modal__text" v-if="amount > 1000">Можно оплатить баллами не более 25% от услуги</p>
+          <p class="pay-modal__text" v-if="amount >= 1000">Можно оплатить баллами не более 25% от услуги</p>
           <p  class="pay-modal__text" v-else>Бонусами можно оплатить, если стоимость услуг составляет 1000₽ и более.</p>
           <p class="pay-modal__balance">Ваш баланс: <span>{{ formatMoney(userBonuses, 'bonuses') }} баллов</span></p>
           <UiCheckbox :is-validated="false" v-model="isPaymentWithBonuses" name="bonuses" :disabled="amount < 1000">Оплата баллами</UiCheckbox>
@@ -166,6 +166,12 @@ const handlePayment = () => {
     });
   }
 }
+
+watch(() => settingStore.payModalStatus, (newVal) => {
+  if(newVal && amount.value < 1000) {
+    isPaymentWithBonuses.value = false;
+  }
+});
 
 </script>
 
