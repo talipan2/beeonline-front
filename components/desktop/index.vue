@@ -18,16 +18,16 @@
         v-if="pubCard.status == 3"
         type="danger"
         title="Карточка компании отклонена."
-        :text="`Причина: ${pubCard.statusComment}`"
+        :text="`Причина: ${pubCard.statusComment || 'не указана'}`"
         btnText="Изменить"
-        :btn-function="() => btnEditPubCard(pubCard?.type)"
+        :btn-function="() => $router.push('/pubcards/edit/' + pubCard.id)"
       />
       <CommonNotify
         v-if="pubCard.status == 0"
         type="warning"
         title="Карточка компании находится в статусе заполнения."
         btnText="Изменить"
-        :btn-function="() => btnEditPubCard(pubCard?.type)"
+        :btn-function="() => $router.push('/pubcards/edit/' + pubCard.id)"
       />
     </div>
     <div class="desktop__banner" v-if="role === 'performer'">
@@ -44,9 +44,9 @@
       <NuxtLink class="desktop__banner-link" to="/tariffs"></NuxtLink>
     </div>
     <div class="desktop__card-container">
-      <DesktopCard 
-        title="Карточка организации" 
-        :link="userStore.role === 'customer' ? { url: `/pubcards/edit/${pubCard.id}`, text: 'Изменить'} : undefined" 
+      <DesktopCard
+        title="Карточка организации"
+        :link="userStore.role === 'customer' ? { url: `/pubcards/edit/${pubCard.id}`, text: 'Изменить'} : undefined"
         :action="userStore.role === 'performer' ? { function: () => editPubCardModal = true, text: 'Изменить'} : undefined"
       >
         <template #body>
@@ -234,7 +234,6 @@ const props = defineProps({
 const tariffsStore = useTariffsStore();
 const reviewStore = useReviewsStore();
 const toast = useToast();
-const router = useRouter();
 
 const userStore = useUserStore();
 const organizationStore = useOrganizationStore();
@@ -343,18 +342,10 @@ const pubCard = computed(() => {
     rawMaterials: [userStore.userPubCard.materials_own ? 'Исполнителя': '', userStore.userPubCard.materials_tolling ? 'Заказчика' : ''].filter(Boolean),
     category: userStore.userPubCard.categories && userStore.userPubCard.categories.length ? userStore.userPubCard.categories.map(item => item.name) : [],
     status: userStore.userPubCard.status,
+    statusName: userStore.userPubCard.status_name,
     statusComment: userStore.userPubCard.status_comment
   }
 });
-
-const btnEditPubCard = (type) => {
-console.log(type)
-  if(type === 'customer') {
-    router.push({ path: `/pubcards/edit/${pubCard.value.id}` });
-  } else if (type === 'performer') {
-    editPubCardModal.value = true
-  }
-}
 
 watch(() => userStore.userPubCard, () => {
   dataCopyForModal.value = {

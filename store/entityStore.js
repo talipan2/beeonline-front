@@ -213,10 +213,10 @@ export const useEntityStore = defineStore('entity', {
     },
 
     async prepareRaiseService(id) {
-        return await useApi().get(`/services/${id}/raise`);
+        return await useApi().get(`/pubcards/performer/${id}/raise`);
     },
     async raiseService(id) {
-        return await useApi().post(`/services/${id}/raise`);
+        return await useApi().post(`/pubcards/performer/${id}/raise`);
     },
 
     async getOrganizationServices(id) {

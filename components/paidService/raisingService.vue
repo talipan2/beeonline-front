@@ -1,13 +1,13 @@
 <template>
-    <PaidServiceModal title="Поднять услугу" :prepare="prepare" :use="use">
+    <PaidServiceModal title="Поднять карточку" :prepare="prepare" :use="use">
         <template #button="{ open }">
             <slot name="button" :open="open" />
         </template>
         <template #prepared>
             <div class="counterparty-check" v-if="preparedData">
                 <div class="counterparty-check__organization">
-                    <div class="counterparty-check__organization-title">Услуга:</div>
-                    <div class="counterparty-check__organization-name">{{ preparedData.service_name }}</div>
+                    <div class="counterparty-check__organization-title">Карточка:</div>
+                    <div class="counterparty-check__organization-name">{{ preparedData.pubcard_name }}</div>
                 </div>
                 <div class="counterparty-check__organization">
                     <div class="counterparty-check__organization-title">{{ preparedData.raising_service.name }}</div>
@@ -16,7 +16,7 @@
             </div>
         </template>
         <template #used>
-            <CommonAlerts :alert="'Услуга успешно поднята'" type="success"/>
+            <CommonAlerts :alert="'Карточка успешно поднята'" type="success"/>
         </template>
         <template #buttons>
             <UiButton

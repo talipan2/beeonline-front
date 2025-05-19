@@ -1,5 +1,8 @@
 <template>
   <div class="performer-profile">
+    <PerformerRegisterStep1 v-model="data" :formattedData="formattedData" is-preview/>
+    <PerformerRegisterStep2 v-model="data" is-preview/>
+    <PerformerRegisterStep3 v-model="data" is-preview/>
     <CommonLayoutInfoCard title="Представитель компании" class="performer-profile__card">
       <template #action>
         <div class="form-group performer-profile__card-btns">
@@ -22,7 +25,7 @@
             <SvgoPencil class="svg-l" />
             Изменить пароль
           </UiButton>
-        </div> 
+        </div>
       </template>
       <p class="performer-profile__card-description">Указанные данные не разглашаются третьим лицам, и необходимы для успешной работы на портале</p>
       <div class="form-group form-group_type_secondary">
@@ -61,10 +64,7 @@
         Сотрудники
       </UiButton>
     </CommonLayoutInfoCard>
-    <PerformerRegisterStep1 v-model="data" :formattedData="formattedData" is-preview/>
-    <PerformerRegisterStep2 v-model="data" is-preview/>
-    <PerformerRegisterStep3 v-model="data" is-preview/>
-    <CommonLayoutInfoCard title="Представитель компании" class="performer-profile__card">
+    <CommonLayoutInfoCard title="Организация" class="performer-profile__card">
       <template #action>
         <div class="form-group performer-profile__card-btns">
           <UiButton
@@ -86,7 +86,7 @@
             <SvgoPencil class="svg-l" />
             Просмотр документов
           </UiButton>
-        </div> 
+        </div>
       </template>
       <p class="performer-profile__card-description">Указанные данные не разглашаются третьим лицам, и необходимы для успешной работы на портале</p>
       <div class="form-group form-group_type_secondary">
