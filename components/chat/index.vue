@@ -294,6 +294,7 @@
     />
 
     <chat-modal-review ref="modalReview" />
+    <ConfirmModal />
 </template>
 
 <script>
@@ -307,12 +308,15 @@ import { useChatStore } from "~/store/chatStore";
 import { useUserStore } from "~/store/userStore";
 import { useToast } from "vue-toastification";
 
+const {ConfirmModal, confirm} = useConfirmModal();
+
 export default {
     components: {
         ChatMessage,
         ChatModalFiles,
         ChatModalReview,
         FileDrop,
+        ConfirmModal,
     },
     props: {
         init_chat_id: {
@@ -866,6 +870,18 @@ export default {
                     })
                     .then((response) => {
                         this.$emit("change:chat", response);
+                    })
+                    .catch((error) => {
+                        confirm({
+                        title: 'Ошибка',
+                        message: error.message,
+                        confirmText: 'Ок',
+                        cancelText: '',
+                        onConfirm: () => {
+                        },
+                        onCancel: () => {
+                        }
+                    });
                     })
                     .finally(() => {
                         this.message = "";
