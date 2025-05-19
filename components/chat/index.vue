@@ -316,6 +316,7 @@ export default {
         ChatModalFiles,
         ChatModalReview,
         FileDrop,
+        ConfirmModal,
     },
     props: {
         init_chat_id: {
@@ -871,18 +872,16 @@ export default {
                         this.$emit("change:chat", response);
                     })
                     .catch((error) => {
-                        if (error.data?.error_key === "cant_respond") {
-                              confirm({
-                                title: 'Ошибка',
-                                message: error.message,
-                                confirmText: 'Ок',
-                                cancelText: 'Отменить',
-                                onConfirm: () => {
-                                },
-                                onCancel: () => {
-                                }
-                            });
+                        confirm({
+                        title: 'Ошибка',
+                        message: error.message,
+                        confirmText: 'Ок',
+                        cancelText: '',
+                        onConfirm: () => {
+                        },
+                        onCancel: () => {
                         }
+                    });
                     })
                     .finally(() => {
                         this.message = "";

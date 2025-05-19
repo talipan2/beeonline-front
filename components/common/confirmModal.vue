@@ -4,11 +4,11 @@
         <div class="confirm-modal__icon">
           <SvgoAlertIcon class="svg-l"/>
         </div>
-        <h3 class="confirm-modal__title">{{ title }}</h3>
-        <p class="confirm-modal__text">{{ message }}</p>
+        <h3 class="confirm-modal__title" v-if="title">{{ title }}</h3>
+        <p class="confirm-modal__text" v-if="message">{{ message }}</p>
         <div class="confirm-modal__buttons">
-          <UiButton class="confirm-modal__btn confirm-modal__btn_type_cancel" type="button" variant="quinary" size="large" @click="onCancel">{{ cancelText }}</UiButton>
-          <UiButton class="confirm-modal__btn confirm-modal__btn_type_confirm" type="button" variant="quinary" size="large" @click="onConfirm">{{ confirmText }}</UiButton>
+          <UiButton class="confirm-modal__btn confirm-modal__btn_type_cancel" type="button" variant="quinary" size="large" @click="onCancel" v-if="cancelText">{{ cancelText }}</UiButton>
+          <UiButton class="confirm-modal__btn confirm-modal__btn_type_confirm" type="button" variant="quinary" size="large" @click="onConfirm" v-if="confirmText">{{ confirmText }}</UiButton>
         </div>
       </div>
   </ModalsRoundBorder>

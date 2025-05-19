@@ -68,7 +68,7 @@ export const useChatStore = defineStore("chatStore", {
             });
         },
         async sendFirstMessage(data) {
-            return await useApi().post(`/chat/create`, data);
+            return await useApi().post(`/chat/create`, data, null, true);
         },
         async getMessages(chat_id, message_id = null, direction = "up") {
             return await useApi().post(`/chat/${chat_id}/messages`, {
