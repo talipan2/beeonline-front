@@ -50,7 +50,7 @@
         :action="userStore.role === 'performer' ? { function: () => editPubCardModal = true, text: 'Изменить'} : undefined"
       >
         <template #body>
-          <CardsPublic class="desktop__pub-card" :is-props-visible="true" :is-description="true" :data="pubCard" :class="{'loading' : pubCardLoader}"/>
+          <CardsPublic class="desktop__pub-card" :is-props-visible="true" :is-description="true" :data="pubCard" :class="{'loading' : pubCardLoader}" statusVisible isPubCardUp/>
           <ModalsRoundBorder :is-open="editPubCardModal" title="Редактирование карточки" @close="editPubCardModal = false" size="lg"
             class="pubcard-edit-modal">
             <UiForm :submit="handleUpdatePerformerPubCard" @setError="getErrorList">

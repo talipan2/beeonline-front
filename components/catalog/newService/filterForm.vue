@@ -9,6 +9,7 @@
         :type="['selectCountry', 'selectRegions']"
         errorLabel="Регионы производства"
         name="location"
+        modal-title="Выберите регионы"
       />
     </div>
     <div class="filter-modal__item">
