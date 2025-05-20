@@ -10,7 +10,7 @@
           <div class="new-service-card__pubcard-info">
             <h3 class="new-service-card__pubcard-name">{{ data?.name }}</h3>
             <CommonLocationsList class="new-service-card__pubcard-locations"
-              :locationsList="{countries: [data.country]}" />
+              :locationsList="{cities: data.cities}" />
             <div class="new-service-card__pubcard-views">
               <SvgoViewsNew class="svg-m" />
               <p>{{ data.view_count }} просмотров</p>

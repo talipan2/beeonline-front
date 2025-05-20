@@ -202,7 +202,7 @@ const formattedData = computed(() => {
     freeSamples: entityStore.getEntityLabelById('freeTestSamples', data.value?.free_samples)?.join(' / ') || '',
     isStm: data.value?.is_stm ? 'Да' : 'Нет',
     freeStock: data.value?.free_stock ? 'Да' : 'Нет',
-    locations: {cities: data.value?.cities, regions: data.value?.regions, countries: data.value?.countries},
+    locations: {cities: data.value?.cities},
     materials: [data.value.materials_own ? 'Исполнителя': '', data.value.materials_tolling ? 'Заказчика': ''].filter(Boolean).join(' / '),
   }
 });
@@ -224,8 +224,8 @@ watch(() => userStore.userPubCard, (newVal) => {
     free_samples: userStore.userPubCard?.free_samples?.length ? userStore.userPubCard.free_samples : [],
     locations: {
       cities: userStore.userPubCard.cities?.map(city => ({...city, name: locationFormatter({cities: [{...city}]}).locations[0]})) || [],
-      regions: userStore.userPubCard.regions?.map(region => ({...region, name: locationFormatter({regions: [{...region}]}).locations[0]})) || [],
-      countries: userStore.userPubCard.countries?.map(country => ({...country, name: locationFormatter({countries: [{...country}]}).locations[0]})) || []
+      // regions: userStore.userPubCard.regions?.map(region => ({...region, name: locationFormatter({regions: [{...region}]}).locations[0]})) || [],
+      // countries: userStore.userPubCard.countries?.map(country => ({...country, name: locationFormatter({countries: [{...country}]}).locations[0]})) || []
     },
   };
 }, {deep: true, immediate: true, once: true})

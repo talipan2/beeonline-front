@@ -7,7 +7,7 @@
       <div class="new-service-details__pub-card-content">
         <h3 class="new-service-details__pub-card-title">{{ data.name || 'не указано' }}</h3>
         <CommonRating :rating="data.reviews_stats_about?.stars" :reviews="data.reviews_about_count" :is-count-rating="false" />
-        <CommonLocationsList :locationsList="{countries: [data.country]}" />
+        <CommonLocationsList :locationsList="{cities: data.cities}" />
         <div class="new-service-details__pub-card-site" v-if="data?.url_site">
           <SvgoPlanet class="svg-m" />
           <NuxtLink :to="ensureHttps(data.url_site)" class="link" target="_blank" >{{ data.url_site || 'не указано' }}</NuxtLink>
