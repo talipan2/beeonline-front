@@ -268,7 +268,7 @@
                         v-model="message"
                         placeholder="Сообщение"
                         name="message"
-                        maxlength="255"
+                        maxlength="5000"
                         required="required"
                     />
 
