@@ -89,7 +89,7 @@ const cardsData = computed(() => {
     name: pubCard.value?.name,
     logo: pubCard.value?.logo,
     description: pubCard.value?.description,
-    countryId: {countries: [pubCard.value?.country]},
+    countryId: {cities: pubCard.value?.cities, regions: pubCard.value?.regions, countries: pubCard.value?.countries},
     entityCount: pubCard.value?.orders_count || 0,
     type: pubCard.value?.type,
     rawMaterials: [pubCard.value?.materials_own ? 'Исполнителя' : '', pubCard.value?.materials_tolling ? 'Заказчика' : ''].filter(Boolean),

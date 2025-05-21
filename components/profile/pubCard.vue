@@ -156,11 +156,12 @@ onMounted(() => {
         data.value.urlVk = res.url_vk;
         data.value.urlYt = res.url_yt;
         data.value.companyLogo.url = res.logo;
-        data.value.locations = {
-          cities: res.cities?.map(city => ({...city, name: locationFormatter({cities: [{...city}]}).locations[0]})) ?? [], 
-          regions: res.regions?.map(region => ({...region, name: locationFormatter({regions: [{...region}]}).locations[0]})) ?? [], 
-          countries: res.countries?.map(country => ({...country, name: locationFormatter({countries: [{...country}]}).locations[0]})) ?? []
-        };
+        data.value.locations = userStore.role === 'performer' 
+          ? {cities: res.cities?.map(city => ({...city, name: locationFormatter({cities: [{...city}]}).locations[0]})) ?? [], }
+          : {
+            regions: res.regions?.map(region => ({...region, name: locationFormatter({regions: [{...region}]}).locations[0]})) ?? [], 
+            countries: res.countries?.map(country => ({...country, name: locationFormatter({countries: [{...country}]}).locations[0]})) ?? []
+            };
         data.value.gallery = res.gallery;
         data.value.videos = res.videos;
       }

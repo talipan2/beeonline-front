@@ -5,7 +5,7 @@
     >
         <div class="card-pub__head">
             <h5 class="card-pub__title">{{ data.name || "Название компании" }}</h5>
-            <div class="card-pub__status">Статус: {{ data.statusName }}</div>
+            <div class="card-pub__status" v-if="statusVisible">Статус: {{ data.statusName }}</div>
         </div>
         <div class="card-pub__content">
             <div class="card-pub__image image-box image-box_type_frame">
@@ -24,7 +24,7 @@
                         :reviews="data.reviewCount"
                     />
                 </div>
-                <CommonLocationsList :locationsList="data.countryId" />
+                <CommonLocationsList :locationsList="data.countryId" is-country/>
                 <div class="card-pub__details-container">
                     <SvgoCase
                         class="svg-m"
@@ -117,7 +117,7 @@
             :target="linkBlank ? '_blank' : ''"
         >
         </NuxtLink>
-        <div class="card-pub__footer" v-if="data.status == 2">
+        <div class="card-pub__footer" v-if="data.status == 2 && isPubCardUp">
             <div class="card-pub__footer-container">
                 <PaidServiceRaisingService
                     :id="data.id"
@@ -178,6 +178,14 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+    statusVisible: {
+        type: Boolean,
+        default: false,
+    },
+    isPubCardUp: {
+        type: Boolean,
+        default: false,
+    }
 });
 </script>
 
