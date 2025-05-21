@@ -102,13 +102,13 @@
 import { ref } from 'vue';
 
 const props = defineProps({
-  filter: {
+  modelValue: {
     type: Object,
     default: () => ({})
   }
 });
 
-const emit = defineEmits(['updateFilter', 'resetFilter']);
+const emit = defineEmits(['update:modelValue', 'updateFilter', 'resetFilter']);
 const filterModal = ref(null);
 const isVisible = ref(false);
 const mobileModal = ref(false);
@@ -152,6 +152,7 @@ const resetFilter = () => {
 
 const handleUpdateFilter = () => {
   emit('updateFilter', {...filter.value})
+  emit('update:modelValue', {...filter.value})
   hideFilterModal();
 };
 
@@ -159,15 +160,15 @@ const updateIsMobile = () => {
   isMobile.value = window.innerWidth < 768;
 };
 
-watch(() => props.filter, () => {
+watch(() => props.modelValue, () => {
   filter.value = {
-    location: props.filter.location || [],
-    is_stm: props.filter.is_stm != null ? props.filter.is_stm : null,
-    free_samples: props.filter.free_samples || [],
-    material: [props.filter.materials_own ? 0 : undefined, props.filter.materials_tolling ? 1 : undefined].filter(item => item !== undefined),
-    free_stock: props.filter.free_stock != null ? props.filter.free_stock : null,
-    verification: props.filter.verification || null,
-    batch_id: props.filter.batch_id || null,
+    location: props.modelValue.location || [],
+    is_stm: props.modelValue.is_stm != null ? props.modelValue.is_stm : null,
+    free_samples: props.modelValue.free_samples || [],
+    material: [props.modelValue.materials_own ? 0 : undefined, props.modelValue.materials_tolling ? 1 : undefined].filter(item => item !== undefined),
+    free_stock: props.modelValue.free_stock != null ? props.modelValue.free_stock : null,
+    verification: props.modelValue.verification || null,
+    batch_id: props.modelValue.batch_id || null,
   }
 }, {deep: true, immediate: true})
 

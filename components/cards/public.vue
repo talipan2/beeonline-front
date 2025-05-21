@@ -24,7 +24,7 @@
                         :reviews="data.reviewCount"
                     />
                 </div>
-                <CommonLocationsList :locationsList="data.countryId" />
+                <CommonLocationsList :locationsList="data.countryId" is-country/>
                 <div class="card-pub__details-container">
                     <SvgoCase
                         class="svg-m"

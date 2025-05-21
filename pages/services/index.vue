@@ -31,7 +31,7 @@
       <div class="new-service">
         <CommonSelectableButtons :options="categoryList" v-model="filter.categories" mobileButtonText="Категории" :iconButton="clothes">
           <div class="new-service__filters" :class="isMobile ? 'new-service__filter_type_mobile' : 'new-service__filter_type_desktop'">
-            <CatalogNewServiceFilter class="new-service__filter" @updateFilter="handleUpdateFilter" @resetFilter="handleResetFilter" :filter="filter"/>
+            <CatalogNewServiceFilter class="new-service__filter" @updateFilter="handleUpdateFilter" @resetFilter="handleResetFilter" v-model="filter"/>
             <template v-if="!isMobile">
               <UiButton type="button" class="new-service__btn" variant="default" :without-padding="true" @click="handleResetFilter">Сбросить фильтры</UiButton>
               <UiButton type="button" class="new-service__btn" variant="quinary" size="large" @click="handleUpdateFilter(filter)">Применить фильтры</UiButton>
@@ -51,7 +51,6 @@
         </CommonSelectableButtons>
         <div ref="anchor" :class="{'loading': loading}">
           <CatalogNewService :servicesList="servicesList" :slider="true"/>
-          <!-- {{ servicesList }} -->
         </div>
         <CommonPagination 
           v-if="page.lastPage > 1"
@@ -89,7 +88,7 @@ const organizationStore = useOrganizationStore();
 
 const router = useRouter();
 
-const servicesList = computed(() => organizationStore.pubCardsList);
+const servicesList = ref([]);
 const tutorialRefs = ref([]);
 const serviceCardRef = ref([]);
 const categoryList = computed(() => entityStore.entityData.categories);
@@ -159,6 +158,7 @@ const handleUpdateFilter = (data) => {
   // добавление квери параметров для роутинга
   const newQuery = {
     type: 'performer',
+    page: data.page ? data.page : undefined,
     categories: data.categories ? data.categories.join(',') : undefined,
     countries: data.location && data.location.countries ? data.location.countries?.map(item => item.id).join(',') : undefined,
     regions: data.location && data.location.regions ? data.location.regions?.map(item => item.id).join(',') : undefined,
@@ -173,6 +173,7 @@ const handleUpdateFilter = (data) => {
   // добавление квери параметров для запроса
   const filterQuery = {
     type: 'performer',
+    page: data.page ? data.page : undefined,
     categories: data.categories && data.categories.length ? data.categories : undefined,
     regions: data.location && data.location.regions ? data.location.regions?.map(item => item.id) : undefined,
     countries: data.location && data.location.countries ? data.location.countries?.map(item => item.id) : undefined,
@@ -186,7 +187,13 @@ const handleUpdateFilter = (data) => {
 
   // удаление пустых параметров
   Object.keys(newQuery).forEach((key) => {
-    if (newQuery[key] === undefined) delete newQuery[key];
+    if (
+      newQuery[key] == null || 
+      newQuery[key] === '' || 
+      (Array.isArray(newQuery[key]) && newQuery[key].length === 0)
+    ) {
+      delete newQuery[key];
+    }
   });
 
   loading.value = true
@@ -194,6 +201,8 @@ const handleUpdateFilter = (data) => {
   // обновление услуг с новыми параметрами
   organizationStore.getPubCardsList({...filterQuery}).then(res => {
     if(res) {
+      console.log(res)
+      servicesList.value = res.data
       page.value = {
         currentPage: res.meta.current_page,
         lastPage: res.meta.last_page,
@@ -225,21 +234,7 @@ const handleChangePage = (currentPage) => {
 }
 
 watch(() => page.value.currentPage, () => {
-  loading.value = true
-  organizationStore.getPubCardsList({page: page.value.currentPage, ...filter.value}).then(res => {
-    if(res && res.meta && res.data) {
-      page.value = {
-        currentPage: res.meta.current_page,
-        lastPage: res.meta.last_page,
-      }
-      const rect = anchor.value.getBoundingClientRect(); 
-      const offset = window.scrollY + rect.top - settingStore.headerHeight;
-      smoothScroll(offset, false);
-      router.replace({ query: { ...router.currentRoute.value.query, page: res.meta.current_page } });
-    }
-  }).finally(() => {
-    loading.value = false
-  })
+  handleUpdateFilter({page: page.value.currentPage, ...filter.value})
 })
 
 const updateIsMobile = () => {
@@ -283,7 +278,7 @@ onMounted(() => {
 
   organizationStore.getPubCardsList({...params, type: 'performer'}).then(res => {
     if(res) {
-      console.log(res)
+      servicesList.value = res.data
       page.value = {
         currentPage: res.meta.current_page,
         lastPage: res.meta.last_page,
