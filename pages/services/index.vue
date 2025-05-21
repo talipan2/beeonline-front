@@ -143,6 +143,7 @@ const handleUpdateFilter = (data) => {
     router.replace({});
     loading.value = true;
     organizationStore.getPubCardsList({type: 'performer'}).then(res => {
+      servicesList.value = res.data
       page.value = {
         currentPage: res.meta.current_page,
         lastPage: res.meta.last_page,
