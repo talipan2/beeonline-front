@@ -25,13 +25,22 @@
                     class="company-info__locations"
                     :locationsList="{countries: [data.country]}"
                 />
-                <h4 class="company-info__site" v-if="data.url_site">
+                <!-- <h4 class="company-info__site" v-if="data.url_site">
                     Сайт:
                     <a
                         :href="data.url_site"
                         class="link link_type_hidden"
                         target="_blank"
                         >{{ data.url_site }}</a
+                    >
+                </h4> -->
+                <h4 class="company-info__site" v-if="data.url_site">
+                    Номер менеджера:
+                    <a
+                        href="tel:+79651807700"
+                        class="link link_type_hidden"
+                        target="_blank"
+                        >+79651807700</a
                     >
                 </h4>
             </div>
@@ -40,13 +49,21 @@
                     class="company-info__locations company-info__desktop"
                     :locationsList="{countries: [data.country]}"
                 />
-                <h4 class="company-info__site company-info__desktop" v-if="data.url_site">
+                <!-- <h4 class="company-info__site company-info__desktop" v-if="data.url_site">
                     Сайт:
                     <a
                         :href="data.url_site"
                         class="link"
                         target="_blank"
                         >{{ data.url_site }}</a
+                    >
+                </h4> -->
+                <h4 class="company-info__site company-info__desktop" v-if="data.url_site">
+                    Номер менеджера:
+                    <a
+                        href="tel:+79651807700"
+                        class="link"
+                        >+79651807700</a
                     >
                 </h4>
                 <div class="company-info__description">
