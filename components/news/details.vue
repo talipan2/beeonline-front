@@ -10,14 +10,14 @@
 <script setup>
 import { useSettingStore } from '~/store/settingStore';
 
-
+const props = defineProps({
+  data: {
+    type: Object,
+    default: () => ({})
+  }
+});
 const settingStore = useSettingStore();
-const data = ref({});
 const router = useRouter();
-
-await settingStore.getNews(router.currentRoute.value.params.id).then((res) => {
-  data.value = res
-})
 
 const goBack = () => {
   if(history.state.back != null && history.state.back.includes('news')) {
