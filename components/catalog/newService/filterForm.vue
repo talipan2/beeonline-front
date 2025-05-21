@@ -3,6 +3,7 @@
     <div class="filter-modal__item">
       <p class="filter-modal__text">Регионы производства</p>
       <CommonLocation
+        ref="locationFilter"
         buttonLabel="Выбрать регионы"
         v-model="modelValue.location"
         class="filter-modal__location filter-modal__action"
@@ -83,9 +84,20 @@ const props = defineProps({
 const entityStore = useEntityStore();
 
 const batchList = computed(() => entityStore.entityData.serviceBatch)
+const locationFilter = ref(null);
 
 onMounted(() => {
   entityStore.getBatches()
+})
+
+function resetLocationFilter() {
+  if(locationFilter.value){
+    locationFilter.value.resetData();
+  }
+}
+
+defineExpose({
+  resetLocationFilter
 })
 
 </script>

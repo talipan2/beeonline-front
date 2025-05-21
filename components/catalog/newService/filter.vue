@@ -36,7 +36,7 @@
             <SvgoClose class="svg-l" />
           </UiButton>
           <h3 class="filter-modal__title">Еще фильтры</h3>
-          <CatalogNewServiceFilterForm v-model="filter" />
+          <CatalogNewServiceFilterForm v-model="filter" ref="filterRef"/>
           <div class="filter-modal__footer">
             <UiButton 
               type="button" 
@@ -113,6 +113,7 @@ const filterModal = ref(null);
 const isVisible = ref(false);
 const mobileModal = ref(false);
 const isMobile = ref(false);
+const filterRef = ref(null);
 
 const filter = ref({
   location: [],
@@ -148,6 +149,9 @@ const resetFilter = () => {
   };
   emit('resetFilter');
   hideFilterModal();
+  if(filterRef.value) {
+    filterRef.value.resetLocationFilter()
+  }
 }
 
 const handleUpdateFilter = () => {
