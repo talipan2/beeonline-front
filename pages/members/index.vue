@@ -87,7 +87,7 @@ const data = computed(() => {
       category: item.categories && item.categories.length ? item.categories.map(item => item.name) : [],
       rawMaterials: [item.materials_own ? 'Исполнителя' : '', item.materials_tolling ? 'Заказчика' : ''].filter(Boolean),
       type: item.type,
-      countryId: {countries: [item.country]},
+      countryId: {cities: item?.cities, regions: item?.regions, countries: item?.countries},
       country: {countries: [item.country]},
     }
   })
@@ -120,7 +120,7 @@ const handleUpdateFilter = (data, sortType) => {
   const newQuery = {
     type: data.type ? data.type : undefined,
     categories: data.category ? data.category.join(',') : undefined,
-    country_ids: data.location ? data.location.join(',') : undefined,
+    countries: data.location ? data.location.join(',') : undefined,
     materials_own: data.material && data.material.length && data.material.includes(0) ? 1 : undefined,
     materials_tolling: data.material && data.material.length && data.material.includes(1) ? 1 : undefined,
     sort: sortType ? sortType : sortList.value[0].value
@@ -130,7 +130,7 @@ const handleUpdateFilter = (data, sortType) => {
   filter.value = {
     type: data.type ? data.type : undefined,
     categories: data.category && data.category.length ? data.category : undefined,
-    country_ids: data.location && data.location.length ? data.location : undefined,
+    countries: data.location && data.location.length ? data.location : undefined,
     materials_own: data.material && data.material.length && data.material.includes(0) ? 1 : undefined,
     materials_tolling: data.material && data.material.length && data.material.includes(1) ? 1 : undefined,
   }
@@ -219,7 +219,7 @@ onMounted(() => {
       page: query.page ? Number(query.page) : undefined,
       type: 'customer',
       categories: query.categories ? query.categories.split(',').map(item => Number(item)) : undefined,
-      country_ids: query.country_ids ? query.country_ids.split(',').map(item => Number(item)) : undefined,
+      countries: query.countries ? query.countries.split(',').map(item => Number(item)) : undefined,
       materials_own: query.materials_own ? Number(query.materials_own) : undefined,
       materials_tolling: query.materials_tolling ? Number(query.materials_tolling) : undefined,
       sort: query.sort ? query.sort : sortList.value[0].value,
@@ -228,7 +228,7 @@ onMounted(() => {
     filter.value = {
       type: 'customer',
       categories: query.categories ? query.categories.split(',').map(item => Number(item)) : [],
-      country_ids: query.country_ids ? query.country_ids.split(',').map(item => Number(item)) : [],
+      countries: query.countries ? query.countries.split(',').map(item => Number(item)) : [],
       materials_own: query.materials_own ? Number(query.materials_own) : undefined,
       materials_tolling: query.materials_tolling ? Number(query.materials_tolling) : undefined,
     }

@@ -50,7 +50,7 @@ const pubCard = computed(() => {
     entityCount: data.value.type === 'performer' ? data.value.services_count : data.value.orders_count,
     gallery: data.value.gallery && data.value.gallery.length && data.value.gallery.map(item => item.url) || [],
     videos: data.value.videos && data.value.videos.length && data.value.videos.map(item => item.external_url) || [],
-    location: { countries: [data.value.country]},
+    location: {cities: data.value.cities, regions: data.value.regions, countries: data.value.countries},
   }
 })
 

@@ -193,6 +193,7 @@ const pubCardData = computed(() => ({
   locations: {
     regions: userStore.userPubCard && userStore.userPubCard.regions ? userStore.userPubCard.regions : [],
     cities: userStore.userPubCard && userStore.userPubCard.cities ? userStore.userPubCard.cities : [],
+    countries: userStore.userPubCard && userStore.userPubCard.countries ? userStore.userPubCard.countries : [],
   },
 }));
 
