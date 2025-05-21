@@ -46,7 +46,7 @@
             <td class="tariffs-table__price">Итого</td>
             <template v-for="(tariff, colIndex) in tariffs" :key="colIndex">
               <td v-if="tariff.prices !== null" class="tariffs-table__price-value">
-                {{ formatMoney(getPrice(tariff) * 100 / (100 - discount), 'RUB', 0) }}
+                {{ formatMoney(getPrice(tariff) * 100 / (100 - discount), getCurrency(tariff), 0) }}
               </td>
             </template>
           </tr>
@@ -54,7 +54,7 @@
             <td class="tariffs-table__price">Скидка {{ discount }}%</td>
             <template v-for="(tariff, colIndex) in tariffs" :key="colIndex">
               <td v-if="tariff.prices !== null" class="tariffs-table__price-value">
-                <span v-if="discount !== null && tariff.code !== 'free'">{{ `-${getDiscount(getPrice(tariff), discount, 'RUB')}`}}<br /></span>
+                <span v-if="discount !== null && tariff.code !== 'free'">{{ `-${getDiscount(getPrice(tariff), discount, getCurrency(tariff))}`}}<br /></span>
               </td>
             </template>
           </tr>
@@ -62,7 +62,7 @@
             <td class="tariffs-table__price">Итого к оплате</td>
             <template v-for="(tariff, colIndex) in tariffs" :key="colIndex">
               <td v-if="tariff.prices !== null" class="tariffs-table__price-value">
-                {{ formatMoney(getPrice(tariff), 'RUB', 0) }}
+                {{ formatMoney(getPrice(tariff), getCurrency(tariff), 0) }}
               </td>
             </template>
           </tr>
@@ -87,7 +87,7 @@
           :tariff="tariff"
           :feature="getMobileTariffsFeatures(tariff.id)"
           :price="getPrice(tariff)"
-          currency="RUB"
+          :currency=getCurrency(tariff)
           :discount="discount"
           @handlePay="handlePayModal(tariff.code, props.subDuration)"
         />
@@ -153,6 +153,10 @@ function getPrice(tariff) {
   if (tariff.code === 'free') return 0;
   const priceOption = tariff.prices.find(option => option.quantity == props.subDuration);
   return priceOption?.amount;
+}
+
+function getCurrency(tariff) {
+  return tariff.prices.find(option => option.quantity == props.subDuration)?.currency;
 }
 
 function serviceInTariff(service, tariff_id) {
