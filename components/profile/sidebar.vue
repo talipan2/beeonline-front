@@ -89,9 +89,9 @@ const handleChangeRole = async () => {
 
   try {
     await userStore.setUserData({ role: newRole }, userStore.userData.id).then(res => {
+      userStore.role = newRole;
       userStore.checkAuth();
     })
-    userStore.role = newRole;
     localStorage.setItem('role', newRole);
     router.push({ path: redirectPath });
   } catch (error) {
@@ -107,20 +107,17 @@ const setRole = (role) => {
       userStore.userRoles = res.data.roles;
       localStorage.setItem('role', role);
       if(role === 'customer') {
-        organizationStore.setPubCard({
-          id: userStore.userData.organization_id,
-          name: userStore.userData.public_cards[0].name,
-          status: 1,
-          type: role
-        }).then(res => {
-          if(res && res.data && res.data.id) {
-            userStore.userPubCard = res.data;
-            router.push({ path: `/pubcards/edit/${res.data.id}` });
-            toast.success('Вы успешно стали ' + formatLangRole.value);
-          }
-        });
-      } else if(role === 'performer') {
-        router.push({ path: `/performer-register/step2` });
+        if(userStore.userData.organization_id) {
+          router.push({ path: `/register/step2` });
+        } else {
+          router.push({ path: `/register/step1` });
+        }
+      } else if (role === 'performer') {
+        if(userStore.userData.organization_id) {
+          router.push({ path: `/performer-register/step2` });
+        } else {
+          router.push({ path: `/performer-register/step1` });
+        }
       }
     });
 }
