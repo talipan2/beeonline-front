@@ -100,7 +100,7 @@ const handleChangeRole = async () => {
 };
 
 const setRole = (role) => {
-  if(!userStore.userPubCard?.id) return  
+  // if(!userStore.userPubCard?.id) return
   userStore.setUserData({ role: role }, userData.value.id)
     .then(res => {
       userStore.role = role;

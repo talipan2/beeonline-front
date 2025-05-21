@@ -407,7 +407,7 @@ const handleSubmit = async (value, form) => {
       ...value,
       id: userStore.userData.organization_id,
       name: data.value.organizationName,
-      inn: String(data.value.inn),
+      inn: data.value.inn ? String(data.value.inn) : "",
     }, form).then((res) => {
       if(res.data) {
         userStore.userOrganization = res.data;
@@ -433,7 +433,7 @@ const handleSubmit = async (value, form) => {
       userId: userStore.userData.id,
       name: data.value.organizationName,
       organizationForm: data.value.organizationForm,
-      inn: String(data.value.inn),
+      inn: data.value.inn ? String(data.value.inn) : "",
     }, form)
     .then((res) => {
       if (res.data && res.data.id) {
