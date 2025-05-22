@@ -84,7 +84,7 @@ const organizationData = ref({
   selfEmployed: false,
   inn: '',
   kpp: '',
-  organizationForm: 3,
+  organizationForm: 4,
   ogrn: '',
   legalAddress: '',
   registerAddress: '',
@@ -110,6 +110,12 @@ const pubCardData = ref({
   workers_count: null,
   equipment_description: '',
 })
+
+watch(() => organizationData.value.selfEmployed, () => {
+  if(!organizationData.value.selfEmployed && organizationData.value.organizationForm == 3) {
+    organizationData.value.organizationForm = 4;
+  }
+});
 
 const stepsConfig = ref([
   { id: 0, title: 'Регистрационные данные', route: '/register'},
@@ -285,7 +291,7 @@ onMounted(() => {
       if(res.user.organization && res.user.organization.id) {
         const userOrganization = res.user.organization;
         organizationData.value.countryId = userOrganization.country_id
-        organizationData.value.selfEmployed = Boolean(userOrganization.is_foreigner)
+        organizationData.value.selfEmployed = userOrganization.org_form == 3
         organizationData.value.inn = userOrganization.inn
         organizationData.value.organizationName = userOrganization.name
         organizationData.value.companyName = userOrganization.name
@@ -300,6 +306,9 @@ onMounted(() => {
 
       if(res.user.public_cards && res.user.public_cards && res.user.public_cards.length > 0) {
         const pubCard = res.user.public_cards.find(item => item.type === userStore.role)
+
+        if(!pubCard) return
+
         pubCardData.value = {
           ...pubCardData.value,
           id: pubCard.id,

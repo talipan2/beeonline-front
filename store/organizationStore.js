@@ -40,19 +40,24 @@ export const useOrganizationStore = defineStore('organization', {
     formOrganization: [
       {
         id: 1,
-        name: 'ООО',
-        value: 'ooo',
-      },
-      {
-        id: 2,
         name: 'ИП',
         value: 'ip',
       },
       {
+        id: 2,
+        name: 'ООО',
+        value: 'ooo',
+      },
+      {
         id: 3,
+        name: 'Самозанятый',
+        value: 'self',
+      },
+      {
+        id: 4,
         name: 'Другое',
         value: 'other',
-      }
+      },
     ]
   }),
   getters: {

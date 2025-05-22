@@ -141,7 +141,7 @@ const handleSubmit = async(value, form) => {
   if(props.submitFunc) {
    await props.submitFunc();
   } else {
-    if(!userStore.userPubCard.id) {
+    if(!userStore.userPubCard?.id) {
       await organizationStore.setPubCard({
         id: userStore.userData.organization_id,
         name: data.value.companyName,

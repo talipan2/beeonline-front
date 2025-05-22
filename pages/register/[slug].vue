@@ -73,7 +73,7 @@ const data = ref({
   countryId: 1,
   inn: null,
   kpp: null,
-  organizationForm: 3,
+  organizationForm: 4,
   ogrn: null,
   legalAddress: null,
   organizationName: null,
@@ -147,6 +147,12 @@ onUnmounted(() => {
   window.removeEventListener("scroll", onScrollPage)
 });
 
+watch(() => data.value.selfEmployed, () => {
+  if(!data.value.selfEmployed && data.value.organizationForm == 3) {
+    data.value.organizationForm = 4;
+  }
+});
+
 const checkListCard = computed(() => {
   return {
     name: data.value.companyName,
@@ -177,7 +183,7 @@ onMounted(() => {
         const userOrganization = res.user.organization;
         data.value.country = {countries: [{...userOrganization.country}]}
         data.value.countryId = userOrganization.country_id
-        data.value.selfEmployed = Boolean(userOrganization.is_foreigner)
+        data.value.selfEmployed = userOrganization.org_form == 3
         data.value.inn = userOrganization.inn
         data.value.organizationName = userOrganization.name
         data.value.companyName = userOrganization.name
@@ -191,7 +197,10 @@ onMounted(() => {
 
       if(res.user.public_cards && res.user.public_cards && res.user.public_cards.length > 0) {
         const pubCard = res.user.public_cards.find(item => item.type === userStore.role)
-        data.value.companyName = pubCard.name.length > 0 && pubCard.name
+
+        if(!pubCard) return;
+
+        data.value.companyName = pubCard.name?.length > 0 && pubCard.name
         data.value.description = pubCard.description
         data.value.siteUrl = pubCard.site_url
         data.value.companyLogo = {url:pubCard.logo}
