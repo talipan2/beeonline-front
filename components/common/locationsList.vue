@@ -59,7 +59,7 @@ const otherLocations = computed(() => {
   if(!props.isCountry) {
     return data.value.slice(1);
   } else {
-    return data.value;
+    return data.value.filter((item) => item  !== countryName.value)
   }
 })
 
