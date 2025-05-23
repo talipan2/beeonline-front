@@ -138,8 +138,8 @@ const currentHandleSubmit = computed(() => {
     case 'step4':
       return (async (value, form) => {
         await entityStore.editOrder(order.value.id, {
-          isSafeDeal: order.value.isSafeDeal,
-          isAgreedOrderPlacement: order.value.isAgreedOrderPlacement,
+          // isSafeDeal: order.value.isSafeDeal,
+          // isAgreedOrderPlacement: order.value.isAgreedOrderPlacement,
           status: 'under_moderation',
         }, form).then(res => {
           entityStore.fillingOrder = null

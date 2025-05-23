@@ -116,12 +116,12 @@
         text='Безопасная сделка'
       />
     </UiCheckbox> -->
-    <UiCheckbox v-model="data.isAgreedOrderPlacement" class="form-group-data entity_step-check__checkbox" v-if="entityOfRole === 'orders'" :isValidated="false">
+    <!-- <UiCheckbox v-model="data.isAgreedOrderPlacement" class="form-group-data entity_step-check__checkbox" v-if="entityOfRole === 'orders'" :isValidated="false">
       Согласен на размещение заказа в телеграм-канале &nbsp;<a>"Аутсорсинг в легпроме"</a>. 
       <CommonTooltip class=""
         text='Аутсорсинг в легпроме'
       />
-    </UiCheckbox>
+    </UiCheckbox> -->
     <div class="form-group">
       <UiButton :to="backLink" class="form-group-data form-group-data__btn" variant="tertiary" size="large">Назад</UiButton>
       <UiButton type="button"  @click="handleSubmit" class="form-group-data form-group-data__btn" variant="quinary" size="large">Подтвердить
