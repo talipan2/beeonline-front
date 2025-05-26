@@ -365,9 +365,21 @@ const locationList = ref([]);
 // ]);
 
 const formOrganization = ref([
-  { id: 1, value: "ooo", label: "ООО" },
-  { id: 2, value: "ip", label: "ИП" },
-  { id: 3, value: "other", label: "Другое" },
+      {
+        id: 1,
+        label: 'ИП',
+        value: 'ip',
+      },
+      {
+        id: 2,
+        label: 'ООО',
+        value: 'ooo',
+      },
+      {
+        id: 4,
+        label: 'Другое',
+        value: 'other',
+      },
 ]);
 
 const handleSearchOrgByInn = (inn) => {
@@ -407,7 +419,8 @@ const handleSubmit = async (value, form) => {
       ...value,
       id: userStore.userData.organization_id,
       name: data.value.organizationName,
-      inn: String(data.value.inn),
+      inn: data.value.inn ? String(data.value.inn) : "",
+      organizationForm: data.value.selfEmployed ? 3 : data.value.organizationForm,
     }, form).then((res) => {
       if(res.data) {
         userStore.userOrganization = res.data;
@@ -432,8 +445,8 @@ const handleSubmit = async (value, form) => {
       ...value,
       userId: userStore.userData.id,
       name: data.value.organizationName,
-      organizationForm: data.value.organizationForm,
-      inn: String(data.value.inn),
+      organizationForm: data.value.selfEmployed ? 3 : data.value.organizationForm,
+      inn: data.value.inn ? String(data.value.inn) : "",
     }, form)
     .then((res) => {
       if (res.data && res.data.id) {

@@ -35,7 +35,7 @@
                             title="Категории"
                         />
                     </div>
-                    <div
+                    <!-- <div
                         class="prop"
                         v-if="data.pubcard?.url_site"
                     >
@@ -45,6 +45,16 @@
                             class="prop__value link link_type_hidden"
                             target="_blank"
                             >{{ data.pubcard?.url_site }}</a
+                        >
+                    </div> -->
+                    <div
+                        class="prop"
+                    >
+                        <p class="prop__name prop__name_type_grey">Номер менеджера:</p>
+                        <a
+                            href="tel:+79651807700"
+                            class="prop__value link link_type_hidden"
+                            >+79651807700</a
                         >
                     </div>
                     <div class="prop prop_type_text">

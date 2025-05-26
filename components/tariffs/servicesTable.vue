@@ -18,12 +18,8 @@
           <td>
               {{ service.name }}
           </td>
-          <td class="services-table__price" v-if="currentCurrency === 'RUB'">
-            {{ formatMoney(service.price, currentCurrency, 0) }}
-            <span v-if="service.period">{{ ` / ${service.period}` }}</span>
-          </td>
-          <td class="services-table__price" v-if="currentCurrency === 'USD'">
-            {{ formatMoney(service.price, currentCurrency, 0) }}
+          <td class="services-table__price">
+            {{ formatMoney(service.price, service.currency, 0) }}
             <span v-if="service.period">{{ ` / ${service.period}` }}</span>
           </td>
           <td class="services-table__quantity"><CommonCounter v-model="service.quantity" /></td>
@@ -34,12 +30,8 @@
       <ul class="services-list__list">
         <li class="services-list__item" v-for="(services, index) in services" :key="index">
             {{ services.name }}
-          <p class="services-list__price" v-if="currentCurrency === 'RUB'">
-            {{ formatMoney(services.price, currentCurrency, 0) }}
-            <span v-if="services.period">{{ ` / ${services.period}` }}</span>
-          </p>
-          <p class="services-list__price" v-if="currentCurrency === 'USD'">
-            {{ formatMoney(services.price, currentCurrency, 0) }}
+          <p class="services-list__price">
+            {{ formatMoney(services.price, services.currency, 0) }}
             <span v-if="services.period">{{ ` / ${services.period}` }}</span>
           </p>
           <div class="services-list__counter">
@@ -86,6 +78,7 @@ watch(() => userStoreServices.value, (newVal) => {
 			quantity: 0,
 			price: service.prices[0].amount,
 			period: service.numeral_forms ? service.numeral_forms[0] || null : null,
+      currency: service.prices[0].currency
 		};
 	});
 }, {deep: true})

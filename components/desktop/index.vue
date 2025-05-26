@@ -50,7 +50,7 @@
         :action="userStore.role === 'performer' ? { function: () => editPubCardModal = true, text: 'Изменить'} : undefined"
       >
         <template #body>
-          <CardsPublic class="desktop__pub-card" :is-props-visible="true" :is-description="true" :data="pubCard" :class="{'loading' : pubCardLoader}"/>
+          <CardsPublic class="desktop__pub-card" :is-props-visible="true" :is-description="true" :data="pubCard" :class="{'loading' : pubCardLoader}" statusVisible isPubCardUp/>
           <ModalsRoundBorder :is-open="editPubCardModal" title="Редактирование карточки" @close="editPubCardModal = false" size="lg"
             class="pubcard-edit-modal">
             <UiForm :submit="handleUpdatePerformerPubCard" @setError="getErrorList">
@@ -333,7 +333,7 @@ const pubCard = computed(() => {
     logo: userStore.userPubCard.logo,
     type: userStore.userPubCard.type,
     description: userStore.userPubCard.description,
-    countryId: {countries: [userStore.userPubCard.country]},
+    countryId: {cities: userStore.userPubCard?.cities, regions: userStore.userPubCard?.regions, countries: userStore.userPubCard?.countries},
     rating: userStore.userPubCard.reviews_stats_about?.stars,
     reviewCount: userStore.userPubCard.reviews_about_count,
     ratingData: {...userStore.userPubCard.reviews_stats_about, reviewCount: userStore.userPubCard.reviews_about_count},

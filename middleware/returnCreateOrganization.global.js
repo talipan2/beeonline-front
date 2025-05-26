@@ -53,6 +53,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     '/search',
     '/related-industry-services',
     '/news',
+    '/no-roles'
   ]
 
   // переход к созданию организации у заказчика
@@ -100,6 +101,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     '/search',
     '/related-industry-services',
     '/news',
+    
   ]
 
   const notShowModalLinks = [
@@ -132,7 +134,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     const publicCards = userStore.userData.public_cards || []
     const firstCard = publicCards[0];
 
-    if(firstCard && firstCard?.status_code !== 'DRAFT'){
+    if(firstCard?.id && firstCard?.status_code !== 'DRAFT'){
       return
     }
 
@@ -164,8 +166,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
           performerServices = response
         }
       }
-
-      console.log(firstCard)
   
       if(firstCard?.id && firstCard?.status_code != 'DRAFT'){
         return
@@ -178,5 +178,15 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       } else if (firstCard && firstCard.id && firstCard.current_step === 3) {
         return navigateTo({ path: "/performer-register/step4" });
       }
+    }
+
+    // проверка есть ли организация у пользователя для всех пользователей
+    if(userStore.isAuth &&
+      userStore.userData.id &&
+      !availableLinkList.some((item) => to.path.startsWith(item)) &&
+      to.path !== '/'
+      && !userStore.role
+    ) {
+      return navigateTo({path: '/no-roles'})
     }
 })

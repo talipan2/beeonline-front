@@ -15,7 +15,6 @@ export default {
       ogrn: data.ogrn,
       legal_address: data.legalAddress,
       url_site: data.urlSite,
-      is_foreigner: data.selfEmployed,
       country_id: data.countryId,
       email_docs: data.email_docs
     }, form)
@@ -31,7 +30,6 @@ export default {
       ogrn: data.ogrn,
       legal_address: data.legalAddress,
       url_site: data.urlSite,
-      is_foreigner: data.selfEmployed,
       country_id: data.countryId,
       email_docs: data.email_docs
     }, form)

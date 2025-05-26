@@ -10,14 +10,14 @@
 <script setup>
 import { useSettingStore } from '~/store/settingStore';
 
-
+const props = defineProps({
+  data: {
+    type: Object,
+    default: () => ({})
+  }
+});
 const settingStore = useSettingStore();
-const data = ref({});
 const router = useRouter();
-
-await settingStore.getNews(router.currentRoute.value.params.id).then((res) => {
-  data.value = res
-})
 
 const goBack = () => {
   if(history.state.back != null && history.state.back.includes('news')) {
@@ -67,14 +67,30 @@ const goBack = () => {
 }
 
 .news-body {
-    a {
-        display: inline;
-        color: var(--primary-color);
+  a {
+    display: inline;
+    color: var(--primary-color);
+    overflow-wrap: anywhere;
 
-        &:hover {
-            text-decoration: underline;
-        }
+    &:hover {
+      text-decoration: underline;
     }
+  }
+  
+  p {
+    overflow-wrap: anywhere;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  table {
+    max-width: 100% !important;
+    display: block;
+    width: auto !important;
+
+  }
 }
 
 </style>

@@ -8,7 +8,7 @@
       :list="otherLocations" 
       :title="title" 
       placement="bottom-end" 
-      v-if="otherLocations && !isCountry"
+      v-if="otherLocations"
 
     />
   </div>
@@ -31,7 +31,6 @@ const props = defineProps({
     type: Boolean,
     default: false
   }
-
 })
 
 const locationStore = useLocationStore();
@@ -56,13 +55,17 @@ const firstLocation = computed(() => {
 })
 
 const otherLocations = computed(() => {
-  if(!data.value.length && props.isCountry) return null;
-  return data.value.slice(1);
+  if(!data.value.length) return null;
+  if(!props.isCountry) {
+    return data.value.slice(1);
+  } else {
+    return data.value.filter((item) => item  !== countryName.value)
+  }
 })
 
 const countryName = computed(() => {
   if(!firstLocation.value || !props.isCountry) return null;
-  return firstLocation.value.countryId ? locationStore.getCountryById(firstLocation.value.countryId) : null;
+  return firstLocation.value ?  firstLocation.value.split(', ').pop() : '';
 })
 
 </script>

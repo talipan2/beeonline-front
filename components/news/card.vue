@@ -63,6 +63,10 @@ const props = defineProps({
     position: absolute;
     inset: 0;
   }
+
+  img {
+    max-width: 100%;
+  }
 }
 
 </style>

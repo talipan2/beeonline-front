@@ -155,8 +155,8 @@ const currentHandleSubmit = computed(() => {
     case 4:
       return (async(value, form) => {
         await entityStore.editOrder(orderData.value.id, {
-          isSafeDeal: orderData.value.isSafeDeal,
-          isAgreedOrderPlacement: orderData.value.isAgreedOrderPlacement,
+          // isSafeDeal: orderData.value.isSafeDeal,
+          // isAgreedOrderPlacement: orderData.value.isAgreedOrderPlacement,
           status: 'under_moderation',
         }, form)
         settingStore.createEntityFinalModal = true;

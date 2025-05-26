@@ -276,6 +276,7 @@ const handleUpdatePubCard = (value, form) => {
         )
         .then((res) => {
             if (res) {
+                console.log(res)
                 emit("update:modelValue", {
                     ...res,
                     gallery: res.gallery,
@@ -291,21 +292,21 @@ const handleUpdatePubCard = (value, form) => {
                                 ...city,
                                 name: locationFormatter({
                                     cities: [{ ...city }],
-                                }).locations[0],
+                                }).locations,
                             })) || [],
                         regions:
                             res.regions?.map((region) => ({
                                 ...region,
                                 name: locationFormatter({
                                     regions: [{ ...region }],
-                                }).locations[0],
+                                }).locations,
                             })) || [],
                         countries:
                             res.countries?.map((country) => ({
                                 ...country,
                                 name: locationFormatter({
                                     countries: [{ ...country }],
-                                }).locations[0],
+                                }).locations,
                             })) || [],
                     },
                 });
