@@ -279,6 +279,12 @@ export const useUserStore = defineStore("user", {
         this.userPubCard = {};
         this.userOrganizationId = null;
 
+        let logout_redirect_url = localStorage.getItem("logout_redirect_url");
+        if (logout_redirect_url) {
+          localStorage.removeItem("logout_redirect_url");
+          location.href = logout_redirect_url;
+        }
+
         return Promise.resolve();
       } catch (error) {
         this.userToken = null;

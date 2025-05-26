@@ -59,10 +59,6 @@ const locationStore = useLocationStore();
 const title = ref('');
 const toast = useToast();
 
-if (route.query.expo_manager_id) {
-    localStorage.setItem("expo_manager_id", route.query.expo_manager_id);
-}
-
 // если есть заказ который находиться в статусе filling
 const fillingOrder = ref(null);
 
