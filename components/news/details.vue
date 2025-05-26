@@ -67,14 +67,30 @@ const goBack = () => {
 }
 
 .news-body {
-    a {
-        display: inline;
-        color: var(--primary-color);
+  a {
+    display: inline;
+    color: var(--primary-color);
+    overflow-wrap: anywhere;
 
-        &:hover {
-            text-decoration: underline;
-        }
+    &:hover {
+      text-decoration: underline;
     }
+  }
+  
+  p {
+    overflow-wrap: anywhere;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  table {
+    max-width: 100% !important;
+    display: block;
+    width: auto !important;
+
+  }
 }
 
 </style>
