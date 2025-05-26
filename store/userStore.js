@@ -515,5 +515,12 @@ export const useUserStore = defineStore("user", {
     async sendUnreadChatsCount() {
         return await useApi().post('send-unread-chats-count', null, null, true);
     },
+
+    async loginWithOneTimeToken(userId, token) {
+        return await useApi().post(`/login-with-token`, {
+            user_id: userId,
+            token: token,
+        });
+    }
   },
 });
