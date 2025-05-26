@@ -272,7 +272,8 @@ export const useEntityStore = defineStore('entity', {
           name: data.name,
           product_categories: data.category,
           deadline_at: data.completionDate,
-          status: data.status
+          status: data.status,
+          expo_manager_id: localStorage.getItem("expo_manager_id") || null,
         }, form);
         if(response && response.data && response.data.id) {
           this.order.id = response.data.id;

@@ -1,21 +1,21 @@
 <template>
   <NuxtLayout name="create">
     <template #left>
-      <CommonCheckList class="create__checklist" 
-        title="Создание заказа" 
-        adviceTitle="Для публикации заказа нужно заполнить достаточно информации о заказе" 
+      <CommonCheckList class="create__checklist"
+        title="Создание заказа"
+        adviceTitle="Для публикации заказа нужно заполнить достаточно информации о заказе"
         :checkList="checkList"
-        :fill-rating="order.fillRating" 
+        :fill-rating="order.fillRating"
       />
     </template>
     <template #content>
       <component :is="currentComponent" :title="title" role="customer" :handleSubmit="handleSubmit" :formatData="data" :data="order"/>
     </template>
     <template #right>
-      <CommonCheckList class="create__checklist create__checklist_type_right" 
-        title="Создание заказа" 
-        adviceTitle="Для публикации заказа нужно заполнить достаточно информации о заказе" 
-        :checkList="checkList" 
+      <CommonCheckList class="create__checklist create__checklist_type_right"
+        title="Создание заказа"
+        adviceTitle="Для публикации заказа нужно заполнить достаточно информации о заказе"
+        :checkList="checkList"
       />
       <div class="h4">Предварительный просмотр заказа</div>
       <CreateEntityPreview :data="ordersData"/>
@@ -46,7 +46,7 @@ useHead({
 });
 
 definePageMeta({
-  middleware: 'telegram' 
+  middleware: 'telegram'
 });
 
 const router = useRouter();
@@ -58,6 +58,10 @@ const organizationStore = useOrganizationStore();
 const locationStore = useLocationStore();
 const title = ref('');
 const toast = useToast();
+
+if (route.query.expo_manager_id) {
+    localStorage.setItem("expo_manager_id", route.query.expo_manager_id);
+}
 
 // если есть заказ который находиться в статусе filling
 const fillingOrder = ref(null);
@@ -78,8 +82,8 @@ const currentHandleSubmit = computed(() => {
           await entityStore.addNewOrder(
             {
               userId: userStore.userData.id,
-              organizationId: userStore.userData.organization_id || null, 
-              name: order.value.name, 
+              organizationId: userStore.userData.organization_id || null,
+              name: order.value.name,
               category: order.value.categories,
               completionDate: order.value.completionDate,
               status: 'filling',
@@ -100,7 +104,7 @@ const currentHandleSubmit = computed(() => {
             order.value.fillRating = res.fill_rating
             router.push('/orders/create/step2')
           })
-        }    
+        }
       });
     case 'step2':
       return (async (value, form) =>{
@@ -130,7 +134,7 @@ const currentHandleSubmit = computed(() => {
           // if(order.value.logo && order.value.logo.id) {
           //   entityStore.uploadOrderLogo(order.value.id, order.value.logo.id)
           // }
-          
+
           if(order.value.tzFiles && order.value.tzFiles.length) {
             entityStore.uploadTzFiles(order.value.id, order.value.tzFiles.map(item => item.id))
           }
@@ -154,7 +158,7 @@ const currentHandleSubmit = computed(() => {
           router.push(`/customer/orders/show/${order.value.id}`)
         }
       });
-  } 
+  }
 })
 
 const handleSubmit = async(value, form) => {
@@ -205,7 +209,7 @@ const ordersData = computed(() => ({
 
 const data = computed(() => {
   const {locations, alias} = locationFormatter({cities: [...order.value.locations.cities], regions: [...order.value.locations.regions], countries: [...order.value.locations.countries]});
-  return {    
+  return {
     name: order.value.name,
     logo: order.value.gallery && order.value.gallery.length ? order.value.gallery[0].url : '',
     categories: entityStore.getEntityLabelById('categories', order.value.categories),
@@ -220,7 +224,7 @@ const data = computed(() => {
   }
 })
 
-  
+
 onBeforeMount(async () => {
   // Если данных о текущем заказе нет, загружаем их
   if (!entityStore.fillingOrder?.id) {
@@ -301,9 +305,9 @@ const handleRedirect = () => {
 };
 
 function getLocationsForPubCard() {
-  if((!order.value.locations.regions.length && userStore.userPubCard?.regions?.length) || 
+  if((!order.value.locations.regions.length && userStore.userPubCard?.regions?.length) ||
      (!order.value.locations.countries.length && userStore.userPubCard?.countries?.length)) {
-    
+
     // Для регионов
     if(userStore.userPubCard?.regions?.length && !order.value.locations.regions.length) {
       order.value.locations.regions = userStore.userPubCard.regions.map(item => ({
@@ -311,7 +315,7 @@ function getLocationsForPubCard() {
         name: locationFormatter(item)
       }))
     }
-    
+
     // Для стран
     if(userStore.userPubCard?.countries?.length && !order.value.locations.countries.length) {
       order.value.locations.countries = userStore.userPubCard.countries.map(item => ({
