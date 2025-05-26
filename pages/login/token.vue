@@ -21,18 +21,25 @@ let redirect = route.query.redirect;
 
 const userId = route.query.user_id;
 const token = route.query.token;
-const storage = route.query.storage;
+const storage = {};
+
+Object.entries(route.query).forEach(([key, value]) => {
+  const match = key.match(/^storage\[(.+)\]$/);
+  if (match) {
+    storage[match[1]] = value;
+  }
+});
+
+if (Object.keys(storage).length > 0) {
+  Object.entries(storage).forEach(([key, value]) => {
+    localStorage.setItem(key, value);
+  });
+}
 
 userStore.loginWithOneTimeToken(userId, token)
 .then((response) => {
     userStore.userToken = response.token;
     localStorage.setItem("token", response.token);
-
-    if (storage && typeof storage === 'object') {
-        Object.entries(storage).forEach(([key, value]) => {
-            localStorage.setItem(key, value);
-        });
-    }
 
     userStore.checkAuth(true).then((response) => {
         if(typeof redirect === 'string') {
