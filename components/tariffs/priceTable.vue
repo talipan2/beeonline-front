@@ -138,6 +138,8 @@ const getMobileTariffsFeatures = (tariff) => {
 const discount = computed(() => {
   if (!props.subDuration) return null;
   switch (props.subDuration) {
+    case '1':
+      return 0;
     case '3':
       return 5;
     case '6':

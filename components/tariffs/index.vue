@@ -73,7 +73,7 @@ const currentPaymentData = ref({
 });
 
 const tabsList = ref([
-  //{id: 1, label: '1 месяц', value: '1'},
+  {id: 1, label: '1 месяц', value: '1'},
   {id: 2, label: '3 месяца', value: '3'},
   {id: 3, label: '6 месяцев', value: '6'},
   {id: 4, label: '12 месяцев', value: '12'}
