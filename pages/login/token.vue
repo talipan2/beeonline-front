@@ -11,8 +11,10 @@ definePageMeta({
 })
 
 import { useUserStore } from "~/store/userStore";
+import { useSettingStore } from "~/store/settingStore";
 
 const userStore = useUserStore();
+const settingStore = useSettingStore();
 const route = useRoute();
 const config = useRuntimeConfig();
 
@@ -34,6 +36,10 @@ if (Object.keys(storage).length > 0) {
   Object.entries(storage).forEach(([key, value]) => {
     localStorage.setItem(key, value);
   });
+}
+
+if (storage.isCreateOrder) {
+    settingStore.isCreateOrder = true;
 }
 
 userStore.loginWithOneTimeToken(userId, token)
