@@ -1,121 +1,140 @@
 <template>
-  <CommonLayoutInfoCard title="Услуги" class="new-service-card-layout" :class="{'loading' : !isLoaded}">
-    <template v-if="modelValue.services?.length > 0">
-      <div class="new-service-card-layout__service-list" ref="serviceList">
-        <div class="new-service-card-layout__service" v-for="item in modelValue.services" :key="item">
-          <UiButton
-            type="button"
-            class="new-service-card-layout__edit-service"
-            variant="default"
-            :without-padding="true"
-            @click="handleEditService(item)"
-          >
-            <SvgoPencil class="svg-l" />
-            Редактировать услугу
-          </UiButton>
-          <div class="form-group form-group_type_secondary">
-            <div class="form-group-data">
-              <label class="form-group__title">
-                Название услуги
-              </label>
-              <div class="form-value">{{ item.name }}</div>
+  <CommonLayoutInfoCard title="Услуги" class="new-service-card-layout" :class="{'loading' : isLoading}">
+    <div v-if="isLoading" class="new-service-card-layout__loading">
+      <span class="spinner-border text-primary" ></span>
+    </div>
+    <template v-else>
+      <p class="new-service-card-layout__limit-services">
+        Вы можете добавить до 
+        <span class="new-service-card-layout__limit-services-count">
+          {{ limitServices }}
+          {{plural(limitServices, {one: 'услуги', few: 'услуг', many: 'услуг'})}}.
+        </span>
+        <span v-if="modelValue.services?.length < limitServices">
+          Доступно к созданию еще
+            <span class="new-service-card-layout__limit-services-count">
+              {{ limitServices - modelValue.services?.length }}
+              {{plural(limitServices - modelValue.services?.length, {one: 'услуга', few: 'услуги', many: 'услуг'})}}.
+            </span> 
+          </span>
+      </p>
+      <template v-if="modelValue.services?.length > 0">
+        <div class="new-service-card-layout__service-list" ref="serviceList">
+          <div class="new-service-card-layout__service" v-for="item in modelValue.services" :key="item">
+            <UiButton
+              type="button"
+              class="new-service-card-layout__edit-service"
+              variant="default"
+              :without-padding="true"
+              @click="handleEditService(item)"
+            >
+              <SvgoPencil class="svg-l" />
+              Редактировать услугу
+            </UiButton>
+            <div class="form-group form-group_type_secondary">
+              <div class="form-group-data">
+                <label class="form-group__title">
+                  Название услуги
+                </label>
+                <div class="form-value">{{ item.name }}</div>
+              </div>
             </div>
-          </div>
-          <div class="form-group form-group_type_secondary new-service-card-layout__category">
-            <div class="form-group-data">
-              <label class="form-group__title">
-                Категории
-              </label>
-              <div class="new-service-card-layout__category-badge-list">
-                <div class="new-service-card-layout__category-badge" v-for="badge in item.product_categories" :key="badge">
-                  {{ badge.name }}
+            <div class="form-group form-group_type_secondary new-service-card-layout__category">
+              <div class="form-group-data">
+                <label class="form-group__title">
+                  Категории
+                </label>
+                <div class="new-service-card-layout__category-badge-list">
+                  <div class="new-service-card-layout__category-badge" v-for="badge in item.product_categories" :key="badge">
+                    {{ badge.name }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group form-group_type_secondary">
+              <div class="form-group-data">
+                <label class="form-group__title">
+                  Партия
+                </label>
+                <div class="form-group__value">
+                  <div class="form-value">{{ item.batch?.name || '' }}</div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="form-group form-group_type_secondary">
-            <div class="form-group-data">
-              <label class="form-group__title">
-                Партия
-              </label>
-              <div class="form-group__value">
-                <div class="form-value">{{ item.batch?.name || '' }}</div>
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
-    </template>
+      </template>
 
-    <!-- Кнопки с isPreview === false и отображение формы, если добавлено 0 услуг -->
-    <template v-if="!isPreview">
-      <UiForm :submit="handleCreateService">
-        <template v-if="!modelValue.services?.length">
-          <PerformerRegisterServiceForm />
-        </template>
+      <!-- Кнопки с isPreview === false и отображение формы, если добавлено 0 услуг -->
+      <template v-if="!isPreview">
+        <UiForm :submit="handleCreateService">
+          <template v-if="!modelValue.services?.length">
+            <PerformerRegisterServiceForm />
+          </template>
+          <UiButton
+            v-if="modelValue.services?.length === 0"
+            type="submit"
+            variant="quinary"
+            size="large"
+            class="new-service-card-layout__add-service new-service-card-layout__add-service_type_strong"
+          >
+            Добавить услугу
+          </UiButton>
+        </UiForm>
+        <UiButton
+          v-if="modelValue.services?.length > 0 && modelValue.services?.length < limitServices"
+          type="button"
+          variant="tertiary"
+          size="large"
+          class="new-service-card-layout__add-service"
+          @click="handleOpenAddService"
+        >
+          Добавить еще услугу
+        </UiButton>
+        <CommonPagination 
+          class="new-service-card-layout__pagination" 
+          v-if="page.last_page > 1" 
+          :current-page="page.current_page" 
+          :total-pages="page.last_page" 
+          btn-type="square" 
+          :position="'center'" 
+          @change-page="handleChangePage"
+        />
+      </template>
+
+      <!-- Кнопки с isPreview === true -->
+      <template v-if="isPreview">
+        <CommonAlerts :alert="'Услуг нет'" type="warning" v-if="!modelValue.services?.length" border-radius/>
         <UiButton
           v-if="modelValue.services?.length === 0"
-          type="submit"
-          variant="quinary"
+          type="button"
+          variant="tertiary"
           size="large"
-          class="new-service-card-layout__add-service new-service-card-layout__add-service_type_strong"
+          class="new-service-card-layout__add-service"
+          @click="handleOpenAddService"
         >
           Добавить услугу
         </UiButton>
-      </UiForm>
-      <UiButton
-        v-if="modelValue.services?.length > 0"
-        type="button"
-        variant="tertiary"
-        size="large"
-        class="new-service-card-layout__add-service"
-        @click="handleOpenAddService"
-      >
-        Добавить еще услугу
-      </UiButton>
-      <CommonPagination 
-        class="new-service-card-layout__pagination" 
-        v-if="page.last_page > 1" 
-        :current-page="page.current_page" 
-        :total-pages="page.last_page" 
-        btn-type="square" 
-        :position="'center'" 
-        @change-page="handleChangePage"
-      />
-    </template>
-
-    <!-- Кнопки с isPreview === true -->
-    <template v-if="isPreview">
-      <CommonAlerts :alert="'Услуг нет'" type="warning" v-if="!modelValue.services?.length" border-radius/>
-      <UiButton
-        v-if="modelValue.services?.length === 0"
-        type="button"
-        variant="tertiary"
-        size="large"
-        class="new-service-card-layout__add-service"
-        @click="handleOpenAddService"
-      >
-        Добавить услугу
-      </UiButton>
-      <UiButton
-        v-if="modelValue.services?.length > 0"
-        type="button"
-        variant="tertiary"
-        size="large"
-        class="new-service-card-layout__add-service"
-        @click="handleOpenAddService"
-      >
-        Добавить еще услугу
-      </UiButton>
-      <CommonPagination 
-        class="new-service-card-layout__pagination" 
-        v-if="page.last_page > 1" 
-        :current-page="page.current_page" 
-        :total-pages="page.last_page" 
-        btn-type="square" 
-        :position="'center'" 
-        @change-page="handleChangePage"
-      />
+        <UiButton
+          v-if="modelValue.services?.length > 0 && modelValue.services?.length < limitServices"
+          type="button"
+          variant="tertiary"
+          size="large"
+          class="new-service-card-layout__add-service"
+          @click="handleOpenAddService"
+        >
+          Добавить еще услугу
+        </UiButton>
+        <CommonPagination 
+          class="new-service-card-layout__pagination" 
+          v-if="page.last_page > 1" 
+          :current-page="page.current_page" 
+          :total-pages="page.last_page" 
+          btn-type="square" 
+          :position="'center'" 
+          @change-page="handleChangePage"
+        />
+      </template>
     </template>
 
     <!-- Модалка редактирования услуги -->
@@ -198,6 +217,10 @@ const editServiceModal = ref(false)
 const editServiceData = ref({});
 const addNewServiceModal = ref(false);
 const serviceList = ref(null);
+const isLoading = ref(false);
+
+// Лимит услуг для создания
+const limitServices = computed(() => 4)
 
 const serviceData = ref({
   name: '',
@@ -347,6 +370,7 @@ onMounted(async () => {
 
   await nextTick(() => {});
 
+  isLoading.value = true;
   entityStore.getSelfServices(userStore.userData?.organization_id, {per_page: 5}).then(res => {
     if (res?.services) {
       emit('update:modelValue', {...props.modelValue, services: [...res.services]});
@@ -354,7 +378,10 @@ onMounted(async () => {
     if(res?.pagination) {
       page.value = res.pagination;
     }
-  }).finally(() => isLoaded.value = true)
+  }).finally(() => {
+    isLoading.value = false;
+    isLoaded.value = true;
+  })
 });
 </script>
 
@@ -390,6 +417,13 @@ onMounted(async () => {
     }
   }
 
+  &__loading {
+    .spinner-border {
+      width: 3em;
+      height: 3em;
+    }
+  }
+
   &__service {
     margin-bottom: 3.2em;
     display: flex;
@@ -399,6 +433,18 @@ onMounted(async () => {
     &:not(:last-child) {
       border-bottom: 1px solid #e7e7e7;
     }
+  }
+
+  &__limit-services {
+    font-size: 1.4em;
+    line-height: 1em;
+    color: var(--text-color-primary);
+    margin-bottom: 1em;
+  }
+
+  &__limit-services-count {
+    font-weight: 600;
+    color: var(--text-color-ternary);
   }
 
   &__add-service {
