@@ -47,7 +47,7 @@
                             >{{ data.pubcard?.url_site }}</a
                         >
                     </div> -->
-                    <div
+                    <!-- <div
                         class="prop"
                     >
                         <p class="prop__name prop__name_type_grey">Номер менеджера:</p>
@@ -56,7 +56,7 @@
                             class="prop__value link link_type_hidden"
                             >+79651807700</a
                         >
-                    </div>
+                    </div> -->
                     <div class="prop prop_type_text">
                         <p class="industry-services-card__description-title">
                             Описание:

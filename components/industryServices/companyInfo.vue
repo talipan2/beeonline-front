@@ -58,14 +58,14 @@
                         >{{ data.url_site }}</a
                     >
                 </h4> -->
-                <h4 class="company-info__site company-info__desktop" v-if="data.url_site">
+                <!-- <h4 class="company-info__site company-info__desktop" v-if="data.url_site">
                     Номер менеджера:
                     <a
                         href="tel:+79651807700"
                         class="link"
                         >+79651807700</a
                     >
-                </h4>
+                </h4> -->
                 <div class="company-info__description">
                     <h4>Описание:</h4>
                     <p
