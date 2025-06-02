@@ -35,12 +35,17 @@ const isDesktop = breakpoints.greater('lg');
 const currentImageUrl = computed(() => {
   if (!props.banner?.images) return '';
 
-  if (isMobile.value) return props.banner.images.sm || '';
-  if (isTablet.value) return props.banner.images.md || '';
-  return props.banner.images.lg || '';
+  // Порядок приоритетов: текущий размер -> меньшие размеры
+  if (isMobile.value) {
+    return props.banner.images.sm || '';
+  }
+  if (isTablet.value) {
+    return props.banner.images.md || props.banner.images.sm || '';
+  }
+  // Для десктопа: lg -> md -> sm
+  return props.banner.images.lg || props.banner.images.md || props.banner.images.sm || '';
 });
 
-// Проверяем, нужно ли показывать баннер
 const showBanner = computed(() => {
   if (!props.banner || !props.banner.active) return false;
 
@@ -49,9 +54,7 @@ const showBanner = computed(() => {
   if (props.banner.date_active_from && new Date(props.banner.date_active_from) > now) return false;
   if (props.banner.date_active_to && new Date(props.banner.date_active_to) < now) return false;
 
-  // Проверяем наличие изображения для текущего breakpoint
-  if (isMobile.value) return !!props.banner.images?.sm;
-  if (isTablet.value) return !!props.banner.images?.md;
-  return !!props.banner.images?.lg;
+  // Проверяем наличие хотя бы одного изображения (любого размера)
+  return !!props.banner.images?.sm || !!props.banner.images?.md || !!props.banner.images?.lg;
 });
 </script>

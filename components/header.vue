@@ -304,7 +304,7 @@ onMounted(() => {
     // locationStore.getLocations();
   }
 
-  settingStore.getBanners({banner_type: 'top'}).then((res) => {
+  settingStore.getBanners({banner_type: ['top']}).then((res) => {
     if(res && res.data) {
       banner.value = res.data[0];
       setTimeout(() => {

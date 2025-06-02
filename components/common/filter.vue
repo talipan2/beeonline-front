@@ -46,9 +46,11 @@
         </UiButton>
       </div>
 
-      <div class="filter__banner" v-if="filterBanner">
-        <Banners :banner="filterBanner" />
+      <div class="filter__banner">
+        <Banners v-if="customerTopBanner" :banner="customerTopBanner" />
+        <Banners v-if="customerBottomBanner" :banner="customerBottomBanner" />
       </div>
+
     </template>
   </CommonSidebar>
 </template>
@@ -76,6 +78,8 @@ const submitRef = ref(null);
 const emit = defineEmits(['updateTutorialRefSubmit']);
 
 const filterBanner = ref(null)
+const customerTopBanner = ref(null)
+const customerBottomBanner = ref(null)
 
 const isMobile = ref(false);
 const isFilterVisible = ref(false);
@@ -109,10 +113,10 @@ onUnmounted(() => {
 
 
 onMounted(() => {
-  settingStore.getBanners({banner_type: 'banner'}).then((res) => {
+  settingStore.getBanners({banner_type: ['customer_catalog_top', 'customer_catalog_bot']}).then((res) => {
     if(res && res.data && !res.data.length) return
-    filterBanner.value = res.data.find((item) => item.type === 'filter') || {};
-    console.log(filterBanner.value);
+    customerTopBanner.value = res.data.find((item) => item.type === 'customer_catalog_top') || {};
+    customerBottomBanner.value = res.data.find((item) => item.type === 'customer_catalog_bot') || {};
   });
 
 
@@ -199,6 +203,12 @@ onMounted(() => {
 
   &__submit {
     width: 100%;
+  }
+
+  &__banner {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
   }
 
 }
