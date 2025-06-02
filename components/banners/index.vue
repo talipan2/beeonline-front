@@ -37,10 +37,10 @@ const currentImageUrl = computed(() => {
 
   // Порядок приоритетов: текущий размер -> меньшие размеры
   if (isMobile.value) {
-    return props.banner.images.sm || '';
+    return props.banner.images.sm || props.banner.images.md || props.banner.images.lg || '';
   }
   if (isTablet.value) {
-    return props.banner.images.md || props.banner.images.sm || '';
+    return props.banner.images.md || props.banner.images.sm || props.banner.images.lg || '';
   }
   // Для десктопа: lg -> md -> sm
   return props.banner.images.lg || props.banner.images.md || props.banner.images.sm || '';
