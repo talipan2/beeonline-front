@@ -859,34 +859,77 @@ export default {
                         this.sending = false;
                     });
             } else {
-                useChatStore()
-                    .sendFirstMessage({
-                        message: this.message,
-                        organization_id: this.init_org_id,
-                        organization_type: this.init_org_type,
-                        order_id: this.init_order_id,
-                        adjacent_service_id: this.init_adjacent_service_id,
-                        performer_id: this.init_performer_id,
-                    })
-                    .then((response) => {
-                        this.$emit("change:chat", response);
-                    })
-                    .catch((error) => {
-                        confirm({
-                        title: 'Ошибка',
-                        message: error.message,
-                        confirmText: 'Ок',
-                        cancelText: '',
+                if(this.init_performer_id) {
+                    useChatStore()
+                        .sendFirstMessage({
+                            message: this.message,
+                            organization_id: this.init_org_id,
+                            organization_type: this.init_org_type,
+                            order_id: this.init_order_id,
+                            adjacent_service_id: this.init_adjacent_service_id,
+                            performer_id: this.init_performer_id,
+                        })
+                        .then((response) => {
+                            this.$emit("change:chat", response);
+                        })
+                        .catch((error) => {
+                            confirm({
+                            title: 'Ошибка',
+                            message: error.message,
+                            confirmText: 'Ок',
+                            cancelText: '',
+                            onConfirm: () => {
+                            },
+                            onCancel: () => {
+                            }
+                        });
+                        })
+                        .finally(() => {
+                            this.message = "";
+                            this.sending = false;
+                        });
+                } else {
+                    confirm({
+                        title: 'Отправка сообщения',
+                        message: 'Убедитесь, что хотите написать Заказчику. Вы используете один из бесплатных откликов',
+                        confirmText: 'Отправить',
+                        cancelText: 'Отменить',
                         onConfirm: () => {
+                            useChatStore()
+                                .sendFirstMessage({
+                                    message: this.message,
+                                    organization_id: this.init_org_id,
+                                    organization_type: this.init_org_type,
+                                    order_id: this.init_order_id,
+                                    adjacent_service_id: this.init_adjacent_service_id,
+                                    performer_id: this.init_performer_id,
+                                })
+                                .then((response) => {
+                                    this.$emit("change:chat", response);
+                                })
+                                .catch((error) => {
+                                    confirm({
+                                    title: 'Ошибка',
+                                    message: error.message,
+                                    confirmText: 'Ок',
+                                    cancelText: '',
+                                    onConfirm: () => {
+                                    },
+                                    onCancel: () => {
+                                    }
+                                });
+                                })
+                                .finally(() => {
+                                    this.message = "";
+                                    this.sending = false;
+                                });
                         },
                         onCancel: () => {
+                            this.sending = false;
                         }
-                    });
                     })
-                    .finally(() => {
-                        this.message = "";
-                        this.sending = false;
-                    });
+                }
+
             }
         },
 
