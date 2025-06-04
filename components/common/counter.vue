@@ -4,7 +4,7 @@
       <SvgoMinus class="svg-m" />
     </UiButton>
     <div class="counter__count">
-      {{ modelValue }}
+      {{ modelValue * priceQuantity }}
     </div>
     <UiButton type="button" class="counter__btn" variant="default" size="around" @click="increment">
       <SvgoPlus class="svg-m" />
@@ -18,7 +18,11 @@ const props = defineProps({
   modelValue: {
     type: Number,
     default: 0,
-  }
+  },
+  priceQuantity: {
+    type: Number,
+    default: 1,
+  },
 })
 
 const emit = defineEmits(['update:modelValue']);
