@@ -1,11 +1,15 @@
 <template>
   <div class="new-service-details">
     <CommonLayoutInfoCard class="new-service-details__pub-card new-service-details__pub-card_type_desktop">
+      <CommonNameplate class="new-service-details__pub-card-nameplate" text="Премиум" />
       <div class="new-service-details__pub-card-image">
         <UiImage :src="data.logo || defaultImage" :alt="data.name" :external="true"/>
       </div>
       <div class="new-service-details__pub-card-content">
-        <h3 class="new-service-details__pub-card-title">{{ data.name || 'не указано' }}</h3>
+        <div class="new-service-details__pub-card-top">
+          <h3 class="new-service-details__pub-card-title">{{ data.name || 'не указано' }}</h3>
+          <CommonUserOnlineStatus class="new-service-details__pub-card-user-status" :lastActivity="new Date(2025, 5, 3, 12, 30)" />
+        </div>
         <CommonRating :rating="data.reviews_stats_about?.stars" :reviews="data.reviews_about_count" :is-count-rating="false" />
         <CommonLocationsList
           :locationsList="{cities: data?.cities, regions: data?.regions, countries: data?.countries}"
@@ -93,12 +97,16 @@
       </div>
     </CommonLayoutInfoCard>
     <CommonLayoutInfoCard class="new-service-details__pub-card new-service-details__pub-card_type_mobile">
+      <CommonNameplate class="new-service-details__pub-card-nameplate new-service-details__pub-card-nameplate_type_mobile" text="Премиум" />
       <div class="new-service-details__pub-card-image">
         <UiImage :src="data.logo || defaultImage" :alt="data.name" :external="true"/>
       </div>
       <div class="new-service-details__pub-card-content">
         <CommonRating :rating="data.reviews_stats_about?.stars" :reviews="data.reviews_about_count" :is-count-rating="false" />
-        <CommonLocationsList :locationsList="{countries: [data.country]}" />
+        <CommonLocationsList 
+          :locationsList="{cities: data?.cities, regions: data?.regions, countries: data?.countries}"
+          is-country
+         />
         <div class="new-service-details__pub-card-site" v-if="data.url_site">
           <SvgoPlanet class="svg-m" />
           <NuxtLink :to="data.siteUrl" class="link" target="_blank" >{{ data.url_site || 'не указано' }}</NuxtLink>
@@ -106,6 +114,7 @@
       </div>
       <div class="new-service-details__pub-card-content">
         <h3 class="new-service-details__pub-card-title">{{ data.name || 'не указано' }}</h3>
+        <CommonUserOnlineStatus class="new-service-details__pub-card-user-status new-service-details__pub-card-user-status_type_mobile" :lastActivity="new Date(2025, 5, 3, 12, 30)" />
         <!-- КНОПКИ ДЛЯ МОБИЛКИ -->
         <div class="new-service-details__pub-card-buttons" v-if="userStore.isAuth">
           <UiButton
@@ -392,9 +401,42 @@ onMounted(() => {
     margin-bottom: 3.2em;
     column-gap: 5.6em;
     align-items: flex-start;
+    position: relative;
 
     &_type_mobile {
       display: none;
+    }
+
+    &-nameplate {
+      position: absolute;
+      top: 12px;
+      right: 0;
+
+      @include mobile {
+        top: 0;
+      }
+    }
+
+    &-user-status {
+      @include mobile {
+        display: none;
+      }
+
+      &_type_mobile {
+        display: none;
+
+        @include mobile {
+          display: flex;
+        }
+      }
+
+    }
+
+    &-top {
+      display: flex;
+      align-items: center;
+      gap: 1em;
+      flex-wrap: wrap;
     }
 
     .rate {
@@ -434,6 +476,12 @@ onMounted(() => {
       flex-direction: column;
       row-gap: 1em;
       font-size: 1.6em;
+      padding-right: 10em;
+      width: 100%;
+
+      @include mobile {
+        padding-right: 0;
+      }
     }
 
     &-title {
@@ -462,7 +510,7 @@ onMounted(() => {
     }
 
     &-button {
-      width: 100%;
+      // width: 100%;
       font-size: .75em;
       text-transform: uppercase;
       column-gap: .5em;
@@ -525,10 +573,12 @@ onMounted(() => {
 
       &-image {
         flex: 0 0 32%;
+        margin-top: 10px;
       }
 
       &-content {
         flex: 1 1 calc(59% - 1.6em);
+        margin-top: 10px;
       }
 
       &_type_desktop {
