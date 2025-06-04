@@ -101,7 +101,9 @@ function prepare()
         }
         if (error.data?.error_data) {
             responseErrorData.value = error.data.error_data;
-            settingStore.payModalStatus = true;
+            if (!responseErrorData.value.need_confirm) {
+                settingStore.payModalStatus = true;
+            }
         }
     })
     .finally(() => {
@@ -139,6 +141,11 @@ function reset() {
     responseErrorKey.value = null;
     responseErrorData.value = null;
 }
+
+defineExpose({
+    openModal,
+    closeModal,
+});
 </script>
 
 <style lang="scss" scoped>
