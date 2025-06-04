@@ -20,22 +20,22 @@
           </td>
           <td class="services-table__price">
             {{ formatMoney(service.price, service.currency, 0) }}
-            <span v-if="service.period">{{ ` / ${service.period}` }}</span>
+            <span v-if="service.period" v-html="` / ${service.period}`"></span>
           </td>
-          <td class="services-table__quantity"><CommonCounter v-model="service.quantity" /></td>
+          <td class="services-table__quantity"><CommonCounter v-model="service.quantity" :price-quantity="service.price_quantity" /></td>
         </tr>
       </tbody>
     </table>
     <div class="services-list">
       <ul class="services-list__list">
-        <li class="services-list__item" v-for="(services, index) in services" :key="index">
-            {{ services.name }}
+        <li class="services-list__item" v-for="(service, index) in services" :key="index">
+            {{ service.name }}
           <p class="services-list__price">
-            {{ formatMoney(services.price, services.currency, 0) }}
-            <span v-if="services.period">{{ ` / ${services.period}` }}</span>
+            {{ formatMoney(service.price, service.currency, 0) }}
+            <span v-if="service.period" v-html="` / ${service.period}`"></span>
           </p>
           <div class="services-list__counter">
-            <CommonCounter v-model="services.quantity" />
+            <CommonCounter v-model="service.quantity" :price-quantity="service.price_quantity" />
           </div>
         </li>
       </ul>
@@ -72,13 +72,30 @@ const services = ref([]);
 
 watch(() => userStoreServices.value, (newVal) => {
 	services.value = newVal.map(service => {
+        let price = service.prices[0];
+        let period = null;
+        if (service.numeral_forms) {
+            let defaultNumeralForm = service.numeral_forms[0];
+            period = plural(price.quantity, {
+                one: service.numeral_forms[0] || defaultNumeralForm,
+                few: service.numeral_forms[1] || defaultNumeralForm,
+                many: service.numeral_forms[2] || defaultNumeralForm,
+                other: defaultNumeralForm,
+            });
+
+            if (price.quantity > 1) {
+                period = price.quantity + '&nbsp;' + period;
+            }
+        }
 		return {
 			id: service.id,
 			name: service.name,
 			quantity: 0,
-			price: service.prices[0].amount,
-			period: service.numeral_forms ? service.numeral_forms[0] || null : null,
-      currency: service.prices[0].currency
+			price: price.amount,
+            price_quantity: price.quantity,
+            price_period: price.period,
+			period: period,
+            currency: price.currency,
 		};
 	});
 }, {deep: true})
