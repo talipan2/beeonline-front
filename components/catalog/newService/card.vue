@@ -1,5 +1,6 @@
 <template>
   <div class="new-service-card" :class="{'new-service-card_type_revers': reversColor}">
+    <CommonNameplate class="new-service-card__nameplate" text="Премиум" />
     <div class="new-service-card__header">
       <div class="new-service-card__pubcard">
         <!-- <p class="new-service-card__pubcard-title">Название компании</p> -->
@@ -21,7 +22,10 @@
         </div>
       </div>
       <p class="new-service-card__description prop_type_hidden">{{ data.description }}</p>
-      <UiButton class="new-service-card__btn" variant="quinary" size="large" :to="`/services/${data.id}`">Подробнее</UiButton>
+      <div class="new-service-card__pubcard-right">
+        <UiButton class="new-service-card__btn" variant="quinary" size="large" :to="`/services/${data.id}`">Подробнее</UiButton>
+        <CommonUserOnlineStatus class="new-service-card__user-status" :lastActivity="new Date(2025, 5, 3, 12, 30)" />
+      </div>
     </div>
     <div class="new-service-card__specs">
       <CatalogNewServiceDetailsBadge
@@ -76,6 +80,7 @@ const props = defineProps({
   flex-direction: column;
   row-gap: 5.6em;
   flex: 1;
+  position: relative;
 
   &_type_revers {
     background-color: #fff;
@@ -143,6 +148,21 @@ const props = defineProps({
       font-weight: 400;
       color: var(--text-color-monodecimal);
     }
+
+    &-right {
+      display: flex;
+      flex-direction: column;
+      row-gap: 2.2em;
+      align-items: center;
+      max-width: 23em;
+      width: 100%;
+      margin-top: 3.5em;
+      flex: 0 0 100%;
+
+      @include small-tablet { 
+        margin-top: 4.5em
+      }
+    }
   }
 
   &__description {
@@ -151,7 +171,7 @@ const props = defineProps({
     line-height: 1.5em;
     color: var(--text-color-gray);
     max-width: 40em;
-    flex-grow: 1;
+    flex: 1 1 100%;
   }
 
   &__btn {
@@ -159,10 +179,22 @@ const props = defineProps({
     font-weight: 400;
     text-transform: uppercase;
     color: var(--text-color-hover-secondary);
-    max-width: 20em;
     width: 100%;
 
     &_type_mobile {
+      display: none;
+    }
+  }
+
+  &__nameplate {
+    position: absolute;
+    right: 0;
+    top: 12px;
+    z-index: 2;
+  }
+
+  &__user-status {
+    @include mobile {
       display: none;
     }
   }
