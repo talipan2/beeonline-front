@@ -2,8 +2,8 @@
   <div class="user-activity-status">
     <div class="user-activity-status__icon" :class="{'user-activity-status__icon_type_active': isOnline}"></div>
     <span class="user-activity-status__text" v-if="isOnline">Сейчас онлайн</span>
-    <span class="user-activity-status__text" v-else-if="isToday">Был в сети сегодня в {{ lastSeenTime }}</span>
-    <span class="user-activity-status__text" v-else>Был в сети {{ lastSeenDate }}</span>
+    <span class="user-activity-status__text" v-else-if="isToday">Был(а) в сети сегодня в {{ lastSeenTime }}</span>
+    <span class="user-activity-status__text" v-else>Был(а) в сети {{ lastSeenDate }}</span>
   </div>
 </template>
 

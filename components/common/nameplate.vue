@@ -52,7 +52,7 @@ const props = defineProps({
   }
 
   @include tablet {
-    padding: 1em 1.6em;
+    padding: .8em 1.6em;
 
     svg {
       width: 1.8em;

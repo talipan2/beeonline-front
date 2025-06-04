@@ -8,7 +8,7 @@
       <div class="new-service-details__pub-card-content">
         <div class="new-service-details__pub-card-top">
           <h3 class="new-service-details__pub-card-title">{{ data.name || 'не указано' }}</h3>
-          <CommonUserOnlineStatus :lastActivity="new Date(2025, 5, 3, 12, 30)" />
+          <CommonUserOnlineStatus class="new-service-details__pub-card-user-status" :lastActivity="new Date(2025, 5, 3, 12, 30)" />
         </div>
         <CommonRating :rating="data.reviews_stats_about?.stars" :reviews="data.reviews_about_count" :is-count-rating="false" />
         <CommonLocationsList
@@ -97,6 +97,7 @@
       </div>
     </CommonLayoutInfoCard>
     <CommonLayoutInfoCard class="new-service-details__pub-card new-service-details__pub-card_type_mobile">
+      <CommonNameplate class="new-service-details__pub-card-nameplate new-service-details__pub-card-nameplate_type_mobile" text="Премиум" />
       <div class="new-service-details__pub-card-image">
         <UiImage :src="data.logo || defaultImage" :alt="data.name" :external="true"/>
       </div>
@@ -113,6 +114,7 @@
       </div>
       <div class="new-service-details__pub-card-content">
         <h3 class="new-service-details__pub-card-title">{{ data.name || 'не указано' }}</h3>
+        <CommonUserOnlineStatus class="new-service-details__pub-card-user-status new-service-details__pub-card-user-status_type_mobile" :lastActivity="new Date(2025, 5, 3, 12, 30)" />
         <!-- КНОПКИ ДЛЯ МОБИЛКИ -->
         <div class="new-service-details__pub-card-buttons" v-if="userStore.isAuth">
           <UiButton
@@ -409,6 +411,25 @@ onMounted(() => {
       position: absolute;
       top: 12px;
       right: 0;
+
+      @include mobile {
+        top: 0;
+      }
+    }
+
+    &-user-status {
+      @include mobile {
+        display: none;
+      }
+
+      &_type_mobile {
+        display: none;
+
+        @include mobile {
+          display: flex;
+        }
+      }
+
     }
 
     &-top {
@@ -552,10 +573,12 @@ onMounted(() => {
 
       &-image {
         flex: 0 0 32%;
+        margin-top: 10px;
       }
 
       &-content {
         flex: 1 1 calc(59% - 1.6em);
+        margin-top: 10px;
       }
 
       &_type_desktop {

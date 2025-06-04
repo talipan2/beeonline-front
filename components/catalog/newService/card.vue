@@ -18,6 +18,7 @@
               <SvgoViewsNew class="svg-m" />
               <p>{{ data.view_count }} просмотров</p>
             </div>
+          <CommonUserOnlineStatus class="new-service-card__user-status new-service-card__user-status_type_mobile" :lastActivity="new Date(2025, 5, 3, 12, 30)" />
           </div>
         </div>
       </div>
@@ -111,6 +112,10 @@ const props = defineProps({
     &-content {
       display: flex;
       align-items: center;
+
+      @include mobile {
+        margin-top: 2.5em;
+      }
     }
 
     &-info {
@@ -196,6 +201,14 @@ const props = defineProps({
   &__user-status {
     @include mobile {
       display: none;
+    }
+
+    &_type_mobile {
+      display: none;
+
+      @include mobile {
+        display: flex;
+      }
     }
   }
 
