@@ -14,7 +14,6 @@
           <th>Сумма</th>
           <th>Тип</th>
           <th>Статус</th>
-          <th>Оплачен</th>
           <th>Действия</th>
         </tr>
       </thead>
@@ -43,15 +42,6 @@
           </td>
           <td class="invoices-table__date">
             {{ invoice.status_name }}
-          </td>
-          <td class="invoices-table__date">
-            <template v-if="invoice.is_payed && invoice.payed_at">
-              {{ formatDate(invoice.payed_at, "DD.MM.YYYY") }}
-              <span>{{
-                formatDate(invoice.payed_at, "mm:HH")
-              }}</span>
-            </template>
-            <template v-else>Не оплачен</template>
           </td>
           <td>
             <a :href="invoice.pdf_url" target="_blank" v-if="invoice.pdf_url">Открыть</a>
