@@ -18,7 +18,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     settingStore.isTelegram = true
   }
 
-  
+
   await nextTick();
 
   if (!userStore.isAuth) {
@@ -57,12 +57,12 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   ]
 
   // переход к созданию организации у заказчика
-  if(userStore.isAuth && 
+  if(userStore.isAuth &&
     userStore.userData.id &&
     userStore.role === 'customer' &&
-    !userStore.userData?.organization_id && 
-    to.path !== '/register/step1' &&  
-    settingStore.isCreateOrder === false && 
+    (!userStore.userData?.organization_id || userStore.userData?.organization_is_auto_created) &&
+    to.path !== '/register/step1' &&
+    settingStore.isCreateOrder === false &&
     !availableLinkList.some((item) => to.path.startsWith(item)) &&
     to.path !== '/'
   ) {
@@ -74,7 +74,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     userStore.isAuth &&
     userStore.userData.id &&
     userStore.role === 'performer' &&
-    !userStore.userData?.organization_id &&
+    (!userStore.userData?.organization_id || userStore.userData?.organization_is_auto_created) &&
     to.path !== '/performer-register/step1' &&
     !availableLinkList.some((item) => to.path.startsWith(item)) &&
     to.path !== '/'
@@ -101,7 +101,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     '/search',
     '/related-industry-services',
     '/news',
-    
+
   ]
 
   const notShowModalLinks = [
@@ -110,8 +110,8 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   ]
 
   // подтверждение перехода
-  if((from.path.startsWith('/register/step') || from.path.startsWith('/performer-register/step')) && 
-    to.path !== from.path && 
+  if((from.path.startsWith('/register/step') || from.path.startsWith('/performer-register/step')) &&
+    to.path !== from.path &&
     (showModalLinks.some((item) => to.path.startsWith(item)) || to.path === '/') &&
     !settingStore.registerRedirectConfirm
     && !notShowModalLinks.some((item) => to.path.startsWith(item))
@@ -128,8 +128,8 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     userStore.userData.id &&
     userStore.userData?.organization_id &&
     !availableLinkList.some((item) => to.path.startsWith(item)) &&
-    to.path !== '/' && 
-    userStore.userData?.public_cards 
+    to.path !== '/' &&
+    userStore.userData?.public_cards
   ) {
     const publicCards = userStore.userData.public_cards || []
     const firstCard = publicCards[0];
@@ -139,6 +139,8 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     }
 
     if(!firstCard) {
+      return navigateTo({ path: "/register/step2" });
+    } else if (firstCard.is_auto_created) {
       return navigateTo({ path: "/register/step2" });
     } else if (firstCard?.current_step === 1 && publicCards.length === 1) {
       return navigateTo({ path: "/register/step3" });
@@ -154,8 +156,8 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       userStore.userData.id &&
       userStore.userData?.organization_id &&
       !availableLinkList.some((item) => to.path.startsWith(item)) &&
-      to.path !== '/' && 
-      userStore.userData?.public_cards 
+      to.path !== '/' &&
+      userStore.userData?.public_cards
     ) {
       const publicCards = userStore.userData.public_cards || []
       const firstCard = publicCards.find(card => card.type === 'performer');
@@ -166,11 +168,11 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
           performerServices = response
         }
       }
-  
+
       if(firstCard?.id && firstCard?.status_code != 'DRAFT'){
         return
       }
-  
+
       if(!firstCard?.id) {
         return navigateTo({ path: "/performer-register/step2" });
       } else if (firstCard && firstCard.id && firstCard.current_step === 2 ) {
