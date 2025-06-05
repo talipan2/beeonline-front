@@ -1,14 +1,14 @@
 <template>
   <div class="new-service-details">
     <CommonLayoutInfoCard class="new-service-details__pub-card new-service-details__pub-card_type_desktop">
-      <CommonNameplate class="new-service-details__pub-card-nameplate" text="Премиум" />
+      <CommonNameplate v-if="data.tariff?.name" class="new-service-details__pub-card-nameplate" :text="data.tariff?.name" />
       <div class="new-service-details__pub-card-image">
         <UiImage :src="data.logo || defaultImage" :alt="data.name" :external="true"/>
       </div>
       <div class="new-service-details__pub-card-content">
         <div class="new-service-details__pub-card-top">
           <h3 class="new-service-details__pub-card-title">{{ data.name || 'не указано' }}</h3>
-          <CommonUserOnlineStatus class="new-service-details__pub-card-user-status" :lastActivity="new Date(2025, 5, 3, 12, 30)" />
+          <CommonUserOnlineStatus class="new-service-details__pub-card-user-status" :lastActivity="data.last_active_at" />
         </div>
         <CommonRating :rating="data.reviews_stats_about?.stars" :reviews="data.reviews_about_count" :is-count-rating="false" />
         <CommonLocationsList
@@ -97,7 +97,7 @@
       </div>
     </CommonLayoutInfoCard>
     <CommonLayoutInfoCard class="new-service-details__pub-card new-service-details__pub-card_type_mobile">
-      <CommonNameplate class="new-service-details__pub-card-nameplate new-service-details__pub-card-nameplate_type_mobile" text="Премиум" />
+      <CommonNameplate v-if="data.tariff?.name" class="new-service-details__pub-card-nameplate new-service-details__pub-card-nameplate_type_mobile" :text="data.tariff?.name" />
       <div class="new-service-details__pub-card-image">
         <UiImage :src="data.logo || defaultImage" :alt="data.name" :external="true"/>
       </div>
@@ -114,7 +114,7 @@
       </div>
       <div class="new-service-details__pub-card-content">
         <h3 class="new-service-details__pub-card-title">{{ data.name || 'не указано' }}</h3>
-        <CommonUserOnlineStatus class="new-service-details__pub-card-user-status new-service-details__pub-card-user-status_type_mobile" :lastActivity="new Date(2025, 5, 3, 12, 30)" />
+        <CommonUserOnlineStatus class="new-service-details__pub-card-user-status new-service-details__pub-card-user-status_type_mobile" :lastActivity="data.last_active_at" />
         <!-- КНОПКИ ДЛЯ МОБИЛКИ -->
         <div class="new-service-details__pub-card-buttons" v-if="userStore.isAuth">
           <UiButton
