@@ -28,14 +28,8 @@
   // Преобразуем время из UTC в локальное время пользователя
   const convertToLocalTime = (dateString) => {
     if(!dateString) return ''
-    // Создаем дату из UTC строки
-    const utcDate = new Date(dateString);
-    
-    // Получаем смещение часового пояса пользователя в минутах
-    const userTimezoneOffset = new Date().getTimezoneOffset();
-    
-    // Корректируем время на смещение часового пояса пользователя
-    return new Date(utcDate.getTime() - (userTimezoneOffset * 60 * 1000));
+    // Создаем дату из строки - она уже будет в локальном времени
+    return new Date(dateString);
   };
 
   const lastSeen = computed(() => convertToLocalTime(props.lastActivity));
