@@ -1,9 +1,9 @@
 <template>
-  <CatalogBanner :fetch-function="fetchServiceSlider" class="new-service__banner">
+  <!-- <CatalogBanner :fetch-function="fetchServiceSlider" class="new-service__banner">
     <template #item="{ item }">
       <CatalogNewServiceCard :data="item" class="highlight" :revers-color="true"/>
     </template>
-  </CatalogBanner>
+  </CatalogBanner> -->
   <div class="new-service__list">
     <template v-if="servicesList.length">
       <template v-for="item in servicesList" :key="item.id">
@@ -35,13 +35,13 @@ const props = defineProps({
 const entityStore = useEntityStore();
 const organizationStore = useOrganizationStore();
 
-const fetchServiceSlider = async ( page, per_page=10) => {
-  const res = await organizationStore.getPubCardSlider({ page, per_page })
-  return {
-    data: res.data,
-    meta: res.meta
-  }
-}
+// const fetchServiceSlider = async ( page, per_page=10) => {
+//   const res = await organizationStore.getPubCardSlider({ page, per_page })
+//   return {
+//     data: res.data,
+//     meta: res.meta
+//   }
+// }
 
 </script>
 
