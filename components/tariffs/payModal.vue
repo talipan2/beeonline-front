@@ -29,7 +29,7 @@
             <tbody>
               <tr v-for="(service, index) in data.data" :key="index">
                 <td>{{ service.name }}</td>
-                <td>{{ service.quantity }}</td>
+                <td>{{ service.quantity * service.price_quantity }}</td>
                 <td>{{ formatMoney(service.price * service.quantity, currentCurrency, 0) }}</td>
               </tr>
             </tbody>

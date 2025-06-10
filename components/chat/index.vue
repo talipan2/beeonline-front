@@ -295,6 +295,7 @@
 
     <chat-modal-review ref="modalReview" />
     <ConfirmModal />
+    <PaidServiceChats :id="org_id" ref="paidServiceChats"/>
 </template>
 
 <script>
@@ -307,6 +308,7 @@ import { useChatStore } from "~/store/chatStore";
 // import { useChannelsStore } from "~/store/channelsStore";
 import { useUserStore } from "~/store/userStore";
 import { useToast } from "vue-toastification";
+import PaidServiceChats from "~/components/paidService/chats.vue";
 
 const {ConfirmModal, confirm} = useConfirmModal();
 
@@ -317,6 +319,7 @@ export default {
         ChatModalReview,
         FileDrop,
         ConfirmModal,
+        PaidServiceChats,
     },
     props: {
         init_chat_id: {
@@ -820,6 +823,59 @@ export default {
             return false;
         },
 
+        sendFirstMessage(is_prepare = false) {
+            let promise = useChatStore()
+                .sendFirstMessage({
+                    message: this.message,
+                    organization_id: this.init_org_id,
+                    organization_type: this.init_org_type,
+                    order_id: this.init_order_id,
+                    adjacent_service_id: this.init_adjacent_service_id,
+                    performer_id: this.init_performer_id,
+                    is_prepare: is_prepare,
+                })
+                .then((response) => {
+                    if (typeof response.is_prepare !== 'undefined') {
+                        confirm({
+                            title: 'Отправка сообщения',
+                            message: response.message,
+                            confirmText: 'Отправить',
+                            cancelText: 'Отменить',
+                            onConfirm: () => {
+                                this.sendFirstMessage(false);
+                            },
+                            onCancel: () => {
+                                //
+                            }
+                        });
+                    } else {
+                        this.message = "";
+                        this.$emit("change:chat", response);
+                    }
+                })
+                .catch((error) => {
+                    if (error.data.error_key === 'buy_service') {
+                        this.$refs.paidServiceChats.openModal(error, () => {
+                            this.sendFirstMessage(false);
+                        });
+                    } else {
+                        confirm({
+                            title: 'Ошибка',
+                            message: error.message,
+                            confirmText: 'Ок',
+                            cancelText: '',
+                            onConfirm: () => {
+                            },
+                            onCancel: () => {
+                            }
+                        });
+                    }
+                })
+                .finally(() => {
+                    this.sending = false;
+                });
+        },
+
         sendMessage(values, message = null) {
             if (!this.chat) return null;
 
@@ -859,34 +915,18 @@ export default {
                         this.sending = false;
                     });
             } else {
-                useChatStore()
-                    .sendFirstMessage({
-                        message: this.message,
-                        organization_id: this.init_org_id,
-                        organization_type: this.init_org_type,
-                        order_id: this.init_order_id,
-                        adjacent_service_id: this.init_adjacent_service_id,
-                        performer_id: this.init_performer_id,
-                    })
-                    .then((response) => {
-                        this.$emit("change:chat", response);
-                    })
-                    .catch((error) => {
-                        confirm({
-                        title: 'Ошибка',
-                        message: error.message,
-                        confirmText: 'Ок',
-                        cancelText: '',
-                        onConfirm: () => {
-                        },
-                        onCancel: () => {
-                        }
-                    });
-                    })
-                    .finally(() => {
-                        this.message = "";
-                        this.sending = false;
-                    });
+                // confirm({
+                //         title: 'Отправка сообщения',
+                //         message: 'Убедитесь, что хотите написать Заказчику. Вы используете один из бесплатных откликов',
+                //         confirmText: 'Отправить',
+                //         cancelText: 'Отменить',
+                //         onConfirm: () => {
+                //         },
+                //         onCancel: () => {
+                //             // this.sending = false;
+                //         }
+                //     })
+                this.sendFirstMessage(true);
             }
         },
 
