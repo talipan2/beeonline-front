@@ -12,7 +12,7 @@
     </template>
     <template #content>
       <div ref="anchor">
-        <p class="orders-description">Вы можете создать и разместить заказ через бота быстрых заказов.</p>
+        <p class="orders-description">Вы можете создать и разместить заказ через <a class="link orders-description__link" href="https://t.me/beeonline_notify_bot" target="_blank">бота быстрых заказов</a>.</p>
         <CatalogOrdersList
         :data="ordersList" 
         @updateOrderCardRef="updateServiceCardRef" 
@@ -208,6 +208,10 @@ onMounted(() => {
 .orders-description {
   font-size: 1.6em;
   margin-bottom: 1.5em;
+
+  &__link {
+    display: inline;
+  }
 }
 
 </style>

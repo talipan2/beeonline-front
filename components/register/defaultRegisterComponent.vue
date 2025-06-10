@@ -51,17 +51,7 @@
           </label>
           <label class="form-group-data form-group__title">
             Ваш телефон *
-            <UiInput
-              :rules="{ required: true, max: 16 }"
-              name="phone"
-              label="Телефон"
-              class="form-group__value"
-              type="tel"
-              placeholder="Телефон"
-              v-model="userData.phone"
-              :phonePlus="true"
-              :max-length="16"
-            />
+            <CommonPhoneMusk class="form-group__value register__phone-mask" v-model="userData" :rules="{ required: true, max: 16 }" name="phone" label="Телефон" />
           </label>
         </div>
         <div class="register__checkbox">
@@ -101,14 +91,15 @@ const userData = ref({
   email: "",
   phone: "",
   privacyPolicy: true,
-  role: role.value
+  role: role.value,
+  country_code: "",
 });
 const isCreateOrder = computed(() => settingStore.isCreateOrder);
 
 const handleSubmit = async (values, form) => {
   const utm = localStorage.getItem('utm_params')
   await userStore
-    .registerUser({...values, role: userData.value.role, utm: utm}, form)
+    .registerUser({...values, role: userData.value.role, utm: utm, country_code: userData.value.country_code, phone: userData.value.phone}, form)
     .then((res) => {
       if(userData.value.role === 'customer') {
         if (isCreateOrder.value) {
@@ -157,6 +148,10 @@ onMounted(() => {
       margin-bottom: 1.46em;
     }
 
+    
+  }
+  &__phone-mask {
+    flex: 0 1 40%;
   }
   
 }
