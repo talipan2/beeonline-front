@@ -75,7 +75,7 @@ const formatData = computed(() => {
       gallery: data.value.gallery && data.value.gallery.length && data.value.gallery.map(item => item.url),
       tzFiles: data.value.tz_files && data.value.tz_files.length && data.value.tz_files.map(item => item.url),
       views: data.value.view_count,
-      name: data.value.name
+      name: data.value.name,
     }
 })
 
