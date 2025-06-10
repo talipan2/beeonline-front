@@ -44,7 +44,7 @@
   <CommonAlerts v-if="errorsList.selectedLocations && !skipLocationError" :alert="errorsList.selectedLocations" alertType="validation" />
   <div class="form-group form-group_type_secondary">
     <label class="form-group__title">Выбрать город</label>
-    <p class="form-group-description">Укажите не более 5 городов, где вы ищите заказчиков. Клиенты в первую очередь просматривают объявления об услугах в своих регионах. Поэтому обязательно укажите ваш населенный пункт.</p>
+    <p class="form-group-description">Укажите местонахождение вашего производства, в случае если у вас несколько фабрик - укажите все локации производства, не более 5.</p>
     <CommonLocation
       buttonLabel="Выбрать город"
       v-model="modelValue.locations"
