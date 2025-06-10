@@ -49,15 +49,7 @@
           </label>
           <label class="form-group__title form-group-data">
             Ваш телефон *
-            <UiInput
-              :rules="{ required: true, max: 16 }"
-              name="phone"
-              label="Ваш телефон"
-              class="form-group__value"
-              type="text"
-              placeholder="Ваш телефон"
-              v-model="data.phone"
-            />
+            <CommonPhoneMusk class="form-group__value" v-model="data" name="phone" label="Телефон" />
           </label>
         </div>
         <div class="user-data-modal__btn-container">
@@ -82,7 +74,8 @@ const data = ref({
   name: '',
   post: '',
   email: '',
-  phone: ''
+  phone: '',
+  country_code: ''
 });
 
 const settingStore = useSettingStore();
@@ -94,7 +87,8 @@ const handleSubmit = async(values, form) => {
       name: data.value.name,
       post: data.value.post,
       email: data.value.email,
-      phone: data.value.phone.replace(/^\+/, "")
+      phone: data.value.phone,
+      country_code: data.value.country_code,
     }, data.value.id, form).then(res => {
       toast.success('Данные успешно обновлены');
       if(res) {

@@ -37,6 +37,7 @@ const employeeData = ref({
   phone: '',
   permissions: [],
   notifications: [],
+  country_code: '',
 })
 
 watch(() => props.userData, (newVal) => {
@@ -58,7 +59,8 @@ const handleSubmit = (value, form) => {
     email: employeeData.value.email,
     post: employeeData.value.post,
     phone: employeeData.value.phone,
-    permissions: employeeData.value.permissions
+    permissions: employeeData.value.permissions,
+    country_code: employeeData.value.country_code
   }, form).then(() => {
     userStore.setNotification(props.userData.id, employeeData.value.notifications);
     toast.success('Данные сотрудника успешно обновлены');

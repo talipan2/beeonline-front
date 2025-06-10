@@ -44,15 +44,7 @@
       <div class="form-group-data">
         <label class="form-group__title">
           Телефон
-          <UiInput
-            name="phone"
-            type="tel"
-            class="form-group__value staff__phone"
-            v-model="modelValue.phone"
-            :phonePlus="true"
-            placeholder="+"
-            :rules="{ required: true }"
-          />
+          <CommonPhoneMusk class="form-group__value" v-model="phoneData" name="phone" label="Телефон" />
         </label>
       </div>
     </div>
@@ -98,6 +90,14 @@ const userNotifications = [
   { id: 5, value: {'Новости': ['cabinet']}, label: "Новостные уведомления" },
 ];
 
+const phoneData = computed({
+  get() {
+    return {phone: props.modelValue?.phone, country_code: props.modelValue?.country_code}
+  },
+  set(value) {
+    emit('update:modelValue', {...props.modelValue, phone: value.phone, country_code: value.country_code});
+  }
+})
 
 // Отдельный computed для преобразования значений
 const notificationsModel = computed({
