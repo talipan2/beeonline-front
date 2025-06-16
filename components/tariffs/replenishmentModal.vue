@@ -47,6 +47,7 @@
                         variant="primary"
                         size="large"
                         @click="buttonValue = 'external'"
+                        v-if="currentCurrency === 'RUB'"
                         >Оплатить картой</UiButton
                     >
                     <UiButton
