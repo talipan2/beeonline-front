@@ -68,7 +68,7 @@
         <template #body>
           <div class="desktop__balance balance-card" :class="{'loading' : pubCardLoader}">
             <div class="balance-card__header">
-              <p class="balance-card__balance">{{ formatMoney(userBalance, userCurrency, 2, false) }}<span class="balance-card__currency"> руб.</span></p>
+              <p class="balance-card__balance">{{ formatMoney(userBalance, userCurrency, 2, false) }}<span class="balance-card__currency"> {{ userCurrency }}</span></p>
               <p class="balance-card__balance">{{ formatMoney(userBonuses, 'bonuses') }} <span class="balance-card__currency"> баллов</span></p>
             </div>
             <div class="balance-card__details-list balance-card__details-list_type_desktop">
