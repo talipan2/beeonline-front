@@ -25,11 +25,11 @@
           Вы использовали все доступные услуги
         </span>
       </p>
-      <template v-if="modelValue.services?.length > 0">
+      <template v-if="services?.length > 0">
         <div class="new-service-card-layout__service-list" ref="serviceList">
           <div
             class="new-service-card-layout__service"
-            v-for="item in modelValue.services"
+            v-for="item in services"
             :key="item">
             <UiButton
               type="button"
@@ -75,11 +75,11 @@
       <!-- Кнопки с isPreview === false и отображение формы, если добавлено 0 услуг -->
       <template v-if="!isPreview">
         <UiForm :submit="handleCreateService">
-          <template v-if="!modelValue.services?.length">
+          <template v-if="!services?.length">
             <PerformerRegisterServiceForm />
           </template>
           <UiButton
-            v-if="modelValue.services?.length === 0"
+            v-if="services?.length === 0"
             type="submit"
             variant="quinary"
             size="large"
@@ -88,7 +88,7 @@
           </UiButton>
         </UiForm>
         <UiButton
-          v-if="modelValue.services?.length > 0 && availableServicesCount > 0"
+          v-if="services?.length > 0 && availableServicesCount > 0"
           type="button"
           variant="tertiary"
           size="large"
@@ -111,10 +111,10 @@
         <CommonAlerts
           :alert="'Услуг нет'"
           type="warning"
-          v-if="!modelValue.services?.length"
+          v-if="!services?.length"
           border-radius />
         <UiButton
-          v-if="modelValue.services?.length === 0"
+          v-if="services?.length === 0"
           type="button"
           variant="tertiary"
           size="large"
@@ -123,7 +123,7 @@
           Добавить услугу
         </UiButton>
         <UiButton
-          v-if="modelValue.services?.length > 0 && availableServicesCount > 0"
+          v-if="services?.length > 0 && availableServicesCount > 0"
           type="button"
           variant="tertiary"
           size="large"
@@ -223,6 +223,9 @@
   import { useToast } from "vue-toastification";
   import { useUserStore } from "~/store/userStore";
   import { useSettingStore } from "~/store/settingStore";
+  import { useOrganizationStore } from "~/store/organizationStore";
+
+  const organizationStore = useOrganizationStore();
 
   const props = defineProps({
     modelValue: {
@@ -238,6 +241,8 @@
     current_page: 1,
     last_page: 1,
   });
+
+  const services = ref([]);
 
   const emit = defineEmits(["update:modelValue"]);
   const { ConfirmModal, confirm } = useConfirmModal();
@@ -295,28 +300,7 @@
       .then((res) => {
         console.log(res);
         if (res) {
-          emit("update:modelValue", {
-            ...props.modelValue,
-            services: [
-              {
-                id: res.id,
-                name: value.name,
-                batch: {
-                  id: value.batches,
-                  name: entityStore.getEntityLabelById(
-                    "serviceBatch",
-                    value.batches
-                  ),
-                },
-                product_categories: value.category.map((id) => ({
-                  id: id,
-                  name: entityStore.getEntityLabelById("categories", id),
-                })),
-              },
-              ...props.modelValue.services,
-            ],
-          });
-
+          services.value = [...services.value, res];
           availableServicesCount.value = availableServicesCount.value - 1;
 
           addNewServiceModal.value = false;
@@ -349,23 +333,17 @@
       cancelText: "Отменить",
       onConfirm: () => {
         if (service.isLocal) {
-          emit("update:modelValue", {
-            ...props.modelValue,
-            services: props.modelValue.services.filter(
+            services.value = services.value.filter(
               (item) => item.id !== service.id
-            ),
-          });
+            );
           availableServicesCount.value = availableServicesCount.value + 1;
           editServiceModal.value = false;
           toast.warning("Услуга удалена");
         } else {
           entityStore.deleteService(service.id).then((res) => {
-            emit("update:modelValue", {
-              ...props.modelValue,
-              services: props.modelValue.services.filter(
-                (item) => item.id !== service.id
-              ),
-            });
+            services.value = services.value.filter(
+              (item) => item.id !== service.id
+            );
             availableServicesCount.value = availableServicesCount.value + 1;
             toast.warning("Услуга удалена");
             editServiceModal.value = false;
@@ -385,11 +363,11 @@
       })
       .then((res) => {
         if (res) {
-          const index = props.modelValue.services.findIndex(
+          const index = services.value.findIndex(
             (i) => i.id === item.id
           );
-          const services = [...props.modelValue.services];
-          services[index] = {
+          const newServices = [...services.value];
+          newServices[index] = {
             ...item,
             name: value.name,
             batch: {
@@ -404,10 +382,7 @@
               name: entityStore.getEntityLabelById("categories", id),
             })),
           };
-          emit("update:modelValue", {
-            ...props.modelValue,
-            services: services,
-          });
+          services.value = newServices;
           editServiceModal.value = false;
           if (props.isPreview) {
             toast.success("Услуга успешно обновлена");
@@ -433,10 +408,7 @@
       })
       .then((res) => {
         if (res?.services) {
-          emit("update:modelValue", {
-            ...props.modelValue,
-            services: [...res.services],
-          });
+            services.value = res.services
         }
         if (res?.pagination) {
           page.value = res.pagination;
@@ -450,6 +422,11 @@
         loading.value = false;
       });
   };
+
+watch(() => services.value, (newVal) => {
+    console.log(newVal.length);
+  organizationStore.servicesCount = newVal?.length || 0;
+})
 
   onMounted(async () => {
     // try {
@@ -473,10 +450,7 @@
       .getSelfServices(userStore.userData?.organization_id, { per_page: 5 })
       .then((res) => {
         if (res?.services) {
-          emit("update:modelValue", {
-            ...props.modelValue,
-            services: [...res.services],
-          });
+          services.value = res.services;
         }
         if (res?.pagination) {
           page.value = res.pagination;
