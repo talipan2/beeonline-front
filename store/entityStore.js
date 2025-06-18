@@ -219,6 +219,13 @@ export const useEntityStore = defineStore('entity', {
         return await useApi().post(`/pubcards/performer/${id}/raise`);
     },
 
+    async prepareOrderIntro(id) {
+        return await useApi().get(`/orders/${id}/intro`);
+    },
+    async setOrderIntro(id, data, form) {
+        return await useApi().post(`/orders/${id}/intro`, data, form);
+    },
+
     async getOrganizationServices(id) {
       if(!id) return
       try {

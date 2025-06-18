@@ -96,14 +96,10 @@ function prepare()
     })
     .catch((error) => {
         responseError.value = error;
-        if (error.data?.error_key) {
-            responseErrorKey.value = error.data.error_key;
-        }
-        if (error.data?.error_data) {
-            responseErrorData.value = error.data.error_data;
-            if (!responseErrorData.value.need_confirm) {
-                settingStore.payModalStatus = true;
-            }
+        responseErrorKey.value = error?.data?.error_key;
+        responseErrorData.value = error?.data?.error_data;
+        if (!responseErrorData.value?.need_confirm) {
+            settingStore.payModalStatus = true;
         }
     })
     .finally(() => {
@@ -123,13 +119,15 @@ function use()
     })
     .catch((error) => {
         responseError.value = error;
-        if (error.data?.error_key) {
-            responseErrorKey.value = error.data.error_key;
-        }
+        responseErrorKey.value = error?.data?.error_key;
     })
     .finally(() => {
-        useLoading.value = false;
+        stopUseLoading();
     });
+}
+
+function stopUseLoading() {
+    useLoading.value = false;
 }
 
 function reset() {
@@ -143,8 +141,10 @@ function reset() {
 }
 
 defineExpose({
+    use,
     openModal,
     closeModal,
+    stopUseLoading,
 });
 </script>
 
