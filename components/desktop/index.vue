@@ -20,14 +20,26 @@
         title="Карточка компании отклонена."
         :text="`Причина: ${pubCard.statusComment || 'не указана'}`"
         btnText="Изменить"
-        :btn-function="() => editPubCardModal = true"
+        :btn-function="() => {
+            if (role === 'customer') {
+                $router.push('/pubcards/edit/' + pubCard.id)
+            } else if (role === 'performer') {
+                editPubCardModal = true;
+            }
+        }"
       />
       <CommonNotify
         v-if="pubCard.status == 0"
         type="warning"
         title="Карточка компании находится в статусе заполнения."
         btnText="Изменить"
-        :btn-function="() => $router.push('/pubcards/edit/' + pubCard.id)"
+        :btn-function="() => {
+            if (role === 'customer') {
+                $router.push('/pubcards/edit/' + pubCard.id)
+            } else if (role === 'performer') {
+                editPubCardModal = true;
+            }
+        }"
       />
     </div>
     <div class="desktop__banner" v-if="role === 'performer'">
