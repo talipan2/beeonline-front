@@ -181,7 +181,17 @@ const settingStore = useSettingStore();
 const entityStore = useEntityStore();
 
 const data = ref({});
-const userData = ref({});
+const userData = computed(() => {
+  if(userStore.userData) {
+    return {
+      ...userStore.userData,
+      email: userStore.userData.email && userStore.userData.email.replace(/(.{0,3})(?=@)/, (match) => '*'.repeat(match.length)) || '-',
+      phone: userStore.userData.phone && userStore.userData.phone.replace(/(\d{4})$/, '****') || '-',
+    }
+  } else {
+    return {}
+  }
+});
 
 const userOrganization = computed(() => {
   if(userStore.userData && userStore.userData.organization) {
@@ -232,14 +242,10 @@ watch(() => userStore.userPubCard, (newVal) => {
     },
 
   };
-}, {deep: true, immediate: true, once: true})
+}, {deep: true, immediate: true})
 
 onMounted(() => {
-  userData.value = {
-    ...userStore.userData,
-    email: userStore.userData.email && userStore.userData.email.replace(/(.{0,3})(?=@)/, (match) => '*'.repeat(match.length)) || '-',
-    phone: userStore.userData.phone && userStore.userData.phone.replace(/(\d{4})$/, '****') || '-',
-  }
+
 })
 
 </script>

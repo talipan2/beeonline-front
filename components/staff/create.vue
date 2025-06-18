@@ -20,10 +20,13 @@
 <script setup>
 import { useOrganizationStore } from '~/store/organizationStore';
 import { useUserStore } from '~/store/userStore';
+import { useToast } from 'vue-toastification';
 
 
 const organizationStore = useOrganizationStore();
 const userStore = useUserStore();
+const toast = useToast()
+const router = useRouter()
 
 const staffData = ref({
   name: '',
@@ -32,6 +35,7 @@ const staffData = ref({
   post: '',
   permissions: [],
   notifications: [],
+  country_code: ''
 });
 
 const createOrganizationEmployee = () => {
@@ -41,6 +45,7 @@ const createOrganizationEmployee = () => {
     phone: staffData.value.phone,
     post: staffData.value.post,
     organization_id: userStore.userData.organization_id,
+    country_code: staffData.value.country_code
   }).then(res => {
     if(res.data) {
       userStore.changeUserData(res.data.id, {permissions: staffData.value.permissions});
