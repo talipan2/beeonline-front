@@ -1,5 +1,5 @@
 <template>
-  <div class="soc-reg">
+  <!-- <div class="soc-reg">
     <div class="soc-reg__divider">
       <p>Или</p>
     </div>
@@ -12,7 +12,7 @@
         <SvgoVkontakte class="svg-lx" />
       </a>
     </div>
-  </div>
+  </div> -->
 </template>
 
 <script setup>
