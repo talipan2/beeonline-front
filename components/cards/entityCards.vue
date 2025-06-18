@@ -94,6 +94,24 @@
         </template>
       </template>
 
+      <template v-if="type === 'order'">
+            <PaidServiceOrderIntro
+                :id="data.id"
+                :title="data.hasIntro ? 'Изменить приветствие' : 'Добавить приветствие'"
+            >
+                <template #button="{ open }">
+                    <UiButton variant="quinary" size="large" type="button" @click="open" class="entity-card__btn">
+                        <template v-if="data.hasIntro">
+                            Изменить приветствие
+                        </template>
+                        <template v-else>
+                            Добавить приветствие
+                        </template>
+                    </UiButton>
+                </template>
+            </PaidServiceOrderIntro>
+        </template>
+
       <p class="entity-card__status">{{ data.status }}</p>
     </div>
     <NuxtLink class="entity-card__link" :to="`/performer/services/show/${data.id}`" v-if="role === 'performer'"></NuxtLink>

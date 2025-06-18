@@ -50,6 +50,8 @@ export const useApi = () => {
         }
 
         throw {
+            statusCode: error?.statusCode,
+            // status: error?.response?.status,
             message: errorMessage,
             data: error?.data,
         };

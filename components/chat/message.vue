@@ -271,6 +271,7 @@ export default {
 
     &__text {
         font-size: var(--font-size-14);
+        white-space: pre-line;
     }
 
 	&__buttons {
