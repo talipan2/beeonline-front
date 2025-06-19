@@ -7,6 +7,7 @@
         type="warning"
         text="Ваша электронная почта не подтверждена. Для полноценной работы на портале и доступа ко всем функциям рекомендуем подтвердить."
         btnText="Подтвердить"
+        :btn-function="sendEmailConfirm"
       />
       <CommonNotify
         v-if="pubCard.status == 1"
@@ -465,6 +466,22 @@ chatStore.getChatList().then((res) => {
     allChatsList.value = res.all_chats.map(mapChat);
     unreadChatsList.value = res.unread_chats.map(mapChat);
 });
+
+const loading = ref(false);
+
+const sendEmailConfirm = () => {
+    if (loading.value) return;
+    loading.value = true;
+    userStore.sendEmailConfirm()
+    .then(res => {
+        if (res) {
+            toast.success(res.message || 'Письмо отправлено');
+        }
+    })
+    .finally(() => {
+        loading.value = false
+    });
+}
 
 </script>
 

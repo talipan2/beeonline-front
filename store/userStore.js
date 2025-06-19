@@ -527,6 +527,11 @@ export const useUserStore = defineStore("user", {
             user_id: userId,
             token: token,
         });
+    },
+
+    async sendEmailConfirm()
+    {
+        return await useApi().get(`/email-confirm`);
     }
   },
 });
