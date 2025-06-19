@@ -1,5 +1,5 @@
 <template>
-  <div class="advice">
+  <!-- <div class="advice">
     <div class="advice__icon">
       <SvgoAdvice />
     </div>
@@ -9,7 +9,7 @@
         <slot />
       </div>
     </div>
-  </div>
+  </div> -->
 </template>
 
 <style lang="scss">
