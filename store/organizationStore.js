@@ -7,6 +7,7 @@ export const useOrganizationStore = defineStore('organization', {
     pubCards: {},
     pubCardsList: [],
     pubCardGallery: null,
+    servicesCount: 0,
     registerOrg: {
       countryId: 1,
       inn: null,
@@ -402,7 +403,7 @@ export const useOrganizationStore = defineStore('organization', {
         }
       } catch (error) {
         throw error;
-      } 
+      }
     }
   }
 })

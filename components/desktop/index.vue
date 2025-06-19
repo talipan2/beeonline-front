@@ -7,6 +7,7 @@
         type="warning"
         text="Ваша электронная почта не подтверждена. Для полноценной работы на портале и доступа ко всем функциям рекомендуем подтвердить."
         btnText="Подтвердить"
+        :btn-function="sendEmailConfirm"
       />
       <CommonNotify
         v-if="pubCard.status == 1"
@@ -20,14 +21,26 @@
         title="Карточка компании отклонена."
         :text="`Причина: ${pubCard.statusComment || 'не указана'}`"
         btnText="Изменить"
-        :btn-function="() => editPubCardModal = true"
+        :btn-function="() => {
+            if (role === 'customer') {
+                $router.push('/pubcards/edit/' + pubCard.id)
+            } else if (role === 'performer') {
+                editPubCardModal = true;
+            }
+        }"
       />
       <CommonNotify
         v-if="pubCard.status == 0"
         type="warning"
         title="Карточка компании находится в статусе заполнения."
         btnText="Изменить"
-        :btn-function="() => $router.push('/pubcards/edit/' + pubCard.id)"
+        :btn-function="() => {
+            if (role === 'customer') {
+                $router.push('/pubcards/edit/' + pubCard.id)
+            } else if (role === 'performer') {
+                editPubCardModal = true;
+            }
+        }"
       />
     </div>
     <div class="desktop__banner" v-if="role === 'performer'">
@@ -68,7 +81,7 @@
         <template #body>
           <div class="desktop__balance balance-card" :class="{'loading' : pubCardLoader}">
             <div class="balance-card__header">
-              <p class="balance-card__balance">{{ formatMoney(userBalance, userCurrency, 2, false) }}<span class="balance-card__currency"> руб.</span></p>
+              <p class="balance-card__balance">{{ formatMoney(userBalance, userCurrency, 2, false) }}<span class="balance-card__currency"> {{ userCurrency }}</span></p>
               <p class="balance-card__balance">{{ formatMoney(userBonuses, 'bonuses') }} <span class="balance-card__currency"> баллов</span></p>
             </div>
             <div class="balance-card__details-list balance-card__details-list_type_desktop">
@@ -453,6 +466,22 @@ chatStore.getChatList().then((res) => {
     allChatsList.value = res.all_chats.map(mapChat);
     unreadChatsList.value = res.unread_chats.map(mapChat);
 });
+
+const loading = ref(false);
+
+const sendEmailConfirm = () => {
+    if (loading.value) return;
+    loading.value = true;
+    userStore.sendEmailConfirm()
+    .then(res => {
+        if (res) {
+            toast.success(res.message || 'Письмо отправлено');
+        }
+    })
+    .finally(() => {
+        loading.value = false
+    });
+}
 
 </script>
 

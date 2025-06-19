@@ -2,8 +2,8 @@
   <div class="phone-mask input">
     <Field
       :rules="validatePhone"
-      v-slot="{ field, errors, meta }" 
-      :label="label" 
+      v-slot="{ field, errors, meta }"
+      :label="label"
       :name="name"
       class="input__container"
     >
@@ -14,7 +14,7 @@
         :options="{
           initialCountry: 'ru',
           autoPlaceholder: 'polite',
-          countryOrder: ['RU', 'BY', 'KZ'],
+          countryOrder: ['RU', 'BY', 'KZ', 'KG', 'UZ', 'TJ', 'TR', 'CN', 'BD', 'IN', 'VN'],
           separateDialCode: true,
           strictMode: true,
           i18n: ru,
@@ -73,7 +73,7 @@ const intlTelInput = ref(null);
 // Функция валидации телефона
 const validatePhone = (value) => {
   if (!value) return `Поле "${props.label}" обязательно для заполнения`;
-  
+
   const isValid = intlTelInput.value?.instance?.isValidNumber();
   return isValid || `Неверный формат номера телефона для поля "${props.label}"`;
 };
@@ -166,4 +166,3 @@ onMounted(() => {
   }
 }
 </style>
-

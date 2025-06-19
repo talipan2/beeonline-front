@@ -17,9 +17,9 @@
         :completed-steps="completedSteps"
       />
       <UiForm :submit="handleSubmit" @setError="getErrorList">
-        <component 
-          :is="stepsConfig[currentStep].component" 
-          v-model="stepsConfig[currentStep].props" 
+        <component
+          :is="stepsConfig[currentStep].component"
+          v-model="stepsConfig[currentStep].props"
           :title="stepsConfig[currentStep].title"
           :submitBtnText="stepsConfig[currentStep]?.submitBtnText"
           :errorsList="errorList"
@@ -71,7 +71,8 @@ const entityStore = useEntityStore();
 const toast = useToast();
 
 const saveButtonDisabled = computed(() => {
-  if(currentStep.value === 3 && pubCardData.value.services?.length < 1) {
+  const servicesCount = organizationStore.servicesCount || 0;
+  if(currentStep.value === 3 && servicesCount < 1) {
     return true
   } else {
     return false
@@ -177,10 +178,10 @@ const adviceList = computed(() => {
         {
           title: 'Описание',
           description: 'В нескольких предложениях расскажите о специфике компании. Вы можете отметить основные направления деятельности, производственные возможности, ассортимент товаров и материалов, дополнительные оказываемые услуги.',
-          selection: `Это обязательное поле. Рекомендуем добавить текст объемом не более 1 500 знаков и воздержаться от рекламных приемов. 
+          selection: `Это обязательное поле. Рекомендуем добавить текст объемом не более 1 500 знаков и воздержаться от рекламных приемов.
             Объективно расскажите о своих товарах и услугах, чтобы привлечь внимание заказчиков, помочь вам найти надежных клиентов.Запрещено добавлять контактные данные!`,
         },
-      ] 
+      ]
     }
     case 3: {
       return [
@@ -211,7 +212,7 @@ const getErrorList = (errors) => {
 
 const handleSubmit = (value, form) => {
   switch (currentStep.value) {
-    case 2:   
+    case 2:
       if(userStore.userPubCard?.id === pubCardData.value.id) {
         organizationStore.editPerformerPubCard({
           name: value.name,
@@ -258,7 +259,7 @@ const handleSubmit = (value, form) => {
         }
       })
       break;
-    case 4: 
+    case 4:
         organizationStore.editEquipmentDescription({
           equipment_description: pubCardData.value.equipment_description
         }).then((res) => {
@@ -512,7 +513,7 @@ onMounted(() => {
     .register__input-inn {
       .input-container {
         border-radius: 8px 0 0 8px;
-        
+
       }
 
       .register__search-btn {

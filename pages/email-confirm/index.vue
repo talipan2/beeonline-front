@@ -17,18 +17,16 @@ import { useUserStore } from '~/store/userStore';
 
 
 const router = useRouter();
-const settingSore = useSettingStore();
+const settingStore = useSettingStore();
 const userStore = useUserStore();
 const message = ref('');
 const alertStatus = ref('');
 
-
 const handleConfirmEmail = async () => {
-  if (router.currentRoute.value.query?.id && router.currentRoute.value.query?.hash) {
     try {
-      const res = await settingSore.emailConfirm(
-        router.currentRoute.value.query.id,
-        router.currentRoute.value.query.hash
+      const res = await settingStore.emailConfirm(
+        router.currentRoute.value.query?.id,
+        router.currentRoute.value.query?.hash
       );
 
       message.value = res.message;
@@ -45,7 +43,6 @@ const handleConfirmEmail = async () => {
       message.value = err.message || 'Ошибка подтверждения email';
       alertStatus.value = 'error';
     }
-  }
 };
 
 await handleConfirmEmail();

@@ -79,7 +79,7 @@
                     >
                 </div>
             </UiForm>
-            <div class="auth__soc-reg">
+            <!-- <div class="auth__soc-reg">
                 <div class="auth__soc-divider">
                     <p>Или войти через</p>
                 </div>
@@ -95,7 +95,7 @@
                         <SvgoVkontakte class="svg-lx" />
                     </a>
                 </div>
-            </div>
+            </div> -->
             <Alerts />
             <LoginFooter />
         </div>
