@@ -15,7 +15,7 @@
           v-model="currentOrganizationType"
           :options="organizationTypes"
           :return-value="true"
-        /> 
+        />
       </label>
       <label class="form-group__title" for="name"
         >Название компании *
@@ -56,7 +56,7 @@
             :rules="{ required: true, min: 5 }"
             name="description-text"
             label="Описание"
-            v-model="data.description" 
+            v-model="data.description"
             :rows="5"
           />
         </div>
@@ -177,7 +177,7 @@ const handleSubmit = async(value, form) => {
         }
       });
     }
-  } 
+  }
 };
 
 </script>

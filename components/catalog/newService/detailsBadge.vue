@@ -1,5 +1,5 @@
 <template>
-  <div class="details-badge">
+  <div class="details-badge" :style="{ gridColumn: gridColumn }">
     <div class="details-badge__container" :class="{ 'details-badge__container_single': !Array.isArray(specs) }">
       <div v-for="(spec, index) in normalizedSpecs" :key="index" class="details-badge__item">
         <p class="details-badge__name">{{ spec.name }}</p>
@@ -37,10 +37,14 @@ const props = defineProps({
   moreBtn: {
     type: Boolean,
     default: false
-  }
+  },
+  gridColumn: {
+    type: String,
+    default: ''
+  },
 })
 
-const normalizedSpecs = computed(() => 
+const normalizedSpecs = computed(() =>
   Array.isArray(props.specs) ? props.specs : [props.specs]
 )
 </script>

@@ -103,7 +103,7 @@
       </div>
       <div class="new-service-details__pub-card-content">
         <CommonRating :rating="data.reviews_stats_about?.stars" :reviews="data.reviews_about_count" :is-count-rating="false" />
-        <CommonLocationsList 
+        <CommonLocationsList
           :locationsList="{cities: data?.cities, regions: data?.regions, countries: data?.countries}"
           is-country
          />
@@ -200,12 +200,14 @@
           name: 'Категория',
           value: data.categories?.length > 0 && data.categories.map(item => item.name) || [],
         }"
+        grid-column="span 2"
       />
       <CatalogNewServiceDetailsBadge
         :specs="{
           name: 'Сырье',
           value: [data.materials_tolling ? 'Заказчика' : '', data.materials_own ? 'Исполнителя' : ''].filter(Boolean).join(' / ')
         }"
+        grid-column="span 2"
       />
       <CatalogNewServiceDetailsBadge
         :specs="{
@@ -231,6 +233,7 @@
           value: data.free_samples?.length ? entityStore.getEntityLabelById('freeTestSamples', data.free_samples).join(' / ') : '',
         }"
       />
+      <CatalogNewServiceShowContacts :id="data.id" v-if="data.is_open_contacts_active"/>
     </div>
     <CommonLayoutInfoCard title="Услуги" class="new-service-details__services" v-if="data.services && data.services.length">
       <div class="new-service-details__services-list">
@@ -589,8 +592,8 @@ onMounted(() => {
   }
 
   &__specs {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
     gap: 1.6em;
     margin-bottom: 3.2em;
 
@@ -608,6 +611,7 @@ onMounted(() => {
     }
 
     @include mobile {
+      display: flex;
       flex-direction: column;
 
       .details-badge {

@@ -49,6 +49,7 @@
     </div>
     <div class="new-service-card__specs">
       <CatalogNewServiceDetailsBadge
+      grid-column="span 2"
         class="new-service-card__specs-item new-service-card__specs-item_type_desktop"
         :specs="[
           {
@@ -81,6 +82,8 @@
           value:
             data?.free_stock != null ? (data.free_stock ? 'Да' : 'Нет') : '',
         }" />
+
+        <CatalogNewServiceShowContacts :id="data.id" v-if="data.is_open_contacts_active"/>
     </div>
     <div
       class="new-service-card__images"
@@ -256,8 +259,8 @@
     }
 
     &__specs {
-      display: flex;
-      justify-content: space-between;
+        display: grid;
+    grid-template-columns: repeat(4, 1fr);
       gap: 1.6em;
 
       .details-badge:first-child {
@@ -275,6 +278,7 @@
       }
 
       @include mobile {
+        display: flex;
         flex-direction: column;
         gap: 2em;
 
