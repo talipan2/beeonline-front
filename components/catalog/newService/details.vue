@@ -233,7 +233,40 @@
           value: data.free_samples?.length ? entityStore.getEntityLabelById('freeTestSamples', data.free_samples).join(' / ') : '',
         }"
       />
-      <CatalogNewServiceShowContacts :id="data.id" v-if="data.is_open_contacts_active"/>
+      <div class="new-service-details__specs-contacts" v-if="contactsData">
+            <CatalogNewServiceDetailsBadge
+                :specs="{
+                    name: 'Сайт',
+                    value: contactsData.site || 'Не указан',
+                }"
+                :line-limit="false"
+            />
+            <CatalogNewServiceDetailsBadge
+                :specs="{
+                    name: 'Email',
+                    value: contactsData.email || 'Не указан',
+                }"
+                :line-limit="false"
+            />
+            <CatalogNewServiceDetailsBadge
+                :specs="{
+                    name: 'Телефон',
+                    value: contactsData.phone || 'Не указан',
+                }"
+                :line-limit="false"
+            />
+      </div>
+      <CatalogNewServiceContactsButton :id="data.id" v-if="data.is_open_contacts_active && !contactsData" v-slot="{ open }" @show="showContacts">
+        <div class="new-service-details__specs-button">
+            <UiButton
+                variant="primary"
+                size="medium"
+                type="button"
+                @click="open">
+                Показать контакты
+            </UiButton>
+        </div>
+      </CatalogNewServiceContactsButton>
     </div>
     <CommonLayoutInfoCard title="Услуги" class="new-service-details__services" v-if="data.services && data.services.length">
       <div class="new-service-details__services-list">
@@ -317,6 +350,7 @@ const entityStore = useEntityStore();
 const settingStore = useSettingStore();
 const reviewStore = useReviewsStore();
 const userStore = useUserStore();
+const contactsData = ref(null);
 
 const reviewsPage = ref({
   page: 1,
@@ -390,6 +424,10 @@ onMounted(() => {
     }
   })
 })
+
+const showContacts = (contacts) => {
+    contactsData.value = contacts;
+}
 
 </script>
 
@@ -596,6 +634,29 @@ onMounted(() => {
     grid-template-columns: repeat(4, 1fr);
     gap: 1.6em;
     margin-bottom: 3.2em;
+
+    &-button {
+        grid-column: span 4;
+        display: flex;
+        justify-content: center;
+        margin: 1em 0;
+    }
+
+    &-contacts {
+        grid-column: span 4;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: inherit;
+
+        p {
+            overflow-wrap: anywhere;
+        }
+
+        @include mobile {
+            display: flex;
+            flex-direction: column;
+        }
+    }
 
     .details-badge {
       flex: 1 1 calc(25% - 1.6em);

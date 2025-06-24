@@ -35,6 +35,9 @@
         {{ data.description }}
       </p>
       <div class="new-service-card__pubcard-right">
+        <CommonUserOnlineStatus
+          class="new-service-card__user-status"
+          :lastActivity="data.last_active_at" />
         <UiButton
           class="new-service-card__btn"
           variant="quinary"
@@ -42,12 +45,44 @@
           :to="`/services/${data.id}`"
           >Подробнее</UiButton
         >
-        <CommonUserOnlineStatus
-          class="new-service-card__user-status"
-          :lastActivity="data.last_active_at" />
+        <CatalogNewServiceContactsButton :id="data.id" v-if="data.is_open_contacts_active" v-slot="{ open }" @show="showContacts">
+            <UiButton
+              class="new-service-card__btn"
+              variant="quinary"
+              size="large"
+              :disabled="!!contactsData"
+              type="button"
+              @click="open">
+              Показать контакты
+            </UiButton>
+        </CatalogNewServiceContactsButton>
       </div>
     </div>
     <div class="new-service-card__specs">
+        <div class="new-service-card__specs-contacts" v-if="contactsData">
+            <CatalogNewServiceDetailsBadge
+                :specs="{
+                    name: 'Сайт',
+                    value: contactsData.site || 'Не указан',
+                }"
+                :line-limit="false"
+            />
+            <CatalogNewServiceDetailsBadge
+                :specs="{
+                    name: 'Email',
+                    value: contactsData.email || 'Не указан',
+                }"
+                :line-limit="false"
+            />
+            <CatalogNewServiceDetailsBadge
+                :specs="{
+                    name: 'Телефон',
+                    value: contactsData.phone || 'Не указан',
+                }"
+                :line-limit="false"
+            />
+        </div>
+
       <CatalogNewServiceDetailsBadge
       grid-column="span 2"
         class="new-service-card__specs-item new-service-card__specs-item_type_desktop"
@@ -82,8 +117,6 @@
           value:
             data?.free_stock != null ? (data.free_stock ? 'Да' : 'Нет') : '',
         }" />
-
-        <CatalogNewServiceShowContacts :id="data.id" v-if="data.is_open_contacts_active"/>
     </div>
     <div
       class="new-service-card__images"
@@ -91,6 +124,17 @@
       <p class="new-service-card__images-title">Примеры работ</p>
       <CatalogNewServiceImagesList :data="data.gallery" />
     </div>
+    <CatalogNewServiceContactsButton :id="data.id" v-if="data.is_open_contacts_active" v-slot="{ open }" @show="showContacts">
+        <UiButton
+            class="new-service-card__btn new-service-card__btn_type_mobile"
+            variant="quinary"
+            size="large"
+            :disabled="!!contactsData"
+            type="button"
+            @click="open">
+            Показать контакты
+        </UiButton>
+    </CatalogNewServiceContactsButton>
     <UiButton
       class="new-service-card__btn new-service-card__btn_type_mobile"
       variant="quinary"
@@ -104,6 +148,8 @@
 <script setup>
   import defaultImage from "@/assets/images/nophoto_pc.png";
 
+  const contactsData = ref(null);
+
   const props = defineProps({
     data: {
       type: Object,
@@ -114,6 +160,10 @@
       default: false,
     },
   });
+
+  const showContacts = (contacts) => {
+      contactsData.value = contacts;
+  }
 </script>
 
 <style lang="scss">
@@ -128,6 +178,10 @@
     row-gap: 5.6em;
     flex: 1;
     position: relative;
+
+    @include mobile {
+        row-gap: 2em;
+    }
 
     &_type_revers {
       background-color: #fff;
@@ -203,7 +257,7 @@
       &-right {
         display: flex;
         flex-direction: column;
-        row-gap: 2.2em;
+        row-gap: 1em;
         align-items: center;
         max-width: 23em;
         width: 100%;
@@ -260,8 +314,25 @@
 
     &__specs {
         display: grid;
-    grid-template-columns: repeat(4, 1fr);
-      gap: 1.6em;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.6em;
+
+      &-contacts {
+        grid-column: span 4;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: inherit;
+
+        p {
+            overflow-wrap: anywhere;
+        }
+
+        @include mobile {
+            display: flex;
+            flex-direction: column;
+            order: 1;
+        }
+      }
 
       .details-badge:first-child {
         flex: 0 1 50%;
