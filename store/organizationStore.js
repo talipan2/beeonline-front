@@ -404,6 +404,10 @@ export const useOrganizationStore = defineStore('organization', {
       } catch (error) {
         throw error;
       }
-    }
+    },
+
+    async showPubCardContacts(id) {
+        return await useApi().get(`/pubcards/${id}/show-contacts`);
+    },
   }
 })

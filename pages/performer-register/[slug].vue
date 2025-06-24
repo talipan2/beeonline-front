@@ -303,6 +303,8 @@ onMounted(() => {
         organizationData.value.registerAddress = userOrganization.legal_address
         organizationData.value.closedDocumentsEmail = userOrganization.email_docs
         pubCardData.value.name = pubCardData.value.name ? pubCardData.value.name : userOrganization.name
+        pubCardData.value.contact_email = pubCardData.value.contact_email ? pubCardData.value.contact_email : res.user.email
+        pubCardData.value.contact_phone = pubCardData.value.contact_phone ? pubCardData.value.contact_phone : res.user.phone
       }
 
       if(res.user.public_cards && res.user.public_cards && res.user.public_cards.length > 0) {
