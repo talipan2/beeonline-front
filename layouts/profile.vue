@@ -22,10 +22,6 @@
 import { useSettingStore } from '~/store/settingStore';
 import { useUserStore } from '~/store/userStore';
 
-definePageMeta({
-  disableMetrika: true,
-});
-
 const props = defineProps({
   title: {
     type: String,
@@ -73,7 +69,7 @@ onUnmounted(() => {
 <style lang="scss">
 
 .profile {
-  
+
   &__container {
     display: flex;
     column-gap: 10em;
@@ -120,7 +116,7 @@ onUnmounted(() => {
         flex: 1;
       }
     }
-    
+
   }
 }
 
