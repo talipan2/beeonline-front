@@ -18,9 +18,6 @@
           <li class="header-menu__link-item">
             <NuxtLink to="/orders/create" class="header-menu__link">Разместить заказ</NuxtLink>
           </li>
-          <li class="header-menu__link-item">
-            <NuxtLink to="/chat" class="header-menu__link">Сообщения</NuxtLink>
-          </li>
           <li class="header-menu__link-item header-menu__sign-out">
             <UiButton type="button" class="header-menu__link" variant="default" :withoutPadding="true" @click="logOut">Выход</UiButton>
           </li>
