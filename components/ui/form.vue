@@ -27,8 +27,9 @@ const onSubmit = handleSubmit(async (values, form) => {
   try {
     await props.submit(values, form);
   } catch (error) {
-    console.log(error);
+    console.log('ошибка', error);
     const errors = error.data.errors;
+    console.log(form, errors);
     form.setErrors(errors);
     for (let key in errors) {
         form.setFieldTouched(key, true);
