@@ -64,6 +64,15 @@
     <div class="new-service-card__specs">
         <div class="new-service-card__specs-contacts" v-if="contactsData">
             <CatalogNewServiceDetailsBadge
+                grid-column="span 1"
+                :specs="{
+                    name: 'Контактное лицо',
+                    value: contactsData.name || 'Не указано',
+                }"
+                :line-limit="false"
+            />
+            <CatalogNewServiceDetailsBadge
+                grid-column="span 1"
                 :specs="{
                     name: 'Сайт',
                     value: contactsData.site || 'Не указан',
@@ -71,6 +80,7 @@
                 :line-limit="false"
             />
             <CatalogNewServiceDetailsBadge
+                grid-column="span 1"
                 :specs="{
                     name: 'Email',
                     value: contactsData.email || 'Не указан',
@@ -78,6 +88,7 @@
                 :line-limit="false"
             />
             <CatalogNewServiceDetailsBadge
+                grid-column="span 1"
                 :specs="{
                     name: 'Телефон',
                     value: contactsData.phone || 'Не указан',
@@ -332,7 +343,7 @@
       &-contacts {
         grid-column: span 4;
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(4, 1fr);
         gap: inherit;
 
         p {

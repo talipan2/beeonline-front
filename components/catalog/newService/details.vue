@@ -236,6 +236,13 @@
       <div class="new-service-details__specs-contacts" v-if="contactsData">
             <CatalogNewServiceDetailsBadge
                 :specs="{
+                    name: 'Контактное лицо',
+                    value: contactsData.name || 'Не указано',
+                }"
+                :line-limit="false"
+            />
+            <CatalogNewServiceDetailsBadge
+                :specs="{
                     name: 'Сайт',
                     value: contactsData.site || 'Не указан',
                 }"
@@ -645,7 +652,7 @@ const showContacts = (contacts) => {
     &-contacts {
         grid-column: span 4;
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(4, 1fr);
         gap: inherit;
 
         p {
