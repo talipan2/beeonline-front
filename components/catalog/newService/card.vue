@@ -47,7 +47,10 @@
         >
         <CatalogNewServiceContactsButton :id="data.id" v-if="data.is_open_contacts_active" v-slot="{ open }" @show="showContacts">
             <UiButton
-              class="new-service-card__btn"
+              class="new-service-card__btn new-service-card__btn-contacts"
+              :class="{
+                'new-service-card__btn-contacts-hide': !!contactsData,
+              }"
               variant="quinary"
               size="large"
               :disabled="!!contactsData"
@@ -124,7 +127,7 @@
       <p class="new-service-card__images-title">Примеры работ</p>
       <CatalogNewServiceImagesList :data="data.gallery" />
     </div>
-    <CatalogNewServiceContactsButton :id="data.id" v-if="data.is_open_contacts_active" v-slot="{ open }" @show="showContacts">
+    <CatalogNewServiceContactsButton :id="data.id" v-if="data.is_open_contacts_active && !!contactsData" v-slot="{ open }" @show="showContacts">
         <UiButton
             class="new-service-card__btn new-service-card__btn_type_mobile"
             variant="quinary"
@@ -285,6 +288,15 @@
       text-transform: uppercase;
       color: var(--text-color-hover-secondary);
       width: 100%;
+
+      &-contacts {
+        transition: opacity 0.3s ease-in-out;
+        opacity: 1;
+
+        &-hide {
+            opacity: 0;
+        }
+      }
 
       &_type_mobile {
         display: none;
