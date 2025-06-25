@@ -63,9 +63,8 @@ export default defineNuxtConfig({
         },
         server: {
             hmr: {
-                clientPort: process.env.DEV_PORT,
-                protocol: "ws",
-                // clientPort: 443,
+                protocol: process.env.HMR_PROTOCOL || "ws",
+                clientPort: process.env.HMR_PORT || 443,
                 path: "hmr/",
             },
             allowedHosts: ['bee.online.front'],

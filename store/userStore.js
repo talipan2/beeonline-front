@@ -477,15 +477,8 @@ export const useUserStore = defineStore("user", {
       }
     },
 
-    async createNewUser(data) {
-      try {
-        const response = await Api.createNewUser(data);
-        if (response.data) {
-          return response.data;
-        }
-      } catch (error) {
-        throw error;
-      }
+    async createNewUser(data, form) {
+      return await Api.createNewUser(data, form);
     },
 
     async getUser(id) {

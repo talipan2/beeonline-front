@@ -115,13 +115,13 @@ function handleSubmit(values, form) {
 	});
 }
 
-function payInvoice() {
+function payInvoice(fromUpdate = false) {
     if (!invoice.value) return;
     if (invoice.value.status != 'generated') {
         clearInterval(interval.value);
         return;
     }
-    if (opened.value) return; // предотвращаем повторное открытие
+    if (fromUpdate && opened.value) return; // предотвращаем повторное открытие
     if (invoice.value.type === 'external') {
         opened.value = true;
         window.open(invoice.value.payment_url, '_blank');
@@ -167,7 +167,7 @@ function invoiceUpdate(from) {
     invoiceStore.show(invoice.value.id)
     .then((response) => {
         invoice.value = response.data;
-        payInvoice();
+        payInvoice(true);
     })
     .finally(() => {
         loading.value = false;

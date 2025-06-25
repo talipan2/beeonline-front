@@ -3,7 +3,7 @@
     <p class="staff__description">Заполните данные о сотруднике. Его логином будет являться адрес электронной
       почты, на которую придет пароль для доступа в личный кабинет.
     </p>
-    <Form @submit="createOrganizationEmployee">
+    <UiForm :submit="createOrganizationEmployee">
       <StaffContent v-model="staffData"/>
       <div class="form-group staff__buttons">
         <div class="form-group-data">
@@ -13,7 +13,7 @@
           <UiButton to="/staff" class="form-group-data__btn" variant="senary" size="large">Вернуться к списку сотрудников</UiButton>
         </div>
       </div>
-    </Form>
+    </UiForm>
   </div>
 </template>
 
@@ -38,7 +38,7 @@ const staffData = ref({
   country_code: ''
 });
 
-const createOrganizationEmployee = () => {
+const createOrganizationEmployee = (values, form) => {
   userStore.createNewUser({
     email: staffData.value.email,
     name: staffData.value.name,
@@ -46,14 +46,14 @@ const createOrganizationEmployee = () => {
     post: staffData.value.post,
     organization_id: userStore.userData.organization_id,
     country_code: staffData.value.country_code
-  }).then(res => {
+  }, form).then(res => {
     if(res.data) {
       userStore.changeUserData(res.data.id, {permissions: staffData.value.permissions});
       userStore.setNotification(res.data.id, staffData.value.notifications);
       toast.success('Сотрудник успешно создан');
       router.push({ path: '/staff' });
     }
-  })
+  });
 }
 
 </script>

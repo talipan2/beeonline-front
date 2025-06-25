@@ -18,10 +18,10 @@
               role === 'performer' ? 'услугу' : 'заказ'
             } максимально подробно. Указание контактов (телефон, email) - запрещено.`" />
         </label>
-        <UiTextArea 
-          :rules="{ required: true, min: 10 }" 
-          name="description-text" 
-          label="Описание" 
+        <UiTextArea
+          :rules="{ required: true, min: 10 }"
+          name="description-text"
+          label="Описание"
           v-model="data.description"
           class="form-group__value"
         />
@@ -66,7 +66,7 @@
               class="entity__group form-group__value" v-model="data.freeStock" :options="[
                 { value: 0, label: 'Нет' },
                 { value: 1, label: 'Да' },
-              ]" 
+              ]"
             />
           </div>
         </div>
@@ -99,7 +99,7 @@
             <label class="form-group__title entity__label">Партия *
               <CommonTooltip text="Укажите количество в единицах измерения - шт." />
             </label>
-            <UiInput :rules="{ required: true }" name="batch" label="Партия" v-model="data.batch"
+            <UiInput :rules="{ required: true, min_value: 1 }" name="batch" label="Партия" v-model="data.batch"
               class="form-group__value" type="number" />
           </div>
           <div class="entity__data-item">
@@ -107,7 +107,7 @@
               Предпочтительная цена *
               <CommonTooltip text="Укажите предпочтительную цену за единицу товара" />
             </label>
-            <UiInput :rules="{ required: true }" name="price" label="Предпочтительная цена" v-model="data.price"
+            <UiInput :rules="{ required: true, min_value: 1 }" name="price" label="Предпочтительная цена" v-model="data.price"
               class="form-group__value" type="number" />
           </div>
         </div>
@@ -119,26 +119,26 @@
               role === 'performer' ? 'заказчиками' : 'исполнителями заказа'
             }`" />
         </label>
-        <UiTextArea 
+        <UiTextArea
           :rules="{min: 10}"
-          name="conditions" 
-          label="Условия сотрудничества" 
-          v-model="data.termsOfCooperation" 
+          name="conditions"
+          label="Условия сотрудничества"
+          v-model="data.termsOfCooperation"
           class="form-group__value"
         />
       </div>
       <div class="entity__data" v-if="role === 'performer'">
-        <CommonDocumentLoaderAndList v-model="data.tzFiles" 
+        <CommonDocumentLoaderAndList v-model="data.tzFiles"
           text="Фото изделия можно прикрепить сюда."
           :extension="['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'rtf', 'pdf', 'jpeg', 'png', 'jpg', 'gif', 'psd', 'djvu', 'fb2', 'ps', 'zip', 'rar']"
         />
       </div>
       <div class="entity__data" v-if="role === 'customer'">
-        <CommonDocumentLoaderAndList v-model="data.tzFiles" 
-          text="Готовое техническое задание (ТЗ) и 
-          фото изделия можно прикрепить сюда. 
-          Исполнители лучше поймут задачу и качественно выполнят заказ. 
-          Разрешено загружать файлы форматом 
+        <CommonDocumentLoaderAndList v-model="data.tzFiles"
+          text="Готовое техническое задание (ТЗ) и
+          фото изделия можно прикрепить сюда.
+          Исполнители лучше поймут задачу и качественно выполнят заказ.
+          Разрешено загружать файлы форматом
           - doc, .docx, .xls, .xlsx, .ppt, .pptx, .rtf, .pdf, .jpeg, .png, .jpg, .gif, .psd, .djvu, .fb2, .ps, .zip, .rar"
           :extension="['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'rtf', 'pdf', 'jpeg', 'png', 'jpg', 'gif', 'psd', 'djvu', 'fb2', 'ps', 'zip', 'rar']"
         />
@@ -163,7 +163,7 @@
             исполнителям находить их в поиске.
           </p> -->
         </div>
-        <!-- <CommonLocation 
+        <!-- <CommonLocation
           v-if="role === 'performer'"
           buttonLabel="Выбрать город"
           v-model="data.locations"
