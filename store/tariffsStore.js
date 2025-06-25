@@ -68,11 +68,8 @@ export const useTariffsStore = defineStore("tariffs", {
             });
         },
 
-        async closingDocsRequest(data, form) {
-            return Api.closingDocsRequest(data, form)
-            .then((response) => {
-                return response;
-            });
+        async closingDocsRequest(userId, data, form) {
+            return Api.closingDocsRequest(userId, data, form);
         },
     },
 });
