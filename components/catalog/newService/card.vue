@@ -127,7 +127,7 @@
       <p class="new-service-card__images-title">Примеры работ</p>
       <CatalogNewServiceImagesList :data="data.gallery" />
     </div>
-    <CatalogNewServiceContactsButton :id="data.id" v-if="data.is_open_contacts_active && !!contactsData" v-slot="{ open }" @show="showContacts">
+    <CatalogNewServiceContactsButton :id="data.id" v-if="data.is_open_contacts_active && !contactsData" v-slot="{ open }" @show="showContacts">
         <UiButton
             class="new-service-card__btn new-service-card__btn_type_mobile"
             variant="quinary"
