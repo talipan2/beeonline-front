@@ -36,9 +36,7 @@ export default {
         });
     },
 
-    async closingDocsRequest(data, form) {
-        return useApi().put("/balance/closing-docs", data, form).then((response) => {
-            return response;
-        });
+    async closingDocsRequest(userId, data, form) {
+        return useApi().put(`/tariffs/${userId}/closing-docs`, data, form);
     },
 };
