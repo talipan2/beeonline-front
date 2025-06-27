@@ -574,7 +574,7 @@ input[type="number"]::-webkit-inner-spin-button {
 .invalid-error {
   font-size: 1rem;
   line-height: 1em !important;
-  color: #F54A45;
+  color: #da1e28;
   margin-top: .5rem;
   flex: 1 1 100%;
   min-height: 1.5rem;
@@ -583,11 +583,11 @@ input[type="number"]::-webkit-inner-spin-button {
 
 .invalid {
   input, textarea {
-    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%236937a5'%3E%3Ccircle cx='6' cy='6' r='4.5'/%3E%3Cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3E%3Ccircle cx='6' cy='8.2' r='.6' fill='%236937a5' stroke='none'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23da1e28'%3E%3Ccircle cx='6' cy='6' r='4.5'/%3E%3Cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3E%3Ccircle cx='6' cy='8.2' r='.6' fill='%23da1e28' stroke='none'/%3E%3C/svg%3E");
     background-position: right calc(.25em + .5rem) center;
     background-repeat: no-repeat;
     background-size: 1em 1em;
-    border-color: #6937a5;
+    border-color: #da1e28;
     padding-right: calc(1em + 2rem);
   }
 
@@ -603,13 +603,13 @@ input[type="number"]::-webkit-inner-spin-button {
     background-position: right calc(1.5em + .5rem) center, right calc(1rem) center;
     background-repeat: no-repeat;
     background-size: 1em 1em, 15px 15px;
-    border-color: #6937a5;
+    border-color: #da1e28;
     padding-right: calc(1em + 2rem);
   }
 }
 
 .input-container.invalid {
-  border-color: var(--border-color-quaternary) !important;
+  border-color: #da1e28 !important;
 }
 
 // табы
