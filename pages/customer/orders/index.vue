@@ -142,6 +142,7 @@ const cardData = computed(() => {
         countries: [...item.countries],
       },
       statusType: item.status,
+      hasIntro: item.has_intro,
     }
   })
 })
