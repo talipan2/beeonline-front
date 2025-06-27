@@ -30,6 +30,45 @@
     </UiInput>
   </div>
   <div class="form-group form-group_type_secondary">
+        <label class="form-group__title">
+        Контактное лицо (ФИО)
+        </label>
+        <UiInput
+        :rules="{ required: false }"
+        name="contact_name"
+        label="Контактное лицо (ФИО)"
+        v-model="modelValue.contact_name"
+        class="form-group__value"
+        >
+        </UiInput>
+</div>
+  <div class="form-group form-group_type_secondary">
+    <label class="form-group__title">
+      Контактный email
+    </label>
+    <UiInput
+      :rules="{ required: false }"
+      name="contact_email"
+      label="Контактный email"
+      v-model="modelValue.contact_email"
+      class="form-group__value"
+    >
+    </UiInput>
+  </div>
+    <div class="form-group form-group_type_secondary">
+        <label class="form-group__title">
+        Контактный телефон
+        </label>
+        <UiInput
+        :rules="{ required: false }"
+        name="contact_phone"
+        label="Контактный телефон"
+        v-model="modelValue.contact_phone"
+        class="form-group__value"
+        >
+        </UiInput>
+    </div>
+  <div class="form-group form-group_type_secondary">
     <label class="form-group__title">
       Описание
     </label>

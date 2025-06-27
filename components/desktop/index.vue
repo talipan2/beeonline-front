@@ -2,13 +2,14 @@
   <div class="desktop">
     <div class="desktop__notify" v-if="!emailVerified || pubCard.status == 1 || pubCard.status == 3 || pubCard.status == 0">
       <h2 class="desktop__notify-title">Уведомления</h2>
-      <CommonNotify
-        v-if="!emailVerified"
-        type="warning"
-        text="Ваша электронная почта не подтверждена. Для полноценной работы на портале и доступа ко всем функциям рекомендуем подтвердить."
-        btnText="Подтвердить"
-        :btn-function="sendEmailConfirm"
-      />
+      <ProfileSendEmailConfirm v-if="!emailVerified" v-slot="{ send }">
+        <CommonNotify
+            type="warning"
+            text="Ваша электронная почта не подтверждена. Для полноценной работы на портале и доступа ко всем функциям рекомендуем подтвердить."
+            btnText="Подтвердить"
+            :btn-function="send"
+        />
+      </ProfileSendEmailConfirm>
       <CommonNotify
         v-if="pubCard.status == 1"
         type="success"
@@ -466,22 +467,6 @@ chatStore.getChatList().then((res) => {
     allChatsList.value = res.all_chats.map(mapChat);
     unreadChatsList.value = res.unread_chats.map(mapChat);
 });
-
-const loading = ref(false);
-
-const sendEmailConfirm = () => {
-    if (loading.value) return;
-    loading.value = true;
-    userStore.sendEmailConfirm()
-    .then(res => {
-        if (res) {
-            toast.success(res.message || 'Письмо отправлено');
-        }
-    })
-    .finally(() => {
-        loading.value = false
-    });
-}
 
 </script>
 
