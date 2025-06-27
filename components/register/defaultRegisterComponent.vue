@@ -80,6 +80,8 @@
 <script setup>
 import { useSettingStore } from "~/store/settingStore";
 import { useUserStore } from "~/store/userStore";
+import { useTranslateStore } from "~/store/translateStore";
+const translateStore = useTranslateStore();
 const userStore = useUserStore();
 const settingStore = useSettingStore();
 const router = useRouter();
@@ -97,9 +99,11 @@ const userData = ref({
 const isCreateOrder = computed(() => settingStore.isCreateOrder);
 
 const handleSubmit = async (values, form) => {
-  const utm = localStorage.getItem('utm_params')
+
+  const utm = localStorage.getItem('utm_params');
+  const locale = translateStore.lang === 'ru' ? 'ru' : 'en';
   await userStore
-    .registerUser({...values, role: userData.value.role, utm: utm, country_code: userData.value.country_code, phone: userData.value.phone}, form)
+    .registerUser({...values, role: userData.value.role, utm: utm, country_code: userData.value.country_code, phone: userData.value.phone, notification_locale: locale}, form)
     .then((res) => {
       if(userData.value.role === 'customer') {
         if (isCreateOrder.value) {
@@ -148,12 +152,12 @@ onMounted(() => {
       margin-bottom: 1.46em;
     }
 
-    
+
   }
   &__phone-mask {
     flex: 0 1 40%;
   }
-  
+
 }
 
 </style>

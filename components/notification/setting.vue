@@ -1,6 +1,12 @@
 <template>
   <div class="notification-setting">
     <h2 class="notification-setting__title">Настройка уведомлений</h2>
+     <div class="form-group">
+        <label class="form-group__title">
+          Язык уведомлений
+          <UiSelect class="" :options="locales" v-model="locale" name="locale" return-value/>
+        </label>
+      </div>
     <div class="notification-setting__list" v-if="notificationPreferences">
         <template v-for="type in notificationTypes">
             <div class="notification-setting__container" v-if="(!type.roles?.length || type.roles.includes(userStore.role)) && type.is_active">
@@ -44,6 +50,18 @@ const notificationTypes = ref(null);
 const notificationChannels = ref(null);
 const notificationPreferences = ref(null);
 const preferencesByType = ref(null);
+const locale = ref(userStore.userData.notification_locale || 'ru');
+
+const locales = ref([
+    {
+        value: 'ru',
+        label: 'Русский',
+    },
+    {
+        value: 'en',
+        label: 'English',
+    }
+])
 
 const initPreferencesByType = () => {
     let preferences = {};
@@ -85,11 +103,13 @@ const formatPreferencesToRequest = () => {
 const handleSave = () => {
     if (loading.value) return;
     let request = {
+        locale: locale.value,
         preferences: formatPreferencesToRequest()
     };
     loading.value = true;
     userStore.setNotificationPreferences(userStore.userData.id, request)
     .then((res) => {
+        userStore.userData.notification_locale = locale.value;
         toast.success("Настройки сохранены");
     })
     .finally(() => {
