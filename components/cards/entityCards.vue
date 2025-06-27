@@ -97,15 +97,15 @@
       <template v-if="type === 'order'">
             <PaidServiceOrderIntro
                 :id="data.id"
-                :title="data.hasIntro ? 'Изменить приветствие' : 'Добавить приветствие'"
+                :title="data.hasIntro ? 'Изменить ссылку на форму сбора' : 'Добавить ссылку на форму сбора'"
             >
                 <template #button="{ open }">
                     <UiButton variant="quinary" size="large" type="button" @click="open" class="entity-card__btn">
                         <template v-if="data.hasIntro">
-                            Изменить приветствие
+                            Изменить ссылку на форму сбора
                         </template>
                         <template v-else>
-                            Добавить приветствие
+                            Добавить ссылку на форму сбора
                         </template>
                     </UiButton>
                 </template>
