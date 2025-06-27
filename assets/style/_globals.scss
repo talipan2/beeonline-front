@@ -268,7 +268,7 @@ label:active {
       border: 1px solid #d9dae1;
       flex-direction: row-reverse;
       padding: 1.4rem;
-  
+
       svg {
         margin-right: 8px;
       }
@@ -309,7 +309,7 @@ label:active {
 
     @include mobile {
       margin-bottom: 3.2em;
-      
+
       .form-group-data:not(:last-child) {
         margin-bottom: 1.5rem;
       }
@@ -574,7 +574,7 @@ input[type="number"]::-webkit-inner-spin-button {
 .invalid-error {
   font-size: 1rem;
   line-height: 1em !important;
-  color: #6937a5;
+  color: #F54A45;
   margin-top: .5rem;
   flex: 1 1 100%;
   min-height: 1.5rem;
