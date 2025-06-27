@@ -14,7 +14,7 @@
         :options="{
           initialCountry: 'ru',
           autoPlaceholder: 'polite',
-          countryOrder: ['RU', 'BY', 'KZ', 'KG', 'UZ', 'TJ', 'TR', 'CN', 'BD', 'IN', 'VN'],
+          countryOrder: ['RU', 'BY', 'KZ', 'KG', 'UZ', 'VN', 'TJ', 'TR', 'CN', 'BD', 'IN'],
           separateDialCode: true,
           strictMode: true,
           i18n: ru,
