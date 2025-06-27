@@ -85,7 +85,7 @@ const props = defineProps({
     },
     title: {
         type: String,
-        default: 'Добавить приветствие',
+        default: 'Добавить ссылку на форму сбора',
     },
 });
 
