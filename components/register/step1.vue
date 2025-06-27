@@ -298,6 +298,7 @@ import { useOrganizationStore } from "~/store/organizationStore";
 import { useSettingStore } from "~/store/settingStore";
 import { useUserStore } from "~/store/userStore";
 import { useLocationStore } from "~/store/locationStore";
+import { useTranslateStore } from "~/store/translateStore";
 
 const props = defineProps({
   blockTitle: {
@@ -324,6 +325,7 @@ const organizationStore = useOrganizationStore();
 const settingStore = useSettingStore();
 const userStore = useUserStore();
 const locationStore = useLocationStore();
+const translateStore = useTranslateStore();
 const emit = defineEmits(['update:modelValue']);
 
 const getSkipInnRules = computed(() => {
@@ -351,36 +353,65 @@ const role = computed(() => userStore.role);
 const skipInn = ref(false);
 const innModalText = ref("");
 const isSearchInn = ref(false);
-const locationList = ref([]);
+const registerCountries = ref([]);
 
-// const locationList = ref([
-//   { id: 1, label: "Россия" },
-//   { id: 2, label: "Казахстан" },
-//   { id: 3, label: "Беларусь" },
-//   { id: 4, label: "Армения" },
-//   { id: 5, label: "Узбекистан" },
-//   { id: 6, label: "Киргизия" },
-//   { id: 7, label: "Испания" },
-//   { id: 8, label: "Тунис" },
-// ]);
+const formOrganization = computed(function () {
+    if (translateStore.lang == 'ru') {
+        return [
+            {
+                id: 1,
+                label: 'ИП',
+                value: 'ip',
+            },
+            {
+                id: 2,
+                label: 'ООО',
+                value: 'ooo',
+            },
+            {
+                id: 4,
+                label: 'Другое',
+                value: 'other',
+            },
+        ];
+    } else {
+        return [
+            {
+                id: 1,
+                label: 'Sole Proprietor',
+                value: 'ip',
+            },
+            {
+                id: 2,
+                label: 'LLC',
+                value: 'ooo',
+            },
+            {
+                id: 4,
+                label: 'Other',
+                value: 'other',
+            },
+        ];
+    }
+})
 
-const formOrganization = ref([
-      {
-        id: 1,
-        label: 'ИП',
-        value: 'ip',
-      },
-      {
-        id: 2,
-        label: 'ООО',
-        value: 'ooo',
-      },
-      {
-        id: 4,
-        label: 'Другое',
-        value: 'other',
-      },
-]);
+const locationList = computed(function () {
+  if (translateStore.lang == 'ru') {
+    return registerCountries.value.map(item => {
+      return {
+        id: item.id,
+        label: item.name,
+      }
+    })
+  } else {
+    return registerCountries.value.map(item => {
+      return {
+        id: item.id,
+        label: item.name_en,
+      }
+    })
+  }
+})
 
 const handleSearchOrgByInn = (inn) => {
   if( inn === null || inn.length === 0 ) {
@@ -461,7 +492,7 @@ const handleSubmit = async (value, form) => {
         if(userStore.userData && userStore.userData.organization) {
           userStore.userData.organization = res.data;
         }
-        
+
         if(userStore.role == 'performer') {
           router.push("/performer-register/step2");
         } else {
@@ -475,7 +506,7 @@ const handleSubmit = async (value, form) => {
 onMounted(() => {
     locationStore.getRegisterCountries()
     .then(res => {
-        locationList.value = res;
+        registerCountries.value = res;
     })
 })
 
