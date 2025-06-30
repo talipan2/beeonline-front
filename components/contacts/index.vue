@@ -1,11 +1,11 @@
 <template>
   <div class="contacts-container">
     <p class="contacts-container__text">
-      Если у вас есть вопросы, касающиеся организации бизнес-платформы, участия в ней, технических проблем, или любые другие, обратитесь к менеджерам проекта или отправьте нам сообщение, воспользовавшись размещенной ниже формой.
+      Если у вас есть вопросы, касающиеся организации бизнес-платформы, участия в ней, технических проблем, или любые другие, обратитесь к менеджерам проекта.
     </p>
     <div class="contacts-container__contacts">
       <div class="contacts-container__contact-item">
-        123007, Москва, Ленинградский проспект, 35, стр. 2, помещ 329
+        125284, г. Москва, вн.тер.г. муниципальный округ Беговой, пр-кт Ленинградский, д. 35, стр. 2, помещ. 117
       </div>
       <div class="contacts-container__contact-item">
         <a href="tel:+7(495)256-06-26">+7 (495) 256-06-26</a>
@@ -29,7 +29,7 @@
           <UiImage class="contacts-container__manager-pattern" :src="manager.img" :alt="manager.name" />
         </div>
         <div class="contacts-container__manager-text">
-          <p class="contacts-container__manager-name">{{ manager.name }}</p>
+          <p class="contacts-container__manager-name">{{ manager.name }} <br><span class="contacts-container__manager-role">{{ manager.role }}</span></p>
           <a :href="`tel:${formatPhone(manager.phone)}`">{{ manager.phone }}</a>
           <a :href="`mailto:${manager.email}`">{{ manager.email }}</a>
         </div>
@@ -54,10 +54,10 @@
 <script setup>
 
 const managerList = [
-  {name: 'Тимур  Османов Технический Директор', phone: '89773178475', email: 'mail@profashion.ru', img: '/assets/images/managers/managers-1.jpg'},
-  {name: 'Елена Степанова Руководитель проекта', phone: '+7 (925) 226-07-30', email: 'bkp@profashion.ru', img: '/assets/images/managers/managres-2.jpg'},
-  {name: "Лариса Литвин Менеджер", phone: "+79163915749", email: "manager2@profashion.ru", img: "/assets/images/nophoto_pc.png" },
-  {name: "Янина Герасимова Менеджер", phone: "+79771327992", email: "sales3@profashion.ru", img: "/assets/images/nophoto_pc.png"},
+  {name: 'Тимур  Османов', role: 'Технический Директор', phone: '+7 (977) 317-84-75', email: 'mail@profashion.ru', img: '/assets/images/managers/managers-1.jpg'},
+  {name: 'Елена Степанова', role: 'Руководитель проекта', phone: '+7 (925) 226-07-30', email: 'bkp@profashion.ru', img: '/assets/images/managers/managres-2.jpg'},
+  {name: "Лариса Литвин", role: 'Менеджер', phone: "+7 (916) 391-57-49", email: "manager2@profashion.ru", img: "/assets/images/nophoto_pc.png" },
+  {name: "Янина Герасимова", role: 'Менеджер', phone: "+7 (977) 132-79-92", email: "sales3@profashion.ru", img: "/assets/images/nophoto_pc.png"},
   // {name: "Варвара Мишина Менеджер", phone: "+79774367892", email: "adv12@profashion.ru", img: "/assets/images/nophoto_pc.png"}
 ]
 
