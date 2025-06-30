@@ -1,7 +1,7 @@
 <template>
   <div class="other-entity">
     <h2 class="other-entity__title" v-if="title">{{ title }}</h2>
-    <h2 class="other-entity__title" v-else >Другие {{ type === 'order' ? 'заказы' : 'услуги' }} компании</h2>
+    <h2 class="other-entity__title" v-else >Другие {{ type === 'customer' ? 'заказы' : 'услуги' }} компании</h2>
     <div class="other-entity__container">
       <template v-if="type === 'customer'">
         <div class="other-entity__item" v-for="(order, index) in data" :key="index">
