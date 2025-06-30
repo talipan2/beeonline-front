@@ -49,8 +49,9 @@ const orderData = computed(() => {
         { id: 3, name: 'Партия', value: Number(item.batch) },
         { id: 4, name: 'Лекала', value: entityStore.getEntityLabelById('patterns', item.pattern) },
         { id: 5, name: 'Сырье', value: entityStore.getEntityLabelById('rawMaterials', item.material) },
-        { id: 6, name: 'Срок выполнения', value: formatDate(item.deadline_at) },
-        { id: 7, name: 'Описание', value: item.description },
+        { id: 6, name: 'Цена за единицу продукции', value: item.price },
+        { id: 7, name: 'Срок выполнения', value: formatDate(item.deadline_at) },
+        { id: 8, name: 'Описание', value: item.description },
       ],
     };
   });
