@@ -32,7 +32,7 @@
             :checkList="checkList" 
             adviceTitle="Полностью заполненный профиль выше в списке поиска"
           /> -->
-          <CommonAdvice
+          <!-- <CommonAdvice
             class="register__advice"
             v-if="userStore.role === 'performer'"
           >
@@ -83,7 +83,7 @@
                 что повышает вас в поиске
               </li>
             </ul>
-          </CommonAdvice>
+          </CommonAdvice> -->
         </div>
       </div>
     </div>

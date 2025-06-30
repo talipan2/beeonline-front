@@ -23,7 +23,7 @@
             :checkList="checkList" 
             adviceTitle="Полностью заполненный профиль выше в списке поиска" 
           />
-          <CommonAdvice class="register__advice" v-if="['/register/step1'].includes(route.path)">
+          <!-- <CommonAdvice class="register__advice" v-if="['/register/step1'].includes(route.path)">
             <p class="advice__text">ИНН используется в нашем сервисе:</p>
             <ul>
               <li>для автоматического заполнения вашего профиля</li>
@@ -34,7 +34,7 @@
           </CommonAdvice>
           <CommonAdvice class="register__advice sticky" v-if="['/register/step3'].includes(route.path) && userStore.role === 'performer'">
             <p class="advice__text">без указания вашего места производства вы не сможете принимать заказы</p>
-          </CommonAdvice>
+          </CommonAdvice> -->
           <div class="register__preview" v-if="['/register/step2', '/register/step3', '/register/step4'].includes(route.path)">
             <h4 class="register__preview-title">Так вашу компанию будут видеть другие участники</h4>
             <CardsPublic class="register__preview-card" :data="checkListCard" :is-description="true"/>
