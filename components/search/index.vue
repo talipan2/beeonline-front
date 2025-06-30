@@ -1,8 +1,8 @@
 <template>
   <div class="search__container" :class="{'loading' : loading}">
     <h1 class="search__title">Результаты поиска</h1>
-    <UiInput class="search__input" v-model="searchQuery" type="text" name="search" placeholder="Поиск">
-      <UiButton type="button" class="search__btn" variant="default" size="around" @click="handleSearch(searchQuery)">
+    <UiInput class="search__input" v-model="searchQuery" type="text" name="search" placeholder="Поиск" @input="(event) => debouncedSearch(event.target.value)">
+      <UiButton type="button" class="search__btn" variant="default" size="around" @click="handleSearch(searchQuery)" :class="{'search__btn-loading' : loading}">
         <SvgoSearchIcon class="search__btn-icon svg-m"/>
       </UiButton>
     </UiInput>
@@ -89,6 +89,17 @@ const searchResultTotal = ref({});
 
 const handleSearch = (searchQuery, page) => {
   if(loading.value) return;
+  console.log(searchQuery);
+  if(!searchQuery) {
+    isSearch.value = false;
+    router.push({ query: {
+        ...route.query,
+        type: undefined,
+        q: undefined,
+        page: undefined,
+    } });
+    return;
+  }
   loading.value = true;
   const type = currentEntityType.value;
   entityStore.search({query: searchQuery, type: type, page}).then(res => {
@@ -141,6 +152,7 @@ const handleSearch = (searchQuery, page) => {
   })
 }
 
+const debouncedSearch = useDebounce(handleSearch, 500);
 
 const handleChangePage = (page) => {
   if(!page) return
@@ -160,6 +172,10 @@ watch(() => currentEntityType.value, (newVal) => {
     max-width: 70%;
     margin-inline: auto;
     margin-bottom: 10rem;
+
+    @include mobile {
+      max-width: 100%;
+    }
   }
 
   &__title {
@@ -184,6 +200,33 @@ watch(() => currentEntityType.value, (newVal) => {
     top: 50%;
     right: 0;
     transform: translateY(-50%);
+  }
+
+  &__btn-loading {
+    
+    .search__btn-icon {
+      animation: searchPulse 1.5s ease-in-out infinite;
+      
+    }
+  }
+
+  @keyframes searchPulse {
+    0%, 100% {
+      transform: scale(1) rotate(0deg);
+      opacity: 1;
+    }
+    25% {
+      transform: scale(1.1) rotate(-5deg);
+      opacity: 0.8;
+    }
+    50% {
+      transform: scale(0.95) rotate(5deg);
+      opacity: 0.9;
+    }
+    75% {
+      transform: scale(1.05) rotate(-3deg);
+      opacity: 0.8;
+    }
   }
 }
 
