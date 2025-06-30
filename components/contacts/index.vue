@@ -13,14 +13,14 @@
       <div class="contacts-container__contact-item">
         <a href="mailto:info@bee-online.ru">info@bee-online.ru</a>
       </div>
-      <div class="contacts-container__contact-item">
+      <!-- <div class="contacts-container__contact-item">
         <a href="mailto:internet@bee-online.ru">internet@bee-online.ru</a>
         <span>- Почта для пресс-релизов</span>
       </div>
       <div class="contacts-container__contact-item">
         <a href="mailto:fair@bee-online.ru">fair@bee-online.ru</a>
         <span>- По вопросам информационного сотрудничества</span>
-      </div>
+      </div> -->
     </div>
     <h2 class="contacts-container__title">Менеджеры проекта</h2>
     <div class="contacts-container__managers">
