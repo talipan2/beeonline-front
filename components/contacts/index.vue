@@ -56,8 +56,8 @@
 const managerList = [
   {name: 'Тимур  Османов', role: 'Технический Директор', phone: '+7 (977) 317-84-75', email: 'mail@profashion.ru', img: '/assets/images/managers/managers-1.jpg'},
   {name: 'Елена Степанова', role: 'Руководитель проекта', phone: '+7 (925) 226-07-30', email: 'bkp@profashion.ru', img: '/assets/images/managers/managres-2.jpg'},
-  {name: "Лариса Литвин", role: 'Менеджер', phone: "+7 (916) 391-57-49", email: "manager2@profashion.ru", img: "/assets/images/nophoto_pc.png" },
-  {name: "Янина Герасимова", role: 'Менеджер', phone: "+7 (977) 132-79-92", email: "sales3@profashion.ru", img: "/assets/images/nophoto_pc.png"},
+  {name: "Лариса Литвин", role: 'Менеджер', phone: "+7 (916) 391-57-49", email: "manager2@profashion.ru", img: "/assets/images/managers/managers-3.png" },
+  {name: "Янина Герасимова", role: 'Менеджер', phone: "+7 (977) 132-79-92", email: "sales3@profashion.ru", img: "/assets/images/managers/managers-4.png"},
   // {name: "Варвара Мишина Менеджер", phone: "+79774367892", email: "adv12@profashion.ru", img: "/assets/images/nophoto_pc.png"}
 ]
 
