@@ -48,7 +48,7 @@ const props = defineProps({
 <style lang="scss">
 
 .bonus-rules {
-  margin-top: 3rem;
+  // margin-top: 3rem;
 
   &__row {
     display: flex;
