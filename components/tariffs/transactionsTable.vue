@@ -74,12 +74,25 @@
 import { useTariffsStore } from "~/store/tariffsStore";
 import { useUserStore } from "~/store/userStore";
 
+const props = defineProps({
+    currentCurrency: {
+        type: String,
+        default: '',
+    },
+    isLoaded: {
+        type: Boolean,
+        default: false,
+    },
+});
+
 const userStore = useUserStore();
 const tariffStore = useTariffsStore();
 const anchor = ref("anchor");
 
 const transactionList = ref([]);
 const loading = ref(false);
+
+const tableWithBonus = computed(() => props.currentCurrency == 'RUB');
 
 const page = ref(null);
 
@@ -93,7 +106,7 @@ function getTransactions(newPage, need_scroll = true) {
     const prev_page = page.value?.current_page || 1;
 
     tariffStore
-        .getTransactions(userStore.userData?.id, newPage)
+        .getTransactions(userStore.userData?.id, newPage, tableWithBonus.value)
         .then((data) => {
             transactionList.value = data.data;
             page.value = data.meta;
@@ -112,9 +125,10 @@ function getTransactions(newPage, need_scroll = true) {
         });
 }
 
-onMounted(() => {
-    getTransactions(1, false);
-});
+watch(() => props.currentCurrency, () => {
+    getTransactions(1, false, props.currentCurrency);
+}, { deep: true, immediate: true });
+
 </script>
 
 <style lang="scss">

@@ -11,7 +11,7 @@
                     v-else
                 ></span>
             </div>
-            <div class="balance__text">
+            <div class="balance__text" v-if="currentCurrency === 'RUB'">
                 Баллы:
                 <span class="balance__text_type_selection"
                     ><template v-if="tariffsStore.balanceLoaded">{{

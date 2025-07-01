@@ -1,15 +1,15 @@
 <template>
   <div class="bonus">
     <div class="bonus__left-side">
-      <BonusBanner class="bonus__banner_desktop" />
+      <!-- <BonusBanner class="bonus__banner_desktop" /> -->
       <BonusRules />
       <BonusAchievements :organizationId="organizationId"/>
       <BonusTransactions :organizationId="organizationId" />
     </div>
 
     <div class="bonus__right-side">
-      <BonusBanner class="bonus__banner_mobile" />
-      <BonusScore :loading="loading" :bonuses="bonuses" />
+      <!-- <BonusBanner class="bonus__banner_mobile" /> -->
+      <BonusScore v-if="currentCurrency == 2" :loading="loading" :bonuses="bonuses"/>
       <BonusProgress
         :loading="loading"
         :level-groups="levelGroups"
@@ -27,11 +27,13 @@
 <script setup>
 import { useBonusStore } from '~/store/bonusStore';
 import { useUserStore } from '~/store/userStore';
+import { useSettingStore } from '~/store/settingStore';
 
 const props = defineProps({});
 
 const userStore = useUserStore();
 const bonusStore = useBonusStore();
+const settingStore = useSettingStore();
 
 const organizationId = computed(() => userStore.userData?.organization_id);
 
@@ -46,11 +48,11 @@ const achievementsOrgCount = ref(0);
 const achievementsAllCount = ref(0);
 const rating = ref([]);
 const isTest = ref(true);
-
-const data = computed(() => bonusStore.data)
+const currentCurrency = ref(null);
 
 onMounted(() => {
   loading.value = true;
+	// settingStore.getCurrencyList()
 	if(organizationId.value) {
 		bonusStore.getBonusesData(organizationId.value)
 		.then(res => {
@@ -64,6 +66,7 @@ onMounted(() => {
 				achievementsOrgCount.value = res.achievements_org_count;
 				achievementsAllCount.value = res.achievements_all_count;
 				rating.value = res.rating;
+				currentCurrency.value = res.currency_id;
 			}
 		})
 		.finally(() => loading.value = false);

@@ -20,9 +20,10 @@ export default {
         return useApi().post(`tariffs/${userId}/pay-services`, data);
     },
 
-    async getTransactions(userId, page) {
+    async getTransactions(userId, page, withBonus) {
         return useApi().get(`tariffs/${userId}/transactions`, {
              page: page,
+             with_bonuses: withBonus,
         });
     },
 

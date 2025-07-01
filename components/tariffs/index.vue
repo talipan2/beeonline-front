@@ -23,7 +23,7 @@
       <div class="tariffs__content-header">
         <h2 class="tariffs__title">Последние транзакции</h2>
       </div>
-      <TariffsTransactionsTable />
+      <TariffsTransactionsTable :currentCurrency="isLoadedCurrency" />
     </div>
     <div class="tariffs__content">
       <div class="tariffs__content-header">
@@ -53,6 +53,7 @@ const userStore = useUserStore();
 
 const userBalance = computed(() => formatMoney(tariffsStore.userBalance, currentCurrency.value));
 const userBonuses = computed(() => tariffsStore.userBonuses);
+const isLoadedCurrency = ref('');
 
 // переменная для определения международного тарифа
 const isInternational = computed(() => currentCurrency.value !== 'RUB');
@@ -109,7 +110,10 @@ const childReset = (reset) => {
 
 onMounted(() => {
   if(userStore.userData && userStore.userData.id) {
-    tariffsStore.getBalance(userStore.userData.id);
+    tariffsStore.getBalance(userStore.userData.id).then((res) => {
+      console.log(res);
+      isLoadedCurrency.value = res.currency;
+    });
     tariffsStore.getTariffs(userStore.userData.id);
   }
 });
