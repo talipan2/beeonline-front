@@ -33,11 +33,7 @@ export const useSettingStore = defineStore("setting", {
     changeDataModal: false,
     changeUserDataModal: false,
     createEntityFinalModal: false,
-    currencyList: [
-      {id: 2, name: 'Российский рубль', value: 'RUB'},
-      {id: 3, name: 'Доллар США', value: 'USD'},
-      {id: 4, name: 'Евро', value: 'EUR'},
-    ],
+    currencyList: [],
     isLoadingResponse: false,
     isTelegram: false,
     confirmModal: false,
@@ -155,8 +151,16 @@ export const useSettingStore = defineStore("setting", {
     async resetTelegramNotify(id) {
         return await useApi().post(`/users/${id}/reset-tg-chat`);
     },
-
+    async getCurrencyList() {
+        try {
+          const response = await commonApi.getCurrencyList();
+          if (response.data && response.data.data) {
+            this.currencyList = response.data.data.sort((a, b) => a.id - b.id);
+            return response.data.data
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      },
   },
-
-
 })

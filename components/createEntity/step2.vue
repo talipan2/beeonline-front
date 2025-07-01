@@ -103,12 +103,28 @@
               class="form-group__value" type="number" />
           </div>
           <div class="entity__data-item">
-            <label class="form-group__title entity__label">
+            <label class="form-group__title entity__label" :for="`price`">
               Предпочтительная цена *
               <CommonTooltip text="Укажите предпочтительную цену за единицу товара" />
             </label>
-            <UiInput :rules="{ required: true, min_value: 1 }" name="price" label="Предпочтительная цена" v-model="data.price"
-              class="form-group__value" type="number" />
+            <UiInput 
+              :rules="{ required: true, min_value: 1 }" 
+              :id="`price`"
+              name="price" 
+              label="Предпочтительная цена" 
+              v-model="data.price"
+              class="form-group__value" type="number" 
+            >
+              <UiSelect
+                :options="currencyList"
+                v-model="data.currency"
+                return-id
+                label="Валюта"
+                name="currency"
+                class="form-group__value entity__currency-select"
+                :error-show="false"
+              />
+            </UiInput>
           </div>
         </div>
       </div>
@@ -199,7 +215,9 @@
 </template>
 
 <script setup>
+import { fa } from 'intl-tel-input/i18n';
 import { useEntityStore } from '~/store/entityStore';
+import { useSettingStore } from '~/store/settingStore';
 import { getErrorsList } from '~/utils/getValidationErrors';
 
 const props = defineProps({
@@ -226,6 +244,7 @@ const props = defineProps({
 });
 
 const entityStore = useEntityStore();
+const settingStore = useSettingStore();
 
 const backLink = computed(() => {
   if(props.type === 'create') {
@@ -244,6 +263,20 @@ const currentEntity = computed(() => {
 })
 
 const errorList = ref({});
+
+const currencyList = computed(() => {
+  if(settingStore.currencyList.length > 0) {
+    return settingStore.currencyList
+      .filter(item => item.code !== 'bonus')
+      .map(item => ({
+        id: item.id,
+        label: item.code,
+        value: item.code
+      }))
+  } else {
+    return []
+  }
+});
 
 const getErrorList = (errors) => {
   errorList.value = errors
@@ -278,6 +311,12 @@ const minPart = [
 
 const freeStockOptions = computed(() => entityStore.entityData?.freeStock || []);
 
+onMounted(() => {
+  if(settingStore.currencyList.length === 0) {
+    settingStore.getCurrencyList()
+  }
+})
+
 </script>
 
 <style lang="scss">
@@ -293,6 +332,26 @@ const freeStockOptions = computed(() => entityStore.entityData?.freeStock || [])
     }
   }
 
+  &__currency-select {
+    margin-top: 0;
+    flex: 0 0 5em;
+    line-height: 1em;
+
+    .select__select {
+      border: none;
+      padding-block: 0;
+
+      &:focus {
+        box-shadow: none;
+      }
+    }
+
+  }
+
+  .invalid .entity__currency-select .select__select {
+    background: none;
+  }
+  
   &__label {
     display: flex;
     // column-gap: 0.3em;

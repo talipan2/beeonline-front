@@ -31,11 +31,11 @@ import { useLocationStore } from '~/store/locationStore';
 import { useOrganizationStore } from '~/store/organizationStore';
 import { useModal } from 'vue-final-modal';
 import CatalogOrdersStatusModal from "~/components/catalog/orders/statusModal.vue";
+import { useSettingStore } from '~/store/settingStore';
 
 const router = useRouter();
 const entityStore = useEntityStore();
-const organizationStore = useOrganizationStore();
-const locationStore = useLocationStore();
+const settingStore = useSettingStore();
 const data = ref({});
 const pubCard = ref({});
 const loading = ref(false);
@@ -53,7 +53,7 @@ const formatData = computed(() => {
         {name: 'Лекала:', value: entityStore.getEntityLabelById('patterns', data.value.pattern)},
         {name: 'Сырье:', value: data.value.material === 1 ? 'Заказчика' : data.value.material === 0 ? 'Исполнителя' : ''},
         {name: 'Размер партии:', value: parseInt(data.value.batch)},
-        {name: 'Цена за единицу продукции:', value: data.value.price},
+        {name: 'Цена за единицу продукции:', value: `${data.value.price} ${settingStore.getCurrencyNameById(data.value.currency_id)}`},
         {name: 'Сроки выполнения:', value: formatDate(data.value.deadline_at)},
         {name: 'Предпочтительные регионы производства:', value: locations.join(' / ')},
       ],
