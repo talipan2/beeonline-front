@@ -144,6 +144,10 @@ const props = defineProps({
   modalTitle: {
     type: String,
     default: 'Выберите город',
+  },
+  locationsByPerformers: {
+    type: Boolean,
+    default: false
   }
 });
 
@@ -522,12 +526,9 @@ function searchRegionAndCountry(cityId, regionId) {
 
 const loading = ref(false);
 
-watch(() => settingStore.chooseLocationModal, (newVal) => {
-  if (newVal && locations.value.length === 0) {
-    if (loading.value) return;
-    loading.value = true
-    locationStore.getLocations()
-      .then(res => {
+const getLocations = (params = {}) => {
+  locationStore.getLocations(params)
+  .then(res => {
         locations.value = res
         updateCitySelection();
         if (selectedRegionIds.value.length > 0) {
@@ -538,6 +539,17 @@ watch(() => settingStore.chooseLocationModal, (newVal) => {
       })
       .catch(err => console.log(err))
       .finally(() => loading.value = false)
+}
+
+watch(() => settingStore.chooseLocationModal, (newVal) => {
+  if (newVal && locations.value.length === 0) {
+    if (loading.value) return;
+    loading.value = true
+    if(props.locationsByPerformers) {
+      getLocations({by_performers: true})
+    } else {
+      getLocations()
+    }
   }
 })
 

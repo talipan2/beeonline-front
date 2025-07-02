@@ -1,8 +1,8 @@
 import axios from "axios";
 
 export default {
-  async getLocations() {
-    return axios.get(`locations`)
+  async getLocations(params = {}) {
+    return axios.get(`locations`, { params })
   },
 
   async getAdjacentCategories() {
