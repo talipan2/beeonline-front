@@ -22,7 +22,7 @@
         <span>- По вопросам информационного сотрудничества</span>
       </div> -->
     </div>
-    <h2 class="contacts-container__title">Менеджеры проекта</h2>
+    <h2 class="contacts-container__title">Команда проекта</h2>
     <div class="contacts-container__managers">
       <div class="contacts-container__manager" v-for="(manager, index) in managerList" :key="index">
         <div class="contacts-container__manager-image">
