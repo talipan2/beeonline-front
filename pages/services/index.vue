@@ -357,6 +357,10 @@ onBeforeUnmount(() => {
       border: 2px solid #6937a5;
     }
 
+    @include mobile {
+      order: 1;
+    }
+
   }
 
   &__btn-container {
@@ -373,8 +377,11 @@ onBeforeUnmount(() => {
     }
 
     @include mobile {
+      order: 2;
       &_type_mobile {
         display: flex;
+        flex-wrap: wrap;
+        gap: 2em;
         margin-bottom: 1.2em;
       }
 
