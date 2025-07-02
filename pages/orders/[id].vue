@@ -53,7 +53,7 @@ const formatData = computed(() => {
         {name: 'Лекала:', value: entityStore.getEntityLabelById('patterns', data.value.pattern)},
         {name: 'Сырье:', value: data.value.material === 1 ? 'Заказчика' : data.value.material === 0 ? 'Исполнителя' : ''},
         {name: 'Размер партии:', value: parseInt(data.value.batch)},
-        {name: 'Цена за единицу продукции:', value: `${data.value.price} ${settingStore.getCurrencyNameById(data.value.currency_id)}`},
+        {name: 'Цена за единицу продукции:', value: `${data.value.price} ${settingStore.getCurrencyCodeById(data.value.currency_id)}`},
         {name: 'Сроки выполнения:', value: formatDate(data.value.deadline_at)},
         {name: 'Предпочтительные регионы производства:', value: locations.join(' / ')},
       ],
@@ -95,7 +95,11 @@ useHead({
   ],
 });
 
-
+onMounted(() => {
+  if(settingStore.currencyList.length === 0) {
+    settingStore.getCurrencyList()
+  }
+})
 </script>
 
 <style lang="scss">

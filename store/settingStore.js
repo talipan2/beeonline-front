@@ -46,6 +46,10 @@ export const useSettingStore = defineStore("setting", {
     getCurrencyNameById: (state) => (id) => {
       const currency = state.currencyList.find(item => item.id == id);
       return currency ? currency.name : '';
+    },
+    getCurrencyCodeById: (state) => (id) => {
+      const currency = state.currencyList.find(item => item.id == id);
+      return currency ? currency.code : '';
     }
   },
   actions: {
