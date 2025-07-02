@@ -115,8 +115,8 @@ const handleSubmitPassword = (values, form) => {
   }
 
   &__input {
-    font-size: 1.6em;
-    padding: 1.25em;
+    font-size: 1.6rem;
+    padding: 1.25rem;
     position: relative;
     flex: 1;
   }
