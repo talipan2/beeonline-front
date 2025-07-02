@@ -22,7 +22,7 @@
   font-family: "lato", sans-serif;
   font-size: 1rem;
   padding: 1em;
-  padding-bottom: 6em;
+  padding-bottom: 8em;
 
   .breadcrumb-wrapper {
     display: none;
