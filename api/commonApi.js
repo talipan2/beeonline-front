@@ -84,6 +84,6 @@ export default {
   },
 
   async getCurrencyList() {
-    return axios.get(`organizations/currencies`)
+    return axios.get(`currencies`)
   },
 }
