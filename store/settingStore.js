@@ -156,6 +156,17 @@ export const useSettingStore = defineStore("setting", {
         return await useApi().post(`/users/${id}/reset-tg-chat`);
     },
 
+    async getCurrencyList() {
+      try {
+        const response = await commonApi.getCurrencyList();
+        if (response.data) {
+          return response.data
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
   },
 
 

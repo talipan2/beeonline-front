@@ -21,7 +21,7 @@ export const useTariffsStore = defineStore("tariffs", {
 
     actions: {
         async getBalance(userId) {
-            Api.getBalance(userId).then((data) => {
+            return Api.getBalance(userId).then((data) => {
                 this.userBalance = data.balance;
                 this.userBonuses = data.bonuses;
                 this.userCurrency = data.currency;
@@ -30,6 +30,7 @@ export const useTariffsStore = defineStore("tariffs", {
                 this.tariffExpiredAt = data.tariff_expired_at;
                 this.availableUserFeatures = data.services;
                 this.balanceLoaded = true;
+                return data;
             });
         },
 
@@ -53,8 +54,8 @@ export const useTariffsStore = defineStore("tariffs", {
             return Api.payServices(userId, data);
         },
 
-        async getTransactions(userId, page = 1) {
-            return Api.getTransactions(userId, page);
+        async getTransactions(userId, page = 1, withBonus) {
+            return Api.getTransactions(userId, page, withBonus);
         },
 
         async getInvoices(userId, page = 1) {

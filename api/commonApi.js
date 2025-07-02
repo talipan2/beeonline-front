@@ -81,5 +81,9 @@ export default {
 
   async telegramNotify(id) {
     return axios.get(`/users/${id}/tg-chat-code`)
-  }
+  },
+
+  async getCurrencyList() {
+    return axios.get(`organizations/currencies`)
+  },
 }
