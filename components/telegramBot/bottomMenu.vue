@@ -79,11 +79,11 @@ const isActiveRoute = (path) => {
     border: 1px solid var(--button-background-secondary);
     background-color: var(--bg-primary-color);
     border-radius: 50%;
-    padding: 0.6em;
+    // padding: 0.6em;
     transition: all 0.3s ease;
 
     svg {
-      width: 100%;
+      width: 40%;
       height: auto;
     }
   }
