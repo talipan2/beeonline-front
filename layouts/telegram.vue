@@ -1,25 +1,4 @@
 <script setup>
-import { useSettingStore } from '~/store/settingStore';
-
-
-const settingStore = useSettingStore();
-
-useHead({
-  script: [
-    {
-      src: 'https://telegram.org/js/telegram-web-app.js',
-      defer: true,
-      onload: () => {
-        if(window.Telegram.WebApp?.initData) {
-          settingStore.isTelegram = true
-        }  else {
-          settingStore.isTelegram = false
-        }
-      }
-    }
-  ]
-})
-
 </script>
 
 <template>
@@ -30,6 +9,7 @@ useHead({
         <slot />
       </ClientOnly>
     </main>
+    <TelegramBotBottomMenu />
   </div>
 </template>
 
@@ -42,6 +22,7 @@ useHead({
   font-family: "lato", sans-serif;
   font-size: 1rem;
   padding: 1em;
+  padding-bottom: 6em;
 
   .breadcrumb-wrapper {
     display: none;
