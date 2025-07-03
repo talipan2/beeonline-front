@@ -24,7 +24,7 @@
           :submitBtnText="stepsConfig[currentStep]?.submitBtnText"
           :errorsList="errorList"
         />
-        <div class="performer-register-layout__btn-container" v-if="stepsConfig[currentStep]?.type === 'pubCard'" >
+        <div class="performer-register-layout__btn-container" v-if="stepsConfig[currentStep]?.type === 'pubCard' && (currentStep !== 3 || organizationStore.servicesCount > 0)" >
           <UiButton v-if="stepsConfig[currentStep - 1]?.route" class="performer-register-layout__btn" variant="senary" size="large" :to="`/performer-register${stepsConfig[currentStep - 1].route}`">Назад</UiButton>
           <UiButton v-if="stepsConfig.length === currentStep + 1" type="submit" class="performer-register-layout__btn" variant="quinary" size="large">Сохранить данные</UiButton>
           <UiButton v-else type="submit" class="performer-register-layout__btn" variant="quinary" size="large" :disabled="saveButtonDisabled">Сохранить и продолжить</UiButton>
