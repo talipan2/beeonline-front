@@ -277,7 +277,12 @@ const handleSubmit = (value, form) => {
               if(res) {
                 userStore.checkAuth().then(res => {
                   toast.success('Публичная карта отправлена на модерацию')
-                  router.push('/profile')
+                  if(userStore.userData.organization?.currency_id == 2) {
+                    router.push('/profile')
+                  } else {
+                    settingStore.foreignerModal = true
+                    router.push('/tariffs')
+                  }
                 })
               }
             })

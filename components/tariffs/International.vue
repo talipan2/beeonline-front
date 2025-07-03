@@ -24,6 +24,7 @@
         </div>
         <UiButton type="button" class="international-tariffs__btn" variant="quinary" size="large" @click="handleOpenPayModal(tariff, price)">Подключить</UiButton>
       </div>
+      <TariffsForeignerModal @payFunction="handleOpenPayModal(tariff, price)"/>
     </TariffsCardLayout>
 		<template v-for="price in tariff.prices" :key="price">
 			<TariffsMobileCards

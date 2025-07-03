@@ -1,8 +1,8 @@
 <template>
   <div class="tariffs">
     <div class="tariffs__header">
-      <TariffsBalanceCard :userBalance="userBalance" :userBonuses="userBonuses" :currentCurrency="currentCurrency"/>
-      <TariffsPlanSummaryCard />
+      <TariffsBalanceCard class="tariffs__balance-card" :userBalance="userBalance" :userBonuses="userBonuses" :currentCurrency="currentCurrency"/>
+      <TariffsPlanSummaryCard class="tariffs__plan-summary-card" v-if="!(isInternational && tariffsStore.tariffName === 'Бесплатный')" />
     </div>
     <div class="tariffs__content" v-if="tariffsStore.tariffs && tariffsStore.tariffs.length">
       <div class="tariffs__content-header">
@@ -135,6 +135,14 @@ onMounted(() => {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 2.4em;
+  }
+
+  &__balance-card {
+    flex: 0 1 calc(50% - 1.2em);
+  }
+
+  &__plan-summary-card {
+    flex: 0 1 calc(50% - 1.2em);
   }
 
   &__title {
