@@ -11,19 +11,19 @@
         Внимание!
       </h2>
       <p class="foreigner-modal__description">
-        Для получения доступа ко всем возможностям сервиса, вам необходимо подключить «Международный» тариф
+        Ваша карточка компании отправлена на модерацию! В ближайшее время с вами свяжется менеджер.
       </p>
       <div class="foreigner-modal__buttons">
         <UiButton
           type="button"
-          variant="senary"
+          variant="quinary"
           size="large"
           class="foreigner-modal__button"
           @click="confirm"
         >
           Закрыть
         </UiButton>
-        <UiButton
+        <!-- <UiButton
           type="button"
           variant="quinary"
           size="large"
@@ -31,7 +31,7 @@
           @click="handleOpenPayModal"
         >
           Подключить тариф
-        </UiButton>
+        </UiButton> -->
       </div>
     </div>
   </template>
