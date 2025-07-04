@@ -11,7 +11,7 @@
         Внимание!
       </h2>
       <p class="foreigner-modal__description">
-        Ваша карточка компании отправлена на модерацию! В ближайшее время с вами свяжется менеджер.
+        {{ text }}
       </p>
       <div class="foreigner-modal__buttons">
         <UiButton
@@ -41,6 +41,13 @@
 
 <script setup>
 import { useSettingStore } from '~/store/settingStore';
+
+const props = defineProps({
+  text: {
+    type: String,
+    required: 'Ваша карточка компании отправлена на модерацию! В ближайшее время с вами свяжется менеджер.',
+  },
+});
 
 const settingStore = useSettingStore();
 

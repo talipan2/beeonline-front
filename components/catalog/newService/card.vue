@@ -2,7 +2,7 @@
   <div
     class="new-service-card"
     :class="{ 'new-service-card_type_revers': reversColor }">
-    <CommonNameplate v-if="data?.tariff?.name" class="new-service-card__nameplate" :text="data?.tariff?.name" />
+    <CommonNameplate v-if="data?.tariff?.name && data?.tariff?.name !== 'Международный'" class="new-service-card__nameplate" :text="data?.tariff?.name" />
     <div class="new-service-card__header">
       <div class="new-service-card__pubcard">
         <!-- <p class="new-service-card__pubcard-title">Название компании</p> -->

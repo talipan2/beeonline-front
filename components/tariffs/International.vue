@@ -23,9 +23,9 @@
           </ul>
         </div>
         <!-- <UiButton type="button" class="international-tariffs__btn" variant="quinary" size="large" @click="handleOpenPayModal(tariff, price)">Подключить</UiButton> -->
-        <UiButton class="international-tariffs__btn" variant="quinary" size="large" to="/support">Написать в поддержку</UiButton>
+        <UiButton type="button" class="international-tariffs__btn" variant="quinary" size="large" @click="handleOpenSupportModal">Написать в поддержку</UiButton>
       </div>
-      <TariffsForeignerModal @payFunction="handleOpenPayModal(tariff, price)"/>
+      <TariffsForeignerModal @payFunction="handleOpenPayModal(tariff, price)" :text="foreignerModalText"/>
     </TariffsCardLayout>
 		<template v-for="price in tariff.prices" :key="price">
 			<TariffsMobileCards
@@ -43,15 +43,30 @@
 
 <script setup>
 import { useSettingStore } from '~/store/settingStore';
+import { useSupportStore } from '~/store/supportStore';
 import { useTariffsStore } from '~/store/tariffsStore';
 
 
 const settingStore = useSettingStore();
 const tariffsStore = useTariffsStore();
+const supportStore = useSupportStore();
 const emit = defineEmits(['select']);
 
 const tariffs = computed(() => tariffsStore.tariffs);
 const services = computed(() => tariffsStore.services?.filter(service => service.tariffs.length));
+
+const foreignerModalText = ref('Ваша карточка компании отправлена на модерацию! В ближайшее время с вами свяжется менеджер.')
+
+const handleOpenSupportModal = () => {
+  supportStore.createSupportTicket({
+    type: 1,
+    description: 'Подключение международного тарифа',
+  }).then(() => {
+    foreignerModalText.value = 'Отправлен запрос в техническую поддержку. В ближайшее время с вами свяжется менеджер.'
+    settingStore.foreignerModal = true;
+  })
+}
+
 
 const handleOpenPayModal = (tariff, price) => {
     emit('select', {...tariff, price: price, currency: price.currency}, price.amount);
