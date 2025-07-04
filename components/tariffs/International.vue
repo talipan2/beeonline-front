@@ -22,7 +22,8 @@
             </template>
           </ul>
         </div>
-        <UiButton type="button" class="international-tariffs__btn" variant="quinary" size="large" @click="handleOpenPayModal(tariff, price)">Подключить</UiButton>
+        <!-- <UiButton type="button" class="international-tariffs__btn" variant="quinary" size="large" @click="handleOpenPayModal(tariff, price)">Подключить</UiButton> -->
+        <UiButton class="international-tariffs__btn" variant="quinary" size="large" to="/support">Написать в поддержку</UiButton>
       </div>
       <TariffsForeignerModal @payFunction="handleOpenPayModal(tariff, price)"/>
     </TariffsCardLayout>
@@ -134,7 +135,7 @@ function formatDescription({ description, quantity }, subDuration) {
     font-size: 1.6em;
     line-height: 1.3em;
     display: block;
-    columns: 2;
+    // columns: 2;
     gap: 1em;
   }
 
