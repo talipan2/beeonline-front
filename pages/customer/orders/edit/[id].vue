@@ -73,6 +73,7 @@ const orderData = ref({
   completionDate: '',
   locations: [],
   isSafeDeal: false,
+  currency: null,
 })
 
 const previewCardData = computed(() => ({
@@ -132,6 +133,7 @@ const currentHandleSubmit = computed(() => {
           description: orderData.value.description,
           rawMaterials: orderData.value.rawMaterials,
           price: orderData.value.price,
+          currency_id: orderData.value.currency,
           batch: orderData.value.batch,
           patterns: orderData.value.patterns,
           termsOfCooperation: orderData.value.termsOfCooperation,
@@ -225,7 +227,8 @@ await entityStore.getOrder(id).then(res => {
         regions: res.data.regions?.map(region => ({...region, name: locationFormatter({regions: [{...region}]}).locations[0]})) || [],
         countries: res.data.countries?.map(country => ({...country, name: locationFormatter({countries: [{...country}]}).locations[0]})) || []},
       isSafeDeal: Boolean(res.data.is_safedeal),
-      isAgreedOrderPlacement: Boolean(res.data.tg_publish)
+      isAgreedOrderPlacement: Boolean(res.data.tg_publish),
+      currency: res.data.currency_id || 2,
     }
   }
 })

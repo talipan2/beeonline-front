@@ -14,6 +14,7 @@
 <script setup>
 import { useEntityStore } from '~/store/entityStore';
 import { useLocationStore } from '~/store/locationStore';
+import { useSettingStore } from '~/store/settingStore';
 
 
 const props = defineProps({
@@ -29,6 +30,7 @@ const props = defineProps({
 
 const entityStore = useEntityStore();
 const locationStore = useLocationStore();
+const settingStore = useSettingStore();
 const firstCardRef = ref(null);
 const emit = defineEmits(['updateOrderCardRef']);
 
@@ -49,7 +51,7 @@ const orderData = computed(() => {
         { id: 3, name: 'Партия', value: Number(item.batch) },
         { id: 4, name: 'Лекала', value: entityStore.getEntityLabelById('patterns', item.pattern) },
         { id: 5, name: 'Сырье', value: entityStore.getEntityLabelById('rawMaterials', item.material) },
-        { id: 6, name: 'Цена за единицу продукции', value: item.price },
+        { id: 6, name: 'Цена за единицу продукции', value: `${item.price} ${settingStore.getCurrencyCodeById(item.currency_id)}`},
         { id: 7, name: 'Срок выполнения', value: formatDate(item.deadline_at) },
         { id: 8, name: 'Описание', value: item.description },
       ],
@@ -64,6 +66,12 @@ const setFirstCardRef = (index) => {
 watch(() => firstCardRef.value, (newVal) => {
   emit('updateOrderCardRef', firstCardRef.value[0]);
 }, {deep: true})
+
+onMounted(() => {
+  if(settingStore.currencyList.length === 0) {
+    settingStore.getCurrencyList()
+  }
+})
 
 </script>
 

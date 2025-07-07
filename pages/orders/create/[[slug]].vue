@@ -114,6 +114,7 @@ const currentHandleSubmit = computed(() => {
             cities: order.value.locations.cities.map(item => item.id),
             regions: order.value.locations.regions.map(item => item.id),
             countries: order.value.locations.countries.map(item => item.id),
+            currency_id: order.value.currency,
           }, form).then((res) => {
             order.value.fillRating = res.fill_rating
             entityStore.updateOrderStep(order.value.id, 2)
@@ -249,6 +250,7 @@ onBeforeMount(async () => {
                 ? 0
                 : 1,
             price: orderInProgress.price ? Number(orderInProgress.price) : '',
+            currency: orderInProgress.currency_id || 2,
             completionDate: orderInProgress.deadline_at,
             locations: {
               cities: orderInProgress.cities?.map(item => ({ id: item.id, name: locationFormatter(item) })) ?? [],

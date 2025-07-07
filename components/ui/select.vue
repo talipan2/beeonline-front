@@ -15,6 +15,7 @@
         v-bind="field"
         :disabled="disabled"
         :required="required"
+        @change="handleSelectChange"
       >
         <option
           class="select__option"
@@ -26,6 +27,7 @@
           {{ option.label }}
         </option>
       </select>
+      <div class="select__arrow"></div>
       <div class="invalid-error" v-if="errorShow">
         <span v-if="errors.length && meta.touched" class="invalid-error__text">{{ errors[0] }}</span>
       </div>
@@ -74,20 +76,29 @@ const props = defineProps({
   }
 });
 
+const handleSelectChange = (event) => {
+  // Убираем фокус после выбора опции
+  event.target.blur();
+};
+
 </script>
 
 <style lang="scss">
 .select {
+  position: relative;
+
+  &:focus-within &__arrow {
+    transform: translateY(-50%) rotate(180deg);
+  }
+
   &__select {
     font-size: 1em;
-    padding: 1rem;
+    padding: 1rem 3rem 1rem 1rem;
     width: 100%;
     border: 1px solid var(--border-color-secondary);
     color: var(--text-color-senary);
     appearance: none;
-    background: #fff
-      url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='15'%3E%3Cpath stroke='%23343a40' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='m12 6-4.5 4L3 6' fill='none'/%3E%3C/svg%3E")
-      right 1rem center/15px 15px no-repeat;
+    background: #fff;
     cursor: pointer;
 
     &:focus {
@@ -96,6 +107,20 @@ const props = defineProps({
       color: var(--text-color-senary);
       outline: none;
     }
+  }
+
+  &__arrow {
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    transform: translateY(-50%);
+    width: 15px;
+    height: 15px;
+    background: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='15'%3E%3Cpath stroke='%23343a40' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='m12 6-4.5 4L3 6' fill='none'/%3E%3C/svg%3E") no-repeat center center;
+    background-size: contain;
+    transition: transform 0.2s ease;
+    pointer-events: none;
+    z-index: 1;
   }
 
   &_type_disabled {
