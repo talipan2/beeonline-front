@@ -23,7 +23,7 @@
           </ul>
         </div>
         <!-- <UiButton type="button" class="international-tariffs__btn" variant="quinary" size="large" @click="handleOpenPayModal(tariff, price)">Подключить</UiButton> -->
-        <UiButton type="button" class="international-tariffs__btn" variant="quinary" size="large" @click="handleOpenSupportModal">Написать в поддержку</UiButton>
+        <UiButton type="button" class="international-tariffs__btn" variant="quinary" size="large" @click="handleOpenSupportModal">Подключить</UiButton>
       </div>
       <TariffsForeignerModal @payFunction="handleOpenPayModal(tariff, price)" :text="foreignerModalText"/>
     </TariffsCardLayout>
