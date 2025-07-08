@@ -41,6 +41,7 @@ export const useSettingStore = defineStore("setting", {
     returnRegisterModal: false,
     registerRedirectPath: "",
     registerRedirectConfirm: false,
+    foreignerModal: false,
   }),
   getters: {
     getCurrencyNameById: (state) => (id) => {

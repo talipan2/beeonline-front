@@ -22,8 +22,10 @@
             </template>
           </ul>
         </div>
-        <UiButton type="button" class="international-tariffs__btn" variant="quinary" size="large" @click="handleOpenPayModal(tariff, price)">Подключить</UiButton>
+        <!-- <UiButton type="button" class="international-tariffs__btn" variant="quinary" size="large" @click="handleOpenPayModal(tariff, price)">Подключить</UiButton> -->
+        <UiButton type="button" class="international-tariffs__btn" variant="quinary" size="large" @click="handleOpenSupportModal">Подключить</UiButton>
       </div>
+      <TariffsForeignerModal @payFunction="handleOpenPayModal(tariff, price)" :text="foreignerModalText"/>
     </TariffsCardLayout>
 		<template v-for="price in tariff.prices" :key="price">
 			<TariffsMobileCards
@@ -41,15 +43,30 @@
 
 <script setup>
 import { useSettingStore } from '~/store/settingStore';
+import { useSupportStore } from '~/store/supportStore';
 import { useTariffsStore } from '~/store/tariffsStore';
 
 
 const settingStore = useSettingStore();
 const tariffsStore = useTariffsStore();
+const supportStore = useSupportStore();
 const emit = defineEmits(['select']);
 
 const tariffs = computed(() => tariffsStore.tariffs);
 const services = computed(() => tariffsStore.services?.filter(service => service.tariffs.length));
+
+const foreignerModalText = ref('Ваша карточка компании отправлена на модерацию! В ближайшее время с вами свяжется менеджер.')
+
+const handleOpenSupportModal = () => {
+  supportStore.createSupportTicket({
+    type: 7,
+    description: 'Международный тариф',
+  }).then(() => {
+    foreignerModalText.value = 'Отправлен запрос в техническую поддержку. В ближайшее время с вами свяжется менеджер.'
+    settingStore.foreignerModal = true;
+  })
+}
+
 
 const handleOpenPayModal = (tariff, price) => {
     emit('select', {...tariff, price: price, currency: price.currency}, price.amount);
@@ -133,7 +150,7 @@ function formatDescription({ description, quantity }, subDuration) {
     font-size: 1.6em;
     line-height: 1.3em;
     display: block;
-    columns: 2;
+    // columns: 2;
     gap: 1em;
   }
 
