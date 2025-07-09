@@ -337,7 +337,7 @@ const handleClick = async(innSkip) => {
 }
 
 const innRequired = computed(() => {
-  return userStore.role == 'performer'
+  return userStore.role == 'performer' && props.modelValue.countryId == 1
 })
 
 const data = computed({
@@ -346,6 +346,19 @@ const data = computed({
   },
   set(value) {
     emit("update:modelValue", value);
+  }
+});
+
+let initialized = false;
+watch(() => props.modelValue.inn, (inn) => {
+  if (!initialized && inn) {
+    initialized = true;
+  }
+}, { immediate: true });
+
+watch(() => data.value.countryId, (newVal, oldVal) => {
+  if(initialized) {
+    data.value.inn = '';
   }
 });
 
