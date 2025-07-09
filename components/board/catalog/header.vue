@@ -42,6 +42,7 @@
 			<CommonDropDownMultiselect
 				title="Категории"
 				:options="categoryOptions"
+				class="board-catalog-header__category"
 			>
 				<template #iconLeft>
 					<SvgoJacket />
@@ -86,6 +87,7 @@
 		font-size: 1rem;
 		&__container {
 			display: flex;
+			flex-wrap: wrap;
 			align-items: center;
 			gap: 3.2em;
 		}
@@ -103,6 +105,9 @@
 		}
 
 		&__sort {
+			.drop-down-select__dropdown-button {
+				padding: 0.75em;
+			}
 			// Анимация стрелок
 			.sort-svg .sort-svg__arrow-up,
 			.sort-svg .sort-svg__arrow-down {
@@ -113,6 +118,64 @@
 			}
 			&:hover .sort-svg .sort-svg__arrow-down {
 				transform: translateY(4px);
+			}
+		}
+
+		&__category {
+			.drop-down-multiselect__dropdown-button {
+				padding: 0.75em;
+			}
+
+			.drop-down-multiselect__dropdown-left-icon {
+				width: 1.25em;
+				height: 1.25em;
+				svg {
+					width: 100%;
+					height: 100%;
+				}
+			}
+		}
+
+		@include mobile {
+			&__create {
+				order: 4;
+				flex-basis: 100%;
+			}
+
+			&__search {
+				order: 1;
+				flex-basis: 100%;
+			}
+
+			&__sort {
+				order: 3;
+				flex: 0 1 calc(50% - 1.6em);
+
+				.drop-down-select__dropdown-button-icon {
+					display: none;
+				}
+
+				.drop-down-select__dropdown-button {
+					font-size: 1.3em;
+					background-color: transparent;
+					box-shadow: none;
+					padding-inline: 0;
+					column-gap: 0.5em;
+
+					@include hover {
+						box-shadow: none;
+					}
+				}
+			}
+
+			&__category {
+				order: 2;
+				flex: 0 1 calc(50% - 1.6em);
+
+				.drop-down-multiselect__dropdown-button
+					svg:not(.drop-down-multiselect__dropdown-left-icon svg) {
+					display: none;
+				}
 			}
 		}
 	}

@@ -71,7 +71,7 @@
 		&__dropdown-button {
 			font-size: 1.6em;
 			font-weight: 400;
-			column-gap: 1em;
+			column-gap: 0.5em;
 			text-transform: none;
 
 			svg {

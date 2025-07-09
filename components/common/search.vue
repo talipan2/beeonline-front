@@ -64,7 +64,7 @@
 
 <style lang="scss">
 	.search-input {
-		font-size: 1rem;
+		font-size: 1em;
 		box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.07);
 		background: #fff;
 		border-radius: 8px;
@@ -102,6 +102,12 @@
 			font-weight: 400;
 			color: #76768f;
 			background-color: transparent;
+			padding: 0;
+			line-height: 1.5em;
+
+			@include mobile {
+				font-size: 1em;
+			}
 		}
 
 		.input-container:focus-within {

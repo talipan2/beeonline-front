@@ -245,10 +245,10 @@
 
 	.btn-elevated {
 		font-size: 1em;
-		padding: 1.1em 1.4em !important;
+		padding: 1.1em 1.4em;
 		box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.07);
 		background: #fff;
-		border-radius: 8px !important;
+		border-radius: 8px;
 		color: var(--text-color-monodecimal);
 		transition:
 			box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1),
