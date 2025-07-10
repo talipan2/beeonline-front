@@ -1,5 +1,6 @@
 import { useUserStore } from "~/store/userStore";
 import axios from "axios";
+import { useSettingStore } from "~/store/settingStore";
 
 export default defineNuxtRouteMiddleware(async(to, from) => {
     if (to.meta.ignoreAuth) {
@@ -7,6 +8,7 @@ export default defineNuxtRouteMiddleware(async(to, from) => {
       }
 
   const userStore = useUserStore();
+  const settingStore = useSettingStore();
   const router = useRouter();
 
   const publicPaths = [
@@ -59,7 +61,11 @@ export default defineNuxtRouteMiddleware(async(to, from) => {
       await userStore.checkAuth();
     } catch (error) {
       if(isPublicRoute) return;
-      router.push('/login');
+      if(settingStore.isTelegram) {
+        router.push('/telegram');
+      } else {
+        router.push('/login');
+      }
       console.error('Ошибка при проверке авторизации:', error);
     }
   }
