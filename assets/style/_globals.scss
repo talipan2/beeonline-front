@@ -582,17 +582,18 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .invalid {
+
   input, textarea {
     background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23da1e28'%3E%3Ccircle cx='6' cy='6' r='4.5'/%3E%3Cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3E%3Ccircle cx='6' cy='8.2' r='.6' fill='%23da1e28' stroke='none'/%3E%3C/svg%3E");
     background-position: right calc(.25em + .5rem) center;
     background-repeat: no-repeat;
     background-size: 1em 1em;
-    border-color: #da1e28;
+    border-color: #da1e28 !important;
     padding-right: calc(1em + 2rem);
   }
 
   textarea {
-    border-color: var(--border-color-quaternary);
+    border-color: #da1e28;
     background-position: top calc(.25em + .5rem) right calc(.25em + .5rem);
     padding-right: calc(1em + 2rem);
   }
@@ -610,7 +611,19 @@ input[type="number"]::-webkit-inner-spin-button {
 
 .input-container.invalid {
   border-color: #da1e28 !important;
+
+  &:focus-within {
+    box-shadow: var(--box-shadow-input-invalid) !important;
+  }
 }
+
+.text-area.invalid {
+  .text-area__input:focus {
+    box-shadow: var(--box-shadow-input-invalid) !important;
+  }
+}
+
+
 
 // табы
 .tabs {
