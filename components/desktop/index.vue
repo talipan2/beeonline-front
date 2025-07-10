@@ -83,7 +83,7 @@
           <div class="desktop__balance balance-card" :class="{'loading' : pubCardLoader}">
             <div class="balance-card__header">
               <p class="balance-card__balance">{{ formatMoney(userBalance, userCurrency, 2, false) }}<span class="balance-card__currency"> {{ userCurrency }}</span></p>
-              <p class="balance-card__balance">{{ formatMoney(userBonuses, 'bonuses') }} <span class="balance-card__currency"> баллов</span></p>
+              <p class="balance-card__balance" v-if="userCurrency === 'RUB'">{{ formatMoney(userBonuses, 'bonuses') }} <span class="balance-card__currency"> баллов</span></p>
             </div>
             <div class="balance-card__details-list balance-card__details-list_type_desktop">
               <div class="balance-card__details-header ">
@@ -380,17 +380,28 @@ watch(() => userStore.userPubCard, () => {
   };
 }, {deep: true, immediate: true});
 
+// watch(() => userCurrency.value, () => {
+//   tariffsStore.getTransactions(userStore.userData?.id, 1, userCurrency.value === 'RUB')
+//     .then(res => {
+//       transactionsList.value = res.data && res.data.length ? res.data.slice(0, 5) : [];
+//     }).finally(() => {
+//       pubCardLoader.value = false
+//     })
+// }, {deep: true, immediate: true})
+
 onMounted(() => {
   if(userStore.userData && userStore.userData.id) {
     userStore.checkAuth();
     pubCardLoader.value = true;
-    tariffsStore.getBalance(userStore.userData.id);
-    tariffsStore.getTransactions(userStore.userData.id)
-    .then(res => {
-      transactionsList.value = res.data && res.data.length ? res.data.slice(0, 5) : [];
-    }).finally(() => {
-      pubCardLoader.value = false
+    tariffsStore.getBalance(userStore.userData.id).then(res => {
+    tariffsStore.getTransactions(userStore.userData?.id, 1, userCurrency.value === 'RUB')
+      .then(res => {
+        transactionsList.value = res.data && res.data.length ? res.data.slice(0, 5) : [];
+      }).finally(() => {
+        pubCardLoader.value = false
+      })
     })
+
   }
 
 

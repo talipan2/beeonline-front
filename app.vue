@@ -1,11 +1,13 @@
 <template>
-  <NuxtLayout >
+  <NuxtLayout :name="layout">
     <NuxtPage />
   </NuxtLayout>
 </template>
 
 <script setup>
+import { useSettingStore } from '~/store/settingStore';
 
+const settingStore = useSettingStore();
 useHead({
   title: 'Международный цифровой сервис поиска партнеров в сфере легкой промышленности',
   meta: [
@@ -14,7 +16,24 @@ useHead({
       content: 'Международный цифровой сервис поиска партнеров для контрактного производства в сфере легкой промышленности, соединяющий фабрики с потенциальными заказчиками',
     },
   ],
+  script: [
+    {
+      src: 'https://telegram.org/js/telegram-web-app.js',
+      defer: true,
+      onload: () => {
+        if(window.Telegram.WebApp?.initData) {
+          settingStore.isTelegram = true
+        }  else {
+          settingStore.isTelegram = false
+        }
+      }
+    }
+  ]
 });
+
+const layout = computed(() => {
+  return settingStore.isTelegram ? 'telegram' : 'default'
+})
 
 const route = useRoute()
 

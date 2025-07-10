@@ -1,5 +1,5 @@
 <template>
-  <div class="phone-mask input">
+  <div class="phone-mask input" :class="meta.touched && !meta.valid ? 'invalid' : ''">
     <Field
       :rules="validatePhone"
       v-slot="{ field, errors, meta }"
@@ -22,7 +22,7 @@
           nationalMode: false,
           preferredCountries: ['ru'],
           utilsScript: 'https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/utils.js',
-          containerClass: 'input-container'
+          containerClass: `input-container`
         }"
 
         :inputProps="{
@@ -32,6 +32,7 @@
 
         @changeNumber="handleChangeNumber"
         @countryChange="handleCountryChange"
+        @blur="handleBlur"
       />
 
       <div class="invalid-error" v-if="rules">
@@ -46,7 +47,7 @@ import IntlTelInput from "intl-tel-input/vueWithUtils";
 import "intl-tel-input/styles";
 import {ru} from "intl-tel-input/i18n";
 import { useField } from 'vee-validate';
-import { ref } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 
 const props = defineProps({
   modelValue: {
@@ -74,11 +75,17 @@ const intlTelInput = ref(null);
 const validatePhone = (value) => {
   if (!value) return `Поле "${props.label}" обязательно для заполнения`;
 
-  const isValid = intlTelInput.value?.instance?.isValidNumber();
-  return isValid || `Неверный формат номера телефона для поля "${props.label}"`;
+  // Проверяем валидность через instance если он доступен
+  if (intlTelInput.value?.instance) {
+    const isValid = intlTelInput.value.instance.isValidNumber();
+    return isValid || `Неверный формат номера телефона для поля "${props.label}"`;
+  }
+  
+  // Если instance недоступен, считаем поле валидным пока не проверим
+  return true;
 };
 
-const { setErrors } = useField(props.name, validatePhone);
+const { setValue, setTouched, handleBlur, meta } = useField(props.name, validatePhone);
 
 const handleCountryChange = () => {
   // При смене страны нужно перевалидировать номер
@@ -93,24 +100,22 @@ const handleChangeNumber = (number) => {
   const isValid = intlTelInput.value?.instance?.isValidNumber();
   const formattedNumber = intlTelInput.value.instance.getNumber();
 
-  if (isValid) {
-    setErrors(null);
-  } else {
-    setErrors(`Неверный формат номера телефона для поля "${props.label}"`);
-  }
-
+  // Обновляем значение поля в vee-validate
+  setValue(formattedNumber);
   emit('update:modelValue', {...props.modelValue, phone: formattedNumber, country_code: region?.iso2});
 }
 
 watch(() => props.modelValue, () => {
   if(props.modelValue?.phone) {
     intlTelInput.value.instance.setNumber(props.modelValue.phone);
+    setValue(props.modelValue.phone);
   }
 }, {deep: true, once: true})
 
 onMounted(() => {
   if(props.modelValue?.phone) {
     intlTelInput.value.instance.setNumber(props.modelValue.phone);
+    setValue(props.modelValue.phone);
   }
 })
 </script>
@@ -163,6 +168,12 @@ onMounted(() => {
       border-color: var(--border-color-input-focus);
       box-shadow: var(--box-shadow-input);
     }
+  }
+}
+
+.phone-mask.invalid {
+  .input-container {
+    border-color: #da1e28 !important;
   }
 }
 </style>

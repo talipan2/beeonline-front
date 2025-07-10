@@ -86,7 +86,7 @@
           "
         >
           <label class="form-group__title">
-            ИНН организации
+            Для пользователей из РФ: ИНН организации
             <span
               >(Введите ИНН и нажмите на кнопку поиска, чтобы система определила
               вас){{ innRequired ? '*' : '' }}</span
@@ -183,7 +183,7 @@
           v-if="data.countryId !== 1"
         >
           <label class="form-group__title">
-            Идентификационный номер организации
+            Для пользователей из РФ: Идентификационный номер организации
             <span
               >(Введите номер и нажмите на кнопку поиска, чтобы система определила
               вас){{ innRequired ? '*' : '' }}</span
@@ -337,7 +337,7 @@ const handleClick = async(innSkip) => {
 }
 
 const innRequired = computed(() => {
-  return userStore.role == 'performer'
+  return userStore.role == 'performer' && props.modelValue.countryId == 1
 })
 
 const data = computed({
@@ -346,6 +346,19 @@ const data = computed({
   },
   set(value) {
     emit("update:modelValue", value);
+  }
+});
+
+let initialized = false;
+watch(() => props.modelValue.inn, (inn) => {
+  if (!initialized && inn) {
+    initialized = true;
+  }
+}, { immediate: true });
+
+watch(() => data.value.countryId, (newVal, oldVal) => {
+  if(initialized) {
+    data.value.inn = '';
   }
 });
 

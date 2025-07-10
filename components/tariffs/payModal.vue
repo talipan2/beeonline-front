@@ -163,6 +163,7 @@ const handlePayment = () => {
       if (props.reset) props.reset();
       if (props.deleteResetFunction) props.deleteResetFunction();
       tariffsStore.getBalance(userId.value);
+      settingStore.foreignerModal = false;
     });
   }
 }

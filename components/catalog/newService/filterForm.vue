@@ -11,6 +11,7 @@
         errorLabel="Регионы производства"
         name="location"
         modal-title="Выберите регионы"
+        locationsByPerformers
       />
     </div>
     <div class="filter-modal__item">

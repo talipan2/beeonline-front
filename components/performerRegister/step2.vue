@@ -78,14 +78,23 @@
           <template v-if="!services?.length">
             <PerformerRegisterServiceForm />
           </template>
-          <UiButton
-            v-if="services?.length === 0"
-            type="submit"
-            variant="quinary"
-            size="large"
-            class="new-service-card-layout__add-service new-service-card-layout__add-service_type_strong">
-            Добавить услугу
-          </UiButton>
+          <div class="new-service-card-layout__buttons-list" v-if="services?.length === 0">
+            <UiButton
+              type="button"
+              variant="senary"
+              size="large"
+              class="new-service-card-layout__back-button"
+              @click="router.push('/performer-register/step2')">
+              Назад
+            </UiButton>
+            <UiButton
+              type="submit"
+              variant="quinary"
+              size="large"
+              class="new-service-card-layout__add-service new-service-card-layout__add-service_type_strong">
+              Добавить услугу
+            </UiButton>
+          </div>
         </UiForm>
         <UiButton
           v-if="services?.length > 0 && availableServicesCount > 0"
@@ -257,6 +266,8 @@
   const addNewServiceModal = ref(false);
   const serviceList = ref(null);
   const isLoading = ref(false);
+
+  const router = useRouter();
 
   // Лимит услуг для создания
   const availableServicesCount = ref(0);
@@ -524,6 +535,17 @@ watch(() => services.value, (newVal) => {
     &__limit-services-count {
       font-weight: 600;
       color: var(--text-color-ternary);
+    }
+
+    &__buttons-list {
+      display: flex;
+      column-gap: 1em;
+      justify-content: flex-end;
+    }
+
+    &__back-button {
+      font-size: 1.2em;
+      text-transform: uppercase;
     }
 
     &__add-service {

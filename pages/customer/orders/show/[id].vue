@@ -14,6 +14,7 @@
 <script setup>
 import { useEntityStore } from '~/store/entityStore';
 import { useLocationStore } from '~/store/locationStore';
+import { useSettingStore } from '~/store/settingStore';
 import { useUserStore } from '~/store/userStore';
 
 definePageMeta({
@@ -24,6 +25,7 @@ definePageMeta({
 const router = useRouter();
 const entityStore = useEntityStore();
 const locationStore = useLocationStore();
+const settingStore = useSettingStore();
 const userStore = useUserStore();
 
 const roleName = userStore.getRoleNameForBreadcrumbs;
@@ -52,6 +54,7 @@ const orderProps = computed(() => {
         : ''},
       rawMaterials: {label: "Сырье", value: !order.value.material ? 'Исполнителя' : 'Заказчика'},
       pattern: {label: "Лекала", value: order.value.pattern ? 'Есть лекала' : 'Нужен конструктор'},
+      price: {label: "Цена за единицу продукции", value: `${order.value.price} ${settingStore.getCurrencyCodeById(order.value.currency_id)}`},
       completionDate: {label: "Срок выполнения", value: `До ${formatDate(order.value.deadline_at)}`},
       placeOfProduction: {
         label: "Предпочтительные регионы производства",
@@ -73,4 +76,9 @@ await entityStore.getOrder(router.currentRoute.value.params.id)
 //   .finally(() => isLoading.value = false)
 // })
 
+onMounted(() => {
+  if(settingStore.currencyList.length === 0) {
+    settingStore.getCurrencyList()
+  }
+})
 </script>

@@ -24,7 +24,7 @@
           :submitBtnText="stepsConfig[currentStep]?.submitBtnText"
           :errorsList="errorList"
         />
-        <div class="performer-register-layout__btn-container" v-if="stepsConfig[currentStep]?.type === 'pubCard'" >
+        <div class="performer-register-layout__btn-container" v-if="stepsConfig[currentStep]?.type === 'pubCard' && (currentStep !== 3 || organizationStore.servicesCount > 0)" >
           <UiButton v-if="stepsConfig[currentStep - 1]?.route" class="performer-register-layout__btn" variant="senary" size="large" :to="`/performer-register${stepsConfig[currentStep - 1].route}`">Назад</UiButton>
           <UiButton v-if="stepsConfig.length === currentStep + 1" type="submit" class="performer-register-layout__btn" variant="quinary" size="large">Сохранить данные</UiButton>
           <UiButton v-else type="submit" class="performer-register-layout__btn" variant="quinary" size="large" :disabled="saveButtonDisabled">Сохранить и продолжить</UiButton>
@@ -153,12 +153,12 @@ const adviceList = computed(() => {
         },
         {
           title: 'ИНН',
-          description: 'Введите ИНН и нажмите кнопку поиска. Система автоматически найдет вас в базе и заполнит форму.',
+          description: 'Для пользователей из РФ: введите ИНН и нажмите кнопку поиска. Система автоматически найдет вас в базе и заполнит форму.',
           selection: 'Это обязательное поле.'
         },
         {
           title: 'Юридическое название организации',
-          description: 'Система автоматически определяет название организации на основе ИНН. Если название отображается неверно, вы можете изменить его вручную.',
+          description: 'Для пользователей из РФ: система автоматически определяет название организации на основе ИНН. Если название отображается неверно, вы можете изменить его вручную.',
           selection: 'Это обязательное поле. Используйте действительное юридическое название организации.'
         },
       ]
@@ -277,7 +277,12 @@ const handleSubmit = (value, form) => {
               if(res) {
                 userStore.checkAuth().then(res => {
                   toast.success('Публичная карта отправлена на модерацию')
-                  router.push('/profile')
+                  if(userStore.userData.organization?.currency_id == 2) {
+                    router.push('/profile')
+                  } else {
+                    settingStore.foreignerModal = true
+                    router.push('/tariffs')
+                  }
                 })
               }
             })
