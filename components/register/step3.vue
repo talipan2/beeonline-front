@@ -37,6 +37,7 @@
           :is-required="true"
           errorLabel="Регионы производства"
           modalTitle="Выберите регион"
+          locationsByPerformers
         />
         <div class="register__btn-container" v-if="router.currentRoute.value.path.includes('/register')">
           <UiButton class="register__btn" variant="senary" size="large" to="/register/step2">Назад</UiButton>

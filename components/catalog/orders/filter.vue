@@ -28,6 +28,7 @@
           class="filter__location"
           :type="['selectCountry', 'selectRegions']"
           name="location"
+          locationsByPerformers
         />
       </div>
       <div class="filter__item" ref="tutorialRef3">
