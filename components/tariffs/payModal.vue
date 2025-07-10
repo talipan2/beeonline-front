@@ -155,6 +155,11 @@ const handlePayment = () => {
       if (props.reset) props.reset();
       if (props.deleteResetFunction) props.deleteResetFunction();
       tariffsStore.getBalance(userId.value);
+      paymentData.services.forEach(service => {
+        if(service.id && (service.id == 21 || service.id == 22)) {
+          settingStore.openContactsModal = true;
+        }
+      });
     });
   } else {
     const tariff = data.data;
