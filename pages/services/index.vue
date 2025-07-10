@@ -32,9 +32,21 @@
         <CommonSelectableButtons :options="categoryList" v-model="filter.categories" mobileButtonText="Категории" :iconButton="clothes">
           <div class="new-service__filters" :class="isMobile ? 'new-service__filter_type_mobile' : 'new-service__filter_type_desktop'">
             <CatalogNewServiceFilter class="new-service__filter" @updateFilter="handleUpdateFilter" @resetFilter="handleResetFilter" v-model="filter"/>
+            <UiButton 
+              type="button" 
+              class="new-service__open-contacts-btn" 
+              :class="{'is-active': filter.open_contacts}" 
+              variant="secondary" 
+              size="large" 
+              @click="filter.open_contacts = !filter.open_contacts"
+            >
+              Фабрики с открытыми контактами
+            </UiButton>
             <template v-if="!isMobile">
-              <UiButton type="button" class="new-service__btn" variant="default" :without-padding="true" @click="handleResetFilter">Сбросить фильтры</UiButton>
-              <UiButton type="button" class="new-service__btn" variant="quinary" size="large" @click="handleUpdateFilter(filter)">Применить фильтры</UiButton>
+              <div class="new-service__btn-container">
+                <UiButton type="button" class="new-service__btn" variant="default" :without-padding="true" @click="handleResetFilter">Сбросить фильтры</UiButton>
+                <UiButton type="button" class="new-service__btn" variant="quinary" size="large" @click="handleUpdateFilter(filter)">Применить фильтры</UiButton>
+              </div>
             </template>
           </div>
           <template v-if="isMobile">
@@ -113,6 +125,7 @@ const filter = ref({
   free_stock: null,
   verification: null,
   batch_id: null,
+  open_contacts: false,
 });
 
 
@@ -128,11 +141,16 @@ const handleResetFilter = () => {
     free_stock: null,
     rawMaterials: null,
     batch_id: null,
+    open_contacts: false,
   }
   handleUpdateFilter();
 }
 
 watch(() => filter.value.categories, (newValue) => {
+  handleUpdateFilter(filter.value);
+})
+
+watch(() => filter.value.open_contacts, (newValue) => {
   handleUpdateFilter(filter.value);
 })
 
@@ -154,11 +172,10 @@ const handleUpdateFilter = (data) => {
 
   if(loading.value) return
 
-  console.log(data)
-
   // добавление квери параметров для роутинга
   const newQuery = {
     type: 'performer',
+    open_contacts: filter.value.open_contacts,
     page: data.page ? data.page : undefined,
     categories: data.categories ? data.categories.join(',') : undefined,
     countries: data.location && data.location.countries ? data.location.countries?.map(item => item.id).join(',') : undefined,
@@ -174,6 +191,7 @@ const handleUpdateFilter = (data) => {
   // добавление квери параметров для запроса
   const filterQuery = {
     type: 'performer',
+    open_contacts: filter.value.open_contacts,
     page: data.page ? data.page : undefined,
     categories: data.categories && data.categories.length ? data.categories : undefined,
     regions: data.location && data.location.regions ? data.location.regions?.map(item => item.id) : undefined,
@@ -251,6 +269,7 @@ onMounted(() => {
     const query = router.currentRoute.value.query
     params = {
       type: 'performer',
+      open_contacts: filter.value.open_contacts,
       page: query.page ? Number(query.page) : undefined,
       categories: query.categories ? query.categories.split(',').map(item => Number(item)) : undefined,
       countries: [query.countries && query.countries.split(',').map(item => Number(item))].flat(),
@@ -262,10 +281,10 @@ onMounted(() => {
       materials_tolling: query.materials_tolling ? Number(query.materials_tolling) : undefined,
       batch_ids: query.batch_id ? [Number(query.batch_id)] : undefined
     }
-    console.log(params)
     
     filter.value = {
       type: 'performer',
+      open_contacts: filter.value.open_contacts,
       categories: query.categories ? query.categories.split(',').map(item => Number(item)) : [],
       location: {countries: query.countries ? query.countries.split(',').map(item => Number(item)) : [], regions: query.regions ? query.regions.split(',').map(item => Number(item)) : [] },
       is_stm: query.is_stm ? Number(query.is_stm) : undefined,
@@ -325,18 +344,44 @@ onBeforeUnmount(() => {
     display: flex;
     column-gap: 5em;
     margin-bottom: 2.4em;
+    align-items: center;
+  }
+
+  &__open-contacts-btn {
+    font-size: 1.6em;
+    line-height: 1em;
+    font-weight: 500;
+    background-color: #f0eff4;
+
+    &.is-active {
+      border: 2px solid #6937a5;
+    }
+
+    @include mobile {
+      order: 1;
+    }
+
+  }
+
+  &__btn-container {
+    margin-left: auto;
+    display: flex;
+    column-gap: 5em;
   }
 
   &__filter {
-    margin-right: auto;
+    // margin-right: auto;
 
     &_type_mobile {
       display: none;
     }
 
     @include mobile {
+      order: 2;
       &_type_mobile {
         display: flex;
+        flex-wrap: wrap;
+        gap: 2em;
         margin-bottom: 1.2em;
       }
 
