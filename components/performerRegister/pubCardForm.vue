@@ -31,7 +31,7 @@
   </div>
   <div class="form-group form-group_type_secondary">
         <label class="form-group__title">
-        Контактное лицо (ФИО)
+        Контактное лицо (ФИО) (Будет доступно всем пользователям сайта при покупке услуги "Открытые контакты")
         </label>
         <UiInput
         :rules="{ required: false }"
@@ -44,7 +44,7 @@
 </div>
   <div class="form-group form-group_type_secondary">
     <label class="form-group__title">
-      Контактный email
+      Контактный email (Будет доступно всем пользователям сайта при покупке услуги "Открытые контакты")
     </label>
     <UiInput
       :rules="{ required: false }"
@@ -57,7 +57,7 @@
   </div>
     <div class="form-group form-group_type_secondary">
         <label class="form-group__title">
-        Контактный телефон
+        Контактный телефон (Будет доступно всем пользователям сайта при покупке услуги "Открытые контакты")
         </label>
         <UiInput
         :rules="{ required: false }"
