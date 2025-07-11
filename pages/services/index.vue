@@ -416,4 +416,13 @@ onBeforeUnmount(() => {
   }
 }
 
+.telegram-main {
+    .catalog-services {
+      @include mobile {
+        .info__title {
+          margin-top: 10px;
+        }
+      }
+    }
+  }
 </style>
