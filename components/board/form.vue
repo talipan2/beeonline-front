@@ -3,7 +3,7 @@
 		<label class="form-group__title">Анонсовая картинка *</label>
 		<CommonImageLoadSecondary
 			class="board-logo"
-			v-model="modelValue.logo"
+			v-model="data.logo"
 			label="Загрузить фотографию (до 5Мб. Допустимый формат .jpeg, .png, .jpg, .gif)"
 			name="logo"
 			:rules="{ required_image }"
@@ -15,7 +15,7 @@
 		<UiInput
 			:rules="{ required: true, min: 2, max: 100 }"
 			name="name"
-			v-model="modelValue.name"
+			v-model="data.name"
 			label="Название объявления"
 			class="form-group__value"
 			placeholder="Введите название объявления"
@@ -25,7 +25,7 @@
 		<label class="form-group__title">Описание *</label>
 		<UiTextArea
 			class="form-group__value"
-			v-model="modelValue.description"
+			v-model="data.description"
 			name="description"
 			label="Описание"
 			:rules="{ required: true, min: 50, max: 2000 }"
@@ -35,12 +35,23 @@
 	<div class="form-group form-group_type_secondary">
 		<label class="form-group__title">Цена</label>
 		<UiInput
-			:rules="{ required: true }"
+			:rules="{ required: true, min_value: 1 }"
 			name="price"
 			label="Цена"
-			v-model="modelValue.price"
-			class="form-group__value"
-		></UiInput>
+			v-model="data.price"
+			class="form-group__value board-form__price-input"
+			type="number"
+		>
+			<UiSelect
+				:options="currencyList"
+				v-model="data.currency"
+				return-id
+				label="Валюта"
+				name="currency"
+				class="form-group__value board-form__currency-select"
+				:error-show="false"
+			/>
+		</UiInput>
 	</div>
 	<div class="form-group form-group_type_secondary">
 		<label class="form-group__title">Выбор категории *</label>
@@ -57,7 +68,7 @@
 				{ id: 5, label: 'Другое' },
 				{ id: 6, label: 'Пошив' },
 			]"
-			v-model="modelValue.categories"
+			v-model="data.categories"
 			name="categories"
 			label="Выбор категории"
 		/>
@@ -71,7 +82,7 @@
 			<p class="board-form__description">Рекомендуемый размер 300 x 340 px.</p>
 		</div>
 		<CommonGalleryLoadSecondary
-			v-model="modelValue.gallery"
+			v-model="data.gallery"
 			class="board-gallery"
 			:showSetting="false"
 			:maxCount="5"
@@ -83,8 +94,9 @@
 			:rules="{ required: true }"
 			name="contact_name"
 			label="ФИО"
-			v-model="modelValue.contact_name"
+			v-model="data.contact_name"
 			class="form-group__value"
+			placeholder="Введите ФИО"
 		></UiInput>
 	</div>
 	<div class="form-group form-group_type_secondary">
@@ -93,8 +105,9 @@
 			:rules="{ required: true, email: true }"
 			name="contact_email"
 			label="Электронная почта"
-			v-model="modelValue.contact_email"
+			v-model="data.contact_email"
 			class="form-group__value"
+			placeholder="Введите электронную почту"
 		></UiInput>
 	</div>
 
@@ -104,9 +117,10 @@
 			:rules="{ required: true }"
 			name="contact_phone"
 			label="Номер телефона"
-			v-model="modelValue.contact_phone"
+			v-model="data.contact_phone"
 			class="form-group__value"
 			type="tel"
+			placeholder="Введите номер телефона"
 		></UiInput>
 	</div>
 	<div class="form-group form-group_type_secondary">
@@ -115,17 +129,19 @@
 			:rules="{ required: false }"
 			name="company_name"
 			label="Название компании"
-			v-model="modelValue.company_name"
+			v-model="data.company_name"
 			class="form-group__value"
+			placeholder="Введите название компании"
 		></UiInput>
 	</div>
 	<div class="form-group form-group_type_secondary">
 		<label class="form-group__title">Ссылка на сайт</label>
 		<UiInput
 			:rules="{ url: true }"
+			placeholder="Введите название сайта"
 			name="url_site"
 			label="Ссылка на сайт"
-			v-model="modelValue.url_site"
+			v-model="data.url_site"
 			class="form-group__value"
 		>
 			<SvgoPlanet class="svg-m" />
@@ -134,6 +150,10 @@
 </template>
 
 <script setup>
+	import { useSettingStore } from '~/store/settingStore';
+
+	const settingStore = useSettingStore();
+
 	const props = defineProps({
 		modelValue: {
 			type: Object,
@@ -143,6 +163,37 @@
 			type: Object,
 			default: () => ({}),
 		},
+	});
+
+	const emit = defineEmits(['update:modelValue']);
+
+	const data = computed({
+		get() {
+			return props.modelValue;
+		},
+		set(value) {
+			emit('update:modelValue', value);
+		},
+	});
+
+	const currencyList = computed(() => {
+		if (settingStore.currencyList.length > 0) {
+			return settingStore.currencyList
+				.filter((item) => item.code !== 'bonus')
+				.map((item) => ({
+					id: item.id,
+					label: item.code,
+					value: item.code,
+				}));
+		} else {
+			return [];
+		}
+	});
+
+	onMounted(() => {
+		if (settingStore.currencyList.length === 0) {
+			settingStore.getCurrencyList();
+		}
 	});
 </script>
 
@@ -155,7 +206,30 @@
 		width: 100%;
 	}
 
+	.invalid .board-form__currency-select .select__select {
+		background: none;
+	}
+
 	.board-form {
+		&__price-input {
+			flex-direction: row !important;
+		}
+
+		&__currency-select {
+			margin-top: 0;
+			flex: 0 0 5em;
+			line-height: 1em;
+
+			.select__select {
+				border: none;
+				padding-block: 0;
+
+				&:focus {
+					box-shadow: none;
+				}
+			}
+		}
+
 		&__checkbox-group.checkbox-group {
 			flex-direction: row;
 
@@ -171,14 +245,10 @@
 
 		&__description-bold {
 			font-weight: 700;
-			// font-size: 1.4em;
-			// margin-bottom: 1em;
 		}
 
 		&__description {
 			font-weight: 400;
-			// font-size: 1.4em;
-			// margin-bottom: 1em;
 		}
 	}
 </style>

@@ -5,6 +5,7 @@
 				class="board-catalog-header__create"
 				variant="quinary"
 				size="large"
+				to="/board/create"
 			>
 				Создать объявление
 			</UiButton>

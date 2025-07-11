@@ -20,7 +20,7 @@ export default defineNuxtPlugin({
 		defineRule('min', min);
 		defineRule('max', max);
 		defineRule('min_value', min_value);
-		defineRule('max_value', max);
+		defineRule('max_value', max_value);
 		defineRule('numeric', numeric);
 		defineRule('integer', integer);
 		defineRule('email', email);

@@ -1,30 +1,25 @@
 <template>
 	<NuxtLayout
-		name="info"
+		name="profile"
 		title="Объявления"
+		class="announcements-layout"
 	>
 		<template #header>
 			<UiBreadCrumb
 				:list="[
 					{ label: 'Главная', link: '/' },
-					{ label: 'Объявления', link: '' },
+					{ label: `Объявления`, link: '' },
 				]"
 			/>
 		</template>
 		<template #content>
-			<div
-				class="board"
-				ref="list"
-			>
-				<!-- Заголовок и фильтры каталога объявлений -->
-				<BoardCatalogHeader class="board__header" />
-				<BoardList
-					:data="data"
-					:page="page"
-					:isLoading="isLoading"
-					@update:page="handleUpdatePage"
-				/>
-			</div>
+			<BoardList
+				:data="data"
+				:page="page"
+				:isLoading="isLoading"
+				@update:page="handleUpdatePage"
+				:isUserAnnouncements="true"
+			/>
 		</template>
 	</NuxtLayout>
 </template>
@@ -101,13 +96,3 @@
 		handleFetchData({}, false);
 	});
 </script>
-
-<style lang="scss">
-	.board {
-		font-size: 1rem;
-
-		&__header {
-			margin-bottom: 3.2em;
-		}
-	}
-</style>

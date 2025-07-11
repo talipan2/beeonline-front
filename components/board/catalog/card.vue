@@ -29,14 +29,43 @@
 					<p>{{ formatDate(announcement.created_at, 'DD.MM.YYYY') }}</p>
 				</div>
 			</div>
-			<UiButton
-				:to="`/board/${announcement.id}`"
-				class="board-card__button"
-				variant="quinary"
-				size="large"
-			>
-				Подробнее
-			</UiButton>
+			<div class="board-card__buttons">
+				<template v-if="isUserAnnouncements">
+					<UiButton
+						:to="`/board/${announcement.id}`"
+						class="board-card__button"
+						variant="tertiary"
+						size="large"
+					>
+						Изменить
+					</UiButton>
+					<UiButton
+						class="board-card__button"
+						variant="tertiary"
+						size="large"
+					>
+						Снять с публикации
+					</UiButton>
+					<UiButton
+						:to="`/board/${announcement.id}`"
+						class="board-card__button"
+						variant="tertiary"
+						size="large"
+					>
+						Продлить на месяц
+					</UiButton>
+				</template>
+				<template v-else>
+					<UiButton
+						:to="`/board/${announcement.id}`"
+						class="board-card__button"
+						variant="quinary"
+						size="large"
+					>
+						Подробнее
+					</UiButton>
+				</template>
+			</div>
 		</div>
 	</div>
 </template>
@@ -48,6 +77,10 @@
 			default: () => ({}),
 		},
 		loading: {
+			type: Boolean,
+			default: false,
+		},
+		isUserAnnouncements: {
 			type: Boolean,
 			default: false,
 		},
@@ -107,7 +140,7 @@
 			line-height: 1.5em;
 			color: #76768f;
 			opacity: 0.8;
-			margin-bottom: auto;
+			// margin-bottom: auto;
 		}
 
 		&__title,
@@ -137,6 +170,12 @@
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
+			gap: 1em;
+		}
+
+		&__buttons {
+			display: flex;
+			flex-direction: column;
 			gap: 1em;
 		}
 
