@@ -12,7 +12,7 @@
         <h2>Контактные данные</h2>
         <p>Указанные данные не разглашаются третьим лицам и необходимы для успешной работы на портале.</p>
       </div>
-        <div class="form-group">
+        <div class="form-group register__form-group">
           <label class="form-group-data form-group__title">
             Ваше имя *
             <UiInput
@@ -25,7 +25,7 @@
               v-model="userData.name"
             />
           </label>
-          <label class="form-group-data form-group__title">
+          <!-- <label class="form-group-data form-group__title">
             Ваша должность
             <UiInput
               :rules="{min: 2}"
@@ -36,7 +36,7 @@
               placeholder="Ваша должность"
               v-model="userData.jobTitle"
             />
-          </label>
+          </label> -->
           <label class="form-group-data form-group__title">
             E-mail *
             <UiInput
@@ -157,6 +157,16 @@ onMounted(() => {
   &__phone-mask {
     flex: 0 1 40%;
   }
+
+  &__form-group {
+      .form-group-data {
+        flex: 0 1 calc(50% - 1.2em);
+
+        @include mobile {
+          flex: 0 1 100%;
+        }
+      }
+    }
 
 }
 
