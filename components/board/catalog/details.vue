@@ -46,15 +46,53 @@
 					<h2 class="board-catalog-details__header-title-company">
 						{{ data.name }}
 					</h2>
-					<UiButton
-						type="button"
-						variant="quinary"
-						size="large"
-						class="board-catalog-details__header-button"
-						@click="showContacts = !showContacts"
-					>
-						{{ showContacts ? 'Скрыть контакты' : 'Показать контакты' }}
-					</UiButton>
+					<div class="board-catalog-details__header-content-row">
+						<div class="board-catalog-details__header-content-date">
+							{{ 'Активна: до ' + formatDate(data.created_at, 'DD.MM.YYYY') }}
+						</div>
+					</div>
+					<div class="board-catalog-details__header-buttons">
+						<template v-if="type === 'public'">
+							<UiButton
+								type="button"
+								variant="quinary"
+								size="large"
+								class="board-catalog-details__header-button"
+								@click="showContacts = !showContacts"
+							>
+								{{ showContacts ? 'Скрыть контакты' : 'Показать контакты' }}
+							</UiButton>
+						</template>
+						<template v-else-if="type === 'user'">
+							<UiButton
+								type="button"
+								@click="handleOpenEditAnnouncementModal"
+								class="board-card__button"
+								variant="tertiary"
+								size="large"
+							>
+								Изменить
+							</UiButton>
+							<UiButton
+								type="button"
+								class="board-card__button"
+								variant="tertiary"
+								size="large"
+								@click="handleOpenRemoveFromPublicationModal"
+							>
+								Снять с публикации
+							</UiButton>
+							<UiButton
+								type="button"
+								@click="handleOpenAnnouncementPayModal"
+								class="board-card__button"
+								variant="tertiary"
+								size="large"
+							>
+								Продлить на месяц
+							</UiButton>
+						</template>
+					</div>
 				</div>
 			</CommonLayoutInfoCard>
 			<transition name="fade-slide">
@@ -137,12 +175,23 @@
 			type: Boolean,
 			default: false,
 		},
+		type: {
+			type: String,
+			default: 'public',
+			validator: (value) => ['public', 'user'].includes(value),
+		},
 	});
 
 	const organizationStore = useOrganizationStore();
 	const router = useRouter();
 
 	const badges = ['Новое', 'Продано', 'Выкуплено'];
+
+	const emit = defineEmits([
+		'openEditModal',
+		'removeFromPublication',
+		'openAnnouncementPayModal',
+	]);
 
 	const contactsData = {
 		name: 'Иванов Иван',
@@ -157,6 +206,18 @@
 	};
 
 	const showContacts = ref(false);
+
+	const handleOpenEditAnnouncementModal = () => {
+		emit('openEditModal', { ...props.data });
+	};
+
+	const handleOpenRemoveFromPublicationModal = () => {
+		emit('removeFromPublication', props.data.id);
+	};
+
+	const handleOpenAnnouncementPayModal = () => {
+		emit('openAnnouncementPayModal', props.data.id);
+	};
 </script>
 
 <style lang="scss">
@@ -244,6 +305,16 @@
 			font-weight: 600;
 			letter-spacing: -0.02em;
 			color: rgba(19, 19, 19, 0.9);
+		}
+
+		&__header-buttons {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 1.6em;
+
+			@include mobile {
+				flex-direction: column;
+			}
 		}
 
 		&__header-button {

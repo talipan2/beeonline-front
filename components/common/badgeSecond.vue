@@ -5,7 +5,22 @@
 			v-for="badge in badges"
 			:key="badge"
 		>
-			<p class="badge-second__text">{{ badge }}</p>
+			<template v-if="type === 'button'">
+				<button
+					type="button"
+					class="badge-second__text badge-second__text-button"
+					@click="handleClick(badge)"
+				>
+					{{ badge?.label || badge?.name }}
+					<SvgoClose class="svg-s" />
+				</button>
+			</template>
+			<p
+				v-else
+				class="badge-second__text"
+			>
+				{{ badge?.label || badge?.name || badge }}
+			</p>
 		</div>
 	</div>
 </template>
@@ -13,10 +28,21 @@
 <script setup>
 	const props = defineProps({
 		badges: {
+			type: Array,
+			default: () => [],
+		},
+		type: {
 			type: String,
-			default: '',
+			default: 'paragraph',
+			validator: (value) => ['button', 'paragraph'].includes(value),
 		},
 	});
+
+	const emit = defineEmits(['click']);
+
+	const handleClick = (badge) => {
+		emit('click', badge);
+	};
 </script>
 
 <style lang="scss">
@@ -38,6 +64,25 @@
 
 		&__text {
 			opacity: 0.8;
+		}
+
+		&__text-button {
+			display: flex;
+			align-items: center;
+			gap: 0.5em;
+			color: #5a2b96;
+
+			svg {
+				fill: #5a2b96;
+			}
+
+			@include hover {
+				color: var(--text-color-hexadecimal);
+
+				svg {
+					fill: var(--text-color-hexadecimal);
+				}
+			}
 		}
 	}
 </style>

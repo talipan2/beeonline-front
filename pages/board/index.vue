@@ -18,10 +18,15 @@
 			>
 				<!-- Заголовок и фильтры каталога объявлений -->
 				<BoardCatalogHeader class="board__header" />
+				<CommonAlerts
+					alert="Объявлений не найдено"
+					v-if="!data.length && isLoaded"
+				/>
 				<BoardList
 					:data="data"
 					:page="page"
 					:isLoading="isLoading"
+					cardLink="/board"
 					@update:page="handleUpdatePage"
 				/>
 			</div>
@@ -56,6 +61,7 @@
 
 	// Флаг загрузки данных
 	const isLoading = ref(false);
+	const isLoaded = ref(false);
 
 	/**
 	 * Получение списка объявлений с сервера
@@ -82,6 +88,7 @@
 			})
 			.finally(() => {
 				isLoading.value = false;
+				isLoaded.value = true;
 			});
 	};
 

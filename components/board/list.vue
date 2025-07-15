@@ -7,7 +7,7 @@
 		<!-- Скелетоны во время загрузки -->
 		<template v-if="isLoading">
 			<BoardCatalogCard
-				v-for="n in 8"
+				v-for="n in 10"
 				:key="'skeleton-' + n"
 				:loading="true"
 				class="board-list__card"
@@ -22,7 +22,23 @@
 				:announcement="announcement"
 				:loading="false"
 				:isUserAnnouncements="isUserAnnouncements"
+				:link="cardLink"
+				@openEditModal="handleOpenEditAnnouncementModal"
+				@removeFromPublication="handleOpenRemoveFromPublicationModal"
+				@openAnnouncementPayModal="handleOpenAnnouncementPayModal"
 			/>
+			<template v-if="isUserAnnouncements">
+				<BoardModalsAnnouncementEdit
+					:is-open="editAnnouncementModal.isOpen"
+					v-model:data="editAnnouncementModal.data"
+					@close="editAnnouncementModal.isOpen = false"
+				/>
+				<ConfirmModal />
+				<PaidServiceAnnouncement
+					ref="announcementPayModal"
+					:id="announcementId"
+				/>
+			</template>
 		</template>
 	</div>
 	<!-- Пагинация -->
@@ -57,6 +73,9 @@
 	const organizationStore = useOrganizationStore();
 	const settingStore = useSettingStore();
 
+	const { ConfirmModal, confirm } = useConfirmModal();
+	const announcementPayModal = ref(null);
+
 	const props = defineProps({
 		page: {
 			type: Object,
@@ -77,12 +96,47 @@
 			type: Boolean,
 			default: false,
 		},
+		cardLink: {
+			type: String,
+			default: '',
+		},
 	});
+
+	const announcementId = ref(null);
+
+	const handleOpenAnnouncementPayModal = (id) => {
+		if (announcementPayModal.value) {
+			announcementId.value = id;
+			announcementPayModal.value.open(id);
+		}
+	};
 
 	const emit = defineEmits(['update:page']);
 
 	const handleUpdatePage = (page) => {
 		emit('update:page', page);
+	};
+
+	const editAnnouncementModal = ref({
+		data: {},
+		isOpen: false,
+	});
+
+	const handleOpenEditAnnouncementModal = (data) => {
+		editAnnouncementModal.value.data = data;
+		editAnnouncementModal.value.isOpen = true;
+	};
+
+	const handleOpenRemoveFromPublicationModal = (data) => {
+		confirm({
+			title: 'Снять объявление с публикации?',
+			onConfirm: () => {
+				console.log('Удалить объявление из публикации');
+			},
+			onCancel: () => {
+				console.log('Отмена');
+			},
+		});
 	};
 </script>
 
@@ -107,6 +161,10 @@
 		&_user-announcements {
 			.board-list__card {
 				flex: 0 1 calc(33.333% - 2.1em);
+
+				@include mobile {
+					flex: 0 1 100%;
+				}
 			}
 		}
 
@@ -156,6 +214,13 @@
 
 				&_type_next {
 					transform: rotate(180deg) !important;
+				}
+			}
+
+			@include mobile {
+				.pagination__btn_type_prev,
+				.pagination__btn_type_next {
+					display: none;
 				}
 			}
 		}

@@ -15,6 +15,10 @@
 			Создать объявление и перейти к оплате
 		</UiButton>
 	</UiForm>
+	<BoardModalsPay
+		:isOpen="isOpenPayModal"
+		@update:isOpen="handleClosePayModal"
+	/>
 </template>
 
 <script setup>
@@ -33,9 +37,13 @@
 		url_site: '',
 	});
 
-	const submit = (value, form) => {
-		console.log(value, form);
+	const isOpenPayModal = ref(true);
+
+	const handleClosePayModal = () => {
+		isOpenPayModal.value = false;
 	};
+
+	const submit = (value, form) => {};
 </script>
 
 <style lang="scss">

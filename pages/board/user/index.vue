@@ -13,13 +13,21 @@
 			/>
 		</template>
 		<template #content>
-			<BoardList
-				:data="data"
-				:page="page"
-				:isLoading="isLoading"
-				@update:page="handleUpdatePage"
-				:isUserAnnouncements="true"
-			/>
+			<div ref="list">
+				<CommonAlerts
+					alert="Объявлений не найдено"
+					v-if="!data.length && isLoaded"
+				/>
+				<BoardList
+					ref="list"
+					:data="data"
+					:page="page"
+					:isLoading="isLoading"
+					cardLink="/board/user"
+					@update:page="handleUpdatePage"
+					:isUserAnnouncements="true"
+				/>
+			</div>
 		</template>
 	</NuxtLayout>
 </template>
@@ -49,6 +57,9 @@
 	// ref для DOM-элемента списка объявлений (для скролла)
 	const list = ref(null);
 
+	// Список объявлений
+	const data = ref([]);
+
 	// Флаг загрузки данных
 	const isLoading = ref(false);
 
@@ -62,7 +73,12 @@
 		organizationStore
 			.getPubCardsList({ type: 'performer', ...params })
 			.then((res) => {
-				data.value = res.data; // сохраняем полученные объявления
+				data.value = res?.data?.map((item) => {
+					return {
+						...item,
+						categories: item.categories.map((category) => category.id),
+					};
+				}); // сохраняем полученные объявления
 				page.value = res.meta; // обновляем данные пагинации
 				if (scroll) {
 					// Скроллим к списку объявлений с учетом высоты хедера
@@ -87,9 +103,6 @@
 	const handleUpdatePage = (page) => {
 		handleFetchData({ ...params.value, page });
 	};
-
-	// Список объявлений
-	const data = ref({});
 
 	// При монтировании компонента — первый запрос объявлений
 	onMounted(() => {

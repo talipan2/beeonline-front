@@ -6,7 +6,7 @@
 			v-model="data.logo"
 			label="Загрузить фотографию (до 5Мб. Допустимый формат .jpeg, .png, .jpg, .gif)"
 			name="logo"
-			:rules="{ required_image }"
+			:rules="{ required_image: true }"
 			errorLabel="'Анонсовая картинка'"
 		/>
 	</div>
@@ -55,6 +55,12 @@
 	</div>
 	<div class="form-group form-group_type_secondary">
 		<label class="form-group__title">Выбор категории *</label>
+		<CommonBadgeSecond
+			:badges="selectedCategories"
+			@click="handleClickCategory"
+			type="button"
+			class="board-form__badge-second"
+		/>
 		<UiCheckboxGroup
 			class="form-group__value board-form__checkbox-group"
 			variant="rounded"
@@ -122,6 +128,7 @@
 			type="tel"
 			placeholder="Введите номер телефона"
 		></UiInput>
+		<!-- <CommonPhoneMusk class="form-group__value register__phone-mask" v-model="userData" :rules="{ required: true, max: 16 }" name="phone" label="Телефон" /> -->
 	</div>
 	<div class="form-group form-group_type_secondary">
 		<label class="form-group__title">Название компании</label>
@@ -150,9 +157,19 @@
 </template>
 
 <script setup>
+	import { useEntityStore } from '~/store/entityStore';
 	import { useSettingStore } from '~/store/settingStore';
 
 	const settingStore = useSettingStore();
+	const entityStore = useEntityStore();
+
+	const selectedCategories = computed(() => {
+		return entityStore.getEntityLabelById(
+			'announcementCategories',
+			data.value.categories,
+			true
+		);
+	});
 
 	const props = defineProps({
 		modelValue: {
@@ -195,6 +212,14 @@
 			settingStore.getCurrencyList();
 		}
 	});
+
+	const handleClickCategory = (category) => {
+		if (data.value?.categories) {
+			data.value.categories = data.value.categories.filter(
+				(item) => item !== category.id
+			);
+		}
+	};
 </script>
 
 <style lang="scss">
@@ -228,6 +253,11 @@
 					box-shadow: none;
 				}
 			}
+		}
+
+		&__badge-second {
+			font-size: 1.2em;
+			margin-block: 0.66em 1.33em;
 		}
 
 		&__checkbox-group.checkbox-group {

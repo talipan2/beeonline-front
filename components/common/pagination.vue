@@ -66,7 +66,6 @@
 				/>
 			</UiButton>
 		</div>
-		{{ style }}
 	</div>
 </template>
 

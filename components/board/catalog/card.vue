@@ -24,15 +24,28 @@
 				<p class="board-card__price">
 					{{ formatMoney(announcement.price, announcement.currency, 0) }}
 				</p>
-				<div class="board-card__info">
+				<div
+					class="board-card__info"
+					:class="{
+						'board-card__info_user-announcements': isUserAnnouncements,
+					}"
+				>
 					<p>Дата публикации:</p>
+					<p>{{ formatDate(announcement.created_at, 'DD.MM.YYYY') }}</p>
+				</div>
+				<div
+					class="board-card__info"
+					v-if="isUserAnnouncements"
+				>
+					<p>Активна:</p>
 					<p>{{ formatDate(announcement.created_at, 'DD.MM.YYYY') }}</p>
 				</div>
 			</div>
 			<div class="board-card__buttons">
 				<template v-if="isUserAnnouncements">
 					<UiButton
-						:to="`/board/${announcement.id}`"
+						type="button"
+						@click="handleOpenEditAnnouncementModal"
 						class="board-card__button"
 						variant="tertiary"
 						size="large"
@@ -40,14 +53,17 @@
 						Изменить
 					</UiButton>
 					<UiButton
+						type="button"
 						class="board-card__button"
 						variant="tertiary"
 						size="large"
+						@click="handleOpenRemoveFromPublicationModal"
 					>
 						Снять с публикации
 					</UiButton>
 					<UiButton
-						:to="`/board/${announcement.id}`"
+						type="button"
+						@click="handleOpenAnnouncementPayModal"
 						class="board-card__button"
 						variant="tertiary"
 						size="large"
@@ -57,7 +73,8 @@
 				</template>
 				<template v-else>
 					<UiButton
-						:to="`/board/${announcement.id}`"
+						v-if="link"
+						:to="`${link}/${announcement.id}`"
 						class="board-card__button"
 						variant="quinary"
 						size="large"
@@ -67,6 +84,11 @@
 				</template>
 			</div>
 		</div>
+		<NuxtLink
+			v-if="link"
+			:to="`${link}/${announcement.id}`"
+			class="board-card__link"
+		></NuxtLink>
 	</div>
 </template>
 
@@ -84,7 +106,39 @@
 			type: Boolean,
 			default: false,
 		},
+		link: {
+			type: String,
+			default: '',
+		},
 	});
+
+	const emit = defineEmits([
+		'openEditModal',
+		'removeFromPublication',
+		'openAnnouncementPayModal',
+	]);
+
+	const editAnnouncementModal = ref(false);
+	const editAnnouncementData = computed({
+		get() {
+			return props.announcement;
+		},
+		set(value) {
+			emit('update:announcement', value);
+		},
+	});
+
+	const handleOpenEditAnnouncementModal = () => {
+		emit('openEditModal', { ...props.announcement });
+	};
+
+	const handleOpenRemoveFromPublicationModal = () => {
+		emit('removeFromPublication', props.announcement.id);
+	};
+
+	const handleOpenAnnouncementPayModal = () => {
+		emit('openAnnouncementPayModal', props.announcement.id);
+	};
 </script>
 
 <style lang="scss">
@@ -95,6 +149,21 @@
 		background-color: #fff;
 		display: flex;
 		flex-direction: column;
+		position: relative;
+		transition: all 0.3s ease;
+		cursor: pointer;
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+		@include hover {
+			transform: translateY(-8px);
+			box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+		}
+
+		&__link {
+			position: absolute;
+			inset: 0;
+			z-index: 1;
+		}
 
 		&__container {
 			display: flex;
@@ -171,12 +240,17 @@
 			justify-content: space-between;
 			align-items: center;
 			gap: 1em;
+
+			&_user-announcements {
+				order: -1;
+			}
 		}
 
 		&__buttons {
 			display: flex;
 			flex-direction: column;
 			gap: 1em;
+			z-index: 2;
 		}
 
 		&__button {

@@ -3,6 +3,7 @@
 		:label="errorLabel"
 		:rules="rules"
 		v-slot="{ field, errors, meta, handleReset, handleBlur }"
+		:name="name"
 	>
 		<div
 			class="load-image-secondary"
@@ -141,6 +142,10 @@
 			default: () => ({}),
 		},
 		errorLabel: {
+			type: String,
+			default: 'Изображение',
+		},
+		name: {
 			type: String,
 			default: '',
 		},
