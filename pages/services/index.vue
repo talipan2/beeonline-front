@@ -41,6 +41,7 @@
               @click="filter.open_contacts = !filter.open_contacts"
             >
               Фабрики с открытыми контактами
+              <SvgoCancel class="svg-m" v-if="filter.open_contacts" />
             </UiButton>
             <template v-if="!isMobile">
               <div class="new-service__btn-container">
@@ -352,9 +353,20 @@ onBeforeUnmount(() => {
     line-height: 1em;
     font-weight: 500;
     background-color: #f0eff4;
+    column-gap: .5em;
 
     &.is-active {
-      border: 2px solid #6937a5;
+      background-color: #6937a5;
+      color: #fff;
+
+      .svg-m {
+        fill: #fff;
+      }
+
+      @include hover {
+        background-color: #6937a5;
+        color: #fff;
+      }
     }
 
     @include mobile {

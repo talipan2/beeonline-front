@@ -19,10 +19,10 @@
                         <img :src="brand.gallery || defaultImage" :alt="brand.name">
                     </div>
                     <div class="brands__card-footer">
-                        <p class="brands__card-type">{{ brand.name }}</p>
+                        <p class="brands__card-type">{{ brand.description }}</p>
                         <p class="brands__card-tags">{{ brand.product_categories }}</p>
                     </div>
-                    <NuxtLink :to="`/services/${brand.id}`" class="brands__card-link"></NuxtLink>
+                    <NuxtLink :to="`/members/${brand.id}/customer`" class="brands__card-link"></NuxtLink>
                 </SwiperSlide>
             </Swiper>
             <UiImage class="brands__gift-img" src="/assets/images/main/brands/brands-gift.webp" alt="" />
@@ -73,18 +73,23 @@ const breakpoints = {
 const ordersList = ref([]);
 
 onMounted(() => {
-    organizationStore.getPubCardsList()
+    organizationStore.getPubCardsList({type: 'customer'})
         .then(res => {
             if(res && res.data) {
                 ordersList.value = res.data.map(item => {
+                    const {locations, alias} = locationFormatter({
+                        cities: item.cities,
+                        regions: item.regions,
+                        countries: item.countries,
+                    });
                     return {
                         id: item.id,
                         pubCard: {
                             logo: item.logo ? item.logo : '',
                             name: item.name ? item.name : '',
-                            country: item.country ? item.country.name : '',
+                            country: locations.length ? locations[0] : '',
                         },
-                        name: item.services && item.services.length ? item.services[0].name : '',
+                        description: item.description,
                         gallery: item.gallery && item.gallery.length ? item.gallery[0].url : undefined,
                         product_categories: item.categories && item.categories.length ? item.categories.map(item => item.name).join(' , ') : '',
                     }
