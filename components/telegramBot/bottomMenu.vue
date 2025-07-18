@@ -58,7 +58,7 @@ const isActiveRoute = (path) => {
 
   &__item {
     flex: 0 1 33.33333333333333%;
-    padding-block: 0.6em;
+    padding-block: 1.1em;
     font-size: 1.4em;
   }
 

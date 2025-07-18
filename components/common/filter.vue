@@ -1,222 +1,273 @@
 <template>
-  <CommonSidebar class="filter">
-    <template #body>
-      <UiButton v-show="!isFilterVisible && isMobile" @click="toggleFilter" type="button" class="sidebar__btn" variant="quinary" size="large">Показать фильтры</UiButton>
+	<CommonSidebar class="filter">
+		<template #body>
+			<UiButton
+				v-show="!isFilterVisible && isMobile"
+				@click="toggleFilter"
+				type="button"
+				class="sidebar__btn"
+				variant="quinary"
+				size="large"
+			>
+				Показать фильтры
+			</UiButton>
 
-      <div class="sidebar__top" v-show="!isMobile || (isMobile && isFilterVisible)">
-        <div class="filter__container">
-          <slot name="body" />
-          <div class="filter__bottom">
-            <slot name="bottom" />
-          </div>
-          <div class="form-group">
-            <div class="filter__submit" ref="submitRef">
-              <UiButton
-               type="button"
-                variant="quinary"
-                size="large"
-                class="form-group-data__btn"
-                @click="submitFunction"
-              >
-                Применить фильтр
-              </UiButton>
-            </div>
-            <UiButton
-              type="button"
-              variant="default"
-              size="large"
-              class="form-group-data__btn"
-              @click="resetFunction"
-            >
-              Сбросить фильтры
-            </UiButton>
+			<div
+				class="sidebar__top"
+				v-show="!isMobile || (isMobile && isFilterVisible)"
+			>
+				<div class="filter__container">
+					<slot name="body" />
+					<div class="filter__bottom">
+						<slot name="bottom" />
+					</div>
+					<div class="form-group">
+						<div
+							class="filter__submit"
+							ref="submitRef"
+						>
+							<UiButton
+								type="button"
+								variant="quinary"
+								size="large"
+								class="form-group-data__btn"
+								@click="submitFunction"
+							>
+								Применить фильтр
+							</UiButton>
+						</div>
+						<UiButton
+							type="button"
+							variant="default"
+							size="large"
+							class="form-group-data__btn"
+							@click="resetFunction"
+						>
+							Сбросить фильтры
+						</UiButton>
+					</div>
+				</div>
+			</div>
+			<div
+				class="sidebar__bottom"
+				v-show="isFilterVisible && isMobile"
+			>
+				<UiButton
+					@click="toggleFilter"
+					type="button"
+					class="sidebar__btn sidebar__btn_type_close"
+					variant="quinary"
+					size="large"
+				>
+					Скрыть фильтры
+				</UiButton>
+			</div>
 
-          </div>
-        </div>
-      </div>
-      <div class="sidebar__bottom" v-show="isFilterVisible && isMobile">
-        <UiButton  
-          @click="toggleFilter" 
-          type="button" 
-          class="sidebar__btn sidebar__btn_type_close" 
-          variant="quinary" 
-          size="large"
-        >
-          Скрыть фильтры
-        </UiButton>
-      </div>
-
-      <div class="filter__banner">
-        <Banners v-if="customerTopBanner" :banner="customerTopBanner" />
-        <Banners v-if="customerBottomBanner" :banner="customerBottomBanner" />
-      </div>
-
-    </template>
-  </CommonSidebar>
+			<div class="filter__banner">
+				<Banners
+					v-if="customerTopBanner"
+					:banner="customerTopBanner"
+				/>
+				<Banners
+					v-if="customerBottomBanner"
+					:banner="customerBottomBanner"
+				/>
+			</div>
+			<div class="filter__banners">
+				<BoardBanners
+					:data="[
+						{
+							id: 1,
+							name: 'Баннер 1',
+							image:
+								'https://i.pinimg.com/1200x/7b/09/c7/7b09c77fbaf0bad1564b1dc2ff69a9aa.jpg',
+						},
+						{
+							id: 2,
+							name: 'Баннер 2',
+							image:
+								'https://i.pinimg.com/1200x/7b/09/c7/7b09c77fbaf0bad1564b1dc2ff69a9aa.jpg',
+						},
+						{
+							id: 3,
+							name: 'Баннер 3',
+							image:
+								'https://i.pinimg.com/1200x/7b/09/c7/7b09c77fbaf0bad1564b1dc2ff69a9aa.jpg',
+						},
+					]"
+				/>
+			</div>
+		</template>
+	</CommonSidebar>
 </template>
 
 <script setup>
-import { useSettingStore } from '~/store/settingStore';
+	import { useSettingStore } from '~/store/settingStore';
 
+	const props = defineProps({
+		isTutorial: {
+			type: Boolean,
+		},
+		submitFunction: {
+			type: Function,
+			default: () => {},
+		},
+		resetFunction: {
+			type: Function,
+			default: () => {},
+		},
+	});
 
-const props = defineProps({
-  isTutorial: {
-    type: Boolean,
-  }, 
-  submitFunction: {
-    type: Function,
-    default: () => {}
-  },
-  resetFunction: {
-    type: Function,
-    default: () => {}
-  }
-});
+	const settingStore = useSettingStore();
+	const submitRef = ref(null);
+	const emit = defineEmits(['updateTutorialRefSubmit']);
 
-const settingStore = useSettingStore();
-const submitRef = ref(null);
-const emit = defineEmits(['updateTutorialRefSubmit']);
+	const filterBanner = ref(null);
+	const customerTopBanner = ref(null);
+	const customerBottomBanner = ref(null);
 
-const filterBanner = ref(null)
-const customerTopBanner = ref(null)
-const customerBottomBanner = ref(null)
+	const isMobile = ref(false);
+	const isFilterVisible = ref(false);
 
-const isMobile = ref(false);
-const isFilterVisible = ref(false);
+	function toggleFilter() {
+		isFilterVisible.value = !isFilterVisible.value;
+		settingStore.catalogTutorialStatus = isFilterVisible.value;
+	}
 
-function toggleFilter() {
-  isFilterVisible.value = !isFilterVisible.value;
-  settingStore.catalogTutorialStatus = isFilterVisible.value
-}
+	const updateWidth = () => {
+		isMobile.value = window.innerWidth < 768;
+	};
 
-const updateWidth = () => {
-  isMobile.value = window.innerWidth < 768;
-};
+	watch(
+		() => submitRef.value,
+		(newVal) => {
+			emit('updateTutorialRefSubmit', newVal);
+		},
+		{ deep: true }
+	);
 
+	watch(
+		() => settingStore.catalogTutorialStatus,
+		(newVal) => {
+			isFilterVisible.value = newVal;
+		}
+	);
 
-watch(() => submitRef.value, (newVal) => {
-  emit('updateTutorialRefSubmit', newVal);
-}, {deep: true})
+	onMounted(() => {
+		window.addEventListener('resize', updateWidth);
+		updateWidth();
+	});
 
-watch(() => settingStore.catalogTutorialStatus, (newVal) => {
-  isFilterVisible.value = newVal
-});
+	onUnmounted(() => {
+		window.removeEventListener('resize', updateWidth);
+	});
 
-onMounted(() => {
-  window.addEventListener('resize', updateWidth);
-  updateWidth();
-});
-
-onUnmounted(() => {
-  window.removeEventListener('resize', updateWidth);
-});
-
-
-onMounted(() => {
-  settingStore.getBanners({banner_type: ['customer_catalog_top', 'customer_catalog_bot']}).then((res) => {
-    if(res && res.data && !res.data.length) return
-    customerTopBanner.value = res.data.find((item) => item.type === 'customer_catalog_top') || {};
-    customerBottomBanner.value = res.data.find((item) => item.type === 'customer_catalog_bot') || {};
-  });
-
-
-})
+	onMounted(() => {
+		settingStore
+			.getBanners({
+				banner_type: ['customer_catalog_top', 'customer_catalog_bot'],
+			})
+			.then((res) => {
+				if (res && res.data && !res.data.length) return;
+				customerTopBanner.value =
+					res.data.find((item) => item.type === 'customer_catalog_top') || {};
+				customerBottomBanner.value =
+					res.data.find((item) => item.type === 'customer_catalog_bot') || {};
+			});
+	});
 </script>
 
 <style lang="scss">
+	.filter {
+		&__title {
+			font-size: 1.8rem;
+			margin-bottom: 1.1em;
+		}
 
-.filter {
-  &__title {
-    font-size: 1.8rem;
-    margin-bottom: 1.1em;
-  }
+		&__item {
+			padding-bottom: 1.6rem;
+			margin-bottom: 1.6rem;
+			border-bottom: 1px solid var(--border-color-secondary);
+		}
 
-  &__item {
-    padding-bottom: 1.6rem;
-    margin-bottom: 1.6rem;
-    border-bottom: 1px solid var(--border-color-secondary);
-  }
+		.checkbox__label {
+			font-size: 1.6rem;
+		}
 
-  .checkbox__label {
-    font-size: 1.6rem;
-  }
+		&__location {
+			.location__location {
+				flex-basis: 100%;
+			}
 
-  &__location {
+			.btn {
+				max-width: 100%;
+				margin-bottom: 0;
+			}
+		}
 
-    .location__location {
-      flex-basis: 100%;
-    }
+		.sidebar__btn {
+			font-size: 12px;
+			text-transform: uppercase;
+			width: 100%;
+			margin-bottom: 2em;
+		}
 
-    .btn {
-      max-width: 100%;
-      margin-bottom: 0;
-    }
-  }
+		.checkbox-group {
+			flex-direction: column;
+		}
 
-  .sidebar__btn {
-    font-size: 12px;
-    text-transform: uppercase;
-    width: 100%;
-    margin-bottom: 2em;
-  }
+		&__bottom {
+			.filter__item {
+				border-bottom: none;
+			}
+		}
 
-  .checkbox-group {
-    flex-direction: column;
-  }
+		.sidebar__top {
+			border-bottom: none;
+			margin-left: 0;
 
-  &__bottom {
+			.checkbox-group__btn {
+				width: 100%;
+				justify-content: space-between;
+				padding: 0;
+				font-size: 1.6rem;
+				text-transform: none;
+				margin-top: 1.25em;
 
-    .filter__item {
-      border-bottom: none;
-    }
-  }
+				svg {
+					width: 1.3rem;
+					height: 1.3rem;
+				}
+			}
 
-  .sidebar__top {
-    border-bottom: none;
-    margin-left: 0;
+			.checkbox-group__btn_type_active {
+				svg {
+					transform: rotate(180deg);
+				}
+			}
+		}
 
-    .checkbox-group__btn {
-      width: 100%;
-      justify-content: space-between;
-      padding: 0;
-      font-size: 1.6rem;
-      text-transform: none;
-      margin-top: 1.25em;
+		.sidebar__bottom {
+			padding-top: 2em;
+			border-top: 1px solid var(--border-color-secondary);
+		}
 
-      svg {
-        width: 1.3rem;
-        height: 1.3rem;
-      }
-    }
+		&__submit {
+			width: 100%;
+		}
 
-    .checkbox-group__btn_type_active {
-      svg {
-        transform: rotate(180deg);
-      }
-    }
-  }
+		&__banner {
+			display: flex;
+			flex-direction: column;
+			gap: 1em;
+			margin-bottom: 3em;
+		}
 
-  .sidebar__bottom {
-    padding-top: 2em;
-    border-top: 1px solid var(--border-color-secondary);
-  }
+		&__banners {
+			margin-bottom: 3em;
+		}
+	}
 
-  &__submit {
-    width: 100%;
-  }
-
-  &__banner {
-    display: flex;
-    flex-direction: column;
-    gap: 1em;
-  }
-
-}
-
-
-@include mobile {
-
-}
-
-
+	@include mobile {
+	}
 </style>
