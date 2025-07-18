@@ -56,6 +56,7 @@ const ordersFormattedData = computed(() => {
       alias: alias,
       lifecycle_status: item.lifecycle_status,
       lifecycle_status_name: item.lifecycle_status_name,
+      status: item.status,
       data: [
         { id: 1, name: 'Категории', value: item.product_categories && item.product_categories.length ? item.product_categories.map(item => item.name) : [] },
         { id: 2, name: 'Место производства', value: locations },

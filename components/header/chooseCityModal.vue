@@ -2,7 +2,7 @@
   <UiModal v-model="isOpenModal" size="lg" title="Выберите город" @confirm="() => confirm()" class="choose-city-modal choose-city-modal-header modal">
     <template #header>
       <CommonLocationSearch :locations="locations" :select-one-city="true" @selectCity="selectCity"/>
-      <div class="popular-cities">
+      <!-- <div class="popular-cities">
         <p class="popular-cities__title">Популярные города</p>
         <div class="popular-cities__list">
           <button class="popular-cities__item">Санкт-Петербург</button>
@@ -11,7 +11,7 @@
           <button class="popular-cities__item">Екатеринбург</button>
           <button class="popular-cities__item">Рим</button>
         </div>
-      </div>
+      </div> -->
     </template>
     <template #content>
       <button class="choose-city__back-btn"  :class="{'choose-city__back-btn_type_visible': activeLevel !== 'country'}" @click="goBack">
