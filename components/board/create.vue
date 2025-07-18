@@ -1,9 +1,10 @@
 <template>
 	<UiForm
 		class="board-create"
-		@submit="submit"
+		:submit="submit"
 	>
 		<CommonLayoutInfoCard>
+			{{ data }}
 			<BoardForm v-model="data" />
 		</CommonLayoutInfoCard>
 		<UiButton
@@ -22,28 +23,93 @@
 </template>
 
 <script setup>
+	import { useAnnouncementStore } from '~/store/announcementStore';
+
+	const announcementStore = useAnnouncementStore();
+
 	const data = ref({
-		logo: '',
-		name: '',
-		description: '',
+		announcement_image: '',
+		title: '',
+		content: '',
 		price: 0,
 		currency: 2,
-		categories: [],
+		category_ids: [],
 		gallery: [],
-		contact_name: '',
-		contact_email: '',
-		contact_phone: '',
-		company_name: '',
-		url_site: '',
+		name: '',
+		email: '',
+		phone: '',
+		company: '',
+		site: '',
 	});
 
-	const isOpenPayModal = ref(true);
+	const isOpenPayModal = ref(false);
 
 	const handleClosePayModal = () => {
 		isOpenPayModal.value = false;
 	};
 
-	const submit = (value, form) => {};
+	const prepareFormData = () => {
+		// Создаем FormData
+		const formData = new FormData();
+
+		// Добавляем изображение
+		const imageFile = data.value.announcement_image?.formData?.get('file');
+		if (imageFile) {
+			formData.append('announcement_image', imageFile);
+		}
+
+		// Добавляем простые поля
+		const fields = {
+			title: data.value.title || '',
+			content: data.value.content || '',
+			price: String(data.value.price || 0),
+			currency: String(data.value.currency || 2),
+			name: data.value.name || '',
+			email: data.value.email || '',
+			phone: data.value.phone || '',
+			company: data.value.company || '',
+			site: data.value.site || '',
+		};
+
+		Object.entries(fields).forEach(([key, value]) => {
+			formData.append(key, value);
+		});
+
+		// Добавляем массивы
+
+		// // Категории
+		// data.value.category_ids?.forEach((id, index) => {
+		// 	formData.append(`category_ids[${index}]`, String(id));
+		// });
+
+		// Галерея - файлы из FormData
+		data.value.gallery?.forEach((galleryItem, index) => {
+			if (galleryItem.formData) {
+				const galleryFile = galleryItem.formData.get('file');
+				if (galleryFile) {
+					formData.append(`gallery[${index}]`, galleryFile);
+				}
+			} else if (galleryItem.id) {
+				// Если это уже загруженное изображение с ID
+				formData.append(`gallery_ids[${index}]`, String(galleryItem.id));
+			}
+		});
+
+		return formData;
+	};
+
+	const submit = (value, form) => {
+		const formData = prepareFormData();
+		announcementStore
+			.createAnnouncement(formData, form)
+			.then((res) => {
+				console.log('Объявление создано:', res);
+				isOpenPayModal.value = true;
+			})
+			.catch((err) => {
+				console.error('Ошибка создания объявления:', err);
+			});
+	};
 </script>
 
 <style lang="scss">

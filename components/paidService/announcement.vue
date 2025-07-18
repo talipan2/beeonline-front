@@ -55,8 +55,10 @@
 
 <script setup>
 	import { useEntityStore } from '~/store/entityStore';
+	import { useAnnouncementStore } from '~/store/announcementStore';
 
 	const entityStore = useEntityStore();
+	const announcementStore = useAnnouncementStore();
 
 	const props = defineProps({
 		id: {
@@ -78,12 +80,12 @@
 		usedData.value = null;
 		preparedData.value = null;
 
-		return entityStore.prepareRaiseService(props.id).then((response) => {
+		return announcementStore.announcementPrepare(props.id).then((response) => {
 			preparedData.value = response;
 		});
 	};
 	const use = () => {
-		return entityStore.raiseService(props.id).then((response) => {
+		return announcementStore.announcementPublish(props.id).then((response) => {
 			usedData.value = response.data;
 		});
 	};

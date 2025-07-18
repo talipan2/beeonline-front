@@ -26,9 +26,11 @@
 </template>
 
 <script setup>
+	import { useAnnouncementStore } from '~/store/announcementStore';
 	import { useOrganizationStore } from '~/store/organizationStore';
 
 	const organizationStore = useOrganizationStore();
+	const announcementStore = useAnnouncementStore();
 
 	const data = ref({});
 	const router = useRouter();
@@ -36,10 +38,12 @@
 
 	onMounted(() => {
 		isLoading.value = true;
-		organizationStore
-			.getPubCard(router.currentRoute.value.params.id)
+		announcementStore
+			.getAnnouncement(router.currentRoute.value.params.id)
 			.then((res) => {
-				data.value = res;
+				if (res && res.data) {
+					data.value = res.data;
+				}
 			})
 			.finally(() => {
 				isLoading.value = false;

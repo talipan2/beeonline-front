@@ -9,17 +9,17 @@
 		<div class="board-card__container">
 			<div class="board-card__image">
 				<UiImage
-					:src="announcement.logo"
-					:alt="announcement.name"
+					:src="announcement.announcement_image"
+					:alt="announcement.title"
 					external
 				/>
 			</div>
 			<div class="board-card__content">
 				<h3 class="board-card__title">
-					{{ announcement.name }}
+					{{ announcement.title }}
 				</h3>
 				<p class="board-card__description">
-					{{ announcement.description }}
+					{{ announcement.content }}
 				</p>
 				<p class="board-card__price">
 					{{ formatMoney(announcement.price, announcement.currency, 0) }}

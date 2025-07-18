@@ -3,19 +3,20 @@
 		<label class="form-group__title">Анонсовая картинка *</label>
 		<CommonImageLoadSecondary
 			class="board-logo"
-			v-model="data.logo"
+			v-model="data.announcement_image"
 			label="Загрузить фотографию (до 5Мб. Допустимый формат .jpeg, .png, .jpg, .gif)"
-			name="logo"
+			name="announcement_image"
 			:rules="{ required_image: true }"
 			errorLabel="'Анонсовая картинка'"
+			:returnFormData="true"
 		/>
 	</div>
 	<div class="form-group form-group_type_secondary">
 		<label class="form-group__title">Название объявления *</label>
 		<UiInput
 			:rules="{ required: true, min: 2, max: 100 }"
-			name="name"
-			v-model="data.name"
+			name="title"
+			v-model="data.title"
 			label="Название объявления"
 			class="form-group__value"
 			placeholder="Введите название объявления"
@@ -25,8 +26,8 @@
 		<label class="form-group__title">Описание *</label>
 		<UiTextArea
 			class="form-group__value"
-			v-model="data.description"
-			name="description"
+			v-model="data.content"
+			name="content"
 			label="Описание"
 			:rules="{ required: true, min: 50, max: 2000 }"
 			placeholder="Введите описание"
@@ -74,8 +75,8 @@
 				{ id: 5, label: 'Другое' },
 				{ id: 6, label: 'Пошив' },
 			]"
-			v-model="data.categories"
-			name="categories"
+			v-model="data.category_ids"
+			name="category_ids"
 			label="Выбор категории"
 		/>
 	</div>
@@ -92,15 +93,16 @@
 			class="board-gallery"
 			:showSetting="false"
 			:maxCount="5"
+			:returnFormData="true"
 		/>
 	</div>
 	<div class="form-group form-group_type_secondary">
 		<label class="form-group__title">ФИО *</label>
 		<UiInput
 			:rules="{ required: true }"
-			name="contact_name"
+			name="name"
 			label="ФИО"
-			v-model="data.contact_name"
+			v-model="data.name"
 			class="form-group__value"
 			placeholder="Введите ФИО"
 		></UiInput>
@@ -109,9 +111,9 @@
 		<label class="form-group__title">Электронная почта *</label>
 		<UiInput
 			:rules="{ required: true, email: true }"
-			name="contact_email"
+			name="email"
 			label="Электронная почта"
-			v-model="data.contact_email"
+			v-model="data.email"
 			class="form-group__value"
 			placeholder="Введите электронную почту"
 		></UiInput>
@@ -121,9 +123,9 @@
 		<label class="form-group__title">Номер телефона *</label>
 		<UiInput
 			:rules="{ required: true }"
-			name="contact_phone"
+			name="phone"
 			label="Номер телефона"
-			v-model="data.contact_phone"
+			v-model="data.phone"
 			class="form-group__value"
 			type="tel"
 			placeholder="Введите номер телефона"
@@ -134,9 +136,9 @@
 		<label class="form-group__title">Название компании</label>
 		<UiInput
 			:rules="{ required: false }"
-			name="company_name"
+			name="company"
 			label="Название компании"
-			v-model="data.company_name"
+			v-model="data.company"
 			class="form-group__value"
 			placeholder="Введите название компании"
 		></UiInput>
@@ -146,9 +148,9 @@
 		<UiInput
 			:rules="{ url: true }"
 			placeholder="Введите название сайта"
-			name="url_site"
+			name="site"
 			label="Ссылка на сайт"
-			v-model="data.url_site"
+			v-model="data.site"
 			class="form-group__value"
 		>
 			<SvgoPlanet class="svg-m" />
@@ -159,14 +161,16 @@
 <script setup>
 	import { useEntityStore } from '~/store/entityStore';
 	import { useSettingStore } from '~/store/settingStore';
+	import { useUserStore } from '~/store/userStore';
 
 	const settingStore = useSettingStore();
 	const entityStore = useEntityStore();
+	const userStore = useUserStore();
 
 	const selectedCategories = computed(() => {
 		return entityStore.getEntityLabelById(
 			'announcementCategories',
-			data.value.categories,
+			data.value.category_ids,
 			true
 		);
 	});
@@ -214,8 +218,8 @@
 	});
 
 	const handleClickCategory = (category) => {
-		if (data.value?.categories) {
-			data.value.categories = data.value.categories.filter(
+		if (data.value?.category_ids) {
+			data.value.category_ids = data.value.category_ids.filter(
 				(item) => item !== category.id
 			);
 		}

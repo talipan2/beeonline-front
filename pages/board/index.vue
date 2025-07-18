@@ -36,11 +36,11 @@
 
 <script setup>
 	// Импорт стора организаций и настроек
-	import { useOrganizationStore } from '~/store/organizationStore';
+	import { useAnnouncementStore } from '~/store/announcementStore';
 	import { useSettingStore } from '~/store/settingStore';
 
 	// Инициализация стора организаций и стора настроек
-	const organizationStore = useOrganizationStore();
+	const announcementStore = useAnnouncementStore();
 	const settingStore = useSettingStore();
 
 	// Состояние пагинации (текущая и последняя страница)
@@ -70,8 +70,8 @@
 	 */
 	const handleFetchData = (params, scroll = true) => {
 		isLoading.value = true;
-		organizationStore
-			.getPubCardsList({ type: 'performer', ...params })
+		announcementStore
+			.getAnnouncements(params)
 			.then((res) => {
 				data.value = res.data; // сохраняем полученные объявления
 				page.value = res.meta; // обновляем данные пагинации

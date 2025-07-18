@@ -5,8 +5,8 @@
 			<CommonLayoutInfoCard class="board-catalog-details__header">
 				<div class="board-catalog-details__header-image">
 					<UiImage
-						:src="data.logo || defaultImage"
-						:alt="data.name"
+						:src="data.announcement_image || defaultImage"
+						:alt="data.title"
 						external
 					/>
 				</div>
@@ -38,13 +38,13 @@
 						:badges="data.categories.map((category) => category.name)"
 					/>
 					<h1 class="board-catalog-details__header-title">
-						{{ data.name }}
+						{{ data.title }}
 					</h1>
 					<p class="board-catalog-details__header-price">
-						{{ formatMoney(100000000, 'RUB', 0) }}
+						{{ formatMoney(data.price, data.currency, 0) }}
 					</p>
 					<h2 class="board-catalog-details__header-title-company">
-						{{ data.name }}
+						{{ data.company }}
 					</h2>
 					<div class="board-catalog-details__header-content-row">
 						<div class="board-catalog-details__header-content-date">
@@ -58,7 +58,7 @@
 								variant="quinary"
 								size="large"
 								class="board-catalog-details__header-button"
-								@click="showContacts = !showContacts"
+								@click="handleShowContacts"
 							>
 								{{ showContacts ? 'Скрыть контакты' : 'Показать контакты' }}
 							</UiButton>
@@ -103,28 +103,28 @@
 					<CatalogNewServiceDetailsBadge
 						:specs="{
 							name: 'Контактное лицо',
-							value: contactsData.name || 'Не указано',
+							value: data.name || 'Не указано',
 						}"
 						:line-limit="false"
 					/>
 					<CatalogNewServiceDetailsBadge
 						:specs="{
 							name: 'Сайт',
-							value: contactsData.site || 'Не указан',
+							value: data.site || 'Не указан',
 						}"
 						:line-limit="false"
 					/>
 					<CatalogNewServiceDetailsBadge
 						:specs="{
 							name: 'Телефон',
-							value: contactsData.phone || 'Не указан',
+							value: data.phone || 'Не указан',
 						}"
 						:line-limit="false"
 					/>
 					<CatalogNewServiceDetailsBadge
 						:specs="{
 							name: 'Почта',
-							value: contactsData.email || 'Не указан',
+							value: data.email || 'Не указан',
 						}"
 						:line-limit="false"
 					/>
@@ -135,7 +135,7 @@
 				class="board-catalog-details__description"
 			>
 				<p class="board-catalog-details__description-text">
-					{{ data.description || 'не указано' }}
+					{{ data.content || 'не указано' }}
 				</p>
 			</CommonLayoutInfoCard>
 			<CommonLayoutInfoCard
@@ -164,7 +164,7 @@
 
 <script setup>
 	import defaultImage from '~/assets/images/photo-plug.svg';
-	import { useOrganizationStore } from '~/store/organizationStore';
+	import { useAnnouncementStore } from '~/store/announcementStore';
 
 	const props = defineProps({
 		data: {
@@ -182,10 +182,7 @@
 		},
 	});
 
-	const organizationStore = useOrganizationStore();
-	const router = useRouter();
-
-	const badges = ['Новое', 'Продано', 'Выкуплено'];
+	const announcementStore = useAnnouncementStore();
 
 	const emit = defineEmits([
 		'openEditModal',
@@ -193,19 +190,24 @@
 		'openAnnouncementPayModal',
 	]);
 
-	const contactsData = {
-		name: 'Иванов Иван',
-		site: 'https://www.example.com',
-		phone: '+7 (999) 999-99-99',
-		email: 'ivanov@example.com',
-	};
-
 	const currentGalleryIndex = ref(0);
 	const handleUpdatePhotoIndex = (index) => {
 		currentGalleryIndex.value = index;
 	};
 
 	const showContacts = ref(false);
+
+	const handleShowContacts = () => {
+		if (showContacts.value) {
+			showContacts.value = false;
+		} else {
+			announcementStore
+				.updateAnnouncementShowContacts(props.data.id)
+				.then((res) => {
+					showContacts.value = true;
+				});
+		}
+	};
 
 	const handleOpenEditAnnouncementModal = () => {
 		emit('openEditModal', { ...props.data });

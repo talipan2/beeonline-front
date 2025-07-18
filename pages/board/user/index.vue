@@ -36,22 +36,17 @@
 	// Импорт стора организаций и настроек
 	import { useOrganizationStore } from '~/store/organizationStore';
 	import { useSettingStore } from '~/store/settingStore';
+	import { useAnnouncementStore } from '~/store/announcementStore';
 
 	// Инициализация стора организаций и стора настроек
 	const organizationStore = useOrganizationStore();
 	const settingStore = useSettingStore();
+	const announcementStore = useAnnouncementStore();
 
 	// Состояние пагинации (текущая и последняя страница)
 	const page = ref({
 		current_page: 1,
 		last_page: 1,
-	});
-
-	// Параметры фильтрации и сортировки объявлений
-	const params = ref({
-		category_id: 1, // id категории (по умолчанию 1)
-		sort: 'created_at', // сортировка по дате создания
-		search: '', // поисковый запрос
 	});
 
 	// ref для DOM-элемента списка объявлений (для скролла)
@@ -70,8 +65,8 @@
 	 */
 	const handleFetchData = (params, scroll = true) => {
 		isLoading.value = true;
-		organizationStore
-			.getPubCardsList({ type: 'performer', ...params })
+		announcementStore
+			.getAnnouncements(params)
 			.then((res) => {
 				data.value = res?.data?.map((item) => {
 					return {

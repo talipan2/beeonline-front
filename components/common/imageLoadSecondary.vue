@@ -2,8 +2,9 @@
 	<Field
 		:label="errorLabel"
 		:rules="rules"
-		v-slot="{ field, errors, meta, handleReset, handleBlur }"
+		v-slot="{ field, errors, meta, handleReset, handleBlur, setValue }"
 		:name="name"
+		:model-value="imagePreview || modelValue"
 	>
 		<div
 			class="load-image-secondary"
@@ -35,14 +36,23 @@
 									handleDeleteImage();
 									handleReset();
 									handleBlur();
+									setValue('');
 								}
 							"
 						>
 							<SvgoClose class="svg-l" />
 						</UiButton>
+
 						<!-- <UiButton class="load-image-secondary__btn load-image-secondary__btn_type_setting" type="button" variant="default" :without-padding="true" @click="settingModal = true">
               <SvgoSetting class="svg-l"/>
             </UiButton> -->
+						<UiInput
+							class="load-image-secondary__input-url"
+							type="text"
+							name="imagePreview"
+							label="Логотип"
+							v-model="imagePreview"
+						/>
 					</template>
 					<div
 						v-else
@@ -149,10 +159,14 @@
 			type: String,
 			default: '',
 		},
+		returnFormData: {
+			type: Boolean,
+			default: false,
+		},
 	});
 
 	const settingStore = useSettingStore();
-	const imagePreview = ref(props.modelValue.url || '');
+	const imagePreview = ref('');
 	const userStore = useUserStore();
 	const toast = useToast();
 	const progress = ref(0);
@@ -197,17 +211,25 @@
 						}
 					},
 				};
-				settingStore
-					.uploadFiles(userStore.userData.id, formData, config)
-					.then((res) => {
-						if (res && res.media_id) {
-							imagePreview.value = URL.createObjectURL(file);
-							emit('update:modelValue', {
-								id: res.media_id,
-								url: imagePreview.value,
-							});
-						}
+				if (props.returnFormData) {
+					emit('update:modelValue', {
+						formData: formData,
+						url: URL.createObjectURL(file),
 					});
+					imagePreview.value = URL.createObjectURL(file);
+				} else {
+					settingStore
+						.uploadFiles(userStore.userData.id, formData, config)
+						.then((res) => {
+							if (res && res.media_id) {
+								imagePreview.value = URL.createObjectURL(file);
+								emit('update:modelValue', {
+									id: res.media_id,
+									url: imagePreview.value,
+								});
+							}
+						});
+				}
 			} else {
 				toast.error('Файл превышает допустимый размер');
 			}
@@ -231,6 +253,17 @@
 		emit('update:modelValue', null);
 	};
 
+	// Инициализация imagePreview при монтировании
+	onMounted(() => {
+		if (props.modelValue) {
+			if (typeof props.modelValue === 'object' && props.modelValue !== null) {
+				imagePreview.value = props.modelValue.url || '';
+			} else {
+				imagePreview.value = props.modelValue || '';
+			}
+		}
+	});
+
 	watch(
 		() => props.modelValue,
 		(newVal) => {
@@ -239,7 +272,7 @@
 					imagePreview.value = newVal.url;
 				}
 			} else {
-				imagePreview.value = newVal;
+				imagePreview.value = newVal || '';
 			}
 		},
 		{ deep: true, immediate: true }
@@ -371,6 +404,10 @@
 			top: 1em;
 			right: 1em;
 			background-color: transparent;
+		}
+
+		&__input-url {
+			display: none;
 		}
 
 		@include mobile {

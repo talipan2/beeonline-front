@@ -282,6 +282,10 @@
 			type: Number,
 			default: null, // лимит по умолчанию отключён
 		},
+		returnFormData: {
+			type: Boolean,
+			default: false,
+		},
 	});
 
 	const localModelValue = computed({
@@ -370,17 +374,24 @@
 						}
 					},
 				};
-				settingStore
-					.uploadFiles(userStore.userData.id, formData, config)
-					.then((res) => {
-						if (res && res.media_id) {
-							emit('update:modelValue', [
-								...props.modelValue,
-								{ id: res.media_id, url: res.url },
-							]);
-							progress.value = 0;
-						}
-					});
+				if (props.returnFormData) {
+					emit('update:modelValue', [
+						...props.modelValue,
+						{ url: URL.createObjectURL(file), formData: formData },
+					]);
+				} else {
+					settingStore
+						.uploadFiles(userStore.userData.id, formData, config)
+						.then((res) => {
+							if (res && res.media_id) {
+								emit('update:modelValue', [
+									...props.modelValue,
+									{ id: res.media_id, url: res.url },
+								]);
+								progress.value = 0;
+							}
+						});
+				}
 			} else {
 				toast.error('Файл превышает допустимый размер');
 			}
