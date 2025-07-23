@@ -86,7 +86,7 @@
 	};
 	const use = () => {
 		return announcementStore.announcementPublish(props.id).then((response) => {
-			usedData.value = response.data;
+			usedData.value = response;
 		});
 	};
 
