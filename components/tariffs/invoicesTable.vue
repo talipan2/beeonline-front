@@ -33,7 +33,7 @@
           }">
             {{ formatMoney(
               invoice.amount,
-              invoice.currency?.code
+              invoice.currency
             )
             }}
           </td>
