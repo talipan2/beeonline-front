@@ -19,22 +19,22 @@
 				<div class="counterparty-check__organization">
 					<div class="counterparty-check__organization-title">Объявление:</div>
 					<div class="counterparty-check__organization-name">
-						{{ preparedData.pubcard_name }}
+						{{ preparedData.name }}
 					</div>
 				</div>
 				<div class="counterparty-check__organization">
 					<div class="counterparty-check__organization-title">
-						{{ preparedData.raising_service.name }}
+						{{ preparedData.paid_service.name }}
 					</div>
 					<div class="counterparty-check__organization-name">
-						Количество: {{ preparedData.raising_service.quantity }}
+						Количество: {{ preparedData.paid_service.quantity }}
 					</div>
 				</div>
 			</div>
 		</template>
 		<template #used>
 			<CommonAlerts
-				:alert="'Карточка успешно поднята'"
+				:alert="'Объявление оплачено'"
 				type="success"
 			/>
 		</template>
