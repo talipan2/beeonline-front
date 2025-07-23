@@ -1,0 +1,47 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+.output/
+.nuxt/
+
+# Coverage reports
+coverage/
+
+# Logs
+*.log
+logs/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Temporary files
+tmp/
+temp/
+
+# Lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Public assets that shouldn't be formatted
+public/
+
+# Generated files
+*.min.js
+*.min.css
+
+# Docker
+Dockerfile
+docker-compose.yml
+
+# Config files that might have specific formatting
+.gitignore
+.env* 

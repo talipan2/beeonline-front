@@ -14,30 +14,36 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(service, rowIndex) in services" :key="rowIndex">
-          <td>
-              {{ service.name }}
-          </td>
-          <td class="services-table__price">
-            {{ formatMoney(service.price, service.currency, 0) }}
-            <span v-if="service.period" v-html="` / ${service.period}`"></span>
-          </td>
-          <td class="services-table__quantity"><CommonCounter v-model="service.quantity" :price-quantity="service.price_quantity" /></td>
-        </tr>
+        <ServicesItem v-for="(item, index) in cart" :key="index" v-slot="{ service, price, period }" :service="item.service" :price="item.price">
+            <tr>
+                <td>
+                    {{ service.name }} <span v-if="price.title">{{ price.title }}</span>
+                </td>
+                <td class="services-table__price">
+                    {{ formatMoney(price.amount, price.currency, 0) }}
+                    <span v-if="period" v-html="` / ${period}`"></span>
+                </td>
+                <td class="services-table__quantity">
+                    <CommonCounter v-model="item.quantity" :price-quantity="price.quantity" />
+                </td>
+            </tr>
+        </ServicesItem>
       </tbody>
     </table>
     <div class="services-list">
       <ul class="services-list__list">
-        <li class="services-list__item" v-for="(service, index) in services" :key="index">
-            {{ service.name }}
-          <p class="services-list__price">
-            {{ formatMoney(service.price, service.currency, 0) }}
-            <span v-if="service.period" v-html="` / ${service.period}`"></span>
-          </p>
-          <div class="services-list__counter">
-            <CommonCounter v-model="service.quantity" :price-quantity="service.price_quantity" />
-          </div>
-        </li>
+        <ServicesItem v-for="(item, index) in cart" :key="index" v-slot="{ service, price, period }" :service="item.service" :price="item.price">
+            <li class="services-list__item">
+                <div>{{ service.name }} <span v-if="price.title">{{ price.title }}</span></div>
+            <p class="services-list__price">
+                {{ formatMoney(price.amount, price.currency, 0) }}
+                <span v-if="period" v-html="` / ${period}`"></span>
+            </p>
+            <div class="services-list__counter">
+                <CommonCounter v-model="item.quantity" :price-quantity="price.quantity" />
+            </div>
+            </li>
+        </ServicesItem>
       </ul>
     </div>
     <div class="services-table__total">
@@ -54,6 +60,7 @@
 <script setup>
 import { useSettingStore } from '~/store/settingStore';
 import { useTariffsStore } from '~/store/tariffsStore';
+import ServicesItem from './servicesItem.vue';
 
 const props = defineProps({
   currentCurrency: {
@@ -69,55 +76,46 @@ const emit = defineEmits(['select', 'reset']);
 
 const userStoreServices = computed(() =>  tariffsStore.services?.filter(service => service.prices?.length));
 
-const services = ref([]);
+const cart = ref([]);
 
 watch(() => userStoreServices.value, (newVal) => {
-	services.value = newVal.map(service => {
-        let price = service.prices[0];
-        let period = null;
-        if (service.numeral_forms) {
-            let defaultNumeralForm = service.numeral_forms[0];
-            period = plural(price.quantity, {
-                one: service.numeral_forms[0] || defaultNumeralForm,
-                few: service.numeral_forms[1] || defaultNumeralForm,
-                many: service.numeral_forms[2] || defaultNumeralForm,
-                other: defaultNumeralForm,
-            });
+    let items = [];
 
-            if (price.quantity > 1) {
-                period = price.quantity + '&nbsp;' + period;
-            }
+	newVal.forEach(service => {
+        if (!service.prices?.length) {
+            return;
         }
-		return {
-			id: service.id,
-			name: service.name,
-			quantity: 0,
-			price: price.amount,
-            price_quantity: price.quantity,
-            price_period: price.period,
-			period: period,
-            currency: price.currency,
-		};
+        service.prices.forEach(price => {
+            items.push({
+                quantity: 0,
+                service: service,
+                price: price,
+            });
+        });
 	});
+
+    cart.value = items;
 }, {deep: true})
 
 const totalCount = computed(() => {
   let count = 0;
-  services.value.forEach(service => {
-    count += service.quantity * service.price;
+  cart.value.forEach(item => {
+    if (item.price.currency === props.currentCurrency) {
+        count += item.quantity * item.price.amount;
+    }
   });
   return count
 })
 
 const handlePayModal = () => {
   settingStore.payModalStatus = true;
-  const selectedServices = services.value.filter(service => service.quantity > 0);
+  const selectedServices = cart.value.filter(service => service.quantity > 0);
   emit('select', selectedServices, totalCount.value, props.currentCurrency);
   emit('reset', handleReset);
 }
 
 const handleReset = () => {
-  services.value.forEach(service => {
+  cart.value.forEach(service => {
     service.quantity = 0;
   });
 }

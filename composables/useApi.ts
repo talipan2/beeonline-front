@@ -1,170 +1,172 @@
-import { useToast } from "vue-toastification";
-import { useChannelsStore } from "~/store/channelsStore";
-import { useUserStore } from "~/store/userStore";
+import { useToast } from 'vue-toastification';
+import { useChannelsStore } from '~/store/channelsStore';
+import { useUserStore } from '~/store/userStore';
 
 export const useApi = () => {
-    const config = useRuntimeConfig();
-    const baseUrl = config.public.baseUrl;
+	const config = useRuntimeConfig();
+	const baseUrl = config.public.baseUrl;
 
-    const getAuthHeader = () => {
-        const token =
-            localStorage.getItem("token") ||
-            sessionStorage.getItem("token") ||
-            null;
-        return token ? `Bearer ${token}` : "";
-    };
+	const getAuthHeader = () => {
+		const token =
+			localStorage.getItem('token') || sessionStorage.getItem('token') || null;
+		return token ? `Bearer ${token}` : '';
+	};
 
-    const getCurrentRole = () => {
-        return useUserStore().role;
-    };
+	const getCurrentRole = () => {
+		return useUserStore().role;
+	};
 
-    const getSocketId = () => {
-        return useChannelsStore().socketId || "";
-    };
+	const getSocketId = () => {
+		return useChannelsStore().socketId || '';
+	};
 
-    const handleFetchError = (error: any, form?: any, silent?: boolean) => {
-        const errorMessage =
-            error?.data?.message ||
-            error?.message ||
-            "An unknown error occurred";
-        if (form && error?.data?.errors) {
-            if (Array.isArray(error.data.errors)) {
-                if (!silent) {
-                    useToast().error(error.data.errors[0]);
-                }
-            } else {
-                if (!silent) {
-                    useToast().error("Ошибка при валидации формы");
-                }
-                // console.log(error.data.errors);
-                form.setErrors(error.data.errors);
-                for (let key in error.data.errors) {
-                    form.setFieldTouched(key, true);
-                }
-                form.evt.target.scrollIntoView({ behavior: "smooth", block: "center" });
-            }
-        } else {
-            if (!silent) {
-                useToast().error(errorMessage);
-            }
-        }
+	const handleFetchError = (error: any, form?: any, silent?: boolean) => {
+		const errorMessage =
+			error?.data?.message || error?.message || 'An unknown error occurred';
+		if (form && error?.data?.errors) {
+			if (Array.isArray(error.data.errors)) {
+				if (!silent) {
+					useToast().error(error.data.errors[0]);
+				}
+			} else {
+				if (!silent) {
+					useToast().error('Ошибка при валидации формы');
+				}
+				// console.log(error.data.errors);
+				form.setErrors(error.data.errors);
+				for (let key in error.data.errors) {
+					form.setFieldTouched(key, true);
+				}
+				form.evt.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+			}
+		} else {
+			if (!silent) {
+				useToast().error(errorMessage);
+			}
+		}
 
-        throw {
-            statusCode: error?.statusCode,
-            // status: error?.response?.status,
-            message: errorMessage,
-            data: error?.data,
-        };
-    };
+		throw {
+			statusCode: error?.statusCode,
+			// status: error?.response?.status,
+			message: errorMessage,
+			data: error?.data,
+		};
+	};
 
-    const getHeaders = () => {
-        const headers: Record<string, string> = {
-            Accept: "application/json",
-        };
+	const getHeaders = (isFormData: boolean = false) => {
+		const headers: Record<string, string> = {
+			Accept: 'application/json',
+		};
 
-        const authHeader = getAuthHeader();
-        if (authHeader) {
-            headers["Authorization"] = authHeader;
-        }
+		// Не добавляем Content-Type для FormData - браузер сам установит границы
+		if (!isFormData) {
+			headers['Content-Type'] = 'application/json';
+		}
 
-        const socketId = getSocketId()?.toString() ?? "";
-        if (socketId) {
-            headers["X-Socket-ID"] = socketId;
-        }
+		const authHeader = getAuthHeader();
+		if (authHeader) {
+			headers['Authorization'] = authHeader;
+		}
 
-        const role = getCurrentRole() ?? "";
-        if (role) {
-            headers["X-Role"] = role;
-        }
+		const socketId = getSocketId()?.toString() ?? '';
+		if (socketId) {
+			headers['X-Socket-ID'] = socketId;
+		}
 
-        return headers;
-    };
+		const role = getCurrentRole() ?? '';
+		if (role) {
+			headers['X-Role'] = role;
+		}
 
-    const request = async (
-        endpoint: string,
-        method: string,
-        body?: any,
-        params?: any,
-        form?: any,
-        silent: boolean = false,
-        isBlob: boolean = false
-    ) => {
-        // if (form) {
-        //     if (form.controlledValues?.isLoading) {
-        //         throw new Error("Form is already loading");
-        //     }
-        //     form.setFieldValue('isLoading', true);
-        // }
-        try {
+		return headers;
+	};
 
-            endpoint = endpoint.startsWith("/")
-                ? endpoint.substring(1)
-                : endpoint;
-            const response = await useFetch(`${baseUrl}/${endpoint}`, {
-                method,
-                headers: getHeaders(),
-                body: body ? JSON.stringify(body) : undefined,
-                params,
-                baseURL: baseUrl,
-                server: false,
-                responseType: isBlob ? "blob" : "json",
-                credentials: 'include',
-            });
+	const request = async (
+		endpoint: string,
+		method: string,
+		body?: any,
+		params?: any,
+		form?: any,
+		silent: boolean = false,
+		isBlob: boolean = false
+	) => {
+		// if (form) {
+		//     if (form.controlledValues?.isLoading) {
+		//         throw new Error("Form is already loading");
+		//     }
+		//     form.setFieldValue('isLoading', true);
+		// }
+		try {
+			endpoint = endpoint.startsWith('/') ? endpoint.substring(1) : endpoint;
 
-            if (form) {
-                form.resetField('isLoading');
-            }
+			// Проверяем, является ли body FormData
+			const isFormData = body instanceof FormData;
 
-            if (response.error.value) {
-                throw response.error.value;
-            }
+			const response = await useFetch(`${baseUrl}/${endpoint}`, {
+				method: method as any,
+				headers: getHeaders(isFormData),
+				body: isFormData ? body : body ? JSON.stringify(body) : undefined,
+				params,
+				baseURL: baseUrl,
+				server: false,
+				responseType: isBlob ? 'blob' : 'json',
+				credentials: 'include',
+			});
 
-            if (isBlob) {
-                return response.data.value;
-            }
+			if (form) {
+				form.resetField('isLoading');
+			}
 
-            const result = response.data.value;
-            return result;
-        } catch (error) {
-            handleFetchError(error, form, silent);
-        } finally {
-            // if (form) {
-            //     form.setFieldValue('isLoading', false);
-            // }
-        }
-    };
+			if (response.error.value) {
+				throw response.error.value;
+			}
 
-    const get = (
-        endpoint: string,
-        params?: any,
-        form?: any,
-        silent: boolean = false,
-        isBlob: boolean = false
-    ) => request(endpoint, "GET", undefined, params, form, silent, isBlob);
-    const post = (
-        endpoint: string,
-        body?: any,
-        form?: any,
-        silent: boolean = false
-    ) => request(endpoint, "POST", body, undefined, form, silent);
-    const put = (
-        endpoint: string,
-        body?: any,
-        form?: any,
-        silent: boolean = false
-    ) => request(endpoint, "PUT", body, undefined, form, silent);
-    const del = (
-        endpoint: string,
-        body?: any,
-        form?: any,
-        silent: boolean = false
-    ) => request(endpoint, "DELETE", body, undefined, form, silent);
-    const patch = (
-        endpoint: string,
-        body?: any,
-        form?: any,
-        silent: boolean = false
-    ) => request(endpoint, "PATCH", body, undefined, form, silent);
+			if (isBlob) {
+				return response.data.value;
+			}
 
-    return { get, post, put, del, patch };
+			const result = response.data.value;
+			return result;
+		} catch (error) {
+			handleFetchError(error, form, silent);
+		} finally {
+			// if (form) {
+			//     form.setFieldValue('isLoading', false);
+			// }
+		}
+	};
+
+	const get = (
+		endpoint: string,
+		params?: any,
+		form?: any,
+		silent: boolean = false,
+		isBlob: boolean = false
+	) => request(endpoint, 'GET', undefined, params, form, silent, isBlob);
+	const post = (
+		endpoint: string,
+		body?: any,
+		form?: any,
+		silent: boolean = false
+	) => request(endpoint, 'POST', body, undefined, form, silent);
+	const put = (
+		endpoint: string,
+		body?: any,
+		form?: any,
+		silent: boolean = false
+	) => request(endpoint, 'PUT', body, undefined, form, silent);
+	const del = (
+		endpoint: string,
+		body?: any,
+		form?: any,
+		silent: boolean = false
+	) => request(endpoint, 'DELETE', body, undefined, form, silent);
+	const patch = (
+		endpoint: string,
+		body?: any,
+		form?: any,
+		silent: boolean = false
+	) => request(endpoint, 'PATCH', body, undefined, form, silent);
+
+	return { get, post, put, del, patch };
 };
