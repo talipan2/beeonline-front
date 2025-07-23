@@ -22,24 +22,46 @@
 					{{ announcement.content }}
 				</p>
 				<p class="board-card__price">
-					{{ formatMoney(announcement.price, announcement.currency, 0) }}
+					{{ addCurrency(announcement.price) }}
 				</p>
 				<div
+					v-if="announcement.published_at"
 					class="board-card__info"
 					:class="{
 						'board-card__info_user-announcements': isUserAnnouncements,
 					}"
 				>
 					<p>Дата публикации:</p>
-					<p>{{ formatDate(announcement.created_at, 'DD.MM.YYYY') }}</p>
+					<p>{{ formatDate(announcement.published_at, 'DD.MM.YYYY') }}</p>
 				</div>
-				<div
-					class="board-card__info"
-					v-if="isUserAnnouncements"
-				>
-					<p>Активна:</p>
-					<p>{{ formatDate(announcement.created_at, 'DD.MM.YYYY') }}</p>
-				</div>
+				<template v-if="isUserAnnouncements">
+					<div
+						class="board-card__info"
+						v-if="announcement.status_code === 'ACTIVE'"
+					>
+						<p>Активна:</p>
+						<p>до {{ formatDate(announcement.active_until, 'DD.MM.YYYY') }}</p>
+					</div>
+					<div
+						class="board-card__info"
+						v-if="announcement.status_code == 'INACTIVE'"
+					>
+						<p>{{ announcement.status_name }}</p>
+						<p v-if="new Date(announcement.active_until) < new Date()">
+							Срок истек
+						</p>
+					</div>
+					<div
+						class="board-card__info"
+						v-if="
+							announcement.status_code == 'DRAFT' ||
+							announcement.status_code == 'DECLINED' ||
+							announcement.status_code == 'UNDER_MODERATION'
+						"
+					>
+						<p>{{ announcement.status_name }}</p>
+					</div>
+				</template>
 			</div>
 			<div class="board-card__buttons">
 				<template v-if="isUserAnnouncements">
@@ -53,6 +75,7 @@
 						Изменить
 					</UiButton>
 					<UiButton
+						v-if="announcement.status_code === 'ACTIVE'"
 						type="button"
 						class="board-card__button"
 						variant="tertiary"
@@ -63,12 +86,41 @@
 					</UiButton>
 					<UiButton
 						type="button"
+						v-if="
+							announcement.status_code === 'INACTIVE' &&
+							new Date(announcement.active_until) > new Date()
+						"
+						@click="handleActivateAnnouncement"
+						class="board-card__button"
+						variant="tertiary"
+						size="large"
+					>
+						Опубликовать
+					</UiButton>
+					<UiButton
+						v-if="
+							announcement.status_code === 'ACTIVE' ||
+							announcement.status_code === 'UNDER_MODERATION' ||
+							announcement.status_code === 'DECLINED' ||
+							announcement.status_code === 'INACTIVE'
+						"
+						type="button"
 						@click="handleOpenAnnouncementPayModal"
 						class="board-card__button"
 						variant="tertiary"
 						size="large"
 					>
 						Продлить на месяц
+					</UiButton>
+					<UiButton
+						v-if="announcement.status_code === 'DRAFT'"
+						type="button"
+						@click="handleOpenAnnouncementPayModal"
+						class="board-card__button"
+						variant="tertiary"
+						size="large"
+					>
+						Оплатить
 					</UiButton>
 				</template>
 				<template v-else>
@@ -116,28 +168,23 @@
 		'openEditModal',
 		'removeFromPublication',
 		'openAnnouncementPayModal',
+		'openPublicationModal',
 	]);
-
-	const editAnnouncementModal = ref(false);
-	const editAnnouncementData = computed({
-		get() {
-			return props.announcement;
-		},
-		set(value) {
-			emit('update:announcement', value);
-		},
-	});
 
 	const handleOpenEditAnnouncementModal = () => {
 		emit('openEditModal', { ...props.announcement });
 	};
 
 	const handleOpenRemoveFromPublicationModal = () => {
-		emit('removeFromPublication', props.announcement.id);
+		emit('removeFromPublication', props.announcement);
 	};
 
 	const handleOpenAnnouncementPayModal = () => {
 		emit('openAnnouncementPayModal', props.announcement.id);
+	};
+
+	const handleActivateAnnouncement = () => {
+		emit('openPublicationModal', props.announcement);
 	};
 </script>
 

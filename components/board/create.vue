@@ -4,35 +4,36 @@
 		:submit="submit"
 	>
 		<CommonLayoutInfoCard>
-			{{ data }}
-			<BoardForm v-model="data" />
+			<BoardForm
+				v-model="data"
+				isReturnFormDataGallery
+			/>
 		</CommonLayoutInfoCard>
 		<UiButton
 			type="submit"
 			variant="quinary"
 			size="large"
 			class="board-create__btn"
+			:disabled="isLoading"
 		>
 			Создать объявление и перейти к оплате
 		</UiButton>
 	</UiForm>
-	<BoardModalsPay
-		:isOpen="isOpenPayModal"
-		@update:isOpen="handleClosePayModal"
-	/>
 </template>
 
 <script setup>
 	import { useAnnouncementStore } from '~/store/announcementStore';
+	import { useSettingStore } from '~/store/settingStore';
 
 	const announcementStore = useAnnouncementStore();
+	const settingStore = useSettingStore();
 
 	const data = ref({
 		announcement_image: '',
 		title: '',
 		content: '',
 		price: 0,
-		currency: 2,
+		currency_id: 2,
 		category_ids: [],
 		gallery: [],
 		name: '',
@@ -42,11 +43,8 @@
 		site: '',
 	});
 
-	const isOpenPayModal = ref(false);
-
-	const handleClosePayModal = () => {
-		isOpenPayModal.value = false;
-	};
+	const router = useRouter();
+	const isLoading = ref(false);
 
 	const prepareFormData = () => {
 		// Создаем FormData
@@ -63,7 +61,7 @@
 			title: data.value.title || '',
 			content: data.value.content || '',
 			price: String(data.value.price || 0),
-			currency: String(data.value.currency || 2),
+			currency_id: String(data.value.currency_id || 2),
 			name: data.value.name || '',
 			email: data.value.email || '',
 			phone: data.value.phone || '',
@@ -77,10 +75,10 @@
 
 		// Добавляем массивы
 
-		// // Категории
-		// data.value.category_ids?.forEach((id, index) => {
-		// 	formData.append(`category_ids[${index}]`, String(id));
-		// });
+		// Категории
+		data.value.category_ids?.forEach((id, index) => {
+			formData.append(`category_ids[${index}]`, String(id));
+		});
 
 		// Галерея - файлы из FormData
 		data.value.gallery?.forEach((galleryItem, index) => {
@@ -91,7 +89,7 @@
 				}
 			} else if (galleryItem.id) {
 				// Если это уже загруженное изображение с ID
-				formData.append(`gallery_ids[${index}]`, String(galleryItem.id));
+				formData.append(`gallery[${index}]`, galleryItem.id);
 			}
 		});
 
@@ -99,15 +97,25 @@
 	};
 
 	const submit = (value, form) => {
+		if (isLoading.value) return;
+		isLoading.value = true;
 		const formData = prepareFormData();
 		announcementStore
 			.createAnnouncement(formData, form)
 			.then((res) => {
-				console.log('Объявление создано:', res);
-				isOpenPayModal.value = true;
+				console.log(res);
+				if (res.announcement) {
+					router.push(`/board/user/${res.announcement.id}`);
+					settingStore.boardPayModal = true;
+				} else {
+					router.push(`/board/user`);
+				}
 			})
 			.catch((err) => {
 				console.error('Ошибка создания объявления:', err);
+			})
+			.finally(() => {
+				isLoading.value = false;
 			});
 	};
 </script>

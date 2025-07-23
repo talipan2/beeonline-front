@@ -75,26 +75,7 @@
 			</div>
 			<div class="filter__banners">
 				<BoardBanners
-					:data="[
-						{
-							id: 1,
-							name: 'Баннер 1',
-							image:
-								'https://i.pinimg.com/1200x/7b/09/c7/7b09c77fbaf0bad1564b1dc2ff69a9aa.jpg',
-						},
-						{
-							id: 2,
-							name: 'Баннер 2',
-							image:
-								'https://i.pinimg.com/1200x/7b/09/c7/7b09c77fbaf0bad1564b1dc2ff69a9aa.jpg',
-						},
-						{
-							id: 3,
-							name: 'Баннер 3',
-							image:
-								'https://i.pinimg.com/1200x/7b/09/c7/7b09c77fbaf0bad1564b1dc2ff69a9aa.jpg',
-						},
-					]"
+					:data="announcementBanners"
 				/>
 			</div>
 		</template>
@@ -103,6 +84,7 @@
 
 <script setup>
 	import { useSettingStore } from '~/store/settingStore';
+	import { useAnnouncementStore } from '~/store/announcementStore';
 
 	const props = defineProps({
 		isTutorial: {
@@ -119,6 +101,7 @@
 	});
 
 	const settingStore = useSettingStore();
+	const announcementStore = useAnnouncementStore();
 	const submitRef = ref(null);
 	const emit = defineEmits(['updateTutorialRefSubmit']);
 
@@ -128,6 +111,7 @@
 
 	const isMobile = ref(false);
 	const isFilterVisible = ref(false);
+	const announcementBanners = ref([]);
 
 	function toggleFilter() {
 		isFilterVisible.value = !isFilterVisible.value;
@@ -174,6 +158,10 @@
 				customerBottomBanner.value =
 					res.data.find((item) => item.type === 'customer_catalog_bot') || {};
 			});
+
+		announcementStore.getAnnouncementBanners().then((res) => {
+			announcementBanners.value = res?.data || [];
+		});
 	});
 </script>
 

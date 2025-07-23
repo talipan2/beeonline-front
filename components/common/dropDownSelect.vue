@@ -1,47 +1,49 @@
 <template>
-	<UiNewDropdown
-		:arrow="false"
-		:placement="'bottom-start'"
-		:offset="[0, 10]"
-		class="drop-down-select"
-		ref="dropdownRef"
-	>
-		<UiButton
-			class="drop-down-select__dropdown-button"
-			variant="elevated"
+	<div class="drop-down-select-wrapper">
+		<UiNewDropdown
+			:arrow="false"
+			:placement="'bottom-start'"
+			:offset="[0, 10]"
+			class="drop-down-select"
+			ref="dropdownRef"
 		>
-			<slot name="icon-left" />
-			{{ selectedOption.label }}
-			<SvgoDropDownSecondary
-				class="svg-m drop-down-select__dropdown-button-icon"
-				:class="{ active: isOpen }"
-			/>
-		</UiButton>
-		<template #content>
-			<div class="drop-down-select__dropdown-content">
-				<div class="drop-down-select__dropdown-list">
-					<UiButton
-						class="drop-down-select__dropdown-item"
-						v-for="option in options"
-						:key="option.id"
-						variant="default"
-						size="large"
-						type="button"
-						:without-padding="true"
-						@click="handleSelect(option)"
-					>
-						{{ option.label }}
-					</UiButton>
+			<UiButton
+				class="drop-down-select__dropdown-button"
+				variant="elevated"
+			>
+				<slot name="icon-left" />
+				{{ selectedOption.label }}
+				<SvgoDropDownSecondary
+					class="svg-m drop-down-select__dropdown-button-icon"
+					:class="{ active: isOpen }"
+				/>
+			</UiButton>
+			<template #content>
+				<div class="drop-down-select__dropdown-content">
+					<div class="drop-down-select__dropdown-list">
+						<UiButton
+							class="drop-down-select__dropdown-item"
+							v-for="option in options"
+							:key="option.id"
+							variant="default"
+							size="large"
+							type="button"
+							:without-padding="true"
+							@click="handleSelect(option)"
+						>
+							{{ option.label }}
+						</UiButton>
+					</div>
 				</div>
-			</div>
-		</template>
-	</UiNewDropdown>
+			</template>
+		</UiNewDropdown>
+	</div>
 </template>
 
 <script setup>
 	const props = defineProps({
 		modelValue: {
-			type: Number,
+			type: String,
 			default: null,
 		},
 		options: {
@@ -54,14 +56,13 @@
 
 	const selectedOption = computed(() => {
 		if (!props.modelValue) return props.options[0];
-		return props.options.find((option) => option.id === props.modelValue);
+		return props.options.find((option) => option.value === props.modelValue);
 	});
 
 	const emit = defineEmits(['update:modelValue']);
 
 	const handleSelect = (option) => {
-		console.log(option);
-		emit('update:modelValue', option.id);
+		emit('update:modelValue', option.value);
 	};
 
 	const isOpen = computed(() => {
@@ -70,6 +71,16 @@
 </script>
 
 <style lang="scss">
+	.drop-down-select-wrapper {
+		[data-tippy-root] {
+			box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.08);
+			border-radius: 1em;
+			overflow: hidden;
+			background-color: var(--color-white);
+			border: 1px solid var(--color-gray-200);
+		}
+	}
+
 	.drop-down-select {
 		font-size: 1em;
 
@@ -91,10 +102,6 @@
 
 		&__dropdown-content {
 			padding: 1em;
-			border-radius: 1em;
-			background-color: var(--color-white);
-			box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.08);
-			border: 1px solid var(--color-gray-200);
 		}
 
 		&__dropdown-list {

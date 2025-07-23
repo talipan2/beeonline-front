@@ -20,7 +20,6 @@
 				class="search-input__input"
 				:placeholder="placeholder"
 				v-model="search"
-				@update:modelValue="debouncedUpdateValue"
 			></UiInput>
 		</div>
 	</div>
@@ -38,11 +37,18 @@
 		},
 		isLoading: {
 			type: Boolean,
-			default: true,
+			default: false,
 		},
 	});
 
-	const search = ref('');
+	const search = computed({
+		get() {
+			return props.modelValue || '';
+		},
+		set(value) {
+			debouncedUpdateValue(value);
+		},
+	});
 	const inputRef = ref(null);
 	const handleContainerClick = (event) => {
 		// Ищем input внутри контейнера, чтобы гарантировать фокус

@@ -119,6 +119,17 @@
 		if (props.phonePlus && !value.startsWith('+')) {
 			value = `+${value}`;
 		}
+
+		// Удаление ведущих нулей для числовых полей
+		if ((props.type === 'number' || props.inputType === 'number') && value) {
+			// Удаляем все ведущие нули, кроме случая, когда значение просто "0"
+			value = value.replace(/^0+/, '') || '';
+			// Если после удаления нулей строка пустая и был ввод нуля, оставляем пустую строку
+			if (value === '' && /0/.test(value)) {
+				value = '';
+			}
+		}
+
 		emit('update:modelValue', value);
 	}
 </script>

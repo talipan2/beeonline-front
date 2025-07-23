@@ -26,6 +26,7 @@
 					cardLink="/board/user"
 					@update:page="handleUpdatePage"
 					:isUserAnnouncements="true"
+					@updateData="handleUpdateData"
 				/>
 			</div>
 		</template>
@@ -37,11 +38,13 @@
 	import { useOrganizationStore } from '~/store/organizationStore';
 	import { useSettingStore } from '~/store/settingStore';
 	import { useAnnouncementStore } from '~/store/announcementStore';
+	import { useUserStore } from '~/store/userStore';
 
 	// Инициализация стора организаций и стора настроек
 	const organizationStore = useOrganizationStore();
 	const settingStore = useSettingStore();
 	const announcementStore = useAnnouncementStore();
+	const userStore = useUserStore();
 
 	// Состояние пагинации (текущая и последняя страница)
 	const page = ref({
@@ -57,6 +60,7 @@
 
 	// Флаг загрузки данных
 	const isLoading = ref(false);
+	const isLoaded = ref(false);
 
 	/**
 	 * Получение списка объявлений с сервера
@@ -64,9 +68,13 @@
 	 * @param {boolean} scroll - нужно ли скроллить к списку после загрузки
 	 */
 	const handleFetchData = (params, scroll = true) => {
+		if (!userStore.userData.id) return;
 		isLoading.value = true;
 		announcementStore
-			.getAnnouncements(params)
+			.getAnnouncementsUserList(userStore.userData.id, {
+				...params,
+				per_page: 9,
+			})
 			.then((res) => {
 				data.value = res?.data?.map((item) => {
 					return {
@@ -88,6 +96,7 @@
 			})
 			.finally(() => {
 				isLoading.value = false;
+				isLoaded.value = true;
 			});
 	};
 
@@ -97,6 +106,13 @@
 	 */
 	const handleUpdatePage = (page) => {
 		handleFetchData({ ...params.value, page });
+	};
+
+	const handleUpdateData = (announcement) => {
+		const index = data.value.findIndex((item) => item.id === announcement.id);
+		if (index !== -1) {
+			data.value[index] = announcement;
+		}
 	};
 
 	// При монтировании компонента — первый запрос объявлений

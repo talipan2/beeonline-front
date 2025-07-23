@@ -25,11 +25,13 @@
 				@openEditModal="handleOpenEditAnnouncementModal"
 				@removeFromPublication="handleOpenRemoveFromPublicationModal"
 				@openAnnouncementPayModal="handleOpenAnnouncementPayModal"
+				@openPublicationModal="handleOpenPublicationModal"
 			/>
 			<BoardModalsAnnouncementEdit
 				:is-open="editAnnouncementModal.isOpen"
 				v-model:data="editAnnouncementModal.data"
 				@close="editAnnouncementModal.isOpen = false"
+				@updateData="handleUpdateData"
 			/>
 			<ConfirmModal />
 			<PaidServiceAnnouncement
@@ -37,32 +39,48 @@
 				:id="announcementId"
 			/>
 			<BoardModalsPay
-				:isOpen="isOpenPayModal"
-				@update:isOpen="handleClosePayModal"
-				title="Срок публикации"
-				text="Осталось меньше 3 дней до окончания срока публикации объявления. Для продления срока публикации объявления необходимо оплатить услугу."
+				:title="modalText.title"
+				:text="modalText.text"
+				:announcementId="data.id"
 			/>
 		</template>
 	</NuxtLayout>
 </template>
 
 <script setup>
-	import { useOrganizationStore } from '~/store/organizationStore';
+	import { useAnnouncementStore } from '~/store/announcementStore';
+	import { useToast } from 'vue-toastification';
+	import { useSettingStore } from '~/store/settingStore';
 
-	const organizationStore = useOrganizationStore();
+	const announcementStore = useAnnouncementStore();
+	const settingStore = useSettingStore();
 	const { confirm, ConfirmModal } = useConfirmModal();
+	const toast = useToast();
 
 	const data = ref({});
 	const router = useRouter();
 	const isLoading = ref(true);
 
+	const modalText = computed(() => {
+		if (data.value.status_code === 'ACTIVE') {
+			return {
+				title: 'Срок публикации',
+				text: 'Осталось меньше 3 дней до окончания срока публикации объявления. Для продления срока публикации объявления необходимо оплатить услугу.',
+			};
+		}
+		return {
+			title: 'Оплата публикации',
+			text: 'Объявление успешно создано. Для его публикации необходимо оплатить услугу.',
+		};
+	});
+
 	const announcementPayModal = ref(null);
 	const announcementId = ref(null);
 
-	const handleOpenAnnouncementPayModal = (id) => {
+	const handleOpenAnnouncementPayModal = (data) => {
 		if (announcementPayModal.value) {
-			announcementId.value = id;
-			announcementPayModal.value.open(id);
+			announcementId.value = data?.id;
+			announcementPayModal.value.open(data?.id);
 		}
 	};
 	const editAnnouncementModal = ref({
@@ -75,15 +93,16 @@
 		editAnnouncementModal.value.isOpen = true;
 	};
 
-	const handleOpenRemoveFromPublicationModal = (data) => {
+	const handleOpenRemoveFromPublicationModal = (announcement) => {
 		confirm({
 			title: 'Снять объявление с публикации?',
 			onConfirm: () => {
-				console.log('Удалить объявление из публикации');
+				announcementStore.deactivateAnnouncement(announcement?.id).then((res) => {
+					data.value = res?.data;
+					toast.success('Объявление успешно снято с публикации');
+				});
 			},
-			onCancel: () => {
-				console.log('Отмена');
-			},
+			onCancel: () => {},
 		});
 	};
 
@@ -93,12 +112,33 @@
 		isOpenPayModal.value = false;
 	};
 
+	const handleUpdateData = (announcement) => {
+		data.value = {...announcement};
+	};
+
+	const handleOpenPublicationModal = (announcement) => {
+		confirm({
+			title: 'Опубликовать объявление?',
+			onConfirm: () => {
+				announcementStore.activateAnnouncement(announcement?.id).then((res) => {
+					data.value = res?.data;
+					toast.success('Объявление успешно опубликовано');
+				});
+			},
+			onCancel: () => {},
+		});
+	};
+
 	onMounted(() => {
 		isLoading.value = true;
-		organizationStore
-			.getPubCard(router.currentRoute.value.params.id)
+		announcementStore
+			.getAnnouncement(router.currentRoute.value.params.id)
 			.then((res) => {
-				data.value = res;
+				data.value = res?.data || {};
+				const threeDaysInMs = 3 * 24 * 60 * 60 * 1000; // 3 дня в миллисекундах
+				if(res?.data?.status_code === "ACTIVE" && new Date(res?.data?.active_until) - new Date() <= threeDaysInMs) {
+					settingStore.boardPayModal = true;
+				}
 			})
 			.finally(() => {
 				isLoading.value = false;

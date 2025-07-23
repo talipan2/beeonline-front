@@ -2,6 +2,12 @@
 	<div class="board-catalog-details">
 		<BoardCatalogSkeletonDetails v-if="isLoading" />
 		<template v-else>
+			<CommonNotify
+				v-if="type === 'user' && data?.status_code === 'DECLINED'"
+				type="danger"
+				title="Объявление отклонено."
+				:text="`Причина: ${data?.status_comment || 'не указана'}`"
+			/>
 			<CommonLayoutInfoCard class="board-catalog-details__header">
 				<div class="board-catalog-details__header-image">
 					<UiImage
@@ -12,9 +18,13 @@
 				</div>
 				<div class="board-catalog-details__header-content">
 					<div class="board-catalog-details__header-content-row">
-						<div class="board-catalog-details__header-content-date">
+						<div
+							class="board-catalog-details__header-content-date"
+							v-if="data.published_at"
+						>
 							{{
-								'Дата публикации: ' + formatDate(data.created_at, 'DD.MM.YYYY')
+								'Дата публикации: ' +
+								formatDate(data.published_at, 'DD.MM.YYYY')
 							}}
 						</div>
 						<div class="board-catalog-details__header-content-views">
@@ -41,14 +51,26 @@
 						{{ data.title }}
 					</h1>
 					<p class="board-catalog-details__header-price">
-						{{ formatMoney(data.price, data.currency, 0) }}
+						{{ addCurrency(data.price) }}
 					</p>
 					<h2 class="board-catalog-details__header-title-company">
 						{{ data.company }}
 					</h2>
-					<div class="board-catalog-details__header-content-row">
-						<div class="board-catalog-details__header-content-date">
-							{{ 'Активна: до ' + formatDate(data.created_at, 'DD.MM.YYYY') }}
+					<div
+						class="board-catalog-details__header-content-row"
+						v-if="type === 'user'"
+					>
+						<div
+							class="board-catalog-details__header-content-date"
+							v-if="data.status_code === 'ACTIVE'"
+						>
+							{{ 'Активна: до ' + formatDate(data.active_until, 'DD.MM.YYYY') }}
+						</div>
+						<div
+							class="board-catalog-details__header-content-date"
+							v-else
+						>
+							{{ data.status_name }}
 						</div>
 					</div>
 					<div class="board-catalog-details__header-buttons">
@@ -67,15 +89,16 @@
 							<UiButton
 								type="button"
 								@click="handleOpenEditAnnouncementModal"
-								class="board-card__button"
+								class="board-catalog-details__header-button"
 								variant="tertiary"
 								size="large"
 							>
 								Изменить
 							</UiButton>
 							<UiButton
+								v-if="data.status_code === 'ACTIVE'"
 								type="button"
-								class="board-card__button"
+								class="board-catalog-details__header-button"
 								variant="tertiary"
 								size="large"
 								@click="handleOpenRemoveFromPublicationModal"
@@ -83,13 +106,42 @@
 								Снять с публикации
 							</UiButton>
 							<UiButton
+								v-if="
+									new Date(data.active_until) > new Date() &&
+									data.status_code === 'INACTIVE'
+								"
+								type="button"
+								@click="handleOpenPublicationModal"
+								class="board-catalog-details__header-button"
+								variant="tertiary"
+								size="large"
+							>
+								Опубликовать
+							</UiButton>
+							<UiButton
+								v-if="
+									data.status_code === 'ACTIVE' ||
+									data.status_code === 'UNDER_MODERATION' ||
+									data.status_code === 'DECLINED' ||
+									data.status_code === 'INACTIVE'
+								"
 								type="button"
 								@click="handleOpenAnnouncementPayModal"
-								class="board-card__button"
+								class="board-catalog-details__header-button"
 								variant="tertiary"
 								size="large"
 							>
 								Продлить на месяц
+							</UiButton>
+							<UiButton
+								v-if="data.status_code === 'DRAFT'"
+								type="button"
+								@click="handleOpenAnnouncementPayModal"
+								class="board-catalog-details__header-button"
+								variant="tertiary"
+								size="large"
+							>
+								Оплатить
 							</UiButton>
 						</template>
 					</div>
@@ -98,7 +150,7 @@
 			<transition name="fade-slide">
 				<div
 					class="board-catalog-details__specs-contacts"
-					v-if="showContacts"
+					v-if="showContacts || type === 'user'"
 				>
 					<CatalogNewServiceDetailsBadge
 						:specs="{
@@ -188,6 +240,7 @@
 		'openEditModal',
 		'removeFromPublication',
 		'openAnnouncementPayModal',
+		'openPublicationModal',
 	]);
 
 	const currentGalleryIndex = ref(0);
@@ -210,15 +263,24 @@
 	};
 
 	const handleOpenEditAnnouncementModal = () => {
-		emit('openEditModal', { ...props.data });
+		announcementStore.getAnnouncement(props.data.id).then((res) => {
+			emit('openEditModal', {
+				...res.data,
+				category_ids: res.data.categories.map((category) => category.id),
+			});
+		});
 	};
 
 	const handleOpenRemoveFromPublicationModal = () => {
-		emit('removeFromPublication', props.data.id);
+		emit('removeFromPublication', props.data);
 	};
 
 	const handleOpenAnnouncementPayModal = () => {
-		emit('openAnnouncementPayModal', props.data.id);
+		emit('openAnnouncementPayModal', props.data);
+	};
+
+	const handleOpenPublicationModal = () => {
+		emit('openPublicationModal', props.data);
 	};
 </script>
 
@@ -323,8 +385,8 @@
 			font-size: 1.2em;
 			text-transform: uppercase;
 			font-weight: 400;
-			max-width: 50%;
-			padding-block: 1.41em;
+			// max-width: 50%;
+			// padding-block: 1.41em;
 		}
 
 		&__specs-contacts {

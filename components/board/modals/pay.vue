@@ -1,6 +1,6 @@
 <template>
 	<UiModal
-		v-model="isOpenModal"
+		v-model="settingStore.boardPayModal"
 		:title="title"
 		@confirm="() => confirm()"
 	>
@@ -13,7 +13,7 @@
 					<UiButton
 						class="board-pay-modal__btn"
 						type="button"
-						variant="quinary"
+						variant="tertiary"
 						size="large"
 						@click="confirm"
 					>
@@ -39,6 +39,8 @@
 </template>
 
 <script setup>
+	import { useSettingStore } from '~/store/settingStore';
+
 	const emit = defineEmits(['update:isOpen']);
 
 	const props = defineProps({
@@ -48,16 +50,22 @@
 		},
 		text: {
 			type: String,
-			default: 'Для публикации объявления необходимо оплатить услугу.',
+			default:
+				'Объявление успешно создано. Для его публикации необходимо оплатить услугу.',
 		},
 		title: {
 			type: String,
 			default: 'Оплата объявления',
 		},
+		announcementId: {
+			type: Number,
+			default: null,
+		},
 	});
 
+	const settingStore = useSettingStore();
+
 	const announcementPayModal = ref(null);
-	const announcementId = ref(1);
 
 	const isOpenModal = computed({
 		get() {
@@ -69,11 +77,11 @@
 	});
 
 	const openPayModal = () => {
-		announcementPayModal.value.open(announcementId.value);
+		announcementPayModal.value.open(props.announcementId);
 	};
 
 	const confirm = () => {
-		emit('update:isOpen', false);
+		settingStore.boardPayModal = false;
 	};
 </script>
 

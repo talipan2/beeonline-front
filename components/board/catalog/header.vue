@@ -12,6 +12,7 @@
 			<CommonSearch
 				class="board-catalog-header__search"
 				placeholder="Поиск объявлений"
+				v-model="search"
 			/>
 			<CommonDropDownSelect
 				class="board-catalog-header__sort"
@@ -44,19 +45,52 @@
 				title="Категории"
 				:options="categoryOptions"
 				class="board-catalog-header__category"
+				v-model="currentCategory"
 			>
 				<template #iconLeft>
 					<SvgoJacket />
 				</template>
 			</CommonDropDownMultiselect>
+			<CommonBadgeSecond
+				class="board-catalog-header__category-badges"
+				:badges="categoryBadges"
+				type="button"
+				@click="handleDeleteCategory"
+			/>
 		</div>
 	</div>
 </template>
 
 <script setup>
+	import { useAnnouncementStore } from '~/store/announcementStore';
 	import { useEntityStore } from '~/store/entityStore';
 
+	const props = defineProps({
+		params: {
+			type: Object,
+			default: () => ({}),
+		},
+		isLoading: {
+			type: Boolean,
+			default: false,
+		},
+	});
+
+	const emit = defineEmits(['update:params']);
+
+	const announcementStore = useAnnouncementStore();
 	const entityStore = useEntityStore();
+
+	const categoryBadges = computed(() => {
+		return currentCategory.value.map((item) => {
+			return {
+				id: item,
+				label: entityStore.entityData.announcementCategories.find(
+					(category) => category.id === item
+				)?.name,
+			};
+		});
+	});
 
 	const sortOptions = [
 		{
@@ -67,20 +101,74 @@
 		{
 			id: 2,
 			label: 'Сначала дорогие',
-			value: 'price',
+			value: 'expensive',
 		},
 		{
 			id: 3,
 			label: 'Сначала дешевые',
-			value: 'price-asc',
+			value: 'cheap',
 		},
 	];
-	const categoryOptions = computed(() =>
-		entityStore.entityData.categories.slice(0, 10)
+	const categoryOptions = computed(
+		() => entityStore.entityData.announcementCategories
 	);
 
-	const currentSort = ref(1);
+	const currentSort = ref(sortOptions[0].value);
 	const currentCategory = ref([]);
+	const search = ref('');
+	const isInitializing = ref(true);
+
+	// Синхронизация с props из родителя (URL query параметры) - НЕ эмитим события
+	watch(
+		() => props.params,
+		(newParams) => {
+			if (newParams.sort) {
+				currentSort.value = newParams.sort;
+			}
+			if (newParams.category_id) {
+				currentCategory.value = newParams.category_id;
+			}
+			if (newParams.search !== undefined) {
+				search.value = newParams.search;
+			}
+		},
+		{ immediate: true, deep: true }
+	);
+
+	// Отслеживание изменений пользователем - эмитим события
+	watch(
+		() => [currentSort.value, currentCategory.value, search.value],
+		() => {
+			// Пропускаем первое срабатывание (инициализация)
+			if (isInitializing.value) {
+				isInitializing.value = false;
+				return;
+			}
+
+			emit('update:params', {
+				sort: currentSort.value,
+				category_id: currentCategory.value,
+				search: search.value,
+			});
+		},
+		{
+			deep: true,
+			immediate: false,
+		}
+	);
+
+	const handleDeleteCategory = (category) => {
+		currentCategory.value = currentCategory.value.filter(
+			(item) => item !== category.id
+		);
+	};
+
+	onMounted(async () => {
+		await nextTick();
+		if (categoryOptions.value.length === 0) {
+			announcementStore.getAnnouncementsCategories();
+		}
+	});
 </script>
 
 <style lang="scss">
@@ -135,6 +223,11 @@
 					height: 100%;
 				}
 			}
+		}
+
+		&__category-badges {
+			flex: 0 1 100%;
+			font-size: 1.6em;
 		}
 
 		@include mobile {

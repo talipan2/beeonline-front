@@ -55,6 +55,10 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 		'/board',
 	];
 
+	const requireOrganizationAndPublicCardLinks = [
+		'/board/user',
+	];
+
 	// переход к созданию организации у заказчика
 	if (
 		userStore.isAuth &&
@@ -114,7 +118,8 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 		(showModalLinks.some((item) => to.path.startsWith(item)) ||
 			to.path === '/') &&
 		!settingStore.registerRedirectConfirm &&
-		!notShowModalLinks.some((item) => to.path.startsWith(item))
+		!notShowModalLinks.some((item) => to.path.startsWith(item)) &&
+		!requireOrganizationAndPublicCardLinks.some((item) => to.path.startsWith(item))
 	) {
 		settingStore.returnRegisterModal = true;
 		settingStore.registerRedirectPath = to.path;
@@ -127,7 +132,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 		userStore.role === 'customer' &&
 		userStore.userData.id &&
 		userStore.userData?.organization_id &&
-		!availableLinkList.some((item) => to.path.startsWith(item)) &&
+		(!availableLinkList.some((item) => to.path.startsWith(item)) || requireOrganizationAndPublicCardLinks.some((item) => to.path.startsWith(item))) &&
 		to.path !== '/' &&
 		userStore.userData?.public_cards
 	) {
@@ -153,7 +158,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 		userStore.role === 'performer' &&
 		userStore.userData.id &&
 		userStore.userData?.organization_id &&
-		!availableLinkList.some((item) => to.path.startsWith(item)) &&
+		(!availableLinkList.some((item) => to.path.startsWith(item)) || requireOrganizationAndPublicCardLinks.some((item) => to.path.startsWith(item))) &&
 		to.path !== '/' &&
 		userStore.userData?.public_cards
 	) {
@@ -186,7 +191,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 	if (
 		userStore.isAuth &&
 		userStore.userData.id &&
-		!availableLinkList.some((item) => to.path.startsWith(item)) &&
+		(!availableLinkList.some((item) => to.path.startsWith(item)) || requireOrganizationAndPublicCardLinks.some((item) => to.path.startsWith(item))) &&
 		to.path !== '/' &&
 		!userStore.role
 	) {

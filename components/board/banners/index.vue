@@ -11,12 +11,12 @@
 			>
 				<div class="board-banners__item-image">
 					<UiImage
-						:src="item?.image || defaultImage"
-						:alt="item?.name"
+						:src="item?.announcement_image || defaultImage"
+						:alt="item?.title"
 						external
 					/>
 				</div>
-				<h4 class="board-banners__item-title">{{ item?.name }}</h4>
+				<h4 class="board-banners__item-title">{{ item?.title }}</h4>
 				<NuxtLink
 					:to="`${link}/${item?.id}`"
 					class="board-banners__item-link"
@@ -52,14 +52,6 @@
 		background-color: #ededf0;
 		padding: 3.2em;
 
-		@include hover {
-			.board-banners__item:not(:hover) {
-				filter: blur(2px);
-				opacity: 0.6;
-				transform: scale(0.98);
-			}
-		}
-
 		&__title {
 			font-size: 2.2em;
 			font-weight: 400;
@@ -74,6 +66,14 @@
 			flex-direction: column;
 			row-gap: 1.8em;
 			align-items: center;
+
+			// @include hover {
+			// 	.board-banners__item:not(:hover) {
+			// 		filter: blur(2px);
+			// 		opacity: 0.6;
+			// 		transform: scale(0.98);
+			// 	}
+			// }
 		}
 
 		&__item {

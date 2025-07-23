@@ -26,12 +26,14 @@
 				@openEditModal="handleOpenEditAnnouncementModal"
 				@removeFromPublication="handleOpenRemoveFromPublicationModal"
 				@openAnnouncementPayModal="handleOpenAnnouncementPayModal"
+				@openPublicationModal="handleOpenPublicationModal"
 			/>
 			<template v-if="isUserAnnouncements">
 				<BoardModalsAnnouncementEdit
 					:is-open="editAnnouncementModal.isOpen"
 					v-model:data="editAnnouncementModal.data"
 					@close="editAnnouncementModal.isOpen = false"
+					@updateData="(announcement) => emit('updateData', announcement)"
 				/>
 				<ConfirmModal />
 				<PaidServiceAnnouncement
@@ -67,11 +69,14 @@
 </template>
 
 <script setup>
+	import { useAnnouncementStore } from '~/store/announcementStore';
 	import { useOrganizationStore } from '~/store/organizationStore';
 	import { useSettingStore } from '~/store/settingStore';
+	import { useToast } from 'vue-toastification';
 
 	const organizationStore = useOrganizationStore();
 	const settingStore = useSettingStore();
+	const toast = useToast();
 
 	const { ConfirmModal, confirm } = useConfirmModal();
 	const announcementPayModal = ref(null);
@@ -102,6 +107,8 @@
 		},
 	});
 
+	const announcementStore = useAnnouncementStore();
+
 	const announcementId = ref(null);
 
 	const handleOpenAnnouncementPayModal = (id) => {
@@ -111,7 +118,7 @@
 		}
 	};
 
-	const emit = defineEmits(['update:page']);
+	const emit = defineEmits(['update:page', 'updateData']);
 
 	const handleUpdatePage = (page) => {
 		emit('update:page', page);
@@ -123,21 +130,50 @@
 	});
 
 	const handleOpenEditAnnouncementModal = (data) => {
-		editAnnouncementModal.value.data = data;
-		editAnnouncementModal.value.isOpen = true;
+		if (data.id) {
+			announcementStore.getAnnouncement(data.id).then((res) => {
+				editAnnouncementModal.value.data = {
+					...res?.data,
+					category_ids: res?.data?.categories.map((category) => category.id)
+				};
+				editAnnouncementModal.value.isOpen = true;
+			});
+		} else {
+			toast.error('Объявление не найдено');
+		}
 	};
 
 	const handleOpenRemoveFromPublicationModal = (data) => {
 		confirm({
 			title: 'Снять объявление с публикации?',
 			onConfirm: () => {
-				console.log('Удалить объявление из публикации');
+				announcementStore.deactivateAnnouncement(data?.id).then((res) => {
+					const index = props.data.findIndex((item) => item.id === data.id);
+					if (index !== -1) {
+						props.data[index] = res?.data;
+					}
+					toast.success('Объявление успешно снято с публикации');
+				});
 			},
-			onCancel: () => {
-				console.log('Отмена');
-			},
+			onCancel: () => {},
 		});
 	};
+
+	const handleOpenPublicationModal = (data) => {
+		confirm({
+			title: 'Опубликовать объявление?',
+			onConfirm: () => {
+				announcementStore.activateAnnouncement(data?.id).then((res) => {
+					const index = props.data.findIndex((item) => item.id === data.id);
+					if (index !== -1) {
+						props.data[index] = res?.data;
+					}
+					toast.success('Объявление успешно опубликовано');
+				});
+			},
+			onCancel: () => {},
+		});
+	}
 </script>
 
 <style lang="scss">

@@ -406,7 +406,7 @@
 			background-color: transparent;
 		}
 
-		&__input-url {
+		.input:has(.load-image-secondary__input-url) {
 			display: none;
 		}
 
