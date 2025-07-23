@@ -73,7 +73,9 @@
 		});
 	};
 	const use = () => {
-		return announcementStore.announcementPublish(props.id);
+		return announcementStore.announcementPublish(props.id).then((response) => {
+			usedData.value = response;
+		});
 	};
 
 	defineExpose({
