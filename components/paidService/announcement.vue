@@ -38,18 +38,6 @@
 				type="success"
 			/>
 		</template>
-		<template #buttons>
-			<UiButton
-				class="counterparty-check-btn"
-				variant="primary"
-				size="large"
-				:to="usedData?.file?.url"
-				v-if="usedData?.file?.url"
-				target="_blank"
-			>
-				Открыть
-			</UiButton>
-		</template>
 	</PaidServiceModal>
 </template>
 
@@ -85,9 +73,7 @@
 		});
 	};
 	const use = () => {
-		return announcementStore.announcementPublish(props.id).then((response) => {
-			usedData.value = response.data;
-		});
+		return announcementStore.announcementPublish(props.id);
 	};
 
 	defineExpose({
