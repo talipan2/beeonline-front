@@ -24,7 +24,7 @@
                 ></span>
             </div>
         </div>
-        <div class="balance__btn-container" v-if="currentCurrency === 'RUB'">
+        <div class="balance__btn-container">
             <UiButton
                 type="button"
                 class="balance__btn"

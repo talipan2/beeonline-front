@@ -10,7 +10,7 @@
                         <template v-if="responseErrorKey === 'buy_service' && responseErrorData">
                             <TariffsPayModal
                                 :data="responseErrorData"
-                                :userBalance="formatMoney(responseErrorData.balance)"
+                                :userBalance="formatMoney(responseErrorData.balance, responseErrorData.currency)"
                                 :userBonuses="responseErrorData.bonuses"
                                 :currentCurrency="responseErrorData.currency"
                                 :reset="prepare"

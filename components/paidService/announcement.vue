@@ -34,7 +34,7 @@
 		</template>
 		<template #used>
 			<CommonAlerts
-				:alert="'Карточка успешно поднята'"
+				:alert="'Объявление оплачено'"
 				type="success"
 			/>
 		</template>
