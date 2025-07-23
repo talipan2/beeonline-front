@@ -2,7 +2,7 @@
   <section class="banner ">
     <div class="banner__background">
       <div class="container">
-        <h1 class="banner__title">bee-online, экосистема для поиска партнеров в легкой промышленности</h1>
+        <h1 class="banner__title">bee-online — экосистема для поиска партнеров в модной индустрии</h1>
         <p class="banner__description">Проект представляет удобный сервис для поиска партнеров и выхода на прямые
           переговоры</p>
         <NuxtLink type="button" class="banner__link" @click="handleCreateOrder">

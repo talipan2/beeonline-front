@@ -52,4 +52,14 @@ const route = useRoute();
         }
     }
 }
+
+.telegram-main {
+    .chat-layout {
+        @include mobile {
+            .profile__title {
+                margin-block: 0;
+            }
+        }
+    }
+}
 </style>

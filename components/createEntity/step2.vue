@@ -197,7 +197,6 @@
           errorLabel="Регионы производства"
           name="selectedLocations"
           modalTitle="Выберите регион"
-          locationsByPerformers
         />
       </div>
       <div class="form-group">
