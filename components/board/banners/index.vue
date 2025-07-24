@@ -1,8 +1,13 @@
 <template>
 	<div class="board-banners">
-		<h3 class="board-banners__title">
-			{{ title }}
-		</h3>
+		<NuxtLink
+			:to="'/board'"
+			class="board-banners__link"
+		>
+			<h3 class="board-banners__title">
+				{{ title }}
+			</h3>
+		</NuxtLink>
 		<div class="board-banners__list">
 			<div
 				class="board-banners__item"

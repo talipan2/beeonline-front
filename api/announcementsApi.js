@@ -43,4 +43,8 @@ export default {
 	async deactivateAnnouncement(id) {
 		return useApi().patch(`announcements/${id}/deactivate`);
 	},
+
+	async getAnnouncementUser(userId, announcementId) {
+		return useApi().get(`users/${userId}/announcements/${announcementId}`);
+	},
 };

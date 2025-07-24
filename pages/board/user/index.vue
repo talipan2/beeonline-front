@@ -13,6 +13,14 @@
 			/>
 		</template>
 		<template #content>
+			<UiButton
+				class="board-user__create"
+				to="/board/create"
+				variant="quinary"
+				size="large"
+			>
+				Создать объявление
+			</UiButton>
 			<div ref="list">
 				<CommonAlerts
 					alert="Объявлений не найдено"
@@ -120,3 +128,12 @@
 		handleFetchData({}, false);
 	});
 </script>
+
+<style lang="scss">
+	.board-user__create {
+		font-size: 1.2em;
+		text-transform: uppercase;
+		margin-bottom: 2em;
+		width: fit-content;
+	}
+</style>
