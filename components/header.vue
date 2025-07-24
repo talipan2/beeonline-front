@@ -194,6 +194,10 @@ const toggleDropdown = () => {
   isDropdownVisible.value = !isDropdownVisible.value;
 };
 
+watch(() => userStore.isAuth, (newVal) => {
+  updateMenuVisibility();
+})
+
 onMounted(() => {
   updateMenuVisibility();
   window.addEventListener('resize', updateMenuVisibility);
