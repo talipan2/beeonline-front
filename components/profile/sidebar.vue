@@ -244,6 +244,9 @@
 		if (link.includes('/news')) {
 			return router.currentRoute.value.path.includes(link);
 		}
+		if (link.includes('/board/user')) {
+			return router.currentRoute.value.path.includes(link);
+		}
 		return router.currentRoute.value.path === link;
 	};
 </script>

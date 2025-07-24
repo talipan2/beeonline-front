@@ -1,174 +1,185 @@
 <template>
-	<div class="form-group form-group_type_secondary board-form">
-		<label class="form-group__title">Анонсовая картинка *</label>
-		<CommonImageLoadSecondary
-			class="board-logo"
-			v-model="data.logo"
-			label="Загрузить фотографию (до 5Мб. Допустимый формат .jpeg, .png, .jpg, .gif)"
-			name="logo"
-			:rules="{ required_image: true }"
-			errorLabel="'Анонсовая картинка'"
-		/>
-	</div>
-	<div class="form-group form-group_type_secondary">
-		<label class="form-group__title">Название объявления *</label>
-		<UiInput
-			:rules="{ required: true, min: 2, max: 100 }"
-			name="name"
-			v-model="data.name"
-			label="Название объявления"
-			class="form-group__value"
-			placeholder="Введите название объявления"
-		/>
-	</div>
-	<div class="form-group form-group_type_secondary">
-		<label class="form-group__title">Описание *</label>
-		<UiTextArea
-			class="form-group__value"
-			v-model="data.description"
-			name="description"
-			label="Описание"
-			:rules="{ required: true, min: 50, max: 2000 }"
-			placeholder="Введите описание"
-		/>
-	</div>
-	<div class="form-group form-group_type_secondary">
-		<label class="form-group__title">Цена</label>
-		<UiInput
-			:rules="{ required: true, min_value: 1 }"
-			name="price"
-			label="Цена"
-			v-model="data.price"
-			class="form-group__value board-form__price-input"
-			type="number"
-		>
-			<UiSelect
-				:options="currencyList"
-				v-model="data.currency"
-				return-id
-				label="Валюта"
-				name="currency"
-				class="form-group__value board-form__currency-select"
-				:error-show="false"
+	<div class="board-form">
+		<div class="form-group form-group_type_secondary">
+			<label class="form-group__title">Анонсовая картинка *</label>
+			<CommonImageLoadSecondary
+				class="board-logo"
+				v-model="data.announcement_image"
+				label="Загрузить фотографию (до 5Мб. Допустимый формат .jpeg, .png, .jpg, .gif)"
+				name="announcement_image"
+				:rules="{ required_image: true }"
+				errorLabel="'Анонсовая картинка'"
+				:returnFormData="true"
 			/>
-		</UiInput>
-	</div>
-	<div class="form-group form-group_type_secondary">
-		<label class="form-group__title">Выбор категории *</label>
-		<CommonBadgeSecond
-			:badges="selectedCategories"
-			@click="handleClickCategory"
-			type="button"
-			class="board-form__badge-second"
-		/>
-		<UiCheckboxGroup
-			class="form-group__value board-form__checkbox-group"
-			variant="rounded"
-			:rules="{ required: true }"
-			:options="[
-				{ id: 0, label: 'Пошив' },
-				{ id: 1, label: 'Ремонт' },
-				{ id: 2, label: 'Другое' },
-				{ id: 3, label: 'Пошив' },
-				{ id: 4, label: 'Ремонт' },
-				{ id: 5, label: 'Другое' },
-				{ id: 6, label: 'Пошив' },
-			]"
-			v-model="data.categories"
-			name="categories"
-			label="Выбор категории"
-		/>
-	</div>
-	<div class="form-group form-group_type_secondary">
-		<label class="form-group__title">Галерея</label>
-		<div class="board-form__gallery-description">
-			<p class="board-form__description-bold">
-				Фотографии сделают вашу карточку более привлекательной для заказчика
-			</p>
-			<p class="board-form__description">Рекомендуемый размер 300 x 340 px.</p>
 		</div>
-		<CommonGalleryLoadSecondary
-			v-model="data.gallery"
-			class="board-gallery"
-			:showSetting="false"
-			:maxCount="5"
-		/>
-	</div>
-	<div class="form-group form-group_type_secondary">
-		<label class="form-group__title">ФИО *</label>
-		<UiInput
-			:rules="{ required: true }"
-			name="contact_name"
-			label="ФИО"
-			v-model="data.contact_name"
-			class="form-group__value"
-			placeholder="Введите ФИО"
-		></UiInput>
-	</div>
-	<div class="form-group form-group_type_secondary">
-		<label class="form-group__title">Электронная почта *</label>
-		<UiInput
-			:rules="{ required: true, email: true }"
-			name="contact_email"
-			label="Электронная почта"
-			v-model="data.contact_email"
-			class="form-group__value"
-			placeholder="Введите электронную почту"
-		></UiInput>
-	</div>
+		<div class="form-group form-group_type_secondary">
+			<label class="form-group__title">Название объявления *</label>
+			<UiInput
+				:rules="{ required: true, min: 2, max: 100 }"
+				name="title"
+				v-model="data.title"
+				label="Название объявления"
+				class="form-group__value"
+				placeholder="Введите название объявления"
+			/>
+		</div>
+		<div class="form-group form-group_type_secondary">
+			<label class="form-group__title">Описание *</label>
+			<UiTextArea
+				class="form-group__value"
+				v-model="data.content"
+				name="content"
+				label="Описание"
+				:rules="{ required: true, min: 50, max: 2000 }"
+				placeholder="Введите описание"
+			/>
+		</div>
+		<div class="form-group form-group_type_secondary">
+			<label class="form-group__title">Цена</label>
+			<UiInput
+				:rules="{ required: true, min_value: 1 }"
+				name="price"
+				label="Цена"
+				v-model="data.price"
+				class="form-group__value board-form__price-input"
+				type="number"
+			>
+				<UiSelect
+					:options="currencyList"
+					v-model="data.currency_id"
+					return-id
+					label="Валюта"
+					name="currency"
+					class="form-group__value board-form__currency-select"
+					:error-show="false"
+				/>
+			</UiInput>
+		</div>
+		<div class="form-group form-group_type_secondary">
+			<label class="form-group__title">Выбор категории *</label>
+			<CommonBadgeSecond
+				:badges="selectedCategories"
+				@click="handleClickCategory"
+				type="button"
+				class="board-form__badge-second"
+			/>
+			<UiCheckboxGroup
+				class="form-group__value board-form__checkbox-group"
+				variant="rounded"
+				:rules="{ required: true }"
+				:options="categoryOptions"
+				v-model="data.category_ids"
+				name="category_ids"
+				label="Выбор категории"
+			/>
+		</div>
+		<div class="form-group form-group_type_secondary">
+			<label class="form-group__title">Галерея</label>
+			<div class="board-form__gallery-description">
+				<p class="board-form__description-bold">
+					Фотографии сделают вашу карточку более привлекательной для заказчика
+				</p>
+				<p class="board-form__description">
+					Рекомендуемый размер 300 x 340 px.
+				</p>
+			</div>
+			<CommonGalleryLoadSecondary
+				v-model="data.gallery"
+				class="board-gallery"
+				:showSetting="false"
+				:maxCount="5"
+				:returnFormData="isReturnFormDataGallery"
+			/>
+		</div>
+		<div class="form-group form-group_type_secondary">
+			<label class="form-group__title">ФИО *</label>
+			<UiInput
+				:rules="{ required: true }"
+				name="name"
+				label="ФИО"
+				v-model="data.name"
+				class="form-group__value"
+				placeholder="Введите ФИО"
+			></UiInput>
+		</div>
+		<div class="form-group form-group_type_secondary">
+			<label class="form-group__title">Электронная почта *</label>
+			<UiInput
+				:rules="{ required: true, email: true }"
+				name="email"
+				label="Электронная почта"
+				v-model="data.email"
+				class="form-group__value"
+				placeholder="Введите электронную почту"
+			></UiInput>
+		</div>
 
-	<div class="form-group form-group_type_secondary">
-		<label class="form-group__title">Номер телефона *</label>
-		<UiInput
-			:rules="{ required: true }"
-			name="contact_phone"
-			label="Номер телефона"
-			v-model="data.contact_phone"
-			class="form-group__value"
-			type="tel"
-			placeholder="Введите номер телефона"
-		></UiInput>
-		<!-- <CommonPhoneMusk class="form-group__value register__phone-mask" v-model="userData" :rules="{ required: true, max: 16 }" name="phone" label="Телефон" /> -->
-	</div>
-	<div class="form-group form-group_type_secondary">
-		<label class="form-group__title">Название компании</label>
-		<UiInput
-			:rules="{ required: false }"
-			name="company_name"
-			label="Название компании"
-			v-model="data.company_name"
-			class="form-group__value"
-			placeholder="Введите название компании"
-		></UiInput>
-	</div>
-	<div class="form-group form-group_type_secondary">
-		<label class="form-group__title">Ссылка на сайт</label>
-		<UiInput
-			:rules="{ url: true }"
-			placeholder="Введите название сайта"
-			name="url_site"
-			label="Ссылка на сайт"
-			v-model="data.url_site"
-			class="form-group__value"
-		>
-			<SvgoPlanet class="svg-m" />
-		</UiInput>
+		<div class="form-group form-group_type_secondary">
+			<label class="form-group__title">Номер телефона *</label>
+			<UiInput
+				:rules="{ required: true }"
+				name="phone"
+				label="Номер телефона"
+				v-model="data.phone"
+				class="form-group__value"
+				type="tel"
+				placeholder="Введите номер телефона"
+			></UiInput>
+			<!-- <CommonPhoneMusk
+				class="form-group__value register__phone-mask"
+				v-model="data"
+				:rules="{ required: true, max: 16 }"
+				name="phone"
+				label="Телефон"
+			/> -->
+		</div>
+		<div class="form-group form-group_type_secondary">
+			<label class="form-group__title">Название компании</label>
+			<UiInput
+				:rules="{ required: false }"
+				name="company"
+				label="Название компании"
+				v-model="data.company"
+				class="form-group__value"
+				placeholder="Введите название компании"
+			></UiInput>
+		</div>
+		<div class="form-group form-group_type_secondary">
+			<label class="form-group__title">Ссылка на сайт</label>
+			<UiInput
+				:rules="{ url: true }"
+				placeholder="Введите название сайта"
+				name="site"
+				label="Ссылка на сайт"
+				v-model="data.site"
+				class="form-group__value"
+			>
+				<SvgoPlanet class="svg-m" />
+			</UiInput>
+		</div>
 	</div>
 </template>
 
 <script setup>
 	import { useEntityStore } from '~/store/entityStore';
 	import { useSettingStore } from '~/store/settingStore';
+	import { useUserStore } from '~/store/userStore';
+	import { useAnnouncementStore } from '~/store/announcementStore';
 
 	const settingStore = useSettingStore();
 	const entityStore = useEntityStore();
+	const userStore = useUserStore();
+	const announcementStore = useAnnouncementStore();
 
 	const selectedCategories = computed(() => {
-		return entityStore.getEntityLabelById(
-			'announcementCategories',
-			data.value.categories,
-			true
-		);
+		if (data.value.category_ids) {
+			return entityStore.getEntityLabelById(
+				'announcementCategories',
+				data.value.category_ids,
+				true
+			);
+		}
+		return [];
 	});
 
 	const props = defineProps({
@@ -179,6 +190,10 @@
 		errorsList: {
 			type: Object,
 			default: () => ({}),
+		},
+		isReturnFormDataGallery: {
+			type: Boolean,
+			default: false,
 		},
 	});
 
@@ -192,6 +207,10 @@
 			emit('update:modelValue', value);
 		},
 	});
+
+	const categoryOptions = computed(
+		() => entityStore.entityData.announcementCategories
+	);
 
 	const currencyList = computed(() => {
 		if (settingStore.currencyList.length > 0) {
@@ -211,11 +230,14 @@
 		if (settingStore.currencyList.length === 0) {
 			settingStore.getCurrencyList();
 		}
+		if (entityStore.entityData.announcementCategories.length === 0) {
+			announcementStore.getAnnouncementsCategories();
+		}
 	});
 
 	const handleClickCategory = (category) => {
-		if (data.value?.categories) {
-			data.value.categories = data.value.categories.filter(
+		if (data.value?.category_ids) {
+			data.value.category_ids = data.value.category_ids.filter(
 				(item) => item !== category.id
 			);
 		}
@@ -265,6 +287,10 @@
 
 			.checkbox {
 				flex: 0 1 calc(50% - 1.5em);
+
+				@include small-mobile {
+					flex: 1 1 100%;
+				}
 			}
 		}
 
@@ -279,6 +305,11 @@
 
 		&__description {
 			font-weight: 400;
+		}
+		@include mobile {
+			.form-group_type_secondary {
+				margin-bottom: 1em;
+			}
 		}
 	}
 </style>

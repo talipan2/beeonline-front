@@ -19,44 +19,34 @@
 				<div class="counterparty-check__organization">
 					<div class="counterparty-check__organization-title">Объявление:</div>
 					<div class="counterparty-check__organization-name">
-						{{ preparedData.pubcard_name }}
+						{{ preparedData.name }}
 					</div>
 				</div>
 				<div class="counterparty-check__organization">
 					<div class="counterparty-check__organization-title">
-						{{ preparedData.raising_service.name }}
+						{{ preparedData.paid_service.name }}
 					</div>
 					<div class="counterparty-check__organization-name">
-						Количество: {{ preparedData.raising_service.quantity }}
+						Количество: {{ preparedData.paid_service.quantity }}
 					</div>
 				</div>
 			</div>
 		</template>
 		<template #used>
 			<CommonAlerts
-				:alert="'Карточка успешно поднята'"
+				:alert="'Объявление оплачено'"
 				type="success"
 			/>
-		</template>
-		<template #buttons>
-			<UiButton
-				class="counterparty-check-btn"
-				variant="primary"
-				size="large"
-				:to="usedData?.file?.url"
-				v-if="usedData?.file?.url"
-				target="_blank"
-			>
-				Открыть
-			</UiButton>
 		</template>
 	</PaidServiceModal>
 </template>
 
 <script setup>
 	import { useEntityStore } from '~/store/entityStore';
+	import { useAnnouncementStore } from '~/store/announcementStore';
 
 	const entityStore = useEntityStore();
+	const announcementStore = useAnnouncementStore();
 
 	const props = defineProps({
 		id: {
@@ -78,13 +68,13 @@
 		usedData.value = null;
 		preparedData.value = null;
 
-		return entityStore.prepareRaiseService(props.id).then((response) => {
+		return announcementStore.announcementPrepare(props.id).then((response) => {
 			preparedData.value = response;
 		});
 	};
 	const use = () => {
-		return entityStore.raiseService(props.id).then((response) => {
-			usedData.value = response.data;
+		return announcementStore.announcementPublish(props.id).then((response) => {
+			usedData.value = response;
 		});
 	};
 

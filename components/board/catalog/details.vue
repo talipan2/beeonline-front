@@ -2,19 +2,29 @@
 	<div class="board-catalog-details">
 		<BoardCatalogSkeletonDetails v-if="isLoading" />
 		<template v-else>
+			<CommonNotify
+				v-if="type === 'user' && data?.status_code === 'DECLINED'"
+				type="danger"
+				title="Объявление отклонено."
+				:text="`Причина: ${data?.status_comment || 'не указана'}`"
+			/>
 			<CommonLayoutInfoCard class="board-catalog-details__header">
 				<div class="board-catalog-details__header-image">
 					<UiImage
-						:src="data.logo || defaultImage"
-						:alt="data.name"
+						:src="data.announcement_image || defaultImage"
+						:alt="data.title"
 						external
 					/>
 				</div>
 				<div class="board-catalog-details__header-content">
 					<div class="board-catalog-details__header-content-row">
-						<div class="board-catalog-details__header-content-date">
+						<div
+							class="board-catalog-details__header-content-date"
+							v-if="data.published_at"
+						>
 							{{
-								'Дата публикации: ' + formatDate(data.created_at, 'DD.MM.YYYY')
+								'Дата публикации: ' +
+								formatDate(data.published_at, 'DD.MM.YYYY')
 							}}
 						</div>
 						<div class="board-catalog-details__header-content-views">
@@ -38,17 +48,29 @@
 						:badges="data.categories.map((category) => category.name)"
 					/>
 					<h1 class="board-catalog-details__header-title">
-						{{ data.name }}
+						{{ data.title }}
 					</h1>
 					<p class="board-catalog-details__header-price">
-						{{ formatMoney(100000000, 'RUB', 0) }}
+						{{ addCurrency(data.price) }}
 					</p>
 					<h2 class="board-catalog-details__header-title-company">
-						{{ data.name }}
+						{{ data.company }}
 					</h2>
-					<div class="board-catalog-details__header-content-row">
-						<div class="board-catalog-details__header-content-date">
-							{{ 'Активна: до ' + formatDate(data.created_at, 'DD.MM.YYYY') }}
+					<div
+						class="board-catalog-details__header-content-row"
+						v-if="type === 'user'"
+					>
+						<div
+							class="board-catalog-details__header-content-date"
+							v-if="data.status_code === 'ACTIVE'"
+						>
+							{{ 'Активна: до ' + formatDate(data.active_until, 'DD.MM.YYYY') }}
+						</div>
+						<div
+							class="board-catalog-details__header-content-date"
+							v-else
+						>
+							{{ data.status_name }}
 						</div>
 					</div>
 					<div class="board-catalog-details__header-buttons">
@@ -58,7 +80,7 @@
 								variant="quinary"
 								size="large"
 								class="board-catalog-details__header-button"
-								@click="showContacts = !showContacts"
+								@click="handleShowContacts"
 							>
 								{{ showContacts ? 'Скрыть контакты' : 'Показать контакты' }}
 							</UiButton>
@@ -67,15 +89,16 @@
 							<UiButton
 								type="button"
 								@click="handleOpenEditAnnouncementModal"
-								class="board-card__button"
+								class="board-catalog-details__header-button"
 								variant="tertiary"
 								size="large"
 							>
 								Изменить
 							</UiButton>
 							<UiButton
+								v-if="data.status_code === 'ACTIVE'"
 								type="button"
-								class="board-card__button"
+								class="board-catalog-details__header-button"
 								variant="tertiary"
 								size="large"
 								@click="handleOpenRemoveFromPublicationModal"
@@ -83,13 +106,42 @@
 								Снять с публикации
 							</UiButton>
 							<UiButton
+								v-if="
+									new Date(data.active_until) > new Date() &&
+									data.status_code === 'INACTIVE'
+								"
+								type="button"
+								@click="handleOpenPublicationModal"
+								class="board-catalog-details__header-button"
+								variant="tertiary"
+								size="large"
+							>
+								Опубликовать
+							</UiButton>
+							<UiButton
+								v-if="
+									data.status_code === 'ACTIVE' ||
+									data.status_code === 'UNDER_MODERATION' ||
+									data.status_code === 'DECLINED' ||
+									data.status_code === 'INACTIVE'
+								"
 								type="button"
 								@click="handleOpenAnnouncementPayModal"
-								class="board-card__button"
+								class="board-catalog-details__header-button"
 								variant="tertiary"
 								size="large"
 							>
 								Продлить на месяц
+							</UiButton>
+							<UiButton
+								v-if="data.status_code === 'DRAFT'"
+								type="button"
+								@click="handleOpenAnnouncementPayModal"
+								class="board-catalog-details__header-button"
+								variant="tertiary"
+								size="large"
+							>
+								Оплатить
 							</UiButton>
 						</template>
 					</div>
@@ -98,33 +150,33 @@
 			<transition name="fade-slide">
 				<div
 					class="board-catalog-details__specs-contacts"
-					v-if="showContacts"
+					v-if="showContacts || type === 'user'"
 				>
 					<CatalogNewServiceDetailsBadge
 						:specs="{
 							name: 'Контактное лицо',
-							value: contactsData.name || 'Не указано',
+							value: data.name || 'Не указано',
 						}"
 						:line-limit="false"
 					/>
 					<CatalogNewServiceDetailsBadge
 						:specs="{
 							name: 'Сайт',
-							value: contactsData.site || 'Не указан',
+							value: data.site || 'Не указан',
 						}"
 						:line-limit="false"
 					/>
 					<CatalogNewServiceDetailsBadge
 						:specs="{
 							name: 'Телефон',
-							value: contactsData.phone || 'Не указан',
+							value: data.phone || 'Не указан',
 						}"
 						:line-limit="false"
 					/>
 					<CatalogNewServiceDetailsBadge
 						:specs="{
 							name: 'Почта',
-							value: contactsData.email || 'Не указан',
+							value: data.email || 'Не указан',
 						}"
 						:line-limit="false"
 					/>
@@ -135,7 +187,7 @@
 				class="board-catalog-details__description"
 			>
 				<p class="board-catalog-details__description-text">
-					{{ data.description || 'не указано' }}
+					{{ data.content || 'не указано' }}
 				</p>
 			</CommonLayoutInfoCard>
 			<CommonLayoutInfoCard
@@ -164,7 +216,7 @@
 
 <script setup>
 	import defaultImage from '~/assets/images/photo-plug.svg';
-	import { useOrganizationStore } from '~/store/organizationStore';
+	import { useAnnouncementStore } from '~/store/announcementStore';
 
 	const props = defineProps({
 		data: {
@@ -182,23 +234,14 @@
 		},
 	});
 
-	const organizationStore = useOrganizationStore();
-	const router = useRouter();
-
-	const badges = ['Новое', 'Продано', 'Выкуплено'];
+	const announcementStore = useAnnouncementStore();
 
 	const emit = defineEmits([
 		'openEditModal',
 		'removeFromPublication',
 		'openAnnouncementPayModal',
+		'openPublicationModal',
 	]);
-
-	const contactsData = {
-		name: 'Иванов Иван',
-		site: 'https://www.example.com',
-		phone: '+7 (999) 999-99-99',
-		email: 'ivanov@example.com',
-	};
 
 	const currentGalleryIndex = ref(0);
 	const handleUpdatePhotoIndex = (index) => {
@@ -207,16 +250,37 @@
 
 	const showContacts = ref(false);
 
+	const handleShowContacts = () => {
+		if (showContacts.value) {
+			showContacts.value = false;
+		} else {
+			announcementStore
+				.updateAnnouncementShowContacts(props.data.id)
+				.then((res) => {
+					showContacts.value = true;
+				});
+		}
+	};
+
 	const handleOpenEditAnnouncementModal = () => {
-		emit('openEditModal', { ...props.data });
+		announcementStore.getAnnouncement(props.data.id).then((res) => {
+			emit('openEditModal', {
+				...res.data,
+				category_ids: res.data.categories.map((category) => category.id),
+			});
+		});
 	};
 
 	const handleOpenRemoveFromPublicationModal = () => {
-		emit('removeFromPublication', props.data.id);
+		emit('removeFromPublication', props.data);
 	};
 
 	const handleOpenAnnouncementPayModal = () => {
-		emit('openAnnouncementPayModal', props.data.id);
+		emit('openAnnouncementPayModal', props.data);
+	};
+
+	const handleOpenPublicationModal = () => {
+		emit('openPublicationModal', props.data);
 	};
 </script>
 
@@ -321,8 +385,8 @@
 			font-size: 1.2em;
 			text-transform: uppercase;
 			font-weight: 400;
-			max-width: 50%;
-			padding-block: 1.41em;
+			// max-width: 50%;
+			// padding-block: 1.41em;
 		}
 
 		&__specs-contacts {

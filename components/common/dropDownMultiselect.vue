@@ -1,41 +1,44 @@
 <template>
-	<UiNewDropdown
-		:placement="'bottom-start'"
-		:offset="[0, 10]"
-		class="drop-down-multiselect"
-		ref="dropdownRef"
-		:arrow="false"
-	>
-		<UiButton
-			class="drop-down-multiselect__dropdown-button"
-			variant="elevated"
+	<div class="drop-down-multiselect-wrapper">
+		<UiNewDropdown
+			:placement="'bottom-start'"
+			:offset="[0, 10]"
+			class="drop-down-multiselect"
+			ref="dropdownRef"
+			:arrow="false"
 		>
-			<div
-				class="drop-down-multiselect__dropdown-left-icon"
-				v-if="$slots.iconLeft"
+			<UiButton
+				class="drop-down-multiselect__dropdown-button"
+				variant="elevated"
 			>
-				<slot name="iconLeft" />
-			</div>
-			{{ title }}
-			<SvgoDropDownSecondary
-				class="svg-m drop-down-multiselect__dropdown-button-icon"
-				:class="{ active: isOpen }"
-			/>
-		</UiButton>
-		<template #content>
-			<div class="drop-down-multiselect__dropdown-content">
-				<div class="drop-down-multiselect__dropdown-list">
-					<UiCheckboxGroup
-						class="drop-down-multiselect__checkbox-group"
-						v-model="selectedOptions"
-						:options="options"
-						:option-key="'id'"
-						:option-label="'label'"
-					/>
+				<div
+					class="drop-down-multiselect__dropdown-left-icon"
+					v-if="$slots.iconLeft"
+				>
+					<slot name="iconLeft" />
 				</div>
-			</div>
-		</template>
-	</UiNewDropdown>
+				{{ title }}
+				<SvgoDropDownSecondary
+					class="svg-m drop-down-multiselect__dropdown-button-icon"
+					:class="{ active: isOpen }"
+				/>
+			</UiButton>
+			<template #content>
+				<div class="drop-down-multiselect__dropdown-content">
+					<div class="drop-down-multiselect__dropdown-list">
+						<UiCheckboxGroup
+							class="drop-down-multiselect__checkbox-group"
+							v-model="selectedOptions"
+							:options="options"
+							:option-key="'id'"
+							:option-label="'label'"
+							:is-validated="false"
+						/>
+					</div>
+				</div>
+			</template>
+		</UiNewDropdown>
+	</div>
 </template>
 
 <script setup>
@@ -48,10 +51,23 @@
 			type: Array,
 			default: () => [],
 		},
+		modelValue: {
+			type: Array,
+			default: () => [],
+		},
 	});
 
+	const emit = defineEmits(['update:modelValue']);
+
 	const dropdownRef = ref(null);
-	const selectedOptions = ref([]);
+	const selectedOptions = computed({
+		get() {
+			return props.modelValue || [];
+		},
+		set(value) {
+			emit('update:modelValue', value);
+		},
+	});
 
 	const isOpen = computed(() => {
 		return dropdownRef.value?.tippy?.state?.isVisible;
@@ -59,6 +75,16 @@
 </script>
 
 <style lang="scss">
+	.drop-down-multiselect-wrapper {
+		[data-tippy-root] {
+			box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.08);
+			border-radius: 1em;
+			overflow: hidden;
+			background-color: var(--color-white);
+			border: 1px solid var(--color-gray-200);
+		}
+	}
+
 	.drop-down-multiselect {
 		font-size: 1em;
 
@@ -86,10 +112,6 @@
 
 		&__dropdown-content {
 			padding: 1em;
-			border-radius: 1em;
-			background-color: var(--color-white);
-			box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.08);
-			border: 1px solid var(--color-gray-200);
 		}
 
 		&__dropdown-left-icon {
@@ -103,10 +125,5 @@
 			align-items: flex-start;
 			row-gap: 1em;
 		}
-	}
-
-	.tippy-box:has(.drop-down-multiselect__dropdown-content) {
-		background-color: transparent !important;
-		box-shadow: none !important;
 	}
 </style>

@@ -26,6 +26,7 @@
 					cardLink="/board/user"
 					@update:page="handleUpdatePage"
 					:isUserAnnouncements="true"
+					@updateData="handleUpdateData"
 				/>
 			</div>
 		</template>
@@ -36,22 +37,19 @@
 	// Импорт стора организаций и настроек
 	import { useOrganizationStore } from '~/store/organizationStore';
 	import { useSettingStore } from '~/store/settingStore';
+	import { useAnnouncementStore } from '~/store/announcementStore';
+	import { useUserStore } from '~/store/userStore';
 
 	// Инициализация стора организаций и стора настроек
 	const organizationStore = useOrganizationStore();
 	const settingStore = useSettingStore();
+	const announcementStore = useAnnouncementStore();
+	const userStore = useUserStore();
 
 	// Состояние пагинации (текущая и последняя страница)
 	const page = ref({
 		current_page: 1,
 		last_page: 1,
-	});
-
-	// Параметры фильтрации и сортировки объявлений
-	const params = ref({
-		category_id: 1, // id категории (по умолчанию 1)
-		sort: 'created_at', // сортировка по дате создания
-		search: '', // поисковый запрос
 	});
 
 	// ref для DOM-элемента списка объявлений (для скролла)
@@ -62,6 +60,7 @@
 
 	// Флаг загрузки данных
 	const isLoading = ref(false);
+	const isLoaded = ref(false);
 
 	/**
 	 * Получение списка объявлений с сервера
@@ -69,9 +68,13 @@
 	 * @param {boolean} scroll - нужно ли скроллить к списку после загрузки
 	 */
 	const handleFetchData = (params, scroll = true) => {
+		if (!userStore.userData.id) return;
 		isLoading.value = true;
-		organizationStore
-			.getPubCardsList({ type: 'performer', ...params })
+		announcementStore
+			.getAnnouncementsUserList(userStore.userData.id, {
+				...params,
+				per_page: 9,
+			})
 			.then((res) => {
 				data.value = res?.data?.map((item) => {
 					return {
@@ -93,6 +96,7 @@
 			})
 			.finally(() => {
 				isLoading.value = false;
+				isLoaded.value = true;
 			});
 	};
 
@@ -102,6 +106,13 @@
 	 */
 	const handleUpdatePage = (page) => {
 		handleFetchData({ ...params.value, page });
+	};
+
+	const handleUpdateData = (announcement) => {
+		const index = data.value.findIndex((item) => item.id === announcement.id);
+		if (index !== -1) {
+			data.value[index] = announcement;
+		}
 	};
 
 	// При монтировании компонента — первый запрос объявлений

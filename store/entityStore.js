@@ -110,15 +110,7 @@ export const useEntityStore = defineStore('entity', {
 				{ id: 2, label: '1 месяц' },
 				{ id: 3, label: '1 год' },
 			],
-			announcementCategories: [
-				{ id: 0, label: 'Пошив' },
-				{ id: 1, label: 'Ремонт' },
-				{ id: 2, label: 'Другое' },
-				{ id: 3, label: 'Пошив' },
-				{ id: 4, label: 'Ремонт' },
-				{ id: 5, label: 'Другое' },
-				{ id: 6, label: 'Пошив' },
-			],
+			announcementCategories: [],
 		},
 	}),
 	getters: {
