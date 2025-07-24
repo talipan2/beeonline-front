@@ -64,7 +64,7 @@
 							class="board-catalog-details__header-content-date"
 							v-if="data.status_code === 'ACTIVE'"
 						>
-							{{ 'Активна: до ' + formatDate(data.active_until, 'DD.MM.YYYY') }}
+							{{ 'Активна: до ' + formatDate(data.expires_at, 'DD.MM.YYYY') }}
 						</div>
 						<div
 							class="board-catalog-details__header-content-date"
@@ -72,6 +72,20 @@
 						>
 							{{ data.status_name }}
 						</div>
+					</div>
+					<div
+						class="board-catalog-details__header-content-row"
+						v-if="
+							data.status_code !== 'ACTIVE' &&
+							data.status_code !== 'DRAFT' &&
+							data.remaining_publish_time &&
+							type === 'user'
+						"
+					>
+						<p>До конца публикации:</p>
+						<p>
+							{{ convertSecondsToTime(data.remaining_publish_time) }}
+						</p>
 					</div>
 					<div class="board-catalog-details__header-buttons">
 						<template v-if="type === 'public'">
@@ -107,7 +121,8 @@
 							</UiButton>
 							<UiButton
 								v-if="
-									new Date(data.active_until) > new Date() &&
+									data.remaining_publish_time &&
+									data.remaining_publish_time > 0 &&
 									data.status_code === 'INACTIVE'
 								"
 								type="button"

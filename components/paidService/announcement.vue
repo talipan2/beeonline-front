@@ -57,9 +57,14 @@
 			type: String,
 			default: 'Оплата объявления',
 		},
+		type: {
+			type: String,
+			default: '',
+		},
 	});
 
 	const announcementPayModal = ref(null);
+	const emit = defineEmits(['updateData']);
 
 	const preparedData = ref(null);
 	const usedData = ref(null);
@@ -74,7 +79,8 @@
 	};
 	const use = () => {
 		return announcementStore.announcementPublish(props.id).then((response) => {
-			usedData.value = response;
+			usedData.value = response?.data;
+			emit('updateData', response?.data);
 		});
 	};
 

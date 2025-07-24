@@ -4,8 +4,7 @@ import { useUserStore } from '@/store/userStore';
 import { useEntityStore } from '@/store/entityStore';
 
 export const useAnnouncementStore = defineStore('announcementStore', {
-	state: () => ({
-	}),
+	state: () => ({}),
 	actions: {
 		async getAnnouncements(params = {}) {
 			try {
@@ -129,6 +128,17 @@ export const useAnnouncementStore = defineStore('announcementStore', {
 		async deactivateAnnouncement(id) {
 			try {
 				const response = await Api.deactivateAnnouncement(id);
+				if (response) {
+					return response;
+				}
+			} catch (error) {
+				throw error;
+			}
+		},
+
+		async getAnnouncementUser(userId, announcementId) {
+			try {
+				const response = await Api.getAnnouncementUser(userId, announcementId);
 				if (response) {
 					return response;
 				}

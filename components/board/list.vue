@@ -39,6 +39,7 @@
 				<PaidServiceAnnouncement
 					ref="announcementPayModal"
 					:id="announcementId"
+					@updateData="handleUpdateData"
 				/>
 			</template>
 		</template>
@@ -134,7 +135,7 @@
 			announcementStore.getAnnouncement(data.id).then((res) => {
 				editAnnouncementModal.value.data = {
 					...res?.data,
-					category_ids: res?.data?.categories.map((category) => category.id)
+					category_ids: res?.data?.categories.map((category) => category.id),
 				};
 				editAnnouncementModal.value.isOpen = true;
 			});
@@ -159,6 +160,15 @@
 		});
 	};
 
+	const handleUpdateData = (data) => {
+		console.log(data);
+		const index = props.data.findIndex((item) => item.id === data.id);
+		console.log(index);
+		if (index !== -1) {
+			props.data[index] = data;
+		}
+	};
+
 	const handleOpenPublicationModal = (data) => {
 		confirm({
 			title: 'Опубликовать объявление?',
@@ -173,7 +183,7 @@
 			},
 			onCancel: () => {},
 		});
-	}
+	};
 </script>
 
 <style lang="scss">

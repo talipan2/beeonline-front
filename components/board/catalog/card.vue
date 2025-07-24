@@ -40,16 +40,14 @@
 						v-if="announcement.status_code === 'ACTIVE'"
 					>
 						<p>Активна:</p>
-						<p>до {{ formatDate(announcement.active_until, 'DD.MM.YYYY') }}</p>
+						<p>до {{ formatDate(announcement.expires_at, 'DD.MM.YYYY') }}</p>
 					</div>
 					<div
 						class="board-card__info"
 						v-if="announcement.status_code == 'INACTIVE'"
 					>
 						<p>{{ announcement.status_name }}</p>
-						<p v-if="new Date(announcement.active_until) < new Date()">
-							Срок истек
-						</p>
+						<p v-if="announcement.remaining_publish_time == 0">Срок истек</p>
 					</div>
 					<div
 						class="board-card__info"
@@ -60,6 +58,19 @@
 						"
 					>
 						<p>{{ announcement.status_name }}</p>
+					</div>
+					<div
+						class="board-card__until"
+						v-if="
+							announcement.status_code !== 'ACTIVE' &&
+							announcement.status_code !== 'DRAFT' &&
+							announcement.remaining_publish_time
+						"
+					>
+						<p>До конца публикации:</p>
+						<p>
+							{{ convertSecondsToTime(announcement.remaining_publish_time) }}
+						</p>
 					</div>
 				</template>
 			</div>
@@ -88,7 +99,7 @@
 						type="button"
 						v-if="
 							announcement.status_code === 'INACTIVE' &&
-							new Date(announcement.active_until) > new Date()
+							announcement.remaining_publish_time > 0
 						"
 						@click="handleActivateAnnouncement"
 						class="board-card__button"
@@ -290,6 +301,21 @@
 
 			&_user-announcements {
 				order: -1;
+			}
+		}
+
+		&__until {
+			font-size: 1.6em;
+			font-weight: 400;
+			line-height: 1.5em;
+			color: #797b89;
+			display: inline;
+			opacity: 0.8;
+			gap: 1em;
+
+			p {
+				display: inline;
+				margin-right: 1em;
 			}
 		}
 

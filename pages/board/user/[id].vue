@@ -37,6 +37,7 @@
 			<PaidServiceAnnouncement
 				ref="announcementPayModal"
 				:id="announcementId"
+				@updateData="handleUpdateData"
 			/>
 			<BoardModalsPay
 				:title="modalText.title"
@@ -51,8 +52,10 @@
 	import { useAnnouncementStore } from '~/store/announcementStore';
 	import { useToast } from 'vue-toastification';
 	import { useSettingStore } from '~/store/settingStore';
+	import { useUserStore } from '~/store/userStore';
 
 	const announcementStore = useAnnouncementStore();
+	const userStore = useUserStore();
 	const settingStore = useSettingStore();
 	const { confirm, ConfirmModal } = useConfirmModal();
 	const toast = useToast();
@@ -97,10 +100,12 @@
 		confirm({
 			title: 'Снять объявление с публикации?',
 			onConfirm: () => {
-				announcementStore.deactivateAnnouncement(announcement?.id).then((res) => {
-					data.value = res?.data;
-					toast.success('Объявление успешно снято с публикации');
-				});
+				announcementStore
+					.deactivateAnnouncement(announcement?.id)
+					.then((res) => {
+						data.value = res?.data;
+						toast.success('Объявление успешно снято с публикации');
+					});
 			},
 			onCancel: () => {},
 		});
@@ -113,7 +118,7 @@
 	};
 
 	const handleUpdateData = (announcement) => {
-		data.value = {...announcement};
+		data.value = { ...announcement };
 	};
 
 	const handleOpenPublicationModal = (announcement) => {
@@ -132,11 +137,17 @@
 	onMounted(() => {
 		isLoading.value = true;
 		announcementStore
-			.getAnnouncement(router.currentRoute.value.params.id)
+			.getAnnouncementUser(
+				userStore.userData.id,
+				router.currentRoute.value.params.id
+			)
 			.then((res) => {
 				data.value = res?.data || {};
 				const threeDaysInMs = 3 * 24 * 60 * 60 * 1000; // 3 дня в миллисекундах
-				if(res?.data?.status_code === "ACTIVE" && new Date(res?.data?.active_until) - new Date() <= threeDaysInMs) {
+				if (
+					res?.data?.status_code === 'ACTIVE' &&
+					new Date(res?.data?.active_until) - new Date() <= threeDaysInMs
+				) {
 					settingStore.boardPayModal = true;
 				}
 			})
