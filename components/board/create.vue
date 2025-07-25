@@ -9,6 +9,12 @@
 				isReturnFormDataGallery
 			/>
 		</CommonLayoutInfoCard>
+		<BoardModalsErrorModal
+			title="Ошибка создания объявления"
+			:text="errorText"
+			buttonText="Авторизоваться"
+			buttonLink="/login"
+		/>
 		<UiButton
 			type="submit"
 			variant="quinary"
@@ -24,9 +30,11 @@
 <script setup>
 	import { useAnnouncementStore } from '~/store/announcementStore';
 	import { useSettingStore } from '~/store/settingStore';
+	import { useUserStore } from '~/store/userStore';
 
 	const announcementStore = useAnnouncementStore();
 	const settingStore = useSettingStore();
+	const userStore = useUserStore();
 
 	const data = ref({
 		announcement_image: '',
@@ -41,10 +49,12 @@
 		phone: '',
 		company: '',
 		site: '',
+		country_code: '',
 	});
 
 	const router = useRouter();
 	const isLoading = ref(false);
+	const errorText = ref('');
 
 	const prepareFormData = () => {
 		// Создаем FormData
@@ -67,6 +77,7 @@
 			phone: data.value.phone || '',
 			company: data.value.company || '',
 			site: data.value.site || '',
+			country_code: data.value.country_code || '',
 		};
 
 		Object.entries(fields).forEach(([key, value]) => {
@@ -113,11 +124,28 @@
 			})
 			.catch((err) => {
 				console.error('Ошибка создания объявления:', err);
+				if (err.statusCode === 422 && err.message) {
+					errorText.value = err.message;
+					settingStore.boardErrorModal = true;
+				}
 			})
 			.finally(() => {
 				isLoading.value = false;
 			});
 	};
+
+	onMounted(() => {
+		if (userStore.userData.id) {
+			data.value = {
+				...data.value,
+				name: userStore.userData?.name,
+				email: userStore.userData?.email,
+				phone: userStore.userData?.phone,
+				country_code: userStore.userData?.country_code,
+				company: userStore.userData?.organization?.name,
+			};
+		}
+	});
 </script>
 
 <style lang="scss">
