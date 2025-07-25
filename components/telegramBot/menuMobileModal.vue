@@ -1,300 +1,354 @@
 <template>
-  <UiModal v-model="isOpenModal" @confirm="() => confirm()" class="header-menu"
-    :style="{ marginTop: `${headerHeight}px` }" ref="modall" :clickToClose="false">
-    <template #content>
-      <template v-if="isAuth">
-        <button class="header-menu__user-data" @click="() => isOpenDropDown = !isOpenDropDown">
-          <div class="header-menu__user-image">
-            <img :src="logo || defaultLogoImage" :alt="userName">
-          </div>
-          <div class="header-menu__user-info">
-            <div class="header-menu__user-name">{{ userName }}</div>
-          </div>
-        </button>
-        <ul class="header-menu__link-list header-menu__link-list_type_dropdown">
-          <li class="header-menu__link-item">
-            <NuxtLink to="/customer/orders" class="header-menu__link">Заказы</NuxtLink>
-          </li>
-          <li class="header-menu__link-item">
-            <NuxtLink to="/orders/create" class="header-menu__link">Разместить заказ</NuxtLink>
-          </li>
-          <li class="header-menu__link-item header-menu__sign-out">
-            <UiButton type="button" class="header-menu__link" variant="default" :withoutPadding="true" @click="logOut">Выход</UiButton>
-          </li>
-        </ul>
-      </template>
-      <template v-else>
-        <div class="header-menu__sign-in">
-          <UiButton type="button" variant="quinary" size="large" class="header-menu__sign-in-button"
-            @click="settingStore.authModalStatus = true">Вход/Регистрация</UiButton>
-          <UiButton type="button" variant="tertiary" size="large" class="header-menu__order-btn">Разместить заказ
-          </UiButton>
-        </div>
-      </template>
-    </template>
-  </UiModal>
+	<UiModal
+		v-model="isOpenModal"
+		@confirm="() => confirm()"
+		class="header-menu"
+		:style="{ marginTop: `${headerHeight}px` }"
+		ref="modall"
+		:clickToClose="false"
+	>
+		<template #content>
+			<template v-if="isAuth">
+				<button
+					class="header-menu__user-data"
+					@click="() => (isOpenDropDown = !isOpenDropDown)"
+				>
+					<div class="header-menu__user-image">
+						<img
+							:src="logo || defaultLogoImage"
+							:alt="userName"
+						/>
+					</div>
+					<div class="header-menu__user-info">
+						<div class="header-menu__user-name">{{ userName }}</div>
+					</div>
+				</button>
+				<ul class="header-menu__link-list header-menu__link-list_type_dropdown">
+					<li class="header-menu__link-item">
+						<NuxtLink
+							to="/customer/orders"
+							class="header-menu__link"
+						>
+							Заказы
+						</NuxtLink>
+					</li>
+					<li class="header-menu__link-item">
+						<NuxtLink
+							to="/orders/create"
+							class="header-menu__link"
+						>
+							Разместить заказ
+						</NuxtLink>
+					</li>
+					<li class="header-menu__link-item">
+						<NuxtLink
+							to="/board/user"
+							class="header-menu__link"
+						>
+							Объявления
+						</NuxtLink>
+					</li>
+					<li class="header-menu__link-item">
+						<NuxtLink
+							to="/board/create"
+							class="header-menu__link"
+						>
+							Разместить объявление
+						</NuxtLink>
+					</li>
+					<li class="header-menu__link-item header-menu__sign-out">
+						<UiButton
+							type="button"
+							class="header-menu__link"
+							variant="default"
+							:withoutPadding="true"
+							@click="logOut"
+						>
+							Выход
+						</UiButton>
+					</li>
+				</ul>
+			</template>
+			<template v-else>
+				<div class="header-menu__sign-in">
+					<UiButton
+						type="button"
+						variant="quinary"
+						size="large"
+						class="header-menu__sign-in-button"
+						@click="settingStore.authModalStatus = true"
+					>
+						Вход/Регистрация
+					</UiButton>
+					<UiButton
+						type="button"
+						variant="tertiary"
+						size="large"
+						class="header-menu__order-btn"
+					>
+						Разместить заказ
+					</UiButton>
+				</div>
+			</template>
+		</template>
+	</UiModal>
 </template>
 
 <script setup>
-import { useSettingStore } from '~/store/settingStore';
-import defaultLogoImage from "~/assets/images/nophoto_pc.png";
-import { useUserStore } from '~/store/userStore';
-import { useOrganizationStore } from '~/store/organizationStore';
+	import { useSettingStore } from '~/store/settingStore';
+	import defaultLogoImage from '~/assets/images/nophoto_pc.png';
+	import { useUserStore } from '~/store/userStore';
+	import { useOrganizationStore } from '~/store/organizationStore';
 
+	const props = defineProps({
+		modelValue: {
+			type: Boolean,
+			default: false,
+		},
 
-const props = defineProps({
-  modelValue: {
-    type: Boolean,
-    default: false,
-  },
+		headerHeight: {
+			type: Number,
+			default: 0,
+		},
+		userName: {
+			type: String,
+		},
+		role: {
+			type: String,
+		},
+		isAuth: {
+			type: Boolean,
+			default: false,
+		},
+		logo: {
+			type: String,
+			default: '',
+		},
+	});
 
-  headerHeight: {
-    type: Number,
-    default: 0,
-  },
-  userName: {
-    type: String,
-  },
-  role: {
-    type: String,
-  },
-  isAuth: {
-    type: Boolean,
-    default: false,
-  },
-  logo: {
-    type: String,
-    default: '',
-  }
-});
+	const router = useRouter();
+	const emit = defineEmits(['update:modelValue']);
+	const modall = ref(null);
+	const settingStore = useSettingStore();
+	const userStore = useUserStore();
+	const organizationStore = useOrganizationStore();
+	const isOpenModal = ref(props.modelValue);
+	const userRoles = computed(() => userStore.userRoles);
+	const userData = computed(() => userStore.userData);
 
-const router = useRouter();
-const emit = defineEmits(['update:modelValue']);
-const modall = ref(null);
-const settingStore = useSettingStore();
-const userStore = useUserStore();
-const organizationStore = useOrganizationStore();
-const isOpenModal = ref(props.modelValue);
-const userRoles = computed(() => userStore.userRoles);
-const userData = computed(() => userStore.userData);
+	const isOpenDropDown = ref(false);
 
+	function getRoleName(role) {
+		if (role === 'customer') {
+			return 'Заказчик';
+		} else if (role === 'performer') {
+			return 'Исполнитель';
+		}
+	}
 
-const isOpenDropDown = ref(false);
+	function confirm() {
+		emit('update:modelValue', false);
+	}
 
-function getRoleName(role) {
-  if(role === 'customer') {
-    return 'Заказчик';
-  } else if(role === 'performer') {
-    return 'Исполнитель';
-  }
-}
+	watch(
+		() => props.modelValue,
+		(newVal) => {
+			isOpenModal.value = newVal;
+		}
+	);
 
-function confirm() {
-  emit('update:modelValue', false);
-}
+	watch(isOpenModal, (newVal) => {
+		isOpenModal.value = newVal;
+		emit('update:modelValue', newVal);
+	});
 
-watch(() => props.modelValue, (newVal) => {
-  isOpenModal.value = newVal;
-});
+	const logOut = async () => {
+		try {
+			await userStore.logOut();
 
-watch(isOpenModal, (newVal) => {
-  isOpenModal.value = newVal;
-  emit('update:modelValue', newVal);
-});
+			await router.push({ path: '/telegram' });
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
-const logOut = async() => {
-  try {
-    await userStore.logOut();
-
-    await router.push({ path: '/telegram', });
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-watch(() => router.currentRoute.value.path, (newVal) => {
-  confirm();
-})
-
+	watch(
+		() => router.currentRoute.value.path,
+		(newVal) => {
+			confirm();
+		}
+	);
 </script>
 
 <style lang="scss">
+	.telegram-bot-modal {
+		.modal-dialog {
+			left: auto;
+			bottom: auto;
+			right: 3%;
+		}
+	}
 
-.telegram-bot-modal {
-  .modal-dialog {
-    left: auto;
-    bottom: auto;
-    right: 3%;
-  }
+	.header-menu {
+		.modal-body {
+			width: 29em;
+		}
 
-}
+		.modal-content {
+			font-family: 'Inter', sans-serif;
+			max-height: 100%;
+			box-sizing: border-box;
+			overflow-y: auto;
+			padding-bottom: 3em;
+			margin-block: 0;
+			background-color: transparent;
+			padding-right: 1em;
+		}
 
+		&__header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			margin-bottom: 1.5em;
 
-.header-menu {
+			.header__location {
+				font-size: 1.4em;
+			}
+		}
 
-  .modal-body {
-    width: 29em;
-  }
+		.header__lang-item {
+			font-size: 1em;
+		}
 
-  .modal-content {
-    font-family: "Inter", sans-serif;
-    max-height: 100%;
-    box-sizing: border-box;
-    overflow-y: auto;
-    padding-bottom: 3em;
-    margin-block: 0;
-    background-color: transparent;
-    padding-right: 1em;
-  }
+		.choose-lang {
+			[data-tippy-root] {
+				min-width: auto;
+			}
+		}
 
-  &__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1.5em;
+		&__search {
+			margin-bottom: 1em;
+		}
 
-      .header__location {
-        font-size: 1.4em;
-      }
-  }
+		&__sign-in {
+			display: flex;
+			flex-direction: column;
+			row-gap: 1em;
+			padding-block: 2em;
+			border-top: 1px solid var(--text-color-ternary);
+			border-bottom: 1px solid var(--text-color-ternary);
 
-  .header__lang-item {
-    font-size: 1em;
-  }
+			.btn {
+				width: 100%;
+				text-transform: uppercase;
+				font-size: 1.2em;
+			}
+		}
 
-  .choose-lang {
-    [data-tippy-root] {
-      min-width: auto;
-    }
-  }
+		&__order-btn {
+			background-color: transparent;
+			color: #fff;
+		}
 
-  &__search {
-    margin-bottom: 1em;
-  }
+		&__user-data {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			width: 100%;
+			column-gap: 1.2em;
+			padding-block: 1.5em;
+			margin-block: 1.5em;
+			border-bottom: 1px solid var(--text-color-ternary);
+			border-top: 1px solid var(--text-color-ternary);
+		}
 
-  &__sign-in {
-    display: flex;
-    flex-direction: column;
-    row-gap: 1em;
-    padding-block: 2em;
-    border-top: 1px solid var(--text-color-ternary);
-    border-bottom: 1px solid var(--text-color-ternary);
+		&__user-image {
+			width: 3em;
+			height: 3em;
+			border-radius: 3em;
+			overflow: hidden;
+		}
 
-    .btn {
-      width: 100%;
-      text-transform: uppercase;
-      font-size: 1.2em;
-    }
-  }
+		&__user-info {
+			font-size: 1.4em;
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+			flex: 1;
+			row-gap: 0.5em;
+			color: var(--text-color-octonary);
+		}
 
-  &__order-btn {
-    background-color: transparent;
-    color: #fff;
-  }
+		&__user-role {
+			font-size: 0.857em;
+			text-transform: uppercase;
+		}
 
-  &__user-data {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    column-gap: 1.2em;
-    padding-block: 1.5em;
-    margin-block: 1.5em;
-    border-bottom: 1px solid var(--text-color-ternary);
-    border-top: 1px solid var(--text-color-ternary);
+		&__dropdown-icon {
+			path {
+				fill: var(--text-color-octonary);
+			}
+		}
 
-  }
+		&__link-list {
+			display: flex;
+			flex-direction: column;
+			row-gap: 0.625em;
+			font-size: 1.6em;
+			color: var(--text-color-octonary);
+			padding: 0.625em 0 1.9em 2.5em;
+			font-weight: 300;
+			border-bottom: 1px solid var(--text-color-ternary);
+			margin-bottom: 1.25em;
+		}
 
-  &__user-image {
-    width: 3em;
-    height: 3em;
-    border-radius: 3em;
-    overflow: hidden;
-  }
+		&__change-role {
+			font-size: 1.2em;
+			color: var(--text-color-octonary);
+			text-transform: uppercase;
+			column-gap: 0.625em;
+			padding-block: 0.625em 2.291em;
+			border: none;
+			border-bottom: 1px solid var(--text-color-ternary);
+			margin-bottom: 1.66em;
+			border-radius: 0;
+			width: 100%;
 
-  &__user-info {
-    font-size: 1.4em;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    flex: 1;
-    row-gap: .5em;
-    color: var(--text-color-octonary);
-  }
+			svg {
+				fill: #fff;
+			}
+		}
 
-  &__user-role{
-    font-size: 0.857em;
-    text-transform: uppercase;
-  }
+		&__social {
+			display: flex;
+			justify-content: center;
+		}
 
-  &__dropdown-icon {
-    path {
-      fill: var(--text-color-octonary);
-    }
-  }
+		&__social-link {
+			circle {
+				fill: #ffffff00;
+			}
 
-  &__link-list {
-    display: flex;
-    flex-direction: column;
-    row-gap: 0.625em;
-    font-size: 1.6em;
-    color: var(--text-color-octonary);
-    padding: 0.625em 0 1.9em 2.5em;
-    font-weight: 300;
-    border-bottom: 1px solid var(--text-color-ternary);
-    margin-bottom: 1.25em;
-  }
+			@include hover {
+				circle {
+					fill: var(--text-color-octonary);
+				}
+				path {
+					fill: var(--text-color-monodecimal);
+				}
+			}
+		}
 
-  &__change-role {
-    font-size: 1.2em;
-    color: var(--text-color-octonary);
-    text-transform: uppercase;
-    column-gap: 0.625em;
-    padding-block: 0.625em 2.291em;
-    border: none;
-    border-bottom: 1px solid var(--text-color-ternary);
-    margin-bottom: 1.66em;
-    border-radius: 0;
-    width: 100%;
+		&__sign-out {
+			border-top: 1px solid #fff;
+			padding-top: 1em;
 
-    svg {
-      fill: #fff;
-    }
-  }
-
-  &__social {
-    display: flex;
-    justify-content: center;
-  }
-
-  &__social-link {
-    circle {
-      fill: #ffffff00;
-    }
-
-    @include hover {
-      circle {
-        fill: var(--text-color-octonary);
-      }
-      path {
-        fill: var(--text-color-monodecimal);
-      }
-    }
-  }
-
-  &__sign-out {
-    border-top: 1px solid #fff;
-    padding-top: 1em;
-
-    .header-menu__link {
-      font-size: 1.6rem;
-      color: #fff;
-      text-transform: none;
-      font-weight: 300;
-    }
-  }
-
-
-}
-
+			.header-menu__link {
+				font-size: 1.6rem;
+				color: #fff;
+				text-transform: none;
+				font-weight: 300;
+			}
+		}
+	}
 </style>

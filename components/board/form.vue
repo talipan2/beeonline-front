@@ -35,7 +35,7 @@
 			/>
 		</div>
 		<div class="form-group form-group_type_secondary">
-			<label class="form-group__title">Цена</label>
+			<label class="form-group__title">Цена *</label>
 			<UiInput
 				:rules="{ required: true, min_value: 1 }"
 				name="price"
@@ -116,7 +116,7 @@
 
 		<div class="form-group form-group_type_secondary">
 			<label class="form-group__title">Номер телефона *</label>
-			<UiInput
+			<!-- <UiInput
 				:rules="{ required: true }"
 				name="phone"
 				label="Номер телефона"
@@ -124,14 +124,14 @@
 				class="form-group__value"
 				type="tel"
 				placeholder="Введите номер телефона"
-			></UiInput>
-			<!-- <CommonPhoneMusk
-				class="form-group__value register__phone-mask"
+			></UiInput> -->
+			<CommonPhoneMusk
+				class="form-group__value board-form__phone-mask"
 				v-model="data"
 				:rules="{ required: true, max: 16 }"
 				name="phone"
 				label="Телефон"
-			/> -->
+			/>
 		</div>
 		<div class="form-group form-group_type_secondary">
 			<label class="form-group__title">Название компании</label>
@@ -309,6 +309,12 @@
 		@include mobile {
 			.form-group_type_secondary {
 				margin-bottom: 1em;
+			}
+		}
+
+		&__phone-mask {
+			.input-container  {
+				padding: 1.4rem !important;
 			}
 		}
 	}

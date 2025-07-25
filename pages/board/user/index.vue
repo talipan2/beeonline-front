@@ -21,6 +21,7 @@
 			>
 				Создать объявление
 			</UiButton>
+			<div class="divider board-user__divider"></div>
 			<div ref="list">
 				<CommonAlerts
 					alert="Объявлений не найдено"
@@ -135,5 +136,9 @@
 		text-transform: uppercase;
 		margin-bottom: 2em;
 		width: fit-content;
+	}
+
+	.board-user__divider {
+		margin: 4em 0;
 	}
 </style>
