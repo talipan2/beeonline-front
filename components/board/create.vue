@@ -124,7 +124,7 @@
 			})
 			.catch((err) => {
 				console.error('Ошибка создания объявления:', err);
-				if (err.statusCode === 422 && err.message) {
+				if (err.statusCode === 401 && err.message) {
 					errorText.value = err.message;
 					settingStore.boardErrorModal = true;
 				}

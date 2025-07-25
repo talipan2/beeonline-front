@@ -196,23 +196,23 @@
 
 	const getSidebarLinks = (role) => [
 		{ id: 1, label: 'Рабочий стол', value: `/desktop` },
-		{ id: 1, label: 'Объявления', value: `/board/user` },
-		{ id: 2, label: 'Bee-online Gifts', value: `/bonus` },
-		{ id: 3, label: 'Профиль', value: `/profile` },
+		{ id: 2, label: 'Объявления', value: `/board/user` },
+		{ id: 3, label: 'Bee-online Gifts', value: `/bonus` },
+		{ id: 4, label: 'Профиль', value: `/profile` },
 		...(role === 'customer'
-			? [{ id: 4, label: 'Заказы', value: '/customer/orders' }]
+			? [{ id: 5, label: 'Заказы', value: '/customer/orders' }]
 			: []),
 		// { id: 4, label: role === "performer" ? "Услуги" : "Заказы", value: role === "performer" ? "/performer/services" : "/customer/orders", },
-		{ id: 5, label: 'Проверка контрагентов', value: `/org_check` },
-		{ id: 6, label: 'Сообщения', value: '/chat' },
-		{ id: 7, label: 'Сделки', value: '/deals' },
-		{ id: 8, label: 'Документы', value: `/documentation` },
+		{ id: 6, label: 'Проверка контрагентов', value: `/org_check` },
+		{ id: 7, label: 'Сообщения', value: '/chat' },
+		{ id: 8, label: 'Сделки', value: '/deals' },
+		{ id: 9, label: 'Документы', value: `/documentation` },
 		// { id: 9, label: "Партнерские сервисы", value: `/related-industry-services` },
-		{ id: 10, label: 'Избранное', value: `/favorites` },
-		{ id: 11, label: 'Отзывы', value: `/reviews` },
-		{ id: 12, label: 'Баланс и платные услуги', value: '/tariffs' },
-		{ id: 13, label: 'Уведомления', value: `/notifications` },
-		{ id: 14, label: 'Новости', value: '/news' },
+		{ id: 11, label: 'Избранное', value: `/favorites` },
+		{ id: 12, label: 'Отзывы', value: `/reviews` },
+		{ id: 13, label: 'Баланс и платные услуги', value: '/tariffs' },
+		{ id: 14, label: 'Уведомления', value: `/notifications` },
+		{ id: 15, label: 'Новости', value: '/news' },
 	];
 
 	const sidebarIndustryServices = computed(() => {
