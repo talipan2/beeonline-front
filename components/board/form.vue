@@ -157,6 +157,25 @@
 				<SvgoPlanet class="svg-m" />
 			</UiInput>
 		</div>
+		<div class="form-group form-group_type_secondary">
+			<UiCheckbox
+				:rules="{ required: true }"
+				v-model="data.privacy_policy"
+				name="privacy_policy"
+				label="Политика конфиденциальности"
+			>
+				<span>
+					Я согласен(a) с
+					<NuxtLink
+						href="/page-policy"
+						target="_blank"
+						:style="{ display: 'inline' }"
+					>
+						политикой конфиденциальности
+					</NuxtLink>
+				</span>
+			</UiCheckbox>
+		</div>
 	</div>
 </template>
 
@@ -313,7 +332,7 @@
 		}
 
 		&__phone-mask {
-			.input-container  {
+			.input-container {
 				padding: 1.4rem !important;
 			}
 		}
