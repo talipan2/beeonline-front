@@ -165,7 +165,7 @@
 				label="Политика конфиденциальности"
 			>
 				<span>
-					Я согласен с
+					Я согласен(a) с
 					<NuxtLink
 						href="/page-policy"
 						target="_blank"
