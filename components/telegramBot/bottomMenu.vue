@@ -100,7 +100,7 @@
 			display: flex;
 			justify-content: space-between;
 			align-items: top;
-			padding: 0;
+			padding: 0 1em;
 		}
 
 		&__item {
