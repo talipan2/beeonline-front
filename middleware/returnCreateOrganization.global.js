@@ -62,8 +62,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 		userStore.isAuth &&
 		userStore.userData.id &&
 		userStore.role === 'customer' &&
-		(!userStore.userData?.organization_id ||
-			userStore.userData?.organization_is_auto_created) &&
+		!userStore.userData?.organization_id &&
 		to.path !== '/register/step1' &&
 		settingStore.isCreateOrder === false &&
 		!availableLinkList.some((item) => to.path.startsWith(item)) &&
@@ -77,8 +76,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 		userStore.isAuth &&
 		userStore.userData.id &&
 		userStore.role === 'performer' &&
-		(!userStore.userData?.organization_id ||
-			userStore.userData?.organization_is_auto_created) &&
+		!userStore.userData?.organization_id &&
 		to.path !== '/performer-register/step1' &&
 		!availableLinkList.some((item) => to.path.startsWith(item)) &&
 		to.path !== '/'
