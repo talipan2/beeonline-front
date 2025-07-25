@@ -65,7 +65,10 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 		!userStore.userData?.organization_id &&
 		to.path !== '/register/step1' &&
 		settingStore.isCreateOrder === false &&
-		!availableLinkList.some((item) => to.path.startsWith(item)) &&
+		(!availableLinkList.some((item) => to.path.startsWith(item)) ||
+			requireOrganizationAndPublicCardLinks.some((item) =>
+				to.path.startsWith(item)
+			)) &&
 		to.path !== '/'
 	) {
 		return navigateTo({ path: '/register/step1' });
@@ -78,7 +81,10 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 		userStore.role === 'performer' &&
 		!userStore.userData?.organization_id &&
 		to.path !== '/performer-register/step1' &&
-		!availableLinkList.some((item) => to.path.startsWith(item)) &&
+		(!availableLinkList.some((item) => to.path.startsWith(item)) ||
+			requireOrganizationAndPublicCardLinks.some((item) =>
+				to.path.startsWith(item)
+			)) &&
 		to.path !== '/'
 	) {
 		return navigateTo({ path: '/performer-register/step1' });
