@@ -44,8 +44,10 @@
 <script setup>
 	import { useEntityStore } from '~/store/entityStore';
 	import { useAnnouncementStore } from '~/store/announcementStore';
+	import { useSettingStore } from '~/store/settingStore';
 
 	const entityStore = useEntityStore();
+	const settingStore = useSettingStore();
 	const announcementStore = useAnnouncementStore();
 
 	const props = defineProps({
@@ -81,6 +83,11 @@
 		return announcementStore.announcementPublish(props.id).then((response) => {
 			usedData.value = response?.data;
 			emit('updateData', response?.data);
+			if (localStorage.getItem('isFirstAnnouncement') === 'true') {
+				localStorage.removeItem('isFirstAnnouncement');
+				settingStore.createEntityFinalModal = true;
+				settingStore.boardPayModal = false;
+			}
 		});
 	};
 

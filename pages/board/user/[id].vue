@@ -44,6 +44,13 @@
 				:text="modalText.text"
 				:announcementId="data.id"
 			/>
+			<CreateEntityFinalModal
+				text="Спасибо за размещенное объявление. Оно отправлено на модерацию. При желании вы можете заполнить данные об организации"
+				type="announcement"
+				:isAutoClose="false"
+				:btnLink="'/profile'"
+				:btnText="'Перейти в профиль'"
+			/>
 		</template>
 	</NuxtLayout>
 </template>
