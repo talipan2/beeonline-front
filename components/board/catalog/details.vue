@@ -426,6 +426,7 @@
 				font-weight: 400;
 				opacity: 0.8;
 				white-space: pre-line;
+				word-break: break-word;
 			}
 		}
 

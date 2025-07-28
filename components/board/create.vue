@@ -118,6 +118,9 @@
 				if (res.announcement) {
 					router.push(`/board/user/${res.announcement.id}`);
 					settingStore.boardPayModal = true;
+					if (res.user) {
+						localStorage.setItem('isFirstAnnouncement', true);
+					}
 				} else {
 					router.push(`/board/user`);
 				}
