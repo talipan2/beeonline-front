@@ -19,7 +19,7 @@
         <UiImage src="/assets/images/main/services/services-customers.png" class="services__image" />
         <UiImage src="/assets/images/main/services/services-mobile-2.png" class="services__image services__image-mobile"/>
       </div>
-      <div class="services__card services__card_type_suppliers">
+      <!-- <div class="services__card services__card_type_suppliers">
         <h2 class="services__title">Поиск поставщиков</h2>
         <p class="services__description">
           Расширьте свои возможности и увеличьте продажи, подключившись к нашему сервису, который связывает вас с ведущими брендами, ритейлерами и производителями одежды в легкой промышленности!
@@ -34,7 +34,7 @@
         <UiButton to="https://beejob.ru/" variant="quaternary" size="xl" class="services__link" :target="'_blank'">Подробнее</UiButton>
         <UiImage src="/assets/images/main/services/services-factories.png" class="services__image" />
         <UiImage src="/assets/images/main/services/services-mobile-4.png" class="services__image services__image-mobile"/>
-      </div>
+      </div> -->
       <!-- <div class="services__card services__card_type_exhibitions">
         <h2 class="services__title">Поиск выставок</h2>
         <p class="services__description">
