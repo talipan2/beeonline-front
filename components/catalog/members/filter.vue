@@ -3,7 +3,7 @@
     <template #body>
       <!-- <div class="filter__item">
         <h3 class="filter__title">Тип участника:</h3>
-        <UiRadioButtonGroup class="filter__radio" v-model="searchProps.type" :options="[{ label: 'Исполнитель', value: 'performer' }, { label: 'Заказчик', value: 'customer' }]" name="type" :return-number="false"/>
+        <UiRadioButtonGroup class="filter__radio" v-model="searchProps.type" :options="[{ label: 'Производитель', value: 'performer' }, { label: 'Заказчик', value: 'customer' }]" name="type" :return-number="false"/>
       </div> -->
       <div class="filter__item">
         <h3 class="filter__title">Категории продукции:</h3>
@@ -41,7 +41,7 @@
         <h3 class="filter__title">Сырье:</h3>
         <UiCheckboxGroup
           :options="[
-            { id: 0, label: 'Исполнителя' },
+            { id: 0, label: 'Производителя' },
             { id: 1, label: 'Заказчика' },
           ]"
           :isValidated="false"

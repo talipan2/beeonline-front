@@ -11,7 +11,7 @@
       </template>
     </template>
     <template v-else>
-      <CommonAlerts alert="Исполнители не найдены" :type="'warning'" v-if="!servicesList.length" />
+      <CommonAlerts alert="Производители не найдены" :type="'warning'" v-if="!servicesList.length" />
     </template>
   </div>
 </template>

@@ -44,7 +44,7 @@
         class="filter-modal__checkbox filter-modal__action"
         v-model="modelValue.material"
         :options="[
-          { id: 0, label: 'Исполнителя' },
+          { id: 0, label: 'Производителя' },
           { id: 1, label: 'Заказчика' },
         ]"
         :is-validated="false"

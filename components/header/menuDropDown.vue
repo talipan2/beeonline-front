@@ -218,7 +218,7 @@ const formatLangRole = computed(() => {
     case 'customer':
       return 'заказчиком'
     case 'performer': 
-      return 'исполнителем'
+      return 'производителем'
     default:
       return ''
   }

@@ -131,7 +131,7 @@ const data = computed({
 
 const organizationTypes = [
   { id: 0, label: 'Выберите тип организации', value: '', disabled: true },
-  { id: 1, label: 'Исполнитель', value: 'performer' },
+  { id: 1, label: 'Производитель', value: 'performer' },
   { id: 2, label: 'Заказчик', value: 'customer' },
 ]
 

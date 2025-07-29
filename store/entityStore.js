@@ -70,7 +70,7 @@ export const useEntityStore = defineStore('entity', {
       categories: [],
       adjacentCategories: [],
       rawMaterials: [
-        { id: 0, label: "Исполнителя" },
+        { id: 0, label: "Производителя" },
         { id: 1, label: "Заказчика" },
       ],
       patterns: [

@@ -9,25 +9,27 @@
       class="select"
       :class="[field.class, $attrs.class, {'invalid': errors.length && meta.touched }]"
     >
-      <select
-        class="select__select"
-        :class="{'select_type_disabled': disabled}"
-        v-bind="field"
-        :disabled="disabled"
-        :required="required"
-        @change="handleSelectChange"
-      >
-        <option
-          class="select__option"
-          v-for="option in options"
-          :key="option.id"
-          :value="returnValue ? option.value : option.id"
-          :disabled="option.disabled"
+      <div class="select__wrapper">
+        <select
+          class="select__select"
+          :class="{'select_type_disabled': disabled}"
+          v-bind="field"
+          :disabled="disabled"
+          :required="required"
+          @change="handleSelectChange"
         >
-          {{ option.label }}
-        </option>
-      </select>
-      <div class="select__arrow"></div>
+          <option
+            class="select__option"
+            v-for="option in options"
+            :key="option.id"
+            :value="returnValue ? option.value : option.id"
+            :disabled="option.disabled"
+          >
+            {{ option.label }}
+          </option>
+        </select>
+        <div class="select__arrow"></div>
+      </div>
       <div class="invalid-error" v-if="errorShow">
         <span v-if="errors.length && meta.touched" class="invalid-error__text">{{ errors[0] }}</span>
       </div>
@@ -87,7 +89,11 @@ const handleSelectChange = (event) => {
 .select {
   position: relative;
 
-  &:focus-within &__arrow {
+  &__wrapper {
+    position: relative;
+  }
+
+  &__wrapper:focus-within &__arrow {
     transform: translateY(-50%) rotate(180deg);
   }
 

@@ -73,7 +73,7 @@
           @click="handleSwitchRole"
         >
           <SvgoEnter class="svg-m" />
-          Переключится на исполнителя
+          Переключится на производителя
         </UiButton>
         <!-- <NuxtLink to="" class="header-menu__change-role">
           <SvgoEnter class="svg-m" />
@@ -87,7 +87,7 @@
           v-if="!userRoles.includes('performer') && role !== 'adjacent'"
         >
           <SvgoAdduser class="svg-m" />
-            Стать исполнителем
+            Стать производителем
         </UiButton>
         <UiButton
           type="button"
@@ -177,7 +177,7 @@ function getRoleName(role) {
   if(role === 'customer') {
     return 'Заказчик';
   } else if(role === 'performer') {
-    return 'Исполнитель';
+    return 'Производитель';
   }
 }
 

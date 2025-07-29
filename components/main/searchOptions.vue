@@ -11,7 +11,7 @@
       <div class="search-options__card">
         <h3 class="search-options__title">Поиск производителей</h3>
         <p class="search-options__description">Обеспечьте своему бренду надежность, скорость и качество — найдите лучших
-          исполнителей в модной индустрии с нашим сервисом!</p>
+          производителей в модной индустрии с нашим сервисом!</p>
         <UiButton to="/services" class="search-options__link" variant="primary" size="xl" >Каталог производителей</UiButton>
         <UiImage class="search-options__image" src="/assets/images/main/search-options/search-options-2.png"/>
       </div>

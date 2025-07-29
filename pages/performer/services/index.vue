@@ -2,7 +2,7 @@
   <NuxtLayout name="profile" title="Услуги">
     <template #header>
       <UiBreadCrumb
-        :list="[{ label: 'Главная', link: '/' }, { label: 'Кабинет исполнителя', link: '/desktop' }, { label: 'Список услуг', link: '' }]" />
+        :list="[{ label: 'Главная', link: '/' }, { label: 'Кабинет производителя', link: '/desktop' }, { label: 'Список услуг', link: '' }]" />
     </template>
     <template #content>
       <Entity
@@ -10,7 +10,7 @@
         role="performer"
         type="service"
         title="Все услуги"
-        subtitle="Размещайте список своих услуг в каталоге исполнителей и ищите заказчиков в кратчайшие сроки с учетом именно ваших потребностей."
+        subtitle="Размещайте список своих услуг в каталоге производителей и ищите заказчиков в кратчайшие сроки с учетом именно ваших потребностей."
         btnLabel="Создать услугу"
         btnLink="/services/create"
         :data="cardData"
@@ -138,7 +138,7 @@ const cardData = computed(() => {
     id: item.id,
     name: item.name,
     placeOfProduction: locations,
-    rawMaterials: [item.materials_own ? 'Исполнителя' : '', item.materials_tolling ? 'Заказчика' : ''].filter(Boolean),
+    rawMaterials: [item.materials_own ? 'Производителя' : '', item.materials_tolling ? 'Заказчика' : ''].filter(Boolean),
     availabilityStm: item.is_stm != null ? item.is_stm ? 'Да' : 'Нет' : null,
     freeSamples: formatFreeSamples(item.free_samples),
     freeStock:  item.free_stock != null ? item.free_stock ? 'Да' : 'Нет' : null,

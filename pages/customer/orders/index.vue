@@ -10,7 +10,7 @@
         role="customer"
         type="order"
         title="Все заказы"
-        subtitle="Размещайте список своих заказов в каталоге заказчиков и ищите исполнителей в кратчайшие сроки с учетом именно ваших потребностей"
+        subtitle="Размещайте список своих заказов в каталоге заказчиков и ищите производителей в кратчайшие сроки с учетом именно ваших потребностей"
         btnLabel="Создать заказ"
         btnLink="/orders/create"
         :data="cardData"
@@ -131,7 +131,7 @@ const cardData = computed(() => {
       name: item.name,
       placeOfProduction: locations,
       alias: alias,
-      rawMaterials: !item.material ? ['Исполнителя'] : ['Заказчика'],
+      rawMaterials: !item.material ? ['Производителя'] : ['Заказчика'],
       completionDate: item.deadline_at,
       batch: item.batch,
       category: item.product_categories.map(item => item.id),

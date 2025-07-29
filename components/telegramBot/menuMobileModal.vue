@@ -85,7 +85,7 @@ function getRoleName(role) {
   if(role === 'customer') {
     return 'Заказчик';
   } else if(role === 'performer') {
-    return 'Исполнитель';
+    return 'Производитель';
   }
 }
 

@@ -2,7 +2,7 @@
   <NuxtLayout name="profile" title="Карточка услуги" class="entity-edit">
     <template #header>
       <UiBreadCrumb
-        :list="[{ label: 'Главная', link: '/' }, { label: 'Кабинет исполнителя', link: '/desktop' }, { label: 'Список услуг', link: '/performer/services' }, { label: 'Услуга', link: '' }]" />
+        :list="[{ label: 'Главная', link: '/' }, { label: 'Кабинет производителя', link: '/desktop' }, { label: 'Список услуг', link: '/performer/services' }, { label: 'Услуга', link: '' }]" />
     </template>
     <template #content>
       <EntityView v-if="!isLoading" :data="serviceProps" role="performer" type="service"/>
@@ -40,7 +40,7 @@ const serviceProps = computed(() => {
     props: {
       minLot: {label: "Партии", value: service.value.batches && service.value.batches.length ? service.value.batches.map(item => item.name) : []},
       category: { label: "Категория", value: service.value.product_categories && service.value.product_categories.length ? service.value.product_categories.map(item => item.name) : []},
-      rawMaterials: {label: "Сырье", value: [service.value.materials_own ? 'Исполнителя' : '', service.value.materials_tolling ? 'Заказчика' : ''].filter(Boolean).join(' / ')},
+      rawMaterials: {label: "Сырье", value: [service.value.materials_own ? 'Производителя' : '', service.value.materials_tolling ? 'Заказчика' : ''].filter(Boolean).join(' / ')},
       availabilityStm: {label: "Наличие СТМ", value: service.value.availabilityStm ? 'Да' : 'Нет'},
       freeSamples: {label: "Бесплатные образцы", value: formatFreeSamples(service.value.free_samples)},
       placeOfProduction: {label: "Место производства", value: locations,},

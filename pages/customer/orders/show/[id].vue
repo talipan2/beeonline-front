@@ -52,7 +52,7 @@ const orderProps = computed(() => {
         value: order.value.product_categories && order.value.product_categories.length
         ? entityStore.getEntityLabelById('categories', order.value.product_categories.map(item => item.id))
         : ''},
-      rawMaterials: {label: "Сырье", value: !order.value.material ? 'Исполнителя' : 'Заказчика'},
+      rawMaterials: {label: "Сырье", value: !order.value.material ? 'Производителя' : 'Заказчика'},
       pattern: {label: "Лекала", value: order.value.pattern ? 'Есть лекала' : 'Нужен конструктор'},
       price: {label: "Цена за единицу продукции", value: `${order.value.price} ${settingStore.getCurrencyCodeById(order.value.currency_id)}`},
       completionDate: {label: "Срок выполнения", value: `До ${formatDate(order.value.deadline_at)}`},

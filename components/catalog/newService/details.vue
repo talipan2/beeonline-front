@@ -38,7 +38,7 @@
             class="new-service-details__pub-card-button"
             @click="settingStore.sendMessageModal = true"
           >
-            Написать исполнителю
+            Написать производителю
           </UiButton>
           <PaidServiceCounterpartyCheck
             v-if="userStore.userPubCard.id != data.id"
@@ -71,7 +71,7 @@
             class="new-service-details__pub-card-button"
             @click="settingStore.authModalStatus = true"
           >
-            Написать исполнителю
+            Написать производителю
           </UiButton>
           <PaidServiceCounterpartyCheck
             :id="data.organization_id"
@@ -134,7 +134,7 @@
             class="new-service-details__pub-card-button"
             @click="settingStore.sendMessageModal = true"
           >
-            Написать исполнителю
+            Написать производителю
           </UiButton>
           <PaidServiceCounterpartyCheck
             v-if="userStore.userPubCard.id != data.id"
@@ -168,7 +168,7 @@
             class="new-service-details__pub-card-button"
             @click="settingStore.authModalStatus = true"
           >
-            Написать исполнителю
+            Написать производителю
           </UiButton>
           <PaidServiceCounterpartyCheck
             :id="data.organization_id"
@@ -205,7 +205,7 @@
       <CatalogNewServiceDetailsBadge
         :specs="{
           name: 'Сырье',
-          value: [data.materials_tolling ? 'Заказчика' : '', data.materials_own ? 'Исполнителя' : ''].filter(Boolean).join(' / ')
+          value: [data.materials_tolling ? 'Заказчика' : '', data.materials_own ? 'Производителя' : ''].filter(Boolean).join(' / ')
         }"
         grid-column="span 2"
       />

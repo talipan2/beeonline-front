@@ -59,7 +59,7 @@ export const useUserStore = defineStore("user", {
         case "customer":
           return "заказчика";
         case "performer":
-          return "исполнителя";
+          return "производителя";
         case "adjacent":
           return "партнера";
       }

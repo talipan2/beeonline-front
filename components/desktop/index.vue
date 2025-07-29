@@ -356,7 +356,7 @@ const pubCard = computed(() => {
     ratingData: {...userStore.userPubCard.reviews_stats_about, reviewCount: userStore.userPubCard.reviews_about_count},
     stars: userStore.userPubCard.reviews_stats_about?.stars,
     entityCount: userStore.userPubCard.orders_count || userStore.userPubCard.services_count,
-    rawMaterials: [userStore.userPubCard.materials_own ? 'Исполнителя': '', userStore.userPubCard.materials_tolling ? 'Заказчика' : ''].filter(Boolean),
+    rawMaterials: [userStore.userPubCard.materials_own ? 'Производителя': '', userStore.userPubCard.materials_tolling ? 'Заказчика' : ''].filter(Boolean),
     category: userStore.userPubCard.categories && userStore.userPubCard.categories.length ? userStore.userPubCard.categories.map(item => item.name) : [],
     status: userStore.userPubCard.status,
     statusName: userStore.userPubCard.status_name,

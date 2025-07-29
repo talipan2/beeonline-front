@@ -111,7 +111,7 @@ const handleSearch = (searchQuery, page) => {
         return {
           ...item,
           category: item?.categories?.map(item => item?.name),
-          rawMaterials: [item.materials_own ? 'Исполнителя' : '', item.materials_tolling ? 'Заказчика' : ''].filter(Boolean),
+          rawMaterials: [item.materials_own ? 'Производителя' : '', item.materials_tolling ? 'Заказчика' : ''].filter(Boolean),
           countryId: {cities: item?.cities, regions: item?.regions, countries: item?.countries},
           illRating: item.fill_rating,
           reviewCount: item.reviews_about_count,
@@ -126,7 +126,7 @@ const handleSearch = (searchQuery, page) => {
         return {
           ...item,
           category: item?.categories?.map(item => item?.name),
-          rawMaterials: [item.materials_own ? 'Исполнителя' : '', item.materials_tolling ? 'Заказчика' : ''].filter(Boolean),
+          rawMaterials: [item.materials_own ? 'Производителя' : '', item.materials_tolling ? 'Заказчика' : ''].filter(Boolean),
           countryId: {cities: item?.cities, regions: item?.regions, countries: item?.countries},
           illRating: item.fill_rating,
           reviewCount: item.reviews_about_count,

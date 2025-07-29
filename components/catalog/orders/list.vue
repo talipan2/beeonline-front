@@ -48,7 +48,7 @@ const orderData = computed(() => {
       data: [
         { id: 1, name: 'Категории', value: item.product_categories && item.product_categories.length ? item.product_categories.map(item => item.name) : [] },
         { id: 2, name: 'Место производства', value: locations },
-        { id: 3, name: 'Партия', value: Number(item.batch) },
+        { id: 3, name: 'Объем партии', value: Number(item.batch) },
         { id: 4, name: 'Лекала', value: entityStore.getEntityLabelById('patterns', item.pattern) },
         { id: 5, name: 'Сырье', value: entityStore.getEntityLabelById('rawMaterials', item.material) },
         { id: 6, name: 'Цена за единицу продукции', value: `${item.price} ${settingStore.getCurrencyCodeById(item.currency_id)}`},

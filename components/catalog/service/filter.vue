@@ -71,7 +71,7 @@
         <h3 class="filter__title">Сырье:</h3>
         <UiCheckboxGroup
           :options="[
-            { id: 0, label: 'Исполнителя' },
+            { id: 0, label: 'Производителя' },
             { id: 1, label: 'Заказчика' },
           ]"
           :isValidated="false"

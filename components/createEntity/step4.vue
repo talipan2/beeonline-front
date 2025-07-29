@@ -78,7 +78,7 @@
         <p class="form-group__value">{{ formatData.freeStock || 'не указан' }}</p>
       </div>
       <div class="form-group-data" v-if="entityOfRole === 'orders'">
-        <p class="form-group__title">Партия</p>
+        <p class="form-group__title">Объем партии</p>
         <p class="form-group__value">{{ formatData.batch || 'не указан' }}</p>
       </div>
       <div class="form-group-data" v-if="entityOfRole === 'orders'">

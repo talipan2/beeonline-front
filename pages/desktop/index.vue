@@ -50,7 +50,7 @@ const translateRole = computed(() => {
     if (role.value === "customer") {
         return "заказчика";
     } else if (role.value === "performer") {
-        return "исполнителя";
+        return "производителя";
     } else if (role.value === "adjacent") {
         return "партнера";
     }

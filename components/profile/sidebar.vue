@@ -18,7 +18,7 @@
         <template v-if="userStore.role !== 'adjacent'">
           <button v-if="userStore.role === 'customer' && userData.roles?.includes('performer')" @click="handleChangeRole('performer')" class="sidebar__bottom-link">
             <SvgoAdduser class="svg-m" fill="#6937a5" />
-            Кабинет исполнителя
+            Кабинет производителя
           </button>
           <button v-if="userStore.role === 'performer' && userData.roles?.includes('customer')" @click="handleChangeRole('customer')" class="sidebar__bottom-link">
             <SvgoAdduser class="svg-m" fill="#6937a5" />
@@ -27,7 +27,7 @@
           <button type="button" variant="default" class="sidebar__bottom-link"
           @click="setRole('performer')" v-if="!userRoles.includes('performer')" :without-padding="true">
             <SvgoAdduser class="svg-m" fill="#6937a5" />
-            Стать исполнителем
+            Стать производителем
           </button>
           <button type="button" variant="default" class="sidebar__bottom-link"
           @click="setRole('customer')" v-if="!userRoles.includes('customer')" :without-padding="true">
@@ -127,7 +127,7 @@ const formatLangRole = computed(() => {
     case 'customer':
       return 'заказчиком'
     case 'performer': 
-      return 'исполнителем'
+      return 'производителем'
     default:
       return ''
   }

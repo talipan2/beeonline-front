@@ -56,7 +56,7 @@ const role = computed(() => {
   if(props.data && props.data.about?.role === 'customer') {
     return 'Заказчик';
   } else if (props.data && props.data.about?.role === 'performer') {
-    return 'Исполнитель';
+    return 'Производитель';
   }
 })
 

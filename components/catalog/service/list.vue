@@ -65,7 +65,7 @@ const ordersData = computed(() => {
         { 
           id: 1, 
           name: 'Сырье', 
-          value: [item.materials_own ? 'Исполнителя' : '', item.materials_tolling ? 'Заказчика' : ''].filter(Boolean).join(' / ') 
+          value: [item.materials_own ? 'Производителя' : '', item.materials_tolling ? 'Заказчика' : ''].filter(Boolean).join(' / ') 
         },
         { 
           id: 2, 
@@ -99,7 +99,7 @@ onMounted(() => {
             {
               id: 1,
               name: 'Сырье',
-              value: [item.materials_own ? 'Исполнителя' : '', item.materials_tolling ? 'Заказчика' : ''].filter(Boolean).join(' / ')
+              value: [item.materials_own ? 'Производителя' : '', item.materials_tolling ? 'Заказчика' : ''].filter(Boolean).join(' / ')
             },
             {
               id: 2,

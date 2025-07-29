@@ -4,7 +4,7 @@
       <SvgoAdvice />
     </div>
     <div class="advice__body">
-      <div class="advice__title">Совет!</div>
+      <div class="advice__title">Рекомендация!</div>
       <div class="advice__text">
         <slot />
       </div>

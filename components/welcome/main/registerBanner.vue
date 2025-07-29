@@ -2,7 +2,7 @@
   <section class="register-banner" ref="bannerRef">
     <div class="register-banner__inner">
       <div class="register-banner__content" :class="{ 'animate': isVisible }">
-        <h2 class="register-banner__title">Зарегистрируйтесь и мы поможем вам с подбором исполнителей.</h2>
+        <h2 class="register-banner__title">Зарегистрируйтесь и мы поможем вам с подбором производителей.</h2>
         <UiButton type="button" @click="handleRegister" variant="quinary" size="large" class="register-banner__btn">Зарегистрироваться</UiButton>
       </div>
       <div class="register-banner__image-container">

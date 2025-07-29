@@ -22,7 +22,7 @@
           <div class="bottom-menu__icon">
             <SvgoCase class="svg-m" fill="currentColor"/>
           </div>
-          <span class="bottom-menu__text">Каталог<br>исполнителей</span>
+          <span class="bottom-menu__text">Каталог<br>производителей</span>
         </NuxtLink>
       </li>
     </ul>

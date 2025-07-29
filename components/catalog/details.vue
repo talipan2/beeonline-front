@@ -53,7 +53,7 @@
           <UiButton type="button" class="orders-details__btn" v-if="type === 'service'" variant="quinary" size="large"
             @click="settingStore.sendMessageModal = true">
             <SvgoMessage class="svg-m" />
-            Написать исполнителю
+            Написать производителю
           </UiButton>
           <UiButton class="orders-details__btn" v-if="type === 'order'" variant="quinary" size="large"
             :to="{path: '/chat', query: { order_id: entityData.id }}">
@@ -78,7 +78,7 @@
         <UiButton type="button" class="orders-details__btn" v-if="type === 'service'" variant="quinary" size="large"
           @click="settingStore.authModalStatus = true">
           <SvgoMessage class="svg-m" />
-          Написать исполнителю
+          Написать производителю
         </UiButton>
         <UiButton class="orders-details__btn" type="button" v-if="type === 'order'" variant="quinary" size="large"
           @click="settingStore.authModalStatus = true">

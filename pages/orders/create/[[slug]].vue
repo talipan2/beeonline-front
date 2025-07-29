@@ -196,7 +196,7 @@ const ordersData = computed(() => ({
   data: [
     { id: 1, name: 'Категории', value: data.value.categories },
     { id: 2, name: 'Место производства', value: data.value.locations },
-    { id: 3, name: 'Партия', value: data.value.batch },
+    { id: 3, name: 'Объем партии', value: data.value.batch },
     { id: 4, name: 'Лекала', value: data.value.patterns },
     { id: 5, name: 'Сырье', value: data.value.rawMaterials },
     { id: 6, name: 'Срок выполнения', value: data.value.completionDate },

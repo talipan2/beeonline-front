@@ -60,7 +60,7 @@ const ordersFormattedData = computed(() => {
       data: [
         { id: 1, name: 'Категории', value: item.product_categories && item.product_categories.length ? item.product_categories.map(item => item.name) : [] },
         { id: 2, name: 'Место производства', value: locations },
-        { id: 3, name: 'Партия', value: Number(item.batch) },
+        { id: 3, name: 'Объем партии', value: Number(item.batch) },
         { id: 4, name: 'Лекала', value: entityStore.getEntityLabelById('patterns', item.pattern) },
         { id: 5, name: 'Сырье', value: entityStore.getEntityLabelById('rawMaterials', item.material) },
         { id: 6, name: 'Срок выполнения', value: formatDate(item.deadline_at) },
@@ -78,7 +78,7 @@ function handleSelectOrderToMessage() {
     return
   }
   if(!props.performer_id) {
-    toast.error('Исполнитель не выбран');
+    toast.error('Производитель не выбран');
     return
   }
   router.push({path: `/chat`, query: {order_id: selectedOrder.value, performer_id: props.performer_id}});

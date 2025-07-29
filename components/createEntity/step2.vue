@@ -34,7 +34,7 @@
             </p>
             <UiCheckboxGroup :rules="{ minSelected: 1 }" name="rawMaterials" label="Сырье"
               class="entity__group form-group__value" v-model="data.rawMaterials" :options="[
-                { id: 0, label: 'Исполнителя' },
+                { id: 0, label: 'Производителя' },
                 { id: 1, label: 'Заказчика' },
               ]" />
           </div>
@@ -80,7 +80,7 @@
               </p>
             <UiRadioButtonGroup :rules="{ required: true }" name="rawMaterials" label="Сырье"
               class="entity__group form-group__value" v-model="data.rawMaterials" :options="[
-                { value: 0, label: 'Исполнителя' },
+                { value: 0, label: 'Производителя' },
                 { value: 1, label: 'Заказчика' },
               ]" />
           </div>
@@ -96,10 +96,10 @@
               ]" />
           </div>
           <div class="entity__data-item">
-            <label class="form-group__title entity__label">Партия *
+            <label class="form-group__title entity__label">Объем партии *
               <CommonTooltip text="Укажите количество в единицах измерения - шт." />
             </label>
-            <UiInput :rules="{ required: true, min_value: 1 }" name="batch" label="Партия" v-model="data.batch"
+            <UiInput :rules="{ required: true, min_value: 1 }" name="batch" label="Объем партии" v-model="data.batch"
               class="form-group__value" type="number" />
           </div>
           <div class="entity__data-item">
@@ -132,7 +132,7 @@
         <label class="form-group__title entity__label">
           Условия сотрудничества
           <CommonTooltip :text="`Опишите условия, на которых вы готовы сотрудничать с ${
-              role === 'performer' ? 'заказчиками' : 'исполнителями заказа'
+              role === 'performer' ? 'заказчиками' : 'производителями заказа'
             }`" />
         </label>
         <UiTextArea
@@ -153,7 +153,7 @@
         <CommonDocumentLoaderAndList v-model="data.tzFiles"
           text="Готовое техническое задание (ТЗ) и
           фото изделия можно прикрепить сюда.
-          Исполнители лучше поймут задачу и качественно выполнят заказ.
+          Производители лучше поймут задачу и качественно выполнят заказ.
           Разрешено загружать файлы форматом
           - doc, .docx, .xls, .xlsx, .ppt, .pptx, .rtf, .pdf, .jpeg, .png, .jpg, .gif, .psd, .djvu, .fb2, .ps, .zip, .rar"
           :extension="['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'rtf', 'pdf', 'jpeg', 'png', 'jpg', 'gif', 'psd', 'djvu', 'fb2', 'ps', 'zip', 'rar']"
@@ -176,7 +176,7 @@
           <!-- <p class="entity__text" v-else>
             Указанные города и регионы используются для автоматического добавления в новые заказы и позволят
             потенциальным
-            исполнителям находить их в поиске.
+            производителям находить их в поиске.
           </p> -->
         </div>
         <!-- <CommonLocation

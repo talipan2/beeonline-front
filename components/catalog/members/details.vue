@@ -95,7 +95,7 @@
     </div>
     <div class="member-details__content-container" v-if="reviews?.length">
       <h3 class="member-details__content-title">Отзывы</h3>
-      <p class="member-details__content-rating">Общий рейтинг {{ props.data.type === 'performer' ? 'исполнителя' : props.data.type === 'customer' ? 'заказчика' : '' }}: {{ data.rating }}/5</p>
+      <p class="member-details__content-rating">Общий рейтинг {{ props.data.type === 'performer' ? 'производителя' : props.data.type === 'customer' ? 'заказчика' : '' }}: {{ data.rating }}/5</p>
       <ReviewsEntity :data="reviews"/>
       <CommonPagination v-if="reviewsPage.lastPage > 1" class="member-details__pagination" :current-page="reviewsPage.currentPage" :total-pages="reviewsPage.lastPage" @change-page="handleChangeReviewsPage" />
     </div>
@@ -132,7 +132,7 @@ const isSelfEntity = computed(() => props.data.id === userStore.userPubCard?.id)
 const pubCardType = computed(() => {
   switch (props.data.type) {
     case 'performer':
-      return 'исполнителю'
+      return 'производителю'
     case 'customer':
       return 'заказчику'
   }
