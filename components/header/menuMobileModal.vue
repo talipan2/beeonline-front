@@ -38,7 +38,7 @@
       <nav>
         <ul class="header-menu__link-list">
           <li class="header-menu__link-item">
-            <NuxtLink to="/services" class="header-menu__link">Найти исполнителя</NuxtLink>
+            <NuxtLink to="/services" class="header-menu__link">Найти производителя</NuxtLink>
           </li>
           <li class="header-menu__link-item">
             <NuxtLink to="/orders" class="header-menu__link">Найти заказчика</NuxtLink>

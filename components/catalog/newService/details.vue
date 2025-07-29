@@ -217,7 +217,7 @@
       />
       <CatalogNewServiceDetailsBadge
         :specs="{
-          name: 'Наличие СТМ',
+          name: 'Наличие собственной торговой марки (СТМ)',
           value: data.is_stm != null ? data.is_stm ? 'Да' : 'Нет' : ''
         }"
       />

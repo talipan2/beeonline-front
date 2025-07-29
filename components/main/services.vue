@@ -2,9 +2,9 @@
   <section class="services container">
     <div class="services__container">
       <div class="services__card services__card_type_performers">
-        <h2 class="services__title">Поиск исполнителей</h2>
+        <h2 class="services__title">Поиск производителей</h2>
         <p class="services__description">
-          Ускорьте свой путь к успеху с нашим сервисом, находя лучших производителей одежды в легкой промышленности за считанные минуты!
+          Ускорьте свой путь к успеху с нашим сервисом, находя лучших производителей одежды в модной индустрии за считанные минуты!
         </p>
         <UiButton to="/services" variant="quaternary" size="xl" class="services__link">Подробнее</UiButton>
         <UiImage src="/assets/images/main/services/services-performers.png" class="services__image" />
@@ -22,7 +22,7 @@
       <!-- <div class="services__card services__card_type_suppliers">
         <h2 class="services__title">Поиск поставщиков</h2>
         <p class="services__description">
-          Расширьте свои возможности и увеличьте продажи, подключившись к нашему сервису, который связывает вас с ведущими брендами, ритейлерами и производителями одежды в легкой промышленности!
+          Расширьте свои возможности и увеличьте продажи, подключившись к нашему сервису, который связывает вас с ведущими брендами, ритейлерами и производителями одежды в модной индустрии!
         </p>
         <UiButton to="https://marketplace.bee-online.ru/" variant="quaternary" size="xl" class="services__link" :target="'_blank'">Подробнее</UiButton>
         <UiImage src="/assets/images/main/services/services-suppliers.png" class="services__image" />
@@ -30,7 +30,7 @@
       </div>
       <div class="services__card services__card_type_factories">
         <h2 class="services__title">Поиск сотрудников</h2>
-        <p class="services__description">Ускорьте рост вашего бизнеса, находя лучших специалистов легкой промышленности с помощью нашего сервиса поиска сотрудников!</p>
+        <p class="services__description">Ускорьте рост вашего бизнеса, находя лучших специалистов модной индустрии с помощью нашего сервиса поиска сотрудников!</p>
         <UiButton to="https://beejob.ru/" variant="quaternary" size="xl" class="services__link" :target="'_blank'">Подробнее</UiButton>
         <UiImage src="/assets/images/main/services/services-factories.png" class="services__image" />
         <UiImage src="/assets/images/main/services/services-mobile-4.png" class="services__image services__image-mobile"/>
@@ -38,7 +38,7 @@
       <!-- <div class="services__card services__card_type_exhibitions">
         <h2 class="services__title">Поиск выставок</h2>
         <p class="services__description">
-          Посещайте наши выставки, чтобы найти надежных заказчиков, расширить свою сеть и открыть новые возможности для роста в легкой промышленности!
+          Посещайте наши выставки, чтобы найти надежных заказчиков, расширить свою сеть и открыть новые возможности для роста в модной индустрии!
         </p>
         <UiButton to="https://expo.bee-online.ru/" variant="quaternary" size="xl" class="services__link">Подробнее</UiButton>
         <UiImage src="/assets/images/main/services/services-exhibitions.png" class="services__image" />

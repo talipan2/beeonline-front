@@ -21,7 +21,7 @@
       <UiBreadCrumb
         :list="[
           { label: 'Главная', link: '/' },
-          { label: 'Каталог исполнителей', link: '/services' },
+          { label: 'Каталог производителей', link: '/services' },
           { label: `${data?.name || 'Исполнитель'} `, link: ''},
         ]"
       />
@@ -101,7 +101,7 @@ onMounted(async() => {
 
 
 
-const pageTitle = computed(() => formatData.value.name || 'Международный цифровой сервис поиска партнеров в сфере легкой промышленности');
+const pageTitle = computed(() => formatData.value.name || 'Международный цифровой сервис поиска партнеров в сфере модной индустрии');
 
 useHead({
   title: pageTitle,

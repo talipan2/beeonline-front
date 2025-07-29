@@ -9,10 +9,13 @@
   >
     <UiButton type="button" variant="secondary" size="large" class="header__auth-link">
       <SvgoUser class="svg-m" />
-      <template v-if="userStore.role === 'customer' || userStore.role === 'performer'">
+      <template v-if="userStore.role === 'customer'">
         Кабинет
-        <span class="d-none" v-if="userStore.role === 'performer'"> исполнителя</span>
-        <span class="d-none" v-if="userStore.role === 'customer'"> заказчика</span>
+        <span class="d-none"> заказчика</span>
+      </template>
+      <template v-else-if="userStore.role === 'performer'">
+        <span class="d-none-desktop">Аккаунт</span>
+        <span class="d-none-tablet">Аккаунт производителя</span>
       </template>
       <template v-else>
         Личный кабинет
@@ -27,7 +30,7 @@
         <div class="header__user-data">
           <div class="header__user-name">{{ userData.name }}</div>
           <div class="header__user-role" v-if="userStore.role === 'performer'">
-            Исполнитель
+            Производитель
           </div>
           <div class="header__user-role" v-if="userStore.role === 'customer'">
             Заказчик
@@ -54,14 +57,14 @@
         @click="handleSwitchRole" v-if="userStore.role === 'customer' && userData.roles.includes('performer')">
           <SvgoEnter class="svg-m" />
           <span>
-            Переключиться<br>на исполнителя
+            Переключиться<br>на производителя
           </span>
         </UiButton>
         <UiButton type="button" variant="tertiary" size="centered" class="header__dropdown-change-role"
         @click="setRole('performer')" v-if="!userRoles.includes('performer')">
           <SvgoEnter class="svg-m" />
           <span>
-            Стать<br>исполнителем
+            Стать<br>производителем
           </span>
         </UiButton>
         <UiButton type="button" variant="tertiary" size="centered" class="header__dropdown-change-role"
@@ -335,6 +338,16 @@ const formatLangRole = computed(() => {
       display: none;
     }
 
+    .d-none-tablet {
+      display: none;
+    }
   }
+  
+  @media screen and (min-width: 1420px) {
+    .d-none-desktop {
+      display: none;
+    }
+  }
+
 
 </style>

@@ -4,7 +4,7 @@
       <div class="favorites__catalog-wrapper">
         <UiButton to="/services" variant="quinary" size="around" class="favorites__catalog-btn favorites__catalog-btn_type_left">
           <SvgoBtnArrow class="svg-l" />
-          <span>Каталог исполнителей</span>
+          <span>Каталог производителей</span>
         </UiButton>
         <UiButton to="/orders" variant="quinary" size="around" class="favorites__catalog-btn favorites__catalog-btn_type_right">
           <span>Каталог заказчиков</span>

@@ -1,6 +1,6 @@
 <template>
   <div class="performer-register-step-three">
-    <CommonLayoutInfoCard title="Примеры работ" class="performer-register-step-three__layout">
+    <CommonLayoutInfoCard title="Фото образцов" class="performer-register-step-three__layout">
       <template #action>
         <UiButton
           v-if="isPreview"
@@ -61,7 +61,7 @@
         </div>
       </div>
     </CommonLayoutInfoCard>
-    <CommonLayoutInfoCard title="Оборудование" class="performer-register-step-three__layout">
+    <CommonLayoutInfoCard title="Фото оборудования" class="performer-register-step-three__layout">
       <template #action>
         <UiButton
           v-if="isPreview"

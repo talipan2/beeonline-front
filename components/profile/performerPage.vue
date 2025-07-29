@@ -75,7 +75,7 @@
             @click="handleOpenChangeDataModal"
           >
             <SvgoPencil class="svg-l" />
-            Изменить
+            Редактировать
           </UiButton>
           <UiButton
             class="performer-profile__card-btn"

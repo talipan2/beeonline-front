@@ -60,9 +60,12 @@
     <div class="desktop__card-container">
       <DesktopCard
         title="Карточка организации"
-        :link="userStore.role === 'customer' ? { url: `/pubcards/edit/${pubCard.id}`, text: 'Изменить'} : undefined"
-        :action="userStore.role === 'performer' ? { function: () => editPubCardModal = true, text: 'Изменить'} : undefined"
+        :link="userStore.role === 'customer' ? { url: `/pubcards/edit/${pubCard.id}`, text: 'Редактировать'} : undefined"
+        :action="userStore.role === 'performer' ? { function: () => editPubCardModal = true, text: 'Редактировать'} : undefined"
       >
+        <template #svg>
+          <SvgoPencil class="svg-m" />
+        </template>
         <template #body>
           <CardsPublic class="desktop__pub-card" :is-props-visible="true" :is-description="true" :data="pubCard" :class="{'loading' : pubCardLoader}" statusVisible isPubCardUp/>
           <ModalsRoundBorder :is-open="editPubCardModal" title="Редактирование карточки" @close="editPubCardModal = false" size="lg"

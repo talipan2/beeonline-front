@@ -11,7 +11,7 @@
           <nav class="footer__nav">
             <ul class="footer__list">
               <li class="footer__links-item">
-                <NuxtLink to="/services" class="footer__link">Найти исполнителя</NuxtLink>
+                <NuxtLink to="/services" class="footer__link">Найти производителя</NuxtLink>
               </li>
               <li class="footer__links-item">
                 <NuxtLink to="/orders" class="footer__link">Найти заказчика</NuxtLink>

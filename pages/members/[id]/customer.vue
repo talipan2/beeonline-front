@@ -59,7 +59,7 @@ const activeEntity = computed(() => data.value.orders || [])
 data.value = await organizationStore.getPubCard(router.currentRoute.value.params.id)
 
 
-const pageTitle = computed(() => pubCard.value.name || 'Международный цифровой сервис поиска партнеров в сфере легкой промышленности');
+const pageTitle = computed(() => pubCard.value.name || 'Международный цифровой сервис поиска партнеров в сфере модной индустрии');
 
 useHead({
   title: pageTitle,
