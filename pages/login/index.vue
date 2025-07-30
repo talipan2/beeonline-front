@@ -7,6 +7,9 @@
 </template>
 
 <script setup>
+import { useSettingStore } from "~/store/settingStore";
+
+const settingStore = useSettingStore();
 
 useHead({
   title: 'Авторизация',
@@ -34,6 +37,10 @@ watch(() => router.currentRoute.value.query, (newVal) => {
     currentAuthPage.value = ''
   }
 }, {deep: true, immediate: true})
+
+onMounted(() => {
+    settingStore.authModalStatus = false;
+});
 
 </script>
 
