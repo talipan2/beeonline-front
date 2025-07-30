@@ -39,6 +39,10 @@ export default {
     return useApi().post('reset-password', values, form)
   },
 
+  async changePassword(values, form) {
+    return useApi().post('change-password', values, form)
+  },
+
   async setUserData(values, id, form) {
     return useApi().patch(`users/${id}`, values, form)
   },

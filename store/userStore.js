@@ -316,6 +316,11 @@ export const useUserStore = defineStore("user", {
       return await Api.resetPassword(data, form);
     },
 
+    // изменение пароля
+    async changePassword(data, form) {
+      return await Api.changePassword(data, form);
+    },
+
     async setUserData(data, id, form) {
       try {
         const response = await Api.setUserData(data, id, form);
