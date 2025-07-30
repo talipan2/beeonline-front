@@ -144,6 +144,7 @@ const isDropdownVisible = ref(false);
 const menuItems = ref([
   { to: '/services', text: 'Найти производителя' },
   { to: '/orders', text: 'Найти заказчика' },
+  { to: '/board', text: 'Объявления' },
   { to: '/related-industry-services', text: 'Сервисы' },
   { to: '/news', text: 'Новости' },
 ]);
@@ -192,6 +193,10 @@ const updateMenuVisibility = () => {
 const toggleDropdown = () => {
   isDropdownVisible.value = !isDropdownVisible.value;
 };
+
+watch(() => userStore.isAuth, (newVal) => {
+  updateMenuVisibility();
+})
 
 onMounted(() => {
   updateMenuVisibility();

@@ -142,6 +142,7 @@ const dropdownMenuLinks = computed(() => {
     return [
       { label: 'Рабочий стол', value: `/desktop` },
       { label: 'Bee-online Gifts', value: `/bonus` },
+      { label: 'Объявления', value: `/board/user` },
       { label: 'Профиль', value: `/profile` },
       ...(role.value === 'customer' 
       ? [{ label: 'Заказы', value: '/customer/orders' }] 

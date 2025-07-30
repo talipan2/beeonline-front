@@ -61,9 +61,18 @@
             variant="square"
             class="auth__checkbox"
             name="is_remember"
+            :is-validated="false"
           >
             Запомнить меня
           </UiCheckbox>
+          <UiButton
+            to="/forgot-password"
+            class="auth__btn-forgot-password"
+            variant="default"
+            size="large"
+            without-padding
+            >Забыли пароль?</UiButton
+          >
         </div>
       </UiForm>
     </div>
@@ -184,6 +193,7 @@ const handleSubmit = (values, form) => {
     display: flex;
     justify-content: space-between;
     column-gap: 1em;
+    align-items: center;
   }
 
   &__btn {
@@ -193,6 +203,11 @@ const handleSubmit = (values, form) => {
     font-size: 1.2em;
     font-weight: 400;
     padding: 1em;
+  }
+
+  &__btn-forgot-password {
+    font-size: 1.6em;
+    font-weight: 400;
   }
 
   &__link {

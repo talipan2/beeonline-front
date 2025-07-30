@@ -128,6 +128,7 @@
     const modalBody = ref(null)
     const headerHeight = ref(0)
     const isMobile = ref(false)
+    const router = useRouter()
 
     // Вычисляемый класс для контента модалки
     const contentClass = computed(() => {
@@ -135,9 +136,9 @@
     })
 
     // Закрытие модалки при изменении маршрута
-    watch(() => props.$route, () => {
+    watch(() => router.currentRoute.value, () => {
         emit('update:modelValue', false)
-    })
+    }, {deep: true})
 
     // Расчёт высоты хидера и применение отступа
     const calculateHeaderHeight = () => {

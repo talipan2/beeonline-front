@@ -27,10 +27,10 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(service, index) in data.data" :key="index">
-                <td>{{ service.name }}</td>
-                <td>{{ service.quantity * service.price_quantity }}</td>
-                <td>{{ formatMoney(service.price * service.quantity, currentCurrency, 0) }}</td>
+              <tr v-for="(item, index) in data.data" :key="index">
+                <td>{{ item.service.name }}</td>
+                <td>{{ item.quantity * item.price.quantity }}</td>
+                <td>{{ formatMoney(item.price.amount * item.quantity, currentCurrency, 0) }}</td>
               </tr>
             </tbody>
           </table>
@@ -141,13 +141,14 @@ const handlePayment = () => {
   };
   if (data.isServices) {
     paymentData.services = data.data
-      .filter(service => {
-        return service.quantity > 0;
+      .filter(item => {
+        return item.quantity > 0;
       })
-      .map(service => {
+      .map(item => {
         return {
-          id: service.id,
-          quantity: service.quantity,
+          id: item.service.id,
+          price_id: item.price.id,
+          quantity: item.quantity,
         };
       });
     tariffsStore.payServices(userId.value, paymentData).then((data) => {

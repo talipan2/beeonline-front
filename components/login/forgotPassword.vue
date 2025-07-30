@@ -15,6 +15,14 @@
         />
         <div class="forgot__btn-container">
           <UiButton
+            v-if="settingStore.isTelegram"
+            to="/telegram"
+            class="forgot__btn forgot__btn_type-back"
+            variant="default"
+            >Вернуться к авторизации</UiButton
+          >
+          <UiButton
+            v-else
             to="/login"
             class="forgot__btn forgot__btn_type-back"
             variant="default"
@@ -57,8 +65,10 @@
 
 <script setup>
 import { useUserStore } from '~/store/userStore';
+import { useSettingStore } from '~/store/settingStore';
 
 const userStore = useUserStore();
+const settingStore = useSettingStore();
 
 const email = ref('');
 const password = ref('')

@@ -147,13 +147,15 @@ const currentHandleSubmit = computed(() => {
           entityStore.resetOrder()
           toast.success('Заказ отправлен на модерацию');
         });
-        if(settingStore.isCreateOrder) {
-          router.push('/register/step1')
-          // settingStore.isCreateOrder = false
-        } else {
-          settingStore.createEntityFinalModal = true;
-          router.push(`/customer/orders/show/${order.value.id}`)
-        }
+        // if(settingStore.isCreateOrder) {
+        //   router.push('/register/step1')
+        //   // settingStore.isCreateOrder = false
+        // } else {
+        //   settingStore.createEntityFinalModal = true;
+        //   router.push(`/customer/orders/show/${order.value.id}`)
+        // }
+        settingStore.createEntityFinalModal = true;
+        router.push(`/customer/orders/show/${order.value.id}`)
       });
   }
 })

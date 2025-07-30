@@ -17,7 +17,8 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(service, rowIndex) in services" :key="rowIndex">
+            <template v-for="(service, rowIndex) in services" :key="rowIndex">
+            <tr v-if="serviceHasTariffs(service)">
             <td>
               <p class="tariffs-table__feature">
                 {{ service.name }}
@@ -42,6 +43,7 @@
               </td>
             </template>
           </tr>
+            </template>
           <tr>
             <td class="tariffs-table__price">Итого</td>
             <template v-for="(tariff, colIndex) in tariffs" :key="colIndex">
@@ -188,6 +190,11 @@ function formatDescription({ description, quantity }, locale = 'ru-RU') {
   const variants = { one, few, many };
 
   return `${quantity} ${plural(quantity, variants, locale)}`;
+}
+
+function serviceHasTariffs(service)
+{
+    return service?.tariffs?.filter(serviceTariff => tariffs.value.find(tariff => tariff.id == serviceTariff.id)).length > 0;
 }
 
 </script>

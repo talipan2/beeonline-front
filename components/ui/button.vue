@@ -1,294 +1,327 @@
 <template>
-  <NuxtLink
-    :class="buttonClass"
-    :to="to"
-    v-if="type === 'link'"
-    :target="target"
-    :download="download"
-  >
-    <slot />
-  </NuxtLink>
-  <button v-else :class="buttonClass" :type="type" :disabled="disabled" @click="handleClick">
-    <slot />
-  </button>
+	<NuxtLink
+		:class="buttonClass"
+		:to="to"
+		v-if="type === 'link'"
+		:target="target"
+		:download="download"
+	>
+		<slot />
+	</NuxtLink>
+	<button
+		v-else
+		:class="buttonClass"
+		:type="type"
+		:disabled="disabled"
+		@click="handleClick"
+	>
+		<slot />
+	</button>
 </template>
 
 <script setup>
+	const props = defineProps({
+		variant: {
+			type: String,
+			default: 'primary',
+			validator: (value) =>
+				[
+					'primary',
+					'secondary',
+					'tertiary',
+					'quaternary',
+					'quinary',
+					'senary',
+					'telegram',
+					'default',
+					'elevated',
+				].includes(value),
+		},
+		size: {
+			type: String,
+			default: 'medium',
+			validator: (value) =>
+				['small', 'medium', 'large', 'centered', 'around', 'xl'].includes(
+					value
+				),
+		},
+		disabled: {
+			type: Boolean,
+			default: false,
+		},
+		to: {
+			type: [String, Object],
+			default: null,
+		},
+		type: {
+			type: String,
+			default: 'link',
+			validator: (value) => ['link', 'button', 'submit'].includes(value),
+		},
+		target: {
+			type: String,
+			default: '',
+		},
+		withoutPadding: {
+			type: Boolean,
+			default: false,
+		},
+		download: {
+			type: String,
+			default: null,
+		},
+	});
 
-const props = defineProps({
-  variant: {
-    type: String,
-    default: 'primary',
-    validator: value => ['primary', 'secondary', 'tertiary', 'quaternary', 'quinary', 'senary', 'telegram', 'default'].includes(value),
-  },
-  size: {
-    type: String,
-    default: 'medium',
-    validator: value => ['small', 'medium', 'large', 'centered', 'around', 'xl'].includes(value),
-  },
-  disabled: {
-    type: Boolean,
-    default: false,
-  },
-  to: {
-    type: [String, Object],
-    default: null,
-  },
-  type: {
-    type: String,
-    default: 'link',
-    validator: value => ['link', 'button', 'submit'].includes(value),
-  },
-  target: {
-    type: String,
-    default: ''
-  },
-  withoutPadding: {
-    type: Boolean,
-    default: false,
-  },
-  download: {
-    type: String,
-    default: null
-  }
-});
+	const emit = defineEmits(['click']);
 
+	const buttonClass = computed(() => {
+		return [
+			'btn',
+			`btn-${props.variant}`,
+			`btn-${props.size}`,
+			{ 'btn-disabled': props.disabled },
+			{ 'btn-without-padding': props.withoutPadding },
+		];
+	});
 
-const emit = defineEmits(['click']);
-
-const buttonClass = computed(() => {
-  return [
-    'btn',
-    `btn-${props.variant}`,
-    `btn-${props.size}`,
-    { 'btn-disabled': props.disabled },
-    { 'btn-without-padding': props.withoutPadding },
-  ];
-});
-
-const handleClick = () => {
-  emit('click');
-}
-
+	const handleClick = () => {
+		emit('click');
+	};
 </script>
 
 <style lang="scss">
+	.btn {
+		display: flex;
+		border: 2px solid transparent;
+		align-items: center;
+		justify-content: center;
+		text-wrap: nowrap;
+		position: relative;
+	}
 
-.btn {
-  display: flex;
-  border: 2px solid transparent;
-  align-items: center;
-  justify-content: center;
-  text-wrap: nowrap;
-  position: relative;
-}
+	.btn-disabled {
+		opacity: 0.5;
+		cursor: default;
+	}
 
-.btn-disabled {
-  opacity: .5;
-  cursor: default;
-}
+	.btn-primary {
+		background-color: var(--button-background-primary);
+		color: var(--text-color-octonary);
+		// font-size: 1.6rem;
+		font-weight: 600;
+		line-height: 1em;
 
-.btn-primary {
-  background-color: var(--button-background-primary);
-  color: var(--text-color-octonary);
-  // font-size: 1.6rem;
-  font-weight: 600;
-  line-height: 1em;
+		// &:hover {
+		//   background-color: var(--button-background-primary-hover);
+		// }
 
-  // &:hover {
-  //   background-color: var(--button-background-primary-hover);
-  // }
+		@include hover {
+			background-color: var(--button-background-primary-hover);
+			color: var(--text-color-octonary);
+		}
 
-  @include hover {
-    background-color: var(--button-background-primary-hover);
-    color: var(--text-color-octonary);
-  }
+		@include mobile {
+			font-size: 12px;
+		}
+	}
 
-  @include mobile {
-    font-size: 12px;
-  }
-}
+	.btn-secondary {
+		background-color: var(--button-background-secondary);
+		color: var(--text-color-quaternary);
+		// font-size: 1.4rem;
+		font-weight: 600;
+		line-height: 1em;
 
-.btn-secondary {
-  background-color: var(--button-background-secondary);
-  color: var(--text-color-quaternary);
-  // font-size: 1.4rem;
-  font-weight: 600;
-  line-height: 1em;
+		@include hover {
+			background-color: var(--button-background-secondary-hover);
+			color: var(--text-color-quaternary);
+		}
+	}
 
-  @include hover {
-    background-color: var(--button-background-secondary-hover);
-    color: var(--text-color-quaternary);
-  }
-}
+	.btn-tertiary {
+		background-color: var(--button-background-quaternary);
+		color: var(--text-color-primary);
+		// font-size: 1.4rem;
+		font-weight: 400;
+		border: 2px solid var(--border-color-quaternary);
+		line-height: 1em;
 
-.btn-tertiary {
-  background-color: var(--button-background-quaternary);
-  color: var(--text-color-primary);
-  // font-size: 1.4rem;
-  font-weight: 400;
-  border: 2px solid var(--border-color-quaternary);
-  line-height: 1em;
+		@include hover {
+			background-color: var(--button-background-primary);
+			color: var(--text-color-octonary);
 
-  @include hover {
-    background-color: var(--button-background-primary);
-    color: var(--text-color-octonary);
+			svg {
+				fill: var(--text-color-octonary);
+			}
+		}
 
-    svg {
-      fill: var(--text-color-octonary);
-    }
-  }
+		&.active {
+			background-color: var(--button-background-primary);
+			color: var(--text-color-octonary);
 
-  &.active {
-    background-color: var(--button-background-primary);
-    color: var(--text-color-octonary);
+			svg {
+				fill: var(--text-color-octonary);
+			}
+		}
+	}
 
-    svg {
-      fill: var(--text-color-octonary);
-    }
-  }
-}
+	.btn-quaternary {
+		background-color: hsla(0, 0%, 100%, 0.31);
+		color: #fff;
+		display: block;
+		// font-size: 1.8rem;
+		line-height: 1em;
+		transition:
+			background-color 0.2s ease-in-out,
+			color 0.2s ease-in-out;
 
-.btn-quaternary {
-  background-color: hsla(0, 0%, 100%, 0.31);
-  color: #fff;
-  display: block;
-  // font-size: 1.8rem;
-  line-height: 1em;
-  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+		@include hover {
+			background-color: var(--button-background-quaternary-hover);
+			color: var(--text-color-hover-primary);
+		}
+	}
 
-  @include hover {
-    background-color: var(--button-background-quaternary-hover);
-    color: var(--text-color-hover-primary)
-  }
-}
+	.btn-quinary {
+		background-color: var(--button-background-primary);
+		color: var(--text-color-octonary);
 
+		svg {
+			fill: var(--text-color-octonary);
 
-.btn-quinary {
-  background-color: var(--button-background-primary);
-  color: var(--text-color-octonary);
+			path {
+				fill: var(--text-color-octonary);
+			}
+		}
 
-  svg {
-    fill: var(--text-color-octonary);
+		@include hover {
+			border-color: var(--button-background-primary);
+			background-color: var(--button-background-quaternary-hover);
+			color: var(--text-color-primary);
 
-    path {
-      fill: var(--text-color-octonary);
-    }
-  }
+			svg {
+				fill: var(--text-color-primary);
 
-  @include hover {
-    border-color: var(--button-background-primary);
-    background-color: var(--button-background-quaternary-hover);
-    color: var(--text-color-primary);
+				path {
+					fill: var(--text-color-primary);
+				}
+			}
+		}
+	}
 
-    svg {
-      fill: var(--text-color-primary);
+	.btn-senary {
+		// font-size: 1.6rem;
+		background-color: var(--button-background-quaternary);
+		border-color: #fff;
+		color: var(--text-color-primary);
+		box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3);
 
-      path {
-        fill: var(--text-color-primary);
-      }
-    }
-  }
-}
+		@include hover {
+			background-color: var(--button-background-primary);
+			border-color: var(--button-background-primary);
+			color: var(--text-color-octonary);
 
-.btn-senary {
-  // font-size: 1.6rem;
-  background-color: var(--button-background-quaternary);
-  border-color: #fff;
-  color: var(--text-color-primary);
-  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3);
+			svg {
+				fill: var(--text-color-octonary);
 
-  @include hover {
-    background-color: var(--button-background-primary);
-    border-color: var(--button-background-primary);
-    color: var(--text-color-octonary);
+				path {
+					fill: var(--text-color-octonary);
+				}
+			}
+		}
+	}
 
-    svg {
-      fill: var(--text-color-octonary);
+	.btn-telegram {
+		font-size: 1.6rem;
+		background-color: var(--button-background-quaternary);
+		border-color: #08c;
+		color: var(--text-color-primary);
 
-      path {
-        fill: var(--text-color-octonary);
-      }
-    }
-  }
-}
+		@include hover {
+			background-color: #08c;
+			border-color: #08c;
+			color: var(--text-color-octonary);
+		}
+	}
 
-.btn-telegram {
-  font-size: 1.6rem;
-  background-color: var(--button-background-quaternary);
-  border-color: #08c;
-  color: var(--text-color-primary);
+	.btn-elevated {
+		font-size: 1em;
+		padding: 1.1em 1.4em;
+		box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.07);
+		background: #fff;
+		border-radius: 8px;
+		color: var(--text-color-monodecimal);
+		transition:
+			box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+			transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+			color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 
-  @include hover {
-    background-color: #08c;
-    border-color: #08c;
-    color: var(--text-color-octonary);
-  }
-}
+		@include hover {
+			box-shadow: 0 6px 24px 0 rgba(0, 0, 0, 0.15);
+		}
+	}
 
-.btn-xl {
-  padding: 1.6rem 3.2rem;
-  border-radius: 100px;
+	.btn-xl {
+		padding: 1.6rem 3.2rem;
+		border-radius: 100px;
 
-  @include mobile {
-    padding: 12px 24px;
-  }
-}
+		@include mobile {
+			padding: 12px 24px;
+		}
+	}
 
-.btn-medium {
-    justify-content: center;
-    text-transform: uppercase;
-    font-size: 1.2em;
-    font-weight: 400;
-    padding: 1em;
-    border-radius: 100px;
-}
+	.btn-medium {
+		justify-content: center;
+		text-transform: uppercase;
+		font-size: 1.2em;
+		font-weight: 400;
+		padding: 1em;
+		border-radius: 100px;
+	}
 
-.btn-large {
-  padding: 1.2rem 2rem;
-  border-radius: 100px;
+	.btn-large {
+		padding: 1.2rem 2rem;
+		border-radius: 100px;
 
-  @include mobile {
-    padding: 12px 20px;
-  }
-}
+		@include mobile {
+			padding: 12px 20px;
+		}
+	}
 
-.btn-small {
-  padding: 0.6rem 1.6rem;
-  border-radius: 100px;
+	.btn-small {
+		padding: 0.6rem 1.6rem;
+		border-radius: 100px;
 
-  @include mobile {
-    padding: 6px 16px;
-    border-radius: 32px;
-  }
-}
+		@include mobile {
+			padding: 6px 16px;
+			border-radius: 32px;
+		}
+	}
 
-.btn-centered {
-  padding: .75rem 2rem;
-  border-radius: 100px;
+	.btn-centered {
+		padding: 0.75rem 2rem;
+		border-radius: 100px;
 
-  @include mobile {
-    padding: 7.5px;
-  }
-}
+		@include mobile {
+			padding: 7.5px;
+		}
+	}
 
-.btn-around {
-  // padding: 1.2rem;
-  border-radius: 100px;
-  // padding: 0 1em;
-  min-width: 4rem;
-  height: 4rem;
-}
+	.btn-around {
+		// padding: 1.2rem;
+		border-radius: 100px;
+		// padding: 0 1em;
+		min-width: 4rem;
+		height: 4rem;
+	}
 
-.btn-icon {
-  padding: 0;
-  border-radius: 100px;
-  min-width: 4rem;
-  height: 4rem;
-}
+	.btn-icon {
+		padding: 0;
+		border-radius: 100px;
+		min-width: 4rem;
+		height: 4rem;
+	}
 
-.btn-without-padding {
-  padding: 0!important;
-}
-
+	.btn-without-padding {
+		padding: 0 !important;
+	}
 </style>
