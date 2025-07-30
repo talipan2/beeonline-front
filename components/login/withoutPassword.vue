@@ -80,6 +80,13 @@
 <script setup>
 import { useUserStore } from "~/store/userStore";
 
+const props = defineProps({
+  redirect: {
+    type: String,
+    required: true,
+  }
+})
+
 const router = useRouter();
 
 const currentAuthPage = ref("write-email");
@@ -114,7 +121,7 @@ const handleSubmitCode = (values, form) => {
             form
         )
         .then((res) => {
-            router.push({ path: "/desktop" });
+            router.push({ path: props.redirect });
         });
 };
 </script>

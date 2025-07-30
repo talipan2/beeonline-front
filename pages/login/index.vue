@@ -1,7 +1,7 @@
 <template>
   <div class="login-container container">
     <UiBreadCrumb :list="[{label: 'Главная', link: '/'},{ label: 'Авторизация', link: '' }]" />
-    <LoginWithoutPassword v-if="currentAuthPage === 'without-password'"/>
+    <LoginWithoutPassword v-if="currentAuthPage === 'without-password'" redirect="/desktop"/>
     <Login v-else/>
   </div>
 </template>

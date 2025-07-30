@@ -1,5 +1,5 @@
 <template>
-  <TelegramBotAuthWithoutPassword v-if="currentAuthPage === 'without-password'"/>
+  <LoginWithoutPassword v-if="currentAuthPage === 'without-password'" redirect="/customer/orders"/>
   <TelegramBotAuth v-else />
 </template>
 
