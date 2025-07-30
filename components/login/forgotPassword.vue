@@ -46,7 +46,6 @@
 import { useUserStore } from "~/store/userStore";
 
 const userStore = useUserStore();
-const settingStore = useSettingStore();
 
 const loading = ref(false);
 const success = ref(false);
