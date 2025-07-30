@@ -6,6 +6,9 @@
 </template>
 
 <script setup>
+import { useSettingStore } from "~/store/settingStore";
+
+const settingStore = useSettingStore();
 
 useHead({
   title: 'Восстановление пароля',
@@ -19,6 +22,10 @@ useHead({
 
 definePageMeta({
     disableMetrika: true,
+});
+
+onMounted(() => {
+    settingStore.authModalStatus = false;
 });
 
 </script>
