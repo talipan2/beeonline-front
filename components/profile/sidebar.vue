@@ -150,7 +150,7 @@ const getSidebarLinks = (role) => [
   { id: 5, label: "Проверка контрагентов", value: `/org_check` },
   { id: 6, label: "Сообщения", value: "/chat" },
   { id: 7, label: "Сделки", value: "/deals" },
-  { id: 8, label: "Документы", value: `/documentation` },
+  // { id: 8, label: "Документы", value: `/documentation` },
   // { id: 9, label: "Партнерские сервисы", value: `/related-industry-services` },
   { id: 10, label: "Избранное", value: `/favorites` },
   { id: 11, label: "Отзывы", value: `/reviews` },

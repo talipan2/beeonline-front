@@ -9,7 +9,7 @@
   >
     <template #header />
     <template #content>
-      <p class="change-data-modal__text">Чтобы изменить данные организации обратитесь в тех. поддержку</p>
+      <p class="change-data-modal__text">Чтобы изменить данные организации, обратитесь в тех. поддержку</p>
       <div class="change-data-modal__button-container">
         <UiButton class="change-data-modal__btn" type="button" variant="quinary" size="large" @click="changeDataLink">Изменить данные</UiButton>
         <UiButton class="change-data-modal__btn change-data-modal__btn__type-cancel" type="button" variant="tertiary" size="large" @click="() =>confirm()">Отменить</UiButton>

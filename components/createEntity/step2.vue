@@ -161,7 +161,7 @@
       </div>
       <CommonAlerts v-if="errorList.selectedLocations" :alert="errorList.selectedLocations" alertType="validation" />
       <div class="entity__data" v-if="role === 'customer'">
-        <h2 class="entity__subtitle">Регионы фактического производства заказа</h2>
+        <h2 class="entity__subtitle">Регионы фактического производства заказа *</h2>
         <div class="entity__text-container">
           <p class="entity__text" v-if="role === 'performer'">
             Укажите город вашего производства. Если производств несколько - выберите несколько городов, но не более
