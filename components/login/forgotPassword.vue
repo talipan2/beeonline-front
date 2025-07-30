@@ -46,6 +46,7 @@
 import { useUserStore } from "~/store/userStore";
 
 const userStore = useUserStore();
+const settingStore = useSettingStore();
 
 const loading = ref(false);
 const success = ref(false);
@@ -60,7 +61,6 @@ const handleSubmit = (values, form) => {
     userStore
         .forgotPassword(values, form)
         .then((res) => {
-            console.log(res);
             success.value = true;
             message.value = res.message;
         })

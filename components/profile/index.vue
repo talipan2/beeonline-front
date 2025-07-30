@@ -1,7 +1,7 @@
 <template>
   <div class="profile__checklist">
     <CommonProfileCheckCard title="Представитель компании"
-      text="Указанные данные не разглашаются третьим лицам, и необходимы для успешной работы на портале" :first-btn="handleOpenChangeUserDataModal"
+      text="Указанные данные не разглашаются третьим лицам, они необходимы для успешной работы на портале" :first-btn="handleOpenChangeUserDataModal"
       changeLinkLabel="Изменить данные" secondLink="/profile/update_pwd" secondLinkLabel="Изменить пароль">
       <div class="form-group profile__representative">
         <div class="form-group-data">
@@ -85,7 +85,7 @@
       </div>
     </CommonProfileCheckCard>
     <CommonProfileCheckCard title="Данные организации"
-      text="Указанные данные не разглашаются третьим лицам, и необходимы для успешной работы на портале"
+      text="Указанные данные не разглашаются третьим лицам, они необходимы для успешной работы на портале"
       :first-btn="handleOpenChangeDataModal" changeLinkLabel="Изменить" secondLink="/documentation" secondLinkLabel="Просмотр документов">
       <div class="register__organization-data">
         <div class="form-group-data">

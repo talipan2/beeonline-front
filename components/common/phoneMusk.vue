@@ -1,12 +1,12 @@
 <template>
-  <div class="phone-mask input" :class="meta.touched && !meta.valid ? 'invalid' : ''">
-    <Field
-      :rules="validatePhone"
-      v-slot="{ field, errors, meta }"
-      :label="label"
-      :name="name"
-      class="input__container"
-    >
+  <Field
+    :rules="validatePhone"
+    v-slot="{ field, errors, meta, }"
+    :label="label"
+    :name="name"
+    class="input__container"
+  >
+    <div class="phone-mask input" :class="[meta.touched && errors.length > 0 ? 'invalid' : '', field.class, $attrs.class,]" >
       <IntlTelInput
         ref="intlTelInput"
         class="phone-mask__input"
@@ -34,12 +34,11 @@
         @countryChange="handleCountryChange"
         @blur="handleBlur"
       />
-
       <div class="invalid-error" v-if="rules">
         <span v-if="errors.length && meta.touched" class="invalid-error__text">{{ errors[0] }}</span>
       </div>
-    </Field>
-  </div>
+    </div>
+  </Field>
 </template>
 
 <script setup>
@@ -85,7 +84,7 @@ const validatePhone = (value) => {
   return true;
 };
 
-const { setValue, setTouched, handleBlur, meta } = useField(props.name, validatePhone);
+const { setValue, setTouched, handleBlur, meta, errorMessage } = useField(props.name, validatePhone);
 
 const handleCountryChange = () => {
   // При смене страны нужно перевалидировать номер
