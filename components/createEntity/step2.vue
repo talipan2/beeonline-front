@@ -107,13 +107,13 @@
               Предпочтительная цена *
               <CommonTooltip text="Укажите предпочтительную цену за единицу товара" />
             </label>
-            <UiInput 
-              :rules="{ required: true, min_value: 1 }" 
+            <UiInput
+              :rules="{ required: true, min_value: 1, max_value: 9999999999999 }"
               :id="`price`"
-              name="price" 
-              label="Предпочтительная цена" 
+              name="price"
+              label="Предпочтительная цена"
               v-model="data.price"
-              class="form-group__value" type="number" 
+              class="form-group__value" type="number"
             >
               <UiSelect
                 :options="currencyList"
@@ -351,7 +351,7 @@ onMounted(() => {
   .invalid .entity__currency-select .select__select {
     background: none;
   }
-  
+
   &__label {
     display: flex;
     // column-gap: 0.3em;
