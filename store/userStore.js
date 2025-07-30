@@ -301,25 +301,19 @@ export const useUserStore = defineStore("user", {
       }
     },
 
-    // Изменение пароля
-    async resetPassword(data, form) {
-      return await Api.resetPassword(data, form);
+    // отправляем one-time password
+    async otpSend(data, form) {
+      return await Api.otpSend(data, form);
     },
 
-    // отправка запроса для восстановления пароля
+    // отправка письма
     async forgotPassword(data, form) {
       return await Api.forgotPassword(data, form);
     },
 
-    async resetForgotPassword(data, form) {
-      try {
-        const response = await Api.resetForgotPassword(data, form);
-        if (response.data) {
-          return response.data;
-        }
-      } catch (error) {
-        throw error;
-      }
+    // сброс пароля
+    async resetPassword(data, form) {
+      return await Api.resetPassword(data, form);
     },
 
     async setUserData(data, id, form) {

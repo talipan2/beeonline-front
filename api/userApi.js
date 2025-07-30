@@ -27,6 +27,10 @@ export default {
     return axios.get(`users/${id}`)
   },
 
+  async otpSend(values, form) {
+    return useApi().post('otp-send', values, form)
+  },
+
   async forgotPassword(values, form) {
     return useApi().post('forgot-password', values, form)
   },
