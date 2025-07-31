@@ -73,7 +73,7 @@ const breakpoints = {
 const ordersList = ref([]);
 
 onMounted(() => {
-    organizationStore.getPubCardsList({type: 'customer'})
+    organizationStore.getPubCardsList({type: 'customer', slider: 1})
         .then(res => {
             if(res && res.data) {
                 ordersList.value = res.data.map(item => {
