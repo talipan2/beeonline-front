@@ -20,10 +20,21 @@
 						Закрыть
 					</UiButton>
 					<UiButton
+						v-if="buttonLink"
 						class="board-error-modal__btn"
 						variant="quinary"
 						size="large"
 						:to="buttonLink"
+					>
+						{{ buttonText }}
+					</UiButton>
+					<UiButton
+						v-else
+						type="button"
+						class="board-error-modal__btn"
+						variant="quinary"
+						size="large"
+						@click="buttonFunction"
 					>
 						{{ buttonText }}
 					</UiButton>
@@ -52,6 +63,10 @@
 		buttonLink: {
 			type: String,
 			default: '',
+		},
+		buttonFunction: {
+			type: Function,
+			default: () => {},
 		},
 	});
 

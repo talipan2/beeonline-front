@@ -166,7 +166,7 @@
 				name: item.name,
 				placeOfProduction: locations,
 				alias: alias,
-				rawMaterials: !item.material ? ['Исполнителя'] : ['Заказчика'],
+				rawMaterials: !item.material ? ['Производителя'] : ['Заказчика'],
 				completionDate: item.deadline_at,
 				batch: item.batch,
 				category: item.product_categories.map((item) => item.id),

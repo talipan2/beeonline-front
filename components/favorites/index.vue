@@ -4,7 +4,7 @@
       <div class="favorites__catalog-wrapper">
         <UiButton to="/services" variant="quinary" size="around" class="favorites__catalog-btn favorites__catalog-btn_type_left">
           <SvgoBtnArrow class="svg-l" />
-          <span>Каталог исполнителей</span>
+          <span>Каталог производителей</span>
         </UiButton>
         <UiButton to="/orders" variant="quinary" size="around" class="favorites__catalog-btn favorites__catalog-btn_type_right">
           <span>Каталог заказчиков</span>
@@ -188,7 +188,7 @@ const ordersData = computed(() => {
       data: [
         { id: 1, name: 'Категории', value: item.product_categories && item.product_categories.length ? item.product_categories.map(item => item.name) : [] },
         { id: 2, name: 'Место производства', value: locations },
-        { id: 3, name: 'Партия', value: Number(item.batch) },
+        { id: 3, name: 'Объем партии', value: Number(item.batch) },
         { id: 4, name: 'Лекала', value: entityStore.getEntityLabelById('patterns', item.pattern) },
         { id: 5, name: 'Сырье', value: entityStore.getEntityLabelById('rawMaterials', item.material) },
         { id: 6, name: 'Срок выполнения', value: formatDate(item.deadline_at) },
@@ -215,7 +215,7 @@ const servicesData = computed(() => {
       views: 0, // нет на бэке
       companyName: item.pub_card && item.pub_card.name ? item.pub_card.name : '',
       data: [
-        { id: 1, name: 'Сырье', value: [item.materials_own ? 'Исполнителя' : '', item.materials_tolling ? 'Заказчика' : ''].filter(Boolean).join(' / ') },
+        { id: 1, name: 'Сырье', value: [item.materials_own ? 'Производителя' : '', item.materials_tolling ? 'Заказчика' : ''].filter(Boolean).join(' / ') },
         { id: 2, name: 'Категории', value: item.product_categories && item.product_categories.length ? item.product_categories.map(item => item.name).join(' / ') : '' },
         { id: 3, name: 'Наличие СТМ', value: item.is_stm ? 'Да' : 'Нет' },
         { id: 4, name: 'Бесплатные образцы', value: entityStore.getEntityLabelById('freeTestSamples', item.free_samples) },
@@ -240,7 +240,7 @@ const membersData = computed(() => {
       rating: item.reviews_stats_about?.average_rating,
       entityCount: item.type === 'performer' ? item.services_count : item.orders_count,
       category: item.categories && item.categories.length ? item.categories.map(item => item.name) : [],
-      rawMaterials: [item.materials_own ? 'Исполнителя' : '', item.materials_tolling ? 'Заказчика' : ''].filter(Boolean),
+      rawMaterials: [item.materials_own ? 'Производителя' : '', item.materials_tolling ? 'Заказчика' : ''].filter(Boolean),
       type: item.type,
       countryId: {cities: item?.cities, regions: item?.regions, countries: item?.countries},
     }

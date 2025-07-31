@@ -69,7 +69,7 @@
 					<span class="bottom-menu__text">
 						Каталог
 						<br />
-						исполнителей
+						производителей
 					</span>
 				</NuxtLink>
 			</li>

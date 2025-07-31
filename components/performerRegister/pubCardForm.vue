@@ -103,7 +103,7 @@
           class="form-group__value"
           variant="rounded"
           :options="[
-            { id: 0, label: 'Исполнителя' },
+            { id: 0, label: 'Производителя' },
             { id: 1, label: 'Заказчика' },
           ]"
           v-model="modelValue.materials"

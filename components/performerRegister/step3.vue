@@ -1,6 +1,6 @@
 <template>
   <div class="performer-register-step-three">
-    <CommonLayoutInfoCard title="Примеры работ" class="performer-register-step-three__layout">
+    <CommonLayoutInfoCard title="Фото образцов" class="performer-register-step-three__layout">
       <template #action>
         <UiButton
           v-if="isPreview"
@@ -16,7 +16,7 @@
       </template>
       <div class="performer-register-step-three__gallery">
         <template v-if="!isPreview">
-          <p class="performer-register-step-three__gallery-text">Фотографии сделают вашу карточку более привлекательной для заказчика. Первые 4 фотографии будут отображаться в примерах работ в каталоге исполнителей.</p>
+          <p class="performer-register-step-three__gallery-text">Фотографии сделают вашу карточку более привлекательной для заказчика. Первые 4 фотографии будут отображаться в примерах работ в каталоге производителей.</p>
           <p class="performer-register-step-three__gallery-text">Рекомендуемый размер 300 x 340 px.</p>
         </template>
         <CommonGalleryLoadSecondary 
@@ -61,7 +61,7 @@
         </div>
       </div>
     </CommonLayoutInfoCard>
-    <CommonLayoutInfoCard title="Оборудование" class="performer-register-step-three__layout">
+    <CommonLayoutInfoCard title="Фото оборудования" class="performer-register-step-three__layout">
       <template #action>
         <UiButton
           v-if="isPreview"

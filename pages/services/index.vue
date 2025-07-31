@@ -23,9 +23,9 @@
       </div>
     </template>
   </NuxtLayout> -->
-  <NuxtLayout name="info" className="catalog-services" title="Каталог исполнителей">
+  <NuxtLayout name="info" className="catalog-services" title="Каталог производителей">
     <template #header>
-      <UiBreadCrumb :list="[{label: 'Главная', link: '/'}, { label: 'Каталог исполнителей', link: '' }]" />
+      <UiBreadCrumb :list="[{label: 'Главная', link: '/'}, { label: 'Каталог производителей', link: '' }]" />
     </template>
     <template #content>
       <div class="new-service">

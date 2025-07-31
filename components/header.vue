@@ -142,7 +142,7 @@ const banner = ref({})
 const menuList = ref(null);
 const isDropdownVisible = ref(false);
 const menuItems = ref([
-  { to: '/services', text: 'Найти исполнителя' },
+  { to: '/services', text: 'Найти производителя' },
   { to: '/orders', text: 'Найти заказчика' },
   { to: '/board', text: 'Объявления' },
   { to: '/related-industry-services', text: 'Сервисы' },

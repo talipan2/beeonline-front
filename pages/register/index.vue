@@ -155,7 +155,7 @@ const userRole = computed(() => {
   if (userStore.role === "customer") {
     return "заказчика";
   } else if (userStore.role === "performer") {
-    return "исполнителя";
+    return "производителя";
   }
 });
 

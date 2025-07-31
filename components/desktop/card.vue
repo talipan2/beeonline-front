@@ -2,8 +2,14 @@
   <div class="desktop-card">
     <div class="desktop-card__header">
       <h2 class="desktop-card__title">{{ title }}</h2>
-      <UiButton v-if="link?.url" :to="link.url" class="desktop-card__btn link" variant="default" without-padding>{{ link.text }}</UiButton>
-      <UiButton  v-if="action?.function" type="button" @click="action.function" class="desktop-card__btn link" variant="default" without-padding>{{ action.text }}</UiButton>
+      <UiButton v-if="link?.url" :to="link.url" class="desktop-card__btn link" variant="default" without-padding>
+        <slot name="svg" />
+        {{ link.text }}
+      </UiButton>
+      <UiButton  v-if="action?.function" type="button" @click="action.function" class="desktop-card__btn link" variant="default" without-padding>
+        <slot name="svg" />
+        {{ action.text }}
+      </UiButton>
     </div>
     <div class="desktop-card__body">
       <slot name="body" />  
@@ -38,6 +44,7 @@ const props = defineProps({
   flex: 1 1 50%;
   font-size: 1rem;
   margin-bottom: 7.4em;
+  transition: all .3s ease;
 
   &__header {
     display: flex;
@@ -54,6 +61,28 @@ const props = defineProps({
     font-size: .66em;
     font-weight: 600;
     text-transform: uppercase;
+    column-gap: .5em;
+
+    svg {
+      fill: inherit;
+
+      path {
+        fill: inherit;
+      }
+    }
+
+    &:hover {
+      svg {
+        fill: var(--text-color-hover-primary);
+        path {
+          fill: var(--text-color-hover-primary);
+        }
+      }
+    }
+
+    &:has(svg):hover {
+      text-decoration: none;
+    }
   }
 
   &__body {

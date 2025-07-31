@@ -85,7 +85,7 @@ const data = computed(() => {
       rating: item.reviews_about_count,
       entityCount: item.type === 'performer' ? item.services_count : item.orders_count,
       category: item.categories && item.categories.length ? item.categories.map(item => item.name) : [],
-      rawMaterials: [item.materials_own ? 'Исполнителя' : '', item.materials_tolling ? 'Заказчика' : ''].filter(Boolean),
+      rawMaterials: [item.materials_own ? 'Производителя' : '', item.materials_tolling ? 'Заказчика' : ''].filter(Boolean),
       type: item.type,
       countryId: {cities: item?.cities, regions: item?.regions, countries: item?.countries},
       country: {countries: [item.country]},

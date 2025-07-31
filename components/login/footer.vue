@@ -20,7 +20,7 @@
         variant="quinary"
         @click="registerPerformer"
         size="large"
-        >Исполнитель
+        >Производитель
       </UiButton>
     </div>
   </div>

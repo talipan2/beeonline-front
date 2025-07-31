@@ -19,7 +19,7 @@
                         <p class="prop__value">{{ data.order?.product_categories?.map(item => item.name).join(', ') || 'не указано' }}</p>
                     </div>
                     <div class="prop">
-                        <p class="prop__name">Партия:</p>
+                        <p class="prop__name">Объем партии:</p>
                         <p class="prop__value">{{data.order && data.order.batch ? data.order?.batch.replace(/\.00$/, '') : 'не указано' }}</p>
                     </div>
                     <div class="prop">
@@ -34,7 +34,7 @@
                     <div class="deals-body__contacts-value">{{ data.customer?.name || 'не указано' }}</div>
                 </div>
                 <div class="deals-body__contacts-item">
-                    <div class="deals-body__contacts-name">Исполнитель:</div>
+                    <div class="deals-body__contacts-name">Производитель:</div>
                     <div class="deals-body__contacts-value">{{ data.performer?.name || 'не указано' }}</div>
                 </div>
             </div>

@@ -31,7 +31,7 @@
 							class="svg-m"
 							fill="#6937a5"
 						/>
-						Кабинет исполнителя
+						Кабинет производителя
 					</button>
 					<button
 						v-if="
@@ -59,7 +59,7 @@
 							class="svg-m"
 							fill="#6937a5"
 						/>
-						Стать исполнителем
+						Стать производителем
 					</button>
 					<button
 						type="button"
@@ -181,7 +181,7 @@
 			case 'customer':
 				return 'заказчиком';
 			case 'performer':
-				return 'исполнителем';
+				return 'производителем';
 			default:
 				return '';
 		}
@@ -206,7 +206,7 @@
 		{ id: 6, label: 'Проверка контрагентов', value: `/org_check` },
 		{ id: 7, label: 'Сообщения', value: '/chat' },
 		{ id: 8, label: 'Сделки', value: '/deals' },
-		{ id: 9, label: 'Документы', value: `/documentation` },
+		// { id: 9, label: 'Документы', value: `/documentation` },
 		// { id: 9, label: "Партнерские сервисы", value: `/related-industry-services` },
 		{ id: 11, label: 'Избранное', value: `/favorites` },
 		{ id: 12, label: 'Отзывы', value: `/reviews` },

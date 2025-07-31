@@ -83,7 +83,7 @@ const previewCardData = computed(() => ({
   data: [
     { id: 1, name: 'Категории', value: formatData.value.categories },
     { id: 2, name: 'Место производства', value: formatData.value.locations },
-    { id: 3, name: 'Партия', value: formatData.value.batch },
+    { id: 3, name: 'Объем партии', value: formatData.value.batch },
     { id: 4, name: 'Лекала', value: formatData.value.patterns },
     { id: 5, name: 'Сырье', value: formatData.value.rawMaterials },
     { id: 6, name: 'Срок выполнения', value: formatData.value.completionDate },

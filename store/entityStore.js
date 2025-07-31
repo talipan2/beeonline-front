@@ -70,7 +70,7 @@ export const useEntityStore = defineStore('entity', {
 			categories: [],
 			adjacentCategories: [],
 			rawMaterials: [
-				{ id: 0, label: 'Исполнителя' },
+				{ id: 0, label: 'Производителя' },
 				{ id: 1, label: 'Заказчика' },
 			],
 			patterns: [
@@ -91,10 +91,10 @@ export const useEntityStore = defineStore('entity', {
 				{ id: 1, label: 'Да' },
 			],
 			minLot: [
-				{ id: 1, label: 'до 100' },
-				{ id: 2, label: 'от 100 до 500' },
-				{ id: 3, label: 'от 500 до 1 000' },
-				{ id: 4, label: '1 000 и выше' },
+				// { id: 1, label: 'до 100' },
+				// { id: 2, label: 'от 100 до 500' },
+				{ id: 3, label: 'от 1 до 999' },
+				{ id: 4, label: '1000 и выше' },
 			],
 			serviceBatch: [],
 			status: [

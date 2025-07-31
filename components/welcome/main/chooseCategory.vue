@@ -3,7 +3,7 @@
     <div class="welcome-block-wrapper">
       <h2 class="welcome-block-name">Каталог</h2>
       <h3 class="welcome-title"><span>Выберите</span> подходящую категорию одежды</h3>
-      <p class="welcome-subtitle">Сервис Bee-online.ru - место, где можно найти исполнителя 
+      <p class="welcome-subtitle">Сервис Bee-online.ru - место, где можно найти производителя 
         на пошив одежды из сотен предпринимателей и фабрик по всей России, Белорусии и Казахстана
       </p>
     </div>

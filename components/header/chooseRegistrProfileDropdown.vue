@@ -4,7 +4,7 @@
     <template #content >
       <div class="choose-register">
         <button class="choose-register__btn" @click="registerCustomer">Заказчик</button>
-        <button class="choose-register__btn" @click="registerPerformer">Исполнитель</button>
+        <button class="choose-register__btn" @click="registerPerformer">Производитель</button>
       </div>
     </template>
   </UiNewDropdown>

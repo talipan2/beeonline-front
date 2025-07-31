@@ -62,7 +62,7 @@
             </div>
             <div class="form-group form-group_type_secondary">
               <div class="form-group-data">
-                <label class="form-group__title"> Партия </label>
+                <label class="form-group__title"> Объем партии </label>
                 <div class="form-group__value">
                   <div class="form-value">{{ item.batch?.name || "" }}</div>
                 </div>

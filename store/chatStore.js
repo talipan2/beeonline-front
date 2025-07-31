@@ -119,7 +119,7 @@ export const useChatStore = defineStore("chatStore", {
                 case "customer":
                     return "Заказчик";
                 case "performer":
-                    return "Исполнитель";
+                    return "Производитель";
                 default:
                     return null;
             }

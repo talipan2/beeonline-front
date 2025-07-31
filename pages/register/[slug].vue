@@ -97,7 +97,7 @@ const data = ref({
 const blockTitle = computed(() => {
   const titles = {
     customer: 'Регистрация заказчика',
-    performer: 'Регистрация исполнителя'
+    performer: 'Регистрация производителя'
   };
   return titles[userStore.role] || 'Регистрация';
 });
@@ -169,7 +169,7 @@ const userRole = computed(() => {
   if(userStore.role === 'customer') {
     return 'заказчика';
   } else if(userStore.role === 'performer') {
-    return 'исполнителя';
+    return 'производителя';
   }
 })
 

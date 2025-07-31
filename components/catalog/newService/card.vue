@@ -107,7 +107,7 @@
               ? data.categories.map((item) => item.name).join(' / ')
               : '',
           },
-          // {name: 'Сырье', value: [data.materials_tolling ? 'Заказчика' : '', data.materials_own ? 'Исполнителя' : ''].filter(Boolean).join(' / ')},
+          // {name: 'Сырье', value: [data.materials_tolling ? 'Заказчика' : '', data.materials_own ? 'Производителя' : ''].filter(Boolean).join(' / ')},
           { name: 'Количество швей', value: data.workers_count },
         ]" />
       <CatalogNewServiceDetailsBadge

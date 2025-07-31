@@ -1,12 +1,15 @@
 <template>
   <div class="login-container container">
     <UiBreadCrumb :list="[{label: 'Главная', link: '/'},{ label: 'Авторизация', link: '' }]" />
-    <LoginWithoutPassword v-if="currentAuthPage === 'without-password'"/>
+    <LoginWithoutPassword v-if="currentAuthPage === 'without-password'" redirect="/desktop"/>
     <Login v-else/>
   </div>
 </template>
 
 <script setup>
+import { useSettingStore } from "~/store/settingStore";
+
+const settingStore = useSettingStore();
 
 useHead({
   title: 'Авторизация',
@@ -34,6 +37,10 @@ watch(() => router.currentRoute.value.query, (newVal) => {
     currentAuthPage.value = ''
   }
 }, {deep: true, immediate: true})
+
+onMounted(() => {
+    settingStore.authModalStatus = false;
+});
 
 </script>
 

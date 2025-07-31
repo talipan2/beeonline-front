@@ -9,13 +9,13 @@
           <label class="form-group__title">
             Старый пароль*
             <UiInput
-              v-model="passwordData.old_password"
+              v-model="passwordData.password"
               :rules="{ required: true, min: 4 }"
-              class="form-group__value" 
-              name="old_password" 
-              label="Старый пароль" 
-              type="password" 
-              placeholder="*****" 
+              class="form-group__value"
+              name="password"
+              label="Старый пароль"
+              type="password"
+              placeholder="*****"
             />
           </label>
         </div>
@@ -27,10 +27,10 @@
             <UiInput
               v-model="passwordData.new_password"
               :rules="{ required: true, min: 6 }"
-              class="form-group__value" 
-              name="new_password" 
-              label="Новый пароль" 
-              :type="showNewPassword ? 'text' : 'password'" 
+              class="form-group__value"
+              name="new_password"
+              label="Новый пароль"
+              :type="showNewPassword ? 'text' : 'password'"
               placeholder="Не менее 6 символов"
             >
               <template #action>
@@ -49,12 +49,12 @@
           <label class="form-group__title">
             Подтвердите пароль
             <UiInput
-              v-model="passwordData.confirmPassword"
+              v-model="passwordData.new_password_confirmation"
               :rules="{ required: true, min: 6, confirmed: passwordData.new_password }"
-              class="form-group__value" 
-              name="confirmPassword" 
-              label="Подтвердите пароль" 
-              :type="showConfirmPassword ? 'text' : 'password'" 
+              class="form-group__value"
+              name="new_password_confirmation"
+              label="Подтвердите пароль"
+              :type="showConfirmPassword ? 'text' : 'password'"
               placeholder="Не менее 6 символов"
             >
               <template #action>
@@ -73,7 +73,7 @@
       <UiButton type="button" @click="settingStore.resetPasswordModal = true" class="profile-update-password__forgot-btn" variant="default">Забыли пароль?</UiButton>
       <UiButton type="submit" class="profile-update-password__btn" variant="quinary" size="large">
         Изменить пароль
-        <SvgoBtnArrow class="svg-lx" />  
+        <SvgoBtnArrow class="svg-lx" />
       </UiButton>
     </UiForm>
     <ProfileResetPasswordModal @reset="forgotPassword"/>
@@ -99,17 +99,17 @@ const toast = useToast();
 const showNewPassword = ref(false);
 const showConfirmPassword = ref(false);
 const passwordData = ref({
-  old_password: '',
+  password: '',
   new_password: '',
-  confirmPassword: '',
+  new_password_confirmation: '',
 })
 
+const loading = ref(false);
+
 async function handleResetPassword(values, form) {
-  if(passwordData.value.new_password === passwordData.value.confirmPassword) {
-    await userStore.resetPassword({
-      old_password: passwordData.value.old_password,
-      new_password: passwordData.value.new_password,
-    }, form)
+    if (loading.value) return;
+    loading.value = true;
+    await userStore.changePassword(values, form)
     .then(res => {
       toast.success('Пароль успешно изменен');
       router.push(`/profile`);
@@ -117,11 +117,23 @@ async function handleResetPassword(values, form) {
     .catch(err => {
       settingStore.setAlert('error', err.response.data.message);
     })
-  }
+    .finally(() => {
+      loading.value = false;
+    });
 }
 
 function forgotPassword() {
-  isSendedMailToReset.value = true;
+    if (loading.value) return;
+    loading.value = true;
+    userStore.forgotPassword({
+        email: userStore.userData.email
+    })
+    .then((res) => {
+        isSendedMailToReset.value = true;
+    })
+    .finally(() => {
+        loading.value = false;
+    });
 }
 
 

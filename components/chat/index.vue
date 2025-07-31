@@ -78,7 +78,7 @@
                                         target="_blank"
                                         v-if="org.pivot.role === 'performer' && chat.order && !chat.deal && !chat.order.selected_performer_id"
                                     >
-                                        Выбрать исполнителя
+                                        Выбрать производителя
                                     </UiButton>
                                     <UiButton
                                         class="dialog-head__btn dialog-head__btn_type_colored"

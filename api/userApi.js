@@ -27,16 +27,20 @@ export default {
     return axios.get(`users/${id}`)
   },
 
-  async resetPassword(values, form) {
-    return useApi().post('change-password', values, form)
+  async otpSend(values, form) {
+    return useApi().post('otp-send', values, form)
   },
 
   async forgotPassword(values, form) {
-    return useApi().post('restore-password', values, form)
+    return useApi().post('forgot-password', values, form)
   },
 
-  async resetForgotPassword(values, form) {
+  async resetPassword(values, form) {
     return useApi().post('reset-password', values, form)
+  },
+
+  async changePassword(values, form) {
+    return useApi().post('change-password', values, form)
   },
 
   async setUserData(values, id, form) {

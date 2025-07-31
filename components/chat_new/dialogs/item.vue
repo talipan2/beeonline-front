@@ -79,7 +79,7 @@
   const emit = defineEmits(['change:chat', 'change:chat-by-message']);
 
   const getOrgType = (organization) => {
-    return 'Исполнитель'
+    return 'Производитель'
   }
 
   const getProductType = (product) => {

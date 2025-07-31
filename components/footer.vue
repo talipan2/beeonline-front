@@ -18,7 +18,7 @@
 									to="/services"
 									class="footer__link"
 								>
-									Найти исполнителя
+									Найти производителя
 								</NuxtLink>
 							</li>
 							<li class="footer__links-item">

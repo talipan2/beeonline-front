@@ -20,7 +20,7 @@
         <UiImage src="/assets/images/main/advantages/advantages-4.png"/>
       </li>
       <li class="advantages__card advantages__card_type_choice">
-        <h3>Широкий выбор исполнителей и заказчиков</h3>
+        <h3>Широкий выбор производителей и заказчиков</h3>
         <UiImage src="/assets/images/main/advantages/advantages-5.png"/>
       </li>
       <li class="advantages__card advantages__card_type_negotiation">

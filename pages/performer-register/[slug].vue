@@ -1,5 +1,5 @@
 <template>
-  <NuxtLayout name="performer-register" title="Регистрация исполнителя" class="performer-register-layout">
+  <NuxtLayout name="performer-register" title="Регистрация производителя" class="performer-register-layout">
     <template #leftSide>
       <CommonCheckListStep
         class="performer-register-layout__steps performer-register-layout__steps_type_desktop"
@@ -9,7 +9,7 @@
       />
     </template>
     <template #content>
-      <h1 class="performer-register-layout__title">Регистрация исполнителя</h1>
+      <h1 class="performer-register-layout__title">Регистрация производителя</h1>
       <CommonCheckListStep
         class="performer-register-layout__steps performer-register-layout__steps_type_mobile"
         :steps="stepCheckList"

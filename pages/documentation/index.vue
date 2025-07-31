@@ -35,7 +35,7 @@ const organizationStore = useOrganizationStore();
 const userStore = useUserStore();
 
 const role = computed(() => userStore.role);
-const translateRole = computed(() => role.value === 'customer' ? 'заказчика' : 'исполнителя');
+const translateRole = computed(() => role.value === 'customer' ? 'заказчика' : 'производителя');
 const dataList = ref([]);
 
 onMounted(() => {

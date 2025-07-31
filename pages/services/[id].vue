@@ -21,8 +21,8 @@
       <UiBreadCrumb
         :list="[
           { label: 'Главная', link: '/' },
-          { label: 'Каталог исполнителей', link: '/services' },
-          { label: `${data?.name || 'Исполнитель'} `, link: ''},
+          { label: 'Каталог производителей', link: '/services' },
+          { label: `${data?.name || 'Производитель'} `, link: ''},
         ]"
       />
     </template>
@@ -63,7 +63,7 @@ const formatData = computed(() => {
           value: data.value.product_categories && data.value.product_categories.length ? data.value.product_categories : [], 
           link: 'categories',
         },
-        {name: 'Материалы:', value: [data.value.materials_tolling ? {name:'Заказчика', id: 1} : '', data.value.materials_own ? {name: 'Исполнителя', id: 0} : ''].filter(Boolean), link: 'material'},
+        {name: 'Материалы:', value: [data.value.materials_tolling ? {name:'Заказчика', id: 1} : '', data.value.materials_own ? {name: 'Производителя', id: 0} : ''].filter(Boolean), link: 'material'},
         {name: 'Наличие СТМ:', value: entityStore.getEntityLabelById('availabilityStm', data.value.is_stm)},
         {name: 'Бесплатные образцы:', value: entityStore.getEntityLabelById('freeTestSamples', data.value.free_samples)},
         {name: 'Регион производства:', value: locations.join(' / ')},
@@ -101,7 +101,7 @@ onMounted(async() => {
 
 
 
-const pageTitle = computed(() => formatData.value.name || 'Международный цифровой сервис поиска партнеров в сфере легкой промышленности');
+const pageTitle = computed(() => formatData.value.name || 'Международный цифровой сервис поиска партнеров в сфере модной индустрии');
 
 useHead({
   title: pageTitle,

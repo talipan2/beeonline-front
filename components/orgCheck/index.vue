@@ -44,7 +44,7 @@
       <CommonAlerts alert="Проверок нет" :type="'warning'" />
       <div class="org-check__link-container">
         <UiButton to="/services" variant="quinary" size="large" class="org-check__link" v-if="userStore.role === 'customer'">
-          <span>Каталог исполнителей</span>
+          <span>Каталог производителей</span>
           <SvgoBtnArrow class="svg-l" />
         </UiButton>
         <UiButton to="/orders" variant="quinary" size="large" class="org-check__link" v-if="userStore.role === 'performer'">

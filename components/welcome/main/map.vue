@@ -3,7 +3,7 @@
     <div class="welcome-map__container">
       <div class="welcome-map__header">
         <h2 class="welcome-map__title">Выбирайте партнеров<br>рядом с Вами</h2>
-        <UiButton to="/members" variant="quinary" size="large" class="welcome-map__btn">Все исполнители</UiButton>
+        <UiButton to="/members" variant="quinary" size="large" class="welcome-map__btn">Все производители</UiButton>
       </div>
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" width="1919" height="903" class="map-svg" viewBox="0 0 1919 903">
         <path d="M0 0h1919v1033H0z" fill="url(#pattern0)"/>

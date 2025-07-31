@@ -44,7 +44,7 @@ const props = defineProps({
 
 const labelButton = computed(() => {
   if(props.data.type === 'performer') {
-    return 'Написать исполнителю'
+    return 'Написать производителю'
   } else {
     return 'Написать заказчику'
   }

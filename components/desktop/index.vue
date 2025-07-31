@@ -60,9 +60,12 @@
     <div class="desktop__card-container">
       <DesktopCard
         title="Карточка организации"
-        :link="userStore.role === 'customer' ? { url: `/pubcards/edit/${pubCard.id}`, text: 'Изменить'} : undefined"
-        :action="userStore.role === 'performer' ? { function: () => editPubCardModal = true, text: 'Изменить'} : undefined"
+        :link="userStore.role === 'customer' ? { url: `/pubcards/edit/${pubCard.id}`, text: 'Редактировать'} : undefined"
+        :action="userStore.role === 'performer' ? { function: () => editPubCardModal = true, text: 'Редактировать'} : undefined"
       >
+        <template #svg>
+          <SvgoPencil class="svg-m" />
+        </template>
         <template #body>
           <CardsPublic class="desktop__pub-card" :is-props-visible="true" :is-description="true" :data="pubCard" :class="{'loading' : pubCardLoader}" statusVisible isPubCardUp/>
           <ModalsRoundBorder :is-open="editPubCardModal" title="Редактирование карточки" @close="editPubCardModal = false" size="lg"
@@ -353,7 +356,7 @@ const pubCard = computed(() => {
     ratingData: {...userStore.userPubCard.reviews_stats_about, reviewCount: userStore.userPubCard.reviews_about_count},
     stars: userStore.userPubCard.reviews_stats_about?.stars,
     entityCount: userStore.userPubCard.orders_count || userStore.userPubCard.services_count,
-    rawMaterials: [userStore.userPubCard.materials_own ? 'Исполнителя': '', userStore.userPubCard.materials_tolling ? 'Заказчика' : ''].filter(Boolean),
+    rawMaterials: [userStore.userPubCard.materials_own ? 'Производителя': '', userStore.userPubCard.materials_tolling ? 'Заказчика' : ''].filter(Boolean),
     category: userStore.userPubCard.categories && userStore.userPubCard.categories.length ? userStore.userPubCard.categories.map(item => item.name) : [],
     status: userStore.userPubCard.status,
     statusName: userStore.userPubCard.status_name,

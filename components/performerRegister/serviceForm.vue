@@ -30,12 +30,12 @@
       />
     </div>
     <div class="form-group form-group_type_secondary service-form__radio">
-      <label class="form-group__title"> Партия </label>
+      <label class="form-group__title"> Объем партии </label>
       <UiRadioButtonGroup 
         class="form-group__value"
         name="batches"
         v-model="service.batches"
-        label="Партия"
+        label="Объем партии"
         :options="batchList"
         return-number
         :rules="{ required: true }"

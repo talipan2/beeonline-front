@@ -75,7 +75,7 @@
             @click="handleOpenChangeDataModal"
           >
             <SvgoPencil class="svg-l" />
-            Изменить
+            Редактировать
           </UiButton>
           <UiButton
             class="performer-profile__card-btn"
@@ -216,7 +216,7 @@ const formattedData = computed(() => {
     isStm: data.value?.is_stm ? 'Да' : 'Нет',
     freeStock: data.value?.free_stock ? 'Да' : 'Нет',
     locations: {cities: cities, regions: regions, countries: countries},
-    materials: [data.value.materials_own ? 'Исполнителя': '', data.value.materials_tolling ? 'Заказчика': ''].filter(Boolean).join(' / '),
+    materials: [data.value.materials_own ? 'Производителя': '', data.value.materials_tolling ? 'Заказчика': ''].filter(Boolean).join(' / '),
   }
 });
 

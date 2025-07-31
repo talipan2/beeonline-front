@@ -67,7 +67,7 @@ const categoryOptions = computed(() => [
 ]);
 
 const minLotOptions = computed(() => [
-  { id: 0, label: 'Любой размер партии', value: 'all' },
+  { id: 0, label: 'Любой объем партии', value: 'all' },
   ...entityStore.entityData.minLot.map((minLot) => {
     return { id: minLot.id, label: minLot.label, value: minLot.id };
   })
@@ -88,7 +88,7 @@ const statusReviewOptions = [
 
 const participantOptions = [
   { id: 0, label: "От всех участников", value: "all" },
-  { id: 1, label: "От исполнителей", value: "performer" },
+  { id: 1, label: "От производителей", value: "performer" },
   { id: 2, label: "От заказчиков", value: "customer" },
   { id: 3, label: "От поставщиков", value: "supplier" },
 ];

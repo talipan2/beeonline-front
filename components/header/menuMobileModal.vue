@@ -92,7 +92,7 @@
 							to="/services"
 							class="header-menu__link"
 						>
-							Найти исполнителя
+							Найти производителя
 						</NuxtLink>
 					</li>
 					<li class="header-menu__link-item">
@@ -156,7 +156,7 @@
 					@click="handleSwitchRole"
 				>
 					<SvgoEnter class="svg-m" />
-					Переключится на исполнителя
+					Переключится на производителя
 				</UiButton>
 				<!-- <NuxtLink to="" class="header-menu__change-role">
           <SvgoEnter class="svg-m" />
@@ -170,7 +170,7 @@
 					v-if="!userRoles.includes('performer') && role !== 'adjacent'"
 				>
 					<SvgoAdduser class="svg-m" />
-					Стать исполнителем
+					Стать производителем
 				</UiButton>
 				<UiButton
 					type="button"
@@ -272,7 +272,7 @@
 		if (role === 'customer') {
 			return 'Заказчик';
 		} else if (role === 'performer') {
-			return 'Исполнитель';
+			return 'Производитель';
 		}
 	}
 
@@ -346,7 +346,7 @@
 				{ id: 6, label: 'Проверка контрагентов', value: `/org_check` },
 				{ id: 7, label: 'Сообщения', value: '/chat' },
 				{ id: 8, label: 'Сделки', value: '/deals' },
-				{ id: 9, label: 'Документы', value: `/documentation` },
+				// { id: 9, label: 'Документы', value: `/documentation` },
 				{
 					id: 10,
 					label: 'Партнерские сервисы',

@@ -73,7 +73,7 @@
 						class="new-service-details__pub-card-button"
 						@click="settingStore.sendMessageModal = true"
 					>
-						Написать исполнителю
+						Написать производителю
 					</UiButton>
 					<PaidServiceCounterpartyCheck
 						v-if="userStore.userPubCard?.id != data.id"
@@ -123,7 +123,7 @@
 						class="new-service-details__pub-card-button"
 						@click="settingStore.authModalStatus = true"
 					>
-						Написать исполнителю
+						Написать производителю
 					</UiButton>
 					<PaidServiceCounterpartyCheck :id="data.organization_id">
 						<template #button>
@@ -233,7 +233,7 @@
 						class="new-service-details__pub-card-button"
 						@click="settingStore.sendMessageModal = true"
 					>
-						Написать исполнителю
+						Написать производителю
 					</UiButton>
 					<PaidServiceCounterpartyCheck
 						v-if="userStore.userPubCard?.id != data.id"
@@ -284,7 +284,7 @@
 						class="new-service-details__pub-card-button"
 						@click="settingStore.authModalStatus = true"
 					>
-						Написать исполнителю
+						Написать производителю
 					</UiButton>
 					<PaidServiceCounterpartyCheck :id="data.organization_id">
 						<template #button>
@@ -336,7 +336,7 @@
 					name: 'Сырье',
 					value: [
 						data.materials_tolling ? 'Заказчика' : '',
-						data.materials_own ? 'Исполнителя' : '',
+						data.materials_own ? 'Производителя' : '',
 					]
 						.filter(Boolean)
 						.join(' / '),
@@ -351,7 +351,7 @@
 			/>
 			<CatalogNewServiceDetailsBadge
 				:specs="{
-					name: 'Наличие СТМ',
+					name: 'Наличие собственной торговой марки (СТМ)',
 					value: data.is_stm != null ? (data.is_stm ? 'Да' : 'Нет') : '',
 				}"
 			/>

@@ -100,7 +100,7 @@
 				},
 				rawMaterials: {
 					label: 'Сырье',
-					value: !order.value.material ? 'Исполнителя' : 'Заказчика',
+					value: !order.value.material ? 'Производителя' : 'Заказчика',
 				},
 				pattern: {
 					label: 'Лекала',
