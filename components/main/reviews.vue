@@ -1,0 +1,438 @@
+<template>
+	<div
+		class="reviews-company container"
+		ref="reviewsContainer"
+	>
+		<div class="reviews-company__container">
+			<div class="reviews-company__title-container">
+				<h2 class="reviews-company__title">Отзывы клиентов</h2>
+				<UiImage
+					src="/assets/images/main/review/pattern.png"
+					alt="Изображение звёзд"
+				/>
+			</div>
+			<div
+				class="reviews-company__slider-container"
+				ref="sliderContainer"
+			>
+				<Swiper
+					:slidesPerView="2.2"
+					:spaceBetween="24"
+					:breakpoints="{
+						1524: {
+							slidesPerView: 2.2,
+						},
+						1024: {
+							slidesPerView: 1.5,
+						},
+						320: {
+							slidesPerView: 1.2,
+						},
+					}"
+					class="reviews-company__slider"
+					:modules="modules"
+					@swiper="setSwiperInstance"
+					@slideChange="onSlideChange"
+				>
+					<SwiperSlide
+						v-for="(review, index) in data"
+						:key="index"
+						class="reviews-company__slide"
+					>
+						<div class="reviews-company__slide-container">
+							<div class="reviews-company__slide-header">
+								<div class="reviews-company__slide-image">
+									<UiImage
+										:src="review.image"
+										:alt="review.name"
+										external="true"
+									/>
+								</div>
+								<div class="reviews-company__slide-name">
+									<p class="reviews-company__slide-name-role">
+										{{ review.role }}
+									</p>
+									<h3 class="reviews-company__slide-name-title">
+										{{ review.name }}
+									</h3>
+									<p class="reviews-company__slide-name-organization">
+										{{ review.organization_name }}
+									</p>
+								</div>
+							</div>
+							<p class="reviews-company__slide-text">
+								{{ review.text }}
+							</p>
+						</div>
+					</SwiperSlide>
+				</Swiper>
+				<div
+					class="reviews-company__slider-navigation"
+					v-if="data.length > 1"
+				>
+					<UiButton
+						type="button"
+						class="reviews-company__slider-btn reviews-company__slider-btn_type_prev"
+						variant="secondary"
+						@click="slidePrev"
+						:disabled="isBeginning"
+					>
+						<SvgoArrow class="svg-l" />
+					</UiButton>
+					<UiButton
+						type="button"
+						class="reviews-company__slider-btn reviews-company__slider-btn_type_next"
+						variant="secondary"
+						@click="slideNext"
+						:disabled="isEnd"
+					>
+						<SvgoArrow class="svg-l" />
+					</UiButton>
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
+
+<script setup>
+	import { Navigation } from 'swiper/modules';
+	import defaultImage from '@/assets/images/user-plug.png';
+
+	const reviewsContainer = ref(null);
+	const sliderContainer = ref(null);
+
+	const swiperInstance = ref(null);
+	const modules = [Navigation];
+
+	const isBeginning = ref(true);
+	const isEnd = ref(false);
+
+	const data = ref([
+		{
+			id: 1,
+			image: defaultImage,
+			name: 'Александр Сергеевич',
+			role: 'Заказчик',
+			organization_name: 'ООО "Ромашка"',
+			text: `“Мы уже давно сотрудничаем с BEE-online.ru
+        и неизменно остаёмся довольны. Каждый заказ 
+        на платформе получает от 5 до 15 откликов. 
+        Это хорошая выборка, которая обеспечивает гибкость в работе. 
+        А за счет доступной логистики находить подрядчиков можно в любой точке РФ. Никаких ограничений — только эффективность.”`,
+		},
+		{
+			id: 2,
+			image: defaultImage,
+			name: 'Ольга Александровна',
+			role: 'Заказчик',
+			organization_name: 'ООО "Ромашка"',
+			text: `“В течение полутора или двух недель после размещения заказа мы получаем до 30 откликов. 
+        Не менее 80% из них полностью соответствуют нашим ожиданиям. Это высокий показатель. Выбираем только тех, 
+        у кого есть реальные производственные мощности. Конечно, по критериям цены/качества тоже оцениваем. 
+        С BEE-online.ru таких найти легко.”`,
+		},
+		{
+			id: 3,
+			image: defaultImage,
+			name: 'Александр Сергеевич',
+			role: 'Заказчик',
+			organization_name: 'ООО "Ромашка"',
+			text: `“Мы уже давно сотрудничаем с BEE-online.ru
+        и неизменно остаёмся довольны. Каждый заказ 
+        на платформе получает от 5 до 15 откликов. 
+        Это хорошая выборка, которая обеспечивает гибкость в работе. 
+        А за счет доступной логистики находить подрядчиков можно в любой точке РФ. Никаких ограничений — только эффективность.”`,
+		},
+	]);
+
+	const setSwiperInstance = (swiper) => {
+		swiperInstance.value = swiper;
+	};
+
+	const slidePrev = () => {
+		if (swiperInstance.value) {
+			swiperInstance.value.slidePrev();
+		}
+	};
+
+	const slideNext = () => {
+		if (swiperInstance.value) {
+			swiperInstance.value.slideNext();
+		}
+	};
+
+	const onSlideChange = (swiper) => {
+		updateNavigationState(swiper);
+	};
+
+	const updateNavigationState = (swiper) => {
+		isBeginning.value = swiper.isBeginning;
+		isEnd.value = swiper.isEnd;
+	};
+
+	const handleResize = () => {
+		if (!reviewsContainer.value || !sliderContainer.value) return;
+
+		if (window.innerWidth < 768) {
+			sliderContainer.value.style.width = `100%`;
+			sliderContainer.value.style.marginRight = `0px`;
+		} else {
+			// Получаем вычисленные стили
+			const computedStyle = window.getComputedStyle(reviewsContainer.value);
+			const marginRight = parseFloat(computedStyle.marginRight) || 0;
+			const paddingRight = parseFloat(computedStyle.paddingRight) || 0;
+
+			// Устанавливаем новые значения
+			sliderContainer.value.style.width = `calc(100% + ${marginRight + paddingRight}px)`;
+			sliderContainer.value.style.marginRight = `-${marginRight + paddingRight}px`;
+		}
+	};
+
+	// Добавляем обработчик с debounce
+	let resizeTimeout;
+
+	const debouncedResize = () => {
+		clearTimeout(resizeTimeout);
+		resizeTimeout = setTimeout(handleResize, 100);
+	};
+
+	onMounted(() => {
+		window.addEventListener('resize', debouncedResize);
+		handleResize(); // Инициализация при монтировании
+	});
+
+	onUnmounted(() => {
+		window.removeEventListener('resize', debouncedResize);
+	});
+</script>
+
+<style lang="scss">
+	.reviews-company {
+		font-size: 1rem;
+
+		overflow: visible;
+		position: relative;
+		padding-block: 10em;
+		margin-bottom: 10em;
+
+		&__container {
+			display: flex;
+			gap: 2.4em;
+			overflow: visible;
+		}
+
+		&__title-container {
+			padding: 4.8em 3.8em;
+			aspect-ratio: 1/1.35;
+			border-radius: 24px;
+			background: linear-gradient(to bottom, #2d007b 10%, #964ca8 90%);
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			gap: 1em;
+			align-items: center;
+		}
+
+		&__title {
+			font-family: 'fira-sans', sans-serif;
+			font-size: 4em;
+			font-weight: 700;
+			color: #ffffff;
+			text-align: center;
+		}
+
+		&__image {
+			width: 100%;
+			height: auto;
+		}
+
+		&__slider {
+			height: 100%;
+		}
+
+		&__slider-container {
+			flex: 1 1 0;
+			min-width: 0;
+			overflow: visible;
+		}
+
+		&__slide-container {
+			display: flex;
+			flex-direction: column;
+			gap: 1em;
+			background: #f6f4ff;
+			border-radius: 24px;
+			padding: 4.8em;
+			height: 100%;
+		}
+
+		&__slide-header {
+			display: flex;
+			gap: 2.4em;
+			align-items: center;
+		}
+
+		&__slide-name {
+			display: flex;
+			flex-direction: column;
+			gap: 0.5em;
+			flex: 0 1 100%;
+		}
+
+		&__slide-image {
+			flex: 1 0 21%;
+			max-width: 21%;
+			border-radius: 50%;
+			background-color: #fff;
+			overflow: hidden;
+			aspect-ratio: 1/1;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+
+			img {
+				width: 100%;
+				height: auto;
+				object-fit: cover;
+			}
+		}
+
+		&__slide-name-role {
+			font-size: 2em;
+			font-weight: 500;
+			line-height: 1.6em;
+			color: #2a1947;
+		}
+
+		&__slide-name-title {
+			font-family: 'Coolvetica', sans-serif;
+			font-weight: 400;
+			font-size: 2.4em;
+			line-height: 1.33em;
+			color: #2a1947;
+		}
+
+		&__slide-name-organization {
+			font-weight: 500;
+			font-size: 2em;
+			line-height: 1.6em;
+			color: #2a1947;
+		}
+
+		&__slide-text {
+			font-weight: 500;
+			font-size: 2em;
+			line-height: 1.6em;
+			color: #2a1947;
+		}
+
+		&__slider-navigation {
+			display: flex;
+			gap: 1em;
+			position: absolute;
+			top: 0;
+			right: 0;
+			z-index: 3;
+		}
+
+		&__slider-btn {
+			width: 5.6em;
+			height: 5.6em;
+			border-radius: 50%;
+			background: #fff;
+
+			&_type_next {
+				transform: rotate(180deg);
+				box-shadow: 0 -12px 22px 0 rgba(0, 0, 0, 0.1);
+			}
+
+			&_type_prev {
+				box-shadow: 0 12px 22px 0 rgba(0, 0, 0, 0.1);
+			}
+		}
+
+		@include mobile {
+			padding-bottom: 8em;
+			margin-bottom: 5em;
+
+			&__container {
+				flex-direction: column;
+			}
+
+			&__title-container {
+				aspect-ratio: initial;
+				flex-direction: row;
+				padding: 2em;
+
+				img {
+					flex: 0 0 30%;
+					max-width: 30%;
+				}
+			}
+
+			&__title {
+				flex: 0 1 100%;
+				text-align: justify;
+			}
+
+			&__slide-image {
+				aspect-ratio: 1;
+				flex: 0 1 24%;
+				max-width: 24%;
+			}
+
+			&__slider-container {
+				flex: auto;
+				overflow: hidden;
+			}
+
+			&__slide-container {
+				padding: 2.4em;
+			}
+
+			&__slider-navigation {
+				bottom: 0;
+				left: 1.3em;
+				right: auto;
+				top: auto;
+			}
+
+			&__slider-btn {
+				width: 4em;
+				height: 4em;
+			}
+		}
+
+		@include small-mobile {
+			&__title {
+				font-size: 2.2em;
+			}
+
+			&__slide-header {
+				column-gap: 1.2em;
+			}
+
+			&__slide-name-role {
+				font-size: 1.4em;
+			}
+
+			&__slide-name-title {
+				font-size: 1.6em;
+			}
+
+			&__slide-name-organization {
+				font-size: 1.4em;
+			}
+
+			&__slide-text {
+				font-size: 1.4em;
+			}
+		}
+
+		@media screen and (max-width: 1640px) {
+			&__slider-navigation {
+				right: 2.6em;
+			}
+		}
+	}
+</style>
