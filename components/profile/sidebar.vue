@@ -197,7 +197,7 @@
 	const getSidebarLinks = (role) => [
 		{ id: 1, label: 'Рабочий стол', value: `/desktop` },
 		{ id: 2, label: 'Объявления', value: `/board/user` },
-		{ id: 3, label: 'Bee-online Gifts', value: `/bonus` },
+		...(userStore.userOrganization?.currency_code === 'RUB' ? [{ id: 3, label: 'Bee-online Gifts', value: `/bonus` }] : []),
 		{ id: 4, label: 'Профиль', value: `/profile` },
 		...(role === 'customer'
 			? [{ id: 5, label: 'Заказы', value: '/customer/orders' }]

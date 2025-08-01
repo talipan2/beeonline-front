@@ -1,5 +1,5 @@
 <template>
-	<div class="board-banners">
+	<div class="board-banners" v-if="data.length > 0">
 		<NuxtLink
 			:to="'/board'"
 			class="board-banners__link"

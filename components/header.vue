@@ -145,7 +145,7 @@ const menuItems = ref([
   { to: '/services', text: 'Найти производителя' },
   { to: '/orders', text: 'Найти заказчика' },
   { to: '/board', text: 'Объявления' },
-  { to: '/related-industry-services', text: 'Сервисы' },
+  // { to: '/related-industry-services', text: 'Сервисы' },
   { to: '/news', text: 'Новости' },
 ]);
 

@@ -13,7 +13,7 @@
 			title="Ошибка создания объявления"
 			:text="errorText"
 			buttonText="Авторизоваться"
-			buttonLink="/login"
+			:buttonFunction="openAuthModal"
 		/>
 		<UiButton
 			type="submit"
@@ -51,6 +51,11 @@
 		site: '',
 		country_code: '',
 	});
+
+	const openAuthModal = () => {
+		settingStore.boardErrorModal = false;
+		settingStore.authModalStatus = true;
+	};
 
 	const router = useRouter();
 	const isLoading = ref(false);
