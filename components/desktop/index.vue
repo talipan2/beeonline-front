@@ -44,7 +44,7 @@
         }"
       />
     </div>
-    <div class="desktop__banner" v-if="role === 'performer'">
+    <div class="desktop__banner" v-if="role === 'performer' && userStore.userOrganization?.currency_code === 'RUB'">
       <div class="desktop__banner-content">
         <h2 class="desktop__banner-title">Новые тарифы Премиум и Ультра!</h2>
         <div class="desktop__banner-container">
