@@ -347,11 +347,11 @@
 				{ id: 7, label: 'Сообщения', value: '/chat' },
 				{ id: 8, label: 'Сделки', value: '/deals' },
 				// { id: 9, label: 'Документы', value: `/documentation` },
-				{
-					id: 10,
-					label: 'Партнерские сервисы',
-					value: `/related-industry-services`,
-				},
+				// {
+				// 	id: 10,
+				// 	label: 'Партнерские сервисы',
+				// 	value: `/related-industry-services`,
+				// },
 				{ id: 11, label: 'Избранное', value: `/favorites` },
 				{ id: 12, label: 'Отзывы', value: `/my-reviews` },
 				{ id: 13, label: 'Баланс и платные услуги', value: '/tariffs' },
