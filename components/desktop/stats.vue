@@ -4,13 +4,13 @@
       <div class="stats">
         <div class="stats__list">
           <div class="stats__items-container">
-            <div class="stats__item" @mouseover="currentViewSetting = 'profile'">
-              <p class="stats__title" :class="{ 'active': currentViewSetting === 'profile'}">Просмотры профиля</p>
-              <p class="stats__value">{{ `${data.profile_views?.weekly || 0} (${data.profile_views?.total || 0})` }}</p>
+            <div class="stats__item" @mouseover="currentViewSetting = 'pubcard'">
+              <p class="stats__title" :class="{ 'active': currentViewSetting === 'pubcard'}">Просмотры профиля</p>
+              <p class="stats__value">{{ `${data.pubcard_views?.weekly || 0} (${data.pubcard_views?.previous || 0})` }}</p>
               <div class="stats__status">
-                <div :class="handleCheckStatsPosition(data.profile_views?.percentage)">
+                <div :class="handleCheckStatsPosition(data.pubcard_views?.percentage)">
                   <SvgoBalanceArrow class="svg-m " />
-                  <p class="stats__status-text">{{ data.profile_views?.percentage || 0 }}%</p>
+                  <p class="stats__status-text">{{ data.pubcard_views?.percentage || 0 }}%</p>
                 </div>
                 <span class="desktop__selected">за неделю</span>
               </div>
@@ -18,7 +18,7 @@
             <div class="divider-vertical"></div>
             <div class="stats__item" @mouseover="currentViewSetting = 'orders'" v-if="role === 'customer'">
               <p class="stats__title" :class="{ 'active': currentViewSetting === 'orders'}">Просмотры заказов</p>
-              <p class="stats__value">{{ `${data.order_views?.weekly || 0} (${data.order_views?.total || 0})` }}</p>
+              <p class="stats__value">{{ `${data.order_views?.weekly || 0} (${data.order_views?.previous || 0})` }}</p>
               <div class="stats__status">
                 <div :class="handleCheckStatsPosition(data.order_views?.percentage)">
                   <SvgoBalanceArrow class="svg-m" />
@@ -27,21 +27,23 @@
                 <span class="desktop__selected">за неделю</span>
               </div>
             </div>
-            <div class="stats__item" @mouseover="currentViewSetting = 'services'" v-if="role === 'performer'">
-              <p class="stats__title" :class="{ 'active': currentViewSetting === 'services'}">Просмотры услуг</p>
-              <p class="stats__value">{{ `${data.service_views?.weekly || 0} (${data.service_views?.total || 0})` }}</p>
-              <div class="stats__status">
-                <div :class="handleCheckStatsPosition(data.service_views?.percentage)">
-                  <SvgoBalanceArrow class="svg-m" />
-                  <p class="stats__status-text">{{ data.service_views?.percentage || 0 }}%</p>
+            <template v-if="false">
+                <div class="stats__item" @mouseover="currentViewSetting = 'services'" v-if="role === 'performer'">
+                <p class="stats__title" :class="{ 'active': currentViewSetting === 'services'}">Просмотры услуг</p>
+                <p class="stats__value">{{ `${data.service_views?.weekly || 0} (${data.service_views?.previous || 0})` }}</p>
+                <div class="stats__status">
+                    <div :class="handleCheckStatsPosition(data.service_views?.percentage)">
+                    <SvgoBalanceArrow class="svg-m" />
+                    <p class="stats__status-text">{{ data.service_views?.percentage || 0 }}%</p>
+                    </div>
+                    <span class="desktop__selected">за неделю</span>
                 </div>
-                <span class="desktop__selected">за неделю</span>
-              </div>
-            </div>
-            <div class="divider-vertical"></div>
+                </div>
+            </template>
+            <div class="divider-vertical" v-if="role === 'customer'"></div>
             <div class="stats__item" @mouseover="currentViewSetting = 'favorites'">
               <p class="stats__title" :class="{ 'active': currentViewSetting === 'favorites'}" >Добавлен в избранное</p>
-              <p class="stats__value">{{ `${data.favorites?.weekly || 0} (${data.favorites?.total || 0})` }}</p>
+              <p class="stats__value">{{ `${data.favorites?.weekly || 0} (${data.favorites?.previous || 0})` }}</p>
               <div class="stats__status">
                 <div :class="handleCheckStatsPosition(data.favorites?.percentage)">
                   <SvgoBalanceArrow class="svg-m" />
@@ -64,7 +66,7 @@ const props = defineProps({
   role: {
     type: String,
     required: true,
-  }, 
+  },
   data: {
     type: Object,
     default: () => ({}),
@@ -76,7 +78,7 @@ const chartDataSets = computed(() => {
     return props.data.daily_stats
   } else {
     return {
-      profile_views: Array(15).fill(0),
+      pubcard_views: Array(15).fill(0),
       order_views: Array(15).fill(0),
       service_views: Array(15).fill(0),
       favorites: Array(15).fill(0),
@@ -89,14 +91,12 @@ const isHover = ref(false)
 
 const currentDataSet = computed(() => {
   switch (currentViewSetting.value) {
-    case 'profile':
-      return chartDataSets.value.profile_views;
+    case 'pubcard':
+        return props.data.pubcard_views.chart;
     case 'orders':
-      return chartDataSets.value.order_views;
+        return props.data.order_views.chart;
     case 'favorites':
-      return chartDataSets.value.favorites;
-    case 'services':
-      return chartDataSets.value.service_views;
+        return props.data.favorites.chart;
     default:
       return Array(15).fill(0);
   }
