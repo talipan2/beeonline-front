@@ -1,5 +1,4 @@
 <template>
-	{{ counter }}
 	<Field
 		:name="name"
 		:label="label"
@@ -13,10 +12,10 @@
 			:class="[
 				$attrs.class,
 				`drop-down-select-wrapper_variant_${variant}`,
+				{ 'drop-down-select-wrapper_variant_no-border': !showBorder },
 				{ invalid: errors.length && meta.touched },
 			]"
 		>
-			{{ selectedOption }}
 			<UiNewDropdown
 				:arrow="false"
 				placement="bottom-start"
@@ -25,12 +24,14 @@
 				ref="dropdownRef"
 			>
 				<UiButton
+					type="button"
 					class="drop-down-select__dropdown-button"
 					variant="elevated"
 					:class="{
 						'drop-down-select__dropdown-button_placeholder':
 							selectedOption?.disabled,
 					}"
+					:key="selectKey"
 				>
 					<slot name="icon-left" />
 					{{ selectedOption?.label }}
@@ -52,6 +53,10 @@
 								:without-padding="true"
 								@click="(event) => handleSelect(option, event)"
 								:disabled="option?.disabled"
+								:class="{
+									'drop-down-select__dropdown-item_selected':
+										isOptionSelected(option),
+								}"
 							>
 								{{ option.label }}
 							</UiButton>
@@ -75,36 +80,52 @@
 </template>
 
 <script setup>
+	import { useTranslateStore } from '~/store/translateStore';
+
 	const props = defineProps({
+		/** Текущее выбранное значение */
 		modelValue: {
 			type: String,
 			default: null,
 		},
+		/** Массив опций для выбора. Каждая опция должна содержать {label, value || id} */
 		options: {
 			type: Array,
 			default: () => [],
 		},
+		/** Имя поля для формы */
 		name: {
 			type: String,
 			default: '',
 		},
+		/** Правила валидации */
 		rules: {
 			type: [String, Object],
 			default: '',
 		},
+		/** Показывать ли ошибку валидации */
 		errorShow: {
 			type: Boolean,
 			default: true,
 		},
+		/** Текст лейбла поля */
 		label: {
 			type: String,
 			default: '',
 		},
+		/** Вариант отображения: 'default' | 'elevated' */
 		variant: {
 			type: String,
 			default: 'default',
-			validator: (value) => ['default', 'elevated'].includes(value),
+			validator: (value) =>
+				['default', 'elevated', 'default-no-border'].includes(value),
 		},
+		/** Показывать ли border у кнопки */
+		showBorder: {
+			type: Boolean,
+			default: true,
+		},
+		/** Возвращает value вместо id */
 		returnValue: {
 			type: Boolean,
 			default: false,
@@ -113,6 +134,7 @@
 
 	const fieldRef = ref(null);
 	const dropdownRef = ref(null);
+	const translateStore = useTranslateStore();
 
 	const offset = computed(() => {
 		if (props.variant === 'elevated') {
@@ -124,30 +146,46 @@
 	const selectedOption = computed(() => {
 		if (!props.modelValue) return props.options[0];
 		if (props.returnValue) {
-			console.log(
-				props.options.find((option) => option.value === props.modelValue)
-			);
 			return props.options.find((option) => option.value === props.modelValue);
 		} else {
 			return props.options.find((option) => option.id === props.modelValue);
 		}
 	});
 
+	const isOptionSelected = (option) => {
+		if (!selectedOption.value || !option) return false;
+
+		if (props.returnValue) {
+			return (
+				selectedOption.value.value &&
+				option.value &&
+				selectedOption.value.value === option.value
+			);
+		} else {
+			return (
+				selectedOption.value.id &&
+				option.id &&
+				selectedOption.value.id === option.id
+			);
+		}
+	};
+
 	const emit = defineEmits(['update:modelValue']);
 
-	const counter = ref(0);
+	const selectKey = ref();
 
 	const handleSelect = (option) => {
-		if (props.returnValue) {
-			emit('update:modelValue', option.value);
-		} else {
-			emit('update:modelValue', option.id);
-		}
+		const valueToSet = props.returnValue ? option.value : option.id;
+
+		emit('update:modelValue', valueToSet);
+
 		if (fieldRef.value) {
-			fieldRef.value?.setValue(option.value);
+			fieldRef.value?.setValue(valueToSet);
 			fieldRef.value?.setTouched(true);
 		}
-		counter.value++;
+		if (translateStore.langDefault != translateStore.lang) {
+			selectKey.value = `select-${option.id || option.value}`;
+		}
 	};
 
 	const isOpen = computed(() => {
@@ -163,14 +201,6 @@
 			}
 		}
 	);
-
-	const updateCounter = () => {
-		counter.value++;
-	};
-
-	// onMounted(() => {
-	// 	setInterval(updateCounter, 1000);
-	// });
 </script>
 
 <style lang="scss">
@@ -184,17 +214,23 @@
 			background-color: var(--color-white);
 			border: 1px solid var(--color-gray-200);
 			width: 100%;
+			max-height: 30em;
+			max-width: 100%;
+			overflow-y: auto;
 		}
 
 		&_variant_default {
 			[data-tippy-root] {
 				border-radius: 0;
+				border: 1px solid var(--border-color-secondary);
+				min-width: auto;
+				box-shadow: 0px 21px 24px 7px rgba(34, 60, 80, 0.2);
 			}
 			.drop-down-select {
 				width: 100%;
 
 				&__dropdown-content {
-					padding: 1em 0;
+					padding: 0;
 				}
 
 				&__dropdown-list {
@@ -206,6 +242,17 @@
 					border: 1px solid var(--border-color-secondary);
 					padding: 0.625em;
 					color: var(--text-color-senary);
+					box-shadow: none;
+
+					@include hover {
+						color: var(--text-color-senary);
+						box-shadow: none;
+					}
+
+					&:focus {
+						border-color: var(--border-color-input-focus) !important;
+						box-shadow: var(--box-shadow-input) !important;
+					}
 
 					svg {
 						width: 1.4em;
@@ -226,6 +273,27 @@
 					&:hover:not(:disabled) {
 						background-color: var(--primary-color);
 						color: var(--color-white);
+					}
+
+					&_selected {
+						background-color: var(--primary-color);
+						color: var(--color-white);
+					}
+				}
+			}
+		}
+
+		&_variant_no-border {
+			.drop-down-select {
+				&__dropdown-button {
+					border: none;
+					background: transparent;
+					background-color: transparent;
+					box-shadow: none;
+					padding: 0;
+
+					@include hover {
+						box-shadow: none;
 					}
 				}
 			}
@@ -249,14 +317,19 @@
 			column-gap: 1em;
 			text-transform: none;
 			justify-content: space-between;
+			width: 100%;
+
+			@include hover {
+				color: inherit;
+			}
 
 			&_placeholder {
 				color: var(--color-gray-500);
 			}
 
 			svg {
-				width: 2.4em;
-				height: 2.4em;
+				width: 1.5em;
+				height: 1.5em;
 			}
 
 			&-icon.active {
@@ -273,6 +346,13 @@
 			flex-direction: column;
 			align-items: flex-start;
 			row-gap: 1em;
+		}
+
+		&__dropdown-item {
+			&_selected {
+				color: var(--text-color-hover-primary);
+				cursor: default;
+			}
 		}
 	}
 

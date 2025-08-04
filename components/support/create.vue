@@ -5,7 +5,6 @@
 			class="support-create__form"
 			:submit="handleSubmit"
 		>
-			{{ count }}
 			<label class="support-create__label form-group__title">
 				Тема обращения
 				<!-- <UiSelect
@@ -26,7 +25,6 @@
 					variant="default"
 					:return-value="true"
 				/>
-				{{ appealData.type }}
 			</label>
 			<label class="support-create__label form-group__title">
 				Опишите вашу ситуацию
@@ -130,17 +128,10 @@
 		supportStore.fetchSupportTicketTypes();
 	});
 
-	const count = ref(0);
-
-	const updateCounter = () => {
-		count.value++;
-	};
-
 	onMounted(() => {
 		supportStore.fetchSupportTicketStatuses().then((response) => {
 			fetchTickets();
 		});
-		setInterval(updateCounter, 1000);
 	});
 </script>
 

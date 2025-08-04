@@ -44,7 +44,7 @@
 				class="form-group__value board-form__price-input"
 				type="number"
 			>
-				<UiSelect
+				<!-- <UiSelect
 					:options="currencyList"
 					v-model="data.currency_id"
 					return-id
@@ -52,6 +52,15 @@
 					name="currency"
 					class="form-group__value board-form__currency-select"
 					:error-show="false"
+				/> -->
+				<CommonDropDownSelect
+					:options="currencyList"
+					v-model="data.currency_id"
+					label="Валюта"
+					name="currency"
+					class="form-group__value board-form__currency-select notranslate"
+					:error-show="false"
+					:show-border="false"
 				/>
 			</UiInput>
 		</div>
@@ -282,9 +291,11 @@
 		}
 
 		&__currency-select {
+			font-size: 1em;
 			margin-top: 0;
-			flex: 0 0 5em;
+			flex: 0 0 2em;
 			line-height: 1em;
+			padding: 0;
 
 			.select__select {
 				border: none;
