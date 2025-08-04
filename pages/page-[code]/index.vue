@@ -63,7 +63,7 @@
 
 		p {
 			font-size: 1.6em;
-			margin-bottom: 1.5em;
+			// margin-bottom: 1.5em;
 		}
 
 		li {
