@@ -357,6 +357,7 @@
 				{ id: 13, label: 'Баланс и платные услуги', value: '/tariffs' },
 				{ id: 14, label: 'Уведомления', value: `/notifications` },
 				{ id: 15, label: 'Новости', value: '/news' },
+				{ id: 16, label: 'Поддержка', value: '/support' },
 			];
 		}
 	});

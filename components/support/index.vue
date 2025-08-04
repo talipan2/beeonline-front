@@ -162,6 +162,10 @@
 			font-size: 1.6em;
 			max-width: 30%;
 			margin-bottom: 1.5em;
+
+			@include mobile {
+				max-width: 100%;
+			}
 		}
 
 		&__title {
