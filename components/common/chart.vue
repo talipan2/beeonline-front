@@ -22,7 +22,7 @@ const chartData = ref({
   datasets: [
     {
       label: 'Статистика',
-      data: [...props.data], 
+      data: Object.values(props.data),
       borderColor: '#6937a5',
       backgroundColor: (ctx) => {
         const gradient = ctx.chart.ctx.createLinearGradient(0, 0, 0, 100);
@@ -71,7 +71,7 @@ const chartOptions = {
 };
 
 watch(() => props.data, (newVal) => {
-  lineChart.value.chart.data.datasets[0].data = [...newVal];
+  lineChart.value.chart.data.datasets[0].data = Object.values(newVal);
   lineChart.value.chart.update();
 });
 
