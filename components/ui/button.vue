@@ -97,6 +97,11 @@
 		justify-content: center;
 		text-wrap: nowrap;
 		position: relative;
+
+		font {
+			pointer-events: none;
+			user-select: none;
+		}
 	}
 
 	.btn-disabled {
