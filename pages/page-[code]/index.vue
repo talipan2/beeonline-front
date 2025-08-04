@@ -26,16 +26,6 @@
 
 	const data = ref({});
 
-	useHead({
-		title: data?.title,
-		meta: [
-			{
-				name: 'description',
-				content: data?.description || data?.title,
-			},
-		],
-	});
-
 	const settingStore = useSettingStore();
 	const router = useRouter();
 	const isLoading = ref(false);
@@ -55,6 +45,16 @@
 		.finally(() => {
 			isLoading.value = false;
 		});
+
+	useHead({
+		title: data?.value?.title,
+		meta: [
+			{
+				name: 'description',
+				content: data?.value?.description || data?.value?.title,
+			},
+		],
+	});
 </script>
 
 <style lang="scss">
@@ -70,6 +70,10 @@
 			font-size: 1.6em;
 			list-style-type: decimal;
 			list-style-position: inside;
+		}
+
+		a {
+			display: inline;
 		}
 
 		a:hover {
