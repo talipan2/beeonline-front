@@ -269,6 +269,7 @@
 					width: 100%;
 					justify-content: flex-start;
 					transition: none;
+					color: var(--text-color-senary);
 
 					&:hover:not(:disabled) {
 						background-color: var(--primary-color);
@@ -291,6 +292,10 @@
 					background-color: transparent;
 					box-shadow: none;
 					padding: 0;
+
+					&:focus {
+						box-shadow: none !important;
+					}
 
 					@include hover {
 						box-shadow: none;

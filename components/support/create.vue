@@ -23,7 +23,6 @@
 					label="Тема обращения"
 					:rules="{ required: true }"
 					variant="default"
-					:return-value="true"
 				/>
 			</label>
 			<label class="support-create__label form-group__title">

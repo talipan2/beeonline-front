@@ -475,7 +475,7 @@ onMounted(() => {
       margin-bottom: 3em;
     }
 
-    .select__select {
+    .drop-down-select__dropdown-button {
       border-radius: 8px;
       border: 1px solid #d9dae1;
       padding: 1.4rem;
