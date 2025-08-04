@@ -168,5 +168,17 @@ export const useSettingStore = defineStore('setting', {
 				console.error(error);
 			}
 		},
+
+		async getPageContent(code) {
+			try {
+				const response = await commonApi.getPageContent(code);
+				if (response.data) {
+					return response.data;
+				}
+			} catch (error) {
+				console.error(error);
+				throw error;
+			}
+		},
 	},
 });

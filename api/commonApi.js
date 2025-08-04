@@ -1,88 +1,92 @@
-import axios from "axios";
+import axios from 'axios';
 
 export default {
-  async getLocations(params = {}) {
-    return axios.get(`locations`, { params })
-  },
+	async getLocations(params = {}) {
+		return axios.get(`locations`, { params });
+	},
 
-  async getAdjacentCategories() {
-    return axios.get(`adjacent-categories`);
-  },
+	async getAdjacentCategories() {
+		return axios.get(`adjacent-categories`);
+	},
 
-  async getCategories() {
-    return axios.get(`product-categories`);
-  },
+	async getCategories() {
+		return axios.get(`product-categories`);
+	},
 
-  async getBatchSizes() {
-    return axios.get(`batches`);
-  },
+	async getBatchSizes() {
+		return axios.get(`batches`);
+	},
 
-  async getBonuses(organizationId, { type }) {
-    const params = {
-      ...(type ? { type } : {}),
-    };
-    return axios.get(`bonuses/${organizationId}`, { params });
-  },
+	async getBonuses(organizationId, { type }) {
+		const params = {
+			...(type ? { type } : {}),
+		};
+		return axios.get(`bonuses/${organizationId}`, { params });
+	},
 
-  async getBonusesData(organizationId) {
-    return axios.get(`bonuses/${organizationId}/data`);
-  },
+	async getBonusesData(organizationId) {
+		return axios.get(`bonuses/${organizationId}/data`);
+	},
 
-  async getBonusesTransactions(organizationId, { page }) {
-    const params = {
-      ...(page !== undefined && page !== null ? { page } : {}),
-    };
-    return axios.get(`bonuses/${organizationId}/transactions`, { params });
-  },
+	async getBonusesTransactions(organizationId, { page }) {
+		const params = {
+			...(page !== undefined && page !== null ? { page } : {}),
+		};
+		return axios.get(`bonuses/${organizationId}/transactions`, { params });
+	},
 
-  async getAchievements(organizationId, { page, limit, type, bonus }) {
-    const params = {
-      ...(page !== undefined && page !== null ? { page } : {}),
-      ...(limit !== undefined && limit !== null ? { limit } : {}),
-      ...(type ? { type } : {}),
-      ...(bonus !== undefined && bonus !== null ? { bonus } : {}),
-    };
+	async getAchievements(organizationId, { page, limit, type, bonus }) {
+		const params = {
+			...(page !== undefined && page !== null ? { page } : {}),
+			...(limit !== undefined && limit !== null ? { limit } : {}),
+			...(type ? { type } : {}),
+			...(bonus !== undefined && bonus !== null ? { bonus } : {}),
+		};
 
-    return useApi().get(`achievements/${organizationId}`, params);
-  },
+		return useApi().get(`achievements/${organizationId}`, params);
+	},
 
-  async search(params = {}) {
-    return axios.get(`search`, { params });
-  },
+	async search(params = {}) {
+		return axios.get(`search`, { params });
+	},
 
-  async getFaqs() {
-    return axios.get(`faqs`);
-  },
+	async getFaqs() {
+		return axios.get(`faqs`);
+	},
 
-  async getNewsList(params = {}) {
-    return axios.get(`news`, { params });
-  },
+	async getNewsList(params = {}) {
+		return axios.get(`news`, { params });
+	},
 
-  async getNews(id) {
-    return axios.get(`news/${id}`);
-  },
+	async getNews(id) {
+		return axios.get(`news/${id}`);
+	},
 
-  async getBanners(params = {}) {
-    return axios.get(`banners`, { params });
-  },
+	async getBanners(params = {}) {
+		return axios.get(`banners`, { params });
+	},
 
-  async getRegisterCountries() {
-    return useApi().get(`register-countries`);
-  },
+	async getRegisterCountries() {
+		return useApi().get(`register-countries`);
+	},
 
-  async getCountries() {
-    return axios.get(`countries`);
-  },
+	async getCountries() {
+		return axios.get(`countries`);
+	},
 
-  async emailConfirm(id, hash) {
-    return axios.post(`email-confirm`, { id, hash });
-  },
+	async emailConfirm(id, hash) {
+		return axios.post(`email-confirm`, { id, hash });
+	},
 
-  async telegramNotify(id) {
-    return axios.get(`/users/${id}/tg-chat-code`);
-  },
+	async telegramNotify(id) {
+		return axios.get(`/users/${id}/tg-chat-code`);
+	},
 
-  async getCurrencyList() {
-    return axios.get(`currencies`);
-  },
+	async getCurrencyList() {
+		return axios.get(`currencies`);
+	},
+
+	async getPageContent(code) {
+		return useApi().get(`dynamic-pages/${code}`);
+	},
 };
