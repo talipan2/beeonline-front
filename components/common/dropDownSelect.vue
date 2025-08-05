@@ -201,6 +201,12 @@
 			}
 		}
 	);
+
+	onMounted(() => {
+		if (fieldRef.value) {
+			fieldRef.value?.setValue(props.modelValue);
+		}
+	});
 </script>
 
 <style lang="scss">
