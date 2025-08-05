@@ -18,6 +18,9 @@
 				class="board-catalog-header__sort"
 				:options="sortOptions"
 				v-model="currentSort"
+				:error-show="false"
+				variant="elevated"
+				return-value
 			>
 				<template #icon-left>
 					<svg
@@ -194,6 +197,7 @@
 		}
 
 		&__sort {
+			font-size: 1.6em;
 			.drop-down-select__dropdown-button {
 				padding: 0.75em;
 			}

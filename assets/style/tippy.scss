@@ -1,96 +1,97 @@
-.tippy-box[data-animation="fade"][data-state="hidden"] {
-  opacity: 0;
+.tippy-box[data-animation='fade'][data-state='hidden'] {
+	opacity: 0;
 }
 [data-tippy-root] {
-  max-width: calc(100vw - 10px);
-  min-width: 28rem;
+	max-width: calc(100vw - 10px);
+	min-width: 28rem;
 }
 .tippy-box {
-  position: relative;
-  background-color: #FFF;
-  color: #565263;
-  border-radius: 0;
-border: 1px solid #d1d5db;
-  font-size: 14px;
-  line-height: 1.4;
-  white-space: normal;
-  outline: 0;
-  transition-property: transform, visibility, opacity;
-background: #FFF;
+	position: relative;
+	background-color: #fff;
+	color: #565263;
+	border-radius: 0;
+	border: 1px solid #d1d5db;
+	font-size: 14px;
+	line-height: 1.4;
+	white-space: normal;
+	outline: 0;
+	transition-property: transform, visibility, opacity;
+	background: #fff;
 }
-.tippy-box[data-placement^="top"] > .tippy-arrow {
-  bottom: -15px;
+.tippy-box[data-placement^='top'] > .tippy-arrow {
+	bottom: -15px;
 }
-.tippy-box[data-placement^="top"] > .tippy-arrow:before {
-  bottom: 0px;
-  left: 0;
-  border-width: 15px 7.5px 0;
-  border-top-color: initial;
-  transform-origin: center top;
+.tippy-box[data-placement^='top'] > .tippy-arrow:before {
+	bottom: 0px;
+	left: 0;
+	border-width: 15px 7.5px 0;
+	border-top-color: initial;
+	transform-origin: center top;
 }
-.tippy-box[data-placement^="bottom"] > .tippy-arrow {
-  top: 0;
+.tippy-box[data-placement^='bottom'] > .tippy-arrow {
+	top: 0;
 }
-.tippy-box[data-placement^="bottom"] > .tippy-arrow:before {
-  top: -15px;
-  left: 0;
-  border-width: 0 7.5px 15px;
-  border-bottom-color: initial;
-  transform-origin: center bottom;
+.tippy-box[data-placement^='bottom'] > .tippy-arrow:before {
+	top: -15px;
+	left: 0;
+	border-width: 0 7.5px 15px;
+	border-bottom-color: initial;
+	transform-origin: center bottom;
 }
-.tippy-box[data-placement^="left"] > .tippy-arrow {
-  right: 0;
+.tippy-box[data-placement^='left'] > .tippy-arrow {
+	right: 0;
 }
-.tippy-box[data-placement^="left"] > .tippy-arrow:before {
-  border-width: 8px 0 8px 8px;
-  border-left-color: initial;
-  right: -8px;
-  transform-origin: center left;
+.tippy-box[data-placement^='left'] > .tippy-arrow:before {
+	border-width: 8px 0 8px 8px;
+	border-left-color: initial;
+	right: -8px;
+	transform-origin: center left;
 }
-.tippy-box[data-placement^="right"] > .tippy-arrow {
-  left: 0;
+.tippy-box[data-placement^='right'] > .tippy-arrow {
+	left: 0;
 }
-.tippy-box[data-placement^="right"] > .tippy-arrow:before {
-  left: -8px;
-  border-width: 8px 8px 8px 0;
-  border-right-color: initial;
-  transform-origin: center right;
+.tippy-box[data-placement^='right'] > .tippy-arrow:before {
+	left: -8px;
+	border-width: 8px 8px 8px 0;
+	border-right-color: initial;
+	transform-origin: center right;
 }
-.tippy-box[data-inertia][data-state="visible"] {
-  transition-timing-function: cubic-bezier(0.54, 1.5, 0.38, 1.11);
+.tippy-box[data-inertia][data-state='visible'] {
+	transition-timing-function: cubic-bezier(0.54, 1.5, 0.38, 1.11);
 }
 .tippy-arrow {
-  width: 16px;
-  height: 16px;
-  color: #6937a5;
+	width: 16px;
+	height: 16px;
+	color: #6937a5;
 }
 .tippy-arrow:before {
-  content: "";
-  position: absolute;
-  border-color: transparent;
-  border-style: solid;
+	content: '';
+	position: absolute;
+	border-color: transparent;
+	border-style: solid;
 }
 .tippy-content {
-  position: relative;
-  // padding: 5px 9px;
-  z-index: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-// max-height: min(300px, 100vh);
+	position: relative;
+	// padding: 5px 9px;
+	z-index: 1;
+	overflow-y: auto;
+	overflow-x: hidden;
+	// max-height: min(300px, 100vh);
 }
 
 .tippy-box[data-theme~='select'] {
-// border-radius: 10px;
-box-shadow: 0 0 5px #E4E4E4;
-.tippy-content {
-  padding: 5px 0;
-}
+	// border-radius: 10px;
+	box-shadow: 0 0 5px #e4e4e4;
+	.tippy-content {
+		padding: 5px 0;
+	}
 }
 
 .tippy-box[data-theme~='text-area'] {
-  font-size: 14px;
-  padding: 10px;
-  box-shadow:  -2px -2px 0 #6937a5, 0 1px 1px rgba(0, 0, 0, 0.15);
-  border: none;
-  
+	font-size: 14px;
+	padding: 10px;
+	box-shadow:
+		-2px -2px 0 #6937a5,
+		0 1px 1px rgba(0, 0, 0, 0.15);
+	border: none;
 }
