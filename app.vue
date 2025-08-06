@@ -1,6 +1,7 @@
 <template>
   <NuxtLayout :name="layout">
     <NuxtPage />
+		<CookieBanner />
   </NuxtLayout>
 </template>
 
