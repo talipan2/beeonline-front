@@ -37,7 +37,10 @@
 			/>
 		</template>
 		<template #content>
-			<div class="new-service">
+			<div
+				class="new-service"
+				ref="anchor"
+			>
 				<CommonSelectableButtons
 					:options="categoryList"
 					v-model="filter.categories"
@@ -108,10 +111,7 @@
 						</UiButton>
 					</template>
 				</CommonSelectableButtons>
-				<div
-					ref="anchor"
-					:class="{ loading: loading }"
-				>
+				<div :class="{ loading: loading }">
 					<CatalogNewService
 						:servicesList="servicesList"
 						:slider="true"
@@ -160,7 +160,7 @@
 	const isMobile = ref(false);
 	const selectableButtons = ref(null);
 
-	const anchor = ref('anchor');
+	const anchor = ref(null);
 
 	const loading = ref(false);
 	const isLoaded = ref(false);
@@ -321,19 +321,23 @@
 			.getPubCardsList({ ...filterQuery })
 			.then((res) => {
 				if (res) {
-					console.log(res);
 					servicesList.value = res.data;
+					console.log(filterQuery.page, page.value.currentPage);
+
+					// скрол;
+					if (filterQuery.page) {
+						const rect = anchor.value.getBoundingClientRect();
+						const offset =
+							window.scrollY + rect.top - settingStore.headerHeight;
+						smoothScroll(offset, false);
+
+						router.replace({ query: { ...newQuery } });
+					}
+
 					page.value = {
 						currentPage: res.meta.current_page,
 						lastPage: res.meta.last_page,
 					};
-
-					// скрол
-					// const rect = anchor.value.getBoundingClientRect();
-					// const offset = window.scrollY + rect.top - settingStore.headerHeight;
-					// smoothScroll(offset, false);
-
-					router.replace({ query: { ...newQuery } });
 				}
 			})
 			.finally(() => {
