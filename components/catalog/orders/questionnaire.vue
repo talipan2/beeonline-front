@@ -42,22 +42,27 @@
 						/>
 					</div>
 					<!-- Второй вопрос: найден ли исполнитель на данной платформе -->
-					<div class="form-group-data">
-						<label class="form-group__title">
-							2. Найден ли исполнитель на нашей платформе?
-						</label>
-						<UiRadioButtonGroup
-							:rules="{ required: true }"
-							class="form-group__value"
-							:options="[
-								{ id: 1, value: 1, label: 'Да' },
-								{ id: 0, value: 0, label: 'Нет' },
-							]"
-							v-model="questionnaireData.found_performer_on_platform"
-							name="found_performer_on_platform"
-							label="Найден ли исполнитель на нашей платформе?"
-						/>
-					</div>
+					<transition name="fade">
+						<div
+							class="form-group-data"
+							v-if="showAnotherQuestion"
+						>
+							<label class="form-group__title">
+								2. Найден ли исполнитель на нашей платформе?
+							</label>
+							<UiRadioButtonGroup
+								:rules="{ required: showAnotherQuestion ? true : false }"
+								class="form-group__value"
+								:options="[
+									{ id: 1, value: 1, label: 'Да' },
+									{ id: 0, value: 0, label: 'Нет' },
+								]"
+								v-model="questionnaireData.found_performer_on_platform"
+								name="found_performer_on_platform"
+								label="Найден ли исполнитель на нашей платформе?"
+							/>
+						</div>
+					</transition>
 					<!-- Кнопки управления формой -->
 					<div class="questionnaire-modal__buttons">
 						<UiButton
@@ -202,6 +207,18 @@
 	const hasMoreData = ref(true); // Есть ли еще данные для загрузки
 
 	/**
+	 * Данные формы опроса
+	 */
+	const questionnaireData = ref({
+		found_performer: null, // Найден ли исполнитель (1 - да, 0 - нет)
+		found_performer_on_platform: null, // Найден ли исполнитель на платформе (1 - да, 0 - нет)
+	});
+
+	const showAnotherQuestion = computed(
+		() => questionnaireData.value.found_performer === 1
+	);
+
+	/**
 	 * Состояние пагинации для бесконечного скролла
 	 */
 	const page = ref({
@@ -234,14 +251,6 @@
 	};
 
 	/**
-	 * Данные формы опроса
-	 */
-	const questionnaireData = ref({
-		found_performer: null, // Найден ли исполнитель (1 - да, 0 - нет)
-		found_performer_on_platform: null, // Найден ли исполнитель на платформе (1 - да, 0 - нет)
-	});
-
-	/**
 	 * Методы, доступные родительскому компоненту
 	 */
 	defineExpose({
@@ -259,31 +268,42 @@
 	 * @param {Object} form - Объект формы
 	 */
 	const handleSubmit = (values, form) => {
-		entityStore.orderUnpublish(props.orderId, values, form).then((res) => {
-			// Обновляем данные заказа в сторе
-			const order = entityStore.organizationOrders.find(
-				(item) => item.id === props.orderId
-			);
+		entityStore
+			.orderUnpublish(
+				props.orderId,
+				{
+					...values,
+					found_performer_on_platform: values.found_performer_on_platform
+						? 1
+						: 0,
+				},
+				form
+			)
+			.then((res) => {
+				// Обновляем данные заказа в сторе
+				const order = entityStore.organizationOrders.find(
+					(item) => item.id === props.orderId
+				);
 
-			if (order) {
-				Object.assign(order, res?.data);
-			}
-			toast.success('Заказ успешно снят с публикации');
-			orderPublicationId.value = res?.data?.order_publication_id;
+				if (order) {
+					Object.assign(order, res?.data);
+				}
+				toast.success('Заказ успешно снят с публикации');
+				orderPublicationId.value = res?.data?.order_publication_id;
 
-			// Если исполнитель найден и найден на платформе - показываем список исполнителей
-			if (
-				orderPublicationId.value &&
-				values.found_performer === 1 &&
-				values.found_performer_on_platform === 1
-			) {
-				isQuestionnaireSending.value = true;
-				getPerformers();
-			} else {
-				// Иначе просто закрываем модалку
-				confirm();
-			}
-		});
+				// Если исполнитель найден и найден на платформе - показываем список исполнителей
+				if (
+					orderPublicationId.value &&
+					values.found_performer === 1 &&
+					values.found_performer_on_platform === 1
+				) {
+					isQuestionnaireSending.value = true;
+					getPerformers();
+				} else {
+					// Иначе просто закрываем модалку
+					confirm();
+				}
+			});
 	};
 
 	/**
@@ -495,6 +515,19 @@
 			font-size: 1.4em;
 			font-weight: 400;
 			-webkit-line-clamp: 3;
+		}
+
+		.fade-enter-active,
+		.fade-leave-active {
+			transition: all 0.3s ease;
+		}
+		.fade-enter-from {
+			transform: translateY(50px);
+			opacity: 0;
+		}
+		.fade-leave-to {
+			transform: translateY(-50px);
+			opacity: 0;
 		}
 	}
 </style>
