@@ -1,7 +1,9 @@
 <template>
 	<RegisterLayout
 		:block-title="`${
-			role === 'customer' ? 'Регистрация заказчика' : 'Регистрация производителя'
+			role === 'customer'
+				? 'Регистрация заказчика'
+				: 'Регистрация производителя'
 		}`"
 		title="Контактные данные"
 		description="Указанные данные не разглашаются третьим лицам и необходимы для успешной работы на портале."
@@ -87,13 +89,32 @@
 						:rules="{ required: true }"
 						v-model="userData.privacyPolicy"
 					>
-						Я согласен(а) с&nbsp;
-						<NuxtLink
-							to="/page-policy"
-							target="_blank"
-						>
-							политикой конфиденциальности.
-						</NuxtLink>
+						<span class="register__checkbox-text">
+							Я согласен(а) с
+							<NuxtLink
+								to="/page-policy"
+								target="_blank"
+							>
+								политикой конфиденциальности.
+							</NuxtLink>
+						</span>
+					</UiCheckbox>
+				</div>
+				<div class="register__checkbox">
+					<UiCheckbox
+						name="Согласие на обработку персональных данных"
+						:rules="{ required: true }"
+						v-model="userData.personalData"
+					>
+						<span class="register__checkbox-text">
+							Я согласен(а) с
+							<NuxtLink
+								to="/page-personal-data"
+								target="_blank"
+							>
+								соглашением на обработку персональных данных.
+							</NuxtLink>
+						</span>
 					</UiCheckbox>
 				</div>
 			</div>
@@ -128,10 +149,11 @@
 		jobTitle: '',
 		email: '',
 		phone: '',
-		privacyPolicy: true,
+		privacyPolicy: false,
 		role: role.value,
 		country_code: '',
 		organization_name: '',
+		personalData: false,
 	});
 	const isCreateOrder = computed(() => settingStore.isCreateOrder);
 
@@ -217,6 +239,18 @@
 				@include mobile {
 					flex: 0 1 100%;
 				}
+			}
+		}
+
+		&__checkbox {
+			a {
+				display: inline;
+			}
+		}
+
+		@include mobile {
+			&__checkbox {
+				margin-bottom: 1em !important;
 			}
 		}
 	}

@@ -30,7 +30,7 @@
 	const router = useRouter();
 	const isLoading = ref(false);
 
-	const code = router.currentRoute.value.path.split('-').pop();
+	const code = router.currentRoute.value.path.replace('/page-', '');
 	await settingStore
 		.getPageContent(code)
 		.then((res) => {
@@ -70,6 +70,12 @@
 			font-size: 1.6em;
 			list-style-type: decimal;
 			list-style-position: inside;
+			padding-left: 1em;
+
+			p {
+				font-size: 1em;
+				display: inline;
+			}
 		}
 
 		a {
@@ -84,6 +90,20 @@
 		ol {
 			list-style-position: inside;
 			padding: 0;
+		}
+
+		table {
+			border-collapse: collapse;
+
+			th,
+			td {
+				border: 1px solid var(--border-color-secondary);
+				padding: 8px 12px;
+			}
+
+			@include mobile {
+				font-size: 0.7em;
+			}
 		}
 	}
 </style>
