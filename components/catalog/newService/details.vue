@@ -601,8 +601,8 @@
 			.then((res) => {
 				reviewList.value = res.data;
 				reviewsPage.value = {
-					page: res.pagination.current_page,
-					last_page: res.pagination.last_page,
+					page: res.meta.current_page,
+					last_page: res.meta.last_page,
 				};
 			});
 	};
