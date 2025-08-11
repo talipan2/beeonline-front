@@ -146,8 +146,8 @@ watch(() => organizationId.value, (newVal) => {
     reviewStore.getOrganizationReviews(newVal).then((res) => {
       reviews.value = res.data
       reviewsPage.value = {
-        currentPage: res.pagination.current_page,
-        lastPage: res.pagination.last_page
+        currentPage: res.meta.current_page,
+        lastPage: res.meta.last_page
       }
     }).finally(() => isLoading.value = false)
   }
@@ -164,8 +164,8 @@ const handleChangeReviewsPage = (page) => {
     console.log(res)
     reviews.value = res.data
     reviewsPage.value = {
-      currentPage: res.pagination.current_page,
-      lastPage: res.pagination.last_page
+      currentPage: res.meta.current_page,
+      lastPage: res.meta.last_page
     }
   }).finally(() => isLoading.value = false)
 }
