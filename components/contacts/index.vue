@@ -5,7 +5,7 @@
     </p>
     <div class="contacts-container__contacts">
       <div class="contacts-container__contact-item">
-        125284, г. Москва, вн.тер.г. муниципальный округ Беговой, пр-кт Ленинградский, д. 35, стр. 2, помещ. 117
+        125284, г. Москва, вн.тер.г. Муниципальный округ Беговой, пр-кт Ленинградский д. 35, стр.2, помещ. 214
       </div>
       <div class="contacts-container__contact-item">
         <a href="tel:+7(495)256-06-26">+7 (495) 256-06-26</a>
@@ -76,7 +76,7 @@ const formatPhone = (phone) => phone.replace(/[\s()-]/g, '');
 
   a:hover {
       text-decoration: underline;
-  } 
+  }
 
   &__text {
     margin-bottom: 2em;
@@ -93,7 +93,7 @@ const formatPhone = (phone) => phone.replace(/[\s()-]/g, '');
       margin-left: .3em;
     }
   }
-  
+
   &__title {
     font-size: 1.5em;
     margin-block: 1.25em .83em;
@@ -178,7 +178,7 @@ const formatPhone = (phone) => phone.replace(/[\s()-]/g, '');
     &__managers {
       gap: 1.7rem;
     }
-    
+
     &__manager {
       flex-basis: 100%;
       max-width: 100%;
