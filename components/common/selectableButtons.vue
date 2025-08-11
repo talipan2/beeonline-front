@@ -33,6 +33,7 @@
 				variant="quinary"
 				size="small"
 				@click="toggleExpand"
+				ref="moreButton"
 			>
 				{{ isExpanded ? 'Свернуть' : 'Еще' }}
 			</UiButton>
@@ -102,7 +103,7 @@
 				<UiButton
 					type="button"
 					variant="quinary"
-					@click="mobileModal = false"
+					@click="emit('updateFilter')"
 				>
 					Применить
 				</UiButton>
@@ -139,12 +140,14 @@
 	const resizeObserver = ref(null);
 	const selectedList = ref([]);
 	const mobileModal = ref(false);
+	const moreButton = ref(null);
+	const router = useRouter();
 
 	const showMoreButton = computed(() => {
 		return buttons.value.length > visibleCount.value;
 	});
 
-	const emit = defineEmits(['update:modelValue']);
+	const emit = defineEmits(['update:modelValue', 'updateFilter']);
 
 	function toggleSelection(button) {
 		const buttonId = button.id; // Получаем id из объекта кнопки
@@ -165,6 +168,7 @@
 			// Удаляем id из modelValue
 			const newIds = props.modelValue.filter((id) => id !== buttonId);
 			emit('update:modelValue', newIds);
+			emit('updateFilter');
 		} else {
 			return;
 		}
@@ -205,15 +209,20 @@
 		return gaps.reduce((sum, val) => sum + val, 0) / gaps.length;
 	}
 
-	function calculateVisible() {
+	async function calculateVisible() {
+		await new Promise((resolve) => requestAnimationFrame(resolve));
 		if (!container.value || buttons.value.length === 0) return;
 
 		const gap = getComputedGap(listRef.value);
-		console.log(gap);
 		const containerWidth = container.value.offsetWidth;
 		let totalWidth = 0;
 		let count = 0;
-		const moreBtnWidth = showMoreButton.value ? 140 : 0;
+
+		// Получаем ширину кнопки "Ещё"
+		let moreBtnWidth = 140; // Значение по умолчанию
+		if (moreButton.value?.$el) {
+			moreBtnWidth = moreButton.value.$el.offsetWidth;
+		}
 
 		for (const [index, btn] of buttons.value.entries()) {
 			if (!btn?.$el) continue;
@@ -222,11 +231,13 @@
 			const currentGap = index > 0 ? gap : 0;
 			const newTotalWidth = totalWidth + currentGap + btnWidth;
 
-			if (
-				newTotalWidth + (showMoreButton.value ? gap + moreBtnWidth : 0) >
-					containerWidth &&
-				count > 0
-			) {
+			// Проверяем, нужна ли кнопка "Ещё" (если есть ещё кнопки после текущей)
+			const needsMoreButton = index < buttons.value.length - 1;
+			const spaceWithMoreButton = needsMoreButton
+				? newTotalWidth + gap + moreBtnWidth
+				: newTotalWidth;
+
+			if (spaceWithMoreButton > containerWidth && count > 0) {
 				break;
 			}
 
@@ -269,11 +280,9 @@
 
 	onMounted(() => {
 		// Инициализация при монтировании, если кнопки уже есть
-		if (buttons.value.length > 0) {
-			nextTick(() => {
-				calculateVisible();
-			});
-		}
+		nextTick(() => {
+			calculateVisible();
+		});
 	});
 </script>
 

@@ -47,6 +47,7 @@
 					mobileButtonText="Категории"
 					:iconButton="clothes"
 					ref="selectableButtons"
+					@updateFilter="() => handleUpdateFilter(filter)"
 				>
 					<div
 						class="new-service__filters"
@@ -92,7 +93,7 @@
 									class="new-service__btn"
 									variant="quinary"
 									size="large"
-									@click="handleUpdateFilter(filter)"
+									@click="handleSelectFilters(filter)"
 								>
 									Применить фильтры
 								</UiButton>
@@ -202,7 +203,9 @@
 	watch(
 		() => filter.value.categories,
 		(newValue) => {
-			handleUpdateFilter(filter.value);
+			if (!isMobile.value) {
+				handleUpdateFilter(filter.value);
+			}
 		}
 	);
 
@@ -213,11 +216,15 @@
 		}
 	);
 
-	// Фильтр
-	const handleUpdateFilter = (data) => {
+	const handleSelectFilters = () => {
 		if (selectableButtons.value) {
 			selectableButtons.value.hideExpand();
 		}
+		handleUpdateFilter(filter.value);
+	};
+
+	// Фильтр
+	const handleUpdateFilter = (data) => {
 		// Если фильтры не выбраны
 		if (!data || data.length === 0) {
 			router.replace({});
@@ -330,9 +337,9 @@
 						const offset =
 							window.scrollY + rect.top - settingStore.headerHeight;
 						smoothScroll(offset, false);
-
-						router.replace({ query: { ...newQuery } });
 					}
+
+					router.replace({ query: { ...newQuery } });
 
 					page.value = {
 						currentPage: res.meta.current_page,
