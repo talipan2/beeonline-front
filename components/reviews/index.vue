@@ -119,11 +119,13 @@ const reviewsListFormatted = computed(() => {
       rate: item.rate,
       positive: item.text_positive,
       negative: item.text_negative,
+      status_name: item.status_name,
+      status_code: item.status_code,
       about: {
-        id: item.about_org.id,
-        name: item.about_org.name,
-        image: item.about_org.image,
-        role: item.about_org.type,
+        id: item.about_pubcard.id,
+        name: item.about_pubcard.name,
+        image: item.about_pubcard.image,
+        role: item.about_pubcard.type,
       },
     };
   });
@@ -139,10 +141,10 @@ const reviewsAboutUsListFormatted = computed(() => {
       positive: item.text_positive,
       negative: item.text_negative,
       about: {
-        id: item.owner_org.id,
-        name: item.owner_org.name,
-        image: item.owner_org.image,
-        role: item.owner_org.type,
+        id: item.owner_pubcard.id,
+        name: item.owner_pubcard.name,
+        image: item.owner_pubcard.image,
+        role: item.owner_pubcard.type,
       },
     };
   });
@@ -233,10 +235,10 @@ const getReviews = (filters) => {
     if (res) {
       if (res.data) {
         reviewsList.value = res.data;
-        if (res.pagination) {
-          pageReviews.value.currentPage = res.pagination.current_page;
-          pageReviews.value.lastPage = res.pagination.last_page;
-          pageReviews.value.total = res.pagination.total;
+        if (res.meta) {
+          pageReviews.value.currentPage = res.meta.current_page;
+          pageReviews.value.lastPage = res.meta.last_page;
+          pageReviews.value.total = res.meta.total;
         }
       }
     }
@@ -255,10 +257,10 @@ const getReviewsForUs = (filters) => {
     if (res) {
       if (res.data) {
         reviewsAboutUsList.value = res.data;
-        if (res.pagination) {
-          pageReviewsAboutUs.value.currentPage = res.pagination.current_page;
-          pageReviewsAboutUs.value.lastPage = res.pagination.last_page;
-          pageReviewsAboutUs.value.total = res.pagination.total;
+        if (res.meta) {
+          pageReviewsAboutUs.value.currentPage = res.meta.current_page;
+          pageReviewsAboutUs.value.lastPage = res.meta.last_page;
+          pageReviewsAboutUs.value.total = res.meta.total;
         }
       }
     }
@@ -304,11 +306,11 @@ onMounted(() => {
     if (res) {
       if (res.data) {
         reviewsList.value = res.data;
-        if (res.pagination) {
+        if (res.meta) {
           pageReviews.value = {
-            currentPage: res.pagination.current_page,
-            lastPage: res.pagination.last_page,
-            total: res.pagination.total,
+            currentPage: res.meta.current_page,
+            lastPage: res.meta.last_page,
+            total: res.meta.total,
           };
         }
       }
@@ -321,11 +323,11 @@ onMounted(() => {
     if (res) {
       if (res.data) {
         reviewsAboutUsList.value = res.data;
-        if (res.pagination) {
+        if (res.meta) {
           pageReviewsAboutUs.value = {
-            currentPage: res.pagination.current_page,
-            lastPage: res.pagination.last_page,
-            total: res.pagination.total,
+            currentPage: res.meta.current_page,
+            lastPage: res.meta.last_page,
+            total: res.meta.total,
           };
         }
       }

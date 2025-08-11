@@ -185,6 +185,25 @@
 				</span>
 			</UiCheckbox>
 		</div>
+		<div class="form-group form-group_type_secondary">
+			<UiCheckbox
+				:rules="{ required: true }"
+				v-model="data.personal_data"
+				name="personal_data"
+				label="Согласие на обработку персональных данных"
+			>
+				<span>
+					Я согласен(a) с
+					<NuxtLink
+						href="/page-personal-data"
+						target="_blank"
+						:style="{ display: 'inline' }"
+					>
+						соглашением на обработку персональных данных
+					</NuxtLink>
+				</span>
+			</UiCheckbox>
+		</div>
 	</div>
 </template>
 

@@ -50,6 +50,8 @@
 		company: '',
 		site: '',
 		country_code: '',
+		privacy_policy: false,
+		personal_data: false,
 	});
 
 	const openAuthModal = () => {

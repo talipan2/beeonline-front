@@ -92,6 +92,14 @@
 					</li>
 					<li class="footer__additionally-item">
 						<NuxtLink
+							to="/page-personal-data"
+							class="footer__additionally-link"
+						>
+							Согласие на обработку персональных данных
+						</NuxtLink>
+					</li>
+					<li class="footer__additionally-item">
+						<NuxtLink
 							to="/page-oferta"
 							class="footer__additionally-link"
 						>

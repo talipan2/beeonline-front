@@ -40,8 +40,8 @@ const pageTitle = ref('');
 
 const review = ref({});
 const reviewsState = computed(() => {
-  console.log(review.value.owner_org?.id, userStore.userOrganization.id)
-  if(review.value.owner_org?.id === userStore.userPubCard.id) {
+  console.log(review.value.owner_pubcard?.id, userStore.userOrganization.id)
+  if(review.value.owner_pubcard?.id === userStore.userPubCard.id) {
     return 'my-reviews';
   } else {
     return 'reviews';
@@ -64,7 +64,7 @@ if (reviewId) {
   await reviewsStore.getReview(reviewId).then((res) => {
     review.value = res;
     if(reviewsState.value === 'reviews') {
-      organizationStore.getPubCard(res.owner_org?.id)
+      organizationStore.getPubCard(res.owner_pubcard?.id)
       .then((res) => {
         review.value = {
           ...review.value,
@@ -73,7 +73,7 @@ if (reviewId) {
         otherSidePubCard.value = res;
       });
     } else {
-      organizationStore.getPubCard(res.about_org?.id)
+      organizationStore.getPubCard(res.about_pubcard?.id)
         .then((res) => {
           review.value = {
             ...review.value,
@@ -92,7 +92,7 @@ if (reviewId) {
 //     reviewsStore.getReview(reviewId).then((res) => {
 //       review.value = res;
 //       if(reviewsState.value === 'reviews') {
-//         organizationStore.getPubCard(res.owner_org?.id)
+//         organizationStore.getPubCard(res.owner_pubcard?.id)
 //         .then((res) => {
 //           review.value = {
 //             ...review.value,
@@ -101,7 +101,7 @@ if (reviewId) {
 //           otherSidePubCard.value = res;
 //         });
 //       } else {
-//         organizationStore.getPubCard(res.about_org?.id)
+//         organizationStore.getPubCard(res.about_pubcard?.id)
 //           .then((res) => {
 //             review.value = {
 //               ...review.value,
