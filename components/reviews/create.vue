@@ -25,7 +25,7 @@
 					label="плюсы сотрудничества"
 					name="text_positive"
 					:rules="{ required: true, min: 5 }"
-					v-model="reviewData.advantagesOfCooperation"
+					v-model="reviewData.text_positive"
 				/>
 			</label>
 		</div>
@@ -38,7 +38,7 @@
 					label="минусы сотрудничества"
 					name="text_negative"
 					:rules="{ required: true, min: 5 }"
-					v-model="reviewData.disadvantagesOfCooperation"
+					v-model="reviewData.text_negative"
 				/>
 			</label>
 		</div>
@@ -76,10 +76,16 @@
 	import { useSettingStore } from '~/store/settingStore';
 	import { useUserStore } from '~/store/userStore';
 
-	const emit = defineEmits(['submit']);
+	const props = defineProps({
+		review: {
+			type: Object,
+			default: () => ({}),
+		},
+	});
 
 	const settingStore = useSettingStore();
 	const userStore = useUserStore();
+	const emit = defineEmits(['submit']);
 
 	const fileLoad = ref(null);
 	const maxFilesSize = 2048;
@@ -102,9 +108,9 @@
 	const formData = ref(new FormData());
 	const reviewData = ref({
 		rate: null,
-		advantagesOfCooperation: null,
-		disadvantagesOfCooperation: null,
-		files: [],
+		text_positive: null,
+		text_negative: null,
+		media_ids: [],
 	});
 
 	const uploadedFiles = ref([]);
@@ -130,16 +136,28 @@
 	};
 
 	const handleSubmit = (values, form) => {
-		console.log(
-			{ ...values, media_ids: uploadedFiles.value.map((item) => item.id) },
-			form
-		);
+		console.log(values, form);
 		emit(
 			'submit',
 			{ ...values, media_ids: uploadedFiles.value.map((item) => item.id) },
 			form
 		);
 	};
+
+	onMounted(() => {
+		if (props.review) {
+			reviewData.value = {
+				...props.review,
+			};
+
+			uploadedFiles.value = props.review.files.map((item) => ({
+				id: item.id,
+				name: item.url.split('/').pop(),
+				url: item.url,
+				type: item.url.split('.').pop().toLowerCase(),
+			}));
+		}
+	});
 </script>
 
 <style lang="scss">
