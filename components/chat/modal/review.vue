@@ -149,6 +149,12 @@ export default {
     },
     submit(values, form) {
       console.log(this.role, this.org_id)
+      let media_ids = [];
+      this.files.forEach(file => {
+        if(file.id) {
+          media_ids.push(file.id);
+        }
+      })
       useReviewsStore().createReview({
         user_id: this.ownerUserid,
         owner_org_id: this.ownerOrgId,
@@ -159,18 +165,13 @@ export default {
         text_negative: values.negative,
         rate: this.rate,
         chat_id: this.chat_id,
+        media_ids: media_ids
       }, form)
         .then((data) => {
-          console.log(data);
-          let media_ids = [];
-          this.files.forEach(file => {
-            if(file.id) {
-              media_ids.push(file.id);
-            }
-          })
-          if(media_ids.length) {
-            useReviewsStore().addReviewFiles(data.id, {media_ids});
-          }
+          // console.log(data);
+          // if(media_ids.length) {
+          //   useReviewsStore().addReviewFiles(data.id, {media_ids});
+          // }
           useToast().success('Отзыв успешно отправлен');
           this.close();
           this.reset();

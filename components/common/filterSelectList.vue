@@ -63,6 +63,8 @@
 				return participantOptions;
 			case 'status':
 				return entityStatusOptions;
+			case 'reviews_status':
+				return reviewsStatusOptions;
 		}
 	};
 
@@ -87,6 +89,13 @@
 		{ id: 2, label: '1 месяц', value: 'month' },
 		{ id: 3, label: '1 год', value: 'year' },
 	]);
+
+	const reviewsStatusOptions = [
+		{ id: 0, label: 'Все статусы', value: 'all' },
+		{ id: 1, label: 'Опубликованные', value: 'PUBLISHED' },
+		{ id: 2, label: 'На модерации', value: 'UNDER_MODERATION' },
+		{ id: 3, label: 'Отклоненные', value: 'REJECTED' },
+	];
 
 	const statusReviewOptions = [
 		{ id: 0, label: 'Все отзывы', value: 'all' },
