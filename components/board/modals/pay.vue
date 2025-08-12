@@ -30,10 +30,11 @@
 					</UiButton>
 				</div>
 			</div>
-			<PaidServiceAnnouncement
+			<!-- <PaidServiceAnnouncement
 				ref="announcementPayModal"
 				:id="announcementId"
-			/>
+				@updateData="emit('updateData', $event)"
+			/> -->
 		</template>
 	</UiModal>
 </template>
@@ -41,7 +42,7 @@
 <script setup>
 	import { useSettingStore } from '~/store/settingStore';
 
-	const emit = defineEmits(['update:isOpen']);
+	const emit = defineEmits(['update:isOpen', 'updateData', 'openAnnouncementPayModal']);
 
 	const props = defineProps({
 		isOpen: {
@@ -67,17 +68,9 @@
 
 	const announcementPayModal = ref(null);
 
-	const isOpenModal = computed({
-		get() {
-			return props.isOpen;
-		},
-		set(value) {
-			emit('update:isOpen', value);
-		},
-	});
-
 	const openPayModal = () => {
-		announcementPayModal.value.open(props.announcementId);
+		emit('openAnnouncementPayModal', {id: props.announcementId});
+		confirm();
 	};
 
 	const confirm = () => {

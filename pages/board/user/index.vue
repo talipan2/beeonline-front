@@ -114,7 +114,7 @@
 	 * @param {number} page - номер новой страницы
 	 */
 	const handleUpdatePage = (page) => {
-		handleFetchData({ ...params.value, page });
+		handleFetchData({page: page});
 	};
 
 	const handleUpdateData = (announcement) => {
