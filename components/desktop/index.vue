@@ -417,12 +417,12 @@ onMounted(() => {
             id: item.id,
             text: item.text_positive,
             rating: item.rate,
-            name: item.owner_org?.name,
-            logo: item.owner_org?.logo,
+            name: item.owner_pubcard?.name,
+            logo: item.owner_pubcard?.logo,
             date: item.date_created,
           }
         });
-        reviewsAboutUsListTotal.value = res.pagination?.total;
+        reviewsAboutUsListTotal.value = res.meta?.total;
       }
     }
   }).finally(() => {
@@ -437,12 +437,12 @@ onMounted(() => {
             id: item.id,
             text: item.text_positive,
             rating: item.rate,
-            name: item.about_org?.name,
-            logo: item.about_org?.logo,
+            name: item.about_pubcard?.name,
+            logo: item.about_pubcard?.logo,
             date: item.date_created,
           }
         });
-        reviewsListTotal.value = res.pagination?.total;
+        reviewsListTotal.value = res.meta?.total;
       }
     }
   }).finally(() => {
