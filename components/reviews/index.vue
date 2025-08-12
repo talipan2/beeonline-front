@@ -175,7 +175,7 @@
 				about: {
 					id: item.about_pubcard.id,
 					name: item.about_pubcard.name,
-					image: item.about_pubcard.image,
+					image: item.about_pubcard.logo,
 					role: item.about_pubcard.type,
 				},
 			};
@@ -194,7 +194,7 @@
 				about: {
 					id: item.owner_pubcard.id,
 					name: item.owner_pubcard.name,
-					image: item.owner_pubcard.image,
+					image: item.owner_pubcard.logo,
 					role: item.owner_pubcard.type,
 				},
 			};
