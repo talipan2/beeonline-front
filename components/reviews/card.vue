@@ -31,7 +31,7 @@
           <p class="reviews-card__title">Минусы сотрудничества</p>
           <p class="reviews-card__text">{{ data.negative }}</p>
         </div>
-        <NuxtLink class="reviews-card__btn" :to="`reviews/show/${data.id}`" >
+        <NuxtLink class="reviews-card__btn" :to="`/reviews/show/${data.id}`" >
           <span>Подробнее</span>
           <SvgoBtnArrow class="svg-m"/>
         </NuxtLink>
