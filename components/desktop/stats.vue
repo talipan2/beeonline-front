@@ -31,7 +31,7 @@
 									</p>
 								</div> -->
 								<span class="desktop__selected">
-									за неделю (за прошлую неделю)
+									за месяц (за прошлый месяц)
 								</span>
 							</div>
 						</div>
@@ -58,7 +58,7 @@
                   <p class="stats__status-text">{{ data.order_views?.percentage || 0 }}%</p>
                 </div> -->
 								<span class="desktop__selected">
-									за неделю (за прошлую неделю)
+									за месяц (за прошлый месяц)
 								</span>
 							</div>
 						</div>
@@ -85,7 +85,7 @@
                     <p class="stats__status-text">{{ data.service_views?.percentage || 0 }}%</p>
                     </div> -->
 									<span class="desktop__selected">
-										за неделю (за прошлую неделю)
+										за месяц (за прошлый месяц)
 									</span>
 								</div>
 							</div>
@@ -115,7 +115,7 @@
                   <p class="stats__status-text">{{ data.favorites?.percentage || 0 }}%</p>
                 </div> -->
 								<span class="desktop__selected">
-									за неделю (за прошлую неделю)
+									за месяц (за прошлый месяц)
 								</span>
 							</div>
 						</div>

@@ -43,6 +43,7 @@
 				:title="modalText.title"
 				:text="modalText.text"
 				:announcementId="data.id"
+				@openAnnouncementPayModal="handleOpenAnnouncementPayModal"
 			/>
 			<CreateEntityFinalModal
 				text="Спасибо за размещенное объявление. Оно отправлено на модерацию. При желании вы можете заполнить данные об организации"
@@ -93,6 +94,7 @@
 			announcementPayModal.value.open(data?.id);
 		}
 	};
+
 	const editAnnouncementModal = ref({
 		data: {},
 		isOpen: false,
