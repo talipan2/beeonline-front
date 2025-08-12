@@ -3,6 +3,13 @@
 		class="reviews"
 		:class="{ loading: isLoading }"
 	>
+  <CommonNotify
+    v-if="countRejectReviews > 0"
+    :text="`У вас есть отклоненные отзывы после модерации.`"
+    type="danger"
+    :btn-text="'Перейти к отклоненным отзывам'"
+    :btn-function="() => activeFilterMyReviews = {status: 'REJECTED'}"
+  />
 		<CommonSelectorListButtons
 			:buttonsList="selectorButtons"
 			@updateActiveButton="updateActiveButton"
@@ -36,7 +43,6 @@
 			:filters="filterList"
 			@setFilters="setFilters"
 			:activeFilters="activeFilterReviewsAboutUs"
-			:filter-mapping="filterMapping"
 		/>
 		<div class="reviews__list">
 			<template v-if="currentButtonType === 'my-reviews'">
@@ -370,6 +376,7 @@
 		activeFilterMyReviews.value = {
 			rate: query.rate || 'all',
 			org_type: query.org_type || 'all',
+			status: query.status || 'all',
 		};
 		reviewsParams = deleteEmptyFilters({ ...activeFilterMyReviews.value });
 		if (query.page) {

@@ -48,6 +48,25 @@
 	const selectedFilters = ref({});
 	const emit = defineEmits(['setFilters']);
 
+	// Создаем обратный маппинг (из имен бэкенда в имена фронтенда)
+	const reverseFilterMapping = computed(() => {
+		const reverse = {};
+		for (const [frontendKey, backendKey] of Object.entries(props.filterMapping)) {
+			reverse[backendKey] = frontendKey;
+		}
+		return reverse;
+	});
+
+	// Функция для преобразования параметров бэкенда в фронтенд имена
+	const mapBackendToFrontend = (backendParams) => {
+		const frontendParams = {};
+		for (const [backendKey, value] of Object.entries(backendParams)) {
+			const frontendKey = reverseFilterMapping.value[backendKey] || backendKey;
+			frontendParams[frontendKey] = value;
+		}
+		return frontendParams;
+	};
+
 	// Функция для возвращения нужных опций в зависимости от типа фильтра
 	const getOptions = (type) => {
 		switch (type) {
@@ -148,12 +167,17 @@
 	watch(
 		() => props.activeFilters,
 		(newVal, oldVal) => {
-			// if (Object.keys(newVal).length !== 0 && (JSON.stringify(newVal) !== JSON.stringify(oldVal))) {
-			//   selectedFilters.value = { ...newVal }; // Обновляем выбранные фильтры
-			// }
-
 			if (Object.keys(newVal).length === 0) {
 				resetFilters();
+				return;
+			}
+
+			// Если значения изменились, обновляем selectedFilters с учетом маппинга
+			if (JSON.stringify(newVal) !== JSON.stringify(oldVal)) {
+				const mappedActiveFilters = mapBackendToFrontend(newVal);
+				props.filters.forEach((filter) => {
+					selectedFilters.value[filter] = mappedActiveFilters[filter] || 'all';
+				});
 			}
 		},
 		{ deep: true, immediate: true }
@@ -162,8 +186,12 @@
 	// Инициализируем значения фильтров
 	onMounted(async () => {
 		await nextTick();
+		
+		// Преобразуем activeFilters из имен бэкенда в имена фронтенда если нужно
+		const mappedActiveFilters = mapBackendToFrontend(props.activeFilters);
+		
 		props.filters.forEach((filter) => {
-			selectedFilters.value[filter] = props.activeFilters[filter] || 'all';
+			selectedFilters.value[filter] = mappedActiveFilters[filter] || 'all';
 		});
 	});
 </script>
