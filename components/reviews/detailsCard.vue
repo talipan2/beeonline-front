@@ -71,7 +71,7 @@ const props = defineProps({
 const formattedFileList = computed(() => {
   if(props.data.files) {
     return props.data.files.map((file) => {
-      return {id: file.id, name: file.url, url: file.url, type: file.url.split('.').pop().toLowerCase()}
+      return {id: file.id, name: file.url.split('/').pop(), url: file.url, type: file.url.split('.').pop().toLowerCase()}
     })
   } else {
     return []
