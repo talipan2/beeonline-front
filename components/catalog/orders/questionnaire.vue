@@ -363,17 +363,18 @@
 					about_org_id: selectedPerformer.value.id,
 					about_org_type: selectedPerformer.value.performer_pubcard.type,
 					order_publication_id: orderPublicationId.value,
+					media_ids: values.media_ids,
 				},
 				form
 			)
 			.then((res) => {
-				console.log(res);
+				// console.log(res);
 				// Добавляем файлы к отзыву, если они есть
-				if (values.media_ids.length > 0) {
-					reviewsStore.addReviewFiles(res?.id, {
-						media_ids: values.media_ids,
-					});
-				}
+				// if (values.media_ids.length > 0) {
+				// 	reviewsStore.addReviewFiles(res?.id, {
+				// 		media_ids: values.media_ids,
+				// 	});
+				// }
 				isOpenReviewModal.value = false;
 				confirm();
 				toast.success('Отзыв успешно отправлен');
