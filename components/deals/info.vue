@@ -29,20 +29,20 @@
                     >Отменить сделку</UiButton
                 >
                 <template v-if="deal.is_manager">
-                    <UiButton
+                    <!-- <UiButton
                         type="button"
                         class="deals-info__button deals-info__button_type_reset"
                         variant="tertiary"
                         @click="emit('action', 'reset')"
                         >Сбросить сделку</UiButton
-                    >
-                    <UiButton
+                    > -->
+                    <!-- <UiButton
                         type="button"
                         class="deals-info__button"
                         variant="quinary"
                         @click="emit('action', 'arbitrage')"
                         >Начать арбитраж</UiButton
-                    >
+                    > -->
                 </template>
                 <template v-else>
                     <UiButton
