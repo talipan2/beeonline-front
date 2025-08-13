@@ -28,13 +28,14 @@
     </template>
     <div class="review-card__answer" v-if="data.reply?.id">
       <div class="image-box review-card__answer-logo">
-        <img :src="data.aboutOrgLogo || defaultImageLogo" alt="Логотип" v-if="reviewsState">
-        <img :src="data.reply?.pubcard_logo || defaultImageLogo" alt="Логотип" v-else>
+        <img :src="data.about_pubcard.logo || defaultImageLogo" alt="Логотип" v-if="reviewsState === 'my-reviews'">
+        <img :src="data.owner_pubcard.logo || defaultImageLogo" alt="Логотип" v-else-if="reviewsState === 'reviews'">
+        <img :src="data.about_pubcard.logo || defaultImageLogo" alt="Логотип" v-else>
       </div>
       <div class="review-card__answer-content">
         <div v-if="!reviewsState">
-          <p class="review-card__answer-date">{{ data.reply?.date_replied }}</p>
-          <h4 class="review-card__answer-title">{{ data.reply?.pubcard_name }}</h4>
+          <p class="review-card__answer-date">{{ formatDate(data.reply?.created_at, 'DD.MM.YYYY mm:HH') }}</p>
+          <h4 class="review-card__answer-title">{{ data.about_pubcard.name }}</h4>
         </div>
         <div v-if="reviewsState === 'my-reviews'">
           <p class="review-card__answer-title">Вам ответили {{ data.reply?.date_replied || formatDate(data.reply?.created_at, 'DD.MM.YYYY mm:HH') }}</p>
@@ -71,7 +72,7 @@ const props = defineProps({
 const formattedFileList = computed(() => {
   if(props.data.files) {
     return props.data.files.map((file) => {
-      return {id: file.id, name: file.url, url: file.url, type: file.url.split('.').pop().toLowerCase()}
+      return {id: file.id, name: file.url.split('/').pop(), url: file.url, type: file.url.split('.').pop().toLowerCase()}
     })
   } else {
     return []

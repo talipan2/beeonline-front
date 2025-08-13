@@ -15,8 +15,8 @@
         </template>
         <CommonFileList class="new-service-reviews__item-files" :data-list="reviewsDocFormat(review.files)" :download-text="true"/>
         <div class="new-service-reviews__item-reply" v-if="review.reply">
-          <span>{{ review.reply.date_replied }}</span>
-          <h4 class="new-service-reviews__item-title">{{ review.reply.pubcard_name }}</h4>
+          <span>{{ formatDate(review.reply.created_at, 'DD.MM.YYYY mm:HH') }}</span>
+          <h4 class="new-service-reviews__item-title">{{ review.about_pubcard.name }}</h4>
           <p class="new-service-reviews__item-text">{{ review.reply.text }}</p>
         </div>
       </div>

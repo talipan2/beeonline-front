@@ -12,6 +12,11 @@
       </div>
     </div>
     <div class="reviews-card__col-2">
+      <template v-if="reviewsState === 'my-reviews'">
+        <div class="reviews-card__status" :class="`reviews-card__status-${data.status_code}`">
+          <span>{{ data.status_name }}</span>
+        </div>
+      </template>
       <div class="reviews-card__rating">
         <p class="reviews-card__rating-text">Оценка: ({{ data.rate }}/5)</p>
         <CommonRating :rating="data.rate" :is-count-rating="false" :is-count-reviews="false"/>
@@ -26,7 +31,7 @@
           <p class="reviews-card__title">Минусы сотрудничества</p>
           <p class="reviews-card__text">{{ data.negative }}</p>
         </div>
-        <NuxtLink class="reviews-card__btn" :to="`reviews/show/${data.id}`" >
+        <NuxtLink class="reviews-card__btn" :to="`/reviews/show/${data.id}`" >
           <span>Подробнее</span>
           <SvgoBtnArrow class="svg-m"/>
         </NuxtLink>
@@ -74,7 +79,7 @@ const role = computed(() => {
   @include tablet {
     font-size: 1.5rem;
   }
-  
+
   @include mobile {
     font-size: 1.3rem;
     flex-wrap: wrap;
@@ -182,6 +187,37 @@ const role = computed(() => {
       margin-top: 2px;
     }
 
+  }
+
+  &__status {
+    margin-bottom: .5em;
+    span {
+        background-color: var(--background-color-secondary);
+        color: var(--text-color-secondary);
+        padding: .25em .41em;
+        border-radius: 5px;
+        font-size: .93em;
+        line-height: 1;
+        font-weight: 500;
+        border: 2px solid currentColor;
+        display: inline-block;
+    }
+
+    &-PUBLISHED {
+        span {
+            color: var(--text-color-success);
+        }
+    }
+    &-REJECTED {
+        span {
+            color: var(--text-color-danger);
+        }
+    }
+    &-UNDER_MODERATION {
+        span {
+            color: var(--text-color-info-primary);
+        }
+    }
   }
 }
 

@@ -1,161 +1,198 @@
 <template>
-  <div class="rating">
-    <div class="rating__wrapper">
-      <div v-if="singleStar" class="rate rate_single" :style="{'--rating': '100%'}">
-      </div>
-      <template v-else>
-        <div class="rate" v-if="isSelected" :class="{ 'rate_selected': hoverRating }"
-          :style="{ '--rating': (hoverRating !== null ? hoverRating : selectedRating || 0) / 5 * 100 + '%' }"
-          @mouseleave="clearHoverRating"
-          @mousemove="setHoverRating"
-          @click="setRating">
-        </div>
-        <div class="rate" v-else
-          :style="{ '--rating': (rating / 5) * 100 + '%' }">
-        </div>
-      </template>
-      <p v-if="isSelected && selectedRating > 0" class="rate__choice">{{ `${selectedRating}/5` }}</p>
-      <p class="rating__count" v-if="isCountRating">{{ rating }}</p>
-      <p class="rating__reviews" v-if="isCountReviews">
-        ({{ reviews }}<span v-if="isReviewText">{{" " + plural(reviews, { one: "отзыв", few: "отзыва", many: "отзывов" })}}</span>)
-      </p>
-    </div>
-    <UiInput
-      v-if="isSelected"
-      v-model="selectedRating"
-      type="number"
-      class="rating__input"
-      name="rate"
-      :rules="{ required: true }"
-      customErrorMessage="Поставьте оценку"
-    />
-  </div>
+	<div class="rating">
+		<div class="rating__wrapper">
+			<div
+				v-if="singleStar"
+				class="rate rate_single"
+				:style="{ '--rating': '100%' }"
+			></div>
+			<template v-else>
+				<div
+					class="rate"
+					v-if="isSelected"
+					:class="{ rate_selected: hoverRating }"
+					:style="{
+						'--rating':
+							((hoverRating !== null ? hoverRating : selectedRating || 0) / 5) *
+								100 +
+							'%',
+					}"
+					@mouseleave="clearHoverRating"
+					@mousemove="setHoverRating"
+					@click="setRating"
+				></div>
+				<div
+					class="rate"
+					v-else
+					:style="{ '--rating': (rating / 5) * 100 + '%' }"
+				></div>
+			</template>
+			<p
+				v-if="isSelected && selectedRating > 0"
+				class="rate__choice"
+			>
+				{{ `${selectedRating}/5` }}
+			</p>
+			<p
+				class="rating__count"
+				v-if="isCountRating"
+			>
+				{{ rating }}
+			</p>
+			<p
+				class="rating__reviews"
+				v-if="isCountReviews"
+			>
+				({{ reviews }}
+				<span v-if="isReviewText">
+					{{
+						' ' +
+						plural(reviews, { one: 'отзыв', few: 'отзыва', many: 'отзывов' })
+					}}
+				</span>
+				)
+			</p>
+		</div>
+		<UiInput
+			v-if="isSelected"
+			v-model="selectedRating"
+			type="number"
+			class="rating__input"
+			name="rate"
+			:rules="{ required: true }"
+			customErrorMessage="Поставьте оценку"
+		/>
+	</div>
 </template>
 
 <script setup>
+	const props = defineProps({
+		rating: {
+			type: Number,
+			default: 0,
+		},
+		isCountReviews: {
+			type: Boolean,
+			default: true,
+		},
+		isCountRating: {
+			type: Boolean,
+			default: true,
+		},
+		isReviewText: {
+			type: Boolean,
+			default: true,
+		},
+		reviews: {
+			type: Number,
+			default: 0,
+		},
+		isSelected: {
+			type: Boolean,
+			default: false,
+		},
+		modelValue: {
+			type: Number,
+			default: 0,
+		},
+		singleStar: {
+			type: Boolean,
+			default: false,
+		},
+	});
 
-const props = defineProps({
-  rating: {
-    type: Number,
-    default: 0,
-  },
-  isCountReviews: {
-    type: Boolean,
-    default: true,
-  },
-  isCountRating: {
-    type: Boolean,
-    default: true,
-  },
-  isReviewText: {
-    type: Boolean,
-    default: true,
-  },
-  reviews: {
-    type: Number,
-    default: 0,
-  },
-  isSelected: {
-    type: Boolean,
-    default: false,
-  },
-  modelValue: {
-    type: Number,
-    default: 0,
-  },
-  singleStar: {
-    type: Boolean,
-    default: false,
-  }
-});
+	const hoverRating = ref(null);
+	const selectedRating = ref(null);
+	const emit = defineEmits(['update:modelValue']);
 
-const hoverRating = ref(null);
-const selectedRating = ref(null);
-const emit = defineEmits(['update:modelValue']);
+	function setHoverRating(event) {
+		const { width, left } = event.currentTarget.getBoundingClientRect();
+		const mouseX = event.clientX - left;
+		hoverRating.value = Math.ceil((mouseX / width) * 5);
+	}
 
-function setHoverRating(event) {
-  const { width, left } = event.currentTarget.getBoundingClientRect();
-  const mouseX = event.clientX - left;
-  hoverRating.value = Math.ceil((mouseX / width) * 5);
-}
+	function clearHoverRating() {
+		hoverRating.value = null;
+	}
 
-function clearHoverRating() {
-  hoverRating.value = null;
-}
+	function setRating() {
+		selectedRating.value = hoverRating.value;
+		emit('update:modelValue', selectedRating.value);
+	}
 
-function setRating() {
-  selectedRating.value = hoverRating.value;
-  emit('update:modelValue', selectedRating.value);
-}
+	watch(
+		() => props.modelValue,
+		(newVal) => {
+			selectedRating.value = newVal;
+		}
+	);
 </script>
 
 <style lang="scss">
-.rating {
+	.rating {
+		&__wrapper {
+			display: flex;
+			align-items: center;
+			flex-wrap: wrap;
+		}
 
-  &__wrapper {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-  }
+		&__reviews {
+			font-size: 1.3rem;
+		}
 
-  &__reviews {
-    font-size: 1.3rem;
-  }
+		&__count {
+			font-size: 1.6rem;
+			margin-right: 0.5em;
+		}
 
-  &__count {
-    font-size: 1.6rem;
-    margin-right: .5em;
-  }
+		&__input {
+			display: none;
+		}
+	}
 
-  &__input {
-    display: none;
-  }
-}
+	.rate {
+		display: inline-flex;
+		position: relative;
+		width: 8em;
+		height: 1.6em;
+		font-size: 1rem;
+		flex-shrink: 0;
+		margin-right: 1.2rem;
 
-.rate {
-  display: inline-flex;
-  position: relative;
-  width: 8em;
-  height: 1.6em;
-  font-size: 1rem;
-  flex-shrink: 0;
-  margin-right: 1.2rem;
+		&_single {
+			width: 1.5em;
+		}
+	}
 
-  &_single {
-    width: 1.5em;
-  }
-}
+	.rate_choice {
+		cursor: pointer;
+		font-size: 20px;
+	}
 
-.rate_choice {
-  cursor: pointer;
-  font-size: 20px;
-}
+	.rate:before,
+	.rate:after {
+		content: '';
+		height: 100%;
+		background: url(~/assets/svg/stars.svg);
+		background-size: 1.6em;
+	}
 
-.rate:before,
-.rate:after {
-  content: "";
-  height: 100%;
-  background: url(~/assets/svg/stars.svg);
-  background-size: 1.6em;
-}
+	.rate:before {
+		background-position: 0 100%;
+		width: var(--rating, 0%);
+	}
 
-.rate:before {
-  background-position: 0 100%;
-  width: var(--rating, 0%);
-}
+	.rate:after {
+		background-position: 100% 0;
+		flex: 1 1 auto;
+	}
 
-.rate:after {
-  background-position: 100% 0;
-  flex: 1 1 auto;
-}
+	.rate_selected {
+		cursor: pointer;
+	}
 
-.rate_selected {
-  cursor: pointer;
-}
-
-.rate__choice {
-  font-size: 1em;
-  color: #565263;
-}
-
+	.rate__choice {
+		font-size: 1em;
+		color: #565263;
+	}
 </style>
