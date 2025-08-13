@@ -150,12 +150,14 @@
 				...props.review,
 			};
 
-			uploadedFiles.value = props.review.files.map((item) => ({
-				id: item.id,
-				name: item.url.split('/').pop(),
-				url: item.url,
-				type: item.url.split('.').pop().toLowerCase(),
-			}));
+			if (props.review?.files && props.review.files.length > 0) {
+				uploadedFiles.value = props.review.files.map((item) => ({
+					id: item.id,
+					name: item.url.split('/').pop(),
+					url: item.url,
+					type: item.url.split('.').pop().toLowerCase(),
+				}));
+			}
 		}
 	});
 </script>
