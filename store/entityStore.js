@@ -571,5 +571,32 @@ export const useEntityStore = defineStore('entity', {
 				throw error;
 			}
 		},
+
+		// Получение исполнителей, с которыми были сообщения в чате
+		async getOrderPublicationsPerformers(id, params) {
+			try {
+				const response = await orderApi.getOrderPublicationsPerformers(
+					id,
+					params
+				);
+				if (response) {
+					return response;
+				}
+			} catch (error) {
+				throw error;
+			}
+		},
+
+		// Снятие заказа с публикации
+		async orderUnpublish(id, values, form) {
+			try {
+				const response = await orderApi.orderUnpublish(id, values, form);
+				if (response) {
+					return response;
+				}
+			} catch (error) {
+				throw error;
+			}
+		},
 	},
 });

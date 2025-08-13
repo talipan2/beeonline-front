@@ -69,6 +69,7 @@
 	import { useLocationStore } from '~/store/locationStore';
 	import { useSettingStore } from '~/store/settingStore';
 	import { useUserStore } from '~/store/userStore';
+	import { useToast } from 'vue-toastification';
 
 	definePageMeta({
 		middleware: 'telegram',
@@ -79,6 +80,7 @@
 	const userStore = useUserStore();
 	const locationStore = useLocationStore();
 	const settingStore = useSettingStore();
+	const toast = useToast();
 
 	const roleName = userStore.getRoleNameForBreadcrumbs;
 
@@ -123,10 +125,14 @@
 						entityStore
 							.editOrder(id, { status: 'under_moderation' })
 							.then(() => {
-								entityStore.getOrganizationOrders(
-									userStore.userData.organization_id
+								const order = entityStore.organizationOrders.find(
+									(item) => item.id === id
 								);
+								if (order) {
+									order.status = 'under_moderation';
+								}
 								settingStore.infoModal = false;
+								toast.success('Заказ отправлен на модерацию');
 							})
 							.catch(() => console.log('error'));
 					},
@@ -140,10 +146,14 @@
 						entityStore
 							.editOrder(id, { status: 'archived' })
 							.then(() => {
-								entityStore.getOrganizationOrders(
-									userStore.userData.organization_id
+								const order = entityStore.organizationOrders.find(
+									(item) => item.id === id
 								);
+								if (order) {
+									order.status = 'archived';
+								}
 								settingStore.infoModal = false;
+								toast.success('Заказ снят с публикации');
 							})
 							.catch(() => console.log('error'));
 					},
