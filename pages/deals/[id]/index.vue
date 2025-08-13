@@ -24,6 +24,7 @@
             <Chat
                 :init_chat_id="chatId"
                 :small="true"
+                :is-manager="isManager"
             />
         </template>
     </NuxtLayout>
