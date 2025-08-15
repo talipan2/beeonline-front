@@ -289,6 +289,9 @@ const getErrorList = (errors) => {
 
 const handleUpdatePerformerPubCard = (value, form) => {
   organizationStore.editPerformerPubCard({
+    contact_name: value.contact_name,
+    contact_email: value.contact_email,
+    contact_phone: value.contact_phone,
     name: value.name,
     description: value.description,
     logo_media_id: dataCopyForModal.value?.logo?.id ? dataCopyForModal.value.logo.id.toString() : undefined,
