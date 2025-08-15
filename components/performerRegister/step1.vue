@@ -256,6 +256,9 @@ const handleUpdatePubCard = (value, form) => {
     organizationStore
         .editPerformerPubCard(
             {
+                contact_email: value.contact_email,
+                contact_name: value.contact_name,
+                contact_phone: value.contact_phone,
                 name: value.name,
                 description: value.description,
                 logo_media_id: dataCopyForModal.value?.logo?.id

@@ -215,6 +215,9 @@ const handleSubmit = (value, form) => {
     case 2:
       if(userStore.userPubCard?.id === pubCardData.value.id) {
         organizationStore.editPerformerPubCard({
+          contact_email: value.contact_email,
+          contact_name: value.contact_name,
+          contact_phone: value.contact_phone,
           name: value.name,
           description: value.description,
           logo_media_id: pubCardData.value.logo?.id ? pubCardData.value.logo.id.toString() : '',
@@ -233,6 +236,9 @@ const handleSubmit = (value, form) => {
         })
       } else {
         organizationStore.createPerformerPubCard({
+          contact_email: value.contact_email,
+          contact_name: value.contact_name,
+          contact_phone: value.contact_phone,
           name: value.name,
           description: value.description,
           logo_media_id: pubCardData.value.logo?.id ? pubCardData.value.logo.id.toString() : '',
