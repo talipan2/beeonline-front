@@ -141,7 +141,7 @@ onMounted(() => {
                             country: locations.length ? locations[0] : '',
                         },
                         description: item.description,
-                        gallery: item.gallery && item.gallery.length ? item.gallery[0].url : undefined,
+                        gallery: item.first_order_gallery_image ? item.first_order_gallery_image?.url : undefined,
                         product_categories: item.categories && item.categories.length ? item.categories.map(item => item.name).join(' , ') : '',
                     }
                 });
