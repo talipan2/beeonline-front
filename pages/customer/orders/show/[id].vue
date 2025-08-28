@@ -23,6 +23,7 @@
 			/>
 			<CreateEntityFinalModal
 				:text="isCreateOrderModalText"
+				:isBanner="true"
 				:type="'order'"
 				:isAutoClose="isAutoCloseModal"
 				:btnLink="'/profile'"

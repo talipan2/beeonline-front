@@ -66,6 +66,10 @@ export default {
 		return axios.get(`banners`, { params });
 	},
 
+	async getBannerLatest(params = {}) {
+		return axios.get(`banners/latest`, { params });
+	},
+
 	async getRegisterCountries() {
 		return useApi().get(`register-countries`);
 	},
