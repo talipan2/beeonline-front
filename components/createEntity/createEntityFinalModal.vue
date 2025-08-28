@@ -7,8 +7,8 @@
 		size="md"
 	>
 		<template #content>
-			<p>{{ text }}</p>
-			<Banners :banner="banner" />
+			<Banners v-if="isBanner && bannerLoaded" :banner="banner" />
+			<p v-else-if="!bannerLoaded">{{ text }}</p>
 			<div
 				class="create-entity-final-modal__buttons"
 				v-if="!isAutoClose && btnLink"
@@ -71,6 +71,7 @@
 
 	const modalState = computed(() => settingStore.createEntityFinalModal);
 	const banner = ref({});
+	const bannerLoaded = ref(false);
 
 	const confirm = () => {
 		settingStore.createEntityFinalModal = false;
@@ -83,23 +84,30 @@
 		localStorage.removeItem('isFirstOrder');
 	};
 
-	onMounted(() => {
-		if (props.isBanner) {
-			settingStore.getBanners({ banner_type: 'banner' }).then((res) => {
-				if (res && res.length > 0) {
-					if (props.type === 'order') {
-						banner.value = res.find(
-							(item) => item.type === 'order_created_popup'
-						);
-					} else if (props.type === 'service') {
-						banner.value = res.find(
-							(item) => item.type === 'service_created_popup'
-						);
-					}
-				}
-			});
-		}
-	});
+	// onMounted(() => {
+	// 	if (props.isBanner) {
+	// 		settingStore.getBannerLatest({ banner_type: 'order_moderation' }).then((res) => {
+	// 			console.log(res.data);
+	// 			if (res.data) {
+	// 				banner.value = res.data;
+	// 			}
+	// 		});
+	// 	}
+	// });
+
+	if (props.isBanner) {
+		await settingStore.getBannerLatest({ banner_type: 'order_moderation' }).then((res) => {
+			console.log(res.data);
+			if (res.data) {
+				banner.value = res.data;
+				bannerLoaded.value = true;
+			} else {
+				bannerLoaded.value = false;
+			}
+		}).catch(() => {
+			bannerLoaded.value = false;
+		});
+	}
 
 	watch(
 		() => modalState.value,
