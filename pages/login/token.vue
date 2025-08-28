@@ -23,6 +23,7 @@ let redirect = route.query.redirect;
 
 const userId = route.query.user_id;
 const token = route.query.token;
+const beesync = route.query.beesync;
 const storage = {};
 
 Object.entries(route.query).forEach(([key, value]) => {
@@ -47,7 +48,7 @@ userStore.loginWithOneTimeToken(userId, token)
     userStore.userToken = response.token;
     localStorage.setItem("token", response.token);
 
-    userStore.checkAuth(true).then((response) => {
+    userStore.checkAuth(!!beesync).then((response) => {
         if(typeof redirect === 'string') {
             const external = !redirect.startsWith(frontUrl);
             if (!external) {
