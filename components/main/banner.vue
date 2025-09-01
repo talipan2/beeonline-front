@@ -2,8 +2,8 @@
   <section class="banner ">
     <div class="banner__background">
       <div class="container">
-        <h1 class="banner__title">bee-online — экосистема для поиска партнеров в модной индустрии</h1>
-        <p class="banner__description">Проект предоставляет удобный сервис для поиска партнеров и дает доступ к прямым переговорам</p>
+        <h1 class="banner__title">bee-online — Платформа для производителей, заказчиков одежды, и швейных фабрик</h1>
+        <p class="banner__description">На BEE-online вы найдете проверенные фабрики для контрактного производства, производителей тканей и фурнитуры, поставщиков оборудования. Более 21 000 участников лёгкой промышленности — в одном месте</p>
         <NuxtLink type="button" class="banner__link" @click="handleCreateOrder">
           Разместить заказ
           <div>
@@ -341,7 +341,7 @@ onUnmounted(() => {
   line-height: 1.4em;
   color: var(--text-color-octonary);
   display: block;
-  max-width: 19.35em;
+  max-width: 26em;
   opacity: 0.8;
   margin-bottom: 2.4em;
   position: relative;
