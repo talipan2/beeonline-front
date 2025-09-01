@@ -5,21 +5,21 @@
 				<h2 class="partners__title">Найдите партнера за 5 минут</h2>
 				<ul class="partners__list">
 					<li class="partners__item">
-						<p class="partners__text">Быстрая регистрация</p>
+						<p class="partners__text">Быстрый поиск производителей одежды по категориям</p>
 						<UiImage src="/assets/images/main/partners/partners-registr.png" />
 					</li>
 					<li class="partners__item">
-						<p class="partners__text">Публикация обьявлений</p>
+						<p class="partners__text">Проверенные поставщики тканей и фурнитуры</p>
 						<UiImage src="/assets/images/main/partners/partners-ads.png" />
 					</li>
 					<li class="partners__item">
-						<p class="partners__text">Уведомления о заказах</p>
+						<p class="partners__text">Прямые переговоры с заказчиками и фабриками</p>
 						<UiImage
 							src="/assets/images/main/partners/partners-notifications.png"
 						/>
 					</li>
 					<li class="partners__item">
-						<p class="partners__text">Переговоры в чате</p>
+						<p class="partners__text">Комплексные услуги: конструирование, упаковка, фулфилмент</p>
 						<UiImage src="/assets/images/main/partners/partners-chats.png" />
 					</li>
 				</ul>
@@ -97,6 +97,7 @@
 		padding: 1.2em 1.4em 1.3em 3.2em;
 		position: relative;
 		z-index: 4;
+		column-gap: 1em;
 	}
 
 	.partners__item img {
@@ -110,9 +111,9 @@
 	.partners__text {
 		color: var(--text-color-octonary);
 		font-family: Coolvetica, sans-serif;
-		font-size: 2.4em;
+		font-size: 2.2em;
 		font-weight: 400;
-		line-height: 1.5em;
+		line-height: 1.2em;
 		margin: 0;
 	}
 
