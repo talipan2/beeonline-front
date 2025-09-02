@@ -9,7 +9,7 @@
 
     <div class="bonus__right-side">
       <!-- <BonusBanner class="bonus__banner_mobile" /> -->
-      <BonusScore v-if="currentCurrency == 2" :loading="loading" :bonuses="bonuses"/>
+      <!-- <BonusScore v-if="currentCurrency == 2" :loading="loading" :bonuses="bonuses"/> -->
       <BonusProgress
         :loading="loading"
         :level-groups="levelGroups"
