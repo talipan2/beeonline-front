@@ -1,6 +1,6 @@
 <template>
     <section class="brands container">
-        <h2 class="brands__title">Больше 14 000 пользователей<br>на платформе</h2>
+        <h2 class="brands__title">Больше 21 000 пользователей<br>на платформе</h2>
         <UiButton variant="quaternary" size="xl" class="brands__link" to="/orders">Каталог заказов</UiButton>
         <div class="brands__cards brands-swiper-container">
             <Swiper class="brands__swiper" :space-between="16" :centered-slides="true" :slides-per-group="1"
