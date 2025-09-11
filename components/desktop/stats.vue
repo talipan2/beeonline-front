@@ -147,10 +147,10 @@
 			return props.data.daily_stats;
 		} else {
 			return {
-				pubcard_views: Array(15).fill(0),
-				order_views: Array(15).fill(0),
-				service_views: Array(15).fill(0),
-				favorites: Array(15).fill(0),
+				pubcard_views: Array(30).fill(0),
+				order_views: Array(30).fill(0),
+				service_views: Array(30).fill(0),
+				favorites: Array(30).fill(0),
 			};
 		}
 	});
@@ -167,7 +167,7 @@
 			case 'favorites':
 				return props.data.favorites.chart;
 			default:
-				return Array(15).fill(0);
+				return Array(30).fill(0);
 		}
 	});
 
