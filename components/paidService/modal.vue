@@ -15,7 +15,7 @@
                                 :currentCurrency="responseErrorData.currency"
                                 :reset="prepare"
                             />
-                            <TariffsReplenishmentModal :currentCurrency="responseErrorData.currency" />
+                            <TariffsReplenishmentModal :currentCurrency="responseErrorData.currency" :withoutInvoice="responseErrorData.withoutInvoice" />
                         </template>
                     </template>
                     <template v-else>
