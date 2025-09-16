@@ -178,15 +178,15 @@
 			label="Политика конфиденциальности"
 		>
 			<span>
-				Нажимая кнопку, я даю согласие 
+				Нажимая кнопку, я даю
 				<NuxtLink
 					to="/page-personal-data"
 					target="_blank"
 					:style="{ display: 'inline' }"
 				>
-					на обработку персональных данных
+					согласие
 				</NuxtLink>
-				в соответствии с
+					на обработку персональных данных в соответствии с
 				<NuxtLink
 					to="/page-personal-data"
 					target="_blank"

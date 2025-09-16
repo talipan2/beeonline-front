@@ -90,14 +90,14 @@
 						v-model="userData.privacyPolicy"
 					>
 						<span class="register__checkbox-text">
-							Нажимая кнопку, я даю согласие 
+							Нажимая кнопку, я даю
 							<NuxtLink
 								to="/page-personal-data"
 								target="_blank"
 							>
-								на обработку персональных данных
+								согласие
 							</NuxtLink>
-							в соответствии с
+							на обработку персональных данных в соответствии с
 							<NuxtLink
 								to="/page-personal-data"
 								target="_blank"
