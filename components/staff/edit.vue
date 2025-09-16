@@ -11,13 +11,29 @@
 						label="Политика конфиденциальности"
 					>
 						<span>
-							Я согласен(a) с
+							Нажимая кнопку, я даю согласие 
 							<NuxtLink
-								href="/page-policy"
+								to="/page-personal-data"
 								target="_blank"
 								:style="{ display: 'inline' }"
 							>
-								политикой конфиденциальности
+								на обработку персональных данных
+							</NuxtLink>
+							в соответствии с
+							<NuxtLink
+								to="/page-personal-data"
+								target="_blank"
+								:style="{ display: 'inline' }"
+							>
+								Политикой по обработке персональных 
+							</NuxtLink>
+							/ 
+							<NuxtLink
+								to="/page-policy"
+								target="_blank"
+								:style="{ display: 'inline' }"
+							>
+								Политикой конфиденциальности.
 							</NuxtLink>
 						</span>
 					</UiCheckbox>
@@ -27,16 +43,16 @@
 						:rules="{ required: true }"
 						v-model="employeeData.personal_data"
 						name="personal_data"
-						label="Согласие на обработку персональных данных"
+						label="Согласие на получение рекламной рассылки"
 					>
 						<span>
-							Я согласен(a) с
+							Нажимая кнопку, я даю согласие на получение рекламной рассылки
 							<NuxtLink
-								href="/page-personal-data"
+								to="/"
 								target="_blank"
 								:style="{ display: 'inline' }"
 							>
-								соглашением на обработку персональных данных
+								BEE-online.ru
 							</NuxtLink>
 						</span>
 					</UiCheckbox>
