@@ -99,17 +99,10 @@
 							</NuxtLink>
 							на обработку персональных данных в соответствии с
 							<NuxtLink
-								to="/page-personal-data"
-								target="_blank"
-							>
-								Политикой по обработке персональных 
-							</NuxtLink>
-							/ 
-							<NuxtLink
 								to="/page-policy"
 								target="_blank"
 							>
-								Политикой конфиденциальности.
+								Политикой по обработке персональных данных
 							</NuxtLink>
 						</span>
 					</UiCheckbox>
@@ -121,13 +114,14 @@
 						v-model="userData.personalData"
 					>
 						<span class="register__checkbox-text">
-							Нажимая кнопку, я даю согласие на получение рекламной рассылки
+							Нажимая кнопку, я даю
 							<NuxtLink
-								to="/"
+								to="/page-consent-mailings"
 								target="_blank"
 							>
-								BEE-online.ru
+								согласие на получение рекламной рассылки
 							</NuxtLink>
+							BEE-online.ru
 						</span>
 					</UiCheckbox>
 				</div>

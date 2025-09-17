@@ -11,7 +11,7 @@
 						label="Политика конфиденциальности"
 					>
 						<span>
-							Нажимая кнопку, я даю
+							Нажимая кнопку, я даю  
 							<NuxtLink
 								to="/page-personal-data"
 								target="_blank"
@@ -19,21 +19,13 @@
 							>
 								согласие
 							</NuxtLink>
-							на обработку персональных данных в соответствии с
-							<NuxtLink
-								to="/page-personal-data"
-								target="_blank"
-								:style="{ display: 'inline' }"
-							>
-								Политикой по обработке персональных 
-							</NuxtLink>
-							/ 
+								на обработку персональных данных в соответствии с
 							<NuxtLink
 								to="/page-policy"
 								target="_blank"
 								:style="{ display: 'inline' }"
 							>
-								Политикой конфиденциальности.
+								Политикой по обработке персональных данных
 							</NuxtLink>
 						</span>
 					</UiCheckbox>
@@ -46,14 +38,15 @@
 						label="Согласие на получение рекламной рассылки"
 					>
 						<span>
-							Нажимая кнопку, я даю согласие на получение рекламной рассылки
+							Нажимая кнопку, я даю 
 							<NuxtLink
-								to="/"
+								to="/page-consent-mailings"
 								target="_blank"
 								:style="{ display: 'inline' }"
 							>
-								BEE-online.ru
+							согласие на получение рекламной рассылки
 							</NuxtLink>
+							BEE-online.ru
 						</span>
 					</UiCheckbox>
 				</div>

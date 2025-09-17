@@ -87,7 +87,7 @@
 							to="/page-policy"
 							class="footer__additionally-link"
 						>
-							Политика конфиденциальности
+							Политика по обработке персональных данных
 						</NuxtLink>
 					</li>
 					<li class="footer__additionally-item">
@@ -96,6 +96,14 @@
 							class="footer__additionally-link"
 						>
 							Согласие на обработку персональных данных
+						</NuxtLink>
+					</li>
+					<li class="footer__additionally-item">
+						<NuxtLink
+							to="/page-consent-mailings"
+							class="footer__additionally-link"
+						>
+							Согласие на получение рекламной рассылки
 						</NuxtLink>
 					</li>
 					<li class="footer__additionally-item">
@@ -219,6 +227,8 @@
 		-moz-column-gap: 3.2em;
 		column-gap: 3.2em;
 		display: flex;
+		flex-wrap: wrap;
+		row-gap: 1em;
 	}
 
 	.footer .footer__additionally-link {
