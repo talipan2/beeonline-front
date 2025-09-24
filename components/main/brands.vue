@@ -1,6 +1,6 @@
 <template>
     <section class="brands container">
-        <h2 class="brands__title">Больше 14 000 пользователей<br>на платформе</h2>
+        <h2 class="brands__title">Больше 20 000 пользователей<br>на платформе</h2>
         <UiButton variant="quaternary" size="xl" class="brands__link" to="/orders">Каталог заказов</UiButton>
         <div class="brands__cards brands-swiper-container">
             <Swiper class="brands__swiper" :space-between="16" :centered-slides="true" :slides-per-group="1"
@@ -65,32 +65,32 @@ const entityStore = useEntityStore();
 const locationStore = useLocationStore();
 const organizationStore = useOrganizationStore();
 
-const breakpoints = { 
-    375: { 
+const breakpoints = {
+    375: {
         slidesPerView: 1.5,
-        centeredSlides: true, 
+        centeredSlides: true,
         spaceBetween: 16,
     },
     500: {
         slidesPerView: 2.5,
-        centeredSlides: true, 
+        centeredSlides: true,
         spaceBetween: 16,
     },
-    888: { 
+    888: {
         slidesPerView: 3,
-        centeredSlides: false, 
+        centeredSlides: false,
         spaceBetween: 16,
-    }, 
-    1024: { 
+    },
+    1024: {
         slidesPerView: 3,
-        centeredSlides: false, 
+        centeredSlides: false,
         spaceBetween: 24,
-    }, 
-    1440: { 
+    },
+    1440: {
         slidesPerView: 4,
         spaceBetween: 24,
         centeredSlides: false,
-    } 
+    }
 }
 
 const ordersList = ref([]);

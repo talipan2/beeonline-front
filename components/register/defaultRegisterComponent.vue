@@ -90,30 +90,38 @@
 						v-model="userData.privacyPolicy"
 					>
 						<span class="register__checkbox-text">
-							Я согласен(а) с
+							Нажимая кнопку, я даю
+							<NuxtLink
+								to="/page-personal-data"
+								target="_blank"
+							>
+								согласие
+							</NuxtLink>
+							на обработку персональных данных в соответствии с
 							<NuxtLink
 								to="/page-policy"
 								target="_blank"
 							>
-								политикой конфиденциальности.
+								Политикой по обработке персональных данных
 							</NuxtLink>
 						</span>
 					</UiCheckbox>
 				</div>
 				<div class="register__checkbox">
 					<UiCheckbox
-						name="Согласие на обработку персональных данных"
+						name="Согласие на получение рекламной рассылки"
 						:rules="{ required: true }"
 						v-model="userData.personalData"
 					>
 						<span class="register__checkbox-text">
-							Я согласен(а) с
+							Нажимая кнопку, я даю
 							<NuxtLink
-								to="/page-personal-data"
+								to="/page-consent-mailings"
 								target="_blank"
 							>
-								соглашением на обработку персональных данных.
+								согласие на получение рекламной рассылки
 							</NuxtLink>
+							BEE-online.ru
 						</span>
 					</UiCheckbox>
 				</div>

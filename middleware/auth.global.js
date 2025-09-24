@@ -38,6 +38,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 		'/email-confirm',
 		'/board',
 		'/page-personal-data',
+		'/page-consent-mailings',
 	];
 
 	// if(!userStore.isAuth) {

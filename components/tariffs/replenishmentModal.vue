@@ -50,6 +50,7 @@
                         >Оплатить картой</UiButton
                     >
                     <UiButton
+                        v-if="!withoutInvoice"
                         type="submit"
                         name="type"
                         value="invoice"
@@ -74,6 +75,10 @@ const props = defineProps({
     currentCurrency: {
         type: String,
         required: true,
+    },
+    withoutInvoice: {
+        type: Boolean,
+        default: false,
     },
 });
 
