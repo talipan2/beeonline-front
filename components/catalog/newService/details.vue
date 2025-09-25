@@ -662,6 +662,10 @@
 			align-items: flex-start;
 			position: relative;
 
+			&_type_desktop {
+				padding-top: 6.8em;
+			}
+
 			&_type_mobile {
 				display: none;
 			}
