@@ -1,6 +1,7 @@
 ARG NODE_VERSION=20.11
 
-FROM dockerhub.timeweb.cloud/library/node:20.11-slim as base
+# FROM dockerhub.timeweb.cloud/library/node:20.11-slim as base
+FROM node:20.11-slim as base
 
 ARG PORT=3004
 
