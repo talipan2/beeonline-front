@@ -12,11 +12,11 @@
     </template>
     <template #content>
       <div ref="anchor">
-        <CatalogServiceList 
-          :data="servicesList" 
-          @updateServiceCardRef="updateServiceCardRef" 
-          :class="{'loading': loading}" 
-          :banner="true" 
+        <CatalogServiceList
+          :data="servicesList"
+          @updateServiceCardRef="updateServiceCardRef"
+          :class="{'loading': loading}"
+          :banner="true"
           :isLoaded="isLoaded"
         />
         <CommonPagination v-if="page.lastPage > 1" :current-page="page.currentPage" :total-pages="page.lastPage" @changePage="handleChangePage" :loading="loading"/>
@@ -70,11 +70,26 @@
 							variant="secondary"
 							size="large"
 							@click="filter.open_contacts = !filter.open_contacts"
+                            v-if="false"
 						>
 							Фабрики с открытыми контактами
 							<SvgoCancel
 								class="svg-m"
 								v-if="filter.open_contacts"
+							/>
+						</UiButton>
+						<UiButton
+							type="button"
+							class="new-service__open-contacts-btn"
+							:class="{ 'is-active': filter.is_international }"
+							variant="secondary"
+							size="large"
+							@click="filter.is_international = !filter.is_international"
+						>
+                            Иностранные фабрики
+							<SvgoCancel
+								class="svg-m"
+								v-if="filter.is_international"
 							/>
 						</UiButton>
 						<template v-if="!isMobile">
@@ -181,6 +196,7 @@
 		verification: null,
 		batch_id: null,
 		open_contacts: false,
+		is_international: false,
 	});
 
 	const handleResetFilter = () => {
@@ -196,6 +212,7 @@
 			rawMaterials: null,
 			batch_id: null,
 			open_contacts: false,
+			is_international: false,
 		};
 		handleUpdateFilter();
 	};
@@ -211,6 +228,13 @@
 
 	watch(
 		() => filter.value.open_contacts,
+		(newValue) => {
+			handleUpdateFilter(filter.value);
+		}
+	);
+
+    watch(
+		() => filter.value.is_international,
 		(newValue) => {
 			handleUpdateFilter(filter.value);
 		}
@@ -250,6 +274,7 @@
 		const newQuery = {
 			type: 'performer',
 			open_contacts: filter.value.open_contacts,
+			is_international: filter.value.is_international,
 			page: data.page ? data.page : undefined,
 			categories: data.categories ? data.categories.join(',') : undefined,
 			countries:
@@ -281,6 +306,7 @@
 		const filterQuery = {
 			type: 'performer',
 			open_contacts: filter.value.open_contacts,
+			is_international: filter.value.is_international,
 			page: data.page ? data.page : undefined,
 			categories:
 				data.categories && data.categories.length ? data.categories : undefined,
@@ -390,6 +416,7 @@
 			params = {
 				type: 'performer',
 				open_contacts: filter.value.open_contacts,
+				is_international: filter.value.is_international,
 				page: query.page ? Number(query.page) : undefined,
 				categories: query.categories
 					? query.categories.split(',').map((item) => Number(item))
@@ -418,6 +445,7 @@
 			filter.value = {
 				type: 'performer',
 				open_contacts: filter.value.open_contacts,
+				is_international: filter.value.is_international,
 				categories: query.categories
 					? query.categories.split(',').map((item) => Number(item))
 					: [],
