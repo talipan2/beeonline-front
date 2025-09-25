@@ -3,11 +3,19 @@
 		<CommonLayoutInfoCard
 			class="new-service-details__pub-card new-service-details__pub-card_type_desktop"
 		>
-			<CommonNameplate
-				v-if="data.tariff?.name"
-				class="new-service-details__pub-card-nameplate"
-				:text="data.tariff?.name"
-			/>
+			<div class="new-service-details__pub-card-nameplate-container">
+				<CommonNameplate
+					v-if="data?.is_open_contacts_active"
+					class="new-service-details__pub-card-nameplate"
+					:text="'Контакты'"
+					is-contacts
+				/>
+				<CommonNameplate
+					v-if="data.tariff?.name"
+					class="new-service-details__pub-card-nameplate"
+					:text="data.tariff?.name"
+				/>
+			</div>
 			<div class="new-service-details__pub-card-image">
 				<UiImage
 					:src="data.logo || defaultImage"
@@ -163,11 +171,19 @@
 		<CommonLayoutInfoCard
 			class="new-service-details__pub-card new-service-details__pub-card_type_mobile"
 		>
-			<CommonNameplate
-				v-if="data.tariff?.name"
-				class="new-service-details__pub-card-nameplate new-service-details__pub-card-nameplate_type_mobile"
-				:text="data.tariff?.name"
-			/>
+			<div class="new-service-details__pub-card-nameplate-container new-service-details__pub-card-nameplate-container_type_mobile">
+				<CommonNameplate
+					v-if="data?.is_open_contacts_active"
+					class="new-service-details__pub-card-nameplate"
+					:text="'Контакты'"
+					is-contacts
+				/>
+				<CommonNameplate
+					v-if="data.tariff?.name"
+					class="new-service-details__pub-card-nameplate"
+					:text="data.tariff?.name"
+				/>
+			</div>
 			<div class="new-service-details__pub-card-image">
 				<UiImage
 					:src="data.logo || defaultImage"
@@ -670,14 +686,20 @@
 				display: none;
 			}
 
-			&-nameplate {
+			&-nameplate-container {
 				position: absolute;
 				top: 12px;
 				right: 0;
+				display: flex;
+				gap: .5em;
 
 				@include mobile {
-					top: 0;
+					top: 16px;
 				}
+			}
+
+			&-nameplate:last-child {
+				border-radius: 8px 0 0 8px;
 			}
 
 			&-user-status {
@@ -831,6 +853,7 @@
 					flex-direction: row;
 					flex-wrap: wrap;
 					gap: 1.6em;
+					padding-top: 7.8em;
 				}
 
 				&-image {
