@@ -485,13 +485,14 @@ body.vfm--scrollbar-hidden .fixed-header {
 	content: '';
 	position: absolute;
 	left: 0;
-	bottom: -3px;
+	bottom: -10px;
 	width: 100%;
-	height: 4px; /* толщина бордера */
+	height: 8px; /* толщина бордера */
 	background: var(--text-color-primary);
 	transform: scaleX(0);
 	transform-origin: left;
 	transition: transform .5s ease;
+  border-radius: 10px;
 }
 
 .header__link:hover::after {
