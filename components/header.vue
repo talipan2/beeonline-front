@@ -487,7 +487,7 @@ body.vfm--scrollbar-hidden .fixed-header {
 	left: 0;
 	bottom: -10px;
 	width: 100%;
-	height: 8px; /* толщина бордера */
+	height: 5px; /* толщина бордера */
 	background: var(--text-color-primary);
 	transform: scaleX(0);
 	transform-origin: left;
