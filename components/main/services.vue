@@ -4,7 +4,8 @@
       <div class="services__card services__card_type_performers">
         <h2 class="services__title">Поиск производителей</h2>
         <p class="services__description">
-          Ускорьте свой путь к успеху с нашим сервисом, находя лучших производителей одежды в модной индустрии за считанные минуты!
+          Ускорьте свой путь к успеху с нашим сервисом, находя лучших производителей одежды в модной индустрии за считаные минуты!
+          На платформе доступен поиск швейных фабрик и цехов для пошива одежды, реализована возможность установить прямые контакты для контрактного производства без посредников.
         </p>
         <UiButton to="/services" variant="quaternary" size="xl" class="services__link">Подробнее</UiButton>
         <UiImage src="/assets/images/main/services/services-performers.png" class="services__image" />
@@ -13,7 +14,8 @@
       <div class="services__card services__card_type_customers">
         <h2 class="services__title">Поиск заказчиков</h2>
         <p class="services__description">
-          Расширьте свой бизнес и увеличьте объем заказов, находя новых клиентов среди ведущих брендов и ритейлеров с нашим удобным и быстрым сервисом!
+          Расширьте свой бизнес и увеличьте объем заказов — найдите новых клиентов среди ведущих брендов и ритейлеров с нашим удобным и быстрым сервисом!
+          Открывайте прямые контакты для контрактного производства и выходите на переговоры без посредников.
         </p>
         <UiButton to="/orders" variant="quaternary" size="xl" class="services__link">Подробнее</UiButton>
         <UiImage src="/assets/images/main/services/services-customers.png" class="services__image" />
@@ -63,7 +65,8 @@
   border-radius: 2.4em;
   display: flex;
   flex-direction: column;
-  height: 46em;
+  min-height: 46em;
+  height: 100%;
   overflow: hidden;
   padding: 4.8em;
   position: relative;

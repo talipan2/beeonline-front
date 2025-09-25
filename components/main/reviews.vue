@@ -5,7 +5,12 @@
 	>
 		<div class="reviews-company__container">
 			<div class="reviews-company__title-container">
-				<h2 class="reviews-company__title">Отзывы клиентов</h2>
+				<div class="reviews-company__title-container-content">
+					<h2 class="reviews-company__title">Отзывы клиентов</h2>
+					<p class="reviews-company__description">
+						Наши клиенты — дизайнеры, бренды, торговые сети, швейные фабрики. Благодаря платформе они находят подрядчиков для пошива одежды, закупают ткани и фурнитуру, арендуют оборудование и находят новых заказчиков
+					</p>
+				</div>
 				<UiImage
 					src="/assets/images/main/review/pattern.png"
 					alt="Изображение звёзд"
@@ -137,10 +142,10 @@
 		{
 			id: 4,
 			image: defaultImage,
-			name: 'Наталья Захарченко',
+			name: 'Наталья Валерьевна',
 			role: 'Исполнитель',
 			organization_name: 'MMAMA Production',
-			text: `Это 100% отраслевая платформа — давно уже на ней работаем. Понравились шаблоны договоров, в разделе «Сделка»`,
+			text: `Это 100% отраслевая платформа — давно уже на ней работаем. Понравились шаблоны договоров, в разделе «Сделка».`,
 		},
 	]);
 
@@ -230,12 +235,22 @@
 			justify-content: space-between;
 			gap: 1em;
 			align-items: center;
+			flex: 0 1 42em;
 		}
 
 		&__title {
 			font-family: 'fira-sans', sans-serif;
 			font-size: 4em;
 			font-weight: 700;
+			color: #ffffff;
+			text-align: center;
+			margin-bottom: .5em;
+		}
+
+		&__description {
+			font-size: 2em;
+			line-height: 1.3em;
+			opacity: .8;
 			color: #ffffff;
 			text-align: center;
 		}
@@ -366,8 +381,10 @@
 
 			&__title-container {
 				aspect-ratio: initial;
-				flex-direction: row;
+				// flex-direction: row;
 				padding: 2em;
+				row-gap: 5em;
+				flex: auto;
 
 				img {
 					flex: 0 0 30%;
@@ -377,6 +394,10 @@
 
 			&__title {
 				flex: 0 1 100%;
+				// text-align: justify;
+			}
+
+			&__description {
 				text-align: justify;
 			}
 
@@ -420,6 +441,17 @@
 		@include small-mobile {
 			&__title {
 				font-size: 2.2em;
+			}
+
+			&__description {
+				font-size: 1.8em;
+			}
+
+			&__title-container {
+				img {
+					flex: 0 0 40%;
+					max-width: 40%;
+				}
 			}
 
 			&__slide-header {
