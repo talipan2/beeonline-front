@@ -141,6 +141,7 @@
 						class="board-card__button"
 						variant="quinary"
 						size="large"
+						target="_blank"
 					>
 						Подробнее
 					</UiButton>
@@ -151,6 +152,7 @@
 			v-if="link"
 			:to="`${link}/${announcement.id}`"
 			class="board-card__link"
+			target="_blank"
 		></NuxtLink>
 	</div>
 </template>
