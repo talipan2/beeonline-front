@@ -39,8 +39,13 @@
 						class="board-card__info"
 						v-if="announcement.status_code === 'ACTIVE'"
 					>
-						<p>Активна:</p>
-						<p>до {{ formatDate(announcement.expires_at, 'DD.MM.YYYY') }}</p>
+                        <template v-if="announcement.expires_at">
+                            <p>Активна:</p>
+                            <p>до {{ formatDate(announcement.expires_at, 'DD.MM.YYYY') }}</p>
+                        </template>
+                        <template v-else>
+                            <p>Активна</p>
+                        </template>
 					</div>
 					<div
 						class="board-card__info"
