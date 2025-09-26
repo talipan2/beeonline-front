@@ -43,6 +43,7 @@
           variant="quinary"
           size="large"
           :to="`/services/${data.id}`"
+          target="_blank"
           >Подробнее</UiButton
         >
         <CatalogNewServiceContactsButton :id="data.id" v-if="data.is_open_contacts_active" v-slot="{ open }" @show="showContacts">
@@ -154,6 +155,7 @@
       variant="quinary"
       size="large"
       :to="`/services/${data.id}`"
+      target="_blank"
       >Подробнее</UiButton
     >
   </div>

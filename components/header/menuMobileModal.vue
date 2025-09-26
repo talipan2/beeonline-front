@@ -108,7 +108,7 @@
 							to="/board"
 							class="header-menu__link"
 						>
-							Объявления
+							Поставщики
 						</NuxtLink>
 					</li>
 					<li class="header-menu__link-item">
