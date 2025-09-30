@@ -123,6 +123,7 @@ const filter = ref({
   free_stock: null,
   verification: null,
   batch_id: null,
+  open_contacts: false,
 });
 
 const toggleFilterModal = () => {
@@ -173,6 +174,7 @@ watch(() => props.modelValue, () => {
     free_stock: props.modelValue.free_stock != null ? props.modelValue.free_stock : null,
     verification: props.modelValue.verification || null,
     batch_id: props.modelValue.batch_id || null,
+    open_contacts: props.modelValue.open_contacts ? props.modelValue.open_contacts : false,
   }
 }, {deep: true, immediate: true})
 
