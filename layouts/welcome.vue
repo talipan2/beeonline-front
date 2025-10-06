@@ -1,10 +1,8 @@
 <template>
   <div class="body">
-    <WelcomeHeader />
     <main class="welcome-main">
       <slot />
     </main>
-    <WelcomeFooter />
   </div>
 </template>
 
@@ -17,4 +15,3 @@
 }
 
 </style>
-
