@@ -485,18 +485,17 @@ body.vfm--scrollbar-hidden .fixed-header {
 	content: '';
 	position: absolute;
 	left: 0;
-	bottom: -10px;
+	bottom: -5px;
 	width: 100%;
-	height: 5px; /* толщина бордера */
+	height: 2px; /* толщина бордера */
 	background: var(--text-color-primary);
-	transform: scaleX(0);
-	transform-origin: left;
-	transition: transform .5s ease;
+	opacity: 0;
+	transition: opacity .2s ease;
   border-radius: 10px;
 }
 
 .header__link:hover::after {
-	transform: scaleX(1);
+	opacity: 1;
 }
 
 .header__link_active {
@@ -505,7 +504,7 @@ body.vfm--scrollbar-hidden .fixed-header {
 }
 
 .header__link_active::after {
-	transform: scaleX(1);
+	opacity: 1;
 	background: var(--text-color-hover-primary);
 }
 
