@@ -5,15 +5,21 @@
 		>
 			<div class="new-service-details__pub-card-nameplate-container">
 				<CommonNameplate
+					class="new-service-details__pub-card-nameplate"
+					:text="'NEW'"
+					type="new"
+				/>
+				<CommonNameplate
 					v-if="data?.is_open_contacts_active"
 					class="new-service-details__pub-card-nameplate"
 					:text="'Контакты'"
-					is-contacts
+					type="contacts"
 				/>
 				<CommonNameplate
 					v-if="data.tariff?.name"
 					class="new-service-details__pub-card-nameplate"
 					:text="data.tariff?.name"
+					type="tariff"
 				/>
 			</div>
 			<div class="new-service-details__pub-card-image">
@@ -173,15 +179,21 @@
 		>
 			<div class="new-service-details__pub-card-nameplate-container new-service-details__pub-card-nameplate-container_type_mobile">
 				<CommonNameplate
+					class="new-service-details__pub-card-nameplate"
+					:text="'NEW'"
+					type="new"
+				/>
+				<CommonNameplate
 					v-if="data?.is_open_contacts_active"
 					class="new-service-details__pub-card-nameplate"
 					:text="'Контакты'"
-					is-contacts
+					type="contacts"
 				/>
 				<CommonNameplate
 					v-if="data.tariff?.name"
 					class="new-service-details__pub-card-nameplate"
 					:text="data.tariff?.name"
+					type="tariff"
 				/>
 			</div>
 			<div class="new-service-details__pub-card-image">
