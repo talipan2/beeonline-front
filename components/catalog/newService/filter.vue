@@ -125,7 +125,6 @@ const filter = ref({
   verification: null,
   batch_id: null,
   open_contacts: false,
-  is_international: false,
 });
 
 const toggleFilterModal = () => {
@@ -149,7 +148,6 @@ const resetFilter = () => {
     free_stock: null,
     verification: null,
     batch_id: null,
-    is_international: null,
   };
   emit('resetFilter');
   hideFilterModal();
@@ -178,7 +176,6 @@ watch(() => props.modelValue, () => {
     verification: props.modelValue.verification || null,
     batch_id: props.modelValue.batch_id || null,
     open_contacts: props.modelValue.open_contacts ? props.modelValue.open_contacts : false,
-    is_international: props.modelValue.is_international ? props.modelValue.is_international : false,
   }
 }, {deep: true, immediate: true})
 

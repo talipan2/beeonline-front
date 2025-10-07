@@ -72,20 +72,20 @@
 								v-if="filter.open_contacts"
 							/>
 						</UiButton>
-						<!-- <UiButton
+						<UiButton
 							type="button"
 							class="new-service__open-contacts-btn"
 							:class="{ 'is-active': filter.is_international }"
-							variant="secondary"
+							variant="tertiary"
 							size="large"
 							@click="filter.is_international = !filter.is_international"
 						>
-                            Иностранные фабрики
+              Иностранные фабрики
 							<SvgoCancel
 								class="svg-m"
 								v-if="filter.is_international"
 							/>
-						</UiButton> -->
+						</UiButton>
 						<div class="new-service__btn-container">
 							<!-- <UiButton
 								type="button"
@@ -521,8 +521,9 @@
 			font-size: 1.6em;
 			line-height: 1em;
 			font-weight: 500;
-			background-color: #f0eff4;
+			background-color: #fff;
 			column-gap: 0.5em;
+			border-radius: 8px;
 
 			&.is-active {
 				background-color: #6937a5;
