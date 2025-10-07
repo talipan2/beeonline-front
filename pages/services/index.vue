@@ -48,6 +48,7 @@
 					:iconButton="clothes"
 					ref="selectableButtons"
 					@updateFilter="() => handleUpdateFilter(filter)"
+					@resetFilter="handleResetFilter"
 				>
 					<div
 						class="new-service__filters"

@@ -158,7 +158,7 @@
 		return buttons.value.length > visibleCount.value;
 	});
 
-	const emit = defineEmits(['update:modelValue', 'updateFilter']);
+	const emit = defineEmits(['update:modelValue', 'updateFilter', 'resetFilter']);
 
 	function toggleSelection(button) {
 		const buttonId = button.id; // Получаем id из объекта кнопки
@@ -183,6 +183,10 @@
 		} else {
 			return;
 		}
+	}
+
+	function handleResetFilter() {
+		emit('resetFilter');
 	}
 
 	function toggleExpand() {
