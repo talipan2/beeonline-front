@@ -81,6 +81,18 @@
         Да
       </UiCheckbox>
     </div>
+    <div class="filter-modal__item">
+      <p class="filter-modal__text">Иностранные фабрики</p>
+      <UiCheckbox
+        class="filter-modal__checkbox filter-modal__action"
+        v-model="modelValue.is_international"
+        :is-validated="false"
+        label="Иностранные фабрики"
+        name="is_international"
+      >
+        Да
+      </UiCheckbox>
+    </div>
   </div>
 </template>
 
