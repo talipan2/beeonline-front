@@ -1,13 +1,13 @@
 <template>
 	<NuxtLayout
 		name="info"
-		title="Объявления"
+		title="Поставщики"
 	>
 		<template #header>
 			<UiBreadCrumb
 				:list="[
 					{ label: 'Главная', link: '/' },
-					{ label: 'Объявления', link: '' },
+					{ label: 'Поставщики', link: '' },
 				]"
 			/>
 		</template>

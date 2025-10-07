@@ -39,8 +39,13 @@
 						class="board-card__info"
 						v-if="announcement.status_code === 'ACTIVE'"
 					>
-						<p>Активна:</p>
-						<p>до {{ formatDate(announcement.expires_at, 'DD.MM.YYYY') }}</p>
+                        <template v-if="announcement.expires_at">
+                            <p>Активна:</p>
+                            <p>до {{ formatDate(announcement.expires_at, 'DD.MM.YYYY') }}</p>
+                        </template>
+                        <template v-else>
+                            <p>Активна</p>
+                        </template>
 					</div>
 					<div
 						class="board-card__info"
@@ -141,6 +146,7 @@
 						class="board-card__button"
 						variant="quinary"
 						size="large"
+						target="_blank"
 					>
 						Подробнее
 					</UiButton>
@@ -151,6 +157,7 @@
 			v-if="link"
 			:to="`${link}/${announcement.id}`"
 			class="board-card__link"
+			target="_blank"
 		></NuxtLink>
 	</div>
 </template>

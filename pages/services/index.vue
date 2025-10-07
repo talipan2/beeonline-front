@@ -57,12 +57,6 @@
 								: 'new-service__filter_type_desktop'
 						"
 					>
-						<CatalogNewServiceFilter
-							class="new-service__filter"
-							@updateFilter="handleUpdateFilter"
-							@resetFilter="handleResetFilter"
-							v-model="filter"
-						/>
 						<UiButton
 							type="button"
 							class="new-service__open-contacts-btn"
@@ -78,7 +72,7 @@
 								v-if="filter.open_contacts"
 							/>
 						</UiButton>
-						<UiButton
+						<!-- <UiButton
 							type="button"
 							class="new-service__open-contacts-btn"
 							:class="{ 'is-active': filter.is_international }"
@@ -91,29 +85,24 @@
 								class="svg-m"
 								v-if="filter.is_international"
 							/>
-						</UiButton>
-						<template v-if="!isMobile">
-							<div class="new-service__btn-container">
-								<UiButton
-									type="button"
-									class="new-service__btn"
-									variant="default"
-									:without-padding="true"
-									@click="handleResetFilter"
-								>
-									Сбросить фильтры
-								</UiButton>
-								<UiButton
-									type="button"
-									class="new-service__btn"
-									variant="quinary"
-									size="large"
-									@click="handleSelectFilters(filter)"
-								>
-									Применить фильтры
-								</UiButton>
-							</div>
-						</template>
+						</UiButton> -->
+						<div class="new-service__btn-container">
+							<!-- <UiButton
+								type="button"
+								class="new-service__btn"
+								variant="quinary"
+								size="large"
+								@click="handleSelectFilters(filter)"
+							>
+								Применить фильтры
+							</UiButton> -->
+							<CatalogNewServiceFilter
+								class="new-service__filter"
+								@updateFilter="handleUpdateFilter"
+								@resetFilter="handleResetFilter"
+								v-model="filter"
+							/>
+						</div>
 					</div>
 					<template v-if="isMobile">
 						<UiButton
@@ -274,7 +263,7 @@
 		const newQuery = {
 			type: 'performer',
 			open_contacts: filter.value.open_contacts,
-			is_international: filter.value.is_international,
+			is_international: data.is_international ? data.is_international : undefined,
 			page: data.page ? data.page : undefined,
 			categories: data.categories ? data.categories.join(',') : undefined,
 			countries:
@@ -300,13 +289,14 @@
 					? 1
 					: undefined,
 			batch_id: data.batch_id != null ? data.batch_id : undefined,
+			open_contacts: data.open_contacts ? data.open_contacts : undefined,
 		};
 
 		// добавление квери параметров для запроса
 		const filterQuery = {
 			type: 'performer',
 			open_contacts: filter.value.open_contacts,
-			is_international: filter.value.is_international,
+			is_international: data.is_international ? data.is_international : undefined,
 			page: data.page ? data.page : undefined,
 			categories:
 				data.categories && data.categories.length ? data.categories : undefined,
@@ -334,6 +324,7 @@
 					? 1
 					: undefined,
 			batch_ids: data.batch_id != null ? [data.batch_id] : undefined,
+			open_contacts: data.open_contacts ? data.open_contacts : undefined,
 		};
 
 		// удаление пустых параметров
@@ -416,7 +407,7 @@
 			params = {
 				type: 'performer',
 				open_contacts: filter.value.open_contacts,
-				is_international: filter.value.is_international,
+				is_international: query.is_international ? Boolean(query.is_international) : undefined,
 				page: query.page ? Number(query.page) : undefined,
 				categories: query.categories
 					? query.categories.split(',').map((item) => Number(item))
@@ -440,12 +431,13 @@
 					? Number(query.materials_tolling)
 					: undefined,
 				batch_ids: query.batch_id ? [Number(query.batch_id)] : undefined,
+				open_contacts: query.open_contacts ? Boolean(query.open_contacts) : undefined,
 			};
 
 			filter.value = {
 				type: 'performer',
 				open_contacts: filter.value.open_contacts,
-				is_international: filter.value.is_international,
+				is_international: query.is_international ? Boolean(query.is_international) : undefined,
 				categories: query.categories
 					? query.categories.split(',').map((item) => Number(item))
 					: [],
@@ -469,6 +461,7 @@
 					? Number(query.materials_tolling)
 					: undefined,
 				batch_id: query.batch_id ? Number(query.batch_id) : undefined,
+				open_contacts: query.open_contacts ? Boolean(query.open_contacts) : undefined,
 			};
 		}
 
@@ -569,7 +562,7 @@
 					display: flex;
 					flex-wrap: wrap;
 					gap: 2em;
-					margin-bottom: 1.2em;
+					margin-bottom: 0;
 				}
 
 				&_type_desktop {

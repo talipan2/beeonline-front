@@ -15,10 +15,11 @@
       ref="filterModal"
       class="filter-modal__tippy"
       :interactive="true"
-      :placement="'bottom-start'"
+      :placement="'bottom-end'"
       :arrow="false"
       :maxWidth="744"
       :interactiveBorder="false"
+      :offset="[170, 10]"
       :clickOutside="false"
       :hide-on-click="false"
       trigger="manual"
@@ -123,6 +124,8 @@ const filter = ref({
   free_stock: null,
   verification: null,
   batch_id: null,
+  open_contacts: false,
+  is_international: false,
 });
 
 const toggleFilterModal = () => {
@@ -146,6 +149,7 @@ const resetFilter = () => {
     free_stock: null,
     verification: null,
     batch_id: null,
+    is_international: null,
   };
   emit('resetFilter');
   hideFilterModal();
@@ -173,6 +177,8 @@ watch(() => props.modelValue, () => {
     free_stock: props.modelValue.free_stock != null ? props.modelValue.free_stock : null,
     verification: props.modelValue.verification || null,
     batch_id: props.modelValue.batch_id || null,
+    open_contacts: props.modelValue.open_contacts ? props.modelValue.open_contacts : false,
+    is_international: props.modelValue.is_international ? props.modelValue.is_international : false,
   }
 }, {deep: true, immediate: true})
 
@@ -207,20 +213,33 @@ onBeforeUnmount(() => {
 
   &__action-btn {
     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.07);
-    background: #fff;
+    background: var(--border-color-quaternary);
     font-size: 1.6em;
     font-weight: 400;
     font-family: 'lato', sans-serif;
-    color: var(--text-color-primary);
+    color: var(--text-color-octonary);
     column-gap: .5em;
     border-radius: 8px;
+    border: 2px solid transparent;
 
-    &_type_mobile {
-      box-shadow: none;
-      background-color: transparent;
-      flex-direction: row-reverse;
+    svg {
+      path {
+        fill: var(--text-color-octonary);
+      }
+    }
 
-      
+    @include hover {
+      background: #fff;
+      color: var(--text-color-primary);
+      svg {
+        path {
+          fill: var(--text-color-primary);
+        }
+      }
+    }
+
+    @include mobile {
+      padding-block: .5em;
     }
   }
   

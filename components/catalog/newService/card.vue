@@ -46,6 +46,7 @@
           variant="quinary"
           size="large"
           :to="`/services/${data.id}`"
+          target="_blank"
           >Подробнее</UiButton
         >
         <CatalogNewServiceContactsButton :id="data.id" v-if="data.is_open_contacts_active" v-slot="{ open }" @show="showContacts">
@@ -157,6 +158,7 @@
       variant="quinary"
       size="large"
       :to="`/services/${data.id}`"
+      target="_blank"
       >Подробнее</UiButton
     >
   </div>
@@ -187,7 +189,7 @@
   .new-service-card {
     font-family: "lato", sans-serif;
     font-size: 1rem;
-    padding: 3.2em 3.2em 4em;
+    padding: 6em 3.2em 4em 3.2em;
     background-color: #eff0f5;
     border-radius: 16px;
     display: flex;

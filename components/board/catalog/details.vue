@@ -64,7 +64,12 @@
 							class="board-catalog-details__header-content-date"
 							v-if="data.status_code === 'ACTIVE'"
 						>
-							{{ 'Активна: до ' + formatDate(data.expires_at, 'DD.MM.YYYY') }}
+                            <template v-if="data.expires_at">
+                                {{ 'Активна: до ' + formatDate(data.expires_at, 'DD.MM.YYYY') }}
+                            </template>
+                            <template v-else>
+                                {{ 'Активна' }}
+                            </template>
 						</div>
 						<div
 							class="board-catalog-details__header-content-date"
