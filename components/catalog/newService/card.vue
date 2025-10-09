@@ -2,7 +2,10 @@
   <div
     class="new-service-card"
     :class="{ 'new-service-card_type_revers': reversColor }">
-    <CommonNameplate v-if="data?.tariff?.name && data?.tariff?.name !== 'Международный'" class="new-service-card__nameplate" :text="data?.tariff?.name" />
+    <div class="new-service-card__nameplate-container">
+      <CommonNameplate v-if="data?.is_open_contacts_active" class="new-service-card__nameplate" :text="'Контакты'" is-contacts />
+      <CommonNameplate class="new-service-card__nameplate" v-if="data?.tariff?.name"  :text="data?.tariff?.name" />
+    </div>
     <div class="new-service-card__header">
       <div class="new-service-card__pubcard">
         <!-- <p class="new-service-card__pubcard-title">Название компании</p> -->
@@ -186,7 +189,7 @@
   .new-service-card {
     font-family: "lato", sans-serif;
     font-size: 1rem;
-    padding: 3.2em 3.2em 4em;
+    padding: 6em 3.2em 4em 3.2em;
     background-color: #eff0f5;
     border-radius: 16px;
     display: flex;
@@ -230,7 +233,7 @@
         align-items: center;
 
         @include mobile {
-          margin-top: 2.5em;
+          margin-top: 3.5em;
         }
       }
 
@@ -316,12 +319,19 @@
       }
     }
 
-    &__nameplate {
+    &__nameplate-container {
       position: absolute;
       right: 0;
       top: 12px;
       z-index: 2;
+      display: flex;
+      gap: .5em;
     }
+
+    &__nameplate:last-child {
+      border-radius: 8px 0 0 8px;
+    }
+    
 
     &__user-status {
       @include mobile {

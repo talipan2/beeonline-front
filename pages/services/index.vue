@@ -300,6 +300,7 @@
 					? 1
 					: undefined,
 			batch_id: data.batch_id != null ? data.batch_id : undefined,
+			open_contacts: data.open_contacts ? data.open_contacts : undefined,
 		};
 
 		// добавление квери параметров для запроса
@@ -334,6 +335,7 @@
 					? 1
 					: undefined,
 			batch_ids: data.batch_id != null ? [data.batch_id] : undefined,
+			open_contacts: data.open_contacts ? data.open_contacts : undefined,
 		};
 
 		// удаление пустых параметров
@@ -440,6 +442,7 @@
 					? Number(query.materials_tolling)
 					: undefined,
 				batch_ids: query.batch_id ? [Number(query.batch_id)] : undefined,
+				open_contacts: query.open_contacts ? Boolean(query.open_contacts) : undefined,
 			};
 
 			filter.value = {
@@ -469,6 +472,7 @@
 					? Number(query.materials_tolling)
 					: undefined,
 				batch_id: query.batch_id ? Number(query.batch_id) : undefined,
+				open_contacts: query.open_contacts ? Boolean(query.open_contacts) : undefined,
 			};
 		}
 

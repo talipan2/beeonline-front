@@ -69,6 +69,18 @@
         :options="batchList"
       />
     </div>
+    <div class="filter-modal__item">
+      <p class="filter-modal__text">Открытые контакты</p>
+      <UiCheckbox
+        class="filter-modal__checkbox filter-modal__action"
+        v-model="modelValue.open_contacts"
+        :is-validated="false"
+        label="Открытые контакты"
+        name="open_contacts"
+      >
+        Да
+      </UiCheckbox>
+    </div>
   </div>
 </template>
 
