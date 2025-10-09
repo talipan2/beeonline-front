@@ -14,7 +14,7 @@
 import { useSupportStore } from "~/store/supportStore";
 
 definePageMeta({
-    disableMetrika: true,
+    disableMetrika: false,
 });
 
 const supportStore = useSupportStore();

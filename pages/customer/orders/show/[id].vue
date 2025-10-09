@@ -41,7 +41,7 @@
 
 	definePageMeta({
 		middleware: 'telegram',
-		disableMetrika: true,
+		disableMetrika: false,
 	});
 
 	const router = useRouter();
@@ -51,11 +51,11 @@
 	const userStore = useUserStore();
 
 	const roleName = userStore.getRoleNameForBreadcrumbs;
-	
+
 	const isAutoCloseModal = computed(() => {
 		return localStorage.getItem('isFirstOrder') === 'true' ? false : true;
 	});
-	
+
 	const isCreateOrderModalText = computed(() => {
 		if (localStorage.getItem('isFirstOrder') === 'true') {
 			return 'Спасибо за размещенный заказ. Он отправлен на модерацию. При желании вы можете заполнить данные об организации';

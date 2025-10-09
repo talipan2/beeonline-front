@@ -41,7 +41,7 @@ import { useSettingStore } from '~/store/settingStore';
 
 definePageMeta({
   middleware: 'telegram',
-  disableMetrika: true,
+  disableMetrika: false,
 });
 
 const router = useRouter();

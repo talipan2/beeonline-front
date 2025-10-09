@@ -32,7 +32,7 @@
 
 <script setup>
 definePageMeta({
-    disableMetrika: true,
+    disableMetrika: false,
 });
 
 const router = useRouter();

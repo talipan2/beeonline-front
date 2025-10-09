@@ -24,7 +24,7 @@ import { useLocationStore } from '~/store/locationStore';
 import {useToast} from "vue-toastification";
 
 definePageMeta({
-    disableMetrika: true,
+    disableMetrika: false,
 });
 
 const router = useRouter();

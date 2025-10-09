@@ -22,7 +22,7 @@ useHead({
 });
 
 definePageMeta({
-    disableMetrika: true,
+    disableMetrika: false,
 });
 
 const router = useRouter();

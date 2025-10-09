@@ -21,7 +21,7 @@ useHead({
 });
 
 definePageMeta({
-    disableMetrika: true,
+    disableMetrika: false,
 });
 
 onMounted(() => {

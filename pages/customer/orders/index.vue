@@ -73,7 +73,7 @@
 
 	definePageMeta({
 		middleware: 'telegram',
-		disableMetrika: true,
+		disableMetrika: false,
 	});
 
 	const entityStore = useEntityStore();

@@ -38,7 +38,7 @@ useHead({
 });
 
 definePageMeta({
-    disableMetrika: true,
+    disableMetrika: false,
 });
 
 const entityStore = useEntityStore();

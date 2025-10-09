@@ -30,7 +30,7 @@ useHead({
 });
 
 definePageMeta({
-    disableMetrika: true,
+    disableMetrika: false,
 });
 
 const userStore = useUserStore();
