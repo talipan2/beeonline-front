@@ -85,6 +85,7 @@ const generateContactsSchema = () => {
     }));
 
     return {
+        "@context": "https://schema.org",
         "@type": "Organization",
         "name": "Bee-Online",
         "url": "https://bee-online.ru",
