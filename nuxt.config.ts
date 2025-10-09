@@ -99,4 +99,9 @@ export default defineNuxtConfig({
 			},
 		},
 	},
+    nitro: {
+        prerender: {
+          routes: ['/contacts', '/help']
+        }
+    }
 });
