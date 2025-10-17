@@ -16,7 +16,7 @@ import { useEntityStore } from '~/store/entityStore';
 import { useLocationStore } from '~/store/locationStore';
 
 definePageMeta({
-    disableMetrika: true,
+    disableMetrika: false,
 });
 
 const router = useRouter();

@@ -28,7 +28,7 @@ useHead({
 });
 
 definePageMeta({
-    disableMetrika: true,
+    disableMetrika: false,
 });
 
 const organizationStore = useOrganizationStore();

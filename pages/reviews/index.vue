@@ -13,7 +13,7 @@
 import { useUserStore } from '~/store/userStore';
 
 definePageMeta({
-    disableMetrika: true,
+    disableMetrika: false,
 });
 
 const currentReviewsState = ref('my-reviews');

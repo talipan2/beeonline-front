@@ -167,7 +167,10 @@
 							type="number"
 						/>
 					</div>
-					<div class="entity__data-item">
+					<div
+						class="entity__data-item"
+						style=""
+					>
 						<label
 							class="form-group__title entity__label"
 							:for="`price`"
@@ -179,8 +182,8 @@
 						</label>
 						<UiInput
 							:rules="{
-								required: true,
-								min_value: 1,
+								required: priceRequired,
+								min_value: priceRequired ? 1 : 0,
 								max_value: 9999999999999,
 							}"
 							:id="`price`"
@@ -189,6 +192,7 @@
 							v-model="data.price"
 							class="form-group__value"
 							type="number"
+							:disabled="data.is_price_negotiable"
 						>
 							<!-- <UiSelect
                 :options="currencyList"
@@ -208,8 +212,18 @@
 								class="form-group__value entity__currency-select notranslate"
 								:error-show="false"
 								:show-border="false"
+								:disabled="data.is_price_negotiable"
 							/>
 						</UiInput>
+						<UiCheckbox
+							class="entity__price-negotiable"
+							name="is_price_negotiable"
+							v-model="data.is_price_negotiable"
+							:label="`По договоренности`"
+							:isValidated="false"
+						>
+							<span>По договоренности</span>
+						</UiCheckbox>
 					</div>
 				</div>
 			</div>
@@ -406,6 +420,10 @@
 	const entityStore = useEntityStore();
 	const settingStore = useSettingStore();
 
+	const priceRequired = computed(() => {
+		return !props.data.is_price_negotiable;
+	});
+
 	const backLink = computed(() => {
 		if (props.type === 'create') {
 			return `/${currentEntity.value}/create/step1`;
@@ -482,6 +500,9 @@
 
 <style lang="scss">
 	.entity {
+		&__price-negotiable {
+			margin-top: 1em;
+		}
 		&__photo {
 			.load-image {
 				flex-grow: 0;

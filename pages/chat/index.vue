@@ -26,7 +26,7 @@
 
 <script setup>
 definePageMeta({
-    disableMetrika: true,
+    disableMetrika: false,
     layout: 'chat',
 });
 

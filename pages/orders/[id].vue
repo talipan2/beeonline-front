@@ -53,7 +53,7 @@ const formatData = computed(() => {
         {name: 'Лекала:', value: entityStore.getEntityLabelById('patterns', data.value.pattern)},
         {name: 'Сырье:', value: data.value.material === 1 ? 'Заказчика' : data.value.material === 0 ? 'Производителя' : ''},
         {name: 'Размер партии:', value: parseInt(data.value.batch)},
-        {name: 'Цена за единицу продукции:', value: `${data.value.price} ${settingStore.getCurrencyCodeById(data.value.currency_id)}`},
+        {name: 'Цена за единицу продукции:', value: `${data.value.is_price_negotiable ? 'По договоренности' : `${data.value.price} ${settingStore.getCurrencyCodeById(data.value.currency_id)}`}`},
         {name: 'Сроки выполнения:', value: formatDate(data.value.deadline_at)},
         {name: 'Предпочтительные регионы производства:', value: locations.join(' / ')},
       ],

@@ -43,7 +43,7 @@ import { useSettingStore } from '~/store/settingStore';
 import { useUserStore } from '~/store/userStore';
 
 definePageMeta({
-    disableMetrika: true,
+    disableMetrika: false,
 });
 
 const entityStore = useEntityStore();

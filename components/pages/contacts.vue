@@ -57,8 +57,50 @@ const getContacts = () => {
     useApi().get(`/contacts/?group=${props.group}`)
     .then((res) => {
         data.value = res.data;
+        // Генерация schema после загрузки данных
+        const schema = generateContactsSchema();
+        if (schema) {
+            useHead({
+                script: [
+                    {
+                        type: 'application/ld+json',
+                        children: JSON.stringify(schema)
+                    }
+                ]
+            });
+        }
     });
 }
+
+// Функция для генерации JSON-LD schema для организации с контактами
+const generateContactsSchema = () => {
+    if (!data.value || data.value.length === 0) return null;
+
+    const contactPoints = data.value.map(person => ({
+        "@type": "ContactPoint",
+        "contactType": person.position || "customer service",
+        "name": person.name,
+        "telephone": person.phone,
+        "email": person.email
+    }));
+
+    return {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Bee-Online",
+        "url": "https://bee-online.ru",
+        "contactPoint": contactPoints,
+        "description": "Международный цифровой сервис поиска партнёров в сфере легкой промышленности, соединяющий фабрики и заказчиков.",
+        "foundingDate": "2020",
+        "address": {
+            "@type": "PostalAddress",
+            "addressCountry": "RU",
+            "addressLocality": "Москва",
+            "postalCode": "125284",
+            "streetAddress": "вн.тер.г. Муниципальный округ Беговой, пр-кт Ленинградский д. 35, стр.2, помещ. 214"
+        }
+    };
+};
 
 const managerList = [
     { name: 'Тимур  Османов', role: 'Технический Директор', phone: '+7 (977) 317-84-75', email: 'mail@bee-online.ru', img: '/assets/images/managers/managers-1.jpg' },

@@ -14,6 +14,7 @@
 				`drop-down-select-wrapper_variant_${variant}`,
 				{ 'drop-down-select-wrapper_variant_no-border': !showBorder },
 				{ invalid: errors.length && meta.touched },
+				{ 'drop-down-select-wrapper_disabled': disabled },
 			]"
 		>
 			<UiNewDropdown
@@ -130,6 +131,10 @@
 			type: Boolean,
 			default: false,
 		},
+		disabled: {
+			type: Boolean,
+			default: false,
+		},
 	});
 
 	const fieldRef = ref(null);
@@ -223,6 +228,10 @@
 			max-height: 30em;
 			max-width: 100%;
 			overflow-y: auto;
+		}
+
+		&_disabled {
+			pointer-events: none;
 		}
 
 		&_variant_default {

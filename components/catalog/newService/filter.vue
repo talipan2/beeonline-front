@@ -157,8 +157,8 @@ const resetFilter = () => {
 }
 
 const handleUpdateFilter = () => {
-  emit('updateFilter', {...filter.value})
-  emit('update:modelValue', {...filter.value})
+  emit('updateFilter', {...props.modelValue, ...filter.value})
+  emit('update:modelValue', {...props.modelValue, ...filter.value})
   hideFilterModal();
 };
 

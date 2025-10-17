@@ -23,7 +23,7 @@
 import { useUserStore } from '~/store/userStore';
 
 definePageMeta({
-    disableMetrika: true,
+    disableMetrika: false,
 });
 
 const userStore = useUserStore();

@@ -41,7 +41,7 @@ import { useSettingStore } from '~/store/settingStore';
 
 definePageMeta({
   middleware: 'telegram',
-  disableMetrika: true,
+  disableMetrika: false,
 });
 
 const router = useRouter();
@@ -74,6 +74,7 @@ const orderData = ref({
   locations: [],
   isSafeDeal: false,
   currency: null,
+  is_price_negotiable: true,
 })
 
 const previewCardData = computed(() => ({
@@ -132,7 +133,7 @@ const currentHandleSubmit = computed(() => {
         await entityStore.editOrder(orderData.value.id, {
           description: orderData.value.description,
           rawMaterials: orderData.value.rawMaterials,
-          price: orderData.value.price,
+          price: orderData.value.is_price_negotiable ? null : orderData.value.price,
           currency_id: orderData.value.currency,
           batch: orderData.value.batch,
           patterns: orderData.value.patterns,
@@ -142,6 +143,7 @@ const currentHandleSubmit = computed(() => {
           countries: orderData.value.locations.countries.map(item => item.id),
           gallery: orderData.value.gallery,
           status: 'under_moderation',
+          is_price_negotiable: orderData.value.is_price_negotiable,
         }, form).then(() => currentStep.value = 4)
 
         if(orderData.value.gallery && orderData.value.gallery.length) {
@@ -229,6 +231,7 @@ await entityStore.getOrder(id).then(res => {
       isSafeDeal: Boolean(res.data.is_safedeal),
       isAgreedOrderPlacement: Boolean(res.data.tg_publish),
       currency: res.data.currency_id || 2,
+      is_price_negotiable: res.data.is_price_negotiable,
     }
   }
 })

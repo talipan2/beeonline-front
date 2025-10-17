@@ -31,7 +31,7 @@
 	});
 
 	definePageMeta({
-		disableMetrika: true,
+		disableMetrika: false,
 	});
 </script>
 

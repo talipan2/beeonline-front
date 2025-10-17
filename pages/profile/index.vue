@@ -31,7 +31,7 @@
 import { useUserStore } from '~/store/userStore';
 
 definePageMeta({
-    disableMetrika: true,
+    disableMetrika: false,
 });
 
 const pubCard = computed(() => userStore.userPubCard);
