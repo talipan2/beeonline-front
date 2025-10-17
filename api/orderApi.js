@@ -36,6 +36,7 @@ export default {
 			gallery,
 			isAgreedOrderPlacement,
 			currency_id,
+			is_price_negotiable,
 		} = data;
 		const params = {};
 		if (name !== '') params.name = name;
@@ -57,6 +58,7 @@ export default {
 		if (isAgreedOrderPlacement !== null)
 			params.tg_publish = isAgreedOrderPlacement;
 		if (currency_id !== null) params.currency_id = currency_id;
+		if (is_price_negotiable !== null) params.is_price_negotiable = is_price_negotiable;
 		return useApi().patch(`orders/${id}`, params, form);
 	},
 

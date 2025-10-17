@@ -109,7 +109,7 @@
 				},
 				price: {
 					label: 'Цена за единицу продукции',
-					value: `${order.value.price} ${settingStore.getCurrencyCodeById(order.value.currency_id)}`,
+					value: `${order.value.is_price_negotiable ? 'По договоренности' : `${order.value.price} ${settingStore.getCurrencyCodeById(order.value.currency_id)}`}`,
 				},
 				completionDate: {
 					label: 'Срок выполнения',
