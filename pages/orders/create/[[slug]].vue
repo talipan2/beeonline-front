@@ -107,7 +107,7 @@ const currentHandleSubmit = computed(() => {
           await entityStore.editOrder(order.value.id, {
             description: order.value.description,
             rawMaterials: order.value.rawMaterials,
-            price: order.value.price,
+            price: order.value.is_price_negotiable ? null : order.value.price,
             batch: order.value.batch,
             patterns: order.value.patterns,
             termsOfCooperation: order.value.termsOfCooperation,
@@ -115,6 +115,7 @@ const currentHandleSubmit = computed(() => {
             regions: order.value.locations.regions.map(item => item.id),
             countries: order.value.locations.countries.map(item => item.id),
             currency_id: order.value.currency,
+            is_price_negotiable: order.value.is_price_negotiable,
           }, form).then((res) => {
             order.value.fillRating = res.fill_rating
             entityStore.updateOrderStep(order.value.id, 2)
@@ -267,6 +268,7 @@ onBeforeMount(async () => {
               orderInProgress.gallery?.length > 0
                 ? orderInProgress.gallery[0]
                 : { url: null, id: null },
+            is_price_negotiable: orderInProgress.is_price_negotiable,
           };
           order.value = entityStore.fillingOrder;
         }

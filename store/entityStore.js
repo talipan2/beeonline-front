@@ -33,6 +33,7 @@ export const useEntityStore = defineStore('entity', {
 				countries: [],
 			},
 			fillRating: 0,
+			is_price_negotiable: false,
 		},
 		fillingOrder: null,
 		fillingService: null,
