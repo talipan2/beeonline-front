@@ -37,6 +37,16 @@
 			>
 				{{ isExpanded ? 'Свернуть' : 'Еще' }}
 			</UiButton>
+			<UiButton
+				type="button"
+				class="new-service__btn"
+				variant="tertiary"
+				size="large"
+				@click="handleResetFilter"
+				ref="resetButton"
+			>
+				Сбросить фильтры
+			</UiButton>
 		</div>
 		<UiButton
 			type="button"
@@ -142,12 +152,13 @@
 	const mobileModal = ref(false);
 	const moreButton = ref(null);
 	const router = useRouter();
+	const resetButton = ref(null);
 
 	const showMoreButton = computed(() => {
 		return buttons.value.length > visibleCount.value;
 	});
 
-	const emit = defineEmits(['update:modelValue', 'updateFilter']);
+	const emit = defineEmits(['update:modelValue', 'updateFilter', 'resetFilter']);
 
 	function toggleSelection(button) {
 		const buttonId = button.id; // Получаем id из объекта кнопки
@@ -172,6 +183,10 @@
 		} else {
 			return;
 		}
+	}
+
+	function handleResetFilter() {
+		emit('resetFilter');
 	}
 
 	function toggleExpand() {
@@ -223,6 +238,11 @@
 		if (moreButton.value?.$el) {
 			moreBtnWidth = moreButton.value.$el.offsetWidth;
 		}
+		let resetBtnWidth = 170; // Значение по умолчанию
+		if (resetButton.value?.$el) {
+			resetBtnWidth = resetButton.value.$el.offsetWidth;
+		}
+
 
 		for (const [index, btn] of buttons.value.entries()) {
 			if (!btn?.$el) continue;
@@ -234,7 +254,7 @@
 			// Проверяем, нужна ли кнопка "Ещё" (если есть ещё кнопки после текущей)
 			const needsMoreButton = index < buttons.value.length - 1;
 			const spaceWithMoreButton = needsMoreButton
-				? newTotalWidth + gap + moreBtnWidth
+				? newTotalWidth + gap + moreBtnWidth + resetBtnWidth
 				: newTotalWidth;
 
 			if (spaceWithMoreButton > containerWidth && count > 0) {

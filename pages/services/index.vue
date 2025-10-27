@@ -48,6 +48,7 @@
 					:iconButton="clothes"
 					ref="selectableButtons"
 					@updateFilter="() => handleUpdateFilter(filter)"
+					@resetFilter="handleResetFilter"
 				>
 					<div
 						class="new-service__filters"
@@ -57,12 +58,6 @@
 								: 'new-service__filter_type_desktop'
 						"
 					>
-						<CatalogNewServiceFilter
-							class="new-service__filter"
-							@updateFilter="handleUpdateFilter"
-							@resetFilter="handleResetFilter"
-							v-model="filter"
-						/>
 						<UiButton
 							type="button"
 							class="new-service__open-contacts-btn"
@@ -82,38 +77,33 @@
 							type="button"
 							class="new-service__open-contacts-btn"
 							:class="{ 'is-active': filter.is_international }"
-							variant="secondary"
+							variant="tertiary"
 							size="large"
 							@click="filter.is_international = !filter.is_international"
 						>
-                            Иностранные фабрики
+              Иностранные фабрики
 							<SvgoCancel
 								class="svg-m"
 								v-if="filter.is_international"
 							/>
 						</UiButton>
-						<template v-if="!isMobile">
-							<div class="new-service__btn-container">
-								<UiButton
-									type="button"
-									class="new-service__btn"
-									variant="default"
-									:without-padding="true"
-									@click="handleResetFilter"
-								>
-									Сбросить фильтры
-								</UiButton>
-								<UiButton
-									type="button"
-									class="new-service__btn"
-									variant="quinary"
-									size="large"
-									@click="handleSelectFilters(filter)"
-								>
-									Применить фильтры
-								</UiButton>
-							</div>
-						</template>
+						<div class="new-service__btn-container">
+							<!-- <UiButton
+								type="button"
+								class="new-service__btn"
+								variant="quinary"
+								size="large"
+								@click="handleSelectFilters(filter)"
+							>
+								Применить фильтры
+							</UiButton> -->
+							<CatalogNewServiceFilter
+								class="new-service__filter"
+								@updateFilter="handleUpdateFilter"
+								@resetFilter="handleResetFilter"
+								v-model="filter"
+							/>
+						</div>
 					</div>
 					<template v-if="isMobile">
 						<UiButton
@@ -274,7 +264,7 @@
 		const newQuery = {
 			type: 'performer',
 			open_contacts: filter.value.open_contacts,
-			is_international: filter.value.is_international,
+			is_international: data.is_international ? data.is_international : undefined,
 			page: data.page ? data.page : undefined,
 			categories: data.categories ? data.categories.join(',') : undefined,
 			countries:
@@ -307,7 +297,7 @@
 		const filterQuery = {
 			type: 'performer',
 			open_contacts: filter.value.open_contacts,
-			is_international: filter.value.is_international,
+			is_international: data.is_international ? data.is_international : undefined,
 			page: data.page ? data.page : undefined,
 			categories:
 				data.categories && data.categories.length ? data.categories : undefined,
@@ -418,7 +408,7 @@
 			params = {
 				type: 'performer',
 				open_contacts: filter.value.open_contacts,
-				is_international: filter.value.is_international,
+				is_international: query.is_international ? Boolean(query.is_international) : undefined,
 				page: query.page ? Number(query.page) : undefined,
 				categories: query.categories
 					? query.categories.split(',').map((item) => Number(item))
@@ -448,7 +438,7 @@
 			filter.value = {
 				type: 'performer',
 				open_contacts: filter.value.open_contacts,
-				is_international: filter.value.is_international,
+				is_international: query.is_international ? Boolean(query.is_international) : undefined,
 				categories: query.categories
 					? query.categories.split(',').map((item) => Number(item))
 					: [],
@@ -532,8 +522,9 @@
 			font-size: 1.6em;
 			line-height: 1em;
 			font-weight: 500;
-			background-color: #f0eff4;
+			background-color: #fff;
 			column-gap: 0.5em;
+			border-radius: 8px;
 
 			&.is-active {
 				background-color: #6937a5;
@@ -573,7 +564,7 @@
 					display: flex;
 					flex-wrap: wrap;
 					gap: 2em;
-					margin-bottom: 1.2em;
+					margin-bottom: 0;
 				}
 
 				&_type_desktop {

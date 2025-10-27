@@ -15,10 +15,11 @@
       ref="filterModal"
       class="filter-modal__tippy"
       :interactive="true"
-      :placement="'bottom-start'"
+      :placement="'bottom-end'"
       :arrow="false"
       :maxWidth="744"
       :interactiveBorder="false"
+      :offset="[170, 10]"
       :clickOutside="false"
       :hide-on-click="false"
       trigger="manual"
@@ -209,20 +210,33 @@ onBeforeUnmount(() => {
 
   &__action-btn {
     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.07);
-    background: #fff;
+    background: var(--border-color-quaternary);
     font-size: 1.6em;
     font-weight: 400;
     font-family: 'lato', sans-serif;
-    color: var(--text-color-primary);
+    color: var(--text-color-octonary);
     column-gap: .5em;
     border-radius: 8px;
+    border: 2px solid transparent;
 
-    &_type_mobile {
-      box-shadow: none;
-      background-color: transparent;
-      flex-direction: row-reverse;
+    svg {
+      path {
+        fill: var(--text-color-octonary);
+      }
+    }
 
-      
+    @include hover {
+      background: #fff;
+      color: var(--text-color-primary);
+      svg {
+        path {
+          fill: var(--text-color-primary);
+        }
+      }
+    }
+
+    @include mobile {
+      padding-block: .5em;
     }
   }
   
