@@ -45,7 +45,7 @@
         <nav class="header__menu-links">
           <ul class="header__menu-list" ref="menuList">
             <li class="header__links-item" v-for="(item, index) in visibleMenuItems" :key="index">
-              <NuxtLink :to="item.to" class="header__link">{{ item.text }}</NuxtLink>
+              <NuxtLink :to="item.to" class="header__link" :class="{ 'header__link_active': router.currentRoute.value.path === item.to }">{{ item.text }}</NuxtLink>
             </li>
           </ul>
         </nav>
@@ -474,7 +474,38 @@ body.vfm--scrollbar-hidden .fixed-header {
 
 .header__links-item {
   flex: 1 0 auto;
+}
 
+.header__link {
+	position: relative;
+  transition: color .5s ease, font-weight .5s ease;
+}
+
+.header__link::after {
+	content: '';
+	position: absolute;
+	left: 0;
+	bottom: -5px;
+	width: 100%;
+	height: 2px; /* толщина бордера */
+	background: var(--text-color-primary);
+	opacity: 0;
+	transition: opacity .2s ease;
+  border-radius: 10px;
+}
+
+.header__link:hover::after {
+	opacity: 1;
+}
+
+.header__link_active {
+	color: var(--text-color-hover-primary);
+  font-weight: 800;
+}
+
+.header__link_active::after {
+	opacity: 1;
+	background: var(--text-color-hover-primary);
 }
 
 .header__auth {
