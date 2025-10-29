@@ -130,6 +130,16 @@
 							Карта сайта
 						</NuxtLink>
 					</li>
+					<li class="footer__additionally-item">
+						<NuxtLink
+							class="footer__additionally-link footer__developer-link"
+							to="https://fillincode.ru"
+							target="_blank"
+						>
+							<span class="footer__developer-link-text">Разработка сайта:</span>
+							<SvgoFillinCode />
+						</NuxtLink>
+					</li>
 				</ul>
 			</div>
 		</div>
@@ -142,6 +152,16 @@
 	.footer {
 		color: var(--text-color-octonary);
 		font-family: 'Inter', sans-serif;
+	}
+
+	.footer__developer-link {
+		display: flex;
+		align-items: center;
+		column-gap: 0.5em;
+		svg {
+			width: 7em;
+			height: auto;
+		}
 	}
 
 	.footer__menu-container {
