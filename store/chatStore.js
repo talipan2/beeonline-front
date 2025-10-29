@@ -78,12 +78,12 @@ export const useChatStore = defineStore("chatStore", {
             });
         },
 		async getOrders() {
-            const role = useUserStore().role;
-            console.log(role);
+            // const role = useUserStore().role;
+            // console.log(role);
 			// if (role != "customer") return null;
-			if (!this.orders) {
+			// if (!this.orders) {
 				this.orders = await useApi().post("/chat/orders");
-			}
+			// }
 			return this.orders;
 		},
 		async getAdjacentServices() {
