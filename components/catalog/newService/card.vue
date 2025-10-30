@@ -3,7 +3,9 @@
     class="new-service-card"
     :class="{ 'new-service-card_type_revers': reversColor }">
     <div class="new-service-card__nameplate-container">
-      <CommonNameplate v-if="data?.is_open_contacts_active" class="new-service-card__nameplate" :text="'Контакты'" is-contacts />
+      <CatalogNewServiceContactsButton :id="data.id" v-if="data.is_open_contacts_active" v-slot="{ open }" @show="showContacts">
+        <CommonNameplate @click="!contactsData ? open() : null" class="new-service-card__nameplate" :style="!contactsData ? 'cursor: pointer;' : ''" :text="'Контакты'" is-contacts />
+      </CatalogNewServiceContactsButton>
       <CommonNameplate class="new-service-card__nameplate" v-if="data?.tariff?.name"  :text="data?.tariff?.name" />
     </div>
     <div class="new-service-card__header">

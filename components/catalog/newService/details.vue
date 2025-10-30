@@ -4,12 +4,20 @@
 			class="new-service-details__pub-card new-service-details__pub-card_type_desktop"
 		>
 			<div class="new-service-details__pub-card-nameplate-container">
-				<CommonNameplate
-					v-if="data?.is_open_contacts_active"
-					class="new-service-details__pub-card-nameplate"
-					:text="'Контакты'"
-					is-contacts
-				/>
+				<CatalogNewServiceContactsButton
+					:id="data.id"
+					v-if="data.is_open_contacts_active"
+					v-slot="{ open }"
+					@show="showContacts"
+				>
+					<CommonNameplate
+						@click="!contactsData ? open() : null"
+						class="new-service-details__pub-card-nameplate"
+						:style="!contactsData ? 'cursor: pointer;' : ''"
+						:text="'Контакты'"
+						is-contacts
+					/>
+				</CatalogNewServiceContactsButton>
 				<CommonNameplate
 					v-if="data.tariff?.name"
 					class="new-service-details__pub-card-nameplate"
@@ -172,12 +180,20 @@
 			class="new-service-details__pub-card new-service-details__pub-card_type_mobile"
 		>
 			<div class="new-service-details__pub-card-nameplate-container new-service-details__pub-card-nameplate-container_type_mobile">
-				<CommonNameplate
-					v-if="data?.is_open_contacts_active"
-					class="new-service-details__pub-card-nameplate"
-					:text="'Контакты'"
-					is-contacts
-				/>
+				<CatalogNewServiceContactsButton
+					:id="data.id"
+					v-if="data.is_open_contacts_active"
+					v-slot="{ open }"
+					@show="showContacts"
+				>
+					<CommonNameplate
+						@click="!contactsData ? open() : null"
+						class="new-service-details__pub-card-nameplate"
+						:style="!contactsData ? 'cursor: pointer;' : ''"
+						:text="'Контакты'"
+						is-contacts
+					/>
+				</CatalogNewServiceContactsButton>
 				<CommonNameplate
 					v-if="data.tariff?.name"
 					class="new-service-details__pub-card-nameplate"
