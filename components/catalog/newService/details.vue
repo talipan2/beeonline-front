@@ -4,6 +4,12 @@
 			class="new-service-details__pub-card new-service-details__pub-card_type_desktop"
 		>
 			<div class="new-service-details__pub-card-nameplate-container">
+				<CommonNameplate
+					v-if="data?.performer_is_new"
+					class="new-service-details__pub-card-nameplate"
+					:text="'NEW'"
+					type="new"
+				/>
 				<CatalogNewServiceContactsButton
 					:id="data.id"
 					v-if="data.is_open_contacts_active"
@@ -15,13 +21,14 @@
 						class="new-service-details__pub-card-nameplate"
 						:style="!contactsData ? 'cursor: pointer;' : ''"
 						:text="'Контакты'"
-						is-contacts
+						type="contacts"
 					/>
 				</CatalogNewServiceContactsButton>
 				<CommonNameplate
 					v-if="data.tariff?.name"
 					class="new-service-details__pub-card-nameplate"
 					:text="data.tariff?.name"
+					type="tariff"
 				/>
 			</div>
 			<div class="new-service-details__pub-card-image">
@@ -191,13 +198,20 @@
 						class="new-service-details__pub-card-nameplate"
 						:style="!contactsData ? 'cursor: pointer;' : ''"
 						:text="'Контакты'"
-						is-contacts
+						type="contacts"
 					/>
 				</CatalogNewServiceContactsButton>
 				<CommonNameplate
 					v-if="data.tariff?.name"
 					class="new-service-details__pub-card-nameplate"
 					:text="data.tariff?.name"
+					type="tariff"
+				/>
+				<CommonNameplate
+					v-if="data?.performer_is_new"
+					class="new-service-details__pub-card-nameplate"
+					:text="'NEW'"
+					type="new"
 				/>
 			</div>
 			<div class="new-service-details__pub-card-image">
