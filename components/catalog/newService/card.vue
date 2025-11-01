@@ -3,7 +3,7 @@
     class="new-service-card"
     :class="{ 'new-service-card_type_revers': reversColor }">
     <div class="new-service-card__nameplate-container">
-      <CommonNameplate class="new-service-card__nameplate" :text="'NEW'" type="new" />
+      <CommonNameplate v-if="data?.performer_is_new" class="new-service-card__nameplate" :text="'NEW'" type="new" />
       <CommonNameplate v-if="data?.is_open_contacts_active" class="new-service-card__nameplate" :text="'Контакты'" type="contacts" />
       <CommonNameplate class="new-service-card__nameplate" v-if="data?.tariff?.name"  :text="data?.tariff?.name" type="tariff" />
     </div>

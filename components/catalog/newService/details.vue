@@ -5,6 +5,7 @@
 		>
 			<div class="new-service-details__pub-card-nameplate-container">
 				<CommonNameplate
+					v-if="data?.performer_is_new"
 					class="new-service-details__pub-card-nameplate"
 					:text="'NEW'"
 					type="new"
@@ -179,6 +180,7 @@
 		>
 			<div class="new-service-details__pub-card-nameplate-container new-service-details__pub-card-nameplate-container_type_mobile">
 				<CommonNameplate
+					v-if="data?.performer_is_new"
 					class="new-service-details__pub-card-nameplate"
 					:text="'NEW'"
 					type="new"
