@@ -218,7 +218,9 @@
 	const sidebarIndustryServices = computed(() => {
 		return [
 			{ id: 1, label: 'Профиль', value: `/profile` },
-			{ id: 2, label: 'Сообщения', value: '/chat' },
+            { id: 2, label: 'Объявления', value: `/board/user` },
+			{ id: 3, label: 'Сообщения', value: '/chat' },
+            { id: 4, label: 'Баланс и платные услуги', value: '/tariffs' },
 		];
 	});
 

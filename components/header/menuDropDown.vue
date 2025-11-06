@@ -135,7 +135,9 @@ const dropdownMenuLinks = computed(() => {
   if(role.value === 'adjacent') {
     return [
       { label: 'Профиль', value: `/profile` },
+      { label: 'Объявления', value: `/board/user` },
       { label: 'Сообщения', value: `/chat` },
+      { label: 'Баланс и платные услуги', value: '/tariffs' },
       { label: 'Техническая поддержка', value: '/support' },
     ]
   } else {
@@ -144,8 +146,8 @@ const dropdownMenuLinks = computed(() => {
       { label: 'Bee-online Gifts', value: `/bonus` },
       { label: 'Объявления', value: `/board/user` },
       { label: 'Профиль', value: `/profile` },
-      ...(role.value === 'customer' 
-      ? [{ label: 'Заказы', value: '/customer/orders' }] 
+      ...(role.value === 'customer'
+      ? [{ label: 'Заказы', value: '/customer/orders' }]
       : []),
       { label: 'Сообщения', value: '/chat' },
       { label: 'Сделки', value: '/deals' },
@@ -218,7 +220,7 @@ const formatLangRole = computed(() => {
   switch (userStore.role) {
     case 'customer':
       return 'заказчиком'
-    case 'performer': 
+    case 'performer':
       return 'производителем'
     default:
       return ''
@@ -343,7 +345,7 @@ const formatLangRole = computed(() => {
       display: none;
     }
   }
-  
+
   @media screen and (min-width: 1420px) {
     .d-none-desktop {
       display: none;
