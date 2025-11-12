@@ -17,6 +17,7 @@
 			<NewsNewDetails
 				:data="data"
 				:actual-news="actualNews"
+				:banners="banners"
 			/>
 		</template>
 	</NuxtLayout>
@@ -29,6 +30,7 @@
 	const data = ref({});
 	const actualNews = ref([]);
 	const router = useRouter();
+	const banners = ref([]);
 
 	// получение детальной новости
 	await settingStore
@@ -38,9 +40,15 @@
 		});
 
 	onMounted(() => {
-		settingStore.getBanners({
-			banner_type: ['news'],
-		});
+		settingStore
+			.getBanners({
+				banner_type: ['news'],
+			})
+			.then((res) => {
+				if (res && res.data) {
+					banners.value = res.data;
+				}
+			});
 		// получение актуальных новостей
 		settingStore.getNewsList({ per_page: 4 }).then((res) => {
 			if (res && res.data) {

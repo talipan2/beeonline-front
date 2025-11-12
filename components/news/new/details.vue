@@ -26,6 +26,13 @@
 			></div>
 		</div>
 		<div class="news-details__right-side">
+			<Banners
+				class="news-details__banner"
+				v-if="banners.length > 0"
+				v-for="banner in banners"
+				:key="banner.id"
+				:banner="banner"
+			/>
 			<div class="news-details__actual-news-container">
 				<h4 class="news-details__actual-news-title">Актуальные новости</h4>
 				<div
@@ -52,6 +59,10 @@
 			default: () => ({}),
 		},
 		actualNews: {
+			type: Array,
+			default: () => [],
+		},
+		banners: {
 			type: Array,
 			default: () => [],
 		},
@@ -170,6 +181,14 @@
 			font-size: 1.5em;
 			font-weight: 700;
 			margin-bottom: 0.83em;
+		}
+
+		&__banner {
+			margin-bottom: 13em;
+
+			@include mobile {
+				display: none;
+			}
 		}
 	}
 
