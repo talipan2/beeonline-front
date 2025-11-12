@@ -26,7 +26,7 @@
 					{{ data.name }}
 				</h3>
 				<p class="news-card__description">
-					{{ stripHtml(data.detail_text) }}
+					{{ stripHtml(data.preview_text) }}
 				</p>
 				<p class="news-card__date">
 					{{ formatDate(data.created_at, 'DD.MM.YYYY') }}
