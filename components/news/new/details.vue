@@ -6,8 +6,13 @@
 					Дата публикации: {{ formatDate(data.created_at, 'DD.MM.YYYY') }}
 				</p>
 				<div class="news-details__header-tags">
-					<div class="news-details__header-tag">Мода</div>
-					<div class="news-details__header-tag">Выставка</div>
+					<div
+						class="news-details__header-tag"
+						v-for="tag in data.tags"
+						:key="tag.id"
+					>
+						{{ tag.name }}
+					</div>
 				</div>
 			</div>
 			<div
@@ -17,6 +22,7 @@
 				<UiImage
 					:src="data.preview_image_url"
 					:alt="data.name"
+					external
 				/>
 			</div>
 			<h2 class="news-details__title">{{ data.name }}</h2>
@@ -145,6 +151,7 @@
 		&__header-tags {
 			display: flex;
 			gap: 1em;
+			flex-wrap: wrap;
 		}
 
 		&__header-tag {

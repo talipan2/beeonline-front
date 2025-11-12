@@ -50,7 +50,7 @@
 				}
 			});
 		// получение актуальных новостей
-		settingStore.getNewsList({ per_page: 4 }).then((res) => {
+		settingStore.getNewsList({ featured: true }).then((res) => {
 			if (res && res.data) {
 				actualNews.value = res.data;
 			}

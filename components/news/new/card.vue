@@ -3,17 +3,24 @@
 		<div class="news-card__image">
 			<UiImage
 				:class="{
-					'news-card__image-plug': !data.image,
-					'news-card__image-img': data.image,
+					'news-card__image-plug': !data.preview_image_url,
+					'news-card__image-img': data.preview_image_url,
 				}"
-				:src="data.image ?? '/assets/images/photo-plug-3.svg'"
+				:src="data.preview_image_url ?? '/assets/images/photo-plug-3.svg'"
 				:alt="data.name"
+				:external="data.preview_image_url ? true : false"
 			/>
 		</div>
 		<div class="news-card__content">
-			<p class="news-card__tag">
-				{{ 'Мода' }}
-			</p>
+			<div class="news-card__tags">
+				<div
+					class="news-card__tag"
+					v-for="tag in data.tags"
+					:key="tag.id"
+				>
+					{{ tag.name }}
+				</div>
+			</div>
 			<div class="news-card__text-wrapper">
 				<h3 class="news-card__title">
 					{{ data.name }}
@@ -105,6 +112,12 @@
 			flex-direction: column;
 			gap: 1.2em;
 			flex: 1;
+		}
+
+		&__tags {
+			display: flex;
+			gap: 0.5em;
+			flex-wrap: wrap;
 		}
 
 		&__tag {
