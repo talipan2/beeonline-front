@@ -5,15 +5,30 @@
 		>
 			<div class="new-service-details__pub-card-nameplate-container">
 				<CommonNameplate
-					v-if="data?.is_open_contacts_active"
+					v-if="data?.performer_is_new"
 					class="new-service-details__pub-card-nameplate"
-					:text="'Контакты'"
-					is-contacts
+					:text="'NEW'"
+					type="new"
 				/>
+				<CatalogNewServiceContactsButton
+					:id="data.id"
+					v-if="data.is_open_contacts_active"
+					v-slot="{ open }"
+					@show="showContacts"
+				>
+					<CommonNameplate
+						@click="!contactsData ? open() : null"
+						class="new-service-details__pub-card-nameplate"
+						:style="!contactsData ? 'cursor: pointer;' : ''"
+						:text="'Контакты'"
+						type="contacts"
+					/>
+				</CatalogNewServiceContactsButton>
 				<CommonNameplate
 					v-if="data.tariff?.name"
 					class="new-service-details__pub-card-nameplate"
 					:text="data.tariff?.name"
+					type="tariff"
 				/>
 			</div>
 			<div class="new-service-details__pub-card-image">
@@ -172,16 +187,31 @@
 			class="new-service-details__pub-card new-service-details__pub-card_type_mobile"
 		>
 			<div class="new-service-details__pub-card-nameplate-container new-service-details__pub-card-nameplate-container_type_mobile">
-				<CommonNameplate
-					v-if="data?.is_open_contacts_active"
-					class="new-service-details__pub-card-nameplate"
-					:text="'Контакты'"
-					is-contacts
-				/>
+				<CatalogNewServiceContactsButton
+					:id="data.id"
+					v-if="data.is_open_contacts_active"
+					v-slot="{ open }"
+					@show="showContacts"
+				>
+					<CommonNameplate
+						@click="!contactsData ? open() : null"
+						class="new-service-details__pub-card-nameplate"
+						:style="!contactsData ? 'cursor: pointer;' : ''"
+						:text="'Контакты'"
+						type="contacts"
+					/>
+				</CatalogNewServiceContactsButton>
 				<CommonNameplate
 					v-if="data.tariff?.name"
 					class="new-service-details__pub-card-nameplate"
 					:text="data.tariff?.name"
+					type="tariff"
+				/>
+				<CommonNameplate
+					v-if="data?.performer_is_new"
+					class="new-service-details__pub-card-nameplate"
+					:text="'NEW'"
+					type="new"
 				/>
 			</div>
 			<div class="new-service-details__pub-card-image">
