@@ -4,6 +4,9 @@
 			Вступайте в Bee-online сообщество: общение без границ!
 		</h3>
 		<UiButton
+			type="link"
+			to="https://t.me/BeeonlineCommunity"
+			target="_blank"
 			class="news-banner__button"
 			variant="quaternary"
 		>
@@ -31,6 +34,10 @@
 		overflow: hidden;
 		margin-bottom: 4em;
 
+		@include mobile {
+			display: none;
+		}
+
 		&__title {
 			font-weight: 500;
 			font-size: 2em;
@@ -38,6 +45,10 @@
 			color: #fff;
 			margin-bottom: 1.35em;
 			max-width: 75%;
+
+			@include tablet {
+				max-width: 100%;
+			}
 		}
 
 		&__button {
