@@ -6,7 +6,7 @@
 					'news-card__image-plug': !data.preview_image_url,
 					'news-card__image-img': data.preview_image_url,
 				}"
-				:src="data.preview_image_url ?? '/assets/images/photo-plug-3.svg'"
+				:src="data.preview_image_url ?? '/assets/images/photo-plug-4.png'"
 				:alt="data.name"
 				:external="data.preview_image_url ? true : false"
 			/>
@@ -87,9 +87,9 @@
 			}
 
 			&-plug {
-				max-width: 50%;
+				width: 100%;
 				height: 100%;
-				object-fit: contain;
+				object-fit: cover;
 			}
 
 			&-img {

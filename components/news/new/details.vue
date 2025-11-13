@@ -32,6 +32,7 @@
 			></div>
 		</div>
 		<div class="news-details__right-side">
+			<NewsNewBanner />
 			<Banners
 				class="news-details__banner"
 				v-if="banners.length > 0"
@@ -191,7 +192,7 @@
 		}
 
 		&__banner {
-			margin-bottom: 13em;
+			margin-bottom: 5em;
 
 			@include mobile {
 				display: none;
@@ -200,22 +201,84 @@
 	}
 
 	.news-body {
+		font-family: 'lato', sans-serif !important;
+		font-size: 1.8rem !important;
+
+		h1,
+		h2,
+		h3,
+		h4,
+		h5,
+		h6 {
+			font-family: 'lato', sans-serif !important;
+		}
+
+		h1 {
+			font-size: 3.6rem !important;
+			line-height: 1.17em !important;
+			font-weight: 700 !important;
+		}
+
+		h2 {
+			font-size: 2rem !important;
+			line-height: 1.2em !important;
+			font-weight: 700 !important;
+		}
+
 		a {
-			display: inline;
-			color: var(--primary-color);
-			overflow-wrap: anywhere;
+			display: inline !important;
+			color: var(--primary-color) !important;
+			overflow-wrap: anywhere !important;
 
 			&:hover {
-				text-decoration: underline;
+				text-decoration: underline !important;
+			}
+		}
+
+		ol {
+			font-size: 1.8rem !important;
+			list-style-type: decimal !important;
+			margin-block-start: 1em !important;
+			margin-block-end: 1em !important;
+			padding-inline-start: 40px !important;
+			unicode-bidi: isolate !important;
+
+			li {
+				list-style: decimal !important;
+			}
+		}
+
+		ul {
+			font-size: 1.8rem !important;
+			list-style-type: disc !important;
+			margin-block-start: 1em !important;
+			margin-block-end: 1em !important;
+			padding-inline-start: 40px !important;
+			unicode-bidi: isolate !important;
+
+			li {
+				list-style: disc !important;
 			}
 		}
 
 		p {
-			overflow-wrap: anywhere;
+			font-family: 'lato', sans-serif !important;
+			font-weight: 400 !important;
+			font-size: 1.8rem !important;
+			line-height: 1.56em !important;
+			overflow-wrap: anywhere !important;
+		}
+
+		span {
+			font-family: 'lato', sans-serif !important;
+			font-size: 1.8rem !important;
+			line-height: 1.56em !important;
+			overflow-wrap: anywhere !important;
 		}
 
 		img {
-			max-width: 100%;
+			max-width: 100% !important;
+			width: 100% !important;
 		}
 
 		table {
