@@ -33,13 +33,14 @@
 		</div>
 		<div class="news-details__right-side">
 			<NewsNewBanner />
-			<Banners
-				class="news-details__banner"
-				v-if="banners.length > 0"
-				v-for="banner in banners"
-				:key="banner.id"
-				:banner="banner"
-			/>
+			<div class="news-details__banners">
+				<Banners
+					v-if="banners.length > 0"
+					v-for="banner in banners"
+					:key="banner.id"
+					:banner="banner"
+				/>
+			</div>
 			<div class="news-details__actual-news-container">
 				<h4 class="news-details__actual-news-title">Актуальные новости</h4>
 				<div
@@ -191,7 +192,10 @@
 			margin-bottom: 0.83em;
 		}
 
-		&__banner {
+		&__banners {
+			display: flex;
+			flex-direction: column;
+			gap: 1em;
 			margin-bottom: 5em;
 
 			@include mobile {
