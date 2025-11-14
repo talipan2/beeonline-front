@@ -43,6 +43,7 @@
 		settingStore
 			.getBanners({
 				banner_type: ['news'],
+				banner_count: [2],
 			})
 			.then((res) => {
 				if (res && res.data) {
