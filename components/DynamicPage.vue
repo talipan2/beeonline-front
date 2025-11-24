@@ -110,5 +110,9 @@
 				font-size: 0.7em;
 			}
 		}
+
+        img {
+            width: auto;
+        }
 	}
 </style>

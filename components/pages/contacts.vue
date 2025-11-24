@@ -165,6 +165,7 @@ const formatPhone = (phone) => phone.replace(/[\s()-]/g, '');
         img {
             position: absolute;
             inset: 0;
+            width: 100%;
         }
     }
 
