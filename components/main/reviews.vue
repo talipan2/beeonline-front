@@ -8,7 +8,10 @@
 				<div class="reviews-company__title-container-content">
 					<h2 class="reviews-company__title">Отзывы клиентов</h2>
 					<p class="reviews-company__description">
-						Наши клиенты — дизайнеры, бренды, торговые сети, швейные фабрики. Благодаря платформе они находят подрядчиков для пошива одежды, закупают ткани и фурнитуру, арендуют оборудование и находят новых заказчиков
+						Наши клиенты — дизайнеры, бренды, торговые сети, швейные фабрики.
+						Благодаря платформе они находят подрядчиков для пошива одежды,
+						закупают ткани и фурнитуру, арендуют оборудование и находят новых
+						заказчиков
 					</p>
 				</div>
 				<UiImage
@@ -65,9 +68,25 @@
 									</p>
 								</div>
 							</div>
-							<p class="reviews-company__slide-text">
+							<p
+								:ref="(el) => setTextRef(el, review.id)"
+								class="reviews-company__slide-text"
+								:class="{
+									'reviews-company__slide-text_expanded': expandedReviews.has(
+										review.id
+									),
+								}"
+							>
 								{{ review.text }}
 							</p>
+							<UiButton
+								type="button"
+								v-if="reviewsWithOverflow.has(review.id)"
+								@click="handleShowMore(review.id)"
+								class="reviews-company__show-more-btn"
+							>
+								{{ expandedReviews.has(review.id) ? 'Скрыть' : 'Показать еще' }}
+							</UiButton>
 						</div>
 					</SwiperSlide>
 				</Swiper>
@@ -112,7 +131,51 @@
 	const isBeginning = ref(true);
 	const isEnd = ref(false);
 
+	const expandedReviews = ref(new Set());
+	const reviewsWithOverflow = ref(new Set());
+	const textRefs = ref(new Map());
+
+	const setTextRef = (el, id) => {
+		if (el) {
+			textRefs.value.set(id, el);
+		}
+	};
+
+	const checkTextOverflow = () => {
+		textRefs.value.forEach((el, id) => {
+			if (el) {
+				// Проверяем, обрезан ли текст
+				const isOverflowing = el.scrollHeight > el.clientHeight;
+				if (isOverflowing) {
+					reviewsWithOverflow.value.add(id);
+				} else {
+					reviewsWithOverflow.value.delete(id);
+				}
+			}
+		});
+	};
+
+	const handleShowMore = (id) => {
+		if (expandedReviews.value.has(id)) {
+			expandedReviews.value.delete(id);
+		} else {
+			expandedReviews.value.add(id);
+		}
+	};
+
 	const data = ref([
+		{
+			id: 5,
+			image: defaultImage,
+			name: 'Жидков Вадим Юрьевич',
+			role: 'Заказчик',
+			organization_name: 'TERRY DREAMS',
+			text: `Хочу сказать огромное спасибо от всей нашей компании. Благодаря вашему сайту с базой поставщиков и производителей в 2025 году мы нашли действительно большое количество швейных цехов и производств. Все они оказались очень живыми, открытыми к сотрудничеству и продуктивными. Мы сэкономили массу времени, избежав долгих поисков через разные источники — на наше объявление откликнулось множество фабрик, в том числе и из стран СНГ. Именно благодаря вашему ресурсу мы смогли успешно выполнить задачи, которые перед нами стояли.
+						
+			Отдельная благодарность Гульнаре за её помощь во внешнеэкономической деятельности. Она подсказала нам нужные фабрики, познакомила с людьми, принимающими решения, и дала ту основу, с которой мы начали нашу работу за пределами страны. Для нас это стало настоящим стартом, мы сразу получили первые результаты и поняли, что движемся в правильном направлении.
+						
+			Спасибо за вашу работу и за ту возможность, которую вы создаёте для бизнеса!`,
+		},
 		{
 			id: 1,
 			image: defaultImage,
@@ -203,6 +266,9 @@
 	onMounted(() => {
 		window.addEventListener('resize', debouncedResize);
 		handleResize(); // Инициализация при монтировании
+		nextTick(() => {
+			checkTextOverflow();
+		});
 	});
 
 	onUnmounted(() => {
@@ -244,13 +310,13 @@
 			font-weight: 700;
 			color: #ffffff;
 			text-align: center;
-			margin-bottom: .5em;
+			margin-bottom: 0.5em;
 		}
 
 		&__description {
 			font-size: 2em;
 			line-height: 1.3em;
-			opacity: .8;
+			opacity: 0.8;
 			color: #ffffff;
 			text-align: center;
 		}
@@ -338,6 +404,17 @@
 			font-size: 2em;
 			line-height: 1.6em;
 			color: #2a1947;
+
+			white-space: pre-line;
+			display: -webkit-box;
+			-webkit-line-clamp: 8;
+			-webkit-box-orient: vertical;
+			overflow: hidden;
+
+			&_expanded {
+				-webkit-line-clamp: unset;
+				overflow: visible;
+			}
 		}
 
 		&__slider-navigation {
