@@ -20,9 +20,9 @@
 </template>
 
 <script setup>
+import { Field, useField } from 'vee-validate';
 import { useLocationStore } from '~/store/locationStore';
 import { useSettingStore } from '~/store/settingStore';
-import { useField } from 'vee-validate';
 
 
 const props = defineProps({

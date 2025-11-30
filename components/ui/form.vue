@@ -5,6 +5,7 @@
 </template>
 
 <script setup>
+import { useForm } from 'vee-validate';
 
 const props = defineProps({
   submit: {
