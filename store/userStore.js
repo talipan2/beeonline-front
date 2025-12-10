@@ -510,6 +510,34 @@ export const useUserStore = defineStore("user", {
     async sendEmailConfirm()
     {
         return await useApi().get(`/email-confirm`);
+    },
+
+    // Получение статуса подписки на рассылку
+    async getNewsletterSubscription(id) {
+      try {
+        const response = await Api.getNewsletterSubscription(id);
+        if (response.data) {
+          return response.data;
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    // Изменение статуса подписки на рассылку
+    async updateNewsletterSubscription(id, subscribed) {
+      try {
+        const response = await Api.updateNewsletterSubscription(id, subscribed);
+        if (response.data) {
+          // Обновляем данные пользователя
+          if (this.userData) {
+            this.userData.newsletter_subscribed = subscribed;
+          }
+          return response.data;
+        }
+      } catch (error) {
+        throw error;
+      }
     }
   },
 });

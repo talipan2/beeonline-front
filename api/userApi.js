@@ -107,6 +107,16 @@ export default {
 
   async changeUserData(id, data, form) {
     return useApi().patch(`users/${id}`, data, form)
+  },
+
+  // получение статуса подписки на рассылку
+  async getNewsletterSubscription(id) {
+    return axios.get(`users/${id}/newsletter-subscription`)
+  },
+
+  // изменение статуса подписки на рассылку
+  async updateNewsletterSubscription(id, subscribed) {
+    return axios.put(`users/${id}/newsletter-subscription`, { newsletter_subscribed: subscribed })
   }
 
 }

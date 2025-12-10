@@ -109,17 +109,16 @@
 				</div>
 				<div class="register__checkbox">
 					<UiCheckbox
-						name="Согласие на получение рекламной рассылки"
-						:rules="{ required: true }"
-						v-model="userData.personalData"
+						name="newsletter_subscribed"
+						v-model="userData.newsletter_subscribed"
 					>
 						<span class="register__checkbox-text">
-							Нажимая кнопку, я даю
+							Я хочу получать
 							<NuxtLink
 								to="/page-consent-mailings"
 								target="_blank"
 							>
-								согласие на получение рекламной рассылки
+								рекламную рассылку
 							</NuxtLink>
 							BEE-online.ru
 						</span>
@@ -161,7 +160,7 @@
 		role: role.value,
 		country_code: '',
 		organization_name: '',
-		personalData: false,
+		newsletter_subscribed: true,
 	});
 	const isCreateOrder = computed(() => settingStore.isCreateOrder);
 
@@ -177,6 +176,7 @@
 					country_code: userData.value.country_code,
 					phone: userData.value.phone,
 					notification_locale: locale,
+					newsletter_subscribed: userData.value.newsletter_subscribed,
 				},
 				form
 			)

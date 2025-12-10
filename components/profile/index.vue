@@ -131,6 +131,36 @@
         <p class="form-group__value">{{ organizationData.email_docs || '-' }}</p>
       </div>
     </CommonProfileCheckCard>
+    <CommonProfileCheckCard 
+      title="Рассылка" 
+      text="Управление подпиской на рекламную рассылку BEE-online.ru"
+    >
+      <div class="profile__newsletter">
+        <div class="form-group-data">
+          <UiCheckbox
+            v-model="newsletterSubscribed"
+            name="newsletter_subscribed"
+          >
+            <span class="form-group__value">
+              Подписаться на рассылку
+            </span>
+          </UiCheckbox>
+          <p class="profile__newsletter-status">
+            Статус: <strong>{{ newsletterSubscribed ? 'Подписан' : 'Не подписан' }}</strong>
+          </p>
+          <UiButton 
+            type="button"
+            class="profile__newsletter-btn"
+            variant="quinary"
+            size="large"
+            @click="handleNewsletterSave"
+            :disabled="newsletterSaving"
+          >
+            {{ newsletterSaving ? 'Сохранение...' : 'Сохранить' }}
+          </UiButton>
+        </div>
+      </div>
+    </CommonProfileCheckCard>
     <ProfileChageUserDataModal />
     <ProfileChangeDataModal />
     <CreateEntityFinalModal text="Публичная карта отправлена на модерацию" />
@@ -219,6 +249,22 @@ const handleOpenChangeDataModal = () => {
 
 const handleOpenChangeUserDataModal = () => {
   settingStore.changeUserDataModal = true;
+}
+
+// Подписка на рассылку
+const newsletterSubscribed = ref(userStore.userData?.newsletter_subscribed ?? true);
+const newsletterSaving = ref(false);
+
+const handleNewsletterSave = async () => {
+  newsletterSaving.value = true;
+  try {
+    await userStore.updateNewsletterSubscription(userStore.userData.id, newsletterSubscribed.value);
+    settingStore.setAlert('success', newsletterSubscribed.value ? 'Вы подписались на рассылку' : 'Вы отписались от рассылки');
+  } catch (error) {
+    settingStore.setAlert('error', 'Не удалось изменить статус подписки');
+  } finally {
+    newsletterSaving.value = false;
+  }
 }
 
 // onMounted(() => {
