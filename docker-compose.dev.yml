@@ -5,16 +5,27 @@ services:
       context: .
       dockerfile: Dockerfile.dev
     ports:
-      - "3000:3000"
-    environment:
-      - NUXT_PUBLIC_BASE_URL=http://localhost:8080/api
-      - NUXT_PUBLIC_BACK_URL=http://localhost:8080
-      - NUXT_PUBLIC_FRONT_URL=http://localhost:3000
-      - API_BASE_URL=http://localhost:8080/api
-      - BACK_URL=http://localhost:8080
-      - FRONT_URL=http://localhost:3000
+      - "3000:3004"
     volumes:
       - .:/usr/src/app/nuxtjs
       - /usr/src/app/nuxtjs/node_modules
-    restart: unless-stopped
+    restart: always
+    environment:
+      - NODE_ENV=development
+      - DEV_PORT=3004
+      - DEV_HOST=0.0.0.0
+      - VITE_PORT=24678
+      - HMR_PROTOCOL=ws
+      - HMR_PORT=443
+      - FRONT_URL=http://localhost:3000
+      - BACK_URL=http://localhost:8080
+      - API_BASE_URL=http://localhost:8080/api
+      - PUSHER_APP_KEY=app-key
+      - PUSHER_HOST=localhost
+      - PUSHER_PORT=6001
+      - PUSHER_SCHEME=http
+      - YANDEX_MAPS_API_KEY=123
+      - YANDEX_METRIKA_ID=455
+    stdin_open: true
+    tty: true
 

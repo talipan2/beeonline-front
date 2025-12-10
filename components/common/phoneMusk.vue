@@ -42,10 +42,10 @@
 </template>
 
 <script setup>
+import { Field, useField } from 'vee-validate';
 import IntlTelInput from "intl-tel-input/vueWithUtils";
 import "intl-tel-input/styles";
 import {ru} from "intl-tel-input/i18n";
-import { useField } from 'vee-validate';
 import { ref, computed, watch, onMounted } from 'vue';
 
 const props = defineProps({
