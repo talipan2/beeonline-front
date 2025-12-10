@@ -20,6 +20,7 @@
 </template>
 
 <script setup>
+import { Field } from 'vee-validate';
 import { useTippy } from 'vue-tippy';
 
 const props = defineProps({

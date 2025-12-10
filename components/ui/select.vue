@@ -50,6 +50,8 @@
 </template>
 
 <script setup>
+	import { Field } from 'vee-validate';
+
 	const props = defineProps({
 		options: {
 			type: Array,

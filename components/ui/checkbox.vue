@@ -8,12 +8,12 @@
         :unchecked-value="false"
         :label="label"
     >
-        <div :class="['checkbox', className, field.class, $attrs.class]">
+        <div :class="['checkbox', className, field?.class, $attrs.class]">
             <label class="checkbox__label">
                 <input
                     type="checkbox"
                     class="checkbox__input"
-                    v-bind="field"
+                    v-bind="field || {}"
                     :disabled="disabled"
                     :readonly="readonly"
                     :indeterminate="indeterminate"
@@ -37,6 +37,7 @@
 
 <script setup>
 import { ref, computed } from "vue";
+import { Field } from 'vee-validate';
 
 const props = defineProps({
     variant: {

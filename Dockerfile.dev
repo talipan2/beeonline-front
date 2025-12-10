@@ -11,7 +11,7 @@ WORKDIR /usr/src/app/nuxtjs
 FROM base as build
 
 COPY --link package.json package-lock.json .
-RUN npm install
+RUN npm ci
 
 # Run
 FROM base
