@@ -36,10 +36,8 @@
 				</div>
 				<div class="form-group">
 					<UiCheckbox
-						:rules="{ required: true }"
-						v-model="staffData.personal_data"
-						name="personal_data"
-						label="Согласие на получение рекламной рассылки"
+						v-model="staffData.newsletter_subscribed"
+						name="newsletter_subscribed"
 					>
 						<span>
 							Нажимая кнопку, я даю 
@@ -100,7 +98,7 @@
 		notifications: [],
 		country_code: '',
 		privacy_policy: false,
-		personal_data: false,
+		newsletter_subscribed: true,
 	});
 
 	const createOrganizationEmployee = (values, form) => {

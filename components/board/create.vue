@@ -51,7 +51,7 @@
 		site: '',
 		country_code: '',
 		privacy_policy: false,
-		personal_data: false,
+		newsletter_subscribed: true,
 	});
 
 	const openAuthModal = () => {

@@ -113,12 +113,12 @@
 						v-model="userData.newsletter_subscribed"
 					>
 						<span class="register__checkbox-text">
-							Я хочу получать
+							Нажимая кнопку, я даю
 							<NuxtLink
 								to="/page-consent-mailings"
 								target="_blank"
 							>
-								рекламную рассылку
+								согласие на получение рекламной рассылки
 							</NuxtLink>
 							BEE-online.ru
 						</span>

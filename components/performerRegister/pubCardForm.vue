@@ -199,10 +199,8 @@
 	</div>
 	<div class="form-group form-group_type_secondary pub-card-form-checkbox">
 		<UiCheckbox
-			:rules="{ required: true }"
-			v-model="modelValue.personal_data"
-			name="personal_data"
-			label="Согласие на получение рекламной рассылки"
+			v-model="modelValue.newsletter_subscribed"
+			name="newsletter_subscribed"
 		>
 			<span>
 				Нажимая кнопку, я даю 

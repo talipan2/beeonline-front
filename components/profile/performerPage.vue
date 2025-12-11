@@ -164,6 +164,34 @@
         </div>
       </div>
     </CommonLayoutInfoCard>
+    <CommonLayoutInfoCard title="Рассылка" class="performer-profile__card">
+      <p class="performer-profile__card-description">Управление подпиской на рекламную рассылку BEE-online.ru</p>
+      <div class="form-group form-group_type_secondary">
+        <div class="form-group-data">
+          <UiCheckbox
+            v-model="newsletterSubscribed"
+            name="newsletter_subscribed"
+          >
+            <span class="form-group__value">
+              Подписаться на рассылку
+            </span>
+          </UiCheckbox>
+          <p class="performer-profile__newsletter-status">
+            Статус: <strong>{{ newsletterSubscribed ? 'Подписан' : 'Не подписан' }}</strong>
+          </p>
+          <UiButton 
+            type="button"
+            class="performer-profile__newsletter-btn"
+            variant="quinary"
+            size="large"
+            @click="handleNewsletterSave"
+            :disabled="newsletterSaving"
+          >
+            {{ newsletterSaving ? 'Сохранение...' : 'Сохранить' }}
+          </UiButton>
+        </div>
+      </div>
+    </CommonLayoutInfoCard>
     <ProfileChageUserDataModal />
     <ProfileChangeDataModal />
   </div>
@@ -226,6 +254,22 @@ const handleOpenChangeUserDataModal = () => {
 
 const handleOpenChangeDataModal = () => {
   settingStore.changeDataModal = true;
+}
+
+// Подписка на рассылку
+const newsletterSubscribed = ref(userStore.userData?.newsletter_subscribed ?? true);
+const newsletterSaving = ref(false);
+
+const handleNewsletterSave = async () => {
+  newsletterSaving.value = true;
+  try {
+    await userStore.updateNewsletterSubscription(userStore.userData.id, newsletterSubscribed.value);
+    settingStore.setAlert('success', newsletterSubscribed.value ? 'Вы подписались на рассылку' : 'Вы отписались от рассылки');
+  } catch (error) {
+    settingStore.setAlert('error', 'Не удалось изменить статус подписки');
+  } finally {
+    newsletterSaving.value = false;
+  }
 }
 
 watch(() => userStore.userPubCard, (newVal) => {
@@ -310,6 +354,17 @@ onMounted(() => {
       border-color: #d2c3e4 !important;
       color: #212529 !important;
     }
+  }
+
+  &__newsletter-status {
+    margin-top: 1em;
+    font-size: 1.3em;
+    color: #565263;
+  }
+
+  &__newsletter-btn {
+    margin-top: 1.5em;
+    max-width: 200px;
   }
 
   @include mobile {

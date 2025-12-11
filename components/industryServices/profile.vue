@@ -17,6 +17,31 @@
       <h3>Статистика</h3>
       <IndustryServicesStatisticsTable />
     </div>
+    <div class="industry-services-profile__newsletter">
+      <h3>Рассылка</h3>
+      <p class="industry-services-profile__newsletter-description">Управление подпиской на рекламную рассылку BEE-online.ru</p>
+      <div class="form-group-data">
+        <UiCheckbox
+          v-model="newsletterSubscribed"
+          name="newsletter_subscribed"
+        >
+          <span>Подписаться на рассылку</span>
+        </UiCheckbox>
+        <p class="industry-services-profile__newsletter-status">
+          Статус: <strong>{{ newsletterSubscribed ? 'Подписан' : 'Не подписан' }}</strong>
+        </p>
+        <UiButton 
+          type="button"
+          class="industry-services-profile__newsletter-btn"
+          variant="quinary"
+          size="large"
+          @click="handleNewsletterSave"
+          :disabled="newsletterSaving"
+        >
+          {{ newsletterSaving ? 'Сохранение...' : 'Сохранить' }}
+        </UiButton>
+      </div>
+    </div>
     <InfoModal :text="infoModal.text" :title="infoModal.title">
       <template #content>
           <UiButton type="button" @click="infoModal.action" class="info-modal__btn" variant="quinary" size="large">Подтвердить</UiButton>
@@ -32,6 +57,22 @@ import { useUserStore } from '~/store/userStore';
 
 const settingStore = useSettingStore();
 const userStore = useUserStore();
+
+// Подписка на рассылку
+const newsletterSubscribed = ref(userStore.userData?.newsletter_subscribed ?? true);
+const newsletterSaving = ref(false);
+
+const handleNewsletterSave = async () => {
+  newsletterSaving.value = true;
+  try {
+    await userStore.updateNewsletterSubscription(userStore.userData.id, newsletterSubscribed.value);
+    settingStore.setAlert('success', newsletterSubscribed.value ? 'Вы подписались на рассылку' : 'Вы отписались от рассылки');
+  } catch (error) {
+    settingStore.setAlert('error', 'Не удалось изменить статус подписки');
+  } finally {
+    newsletterSaving.value = false;
+  }
+}
 
 const infoModal = ref({
   title: '',
@@ -114,6 +155,33 @@ const selectInfoModalData = ({type, id}) => {
       margin-top: 2em;
       margin-bottom: 1.5em;
     }
+  }
+
+  &__newsletter {
+    margin-bottom: 5em;
+
+    h3 {
+      font-size: 1.8em;
+      line-height: 1.2em;
+      margin-bottom: 1em;
+    }
+  }
+
+  &__newsletter-description {
+    font-size: 1.2em;
+    margin-bottom: 1.5em;
+    color: #565263;
+  }
+
+  &__newsletter-status {
+    margin-top: 1em;
+    font-size: 1.3em;
+    color: #565263;
+  }
+
+  &__newsletter-btn {
+    margin-top: 1.5em;
+    max-width: 200px;
   }
 
   @include tablet {
