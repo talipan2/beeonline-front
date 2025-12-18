@@ -18,7 +18,6 @@
 </template>
 
 <script setup>
-import { Form } from 'vee-validate';
 import { useSettingStore } from '~/store/settingStore';
 import { useTariffsStore } from "~/store/tariffsStore";
 import { useUserStore } from '~/store/userStore';

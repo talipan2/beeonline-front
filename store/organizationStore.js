@@ -71,18 +71,6 @@ export const useOrganizationStore = defineStore('organization', {
     },
   },
   actions: {
-    async getOrganization(id) {
-      try {
-        const response = await Api.getOrganization(id);
-        if(response?.data) {
-          this.organization = response.data.data;
-          return response.data;
-        }
-      } catch (error) {
-        throw error;
-      }
-    },
-
     async setOrganization(data, form) {
       try {
         const response = await Api.setOrganization(data, form);

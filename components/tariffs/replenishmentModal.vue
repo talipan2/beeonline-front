@@ -27,16 +27,6 @@
                     <CommonAlerts :alert="invoice.message || 'Что-то пошло не так'" type="error" v-if="invoice.status === 'failed'"/>
                 </div>
             </template>
-            <template v-if="showRequisitesForm">
-                <CommonSpinner v-if="!organizationData" />
-                <TariffsRequisitesForm
-                    v-else
-                    :organization-data="organizationData"
-                    :amount="amount"
-                    @submit="handleRequisitesSubmit"
-                    @cancel="showRequisitesForm = false"
-                />
-            </template>
             <Form @submit="handleSubmit" v-else>
                 <p class="replenishment-modal__text">
                     Вы будете перенаправлены на страницу банка.
@@ -61,11 +51,13 @@
                     >
                     <UiButton
                         v-if="!withoutInvoice"
-                        type="button"
+                        type="submit"
+                        name="type"
+                        value="invoice"
                         class="replenishment-modal__btn replenishment-modal__btn__type-account"
                         variant="tertiary"
                         size="large"
-                        @click="handleInvoiceButtonClick"
+                        @click="buttonValue = 'invoice'"
                         >Сформировать счет</UiButton
                     >
                 </div>
@@ -75,12 +67,9 @@
 </template>
 
 <script setup>
-import { Form } from 'vee-validate';
 import { useSettingStore } from "~/store/settingStore";
 import { useInvoiceStore } from "~/store/invoiceStore";
 import { useChannelsStore } from "~/store/channelsStore";
-import { useUserStore } from "~/store/userStore";
-import { useOrganizationStore } from "~/store/organizationStore";
 
 const props = defineProps({
     currentCurrency: {
@@ -98,8 +87,6 @@ const router = useRouter();
 const invoiceStore = useInvoiceStore();
 const settingStore = useSettingStore();
 const channelsStore = useChannelsStore();
-const userStore = useUserStore();
-const organizationStore = useOrganizationStore();
 
 const buttonValue = ref('');
 const amount = ref(1000);
@@ -108,54 +95,10 @@ const loading = ref(false);
 const invoice = ref(null);
 const interval = ref(null);
 const opened = ref(false);
-const showRequisitesForm = ref(false);
-const organizationData = ref(null);
 
 const confirm = () => {
     settingStore.replenishmentModalStatus = false;
 };
-
-async function handleInvoiceButtonClick() {
-    // Загружаем данные организации
-    if (userStore.userData?.organization_id) {
-        try {
-            const response = await organizationStore.getOrganization(userStore.userData.organization_id);
-            organizationData.value = response.data;
-        } catch (error) {
-            console.error('Ошибка загрузки данных организации:', error);
-        }
-    }
-    showRequisitesForm.value = true;
-}
-
-function handleRequisitesSubmit(payload) {
-    if (loading.value) return;
-    loading.value = true;
-
-    const { requisites, saveRequisites } = payload || {};
-
-    const data = {
-        amount: amount.value,
-        type: 'invoice',
-        redirect_url: router.currentRoute.value.fullPath,
-        requisites,
-        save_requisites: saveRequisites,
-    };
-
-    invoiceStore.makeInvoice(data)
-        .then((response) => {
-            invoice.value = response.data;
-            opened.value = false;
-            showRequisitesForm.value = false;
-            startInvoiceInterval(5000);
-        })
-        .catch((error) => {
-            console.error('Ошибка создания счета:', error);
-        })
-        .finally(() => {
-            loading.value = false;
-        });
-}
 
 function handleSubmit(values, form) {
     if (loading.value) return;
@@ -200,13 +143,10 @@ watch(() => settingStore.replenishmentModalStatus, (newVal) => {
         eventBus.on('InvoiceUpdate', invoiceUpdateHandler);
     } else {
         eventBus.off('InvoiceUpdate', invoiceUpdateHandler);
-        clearInterval(interval.value);
-        loading.value = false;
-        invoice.value = null;
-        showRequisitesForm.value = false;
-        organizationData.value = null;
-        buttonValue.value = '';
     }
+    clearInterval(interval.value);
+    loading.value = false;
+    invoice.value = null;
 });
 
 function startInvoiceInterval(delay = 5000) {

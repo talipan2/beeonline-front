@@ -156,8 +156,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
 		if (!firstCard) {
 			return navigateTo({ path: '/register/step2' });
-		} else if (firstCard.is_auto_created) {
-			return navigateTo({ path: '/register/step2' });
 		} else if (firstCard?.current_step === 1 && publicCards.length === 1) {
 			return navigateTo({ path: '/register/step3' });
 		} else if (firstCard?.current_step === 2 && publicCards.length === 1) {

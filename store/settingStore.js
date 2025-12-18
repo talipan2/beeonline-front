@@ -42,7 +42,6 @@ export const useSettingStore = defineStore('setting', {
 		registerRedirectPath: '',
 		registerRedirectConfirm: false,
 		foreignerModal: false,
-		openContactsModal: false,
 		boardPayModal: false,
 		boardErrorModal: false,
 	}),

@@ -9,29 +9,29 @@
 			class="input"
 			:class="{ input_type_hidden: type === 'hidden' }"
 		>
-		<div
-			class="input-container"
-			:class="[
-				field?.class,
-				$attrs.class,
-				{ invalid: errors.length && meta.touched },
-			]"
-		>
-			<input
-				class="input__field"
-				:type="type"
-				v-bind="field || {}"
-				:disabled="disabled"
-				:placeholder="placeholder"
-				@input="updateValue($event.target.value)"
-				:id="id"
-				@keypress="onKeyDown"
-				:maxlength="maxLength"
-				@focus="$emit('focus', $event)"
-				@blur="$emit('blur', $event)"
-				@keyup.enter="$emit('enter')"
-				:readonly="readonly"
-			/>
+			<div
+				class="input-container"
+				:class="[
+					field.class,
+					$attrs.class,
+					{ invalid: errors.length && meta.touched },
+				]"
+			>
+				<input
+					class="input__field"
+					:type="type"
+					v-bind="field"
+					:disabled="disabled"
+					:placeholder="placeholder"
+					@input="updateValue($event.target.value)"
+					:id="id"
+					@keypress="onKeyDown"
+					:maxlength="maxLength"
+					@focus="$emit('focus', $event)"
+					@blur="$emit('blur', $event)"
+					@keyup.enter="$emit('enter')"
+					:readonly="readonly"
+				/>
 
 				<slot />
 			</div>

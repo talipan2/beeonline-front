@@ -53,7 +53,6 @@
       </p>
       <UiButton type="button" class="services-table__total-btn" variant="quinary" size="large" @click="handlePayModal">Подключить</UiButton>
     </div>
-    <TariffsOpenContactsModal />
   </div>
 </template>
 

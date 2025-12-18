@@ -98,8 +98,5 @@ export default defineNuxtConfig({
 				},
 			},
 		},
-	},
-	veeValidate: {
-		autoImports: false,
-	},
+	}
 });

@@ -123,7 +123,6 @@
 </template>
 
 <script setup>
-	import { Field } from 'vee-validate';
 	import { useUserStore } from '~/store/userStore';
 	import { useSettingStore } from '~/store/settingStore';
 	import { useToast } from 'vue-toastification';

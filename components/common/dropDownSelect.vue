@@ -81,7 +81,6 @@
 </template>
 
 <script setup>
-	import { Field } from 'vee-validate';
 	import { useTranslateStore } from '~/store/translateStore';
 
 	const props = defineProps({
