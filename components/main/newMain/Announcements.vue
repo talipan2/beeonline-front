@@ -1,0 +1,91 @@
+<template>
+	<section class="container new-main__announcements">
+		<MainNewMainSectionContainer
+			title="Поиск объявлений"
+			description="Ускорьте свой путь к успеху с нашим сервисом, находя лучших производителей одежды в модной индустрии за считаные минуты! На платформе доступен поиск швейных фабрик и цехов для пошива одежды, реализована возможность установить прямые контакты для контрактного производства без посредников."
+			link="/board"
+			linkText="Перейти в раздел"
+		>
+			<div class="new-main__announcements-list">
+				<MainNewMainEntityCardSkeleton
+					v-for="n in 8"
+					:key="'skeleton-announcement-' + n"
+					v-if="isLoading"
+					type="announcement"
+				/>
+				<MainNewMainEntityCard
+					v-else
+					v-for="entity in data"
+					:key="entity.id"
+					:entity="entity"
+					entityType="announcement"
+					link="/board"
+				/>
+			</div>
+		</MainNewMainSectionContainer>
+	</section>
+</template>
+
+<script setup>
+	import { useAnnouncementStore } from '~/store/announcementStore';
+
+	const announcementStore = useAnnouncementStore();
+	const data = ref([]);
+	const isLoading = ref(false);
+
+	onMounted(() => {
+		isLoading.value = true;
+		announcementStore
+			.getAnnouncements({
+				per_page: 8,
+			})
+			.then((res) => {
+				if (res && res.data && res.data.length > 0) {
+					data.value = res.data.map((item) => {
+						return {
+							id: item.id,
+							title: item.title,
+							description: item.content,
+							image: item.announcement_image,
+							price: item.price,
+							date: item.updated_at,
+						};
+					});
+				}
+			})
+			.finally(() => {
+				isLoading.value = false;
+			});
+	});
+</script>
+
+<style lang="scss" scoped>
+	.new-main__announcements {
+		font-size: 1rem;
+		margin-bottom: 10em;
+
+		@include mobile {
+			margin-bottom: 6.4rem;
+		}
+
+		&-list {
+			display: grid;
+			grid-template-columns: repeat(4, 1fr);
+			gap: 24px;
+
+			@include desktop {
+				grid-template-columns: repeat(3, 1fr);
+			}
+
+			@include small-tablet {
+				grid-template-columns: repeat(2, 1fr);
+			}
+
+			@include mobile {
+				grid-template-columns: repeat(1, 1fr);
+				max-width: 450px;
+				margin: 0 auto;
+			}
+		}
+	}
+</style>
