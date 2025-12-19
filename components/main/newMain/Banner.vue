@@ -149,7 +149,7 @@
 					align-items: center;
 					gap: 3.2rem;
 					text-align: center;
-					margin-bottom: 24.7em;
+					margin-bottom: 0;
 				}
 
 				&-item {

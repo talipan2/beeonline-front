@@ -143,12 +143,12 @@
 		display: flex;
 		flex-direction: column;
 		&__image {
-			aspect-ratio: 3/2;
 			max-height: 18.2em;
 			position: relative;
 			margin-bottom: 2.3em;
 
 			&-img {
+				aspect-ratio: 3/2;
 				width: 100%;
 				height: 100%;
 				object-fit: contain;
@@ -161,7 +161,7 @@
 			}
 
 			@include mobile {
-				max-height: 28.8rem;
+				max-height: 100%;
 			}
 		}
 
