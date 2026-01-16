@@ -49,13 +49,13 @@
 					>
 						<div class="reviews-company__slide-container">
 							<div class="reviews-company__slide-header">
-								<div class="reviews-company__slide-image">
+								<!-- <div class="reviews-company__slide-image">
 									<UiImage
 										:src="review.image"
 										:alt="review.name"
 										external="true"
 									/>
-								</div>
+								</div> -->
 								<div class="reviews-company__slide-name">
 									<p class="reviews-company__slide-name-role">
 										{{ review.role }}
