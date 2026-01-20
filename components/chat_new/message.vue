@@ -9,8 +9,8 @@
         }"></div>
       </div>
       <div class="message__body">
-        <div class="message__title" v-if="isFirst && message.type != 'system' && message.user?.name">
-          {{ message.user.name }}
+        <div class="message__title" v-if="isFirst && message.type != 'system' && (message.user?.name || (typeof message.user === 'string' && message.user))">
+          {{ typeof message.user === 'string' ? message.user : message.user.name }}
         </div>
         <div class="message__text">
           {{ message.text }}
