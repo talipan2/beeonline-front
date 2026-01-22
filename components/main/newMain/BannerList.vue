@@ -11,9 +11,11 @@
 						v-if="bannerPerformer?.button?.enabled"
 						variant="default"
 						class="banners__button"
-						:to="bannerPerformer?.button?.url || 'javascript:;'"
+						:type="bannerPerformer?.button?.type === 'modal_contacts' ? 'button' : 'link'"
+						:to="bannerPerformer?.button?.type === 'link' ? bannerPerformer?.button?.url : undefined"
+						@click="handleButtonClick(bannerPerformer)"
 					>
-						{{ bannerPerformer.button.text || 'Подробнее' }}
+						{{ bannerPerformer.button.title || 'Подробнее' }}
 					</UiButton>
 				</div>
 				<div class="banners__item">
@@ -25,23 +27,36 @@
 						v-if="bannerCustomer?.button?.enabled"
 						variant="default"
 						class="banners__button"
-						:to="bannerCustomer?.button?.url || 'javascript:;'"
+						:type="bannerCustomer?.button?.type === 'modal_contacts' ? 'button' : 'link'"
+						:to="bannerCustomer?.button?.type === 'link' ? bannerCustomer?.button?.url : undefined"
+						@click="handleButtonClick(bannerCustomer)"
 					>
-						{{ bannerCustomer.button.text || 'Подробнее' }}
+						{{ bannerCustomer.button.title || 'Подробнее' }}
 					</UiButton>
 				</div>
 			</div>
 		</div>
+
+		<!-- Модальное окно обратной связи -->
+		<ContactFormModal v-model="isContactModalOpen" />
 	</section>
 </template>
 
 <script setup>
 	import Banners from '~/components/banners/index.vue';
+	import ContactFormModal from '~/components/main/newMain/ContactFormModal.vue';
 	import { useSettingStore } from '~/store/settingStore';
 
 	const settingStore = useSettingStore();
 	const bannerCustomer = ref({});
 	const bannerPerformer = ref({});
+	const isContactModalOpen = ref(false);
+
+	const handleButtonClick = (banner) => {
+		if (banner?.button?.type === 'modal_contacts') {
+			isContactModalOpen.value = true;
+		}
+	};
 
 	onMounted(() => {
 		settingStore
