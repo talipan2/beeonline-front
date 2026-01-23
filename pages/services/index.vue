@@ -260,6 +260,9 @@
 
 		if (loading.value) return;
 
+		// Хелпер для извлечения id из элемента (поддержка и объектов, и чисел)
+		const extractId = (item) => (typeof item === 'object' && item !== null ? item.id : item);
+
 		// добавление квери параметров для роутинга
 		const newQuery = {
 			type: 'performer',
@@ -268,12 +271,12 @@
 			page: data.page ? data.page : undefined,
 			categories: data.categories ? data.categories.join(',') : undefined,
 			countries:
-				data.location && data.location.countries
-					? data.location.countries?.map((item) => item.id).join(',')
+				data.location && data.location.countries && data.location.countries.length
+					? data.location.countries.map(extractId).join(',')
 					: undefined,
 			regions:
-				data.location && data.location.regions
-					? data.location.regions?.map((item) => item.id).join(',')
+				data.location && data.location.regions && data.location.regions.length
+					? data.location.regions.map(extractId).join(',')
 					: undefined,
 			is_stm: data.is_stm != null ? data.is_stm : undefined,
 			free_samples:
@@ -302,12 +305,12 @@
 			categories:
 				data.categories && data.categories.length ? data.categories : undefined,
 			regions:
-				data.location && data.location.regions
-					? data.location.regions?.map((item) => item.id)
+				data.location && data.location.regions && data.location.regions.length
+					? data.location.regions.map(extractId)
 					: undefined,
 			countries:
-				data.location && data.location.countries
-					? data.location.countries?.map((item) => item.id)
+				data.location && data.location.countries && data.location.countries.length
+					? data.location.countries.map(extractId)
 					: undefined,
 			is_stm: data.is_stm != null ? Boolean(data.is_stm) : undefined,
 			free_samples:

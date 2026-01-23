@@ -75,25 +75,26 @@ const handleUpdateFilter = (data) => {
     return
   }
 
+  // Хелпер для извлечения id из элемента (поддержка и объектов, и чисел)
+  const extractId = (item) => (typeof item === 'object' && item !== null ? item.id : item);
+
   // добавление квери параметров для роутинга
   const newQuery = {
     categories: data.category ? data.category.join(',') : undefined,
-    countries: data.location && data.location.countries ? data.location.countries?.map(item => item.id).join(',') : undefined,
-    regions: data.location && data.location.regions ? data.location.regions?.map(item => item.id).join(',') : undefined,
-    cities: data.location && data.location.cities ? data.location.cities?.map(item => item.id).join(',') : undefined,
+    countries: data.location && data.location.countries && data.location.countries.length ? data.location.countries.map(extractId).join(',') : undefined,
+    regions: data.location && data.location.regions && data.location.regions.length ? data.location.regions.map(extractId).join(',') : undefined,
+    cities: data.location && data.location.cities && data.location.cities.length ? data.location.cities.map(extractId).join(',') : undefined,
     batch_size_min: data.batch && data.batch.length > 1 ? data.batch[0] : undefined,
     batch_size_max: data.batch && data.batch.length > 1 ? data.batch[1] : undefined,
     urgent: data.is_rush ? data.is_rush : undefined,
   }
 
-  console.log(data.location.regions)
-
   // добавление квери параметров для запроса
   filter.value = {
     categories: data.category && data.category.length ? data.category : undefined,
-    regions: data.location && data.location.regions ? data.location.regions.map(item => item.id) : undefined,
-    countries: data.location && data.location.countries ? data.location.countries.map(item => item.id) : undefined,
-    cities: data.location && data.location.cities ? data.location.cities.map(item => item.id) : undefined,
+    regions: data.location && data.location.regions && data.location.regions.length ? data.location.regions.map(extractId) : undefined,
+    countries: data.location && data.location.countries && data.location.countries.length ? data.location.countries.map(extractId) : undefined,
+    cities: data.location && data.location.cities && data.location.cities.length ? data.location.cities.map(extractId) : undefined,
     batch_size_min: data.batch && data.batch.length > 1 ? data.batch[0] : undefined,
     batch_size_max: data.batch && data.batch.length > 1 ? data.batch[1] : undefined,
     urgent: data.is_rush ? data.is_rush : undefined,
