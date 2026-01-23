@@ -97,13 +97,14 @@ const countryList = ref([]);
 
 
 watch(() => props.filter, (newVal) => {
+  if (!newVal || Object.keys(newVal).length <= 1) return;
   searchProps.value = {
     type: newVal.type || 'customer',
     category: newVal.categories || [],
     location: newVal.countries || [],
     material: [newVal.materials_own ? 0 : undefined, newVal.materials_tolling ? 1 : undefined].filter(item => item !== undefined),
   };
-}, {deep: true, once: true})
+}, {deep: true, immediate: true})
 
 onMounted(() => {
   locationStore.getCountries().then(res => {
