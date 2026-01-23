@@ -100,7 +100,7 @@ watch(() => props.filter, (newVal) => {
   searchProps.value = {
     type: newVal.type || 'customer',
     category: newVal.categories || [],
-    location: newVal.country_ids || [],
+    location: newVal.countries || [],
     material: [newVal.materials_own ? 0 : undefined, newVal.materials_tolling ? 1 : undefined].filter(item => item !== undefined),
   };
 }, {deep: true, once: true})
