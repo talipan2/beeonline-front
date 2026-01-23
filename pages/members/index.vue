@@ -195,7 +195,7 @@ watch(() => page.value.currentPage, () => {
       const rect = anchor.value.getBoundingClientRect(); 
       const offset = window.scrollY + rect.top - settingStore.headerHeight;
       smoothScroll(offset, false);
-      router.replace({ query: { page: res.meta.current_page } });
+      router.replace({ query: { ...router.currentRoute.value.query, page: res.meta.current_page } });
     }
   }).finally(() => {
     loading.value = false
