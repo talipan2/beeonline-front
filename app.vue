@@ -52,15 +52,22 @@ const layout = computed(() => {
 const route = useRoute()
 
 const saveUtmParams = () => {
-  const utmParams = {
-    source: route.query.utm_source,
-    medium: route.query.utm_medium,
-    campaign: route.query.utm_campaign,
-    term: route.query.utm_term,
-    content: route.query.utm_content
-  }
+  // Проверяем, есть ли UTM параметры в URL
+  const hasUtmParams = route.query.utm_source || route.query.utm_medium || 
+                       route.query.utm_campaign || route.query.utm_term || route.query.utm_content
 
-  localStorage.setItem('utm_params', JSON.stringify(utmParams))
+  // Сохраняем только если есть хотя бы один UTM параметр
+  if (hasUtmParams) {
+    const utmParams = {
+      utm_source: route.query.utm_source || null,
+      utm_medium: route.query.utm_medium || null,
+      utm_campaign: route.query.utm_campaign || null,
+      utm_term: route.query.utm_term || null,
+      utm_content: route.query.utm_content || null
+    }
+
+    localStorage.setItem('utm_params', JSON.stringify(utmParams))
+  }
 }
 
 onMounted(() => {
