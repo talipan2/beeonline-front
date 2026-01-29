@@ -28,6 +28,19 @@ useHead({
           settingStore.isTelegram = false
         }
       }
+    },
+    {
+      innerHTML: `(function(){(function c(d,w,m,i) {
+        window.supportAPIMethod = m;
+        var s = d.createElement('script');
+        s.id = 'supportScript';
+        s.async = true;
+        var id = '343e36168aed79892af1c06bf605f378';
+        s.src = (!i ? 'https://lcab.talk-me.ru/support/support.js' : 'https://static.site-chat.me/support/support.int.js') + '?h=' + id;
+        s.onerror = i ? undefined : function(){c(d,w,m,true)};
+        w[m] = w[m] ? w[m] : function(){(w[m].q = w[m].q ? w[m].q : []).push(arguments);};
+        (d.head ? d.head : d.body).appendChild(s);
+      })(document,window,'TalkMe')})();`
     }
   ]
 });
