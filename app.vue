@@ -30,6 +30,9 @@ useHead({
       }
     },
     {
+      innerHTML: `window.TalkMeSetup = {domain: "bee-online"};`
+    },
+    {
       innerHTML: `(function(){(function c(d,w,m,i) {
         window.supportAPIMethod = m;
         var s = d.createElement('script');
