@@ -70,6 +70,10 @@ export default {
 		return axios.get(`banners/latest`, { params });
 	},
 
+	async bannerClick(bannerId) {
+		return axios.post(`banners/${bannerId}/click`);
+	},
+
 	async getRegisterCountries() {
 		return useApi().get(`register-countries`);
 	},

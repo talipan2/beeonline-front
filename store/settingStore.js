@@ -144,6 +144,14 @@ export const useSettingStore = defineStore('setting', {
 			}
 		},
 
+		async bannerClick(bannerId) {
+			try {
+				await commonApi.bannerClick(bannerId);
+			} catch (error) {
+				console.error(error);
+			}
+		},
+
 		async emailConfirm(id, hash) {
 			try {
 				const response = await commonApi.emailConfirm(id, hash);

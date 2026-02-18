@@ -11,8 +11,7 @@
 						v-if="bannerPerformer?.button?.enabled"
 						variant="default"
 						class="banners__button"
-						:type="bannerPerformer?.button?.type === 'modal_contacts' ? 'button' : 'link'"
-						:to="bannerPerformer?.button?.type === 'link' ? bannerPerformer?.button?.url : undefined"
+						type="button"
 						@click="handleButtonClick(bannerPerformer)"
 					>
 						{{ bannerPerformer.button.title || 'Подробнее' }}
@@ -27,8 +26,7 @@
 						v-if="bannerCustomer?.button?.enabled"
 						variant="default"
 						class="banners__button"
-						:type="bannerCustomer?.button?.type === 'modal_contacts' ? 'button' : 'link'"
-						:to="bannerCustomer?.button?.type === 'link' ? bannerCustomer?.button?.url : undefined"
+						type="button"
 						@click="handleButtonClick(bannerCustomer)"
 					>
 						{{ bannerCustomer.button.title || 'Подробнее' }}
@@ -53,8 +51,14 @@
 	const isContactModalOpen = ref(false);
 
 	const handleButtonClick = (banner) => {
+		if (banner?.id) {
+			settingStore.bannerClick(banner.id);
+		}
+
 		if (banner?.button?.type === 'modal_contacts') {
 			isContactModalOpen.value = true;
+		} else if (banner?.button?.type === 'link' && banner?.button?.url) {
+			window.open(banner.button.url, '_blank', 'noopener,noreferrer');
 		}
 	};
 
