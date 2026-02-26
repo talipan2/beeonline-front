@@ -5,6 +5,7 @@
     >
         <div class="card-pub__head">
             <h5 class="card-pub__title">{{ data.name || "Название компании" }}</h5>
+            <div class="card-pub__deleted-badge" v-if="data.is_deleted">Удалён</div>
             <div class="card-pub__status" v-if="statusVisible">Статус: {{ data.statusName }}</div>
         </div>
         <div class="card-pub__content">
@@ -205,6 +206,19 @@ const props = defineProps({
         flex-wrap: wrap;
         margin-bottom: 1.5em;
         padding-bottom: 1.5em;
+    }
+
+    &__deleted-badge {
+        align-self: center;
+        font-size: 1.2em;
+        font-weight: 600;
+        padding: .2em .6em;
+        margin-left: .5em;
+        flex: 0 0 auto;
+        color: #fff;
+        background-color: #e53935;
+        border-radius: 4px;
+        letter-spacing: 0.03em;
     }
 
     &__status {
