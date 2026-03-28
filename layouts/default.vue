@@ -7,6 +7,7 @@
     <Footer />
   </div>
   <ModalsContainer />
+  <TariffsNoTariffModal />
 </template>
 
 <script setup>

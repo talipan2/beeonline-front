@@ -1,11 +1,14 @@
 <template>
   <div class="tariff-card">
     <div class="tariff-card__header">
-      <h3 class="tariff-card__title">{{ tariff.name }}</h3>
+      <div>
+        <h3 class="tariff-card__title">{{ tariff.name }}</h3>
+        <p class="tariff-card__subtitle" v-if="getTariffDescription(tariff.code)">{{ getTariffDescription(tariff.code) }}</p>
+      </div>
       <p class="tariff-card__duration">{{ duration }} {{ plural(duration, {one: 'месяц', few: 'месяца', many: 'месяцев'}) }}</p>
     </div>
-    <p class="tariff-card__price tariff-card__price_type_full" v-if="discount && tariff.code !== 'free'">Итого: {{ formatMoney(price * 100 / (100 - discount), currency, 0) }}</p>
-    <p class="tariff-card__discount" v-if="discount && tariff.code !== 'free'">Скидка: {{ `-${discount}% (-${getDiscount(price, discount)})`}}</p>
+    <p class="tariff-card__price tariff-card__price_type_full" v-if="discount && !isFreeCode(tariff.code)">Итого: {{ formatMoney(price * 100 / (100 - discount), currency, 0) }}</p>
+    <p class="tariff-card__discount" v-if="discount && !isFreeCode(tariff.code)">Скидка: {{ `-${discount}% (-${getDiscount(price, discount)})`}}</p>
     <p class="tariff-card__price">Итого к оплате: {{ formatMoney(price, currency, 0) }}</p>
     <ul class="tariff-card__list">
       <li class="tariff-card__item" v-for="item in feature" :key="item">
@@ -20,7 +23,7 @@
         </p>
       </li>
     </ul>
-    <UiButton v-if="price > 0" type="button" @click="$emit('handlePay')" class="tariff-card__btn" variant="quinary" size="large">Подключить</UiButton>
+    <UiButton v-if="!isFreeCode(tariff.code)" type="button" @click="$emit('handlePay')" class="tariff-card__btn" variant="quinary" size="large">Подключить</UiButton>
   </div>
 </template>
 
@@ -52,6 +55,21 @@ const props = defineProps({
     default: 0,
   }
 });
+
+const TARIFF_DESCRIPTIONS = {
+  trial:   'Тест платформы и первые диалоги',
+  premium: 'Быстрые отклики и мгновенные уведомления',
+  ultra:   'Видимость + входящие клиенты',
+  maximum: 'Максимальный приоритет',
+};
+
+function getTariffDescription(code) {
+  return TARIFF_DESCRIPTIONS[code] ?? '';
+}
+
+function isFreeCode(code) {
+  return code === 'free';
+}
 
 function getDiscount(price, discount) {
   const originalAmount = price / (1 - discount / 100);
@@ -100,7 +118,15 @@ function serviceInTariff(service, tariff_id) {
     font-family: 'lato', sans-serif;
     font-size: 1.6em;
     font-weight: 700;
-    margin-bottom: 1em;
+    margin-bottom: .3em;
+  }
+
+  &__subtitle {
+    font-size: 1.2em;
+    font-weight: 400;
+    line-height: 1.4em;
+    color: #989898;
+    margin-bottom: .7em;
   }
 
   &__duration {

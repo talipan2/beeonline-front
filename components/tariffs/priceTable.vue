@@ -12,7 +12,10 @@
           <tr>
             <th>Возможности</th>
             <th v-for="(tariff, index) in tariffs" :key="index">
-              {{ tariff.name }}
+              <span class="tariffs-table__tariff-name" :title="getTariffTooltip(tariff.code)">
+                {{ tariff.name }}
+              </span>
+              <span class="tariffs-table__tariff-desc">{{ getTariffDescription(tariff.code) }}</span>
             </th>
           </tr>
         </thead>
@@ -56,7 +59,7 @@
             <td class="tariffs-table__price">Скидка {{ discount }}%</td>
             <template v-for="(tariff, colIndex) in tariffs" :key="colIndex">
               <td v-if="tariff.prices !== null" class="tariffs-table__price-value">
-                <span v-if="discount !== null && tariff.code !== 'free'">{{ `-${getDiscount(getPrice(tariff), discount, getCurrency(tariff))}`}}<br /></span>
+                <span v-if="discount !== null && !isFreeCode(tariff.code)">{{ `-${getDiscount(getPrice(tariff), discount, getCurrency(tariff))}`}}<br /></span>
               </td>
             </template>
           </tr>
@@ -74,8 +77,15 @@
             <td></td>
             <template v-for="(tariff, colIndex) in tariffs" :key="colIndex">
               <td>
-                <UiButton type="button" class="tariffs-table__btn" variant="quinary" size="large"
-                  @click="handlePayModal(tariff.code, props.subDuration)" v-if="tariff.code !== 'free'">Подключить
+                <UiButton
+                  v-if="!isFreeCode(tariff.code)"
+                  type="button"
+                  class="tariffs-table__btn"
+                  variant="quinary"
+                  size="large"
+                  @click="handlePayModal(tariff.code, props.subDuration)"
+                >
+                  {{ getCtaLabel(tariff.code) }}
                 </UiButton>
               </td>
             </template>
@@ -153,14 +163,49 @@ const discount = computed(() => {
   }
 })
 
+const TARIFF_DESCRIPTIONS = {
+  trial:   'Тест платформы и первые диалоги',
+  premium: 'Быстрые отклики и мгновенные уведомления',
+  ultra:   'Видимость + входящие клиенты',
+  maximum: 'Максимальный приоритет',
+};
+
+const TARIFF_TOOLTIPS = {
+  trial:   'Старт на платформе с мониторингом заказов и первыми переговорами.',
+  premium: 'Мгновенные уведомления и быстрые отклики для регулярного поиска заказов.',
+  ultra:   'Усиленная видимость и открытые контакты: профиль работает как страница фабрики.',
+  maximum: 'Максимальный приоритет и возможность напрямую связываться с заказчиками.',
+};
+
+function getTariffDescription(code) {
+  return TARIFF_DESCRIPTIONS[code] ?? '';
+}
+
+function getTariffTooltip(code) {
+  return TARIFF_TOOLTIPS[code] ?? '';
+}
+
+/** Коды «бесплатных» тарифов (без кнопки оплаты и скидок) */
+function isFreeCode(code) {
+  return code === 'free';
+}
+
+function getCtaLabel(code) {
+  return 'Подключить';
+}
+
 function getPrice(tariff) {
-  if (tariff.code === 'free') return 0;
-  const priceOption = tariff.prices.find(option => option.quantity == props.subDuration);
-  return priceOption?.amount;
+  if (isFreeCode(tariff.code)) return 0;
+  const priceOption = tariff.prices.find(option => option.quantity == props.subDuration)
+    ?? tariff.prices?.[0];
+  return priceOption?.amount ?? 0;
 }
 
 function getCurrency(tariff) {
-  return tariff.prices.find(option => option.quantity == props.subDuration)?.currency;
+  return (
+    tariff.prices.find(option => option.quantity == props.subDuration)?.currency
+    ?? tariff.prices?.[0]?.currency
+  );
 }
 
 function serviceInTariff(service, tariff_id) {
@@ -210,6 +255,21 @@ function serviceHasTariffs(service)
     font-weight: 700;
     text-align: left;
     border-bottom: 1px solid #C4C4C4;
+    vertical-align: top;
+  }
+
+  &__tariff-name {
+    display: block;
+    cursor: default;
+  }
+
+  &__tariff-desc {
+    display: block;
+    font-size: .75em;
+    font-weight: 400;
+    line-height: 1.4em;
+    color: #989898;
+    margin-top: .3em;
   }
 
   th, td {

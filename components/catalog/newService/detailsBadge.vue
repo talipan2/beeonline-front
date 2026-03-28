@@ -16,7 +16,16 @@
         </template>
         <template v-else>
           <p class="details-badge__value" :class="{ 'details-badge__value_type_hidden': lineLimit }">
-            {{ spec.value || '-' }}
+            <a
+              v-if="isUrl(spec.value)"
+              :href="ensureHttps(spec.value)"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="details-badge__link"
+            >
+              {{ spec.value }}
+            </a>
+            <template v-else>{{ spec.value || '-' }}</template>
           </p>
         </template>
       </div>
@@ -25,6 +34,13 @@
 </template>
 
 <script setup>
+import { ensureHttps } from '~/utils/ensureHttps'
+
+function isUrl(value) {
+  if (!value || typeof value !== 'string') return false
+  return /^(https?:\/\/|www\.)/i.test(value.trim())
+}
+
 const props = defineProps({
   specs: {
     type: [Array, Object],
@@ -96,6 +112,16 @@ const normalizedSpecs = computed(() =>
     line-height: 1.2em;
     color: var(--text-color-monodecimal);
 
+
+    a {
+      color: var(--primary-color, #1a73e8);
+      text-decoration: none;
+      word-break: break-all;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
 
     &_type_hidden {
       display: -webkit-box !important;

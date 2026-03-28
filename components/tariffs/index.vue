@@ -7,10 +7,10 @@
 				:userBonuses="userBonuses"
 				:currentCurrency="currentCurrency"
 			/>
-			<TariffsPlanSummaryCard
-				class="tariffs__plan-summary-card"
-				v-if="!(isInternational && tariffsStore.tariffName === 'Бесплатный')"
-			/>
+		<TariffsPlanSummaryCard
+			class="tariffs__plan-summary-card"
+			v-if="!(isInternational && tariffsStore.tariffName === 'Пробный')"
+		/>
 		</div>
 		<div
 			class="tariffs__content"
