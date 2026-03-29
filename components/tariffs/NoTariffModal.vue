@@ -68,6 +68,9 @@ import { useUserStore } from '~/store/userStore'
 const userStore = useUserStore()
 const route = useRoute()
 
+// Дата введения платного пробного тарифа — старые пользователи освобождены
+const TARIFF_REQUIRED_FROM = new Date('2026-03-16T00:00:00')
+
 const isVisible = computed(() => {
     if (!userStore.isAuth) return false
     if (userStore.role !== 'performer') return false
@@ -75,6 +78,9 @@ const isVisible = computed(() => {
 
     const org = userStore.userOrganization
     if (!org || !org.id) return false
+
+    // Старые пользователи (до введения платного тарифа) — не показываем
+    if (org.created_at && new Date(org.created_at) < TARIFF_REQUIRED_FROM) return false
 
     // Нет тарифа
     if (!org.tariff_id) return true
