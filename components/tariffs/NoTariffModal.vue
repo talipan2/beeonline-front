@@ -1,13 +1,13 @@
 <template>
     <VueFinalModal
         :model-value="isVisible"
-        @update:model-value="() => {}"
+        @update:model-value="close"
         class="modal no-tariff-modal"
         content-class="modal-vfm-content"
         overlay-transition="vfm-fade"
         content-transition="vfm-fade"
         :click-to-close="false"
-        :esc-to-close="false"
+        :esc-to-close="true"
         :lock-scroll="true"
         overlay-class="no-tariff-modal__overlay"
         background="non-interactive"
@@ -17,6 +17,9 @@
 
                 <!-- Шапка с иконкой -->
                 <div class="no-tariff-modal__header">
+                    <button class="no-tariff-modal__close" @click="close" aria-label="Закрыть">
+                        <SvgoClose />
+                    </button>
                     <div class="no-tariff-modal__header-icon">
                         <SvgoAlertIcon />
                     </div>
@@ -71,7 +74,14 @@ const route = useRoute()
 // Дата введения платного пробного тарифа — старые пользователи освобождены
 const TARIFF_REQUIRED_FROM = new Date('2026-03-16T00:00:00')
 
+const closedManually = ref(false)
+
+function close() {
+    closedManually.value = true
+}
+
 const isVisible = computed(() => {
+    if (closedManually.value) return false
     if (!userStore.isAuth) return false
     if (userStore.role !== 'performer') return false
     if (route.path === '/tariffs') return false
@@ -123,6 +133,31 @@ const isVisible = computed(() => {
         display: flex;
         align-items: center;
         justify-content: center;
+        position: relative;
+    }
+
+    &__close {
+        position: absolute;
+        top: 1.2rem;
+        right: 1.2rem;
+        width: 3.2rem;
+        height: 3.2rem;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+        color: #fff;
+
+        svg {
+            width: 1.4rem;
+            height: 1.4rem;
+        }
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
     }
 
     &__header-icon {
