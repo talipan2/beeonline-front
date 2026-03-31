@@ -203,7 +203,7 @@
 		}
 
 		&__notice {
-			font-size: 1.4em;
+			font-size: 1.8em;
 			color: var(--text-color-secondary);
 			margin-top: 2rem;
 			margin-bottom: 0;
