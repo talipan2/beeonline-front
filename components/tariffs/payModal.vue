@@ -6,7 +6,7 @@
           <p class="pay-modal__balance">На счету <span>{{ userBalance }}</span></p>
           <UiButton type="button" class="pay-modal__header-btn" variant="default" @click="handleOpenReplenishmentModal">Пополнить</UiButton>
         </div>
-        <div class="pay-modal__body" v-if="currentCurrency === 'RUB'">
+        <div class="pay-modal__body" v-if="currentCurrency === 'RUB' && (data.isServices || data.data?.code !== 'trial')">
           <p class="pay-modal__text" v-if="amount >= 1000">Можно оплатить баллами не более 25% от услуги</p>
           <p  class="pay-modal__text" v-else>Бонусами можно оплатить, если стоимость услуг составляет 1000₽ и более.</p>
           <p class="pay-modal__balance">Ваш баланс: <span>{{ formatMoney(userBonuses, 'bonuses') }} баллов</span></p>
