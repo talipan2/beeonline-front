@@ -41,13 +41,15 @@ const tariffsStore = useTariffsStore();
 
 const availableUserFeatures = computed(() => {
 	if (!tariffsStore.balanceLoaded) return [];
-  return tariffsStore.services?.filter(service => service.prices?.length).map(service => {
-	let feature = tariffsStore.availableUserFeatures.find(f => f.id === service.id);
-	return {
-		title: service.name,
-		value: feature.quantity
-	}
-  });
+	return tariffsStore.services
+		?.filter(service => service.code === 'chats')
+		.map(service => {
+			const feature = tariffsStore.availableUserFeatures.find(f => f.id === service.id);
+			return {
+				title: service.name,
+				value: feature?.quantity ?? 0,
+			};
+		});
 });
 
 // const availableUserFeatures = [
