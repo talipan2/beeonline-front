@@ -3,7 +3,9 @@
     <div class="plan-summary__header">
       <h3 class="plan-summary__header-text">
         Тариф:
-        <span class="plan-summary__text plan-summary__text_type_selection" v-if="tariffsStore.balanceLoaded">{{ tariffsStore.tariffName }}</span>
+        <span class="plan-summary__text plan-summary__text_type_selection" v-if="tariffsStore.balanceLoaded">
+          {{ tariffsStore.tariffName ?? 'Не подключён' }}
+        </span>
         <CommonSpinner v-else />
       </h3>
       <p class="plan-summary__text">

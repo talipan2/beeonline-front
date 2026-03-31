@@ -126,7 +126,13 @@ const emit = defineEmits(['select']);
 
 const tariffsStore = useTariffsStore();
 
-const tariffs = computed(() => tariffsStore.tariffs);
+const tariffs = computed(() => {
+  const all = tariffsStore.tariffs ?? [];
+  if (props.subDuration !== '1') {
+    return all.filter(t => t.code !== 'trial');
+  }
+  return all;
+});
 const services = computed(() => tariffsStore.services?.filter(service => service.tariffs.length));
 
 function getDiscount(price, discount, currency = 'RUB') {

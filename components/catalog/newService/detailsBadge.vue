@@ -25,6 +25,20 @@
             >
               {{ spec.value }}
             </a>
+            <a
+              v-else-if="isPhone(spec.value)"
+              :href="`tel:${normalizePhone(spec.value)}`"
+              class="details-badge__link"
+            >
+              {{ spec.value }}
+            </a>
+            <a
+              v-else-if="isEmail(spec.value)"
+              :href="`mailto:${spec.value}`"
+              class="details-badge__link"
+            >
+              {{ spec.value }}
+            </a>
             <template v-else>{{ spec.value || '-' }}</template>
           </p>
         </template>
@@ -39,6 +53,20 @@ import { ensureHttps } from '~/utils/ensureHttps'
 function isUrl(value) {
   if (!value || typeof value !== 'string') return false
   return /^(https?:\/\/|www\.)/i.test(value.trim())
+}
+
+function isPhone(value) {
+  if (!value || typeof value !== 'string') return false
+  return /^[\+\d][\d\s\-\(\)]{6,}$/.test(value.trim())
+}
+
+function isEmail(value) {
+  if (!value || typeof value !== 'string') return false
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())
+}
+
+function normalizePhone(value) {
+  return value.trim().replace(/[\s\-\(\)]/g, '')
 }
 
 const props = defineProps({

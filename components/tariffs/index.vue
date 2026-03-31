@@ -9,7 +9,7 @@
 			/>
 		<TariffsPlanSummaryCard
 			class="tariffs__plan-summary-card"
-			v-if="!(isInternational && tariffsStore.tariffName === 'Пробный')"
+			v-if="!(isInternational && !tariffsStore.tariffName)"
 		/>
 		</div>
 		<div
@@ -39,17 +39,20 @@
 					:return-value="true"
 				/>
 			</div>
-			<TariffsPriceTable
-				:subDuration="currentTab"
-				@select="selectTariff"
-				v-if="!isInternational"
-			/>
-			<TariffsInternational
-				v-if="isInternational"
-				@select="selectTariff"
-			/>
-		</div>
-		<div class="tariffs__content">
+		<TariffsPriceTable
+			:subDuration="currentTab"
+			@select="selectTariff"
+			v-if="!isInternational"
+		/>
+		<TariffsInternational
+			v-if="isInternational"
+			@select="selectTariff"
+		/>
+		<p class="tariffs__notice">
+			Для работы на платформе необходимо подключить тариф и оплатить его.
+		</p>
+	</div>
+	<div class="tariffs__content">
 			<div class="tariffs__content-header">
 				<h2 class="tariffs__title">Дополнительные услуги</h2>
 			</div>
@@ -197,6 +200,13 @@
 
 		&__content {
 			margin-bottom: 9.6em;
+		}
+
+		&__notice {
+			font-size: 1.4em;
+			color: var(--text-color-secondary);
+			margin-top: 2rem;
+			margin-bottom: 0;
 		}
 
 		&__selector {

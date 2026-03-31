@@ -12,7 +12,7 @@ export const useTariffsStore = defineStore("tariffs", {
         userCurrency: "RUB",
         isForeigner: false,
         availableUserFeatures: null,
-        tariffName: "Пробный",
+        tariffName: null,
         tariffExpiredAt: null,
 
         tariffs: null,

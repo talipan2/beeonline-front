@@ -38,7 +38,6 @@
                             v-for="tariff in payableTariffs"
                             :key="tariff.id"
                             class="no-tariff-modal__tariff-item"
-                            :class="{ 'no-tariff-modal__tariff-item_featured': tariff.code === 'trial' }"
                         >
                             <div class="no-tariff-modal__tariff-name">{{ tariff.name }}</div>
                             <div class="no-tariff-modal__tariff-desc">{{ getTariffDescription(tariff.code) }}</div>
