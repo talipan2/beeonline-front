@@ -203,10 +203,12 @@
 		}
 
 		&__notice {
-			font-size: 1.8em;
-			color: var(--text-color-secondary);
+			font-size: 3em;
+			font-weight: 700;
+			color: var(--text-color-quaternary);
 			margin-top: 2rem;
 			margin-bottom: 0;
+			width: 100%;
 		}
 
 		&__selector {
