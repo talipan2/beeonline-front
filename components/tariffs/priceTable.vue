@@ -161,9 +161,9 @@ const discount = computed(() => {
     case '3':
       return 5;
     case '6':
-      return 10;
-    case '12':
       return 15;
+    case '12':
+      return 20;
     default:
       return null;
   }
