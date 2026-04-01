@@ -159,7 +159,7 @@ const discount = computed(() => {
     case '1':
       return 0;
     case '3':
-      return 5;
+      return 10;
     case '6':
       return 15;
     case '12':
