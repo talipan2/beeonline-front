@@ -40,6 +40,8 @@
 		});
 
 	onMounted(() => {
+		settingStore.incrementNewsView(router.currentRoute.value.params.id);
+
 		settingStore
 			.getBanners({
 				banner_type: ['news'],

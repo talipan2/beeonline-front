@@ -62,6 +62,10 @@ export default {
 		return axios.get(`news/${id}`);
 	},
 
+	async incrementNewsView(id) {
+		return axios.post(`news/${id}/view`);
+	},
+
 	async getBanners(params = {}) {
 		return axios.get(`banners`, { params });
 	},

@@ -28,9 +28,18 @@
 				<p class="news-card__description">
 					{{ stripHtml(data.preview_text) }}
 				</p>
-				<p class="news-card__date">
-					{{ formatDate(data.created_at, 'DD.MM.YYYY') }}
-				</p>
+				<div class="news-card__footer">
+					<p class="news-card__date">
+						{{ formatDate(data.created_at, 'DD.MM.YYYY') }}
+					</p>
+					<div class="news-card__views" v-if="data.views_count !== undefined">
+						<svg class="news-card__views-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+							<circle cx="12" cy="12" r="3"/>
+						</svg>
+						<span>{{ data.views_count }}</span>
+					</div>
+				</div>
 			</div>
 		</div>
 		<NuxtLink
@@ -152,12 +161,32 @@
 			opacity: 0.8;
 		}
 
+		&__footer {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-top: auto;
+		}
+
 		&__date {
 			font-size: 1.4em;
 			font-weight: 400;
 			line-height: 1.3em;
 			opacity: 0.8;
-			margin-top: auto;
+		}
+
+		&__views {
+			display: flex;
+			align-items: center;
+			gap: 0.4em;
+			font-size: 1.4em;
+			font-weight: 400;
+			opacity: 0.8;
+		}
+
+		&__views-icon {
+			width: 1.2em;
+			height: 1.2em;
 		}
 
 		&__link {

@@ -46,6 +46,14 @@
             btnText="Изменить"
             :btn-function="() => (editPubCardModal = true)"
         />
+        <CommonNotify
+            v-if="showTariffBanner"
+            type="warning"
+            title="Без выбора тарифа, ваша анкета не пройдет модерацию и вы не сможете работать на платформе."
+            text="Выберите тариф и оплатите его"
+            btnText="Выбрать тариф"
+            :btn-function="goToTariffs"
+        />
     </CommonLayoutInfoCard>
     <CommonLayoutInfoCard
         title="Карточка компании"
@@ -198,6 +206,7 @@ import defaultImage from "~/assets/images/nophoto_pc.png";
 import { useOrganizationStore } from "~/store/organizationStore";
 import { useToast } from "vue-toastification";
 import { useSettingStore } from "~/store/settingStore";
+import { useTariffsStore } from "~/store/tariffsStore";
 
 const props = defineProps({
     modelValue: {
@@ -220,6 +229,7 @@ const props = defineProps({
 
 const organizationStore = useOrganizationStore();
 const settingStore = useSettingStore();
+const tariffsStore = useTariffsStore();
 const toast = useToast();
 
 const data = computed({
@@ -232,6 +242,13 @@ const data = computed({
 });
 
 const emit = defineEmits(["update:modelValue"]);
+
+const router = useRouter();
+const goToTariffs = () => router.push('/tariffs');
+
+const showTariffBanner = computed(() =>
+    props.isPreview && data.value?.status_code === 'UNDER_MODERATION' && !tariffsStore.tariffName
+);
 
 const dataCopyForModal = ref({ ...data.value });
 

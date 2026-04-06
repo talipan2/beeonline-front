@@ -1,11 +1,7 @@
 <template>
 	<section class="container new-main__announcements">
-		<MainNewMainSectionContainer
-			title="Поиск объявлений"
-			description="Ускорьте свой путь к успеху с нашим сервисом, находя лучших производителей одежды в модной индустрии за считаные минуты! На платформе доступен поиск швейных фабрик и цехов для пошива одежды, реализована возможность установить прямые контакты для контрактного производства без посредников."
-			link="/board"
-			linkText="Перейти в раздел"
-		>
+		<MainNewMainSectionContainer title="Поиск объявлений" link="/board" linkText="Перейти в раздел">
+			<template #description>Найдите подрядчиков и поставщиков для фабрики, ателье, бренда или магазина в разделе <NuxtLink to="/board" class="section-link">«Поставщики»</NuxtLink>. Здесь размещают объявления о продаже тканей и фурнитуры, услугах в сферах логистики, фулфилмента, маркировки, и других смежных с легкой промышленностью направлениях — все на одной площадке.</template>
 			<div class="new-main__announcements-list">
 				<MainNewMainEntityCardSkeleton
 					v-for="n in 8"
@@ -60,6 +56,18 @@
 </script>
 
 <style lang="scss" scoped>
+	.section-link {
+		display: inline;
+		color: #62636e;
+		text-decoration: underline;
+		text-underline-offset: 3px;
+		transition: opacity 0.2s ease;
+
+		&:hover {
+			opacity: 0.75;
+		}
+	}
+
 	.new-main__announcements {
 		font-size: 1rem;
 		margin-bottom: 10em;

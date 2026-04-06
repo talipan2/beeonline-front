@@ -122,6 +122,14 @@ export const useSettingStore = defineStore('setting', {
 			}
 		},
 
+		async incrementNewsView(id) {
+			try {
+				await commonApi.incrementNewsView(id);
+			} catch (error) {
+				console.error(error);
+			}
+		},
+
 		async getBanners(params) {
 			try {
 				const response = await commonApi.getBanners(params);

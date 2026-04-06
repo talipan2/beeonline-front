@@ -2,9 +2,18 @@
 	<div class="news-details">
 		<div class="news-details__container">
 			<div class="news-details__header">
-				<p class="news-details__header-date">
-					Дата публикации: {{ formatDate(data.created_at, 'DD.MM.YYYY') }}
-				</p>
+				<div class="news-details__header-meta">
+					<p class="news-details__header-date">
+						Дата публикации: {{ formatDate(data.created_at, 'DD.MM.YYYY') }}
+					</p>
+					<div class="news-details__views" v-if="data.views_count !== undefined">
+						<svg class="news-details__views-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+							<circle cx="12" cy="12" r="3"/>
+						</svg>
+						<span>{{ data.views_count }}</span>
+					</div>
+				</div>
 				<div class="news-details__header-tags">
 					<div
 						class="news-details__header-tag"
@@ -145,9 +154,28 @@
 			margin-bottom: 1.6em;
 		}
 
+		&__header-meta {
+			display: flex;
+			align-items: center;
+			gap: 1.2em;
+		}
+
 		&__header-date {
 			font-size: 1em;
 			font-weight: 400;
+		}
+
+		&__views {
+			display: flex;
+			align-items: center;
+			gap: 0.4em;
+			font-size: 1em;
+			opacity: 0.7;
+		}
+
+		&__views-icon {
+			width: 1.2em;
+			height: 1.2em;
 		}
 
 		&__header-tags {

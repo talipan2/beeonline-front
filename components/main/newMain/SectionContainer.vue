@@ -2,19 +2,20 @@
 	<div class="search-entity">
 		<div class="search-entity__content">
 			<div class="search-entity__header">
-				<div class="search-entity__header-title">
-					<h2 class="search-entity__title">{{ title }}</h2>
-					<p class="search-entity__description">
-						{{ description }}
-					</p>
-				</div>
-				<UiButton
-					variant="default"
-					:to="link"
-					class="search-entity__header-button"
-				>
-					{{ linkText }}
-				</UiButton>
+			<div class="search-entity__header-title">
+				<h2 class="search-entity__title">{{ title }}</h2>
+				<p class="search-entity__description">
+					<slot name="description">{{ description }}</slot>
+				</p>
+			</div>
+			<UiButton
+				v-if="linkText"
+				variant="default"
+				:to="link"
+				class="search-entity__header-button"
+			>
+				{{ linkText }}
+			</UiButton>
 			</div>
 			<slot />
 		</div>
@@ -90,6 +91,7 @@
 				font-size: 1.4rem;
 			}
 		}
+
 
 		&__header-button {
 			font-size: 1.8em;
