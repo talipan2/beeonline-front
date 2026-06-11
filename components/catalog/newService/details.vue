@@ -28,6 +28,7 @@
 					v-if="data.tariff?.name"
 					class="new-service-details__pub-card-nameplate"
 					:text="data.tariff?.name"
+					:tooltip="useTariffTooltip(data.tariff?.code)"
 					type="tariff"
 				/>
 			</div>
@@ -200,18 +201,19 @@
 						:text="'Контакты'"
 						type="contacts"
 					/>
-				</CatalogNewServiceContactsButton>
-				<CommonNameplate
-					v-if="data.tariff?.name"
-					class="new-service-details__pub-card-nameplate"
-					:text="data.tariff?.name"
-					type="tariff"
-				/>
-				<CommonNameplate
-					v-if="data?.performer_is_new"
-					class="new-service-details__pub-card-nameplate"
-					:text="'NEW'"
-					type="new"
+			</CatalogNewServiceContactsButton>
+			<CommonNameplate
+				v-if="data.tariff?.name"
+				class="new-service-details__pub-card-nameplate"
+				:text="data.tariff?.name"
+				:tooltip="useTariffTooltip(data.tariff?.code)"
+				type="tariff"
+			/>
+			<CommonNameplate
+				v-if="data?.performer_is_new"
+				class="new-service-details__pub-card-nameplate"
+				:text="'NEW'"
+				type="new"
 				/>
 			</div>
 			<div class="new-service-details__pub-card-image">
@@ -597,6 +599,7 @@
 	import { useSettingStore } from '~/store/settingStore';
 	import { useUserStore } from '~/store/userStore';
 	import { useToast } from 'vue-toastification';
+	import { useTariffTooltip } from '~/composables/useTariffTooltip';
 
 	const props = defineProps({
 		data: {

@@ -119,6 +119,15 @@ import { useLocationStore } from '~/store/locationStore';
 
 const locationStore = useLocationStore();
 
+/** В чипах областей не добавляем «, Россия» — иначе путают с поиском по всей стране. */
+function regionChipDisplayName(regionName, countryName) {
+	if (!regionName) return '';
+	if (!countryName) return regionName;
+	const c = String(countryName).trim().toLowerCase();
+	if (c === 'россия' || c === 'russia') return regionName;
+	return `${regionName}, ${countryName}`;
+}
+
 const locations = ref([]);
 
 const props = defineProps({
@@ -230,7 +239,7 @@ function toggleCitySelection(city) {
   if(selectedRegion.value.cities.every(city => city.selected) && locationTypes.value.selectRegions) {
     selectedRegionIds.value.push({
       id: selectedRegion.value.id,
-      name: `${selectedRegion.value.name}, ${selectedCountry.value.name}`
+      name: regionChipDisplayName(selectedRegion.value.name, selectedCountry.value.name),
     });
     selectedCities.value = selectedCities.value.filter(selectedCity => {
       return !selectedRegion.value.cities.some(city => city.id === selectedCity.id)
@@ -346,7 +355,7 @@ function selectAllCities(region) {
       selectedCountry.value.regions.forEach(countryRegion => {
         if (countryRegion.id !== region.id && !selectedRegionIds.value.some(selectedRegionId => selectedRegionId.id === countryRegion.id)) {
           countryRegion.selected = true;
-          selectedRegionIds.value.push({id: countryRegion.id, name: `${countryRegion.name}, ${selectedCountry.value.name}`});
+          selectedRegionIds.value.push({id: countryRegion.id, name: regionChipDisplayName(countryRegion.name, selectedCountry.value.name)});
         }
       });
 
@@ -355,7 +364,7 @@ function selectAllCities(region) {
     }
     // 3. Если регион выбран, добавляем его и все города
     if (region.selected) {
-      selectedRegionIds.value.push({id: region.id, name: `${region.name}, ${selectedCountry.value.name}`});
+      selectedRegionIds.value.push({id: region.id, name: regionChipDisplayName(region.name, selectedCountry.value.name)});
 
       // Устанавливаем все города как выбранные
       region.cities.forEach(city => {
@@ -397,7 +406,7 @@ function selectAllRegions(country) {
       if(!locationTypes.value.selectCountry) {
         selectedRegionIds.value.push({
           id: region.id,
-          name: `${region.name}, ${country.name}`
+          name: regionChipDisplayName(region.name, country.name),
         });
       }
       region.cities.forEach(city => {

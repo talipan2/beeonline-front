@@ -12,6 +12,7 @@ export const useTariffsStore = defineStore("tariffs", {
         userCurrency: "RUB",
         isForeigner: false,
         availableUserFeatures: null,
+        tariffFeatures: [],
         tariffName: null,
         tariffExpiredAt: null,
 
@@ -29,6 +30,7 @@ export const useTariffsStore = defineStore("tariffs", {
                 this.tariffName = data.tariff_name;
                 this.tariffExpiredAt = data.tariff_expired_at;
                 this.availableUserFeatures = data.services;
+                this.tariffFeatures = data.features ?? [];
                 this.balanceLoaded = true;
                 return data;
             });

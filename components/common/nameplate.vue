@@ -1,5 +1,11 @@
 <template>
-  <div class="nameplate">
+  <div
+    class="nameplate"
+    :class="{ 'nameplate_has-tooltip': tooltip }"
+    @mouseenter="showTooltip"
+    @mouseleave="hideTooltip"
+    ref="nameplateRef"
+  >
     <div class="nameplate__name">
       <svg v-if="type === 'new'" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M12.0006 18.26L4.94715 22.2082L6.52248 14.2799L0.587891 8.7918L8.61493 7.84006L12.0006 0.5L15.3862 7.84006L23.4132 8.7918L17.4787 14.2799L19.054 22.2082L12.0006 18.26Z" fill="white" />
@@ -14,6 +20,17 @@
         {{ text }}
       </span>
     </div>
+
+    <Teleport to="body" v-if="tooltip">
+      <div
+        v-show="isHovered"
+        class="nameplate-teleport-tooltip"
+        :style="tooltipStyle"
+      >
+        {{ tooltip }}
+        <span class="nameplate-teleport-tooltip__arrow"></span>
+      </div>
+    </Teleport>
   </div>
 </template>
 
@@ -28,8 +45,34 @@ const props = defineProps({
     type: String,
     default: '',
     validator: (value) => ['new', 'contacts', 'tariff'].includes(value),
-  }
+  },
+  tooltip: {
+    type: String,
+    default: null,
+  },
 })
+
+const nameplateRef = ref(null)
+const isHovered = ref(false)
+const tooltipStyle = ref({})
+
+const updatePosition = () => {
+  if (!nameplateRef.value) return
+  const rect = nameplateRef.value.getBoundingClientRect()
+  tooltipStyle.value = {
+    top: `${rect.bottom + window.scrollY + 10}px`,
+    right: `${window.innerWidth - rect.right}px`,
+  }
+}
+
+const showTooltip = () => {
+  updatePosition()
+  isHovered.value = true
+}
+
+const hideTooltip = () => {
+  isHovered.value = false
+}
 
 </script>
 
@@ -42,6 +85,10 @@ const props = defineProps({
   padding: 1.2em 2.4em;
   border-radius: 8px;
   background: linear-gradient(314deg, #ce51ba 11.02%, #4027a3 100%);
+
+  &_has-tooltip {
+    cursor: default;
+  }
 
   &__name {
     display: flex;
@@ -85,6 +132,29 @@ const props = defineProps({
       width: 1.6em;
       height: 1.6em;
     }
+  }
+}
+
+.nameplate-teleport-tooltip {
+  position: absolute;
+  max-width: 320px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: #2d2d3a;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.5;
+  white-space: normal;
+  z-index: 9999;
+  pointer-events: none;
+
+  &__arrow {
+    position: absolute;
+    bottom: 100%;
+    right: 16px;
+    border: 6px solid transparent;
+    border-bottom-color: #2d2d3a;
   }
 }
 

@@ -39,6 +39,14 @@
 					:return-value="true"
 				/>
 			</div>
+			<div v-if="!isInternational" class="tariffs__table-intro">
+				<p class="tariffs__notice tariffs__notice_pre-table">
+					Покупка тарифа Максимум
+				</p>
+				<p class="tariffs__notice-sub">
+					Подключение тарифа «Максимум» доступно от 3-х месяцев.
+				</p>
+			</div>
 		<TariffsPriceTable
 			:subDuration="currentTab"
 			@select="selectTariff"
@@ -48,9 +56,6 @@
 			v-if="isInternational"
 			@select="selectTariff"
 		/>
-		<p class="tariffs__notice">
-			Для работы на платформе необходимо подключить тариф и оплатить его.
-		</p>
 	</div>
 	<div class="tariffs__content">
 			<div class="tariffs__content-header">
@@ -202,6 +207,10 @@
 			margin-bottom: 9.6em;
 		}
 
+		&__table-intro {
+			margin-bottom: 2rem;
+		}
+
 		&__notice {
 			font-size: 3em;
 			font-weight: 700;
@@ -209,6 +218,24 @@
 			margin-top: 2rem;
 			margin-bottom: 0;
 			width: 100%;
+
+			&_pre-table {
+				margin-top: 0;
+			}
+
+			&_after-table {
+				margin-top: 2rem;
+			}
+		}
+
+		&__notice-sub {
+			font-size: 2em;
+			font-weight: 400;
+			color: var(--text-color-tertiary);
+			margin-top: 0.8rem;
+			margin-bottom: 0;
+			width: 100%;
+			line-height: 1.3;
 		}
 
 		&__selector {

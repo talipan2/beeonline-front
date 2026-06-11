@@ -22,14 +22,25 @@
         <CommonSpinner v-else />
       </p>
     </div>
-    <ul class="plan-summary__list" v-if="tariffsStore.balanceLoaded">
-      <template v-for="item in availableUserFeatures" :key="item.id">
-        <li class="plan-summary__text">
-          {{ item.title }}:
-          <span class="plan-summary__text plan-summary__text_type_selection">{{ item.value }}</span>
+    <template v-if="tariffsStore.balanceLoaded">
+      <ul class="plan-summary__list" v-if="availableUserFeatures.length">
+        <template v-for="item in availableUserFeatures" :key="item.id">
+          <li class="plan-summary__text">
+            {{ item.title }}:
+            <span class="plan-summary__text plan-summary__text_type_selection">{{ item.value }}</span>
+          </li>
+        </template>
+      </ul>
+      <ul class="plan-summary__list plan-summary__list_type_features" v-if="tariffsStore.tariffFeatures.length">
+        <li
+          v-for="(feature, index) in tariffsStore.tariffFeatures"
+          :key="index"
+          class="plan-summary__text plan-summary__feature"
+        >
+          {{ feature }}
         </li>
-      </template>
-    </ul>
+      </ul>
+    </template>
     <CommonSpinner v-else/>
   </TariffsCardLayout>
 </template>
@@ -110,6 +121,16 @@ const availableUserFeatures = computed(() => {
     display: flex;
     flex-direction: column;
     row-gap: .8em;
+
+    &_type_features {
+      margin-top: 1.2em;
+      list-style: disc;
+      padding-left: 2em;
+    }
+  }
+
+  &__feature {
+    line-height: 1.4em;
   }
 
   @include small-tablet {

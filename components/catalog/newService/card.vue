@@ -7,7 +7,7 @@
       <CatalogNewServiceContactsButton :id="data.id" v-if="data.is_open_contacts_active" v-slot="{ open }" @show="showContacts">
         <CommonNameplate @click="!contactsData ? open() : null" class="new-service-card__nameplate" :style="!contactsData ? 'cursor: pointer;' : ''" type="contacts" :text="'Контакты'" />
       </CatalogNewServiceContactsButton>
-      <CommonNameplate class="new-service-card__nameplate" v-if="data?.tariff?.name"  :text="data?.tariff?.name" type="tariff" />
+      <CommonNameplate class="new-service-card__nameplate" v-if="data?.tariff?.name" :text="data?.tariff?.name" :tooltip="useTariffTooltip(data?.tariff?.code)" type="tariff" />
     </div>
     <div class="new-service-card__header">
       <div class="new-service-card__pubcard">
@@ -169,6 +169,7 @@
 
 <script setup>
   import defaultImage from "@/assets/images/nophoto_pc.png";
+  import { useTariffTooltip } from '~/composables/useTariffTooltip';
 
   const contactsData = ref(null);
 

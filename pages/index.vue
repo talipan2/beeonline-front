@@ -9,6 +9,7 @@
 		<!-- <MainSearchOptions /> -->
 		<!-- <MainSafeTransaction /> -->
 		<MainNewMain />
+		<BannersPopupBanner />
 	</div>
 </template>
 

@@ -44,7 +44,29 @@
         }"
       />
     </div>
-    <div class="desktop__banner" v-if="role === 'performer' && userStore.userOrganization?.currency_code === 'RUB'">
+    <div
+      v-if="role === 'performer' && userStore.userOrganization?.currency_code === 'RUB' && showApiDesktopBanner"
+      class="desktop__banner desktop__banner--api"
+    >
+      <img class="desktop__banner-api-image" :src="desktopBannerImageUrl" :alt="desktopBanner.name" />
+      <UiButton
+        v-if="desktopBanner?.button?.enabled"
+        class="desktop__banner-btn"
+        variant="quaternary"
+        size="large"
+        @click="handleDesktopBannerButtonClick"
+      >
+        {{ desktopBanner.button.title || 'Подробнее' }}
+      </UiButton>
+      <a
+        v-if="desktopBanner?.url"
+        class="desktop__banner-link"
+        :href="desktopBanner.url"
+        :target="desktopBanner.open_new_tab ? '_blank' : '_self'"
+        @click="settingStore.bannerClick(desktopBanner.id)"
+      ></a>
+    </div>
+    <div class="desktop__banner" v-else-if="role === 'performer' && userStore.userOrganization?.currency_code === 'RUB'">
       <div class="desktop__banner-content">
         <h2 class="desktop__banner-title">Новые тарифы Премиум и Ультра!</h2>
         <div class="desktop__banner-container">
@@ -230,6 +252,8 @@ import { useReviewsStore } from '~/store/reviewsStore';
 import { useTariffsStore } from '~/store/tariffsStore';
 import { useUserStore } from '~/store/userStore';
 import { useChatStore } from '~/store/chatStore';
+import { useSettingStore } from '~/store/settingStore';
+import { useBreakpoints } from '@vueuse/core';
 import { useToast } from 'vue-toastification';
 
 const props = defineProps({
@@ -255,8 +279,42 @@ const toast = useToast();
 const userStore = useUserStore();
 const organizationStore = useOrganizationStore();
 const chatStore = useChatStore();
+const settingStore = useSettingStore();
 
 const emailVerified = computed(() => userStore.userData.email_verified_at ? true : false);
+
+const desktopBanner = ref(null);
+
+const breakpoints = useBreakpoints({ sm: 640, md: 768, lg: 1024 });
+const isMobile = breakpoints.smaller('sm');
+const isTablet = breakpoints.between('md', 'lg');
+
+const desktopBannerImageUrl = computed(() => {
+  const images = desktopBanner.value?.images;
+  if (!images) return '';
+  if (isMobile.value) return images.sm || images.md || images.lg || '';
+  if (isTablet.value) return images.md || images.sm || images.lg || '';
+  return images.lg || images.md || images.sm || '';
+});
+
+const showApiDesktopBanner = computed(() => {
+  const banner = desktopBanner.value;
+  if (!banner || !banner.active) return false;
+  const now = new Date();
+  if (banner.date_active_from && new Date(banner.date_active_from) > now) return false;
+  if (banner.date_active_to && new Date(banner.date_active_to) < now) return false;
+  return !!(banner.images?.sm || banner.images?.md || banner.images?.lg);
+});
+
+const handleDesktopBannerButtonClick = () => {
+  if (desktopBanner.value?.id) {
+    settingStore.bannerClick(desktopBanner.value.id);
+  }
+  const button = desktopBanner.value?.button;
+  if (button?.type === 'link' && button?.url) {
+    window.open(button.url, '_blank', 'noopener,noreferrer');
+  }
+};
 
 const pubCardStats = ref({})
 
@@ -396,6 +454,14 @@ watch(() => userStore.userPubCard, () => {
 // }, {deep: true, immediate: true})
 
 onMounted(() => {
+  if (props.role === 'performer') {
+    settingStore.getBannerLatest({ banner_type: 'performer_desktop' }).then((res) => {
+      if (res?.data) {
+        desktopBanner.value = res.data;
+      }
+    });
+  }
+
   if(userStore.userData && userStore.userData.id) {
     userStore.checkAuth();
     pubCardLoader.value = true;
@@ -594,6 +660,29 @@ chatStore.getChatList().then((res) => {
 
     &-image {
       width: 39em;
+    }
+
+    &--api {
+      padding: 0;
+      background-image: none;
+      overflow: hidden;
+
+      .desktop__banner-btn {
+        position: absolute;
+        bottom: 2.6em;
+        left: 2.6em;
+        font-size: 1.8em;
+        font-weight: 600;
+        font-family: 'Inter', sans-serif;
+        z-index: 2;
+      }
+    }
+
+    &-api-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
   }
 

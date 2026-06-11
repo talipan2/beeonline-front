@@ -72,6 +72,10 @@ const props = defineProps({
 const settingStore = useSettingStore();
 const locationStore = useLocationStore();
 
+function regionChipLabel(name) {
+	if (!name || typeof name !== 'string') return name;
+	return name.replace(/, Россия$/u, '').replace(/, Russia$/i, '');
+}
 
 const emit = defineEmits(['update:modelValue','update:errorMessage']);
 
@@ -85,7 +89,7 @@ const selectedCities = ref({
 const formattedLocation = computed(() => {
   return [
     ...selectedCities.value.cities.map((city) => ({id: city.id, type: 'city', name: city.name})),
-    ...selectedCities.value.regions.map((region) => ({id: region.id, type: 'region', name: region.name})),
+    ...selectedCities.value.regions.map((region) => ({id: region.id, type: 'region', name: regionChipLabel(region.name)})),
     ...selectedCities.value.countries.map((country) => ({id: country.id, type: 'country', name: country.name}))
   ]
 })

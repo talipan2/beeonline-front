@@ -23,7 +23,10 @@ export default function locationFormatter(data) {
       parts.push(country.name);
     }
 
-    return parts.join(", ");
+    return parts
+      .join(", ")
+      .replace(/, Россия$/u, "")
+      .replace(/, Russia$/i, "");
   }).filter(Boolean);
 
   const firstLocation = locations[0];

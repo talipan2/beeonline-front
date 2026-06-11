@@ -2,7 +2,7 @@
   <div class="tariff-card">
     <div class="tariff-card__header">
       <div>
-        <h3 class="tariff-card__title">{{ tariff.name }}</h3>
+        <h3 class="tariff-card__title" :title="getTariffTableHeaderTooltip(tariff.code)">{{ tariff.name }}</h3>
         <p class="tariff-card__subtitle" v-if="getTariffDescription(tariff.code)">{{ getTariffDescription(tariff.code) }}</p>
       </div>
       <p class="tariff-card__duration">{{ duration }} {{ plural(duration, {one: 'месяц', few: 'месяца', many: 'месяцев'}) }}</p>
@@ -23,11 +23,12 @@
         </p>
       </li>
     </ul>
-    <UiButton v-if="!isFreeCode(tariff.code)" type="button" @click="$emit('handlePay')" class="tariff-card__btn" variant="quinary" size="large">Подключить</UiButton>
+    <UiButton v-if="!isFreeCode(tariff.code) && !(tariff.code === 'maximum' && subDuration == 1)" type="button" @click="$emit('handlePay')" class="tariff-card__btn" variant="quinary" size="large">Подключить</UiButton>
   </div>
 </template>
 
 <script setup>
+import { getTariffTableHeaderTooltip } from '~/composables/tariffTableHeaderTooltips';
 
 const props = defineProps({
   tariff: {
@@ -53,7 +54,11 @@ const props = defineProps({
   discount: {
     type: Number,
     default: 0,
-  }
+  },
+  subDuration: {
+    type: [String, Number],
+    default: null,
+  },
 });
 
 const TARIFF_DESCRIPTIONS = {

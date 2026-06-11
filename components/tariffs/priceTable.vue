@@ -12,7 +12,7 @@
           <tr>
             <th>Возможности</th>
             <th v-for="(tariff, index) in tariffs" :key="index">
-              <span class="tariffs-table__tariff-name" :title="getTariffTooltip(tariff.code)">
+              <span class="tariffs-table__tariff-name" :title="getTariffTableHeaderTooltip(tariff.code)">
                 {{ tariff.name }}
               </span>
               <span class="tariffs-table__tariff-desc">{{ getTariffDescription(tariff.code) }}</span>
@@ -78,7 +78,7 @@
             <template v-for="(tariff, colIndex) in tariffs" :key="colIndex">
               <td>
                 <UiButton
-                  v-if="!isFreeCode(tariff.code)"
+                  v-if="!isFreeCode(tariff.code) && !(tariff.code === 'maximum' && props.subDuration == 1)"
                   type="button"
                   class="tariffs-table__btn"
                   variant="quinary"
@@ -101,6 +101,7 @@
           :price="getPrice(tariff)"
           :currency=getCurrency(tariff)
           :discount="discount"
+          :subDuration="props.subDuration"
           @handlePay="handlePayModal(tariff.code, props.subDuration)"
         />
       </template>
@@ -111,6 +112,7 @@
 <script setup>
 import { useSettingStore } from '~/store/settingStore';
 import { useTariffsStore } from '~/store/tariffsStore';
+import { getTariffTableHeaderTooltip } from '~/composables/tariffTableHeaderTooltips';
 
 
 const props = defineProps({
@@ -176,19 +178,8 @@ const TARIFF_DESCRIPTIONS = {
   maximum: 'Максимальный приоритет',
 };
 
-const TARIFF_TOOLTIPS = {
-  trial:   'Старт на платформе с мониторингом заказов и первыми переговорами.',
-  premium: 'Мгновенные уведомления и быстрые отклики для регулярного поиска заказов.',
-  ultra:   'Усиленная видимость и открытые контакты: профиль работает как страница фабрики.',
-  maximum: 'Максимальный приоритет и возможность напрямую связываться с заказчиками.',
-};
-
 function getTariffDescription(code) {
   return TARIFF_DESCRIPTIONS[code] ?? '';
-}
-
-function getTariffTooltip(code) {
-  return TARIFF_TOOLTIPS[code] ?? '';
 }
 
 /** Коды «бесплатных» тарифов (без кнопки оплаты и скидок) */
